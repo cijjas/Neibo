@@ -21,10 +21,10 @@ public class AccessControlHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccessControlHelper.class);
 
     @Autowired
-    private ProductService ps;
+    private ProductService prs;
 
     @Autowired
-    private PostService postService;
+    private PostService ps;
 
     @Autowired
     private InquiryService is;
@@ -37,11 +37,12 @@ public class AccessControlHelper {
 
     @Autowired
     private BookingService bs;
+
+    @Autowired
+    private UserService us;
 /*
 * Es medio raro esto de que se verifiquen los creates, eso deberia ir por el lado del formulario, o por lo menos eso hacemos usualmente
 * affiliation, review, inquiry
-*
-* Fix naming convention de estos metodos malparidos, chequear que cuando se tiene una URN se esta verificando todos los parametros
 *
 * Revisar si no se puede verificar el uso de query params en la filter chain
 *
@@ -94,9 +95,11 @@ public class AccessControlHelper {
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
-        // maybe this should verify the neighborhood id as well :/
+        long neighborhoodId = extractTwoURNIds(userURN).getFirstId();
+        long userId = extractTwoURNIds(userURN).getSecondId();
+        us.findUser(userId, neighborhoodId).orElseThrow(() -> new NotFoundException("User Not Found"));
 
-        return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
+        return getRequestingUserId(authentication) == userId;
     }
 
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
@@ -190,10 +193,10 @@ public class AccessControlHelper {
     // --------------------------------------------- PROFESSION --------------------------------------------------------
 
     // Worker Query Param in '/professions' can only be used by Neighbors, Workers and Administrators
-    public boolean canUseWorkerQPInProfessions(String worker) {
+    public boolean canUseWorkerQPInProfessions(String workerURN) {
         LOGGER.info("Verifying Query Params Accessibility");
 
-        if (worker == null)
+        if (workerURN == null)
             return true;
 
         Authentication authentication = getAuthentication();
@@ -206,6 +209,10 @@ public class AccessControlHelper {
     public Boolean canReferenceUserInLikeForm(String userURN){
         LOGGER.info("Verifying User Reference In Like Form");
         Authentication authentication = getAuthentication();
+
+        long neighborhoodId = extractTwoURNIds(userURN).getFirstId();
+        long userId = extractTwoURNIds(userURN).getSecondId();
+        us.findUser(userId, neighborhoodId).orElseThrow(() -> new NotFoundException("User Not Found"));
 
         if (isSuperAdministrator(authentication))
             return true;
@@ -223,30 +230,46 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication))
             return true;
 
-        return getRequestingUserNeighborhoodId(authentication) == extractTwoURNIds(postURN).getFirstId();
+        TwoIds twoIds = extractTwoURNIds(postURN);
+        ps.findPost(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        return getRequestingUserNeighborhoodId(authentication) == twoIds.getFirstId();
     }
 
     // Restricted from Anonymous, Unverified and Rejected
     // Neighbors and Administrator can use it when specifying at least one of the Query Params
-    public Boolean canListLikes(String post, String user) {
+    public Boolean canListLikes(String postURN, String userURN) {
         LOGGER.info("Verifying Get Likes Accessibility");
         Authentication authentication = getAuthentication();
 
         // In this case all likes in the application are returned (only Super Admin allowed)
-        if (post == null && user == null)
+        if (postURN == null && userURN == null)
             return isSuperAdministrator(authentication);
 
         if (isSuperAdministrator(authentication))
             return true;
 
-        if (post != null && user != null)
-            return getRequestingUserNeighborhoodId(authentication) == extractTwoURNIds(post).getFirstId()
-                    &&  getRequestingUserNeighborhoodId(authentication) == extractTwoURNIds(user).getFirstId();
 
-        if (user != null)
-            return getRequestingUserNeighborhoodId(authentication) == extractTwoURNIds(user).getFirstId();
-        else
-            return getRequestingUserNeighborhoodId(authentication) == extractTwoURNIds(post).getFirstId();
+        TwoIds postTwoIds;
+        TwoIds userTwoIds;
+        if (userURN != null && postURN == null) {
+            userTwoIds = extractTwoURNIds(userURN);
+            us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
+            return getRequestingUserNeighborhoodId(authentication) == userTwoIds.getFirstId();
+        }
+
+        if (userURN == null) {
+            postTwoIds = extractTwoURNIds(postURN);
+            ps.findPost(postTwoIds.getSecondId(), postTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
+            return getRequestingUserNeighborhoodId(authentication) == postTwoIds.getFirstId();
+        }
+
+        userTwoIds = extractTwoURNIds(userURN);
+        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
+        postTwoIds = extractTwoURNIds(postURN);
+        ps.findPost(postTwoIds.getSecondId(), postTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
+
+        return getRequestingUserNeighborhoodId(authentication) == postTwoIds.getFirstId()
+                &&  getRequestingUserNeighborhoodId(authentication) == userTwoIds.getFirstId();
     }
 
     // Restricted from Anonymous, Unverified and Rejected
@@ -255,6 +278,9 @@ public class AccessControlHelper {
     public Boolean canDeleteLike(String userURN) {
         LOGGER.info("Verifying Accessibility for the User's entities");
         Authentication authentication = getAuthentication();
+
+        TwoIds userTwoIds = extractTwoURNIds(userURN);
+        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
 
         if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
             return false;
@@ -332,7 +358,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Comment c = cs.findComment(commentId).orElseThrow(NotFoundException::new);
+        Comment c = cs.findComment(commentId).orElseThrow(()-> new NotFoundException("Comment Not Found"));
         return getRequestingUserId(authentication) == c.getUser().getUserId();
     }
 
@@ -346,7 +372,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Booking b = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Booking b = bs.findBooking(bookingId, neighborhoodId).orElseThrow(()-> new NotFoundException("Booking Not Found"));
         return getRequestingUserId(authentication) == b.getUser().getUserId();
     }
 
@@ -357,11 +383,13 @@ public class AccessControlHelper {
         LOGGER.info("Verifying Review Creation Accessibility");
         Authentication authentication = getAuthentication();
 
+        TwoIds userTwoIds = extractTwoURNIds(userURN);
+        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
+
         if (isSuperAdministrator(authentication))
             return true;
 
-        long userId = extractTwoURNIds(userURN).getSecondId();
-        return getRequestingUserId(authentication) == userId;
+        return getRequestingUserId(authentication) == userTwoIds.getSecondId();
     }
 
     // ------------------------------------------------ PRODUCTS ----------------------------------------------------------
@@ -374,7 +402,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
@@ -386,7 +414,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
@@ -400,7 +428,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Post p = postService.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        Post p = ps.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
         return p.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
@@ -414,7 +442,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Inquiry Not Found"));
         return i.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
@@ -426,7 +454,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Product p = ps.findProduct(productId).orElseThrow(NotFoundException::new);
+        Product p = prs.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() != getRequestingUserId(authentication);
     }
 
@@ -452,10 +480,14 @@ public class AccessControlHelper {
         if (userURN == null && productURN == null)
             return isSuperAdministrator(authentication) || isAdministrator(authentication);
 
-        if (userURN != null)
+        if (userURN != null) {
+            TwoIds userTwoIds = extractTwoURNIds(userURN);
+            us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
             return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
+        }
 
-        Product product = ps.findProduct(extractTwoURNIds(productURN).getSecondId()).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        TwoIds productTwoIds = extractTwoURNIds(productURN);
+        Product product = prs.findProduct(productTwoIds.getSecondId(), productTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("Product Not Found"));
         return product.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
@@ -491,7 +523,7 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
         return r.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
@@ -504,7 +536,7 @@ public class AccessControlHelper {
             return true;
 
         TwoIds twoIds = extractTwoURNIds(productURN);
-        Product p = ps.findProduct(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() != getRequestingUserId(authentication);
     }
 
