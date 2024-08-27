@@ -1,9 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.*;
+import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImagesURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNReferenceConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,7 +36,7 @@ public class ListingForm {
     private Boolean used;
 
     @NotNull
-    @UserURNAuthorizationConstraint
+    @UserURNReferenceConstraint
     private String user;
 
     public String getUser() {
@@ -66,6 +67,10 @@ public class ListingForm {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Double getPrice() {
         return price;
     }
@@ -76,10 +81,6 @@ public class ListingForm {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public void setDescription(String description) {

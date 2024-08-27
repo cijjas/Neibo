@@ -18,18 +18,18 @@ public class ShiftsValidator implements ConstraintValidator<ShiftsConstraint, Li
 
     @Override
     public boolean isValid(List<Long> shifts, ConstraintValidatorContext context) {
-        if(shifts == null) {
+        if (shifts == null) {
             //null handled by another validator
             return true;
         }
-        if(shifts.isEmpty()) {
+        if (shifts.isEmpty()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Shift ids must be sent as a comma separated list in between brackets []")
                     .addConstraintViolation();
             return false;
         }
-        for(Long shift : shifts) {
-            if(!shiftService.findShift(shift).isPresent()) {
+        for (Long shift : shifts) {
+            if (!shiftService.findShift(shift).isPresent()) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("Shifts do not exist")
                         .addConstraintViolation();

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form.validation.constraints;
 
-import ar.edu.itba.paw.webapp.form.validation.validators.ExistingPostValidator;
 import ar.edu.itba.paw.webapp.form.validation.validators.ExistingRequestValidator;
 
 import javax.validation.Constraint;

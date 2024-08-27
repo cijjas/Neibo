@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNReferenceConstraint;
 
 public class AttendanceForm {
-    @UserURNAuthorizationConstraint
+    @UserURNReferenceConstraint
     private String user;
 
     public String getUser() {

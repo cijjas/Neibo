@@ -9,7 +9,8 @@ import java.util.List;
 
 public class ShiftsUpdateURNValidator implements ConstraintValidator<ShiftsUpdateURNConstraint, List<String>> {
     @Override
-    public void initialize(ShiftsUpdateURNConstraint shiftsUpdateURNConstraint) {}
+    public void initialize(ShiftsUpdateURNConstraint shiftsUpdateURNConstraint) {
+    }
 
     @Override
     public boolean isValid(List<String> shiftsURN, ConstraintValidatorContext constraintValidatorContext) {

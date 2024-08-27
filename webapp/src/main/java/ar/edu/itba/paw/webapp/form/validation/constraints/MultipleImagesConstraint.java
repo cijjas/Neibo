@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Constraint(validatedBy = MultipleImagesValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MultipleImagesConstraint{
+public @interface MultipleImagesConstraint {
     String message() default "Invalid images detected";
 
     Class<?>[] groups() default {};

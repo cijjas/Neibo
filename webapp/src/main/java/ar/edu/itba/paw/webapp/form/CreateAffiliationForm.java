@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerRoleURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerURNConstraint;
-
-import java.util.List;
+import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerURNInAffiliationFormConstraint;
 
 public class CreateAffiliationForm {
-    @WorkerURNConstraint
+    @WorkerURNInAffiliationFormConstraint
     private String worker;
 
     @NeighborhoodURNConstraint

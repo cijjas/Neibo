@@ -25,6 +25,7 @@ public class URNValidator {
     private static final String WORKER_ROLE_URN_REGEX = "^(https?://[^/]+)?/worker-roles/\\d+$";
     private static final String IMAGE_URN_REGEX = "^(https?://[^/]+)?/images/\\d+$";
     private static final String TAGS_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/tags/\\d+$";
+
     // Compile regex patterns during application startup<
     static {
         patternMap.put("channel", Pattern.compile(CHANNEL_URN_REGEX));

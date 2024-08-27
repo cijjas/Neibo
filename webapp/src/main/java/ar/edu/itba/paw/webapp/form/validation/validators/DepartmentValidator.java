@@ -17,7 +17,7 @@ public class DepartmentValidator implements ConstraintValidator<DepartmentConstr
 
     @Override
     public boolean isValid(Integer departmentId, ConstraintValidatorContext constraintValidatorContext) {
-        if(departmentId == null)
+        if (departmentId == null)
             return false;
 
         for (Department department : Department.values()) {

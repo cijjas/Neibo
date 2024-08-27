@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.form.validation.constraints;
 
 import ar.edu.itba.paw.webapp.form.validation.validators.ShiftURNValidator;
-import ar.edu.itba.paw.webapp.form.validation.validators.UserRoleURNValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

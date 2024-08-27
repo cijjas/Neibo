@@ -4,12 +4,12 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsURNConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.sql.Date;
 import java.util.List;
 
 public class ShiftsURNValidator implements ConstraintValidator<ShiftsURNConstraint, List<String>> {
     @Override
-    public void initialize(ShiftsURNConstraint shiftsURNConstraint) {}
+    public void initialize(ShiftsURNConstraint shiftsURNConstraint) {
+    }
 
     @Override
     public boolean isValid(List<String> shiftsURN, ConstraintValidatorContext constraintValidatorContext) {

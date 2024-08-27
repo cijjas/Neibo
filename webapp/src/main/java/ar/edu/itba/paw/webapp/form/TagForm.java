@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 public class TagForm {
     @NotNull
     @TagsConstraint
-    @Size(min=1, max=20)
+    @Size(min = 1, max = 20)
     private String name;
 
     public String getName() {

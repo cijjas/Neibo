@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ProductURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ProductURNInRequestFormConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNReferenceConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
@@ -15,7 +15,7 @@ public class RequestForm {
     private String requestMessage;
 
     @NotNull
-    @ProductURNConstraint
+    @ProductURNInRequestFormConstraint
     private String product;
 
     @NotNull
@@ -23,7 +23,7 @@ public class RequestForm {
     private Integer quantity;
 
     @NotNull
-    @UserURNAuthorizationConstraint
+    @UserURNReferenceConstraint
     private String user;
 
 

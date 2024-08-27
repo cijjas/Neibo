@@ -1,12 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ProfessionsConstraint;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -31,21 +25,37 @@ public class WorkerUpdateForm {
     @ImageURNConstraint
     private String backgroundPicture;
 
-    public String getPhoneNumber() { return phoneNumber; }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-    public String getBusinessName() { return businessName; }
+    public String getBusinessName() {
+        return businessName;
+    }
 
-    public void setBusinessName(String businessName) { this.businessName = businessName; }
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
 
-    public String getAddress() { return address; }
+    public String getAddress() {
+        return address;
+    }
 
-    public void setAddress(String address) { this.address = address; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public String getBio() { return bio; }
+    public String getBio() {
+        return bio;
+    }
 
-    public void setBio(String bio) { this.bio = bio; }
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
     public String getBackgroundPicture() {
         return backgroundPicture;

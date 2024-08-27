@@ -121,7 +121,6 @@ public class RequestController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateRequest(#form.product)")
     public Response createRequest(
             @Valid @NotNull final RequestForm form
     ) {

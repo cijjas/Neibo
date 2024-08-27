@@ -117,7 +117,6 @@ public class ReviewController extends GlobalControllerAdvice {
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateReview(#form.user)")
     public Response createReview(
             @Valid @NotNull final ReviewForm form
     ) {

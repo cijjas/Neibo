@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.*;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ProfessionsURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNConstraint;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

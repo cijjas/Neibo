@@ -22,19 +22,19 @@ public class NeighborhoodsSelectionValidator implements ConstraintValidator<Neig
 
     @Override
     public boolean isValid(String ids, ConstraintValidatorContext constraintValidatorContext) {
-        if(ids == null){
+        if (ids == null) {
             return false;
         }
         //convert the id's string into a List<Long>, where the values are comma separated in the string
         String[] idsString = ids.split(",");
         Long[] idsLong = new Long[idsString.length];
-        for(int i = 0; i < idsString.length; i++) {
+        for (int i = 0; i < idsString.length; i++) {
             idsLong[i] = Long.parseLong(idsString[i]);
         }
 
         List<Neighborhood> neighborhoods = neighborhoodService.getNeighborhoods();
 
-        for(Long id : idsLong) {
+        for (Long id : idsLong) {
             int found = 0;
             for (Neighborhood neighborhood : neighborhoods) {
                 if (Objects.equals(neighborhood.getNeighborhoodId(), id)) {
@@ -42,7 +42,7 @@ public class NeighborhoodsSelectionValidator implements ConstraintValidator<Neig
                     break;
                 }
             }
-            if(found == 0) {
+            if (found == 0) {
                 constraintValidatorContext.disableDefaultConstraintViolation();
                 constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid neighborhood")
                         .addConstraintViolation();

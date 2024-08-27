@@ -6,7 +6,6 @@ import org.springframework.context.MessageSource;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.List;
 import java.util.Locale;
 
 public class TagsValidator implements

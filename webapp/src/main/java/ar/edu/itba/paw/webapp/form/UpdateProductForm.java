@@ -1,15 +1,15 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.*;
-        import org.hibernate.validator.constraints.NotBlank;
+import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImagesURNConstraint;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Arrays;
 
-public class UpdateProductForm{
+public class UpdateProductForm {
     @NotBlank
     @Size(max = 100)
     private String title;
@@ -55,12 +55,16 @@ public class UpdateProductForm{
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getPrice() {
@@ -69,10 +73,6 @@ public class UpdateProductForm{
 
     public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String[] getImages() {

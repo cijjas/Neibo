@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,7 +13,7 @@ public class ResourceForm {
     private String image;
 
     @NotNull
-    @Size(min=1, max = 64)
+    @Size(min = 1, max = 64)
     private String title;
 
     public String getDescription() {

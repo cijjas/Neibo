@@ -8,11 +8,12 @@ import java.util.List;
 
 public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, List<String>> {
     @Override
-    public void initialize(TagsURNConstraint tagsURNConstraint) {}
+    public void initialize(TagsURNConstraint tagsURNConstraint) {
+    }
 
     @Override
     public boolean isValid(List<String> tagURNs, ConstraintValidatorContext constraintValidatorContext) {
-        if(tagURNs == null || tagURNs.isEmpty())
+        if (tagURNs == null || tagURNs.isEmpty())
             return true; //no tags is considered valid
 
         for (String urn : tagURNs)

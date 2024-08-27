@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNReferenceConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
@@ -12,7 +11,7 @@ public class CommentForm {
     @Size(min = 0, max = 500)
     private String comment;
 
-    @UserURNAuthorizationConstraint
+    @UserURNReferenceConstraint
     private String user;
 
     public String getUser() {

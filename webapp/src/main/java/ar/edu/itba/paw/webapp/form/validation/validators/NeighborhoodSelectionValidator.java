@@ -16,11 +16,12 @@ public class NeighborhoodSelectionValidator implements ConstraintValidator<Neigh
     NeighborhoodService neighborhoodService;
 
     @Override
-    public void initialize(NeighborhoodConstraint neighborhoodConstraint) {}
+    public void initialize(NeighborhoodConstraint neighborhoodConstraint) {
+    }
 
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
-        if(id == null) {
+        if (id == null) {
             //returns true so the invalid neighborhood message isn't displayed, the null will be caught by another validation
             return true;
         }

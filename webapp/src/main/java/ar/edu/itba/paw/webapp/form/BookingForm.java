@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.*;
+import ar.edu.itba.paw.webapp.form.validation.constraints.AmenityURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationDateConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNReferenceConstraint;
+
 import javax.validation.constraints.NotNull;
 
 public class BookingForm {
@@ -17,7 +21,7 @@ public class BookingForm {
     private String reservationDate;
 
     @NotNull
-    @UserURNAuthorizationConstraint
+    @UserURNReferenceConstraint
     private String user;
 
     public String getAmenity() {
@@ -44,12 +48,12 @@ public class BookingForm {
         this.user = user;
     }
 
-    public void setReservationDate(String reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
     public String getReservationDate() {
         return reservationDate;
+    }
+
+    public void setReservationDate(String reservationDate) {
+        this.reservationDate = reservationDate;
     }
 
     @Override

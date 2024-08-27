@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.*;
+import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageURNConstraint;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;

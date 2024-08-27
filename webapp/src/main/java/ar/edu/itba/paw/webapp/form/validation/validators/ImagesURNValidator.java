@@ -8,11 +8,12 @@ import javax.validation.ConstraintValidatorContext;
 public class ImagesURNValidator implements ConstraintValidator<ImagesURNConstraint, String[]> {
 
     @Override
-    public void initialize(ImagesURNConstraint imagesURNConstraint) {}
+    public void initialize(ImagesURNConstraint imagesURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String[] imagesURN, ConstraintValidatorContext constraintValidatorContext) {
-        if(imagesURN==null)
+        if (imagesURN == null)
             return true;
 
         for (String urn : imagesURN)

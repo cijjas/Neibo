@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form.validation.constraints;
 
-import ar.edu.itba.paw.webapp.form.validation.validators.LanguageURNValidator;
 import ar.edu.itba.paw.webapp.form.validation.validators.UserRoleURNValidator;
 
 import javax.validation.Constraint;

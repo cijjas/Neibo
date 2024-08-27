@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.RequestURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNConstraint;
 
 import javax.validation.ConstraintValidator;
@@ -9,11 +8,12 @@ import javax.validation.ConstraintValidatorContext;
 public class UserURNValidator implements ConstraintValidator<UserURNConstraint, String> {
 
     @Override
-    public void initialize(UserURNConstraint userURNConstraint) {}
+    public void initialize(UserURNConstraint userURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
-        if(userURN==null)
+        if (userURN == null)
             return false;
 
         return URNValidator.validateURN(userURN, "users");

@@ -4,7 +4,6 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.UserRoleURNConstraint;
 import org.hibernate.validator.constraints.Email;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 
@@ -48,13 +47,21 @@ public class UserUpdateForm {
         this.email = email;
     }
 
-    public String getName(){ return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name){ this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getSurname(){ return surname; }
+    public String getSurname() {
+        return surname;
+    }
 
-    public void setSurname(String surname){ this.surname = surname; }
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
     public String getPassword() {
         return password;
@@ -64,13 +71,21 @@ public class UserUpdateForm {
         this.password = password;
     }
 
-    public Boolean getDarkMode() { return darkMode; }
+    public Boolean getDarkMode() {
+        return darkMode;
+    }
 
-    public void setDarkMode(Boolean darkMode) { this.darkMode = darkMode; }
+    public void setDarkMode(Boolean darkMode) {
+        this.darkMode = darkMode;
+    }
 
-    public String getPhoneNumber() { return phoneNumber; }
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getLanguage() {
         return language;
@@ -96,9 +111,13 @@ public class UserUpdateForm {
         this.profilePicture = profilePicture;
     }
 
-    public Integer getIdentification() { return identification; }
+    public Integer getIdentification() {
+        return identification;
+    }
 
-    public void setIdentification(Integer identification) { this.identification = identification; }
+    public void setIdentification(Integer identification) {
+        this.identification = identification;
+    }
 
 
     @Override

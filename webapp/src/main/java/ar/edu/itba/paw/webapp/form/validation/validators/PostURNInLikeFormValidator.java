@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.form.validation.validators;
 
 import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
 import ar.edu.itba.paw.webapp.form.validation.constraints.PostURNInLikeFormConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNInLikeFormConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -14,11 +12,12 @@ public class PostURNInLikeFormValidator implements ConstraintValidator<PostURNIn
     private AccessControlHelper accessControlHelper;
 
     @Override
-    public void initialize(PostURNInLikeFormConstraint postURNInLikeFormConstraint) {}
+    public void initialize(PostURNInLikeFormConstraint postURNInLikeFormConstraint) {
+    }
 
     @Override
     public boolean isValid(String postURN, ConstraintValidatorContext constraintValidatorContext) {
-        if(postURN==null)
+        if (postURN == null)
             return false;
 
         return URNValidator.validateURN(postURN, "posts") && accessControlHelper.canReferencePostInLikeForm(postURN);

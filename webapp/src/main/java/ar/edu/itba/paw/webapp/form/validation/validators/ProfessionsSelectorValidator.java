@@ -16,13 +16,13 @@ public class ProfessionsSelectorValidator implements ConstraintValidator<Profess
 
     @Override
     public boolean isValid(Long[] professions, ConstraintValidatorContext constraintValidatorContext) {
-        if(professions == null)
+        if (professions == null)
             //true so invalid message isnt displayed, null caught by another validation
             return true;
-        if(professions.length == 0)
+        if (professions.length == 0)
             return false;
 
-        for(Long id : professions) {
+        for (Long id : professions) {
             int found = 0;
             for (Profession profession : Profession.values()) {
                 if (profession.getId() == id) {
@@ -30,7 +30,7 @@ public class ProfessionsSelectorValidator implements ConstraintValidator<Profess
                     break;
                 }
             }
-            if(found == 0) {
+            if (found == 0) {
                 constraintValidatorContext.disableDefaultConstraintViolation();
                 constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid profession")
                         .addConstraintViolation();

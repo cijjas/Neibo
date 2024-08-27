@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.webapp.form.validation.constraints;
 
-import ar.edu.itba.paw.webapp.form.validation.validators.AmenityURNValidator;
-import ar.edu.itba.paw.webapp.form.validation.validators.DepartmentValidator;
 import ar.edu.itba.paw.webapp.form.validation.validators.ShiftsURNValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @Documented
 @Constraint(validatedBy = ShiftsURNValidator.class)

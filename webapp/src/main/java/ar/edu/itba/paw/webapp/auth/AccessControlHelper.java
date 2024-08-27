@@ -41,14 +41,11 @@ public class AccessControlHelper {
     @Autowired
     private UserService us;
 /*
-* Es medio raro esto de que se verifiquen los creates, eso deberia ir por el lado del formulario, o por lo menos eso hacemos usualmente
-* affiliation, review, inquiry
+* Revisar si no se puede verificar el uso de query params en la filter chain, creo que no seria practico esto
+* Tal vez se puede mejorar la filter chain para disminuir la logica de los access control helpers a lo estrictamente necesario
+* por ejemplo que haya un permit all si sos super admin
+* que dentro de neighborhoods admins tengan el permit all
 *
-* Revisar si no se puede verificar el uso de query params en la filter chain
-*
-* Solo autenticacion se verifica aca, la integridad de la informacion se verifica en los formularios
-*
-* Deberia revisar las URLs internas
 *
  * Verificar con los tests
 * */
@@ -95,11 +92,10 @@ public class AccessControlHelper {
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
-        long neighborhoodId = extractTwoURNIds(userURN).getFirstId();
-        long userId = extractTwoURNIds(userURN).getSecondId();
-        us.findUser(userId, neighborhoodId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        TwoIds userTwoIds = extractTwoURNIds(userURN);
+        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
 
-        return getRequestingUserId(authentication) == userId;
+        return getRequestingUserId(authentication) == userTwoIds.getSecondId();
     }
 
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
@@ -206,9 +202,14 @@ public class AccessControlHelper {
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
 
+    // Restricted from Anonymous, Unverified and Rejected
+    // Neighbors and Administrators can reference any User that belongs to their neighborhood
     public Boolean canReferenceUserInLikeForm(String userURN){
         LOGGER.info("Verifying User Reference In Like Form");
         Authentication authentication = getAuthentication();
+
+        if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
+            return false;
 
         long neighborhoodId = extractTwoURNIds(userURN).getFirstId();
         long userId = extractTwoURNIds(userURN).getSecondId();
@@ -223,9 +224,14 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
     }
 
+    // Restricted from Anonymous, Unverified and Rejected
+    // Neighbors and Administrators can reference any Post that belongs to their neighborhood
     public Boolean canReferencePostInLikeForm(String postURN){
         LOGGER.info("Verifying Post Reference In Like Form");
         Authentication authentication = getAuthentication();
+
+        if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
+            return false;
 
         if (isSuperAdministrator(authentication))
             return true;
@@ -331,6 +337,22 @@ public class AccessControlHelper {
         return getRequestingUserNeighborhoodId(authentication) == extractURNId(neighborhoodURN);
     }
 
+    // ------------------------------------------------ REVIEWS --------------------------------------------------------
+
+    // Neighbors can create an Attendance for themselves
+    public Boolean canCreateReview(String userURN) {
+        LOGGER.info("Verifying Review Creation Accessibility");
+        Authentication authentication = getAuthentication();
+
+        TwoIds userTwoIds = extractTwoURNIds(userURN);
+        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
+
+        if (isSuperAdministrator(authentication))
+            return true;
+
+        return getRequestingUserId(authentication) == userTwoIds.getSecondId();
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
     // --------------------------------------- NEIGHBORHOOD NESTED ENTITIES --------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
@@ -374,22 +396,6 @@ public class AccessControlHelper {
 
         Booking b = bs.findBooking(bookingId, neighborhoodId).orElseThrow(()-> new NotFoundException("Booking Not Found"));
         return getRequestingUserId(authentication) == b.getUser().getUserId();
-    }
-
-    // ------------------------------------------------ REVIEWS --------------------------------------------------------
-
-    // Neighbors can create an Attendance for themselves
-    public Boolean canCreateReview(String userURN) {
-        LOGGER.info("Verifying Review Creation Accessibility");
-        Authentication authentication = getAuthentication();
-
-        TwoIds userTwoIds = extractTwoURNIds(userURN);
-        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
-
-        if (isSuperAdministrator(authentication))
-            return true;
-
-        return getRequestingUserId(authentication) == userTwoIds.getSecondId();
     }
 
     // ------------------------------------------------ PRODUCTS ----------------------------------------------------------
@@ -491,6 +497,18 @@ public class AccessControlHelper {
         return product.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
+    public Boolean canReferenceProductInRequestForm(String productURN){
+        LOGGER.info("Verifying Product Reference in Request Form");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication) || isAdministrator(authentication))
+            return true;
+
+        TwoIds twoIds = extractTwoURNIds(productURN);
+        Product p = prs.findProduct(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        return p.getSeller().getUserId() != getRequestingUserId(authentication);
+    }
+
     // Sellers and the Requester can access that particular Request
     public Boolean canAccessRequest(long requestId){
         LOGGER.info("Verifying Request Accessibility");
@@ -526,20 +544,6 @@ public class AccessControlHelper {
         Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
         return r.getUser().getUserId() == getRequestingUserId(authentication);
     }
-
-    // Seller can not create Requests for their own Products
-    public Boolean canCreateRequest(String productURN){
-        LOGGER.info("Verifying Request Creation Accessibility");
-        Authentication authentication = getAuthentication();
-
-        if (isSuperAdministrator(authentication) || isAdministrator(authentication))
-            return true;
-
-        TwoIds twoIds = extractTwoURNIds(productURN);
-        Product p = prs.findProduct(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        return p.getSeller().getUserId() != getRequestingUserId(authentication);
-    }
-
 
     // ------------------------------------------------ HELPERS --------------------------------------------------------
 

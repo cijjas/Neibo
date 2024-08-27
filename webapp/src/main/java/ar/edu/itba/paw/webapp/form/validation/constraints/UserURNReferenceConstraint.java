@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Constraint(validatedBy = UserURNAuthorizationValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UserURNAuthorizationConstraint {
+public @interface UserURNReferenceConstraint {
 
     String message() default "Error in the URN";
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.*;
+import ar.edu.itba.paw.webapp.form.validation.constraints.PostURNInLikeFormConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNInLikeFormConstraint;
 
 import javax.validation.constraints.NotNull;
 

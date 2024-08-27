@@ -116,7 +116,6 @@ public class AffiliationController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canCreateAffiliation(#form.worker)")
     public Response addAffiliation(
             @Valid @NotNull final CreateAffiliationForm form
     ) {

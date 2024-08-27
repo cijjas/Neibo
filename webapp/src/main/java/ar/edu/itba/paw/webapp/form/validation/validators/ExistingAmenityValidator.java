@@ -12,7 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.ConstraintViolationException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -31,25 +30,25 @@ public class ExistingAmenityValidator implements ConstraintValidator<ExistingAme
 
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
-        if(id == null) {
+        if (id == null) {
             //null handled by another validator
             return true;
         }
-        if(id <= 0) {
+        if (id <= 0) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid value (" + id + ") for the Amenity ID. Please use a positive integer greater than 0.")
                     .addConstraintViolation();
             return false;
         }
         Optional<Amenity> amenity = amenityService.findAmenity(id);
-        if(!amenity.isPresent()) {
+        if (!amenity.isPresent()) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("Amenity does not exist")
                     .addConstraintViolation();
             return false;
         }
 
-        String mail = (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
+        String mail = (((UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
         User user = userService.findUser(mail).orElseThrow(() -> new NotFoundException("User not found"));
         //amenity exists, now checking that it belongs to the user's neighborhood
         return (Objects.equals(amenity.get().getNeighborhood().getNeighborhoodId(), user.getNeighborhood().getNeighborhoodId()));
