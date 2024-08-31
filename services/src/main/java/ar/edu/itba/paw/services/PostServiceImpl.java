@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.Channel;
+import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService {
         if (tagURNs != null && !tagURNs.isEmpty())
             tagService.categorizePost(p.getPostId(), tagURNs, neighborhoodId);
 
-        if(channelId == Channel.ANNOUNCEMENTS.getId())
+        if(channelId == BaseChannel.ANNOUNCEMENTS.getId())
             emailService.sendBatchAnnouncementMail(p, neighborhoodId);
 
         return p;

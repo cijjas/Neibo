@@ -25,12 +25,12 @@ public enum Profession {
     }
 
     public static Profession fromId(long id) {
-        if(id <= 0)
+        if (id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Profession ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(p -> p.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new NotFoundException("Profession Not Found"));
+                .orElseThrow(() -> new NotFoundException("Profession Not Found"));
     }
 
     @Override

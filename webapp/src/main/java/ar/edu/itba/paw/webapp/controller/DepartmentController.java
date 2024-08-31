@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.Pair;
-import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.dto.*;

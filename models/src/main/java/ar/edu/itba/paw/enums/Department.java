@@ -64,12 +64,12 @@ public enum Department {
     }
 
     public static Department fromId(long id) {
-        if(id <= 0)
+        if (id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Department ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(d -> d.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new NotFoundException("Department Not Found"));
+                .orElseThrow(() -> new NotFoundException("Department Not Found"));
     }
 
     private String toURLString() {

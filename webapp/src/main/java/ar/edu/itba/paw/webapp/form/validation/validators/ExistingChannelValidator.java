@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
-import ar.edu.itba.paw.enums.Channel;
+import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingChannelConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class ExistingChannelValidator implements ConstraintValidator<ExistingCha
 
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
-        return Channel.nullableFromId(id) != null;
+        return BaseChannel.nullableFromId(id) != null;
     }
 
 }

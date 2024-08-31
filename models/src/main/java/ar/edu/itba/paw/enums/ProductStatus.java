@@ -10,13 +10,14 @@ public enum ProductStatus {
     SELLING; // Search in products the user is currently selling
 
     public static ProductStatus fromId(long id) {
-        if(id <= 0)
+        if (id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Product Status ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(ps -> ps.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new NotFoundException("Product Status Not Found"));
+                .orElseThrow(() -> new NotFoundException("Product Status Not Found"));
     }
+
     public int getId() {
         return ordinal() + 1;
     }

@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Transactional
 @Rollback
-public class ChannelDaoImplTest {
+public class BaseChannelDaoImplTest {
 
     private final String CHANNEL_NAME_1 = "Channel Name 1";
     private final String CHANNEL_NAME_2 = "Channel Name 2";

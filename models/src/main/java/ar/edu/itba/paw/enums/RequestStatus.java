@@ -10,13 +10,14 @@ public enum RequestStatus {
     ACCEPTED;
 
     public static RequestStatus fromId(long id) {
-        if(id <= 0)
+        if (id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Request Status ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(rs -> rs.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new NotFoundException("Request Status Not Found"));
+                .orElseThrow(() -> new NotFoundException("Request Status Not Found"));
     }
+
     public int getId() {
         return ordinal() + 1;
     }

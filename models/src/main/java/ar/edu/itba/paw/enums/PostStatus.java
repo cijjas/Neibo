@@ -10,12 +10,12 @@ public enum PostStatus {
     NONE;
 
     public static PostStatus fromId(long id) {
-        if(id <= 0)
+        if (id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Post Status ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(ps -> ps.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new NotFoundException("Post Status Not Found"));
+                .orElseThrow(() -> new NotFoundException("Post Status Not Found"));
     }
 
     public int getId() {

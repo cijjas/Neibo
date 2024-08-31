@@ -10,12 +10,12 @@ public enum WorkerRole {
     REJECTED;
 
     public static WorkerRole fromId(long id) {
-        if(id <= 0)
+        if (id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Worker Role ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(wr -> wr.getId() == id)
                 .findFirst()
-                .orElseThrow(()-> new NotFoundException("Worker Role Not Found"));
+                .orElseThrow(() -> new NotFoundException("Worker Role Not Found"));
     }
 
     public int getId() {

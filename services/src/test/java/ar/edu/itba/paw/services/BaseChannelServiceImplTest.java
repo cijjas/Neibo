@@ -12,7 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ChannelServiceImplTest {
+public class BaseChannelServiceImplTest {
     private static final Long ID = 1L;
     private static final String NAME = "Amantes de los burritos";
     private static final Long NEIGHBORHOOD_ID = 1L;
