@@ -49,4 +49,13 @@ public class ProfessionServiceImpl implements ProfessionService {
 
         return professionDao.findProfession(professionId);
     }
+
+    @Override
+    public boolean deleteProfession(long professionId) {
+        LOGGER.info("Deleting Profession {}", professionId);
+
+        ValidationUtils.checkProfessionId(professionId);
+
+        return professionDao.deleteProfession(professionId);
+    }
 }

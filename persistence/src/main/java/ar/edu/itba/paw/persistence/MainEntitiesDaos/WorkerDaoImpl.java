@@ -150,14 +150,29 @@ public class WorkerDaoImpl implements WorkerDao {
 
     // ---------------------------------------------- WORKERS DELETE ---------------------------------------------------
 
+    // For some reason this code does not works against the HSQL DB but does work against the PG DB
+    // Just to be safe we are using the native query version that passes the test as well
+    /*
     @Override
     public boolean deleteWorker(long workerId) {
         LOGGER.debug("Deleting Worker with Id {}", workerId);
         Worker worker = em.find(Worker.class, workerId);
+        // The worker is being found
         if (worker != null) {
             em.remove(worker);
             return true;
         }
         return false;
     }
+     */
+
+    @Override
+    public boolean deleteWorker(long workerId) {
+        LOGGER.debug("Deleting Worker with Id {}", workerId);
+        int result = em.createNativeQuery("DELETE FROM workers_info WHERE workerid = :workerId")
+                .setParameter("workerId", workerId)
+                .executeUpdate();
+        return result > 0;
+    }
+
 }

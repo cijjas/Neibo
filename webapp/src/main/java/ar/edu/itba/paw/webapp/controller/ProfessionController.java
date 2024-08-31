@@ -59,7 +59,6 @@ public class ProfessionController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(professionsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -92,7 +91,6 @@ public class ProfessionController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(professionHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -124,6 +122,25 @@ public class ProfessionController {
         return Response.created(uri)
                 .cacheControl(cacheControl)
                 .tag(professionHashCode)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Secured({"ROLE_SUPER_ADMINISTRATOR"})
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteProfessionById(
+            @PathParam("id") final long id
+    ) {
+        LOGGER.info("DELETE request arrived at '/professions/{}'", id);
+
+        // Deletion Attempt
+        if(ps.deleteProfession(id)) {
+            return Response.noContent()
+                    .build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }
 }

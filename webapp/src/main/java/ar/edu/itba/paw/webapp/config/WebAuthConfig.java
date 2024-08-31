@@ -92,44 +92,37 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
 
+                // Public endpoints
                 .antMatchers(
+                        // Root
                         "/",
-                        "/departments",
-                        "/departments/*",
-                        "/shifts",
-                        "/shifts/*",
-                        "/shift-statuses",
-                        "/shift-statuses/*",
-                        "/user-roles",
-                        "/user-roles/*",
-                        "/worker-roles",
-                        "/worker-roles/*",
-                        "/worker-statuses",
-                        "/worker-statuses/*",
-                        "/post-statuses",
-                        "/post-statuses/*",
-                        "/product-statuses",
-                        "/product-statuses/*",
-                        "/languages",
-                        "/languages/*",
-                        "/professions",
-                        "/professions/*",
-                        "/transaction-types",
-                        "/transaction-types/*",
-                        "/neighborhoods",
-                        "/neighborhoods/*",
+                        "/departments", "/departments/*",
+                        "/languages", "/languages/*",
+                        "/post-statuses", "/post-statuses/*",
+                        "/product-statuses", "/product-statuses/*",
+                        "/professions", "/professions/*",
+                        "/request-statuses", "/request-statuses/*",
+                        "/shifts", "/shifts/*",
+                        "/shift-statuses", "/shift-statuses/*",
+                        "/transaction-types", "/transaction-types/*", // todo delete
+                        "/user-roles", "/user-roles/*",
+                        "/worker-roles", "/worker-roles/*",
+                        "/worker-statuses", "/worker-statuses/*",
+                        "/neighborhoods", "/neighborhoods/*",
+                        // User and Worker Creation can be accessed by anyone
+                        // User and Worker List share the same endpoint so they have additional authentication
                         "/neighborhoods/*/users",
                         "/workers"
                 ).permitAll()
 
+                // Registered Users Endpoints
                 .antMatchers(
                         "/neighborhoods/*/users/*",
                         "/workers/*",
+
                         "/images/*",
-                        "/affiliations",
-                        "/affiliations/*",
-                        "/workers/*/reviews",
-                        "/workers/*/reviews/*"
+                        "/affiliations", "/affiliations/*",
+                        "/workers/*/reviews", "/workers/*/reviews/*"
                 ).hasAnyRole(
                         UserRole.REJECTED.name(),
                         UserRole.UNVERIFIED_NEIGHBOR.name(),
@@ -139,95 +132,42 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
 
+                // Neighborhood Specific Endpoints
                 .antMatchers(
-                        "/likes",
-                        "/likes/**"
+                        "/likes", "/likes/**"
                 ).hasAnyRole(
                         UserRole.NEIGHBOR.name(),
                         UserRole.ADMINISTRATOR.name(),
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
-
-                // EVERYTHING WITHIN A NEIGHBORHOOD CAN BE ACCESSED BY USERS BELONGING TO THAT NEIGHBORHOOD OR THE SUPER ADMINISTRATOR
-                // ALSO THE WORKERS NEIGHBORHOOD CAN BE ACCESSED BY EVERYONE
-
                 .antMatchers(
-                        "/neighborhoods/*/posts",
-                        "/neighborhoods/*/posts/*"
+                        "/neighborhoods/*/posts", "/neighborhoods/*/posts/*"
                 ).access(
                         "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
                                 "@accessControlHelper.isNeighborhoodMember(request)"
                 )
-
-                // NEIGHBORS AND ADMINISTRATORS
                 .antMatchers(
-                        "/neighborhoods/*/posts/*/comments/**",
-                        "/neighborhoods/*/products/**",
-                        "/neighborhoods/*/products/*/inquiries/**",
-                        "/neighborhoods/*/requests/**",
-                        "/neighborhoods/*/tags/**",
-                        "/neighborhoods/*/channels/**",
-                        "/neighborhoods/*/amenities/**",
-                        "/neighborhoods/*/bookings/**",
-                        "/neighborhoods/*/resources/**",
-                        "/neighborhoods/*/contacts/**",
-                        "/neighborhoods/*/events/**"
+                        "/neighborhoods/*/posts/*/comments", "/neighborhoods/*/posts/*/comments/*",
+                        "/neighborhoods/*/products", "/neighborhoods/*/products/*",
+                        "/neighborhoods/*/products/*/inquiries", "/neighborhoods/*/products/*/inquiries/*",
+                        "/neighborhoods/*/requests", "/neighborhoods/*/requests/*",
+                        "/neighborhoods/*/tags", "/neighborhoods/*/tags/*",
+                        "/neighborhoods/*/channels", "/neighborhoods/*/channels/*",
+                        "/neighborhoods/*/amenities", "/neighborhoods/*/amenities/*",
+                        "/neighborhoods/*/bookings", "/neighborhoods/*/bookings/*",
+                        "/neighborhoods/*/resources", "/neighborhoods/*/resources/*",
+                        "/neighborhoods/*/contacts", "/neighborhoods/*/contacts/*",
+                        "/neighborhoods/*/events", "/neighborhoods/*/events/*",
+                        "/neighborhoods/*/events/*/attendance", "/neighborhoods/*/events/*/attendance/*"
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
                                 "@accessControlHelper.isNeighborhoodMember(request)"
                 )
+
                 .anyRequest().denyAll();
     }
-
-   /* @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.headers().referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE);
-        http
-                .cors().and()
-                .csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
-                .and()
-                .sessionManagement().sessionCreationPolicy(STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("/**").permitAll();  // Allow access to all paths for testing purposes
-    }*/
-    /*@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement()
-                .invalidSessionUrl("/login")
-                .and().authorizeRequests()
-                .antMatchers("/signup", "/login", "/signup-worker").anonymous()
-                .antMatchers("/admin/**").hasRole("ADMINISTRATOR")
-                .antMatchers("/unverified").hasRole("UNVERIFIED_NEIGHBOR")
-                .antMatchers("/services").hasAnyRole("WORKER", "ADMINISTRATOR", "NEIGHBOR")
-                .antMatchers("/services/neighborhoods").hasRole("WORKER")
-                .antMatchers("/rejected").hasRole("REJECTED")
-                .antMatchers("/profile").hasAnyRole("ADMINISTRATOR", "NEIGHBOR", "WORKER")
-                .antMatchers("/").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
-                .antMatchers("/complaints", "/announcements", "/amenities", "/information", "/reservation", "/posts/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
-                .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR", "WORKER")
-                .and().formLogin()
-                .failureHandler(new CustomAuthenticationFailureHandler())
-                .usernameParameter("mail")
-                .passwordParameter("password")
-                .loginPage("/login")
-                .successHandler(customAuthenticationSuccessHandler())
-                .and().rememberMe()
-                .rememberMeParameter("rememberMe")
-                .userDetailsService(userDetails)
-                .key(StreamUtils.copyToString(rememberMeKey.getInputStream(), StandardCharsets.UTF_8))
-                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
-                .and().logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/landingPage")
-                .and().exceptionHandling()
-                .accessDeniedPage("/errors/errorPage")
-                .and().csrf().disable();
-    }*/
-
 
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
@@ -326,5 +266,4 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
-
 }

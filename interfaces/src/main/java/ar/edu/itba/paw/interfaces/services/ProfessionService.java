@@ -12,4 +12,6 @@ public interface ProfessionService {
     List<Profession> getProfessions(String workerURN);
 
     Optional<Profession> findProfession(long professionId);
+
+    boolean deleteProfession(long professionId);
 }

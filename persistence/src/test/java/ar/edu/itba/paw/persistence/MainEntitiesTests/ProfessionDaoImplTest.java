@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -70,6 +71,32 @@ public class ProfessionDaoImplTest {
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.professions.name()));
     }
 
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
+    @Test
+    public void find_profession_valid() {
+        // Pre Conditions
+        pKey1 = testInserter.createProfession();
+
+        // Exercise
+        Optional<ar.edu.itba.paw.models.Entities.Profession> optionalProfession = professionDaoImpl.findProfession(pKey1);
+
+        // Validations & Post Conditions
+        assertTrue(optionalProfession.isPresent());
+        assertEquals(pKey1, optionalProfession.get().getProfessionId().longValue());
+    }
+
+    @Test
+    public void find_profession_invalid_professionId() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<ar.edu.itba.paw.models.Entities.Profession> optionalProfession = professionDaoImpl.findProfession(INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalProfession.isPresent());
+    }
+
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
@@ -106,6 +133,35 @@ public class ProfessionDaoImplTest {
         // Validations & Post Conditions
         assertTrue(professionList.isEmpty());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+    public void delete_professionId_valid() {
+        // Pre Conditions
+        long pKey = testInserter.createProfession();
+
+        // Exercise
+        boolean deleted = professionDaoImpl.deleteProfession(pKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.professions.name()));
+    }
+
+    @Test
+    public void delete_professionId_invalid_professionId() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = professionDaoImpl.deleteProfession(INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
 
     private void populateProfessions() {
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1); // Workers Neighborhood
