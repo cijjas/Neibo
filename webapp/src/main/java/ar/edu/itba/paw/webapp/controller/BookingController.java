@@ -144,8 +144,7 @@ public class BookingController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteById(
-            @PathParam("id") final long bookingId,
-            @PathParam("neighborhoodId") final long neighborhoodId
+            @PathParam("id") final long bookingId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 

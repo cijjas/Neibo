@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +31,13 @@ public class ShiftServiceImpl implements ShiftService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Shift> getShifts(String amenityURN) {
+    @Transactional(readOnly = true)
+    public List<Shift> getShifts(String amenityURN, Date date) {
         LOGGER.info("Getting Shifts");
 
         Long amenityId = ValidationUtils.checkURNAndExtractAmenityId(amenityURN);
-        return shiftDao.getShifts(amenityId);
+
+        return shiftDao.getShifts(amenityId, date);
     }
 
     @Override

@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -447,6 +451,12 @@ public class ValidationUtils {
         return tagTwoIds.getSecondId();
     }
 
+    public static Date checkAndExtractDate(String date){
+        if (date == null)
+            return null;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return Date.from(LocalDate.parse(date, formatter).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
     // --------------------------------------------------------------------------------------------------------------
 
     public static long extractURNId(String URN) {

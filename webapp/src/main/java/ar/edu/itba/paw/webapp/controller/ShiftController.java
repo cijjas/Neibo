@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,12 +42,14 @@ public class ShiftController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts(
-            @QueryParam("forAmenity") final String amenity
+            @QueryParam("forAmenity") final String amenity,
+            @QueryParam("forDate") final Date date
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Content
-        List<Shift> shifts = ss.getShifts(amenity);
+        List<Shift> shifts = ss.getShifts(amenity, date);
+        System.out.println(shifts);
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control

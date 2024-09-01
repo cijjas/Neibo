@@ -8,6 +8,7 @@ public class ShiftDto {
 
     private String day;
     private String startTime;
+    private Boolean isBooked;
     private Links _links;
 
     public static ShiftDto fromShift(Shift shift, UriInfo uriInfo) {
@@ -17,6 +18,9 @@ public class ShiftDto {
 
         dto.day = shift.getDay().getDayName();
 
+        if (shift.getTaken() != null)
+            dto.isBooked= shift.getTaken();
+
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("shifts")
@@ -24,6 +28,14 @@ public class ShiftDto {
                 .build());
         dto.set_links(links);
         return dto;
+    }
+
+    public Boolean getIsBooked() {
+        return isBooked;
+    }
+
+    public void setIsBooked(Boolean isBooked) {
+        this.isBooked = isBooked;
     }
 
     public String getDay() {

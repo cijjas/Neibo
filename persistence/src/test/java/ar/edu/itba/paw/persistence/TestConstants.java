@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
+import java.sql.Date;
+
 public class TestConstants {
     public static final int BASE_PAGE = 1;
     public static final int BASE_PAGE_SIZE = 20;
@@ -45,5 +47,6 @@ public class TestConstants {
     public static final int NINETEEN_ELEMENTS = 19;
 
     public static final Long EMPTY_FIELD = null;
+    public static final Date NO_DATE = null;
 
 }

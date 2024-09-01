@@ -28,6 +28,9 @@ public class Shift {
     @Transient
     private java.sql.Time endTime;
 
+    @Transient
+    private Boolean taken;
+
     Shift() {
     }
 
@@ -35,6 +38,7 @@ public class Shift {
         this.shiftId = builder.shiftId;
         this.day = builder.day;
         this.startTime = builder.startTime;
+        this.taken = builder.taken;
         if (builder.startTime != null) {
             this.endTime = calculateEndTime(builder.startTime);
         }
@@ -45,6 +49,14 @@ public class Shift {
         long startTimeMillis = startTime.getTimeInterval().getTime();
         long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
         return new java.sql.Time(endTimeMillis);
+    }
+
+    public Boolean getTaken() {
+        return taken;
+    }
+
+    public void setTaken(Boolean taken) {
+        this.taken = taken;
     }
 
     public void setShiftId(Long shiftId) {
@@ -94,9 +106,10 @@ public class Shift {
     public String toString() {
         return "Shift{" +
                 "shiftId=" + shiftId +
-                ", day='" + day + '\'' +
+                ", day=" + day +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
+                ", taken=" + taken +
                 '}';
     }
 
@@ -117,6 +130,7 @@ public class Shift {
         private Long shiftId;
         private Day day;
         private Time startTime;
+        private Boolean taken;
 
         public Builder shiftId(Long shiftId) {
             this.shiftId = shiftId;
@@ -130,6 +144,11 @@ public class Shift {
 
         public Builder startTime(Time startTime) {
             this.startTime = startTime;
+            return this;
+        }
+
+        public Builder taken(Boolean taken) {
+            this.taken = taken;
             return this;
         }
 
