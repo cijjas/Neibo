@@ -19,11 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
-import java.sql.Date;
+import java.util.Date;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -36,8 +34,6 @@ public class ShiftDaoImplTest {
     public static final String DAY_NAME_1 = "DAY 1";
     public static final String DAY_NAME_2 = "DAY 2";
     public static final String DAY_NAME_3 = "DAY 3";
-
-    private final Date DATE = Date.valueOf("2024-09-09");
 
     @Autowired
     private DataSource ds;
@@ -165,10 +161,10 @@ public class ShiftDaoImplTest {
         long sKey3 = testInserter.createShift(dKey3, tKey);
         long avKey1 = testInserter.createAvailability(aKey1, sKey1);
         long avKey2 = testInserter.createAvailability(aKey1, sKey2);
-        testInserter.createBooking(uKey, avKey1, DATE);
+        testInserter.createBooking(uKey, avKey1, DATE_1);
 
         // Exercise
-        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE_1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, shiftList.size());
@@ -184,7 +180,7 @@ public class ShiftDaoImplTest {
         long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE_1);
 
         // Validations & Post Conditions
         assertTrue(shiftList.isEmpty());

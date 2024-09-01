@@ -39,7 +39,7 @@ public class Comment {
         this.date = builder.date;
         this.user = builder.user;
         this.post = builder.post;
-        this.date = new java.sql.Date(System.currentTimeMillis());
+        this.date = new Date(System.currentTimeMillis());
     }
 
     public Long getCommentId() {

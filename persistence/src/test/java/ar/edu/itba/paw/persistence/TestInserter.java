@@ -20,6 +20,8 @@ import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import static ar.edu.itba.paw.persistence.TestConstants.DATE_1;
+
 @Component
 public class TestInserter {
 
@@ -52,7 +54,7 @@ public class TestInserter {
     }
 
     public void createLike(long postId, long userId) {
-        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
+        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new Date(System.currentTimeMillis()));
         em.persist(like);
         em.flush();
     }
@@ -120,7 +122,7 @@ public class TestInserter {
     }
 
     public long createUser(String mail, String password, String name, String surname,
-                           long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification, java.sql.Date date) {
+                           long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification, Date date) {
         User user = new User.Builder()
                 .name(name)
                 .mail(mail)
@@ -159,7 +161,7 @@ public class TestInserter {
         return resource.getResourceId();
     }
 
-    public long createReservation(long amenityId, long userId, java.sql.Date date, Time startTime, Time endTime) {
+    public long createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
         Booking booking = new Booking.Builder()
                 .user(em.find(User.class, userId))
                 .bookingDate(date)
@@ -185,7 +187,7 @@ public class TestInserter {
         return availability.getAmenityAvailabilityId();
     }
 
-    public long createBooking(long userId, long amenityAvailabilityId, java.sql.Date reservationDate) {
+    public long createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
         Booking booking = new Booking.Builder()
                 .user(em.find(User.class, userId))
                 .bookingDate(reservationDate)
@@ -383,7 +385,7 @@ public class TestInserter {
     public long createEvent(long neighborhoodId, long startTime, long endTime) {
         String name = "Dummy Event Name";
         String description = "Me estoy volviendo loco";
-        Date date = java.sql.Date.valueOf("2001-3-14");
+        Date date = DATE_1;
         return createEvent(name, description, date, startTime, endTime, neighborhoodId);
     }
 
@@ -414,7 +416,7 @@ public class TestInserter {
         Language lang = Language.ENGLISH;
         boolean dm = false;
         UserRole role = UserRole.NEIGHBOR;
-        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, java.sql.Date.valueOf("2001-3-14"));
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, DATE_1);
     }
 
     public long createUser(String mail, long neighborhoodId) {
@@ -426,7 +428,7 @@ public class TestInserter {
         Language lang = Language.ENGLISH;
         boolean dm = false;
         UserRole role = UserRole.NEIGHBOR;
-        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, java.sql.Date.valueOf("2001-3-14"));
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, DATE_1);
     }
 
     public long createUser(String mail, UserRole role, long neighborhoodId) {
@@ -437,7 +439,7 @@ public class TestInserter {
         int id = 43243846;
         Language lang = Language.ENGLISH;
         boolean dm = false;
-        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, java.sql.Date.valueOf("2001-3-14"));
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, DATE_1);
     }
 
     public long createTag() {
@@ -452,14 +454,14 @@ public class TestInserter {
     }
 
     public long createReservation(long amenityId, long userId) {
-        java.sql.Date date = java.sql.Date.valueOf("2022-12-12");
+        Date date = DATE_1;
         Time startTime = Time.valueOf(LocalDateTime.now().toLocalTime());
         Time endTime = Time.valueOf(LocalDateTime.now().plusHours(1).toLocalTime());
         return createReservation(amenityId, userId, date, startTime, endTime);
     }
 
     public long createBooking(long userId, long amenityAvailabilityId) {
-        java.sql.Date date = java.sql.Date.valueOf("2022-12-12");
+        Date date = DATE_1;
         return createBooking(userId, amenityAvailabilityId, date);
     }
 
@@ -476,7 +478,7 @@ public class TestInserter {
     public long createReview(long workerId, long userId) {
         float rating = 2.34234F;
         String review = "Really Great Job";
-        return createReview(workerId, userId, rating, review, new java.sql.Date(System.currentTimeMillis()));
+        return createReview(workerId, userId, rating, review, DATE_1);
     }
 
     public long createWorker(long workerId) {

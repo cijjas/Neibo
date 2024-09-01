@@ -14,10 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -42,7 +39,7 @@ public class UserDaoImpl implements UserDao {
                 .language(language)
                 .role(role)
                 .identification(identification)
-                .creationDate(new java.sql.Date(System.currentTimeMillis()))
+                .creationDate(new Date(System.currentTimeMillis()))
                 .build();
         em.persist(user);
         return user;

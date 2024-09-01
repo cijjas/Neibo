@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class ProductDaoImpl implements ProductDao {
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
                 .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
-                .creationDate(new java.sql.Date(System.currentTimeMillis()))
+                .creationDate(new Date(System.currentTimeMillis()))
                 .remainingUnits(units)
                 .build();
         em.persist(product);

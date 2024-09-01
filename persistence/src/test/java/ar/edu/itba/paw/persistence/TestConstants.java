@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import java.sql.Date;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class TestConstants {
     public static final int BASE_PAGE = 1;
@@ -47,6 +49,24 @@ public class TestConstants {
     public static final int NINETEEN_ELEMENTS = 19;
 
     public static final Long EMPTY_FIELD = null;
+
+    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    public static Date DATE_1;
+    public static Date DATE_2;
+    public static Date DATE_3;
+    public static Date DATE_4;
+
+    static {
+        try {
+            DATE_1 = formatter.parse("2024-09-09");
+            DATE_2 = formatter.parse("2024-09-10");
+            DATE_3 = formatter.parse("2024-09-11");
+            DATE_4 = formatter.parse("2024-09-11");
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static final Date NO_DATE = null;
 
 }

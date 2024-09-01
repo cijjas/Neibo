@@ -145,6 +145,7 @@ public class UserController {
     @PreAuthorize("@accessControlHelper.canUpdateUser(#id, #neighborhoodId)")
     public Response updateUserPartially(
             @PathParam("id") final long id,
+            @PathParam("neighborhoodId") final long neighborhoodId,
             @Valid @NotNull final UserUpdateForm partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);

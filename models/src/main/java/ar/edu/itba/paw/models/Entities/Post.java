@@ -62,7 +62,7 @@ public class Post {
         this.tags = builder.tags;
         this.likedByUsers = builder.likedByUsers;
         this.comments = builder.comments;
-        this.date = new java.sql.Date(System.currentTimeMillis());
+        this.date = new Date(System.currentTimeMillis());
     }
 
     public void setPostId(Long postId) {

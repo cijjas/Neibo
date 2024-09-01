@@ -72,7 +72,7 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public List<Event> getEvents(String date, long neighborhoodId, int page, int size) {
+    public List<Event> getEvents(Date date, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Events from Date {}", date);
 
         // Build the JPQL query for fetching event IDs
@@ -90,8 +90,7 @@ public class EventDaoImpl implements EventDao {
 
         // Set the parameters
         if (date != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            query.setParameter("date", Date.from(LocalDate.parse(date, formatter).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            query.setParameter("date", date);
         }
 
         query.setParameter("neighborhoodId", neighborhoodId);
@@ -114,7 +113,7 @@ public class EventDaoImpl implements EventDao {
 
 
     @Override
-    public int countEvents(String date, long neighborhoodId) {
+    public int countEvents(Date date, long neighborhoodId) {
         LOGGER.debug("Counting Events with neighborhoodId {}", neighborhoodId);
 
         StringBuilder jpqlBuilder = new StringBuilder("SELECT DISTINCT COUNT(e.eventId) FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
@@ -126,8 +125,7 @@ public class EventDaoImpl implements EventDao {
         TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
 
         if (date != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            query.setParameter("date", Date.from(LocalDate.parse(date, formatter).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            query.setParameter("date", date);
         }
 
         query.setParameter("neighborhoodId", neighborhoodId);

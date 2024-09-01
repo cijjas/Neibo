@@ -19,9 +19,9 @@ public interface EventDao {
 
     Optional<Event> findEvent(long eventId, long neighborhoodId);
 
-    List<Event> getEvents(String date, long neighborhoodId, int page, int size);
+    List<Event> getEvents(Date date, long neighborhoodId, int page, int size);
 
-    int countEvents(String date, long neighborhoodId);
+    int countEvents(Date date, long neighborhoodId);
 
     // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
 

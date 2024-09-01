@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,7 +144,7 @@ public class RequestServiceImpl implements RequestService {
 
         Request request = requestDao.findRequest(requestId).orElseThrow(() -> new NotFoundException("Request Not Found"));
         request.setStatus(RequestStatus.fromId(requestStatusId));
-        request.setPurchaseDate(new java.sql.Date(System.currentTimeMillis()));
+        request.setPurchaseDate(new Date(System.currentTimeMillis()));
 
         return request;
     }

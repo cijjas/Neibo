@@ -170,7 +170,6 @@ public class EmailServiceImpl implements EmailService {
             // Iterate through each day of the week
             for (int i = 0; i < 7; i++) {
                 Date date = new Date(currentDate.getTime() + i * oneDayInMillis);
-                String formattedDate = dateFormat.format(date);
 
                 int page = 1;
                 int size = 10;
@@ -178,8 +177,8 @@ public class EmailServiceImpl implements EmailService {
 
                 do {
                     // Fetch events for the specified day with pagination
-                    dayEvents = eventDao.getEvents(formattedDate, neighborhoodId, page, size);
-                    allEvents.addAll(eventDao.getEvents(formattedDate, neighborhoodId, page, size));
+                    dayEvents = eventDao.getEvents(date, neighborhoodId, page, size);
+                    allEvents.addAll(eventDao.getEvents(date, neighborhoodId, page, size));
                     page++;
                 } while (dayEvents.size() == size); // Continue fetching next page if the current page is full
             }
@@ -250,7 +249,6 @@ public class EmailServiceImpl implements EmailService {
             Date today = new Date(System.currentTimeMillis());
             long oneDayInMillis = 24L * 60L * 60L * 1000L; // One day in milliseconds
             Date nextDay = new Date(today.getTime() + oneDayInMillis);
-            String formattedDate = dateFormat.format(nextDay);
 
             List<Event> allEvents = new ArrayList<>();
 
@@ -260,7 +258,7 @@ public class EmailServiceImpl implements EmailService {
 
             do {
                 // Fetch events for the next day with pagination
-                events = eventDao.getEvents(formattedDate, neighborhoodId, page, size);
+                events = eventDao.getEvents(nextDay, neighborhoodId, page, size);
                 allEvents.addAll(events);
                 page++;
             } while (events.size() == size); // Continue fetching next page if the current page is full

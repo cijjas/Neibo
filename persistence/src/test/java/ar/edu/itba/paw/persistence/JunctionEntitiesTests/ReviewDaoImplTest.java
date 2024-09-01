@@ -32,8 +32,6 @@ import static org.junit.Assert.*;
 @Rollback
 public class ReviewDaoImplTest {
 
-    public static final String REVIEW_DATE_1 = "2023-12-12";
-    public static final String REVIEW_DATE_2 = "2024-12-12";
     private final double DELTA = 0.001;
     private final float REVIEW_RATING_1 = 4.0f;
     private final float REVIEW_RATING_2 = 4.5f;
@@ -201,8 +199,8 @@ public class ReviewDaoImplTest {
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
-        long rKey1 = testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1, java.sql.Date.valueOf(REVIEW_DATE_1));
-        long rKey2 = testInserter.createReview(uKey, uKey2, REVIEW_RATING_2, REVIEW_MESSAGE_2, java.sql.Date.valueOf(REVIEW_DATE_2));
+        long rKey1 = testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1, DATE_1);
+        long rKey2 = testInserter.createReview(uKey, uKey2, REVIEW_RATING_2, REVIEW_MESSAGE_2, DATE_2);
 
         // Exercise
         Optional<Review> optionalReview = ReviewDaoImpl.findLatestReview(uKey, uKey2);
@@ -279,8 +277,8 @@ public class ReviewDaoImplTest {
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
-        testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1, new java.sql.Date(System.currentTimeMillis()));
-        testInserter.createReview(uKey, uKey2, REVIEW_RATING_2, REVIEW_MESSAGE_2, new java.sql.Date(System.currentTimeMillis()));
+        testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1, DATE_1);
+        testInserter.createReview(uKey, uKey2, REVIEW_RATING_2, REVIEW_MESSAGE_2, DATE_2);
 
         // Exercise
         Float avgRating = ReviewDaoImpl.findAverageRating(uKey);

@@ -4,7 +4,7 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.DateAfterConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.sql.Date;
+import java.util.Date;
 
 public class DateAfterValidator implements
         ConstraintValidator<DateAfterConstraint, Date> {

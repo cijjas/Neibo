@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class InquiryDaoImpl implements InquiryDao {
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
-                .inquiryDate(new java.sql.Date(System.currentTimeMillis()))
+                .inquiryDate(new Date(System.currentTimeMillis()))
                 .build();
         em.persist(inquiry);
 

@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -28,7 +29,7 @@ public class LikeDaoImpl implements LikeDao {
     public Like createLike(long postId, long userId) {
         LOGGER.debug("Inserting Like");
 
-        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
+        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new Date(System.currentTimeMillis()));
         em.persist(like);
         return like;
     }

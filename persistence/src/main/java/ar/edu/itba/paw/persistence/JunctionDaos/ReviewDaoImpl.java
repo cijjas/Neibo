@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class ReviewDaoImpl implements ReviewDao {
                 .worker(em.find(Worker.class, workerId))
                 .rating(rating)
                 .review(reviewString)
-                .date(new java.sql.Date(System.currentTimeMillis()))
+                .date(new Date(System.currentTimeMillis()))
                 .build();
         em.persist(review);
         return review;

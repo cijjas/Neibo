@@ -91,11 +91,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Event> getEvents(String date, long neighborhoodId, int page, int size) {
+    public List<Event> getEvents(Date date, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalDateString(date);
         ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
@@ -104,11 +103,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public int calculateEventPages(String date, long neighborhoodId, int size) {
+    public int calculateEventPages(Date date, long neighborhoodId, int size) {
         LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalDateString(date);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(eventDao.countEvents(date, neighborhoodId), size);

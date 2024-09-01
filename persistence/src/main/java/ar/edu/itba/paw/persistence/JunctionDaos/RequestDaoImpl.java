@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 
 @Repository
@@ -34,7 +35,7 @@ public class RequestDaoImpl implements RequestDao {
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
-                .requestDate(new java.sql.Date(System.currentTimeMillis()))
+                .requestDate(new Date(System.currentTimeMillis()))
                 .status(RequestStatus.REQUESTED)
                 .units(quantity)
                 .build();

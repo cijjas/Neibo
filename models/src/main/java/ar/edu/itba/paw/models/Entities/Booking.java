@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models.Entities;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +24,7 @@ public class Booking {
     private Availability amenityAvailability;
 
     @Column(name = "date")
+    @Temporal(TemporalType.DATE)
     private Date bookingDate;
 
     Booking() {

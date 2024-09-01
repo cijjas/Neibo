@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Event;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,11 +14,11 @@ public interface EventService {
 
     Optional<Event> findEvent(long eventId, long neighborhoodId);
 
-    List<Event> getEvents(String date, long neighborhoodId, int page, int size);
+    List<Event> getEvents(Date date, long neighborhoodId, int page, int size);
 
     // ---------------------------------------------------
 
-    int calculateEventPages(String date, long neighborhoodId, int size);
+    int calculateEventPages(Date date, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

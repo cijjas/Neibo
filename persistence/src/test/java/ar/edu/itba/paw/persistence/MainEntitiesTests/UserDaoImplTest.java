@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +34,6 @@ import static org.junit.Assert.*;
 @Rollback
 public class UserDaoImplTest {
 
-    private static final java.sql.Date USER_CREATION_DATE = Date.valueOf("2001-3-14");
     private final String USER_PASSWORD = "password";
     private final String USER_NAME = "John";
     private final String USER_SURNAME = "Doe";
@@ -93,7 +92,7 @@ public class UserDaoImplTest {
     public void find_userId_valid() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
         Optional<User> optionalUser = userDaoImpl.findUser(uKey1);
@@ -108,7 +107,7 @@ public class UserDaoImplTest {
     public void find_userId_invalid_userId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
         Optional<User> optionalUser = userDaoImpl.findUser(INVALID_ID);
@@ -121,7 +120,7 @@ public class UserDaoImplTest {
     public void find_userId_neighborhoodId_valid() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
         Optional<User> optionalUser = userDaoImpl.findUser(uKey1, nhKey1);
@@ -135,7 +134,7 @@ public class UserDaoImplTest {
     public void find_userId_neighborhoodId_invalid_userId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
         Optional<User> optionalUser = userDaoImpl.findUser(INVALID_ID, nhKey1);
@@ -148,7 +147,7 @@ public class UserDaoImplTest {
     public void find_userId_neighborhoodId_invalid_neighborhoodId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
         Optional<User> optionalUser = userDaoImpl.findUser(uKey1, INVALID_ID);
@@ -161,7 +160,7 @@ public class UserDaoImplTest {
     public void find_userId_neighborhoodId_invalid_userId_neighborhoodId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
         Optional<User> optionalUser = userDaoImpl.findUser(INVALID_ID, INVALID_ID);
@@ -298,9 +297,9 @@ public class UserDaoImplTest {
     public void get_pagination() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_2, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey4 = testInserter.createUser(USER_MAIL_2, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey4 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
         List<User> userList = userDaoImpl.getUsers(EMPTY_FIELD, nhKey1, TEST_PAGE, TEST_PAGE_SIZE);
@@ -408,12 +407,12 @@ public class UserDaoImplTest {
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_2, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey3 = testInserter.createUser(USER_MAIL_4, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_5, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_6, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.ADMINISTRATOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_7, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey2, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey4 = testInserter.createUser(USER_MAIL_2, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey4 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey3 = testInserter.createUser(USER_MAIL_4, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey4 = testInserter.createUser(USER_MAIL_5, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey4 = testInserter.createUser(USER_MAIL_6, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.ADMINISTRATOR, USER_IDENTIFICATION_NUMBER, DATE_1);
+        uKey4 = testInserter.createUser(USER_MAIL_7, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey2, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
     }
 }

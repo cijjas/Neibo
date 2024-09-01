@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.EventDaoImpl;
+import ar.edu.itba.paw.persistence.TestConstants;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +33,8 @@ import static org.junit.Assert.*;
 @Rollback
 public class EventDaoImplTest {
 
-    public static final String NO_DATE = null;
     private static final String EVENT_NAME = "Sample Event";
     private static final String EVENT_DESCRIPTION = "Sample Description";
-    private static final Date EVENT_DATE = Date.valueOf("2024-03-12");
-    public static final String EVENT_DATE_STRING = "2024-03-12";
     private static final Time EVENT_START_TIME = Time.valueOf("22:00:00");
     private static final Time EVENT_END_TIME = Time.valueOf("23:00:00");
     @Autowired
@@ -65,7 +62,7 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Event event = eventDaoImpl.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
+        Event event = eventDaoImpl.createEvent(EVENT_NAME, EVENT_DESCRIPTION, TestConstants.DATE_1, tKey1, tKey2, nhKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -76,7 +73,7 @@ public class EventDaoImplTest {
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
         assertEquals(EVENT_NAME, event.getName());
         assertEquals(EVENT_DESCRIPTION, event.getDescription());
-        assertEquals(EVENT_DATE, event.getDate());
+        assertEquals(TestConstants.DATE_1, event.getDate());
     }
 
     // -------------------------------------------------- FINDS --------------------------------------------------------
@@ -181,12 +178,12 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
         long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
-        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
-        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
 
         // Exercise
-        List<Event> eventList = eventDaoImpl.getEvents(EVENT_DATE_STRING, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Event> eventList = eventDaoImpl.getEvents(DATE_1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, eventList.size());
@@ -214,12 +211,12 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
         long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
-        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
-        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
 
         // Exercise
-        List<Event> eventList = eventDaoImpl.getEvents(EVENT_DATE_STRING, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Event> eventList = eventDaoImpl.getEvents(DATE_1, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, eventList.size());
@@ -233,12 +230,12 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
         long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
-        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
-        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
 
         // Exercise
-        int countEvent = eventDaoImpl.countEvents(EVENT_DATE_STRING, nhKey);
+        int countEvent = eventDaoImpl.countEvents(DATE_1, nhKey);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countEvent);

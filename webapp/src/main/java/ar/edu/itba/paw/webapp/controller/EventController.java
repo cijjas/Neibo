@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,7 @@ public class EventController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listEventsByDate(
-            @QueryParam("forDate") final String date,
+            @QueryParam("forDate") final Date date,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
