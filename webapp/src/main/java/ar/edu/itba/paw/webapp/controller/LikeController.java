@@ -83,13 +83,12 @@ public class LikeController {
 
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "likes",
+                uriInfo.getBaseUri().toString() + "/likes",
                 ls.calculateLikePages(post, user, size),
                 page,
                 size);
 
-        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {
-                })
+        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(likesHashCode)

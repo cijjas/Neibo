@@ -81,14 +81,13 @@ public class InquiryController {
 
         // Pagination Link
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "inquiries",
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "/inquiries",
                 is.calculateInquiryPages(productId, size),
                 page,
                 size
         );
 
-        return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto) {
-                })
+        return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(inquiriesHashCode)

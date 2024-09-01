@@ -70,8 +70,7 @@ public class ProfessionController {
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto) {
-                })
+        return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto) {})
                 .cacheControl(cacheControl)
                 .tag(professionsHashCode)
                 .build();

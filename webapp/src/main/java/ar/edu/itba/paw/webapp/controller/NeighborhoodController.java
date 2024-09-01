@@ -75,14 +75,13 @@ public class NeighborhoodController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString(),
+                uriInfo.getBaseUri().toString() + "/neighborhoods",
                 ns.calculateNeighborhoodPages(worker, size),
                 page,
                 size
         );
 
-        return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto) {
-                })
+        return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto) {})
                 .cacheControl(cacheControl)
                 .tag(neighborhoodsHashCode)
                 .links(links)

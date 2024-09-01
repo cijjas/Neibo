@@ -50,8 +50,7 @@ public class WorkerRoleController {
                 .map(tt -> WorkerRoleDto.fromWorkerRole(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<WorkerRoleDto>>(workerRoleDto) {
-                })
+        return Response.ok(new GenericEntity<List<WorkerRoleDto>>(workerRoleDto) {})
                 .cacheControl(cacheControl)
                 .tag(workerRolesHashCode)
                 .build();
@@ -75,9 +74,6 @@ public class WorkerRoleController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerRoleHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-
-        // Content
-        WorkerRoleDto workerRoleDto = WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo);
 
         return Response.ok(WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo))
                 .cacheControl(cacheControl)

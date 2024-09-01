@@ -77,14 +77,13 @@ public class CommentController {
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts" + postId + "/comment",
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts" + postId + "/comments",
                 cs.calculateCommentPages(postId, size),
                 page,
                 size
         );
 
-        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto) {
-                })
+        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto) {})
                 .cacheControl(cacheControl)
                 .tag(commentsHashCode)
                 .links(links)

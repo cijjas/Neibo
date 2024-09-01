@@ -81,14 +81,13 @@ public class BookingController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities",
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/bookings",
                 bs.calculateBookingPages(user, amenity, neighborhoodId, size),
                 page,
                 size
         );
 
-        return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto) {
-                })
+        return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(bookingsHashCode)

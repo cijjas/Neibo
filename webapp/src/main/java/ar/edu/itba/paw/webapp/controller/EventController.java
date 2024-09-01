@@ -86,8 +86,7 @@ public class EventController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<EventDto>>(eventsDto) {
-                })
+        return Response.ok(new GenericEntity<List<EventDto>>(eventsDto) {})
                 .cacheControl(cacheControl)
                 .tag(eventsHashCode)
                 .links(links)

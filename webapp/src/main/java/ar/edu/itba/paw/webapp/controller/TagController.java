@@ -80,8 +80,7 @@ public class TagController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<TagDto>>(tagsDto) {
-                })
+        return Response.ok(new GenericEntity<List<TagDto>>(tagsDto) {})
                 .cacheControl(cacheControl)
                 .tag(tagsHashCode)
                 .links(links)

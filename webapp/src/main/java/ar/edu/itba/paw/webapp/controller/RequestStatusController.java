@@ -56,8 +56,7 @@ public class RequestStatusController {
                 .map(rs -> RequestStatusDto.fromRequestStatus(rs, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<RequestStatusDto>>(requestStatusDtos) {
-                })
+        return Response.ok(new GenericEntity<List<RequestStatusDto>>(requestStatusDtos) {})
                 .cacheControl(cacheControl)
                 .tag(requestStatusesHashcode)
                 .build();

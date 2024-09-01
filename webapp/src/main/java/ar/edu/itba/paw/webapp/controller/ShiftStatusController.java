@@ -60,8 +60,7 @@ public class ShiftStatusController {
                 .map(tt -> ShiftStatusDto.fromShiftStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ShiftStatusDto>>(shiftStatusDto) {
-                })
+        return Response.ok(new GenericEntity<List<ShiftStatusDto>>(shiftStatusDto) {})
                 .cacheControl(cacheControl)
                 .tag(shiftStatusesHashCode)
                 .build();

@@ -103,8 +103,7 @@ public class AffiliationController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {
-                })
+        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {})
                 .cacheControl(cacheControl)
                 .tag(affiliationsHashCode)
                 .links(links)

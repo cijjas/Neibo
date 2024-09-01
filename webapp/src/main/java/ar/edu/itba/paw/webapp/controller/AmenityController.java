@@ -81,8 +81,7 @@ public class AmenityController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {
-                })
+        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(amenitiesHashCode)

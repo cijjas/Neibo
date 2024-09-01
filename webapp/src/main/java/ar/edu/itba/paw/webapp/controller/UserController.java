@@ -86,8 +86,7 @@ public class UserController {
 
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
-                })
+        return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {})
                 .cacheControl(cacheControl)
                 .tag(usersHashCode)
                 .links(links)

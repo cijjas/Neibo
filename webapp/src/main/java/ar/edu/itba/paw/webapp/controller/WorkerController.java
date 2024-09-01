@@ -83,14 +83,13 @@ public class WorkerController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "workers",
+                uriInfo.getBaseUri().toString() + "/workers",
                 ws.calculateWorkerPages(professions, neighborhoods, size, workerRole, workerStatus),
                 page,
                 size
         );
 
-        return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto) {
-                })
+        return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(workersHashCode)

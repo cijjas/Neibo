@@ -87,8 +87,7 @@ public class RequestController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {
-                })
+        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {})
                 .links(links)
                 .tag(requestsHashCode)
                 .cacheControl(cacheControl)

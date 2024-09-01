@@ -88,8 +88,7 @@ public class PostController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<PostDto>>(postsDto) {
-                })
+        return Response.ok(new GenericEntity<List<PostDto>>(postsDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(postsHashCode)

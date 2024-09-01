@@ -84,8 +84,7 @@ public class AttendanceController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto) {
-                })
+        return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto) {})
                 .cacheControl(cacheControl)
                 .tag(attendanceHashCode)
                 .links(links)

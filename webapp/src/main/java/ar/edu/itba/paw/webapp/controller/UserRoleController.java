@@ -49,8 +49,7 @@ public class UserRoleController {
                 .map(tt -> UserRoleDto.fromUserRole(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<UserRoleDto>>(userRoleDto) {
-                })
+        return Response.ok(new GenericEntity<List<UserRoleDto>>(userRoleDto) {})
                 .cacheControl(cacheControl)
                 .tag(userRoleHashCode)
                 .build();

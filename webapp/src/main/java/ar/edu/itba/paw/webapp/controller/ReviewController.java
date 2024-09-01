@@ -80,8 +80,7 @@ public class ReviewController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto) {
-                })
+        return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(reviewsHashCode)

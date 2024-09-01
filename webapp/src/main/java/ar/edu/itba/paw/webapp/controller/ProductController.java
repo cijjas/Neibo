@@ -80,14 +80,13 @@ public class ProductController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products",
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products",
                 ps.calculateProductPages(neighborhoodId, size, department, user, productStatus),
                 page,
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ProductDto>>(productsDto) {
-                })
+        return Response.ok(new GenericEntity<List<ProductDto>>(productsDto) {})
                 .cacheControl(cacheControl)
                 .tag(productsHashCode)
                 .links(links)

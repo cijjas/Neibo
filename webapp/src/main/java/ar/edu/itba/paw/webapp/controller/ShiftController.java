@@ -65,8 +65,7 @@ public class ShiftController {
                 .map(s -> ShiftDto.fromShift(s, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {
-                })
+        return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
                 .cacheControl(cacheControl)
                 .tag(shiftsHashCode)
                 .build();
