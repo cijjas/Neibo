@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 /*
  * # Summary
@@ -34,7 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/requests")
 @Component
-public class RequestController extends GlobalControllerAdvice {
+public class RequestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
 
     @Autowired
@@ -49,10 +48,8 @@ public class RequestController extends GlobalControllerAdvice {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canAccessRequests(#userURN, #productId)")
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -64,19 +61,22 @@ public class RequestController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
+        // Content
+        final List<Request> requests = rs.getRequests(user, product, type, status, page, size, neighborhoodId);
+        String requestsHashCode = String.valueOf(requests.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(requestsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Request> requests = rs.getRequests(user, product, type, status, page, size, neighborhoodId);
         if (requests.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(requestsHashCode)
                     .build();
-        List<RequestDto> requestDto = requests.stream()
+
+        final List<RequestDto> requestDto = requests.stream()
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
@@ -87,16 +87,17 @@ public class RequestController extends GlobalControllerAdvice {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto){})
+        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {
+                })
                 .links(links)
+                .tag(requestsHashCode)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
             @PathParam("id") final long requestId
@@ -120,7 +121,7 @@ public class RequestController extends GlobalControllerAdvice {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createRequest(
             @Valid @NotNull final RequestForm form
     ) {
@@ -140,8 +141,8 @@ public class RequestController extends GlobalControllerAdvice {
 
     @PATCH
     @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Consumes(value = {MediaType.APPLICATION_JSON,})
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateRequest(#requestId)")
     public Response updateRequest(
             @PathParam("id") final long requestId,
@@ -168,10 +169,9 @@ public class RequestController extends GlobalControllerAdvice {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
         // Deletion Attempt
-        if (rs.deleteRequest(requestId)) {
+        if (rs.deleteRequest(requestId))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

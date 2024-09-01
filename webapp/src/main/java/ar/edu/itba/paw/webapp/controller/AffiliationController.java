@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
-import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
 import ar.edu.itba.paw.webapp.form.AffiliationForm;
@@ -9,7 +8,6 @@ import ar.edu.itba.paw.webapp.form.CreateAffiliationForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -19,36 +17,34 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 /*
-* # Summary
-*   - An Affiliation is the Junction Table between Workers and Neighborhoods
-*   - The relationship has the attribute that defines the state of that relationship (WORKER ROLE : VERIFIED_WORKER, UNVERIFIED_WORKER, REJECTED)
-*
-* # Use cases
-*   - The Admin lists the Workers that have a relationship with his Neighborhood
-*   - The Admin rejects or verifies a Worker
-*   - The Worker creates an affiliation with UNVERIFIED status when it requests for a certain Neighborhood
-*   - The Worker lists the neighborhoods he has an affiliation with
-*
-* # Embeddable? Don't think so
-*   - No Embed :
-*       The Admin panel should list the paginated affiliations for his Worker, and resolve the reference to each Worker
-*   - Embed :
-*       An Affiliation is both used from the Neighborhood and the Worker POV, does not appear to be embeddable as an attribute in neither of them
-*       Also the affiliation itself has another attribute which makes the handling much harder
-*       Worker {
-*           name : Jorge,
-*           professions : [prof1, prof2, prof3],
-*           affiliations : [{neighborhood: nh1, status: verified}, {neighborhood: nh2, status: verified}, {neighborhood: nh3, status: verified}]
-*       }
-*       Use cases cant be satisfied!
-*/
+ * # Summary
+ *   - An Affiliation is the Junction Table between Workers and Neighborhoods
+ *   - The relationship has the attribute that defines the state of that relationship (WORKER ROLE : VERIFIED_WORKER, UNVERIFIED_WORKER, REJECTED)
+ *
+ * # Use cases
+ *   - The Admin lists the Workers that have a relationship with his Neighborhood
+ *   - The Admin rejects or verifies a Worker
+ *   - The Worker creates an affiliation with UNVERIFIED status when it requests for a certain Neighborhood
+ *   - The Worker lists the neighborhoods he has an affiliation with
+ *
+ * # Embeddable? Don't think so
+ *   - No Embed :
+ *       The Admin panel should list the paginated affiliations for his Worker, and resolve the reference to each Worker
+ *   - Embed :
+ *       An Affiliation is both used from the Neighborhood and the Worker POV, does not appear to be embeddable as an attribute in neither of them
+ *       Also the affiliation itself has another attribute which makes the handling much harder
+ *       Worker {
+ *           name : Jorge,
+ *           professions : [prof1, prof2, prof3],
+ *           affiliations : [{neighborhood: nh1, status: verified}, {neighborhood: nh2, status: verified}, {neighborhood: nh3, status: verified}]
+ *       }
+ *       Use cases cant be satisfied!
+ */
 
 @Path("/affiliations")
 @Component
@@ -70,18 +66,18 @@ public class AffiliationController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inNeighborhood") String neighborhood,
-            @QueryParam("forWorker")String worker
+            @QueryParam("forWorker") String worker
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
         // Content
         List<Affiliation> affiliations = nws.getAffiliations(worker, neighborhood, page, size);
-        String affiliationsHashCode = String.valueOf(affiliations.hashCode());
+        String affiliationsHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
         if (affiliations.size() == 1) {
             Affiliation singleAffiliation = affiliations.get(0);
-            affiliationsHashCode= String.valueOf(singleAffiliation.hashCode());
+            affiliationsHashCode = String.valueOf(singleAffiliation.hashCode());
         } else {
             affiliationsHashCode = String.valueOf(affiliations.hashCode());
         }
@@ -107,7 +103,8 @@ public class AffiliationController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {})
+        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(affiliationsHashCode)
                 .links(links)
@@ -172,10 +169,9 @@ public class AffiliationController {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 
         // Deletion Attempt
-        if (nws.deleteAffiliation(worker, neighborhood)) {
+        if (nws.deleteAffiliation(worker, neighborhood))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

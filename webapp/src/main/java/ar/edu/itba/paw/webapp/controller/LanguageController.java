@@ -6,14 +6,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 
 /*
@@ -60,7 +62,8 @@ public class LanguageController {
                 .map(l -> LanguageDto.fromLanguage(l, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<LanguageDto>>(languagesDto){})
+        return Response.ok(new GenericEntity<List<LanguageDto>>(languagesDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(languagesHashCode)
                 .build();
@@ -84,7 +87,7 @@ public class LanguageController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(languageHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        
+
         // Content
 
         return Response.ok(LanguageDto.fromLanguage(language, uriInfo))

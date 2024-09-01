@@ -15,13 +15,10 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
 /*
  * # Summary
@@ -39,7 +36,7 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETa
 
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
-public class BookingController extends GlobalControllerAdvice{
+public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
     @Autowired
@@ -55,7 +52,7 @@ public class BookingController extends GlobalControllerAdvice{
     private long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listBookings(
             @QueryParam("bookedBy") final String user,
             @QueryParam("forAmenity") final String amenity,
@@ -90,7 +87,8 @@ public class BookingController extends GlobalControllerAdvice{
                 size
         );
 
-        return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto){})
+        return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(bookingsHashCode)
@@ -99,7 +97,7 @@ public class BookingController extends GlobalControllerAdvice{
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findBooking(
             @PathParam("id") final long bookingId
     ) {
@@ -124,7 +122,7 @@ public class BookingController extends GlobalControllerAdvice{
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createBooking(
             @Valid @NotNull BookingForm form
     ) {
@@ -144,7 +142,7 @@ public class BookingController extends GlobalControllerAdvice{
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteById(
             @PathParam("id") final long bookingId,
@@ -153,10 +151,10 @@ public class BookingController extends GlobalControllerAdvice{
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
         // Deletion Attempt
-        if(bs.deleteBooking(bookingId)) {
+        if (bs.deleteBooking(bookingId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

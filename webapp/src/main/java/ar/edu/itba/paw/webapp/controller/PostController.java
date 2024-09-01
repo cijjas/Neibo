@@ -34,7 +34,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/posts")
 @Component
-public class PostController extends GlobalControllerAdvice{
+public class PostController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
 
     @Autowired
@@ -50,7 +50,7 @@ public class PostController extends GlobalControllerAdvice{
     private Long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listPosts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -88,7 +88,8 @@ public class PostController extends GlobalControllerAdvice{
                 size
         );
 
-        return Response.ok(new GenericEntity<List<PostDto>>(postsDto){})
+        return Response.ok(new GenericEntity<List<PostDto>>(postsDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(postsHashCode)
@@ -97,7 +98,7 @@ public class PostController extends GlobalControllerAdvice{
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findPostById(
             @PathParam("id") final long postId
     ) {
@@ -123,7 +124,7 @@ public class PostController extends GlobalControllerAdvice{
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPost(
             @Valid @NotNull PublishForm publishForm
-    )  {
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
@@ -145,7 +146,7 @@ public class PostController extends GlobalControllerAdvice{
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeletePost(#postId)")
     public Response deleteById(
             @PathParam("id") final long postId
@@ -153,10 +154,10 @@ public class PostController extends GlobalControllerAdvice{
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
         // Attempt to delete the amenity
-        if(ps.deletePost(postId, neighborhoodId)) {
+        if (ps.deletePost(postId, neighborhoodId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

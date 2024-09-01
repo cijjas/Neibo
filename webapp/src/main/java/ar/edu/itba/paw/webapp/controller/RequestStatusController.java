@@ -15,7 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+
 
 /*
  * # Summary
@@ -55,7 +56,8 @@ public class RequestStatusController {
                 .map(rs -> RequestStatusDto.fromRequestStatus(rs, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<RequestStatusDto>>(requestStatusDtos){})
+        return Response.ok(new GenericEntity<List<RequestStatusDto>>(requestStatusDtos) {
+                })
                 .cacheControl(cacheControl)
                 .tag(requestStatusesHashcode)
                 .build();
@@ -63,7 +65,7 @@ public class RequestStatusController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findRequestStatus(
             @PathParam("id") final int id
     ) {

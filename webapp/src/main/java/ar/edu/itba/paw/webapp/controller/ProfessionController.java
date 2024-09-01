@@ -2,13 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ProfessionService;
 import ar.edu.itba.paw.models.Entities.Profession;
-import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.ProfessionDto;
 import ar.edu.itba.paw.webapp.form.NewProfessionForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -19,7 +19,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 /*
  * # Summary
@@ -71,7 +70,8 @@ public class ProfessionController {
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto){})
+        return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(professionsHashCode)
                 .build();
@@ -79,7 +79,7 @@ public class ProfessionController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findProfession(
             @PathParam("id") final long id
     ) {
@@ -103,7 +103,7 @@ public class ProfessionController {
 
     @POST
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createProfession(
             @Valid @NotNull NewProfessionForm form
     ) {
@@ -128,17 +128,16 @@ public class ProfessionController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteProfessionById(
             @PathParam("id") final long id
     ) {
         LOGGER.info("DELETE request arrived at '/professions/{}'", id);
 
         // Deletion Attempt
-        if(ps.deleteProfession(id)) {
+        if (ps.deleteProfession(id))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

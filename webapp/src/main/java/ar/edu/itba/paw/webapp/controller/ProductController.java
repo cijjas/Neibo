@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 /*
  * # Summary
@@ -34,7 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/products")
 @Component
-public class ProductController extends GlobalControllerAdvice {
+public class ProductController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
@@ -51,7 +50,7 @@ public class ProductController extends GlobalControllerAdvice {
     private Long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -87,7 +86,8 @@ public class ProductController extends GlobalControllerAdvice {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ProductDto>>(productsDto){})
+        return Response.ok(new GenericEntity<List<ProductDto>>(productsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(productsHashCode)
                 .links(links)
@@ -96,10 +96,9 @@ public class ProductController extends GlobalControllerAdvice {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findProduct(
-            @PathParam("id") final long productId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long productId
     ) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
@@ -120,7 +119,7 @@ public class ProductController extends GlobalControllerAdvice {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createProduct(
             @Valid @NotNull final ListingForm form
     ) {
@@ -140,8 +139,8 @@ public class ProductController extends GlobalControllerAdvice {
 
     @PATCH
     @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Consumes(value = {MediaType.APPLICATION_JSON,})
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateProduct(#id)")
     public Response updateProductPartially(
             @PathParam("id") final long id,
@@ -160,7 +159,7 @@ public class ProductController extends GlobalControllerAdvice {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
     public Response deleteById(
             @PathParam("id") final long productId
@@ -168,10 +167,9 @@ public class ProductController extends GlobalControllerAdvice {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Attempt to delete the amenity
-        if(ps.deleteProduct(productId)) {
+        if (ps.deleteProduct(productId))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

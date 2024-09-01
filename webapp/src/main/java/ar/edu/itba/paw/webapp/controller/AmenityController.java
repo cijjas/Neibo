@@ -20,18 +20,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 /*
-* # Summary
-*   - A Neighborhood has many Amenities
-*   - An Amenity has many Availabilities
-*
-* # Use cases
-*   - A User/Admin can list the Amenities for their Neighborhood with the corresponding Shifts
-*   - An Admin can create, delete and update an Amenity for their Neighborhood
-*/
+ * # Summary
+ *   - A Neighborhood has many Amenities
+ *   - An Amenity has many Availabilities
+ *
+ * # Use cases
+ *   - A User/Admin can list the Amenities for their Neighborhood with the corresponding Shifts
+ *   - An Admin can create, delete and update an Amenity for their Neighborhood
+ */
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
 @Component
@@ -83,7 +81,8 @@ public class AmenityController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {})
+        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(amenitiesHashCode)
@@ -99,7 +98,7 @@ public class AmenityController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Content
-        Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(()-> new ar.edu.itba.paw.exceptions.NotFoundException("Amenity Not Found"));
+        Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(() -> new ar.edu.itba.paw.exceptions.NotFoundException("Amenity Not Found"));
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Cache Control
@@ -166,10 +165,9 @@ public class AmenityController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Attempt to delete the amenity
-        if (as.deleteAmenity(id)) {
+        if (as.deleteAmenity(id))
             return Response.noContent()
                     .build();
-        }
 
         // If deletion fails, return not found status
         return Response.status(Response.Status.NOT_FOUND)

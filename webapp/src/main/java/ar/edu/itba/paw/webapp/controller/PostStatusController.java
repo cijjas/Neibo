@@ -7,14 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+
 
 /*
  * # Summary
@@ -56,7 +59,8 @@ public class PostStatusController {
                 .map(tt -> PostStatusDto.fromPostStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto){})
+        return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(postStatusesHashCode)
                 .build();
@@ -64,7 +68,7 @@ public class PostStatusController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findPostStatus(
             @PathParam("id") final int id
     ) {

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
@@ -9,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -21,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 /*
  * # Summary
@@ -34,7 +31,7 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("workers/{workerId}/reviews")
 @Component
-public class ReviewController extends GlobalControllerAdvice {
+public class ReviewController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
     @Autowired
@@ -50,7 +47,7 @@ public class ReviewController extends GlobalControllerAdvice {
     private Long workerId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listReviews(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
@@ -83,7 +80,8 @@ public class ReviewController extends GlobalControllerAdvice {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto){})
+        return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(reviewsHashCode)
@@ -92,7 +90,7 @@ public class ReviewController extends GlobalControllerAdvice {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findReview(
             @PathParam("id") final long id
     ) {
@@ -116,7 +114,7 @@ public class ReviewController extends GlobalControllerAdvice {
 
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createReview(
             @Valid @NotNull final ReviewForm form
     ) {
@@ -136,7 +134,7 @@ public class ReviewController extends GlobalControllerAdvice {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     public Response deleteById(
             @PathParam("id") final long reviewId
@@ -144,10 +142,10 @@ public class ReviewController extends GlobalControllerAdvice {
         LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 
         // Deletion Attempt
-        if(rs.deleteReview(reviewId)) {
+        if (rs.deleteReview(reviewId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

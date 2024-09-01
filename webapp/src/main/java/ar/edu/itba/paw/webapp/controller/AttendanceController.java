@@ -32,7 +32,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
 @Component
-public class AttendanceController extends GlobalControllerAdvice {
+public class AttendanceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceController.class);
 
     @Autowired
@@ -51,7 +51,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     private Long eventId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAttendance(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
@@ -84,7 +84,8 @@ public class AttendanceController extends GlobalControllerAdvice {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto){})
+        return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(attendanceHashCode)
                 .links(links)
@@ -93,7 +94,7 @@ public class AttendanceController extends GlobalControllerAdvice {
 
     @GET
     @Path("/{userId}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAttendance(
             @PathParam("userId") final long userId
     ) {
@@ -116,7 +117,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createAttendance(
             @Valid @NotNull final AttendanceForm form
     ) {
@@ -140,7 +141,7 @@ public class AttendanceController extends GlobalControllerAdvice {
 
     @DELETE
     @Path("/{userId}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteAttendance(#userId)")
     public Response deleteById(
             @PathParam("userId") final long userId
@@ -148,10 +149,9 @@ public class AttendanceController extends GlobalControllerAdvice {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Deletion Attempt
-        if(as.deleteAttendance(userId, eventId)) {
+        if (as.deleteAttendance(userId, eventId))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

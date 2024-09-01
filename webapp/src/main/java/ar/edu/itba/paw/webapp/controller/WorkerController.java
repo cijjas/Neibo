@@ -4,8 +4,8 @@ import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
-import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
+import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 
 /*
  * # Summary
@@ -37,7 +35,7 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPrec
 
 @Path("/workers")
 @Component
-public class WorkerController extends GlobalControllerAdvice {
+public class WorkerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
     @Autowired
@@ -53,7 +51,7 @@ public class WorkerController extends GlobalControllerAdvice {
     private Request request;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -91,7 +89,8 @@ public class WorkerController extends GlobalControllerAdvice {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto){})
+        return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(workersHashCode)
@@ -102,10 +101,9 @@ public class WorkerController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findWorker(
-            @PathParam("id") final long workerId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
@@ -126,7 +124,7 @@ public class WorkerController extends GlobalControllerAdvice {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createWorker(
             @Valid @NotNull final WorkerSignupForm form
     ) {
@@ -146,7 +144,7 @@ public class WorkerController extends GlobalControllerAdvice {
 
     @PATCH
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateWorker(#workerId)")
     public Response updateWorkerPartially(
             @PathParam("id") final long workerId,
@@ -171,10 +169,10 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("DELETE request arrived at '/workers/{}", workerId);
 
         // Deletion Attempt
-        if(ws.deleteWorker(workerId)) {
+        if(ws.deleteWorker(workerId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }*/

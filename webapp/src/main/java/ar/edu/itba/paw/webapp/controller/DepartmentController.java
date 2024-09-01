@@ -1,22 +1,22 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.Pair;
 import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+
 
 
 /*
@@ -62,7 +62,8 @@ public class DepartmentController {
                 .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<DepartmentDto>>(departmentDto){})
+        return Response.ok(new GenericEntity<List<DepartmentDto>>(departmentDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(departmentsHashCode)
                 .build();
@@ -70,7 +71,7 @@ public class DepartmentController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findDepartment(
             @PathParam("id") final int departmentId
     ) {

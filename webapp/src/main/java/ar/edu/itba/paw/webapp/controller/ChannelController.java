@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 /*
  * # Summary
@@ -52,7 +50,7 @@ public class ChannelController {
     private long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listChannels(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
@@ -85,7 +83,8 @@ public class ChannelController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto){})
+        return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(channelsHashCode)
                 .links(links)
@@ -94,7 +93,7 @@ public class ChannelController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findChannel(
             @PathParam("id") long channelId
     ) {
@@ -118,7 +117,7 @@ public class ChannelController {
 
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createChannel(
             @Valid @NotNull NewChannelForm form
     ) {
@@ -143,17 +142,17 @@ public class ChannelController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("id") final long channelId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
         // Deletion Attempt
-        if(cs.deleteChannel(channelId, neighborhoodId)) {
+        if (cs.deleteChannel(channelId, neighborhoodId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

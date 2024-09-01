@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 /*
  * # Summary
@@ -48,7 +46,7 @@ public class NeighborhoodController {
     private Request request;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUseWorkerQPInNeighborhoods(#workerId)")
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -83,7 +81,8 @@ public class NeighborhoodController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto){})
+        return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(neighborhoodsHashCode)
                 .links(links)
@@ -92,7 +91,7 @@ public class NeighborhoodController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findNeighborhood(
             @PathParam("id") final long neighborhoodId
     ) {
@@ -116,7 +115,7 @@ public class NeighborhoodController {
 
     @POST
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createNeighborhood(
             @Valid @NotNull final NewNeighborhoodForm form
     ) {
@@ -141,17 +140,17 @@ public class NeighborhoodController {
     @DELETE
     @Path("/{id}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("id") final long neighborhoodId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}'", neighborhoodId);
 
         // Deletion Attempt
-        if(ns.deleteNeighborhood(neighborhoodId)) {
+        if (ns.deleteNeighborhood(neighborhoodId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

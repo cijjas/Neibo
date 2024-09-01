@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 /*
  * # Summary
@@ -36,7 +35,7 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/products/{productId}/inquiries")
 @Component
-public class InquiryController extends GlobalControllerAdvice{
+public class InquiryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryController.class);
 
     @Autowired
@@ -55,7 +54,7 @@ public class InquiryController extends GlobalControllerAdvice{
     private Long productId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listInquiries(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
@@ -88,7 +87,8 @@ public class InquiryController extends GlobalControllerAdvice{
                 size
         );
 
-        return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto){})
+        return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(inquiriesHashCode)
@@ -97,10 +97,9 @@ public class InquiryController extends GlobalControllerAdvice{
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findInquiry(
-            @PathParam("id") final long inquiryId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long inquiryId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
@@ -121,7 +120,7 @@ public class InquiryController extends GlobalControllerAdvice{
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
     public Response createInquiry(
             @Valid @NotNull final InquiryForm form,
@@ -144,8 +143,8 @@ public class InquiryController extends GlobalControllerAdvice{
 
     @PATCH
     @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Consumes(value = {MediaType.APPLICATION_JSON,})
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
     public Response updateInquiry(
             @PathParam("id") final long inquiryId,
@@ -172,10 +171,9 @@ public class InquiryController extends GlobalControllerAdvice{
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Deletion Attempt
-        if (is.deleteInquiry(inquiryId)) {
+        if (is.deleteInquiry(inquiryId))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

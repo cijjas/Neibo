@@ -4,12 +4,11 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.form.UserUpdateForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
+import ar.edu.itba.paw.webapp.form.UserUpdateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +21,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 /*
  * # Summary
@@ -55,7 +51,7 @@ public class UserController {
     private Long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON})
+    @Produces(value = {MediaType.APPLICATION_JSON})
     @PreAuthorize("@accessControlHelper.canListUsers(#neighborhoodId)")
     public Response listUsers(
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -90,7 +86,8 @@ public class UserController {
 
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})
+        return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(usersHashCode)
                 .links(links)
@@ -99,7 +96,7 @@ public class UserController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canFindUser(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("id") final long id,
@@ -125,7 +122,7 @@ public class UserController {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createUser(
             @Valid @NotNull final SignupForm form
     ) {
@@ -145,7 +142,7 @@ public class UserController {
 
     @PATCH
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateUser(#id, #neighborhoodId)")
     public Response updateUserPartially(
             @PathParam("id") final long id,
@@ -172,10 +169,10 @@ public class UserController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
 
         // Deletion Attempt
-        if(us.deleteUser(userId)) {
+        if(us.deleteUser(userId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }*/

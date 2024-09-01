@@ -7,14 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
-        import javax.ws.rs.core.*;
-        import java.util.Arrays;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("worker-roles")
 @Component
@@ -27,17 +29,19 @@ public class WorkerRoleController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWorkerRoles() {
         LOGGER.info("GET request arrived at '/worker-roles'");
 
+        // Content
+        WorkerRole[] workerRoles = WorkerRole.values();
+        String workerRolesHashCode = String.valueOf(Arrays.hashCode(workerRoles));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerRolesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
@@ -46,34 +50,38 @@ public class WorkerRoleController {
                 .map(tt -> WorkerRoleDto.fromWorkerRole(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<WorkerRoleDto>>(workerRoleDto){})
+        return Response.ok(new GenericEntity<List<WorkerRoleDto>>(workerRoleDto) {
+                })
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(workerRolesHashCode)
                 .build();
     }
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findWorkerRole(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/worker-roles/{}'", id);
 
+        // Content
+        WorkerRole workerRole = WorkerRole.fromId(id);
+        String workerRoleHashCode = String.valueOf(workerRole.hashCode());
+
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerRoleHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         // Content
         WorkerRoleDto workerRoleDto = WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo);
 
-        return Response.ok(workerRoleDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        return Response.ok(WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo))
+                .cacheControl(cacheControl)
+                .tag(workerRoleHashCode)
                 .build();
     }
 }

@@ -10,16 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 /*
  * # Summary
@@ -45,7 +41,7 @@ public class ImageController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findById(
             @PathParam("id") long imageId
     ) {
@@ -97,17 +93,17 @@ public class ImageController {
     @DELETE
     @Path("/{id}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("id") final long imageId
     ) {
         LOGGER.info("DELETE request arrived at '/images/{}'", imageId);
 
         // Deletion Attempt
-        if(is.deleteImage(imageId)) {
+        if (is.deleteImage(imageId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

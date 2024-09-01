@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.slf4j.Logger;
@@ -17,12 +16,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 /*
  * # Summary
@@ -52,7 +46,7 @@ public class ResourceController {
     private Long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listResources() {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
@@ -74,7 +68,8 @@ public class ResourceController {
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto){})
+        return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(resourcesHashCode)
                 .build();
@@ -82,7 +77,7 @@ public class ResourceController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findResource(
             @PathParam("id") final long resourceId
     ) {
@@ -105,7 +100,7 @@ public class ResourceController {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response createResource(
             @Valid @NotNull final ResourceForm form
@@ -126,7 +121,7 @@ public class ResourceController {
 
     @PATCH
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response updateResourcePartially(
             @PathParam("id") final long id,
@@ -145,7 +140,7 @@ public class ResourceController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteResourceById(
             @PathParam("id") final long id
@@ -153,10 +148,9 @@ public class ResourceController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
         // Deletion Attempt
-        if(rs.deleteResource(id)) {
+        if (rs.deleteResource(id))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

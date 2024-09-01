@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.EventDto;
 import ar.edu.itba.paw.webapp.form.EventForm;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -21,8 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 
 /*
@@ -56,7 +52,7 @@ public class EventController {
     private Long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listEventsByDate(
             @QueryParam("forDate") final String date,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -74,7 +70,7 @@ public class EventController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        if(events.isEmpty())
+        if (events.isEmpty())
             return Response.noContent()
                     .tag(eventsHashCode)
                     .build();
@@ -90,7 +86,8 @@ public class EventController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<EventDto>>(eventsDto){})
+        return Response.ok(new GenericEntity<List<EventDto>>(eventsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(eventsHashCode)
                 .links(links)
@@ -99,7 +96,7 @@ public class EventController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findEvent(
             @PathParam("id") final long eventId
     ) {
@@ -122,7 +119,7 @@ public class EventController {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response createEvent(
             @Valid @NotNull final EventForm form
@@ -130,7 +127,7 @@ public class EventController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
+        final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime(), neighborhoodId);
         String eventHashCode = String.valueOf(event.hashCode());
 
         // Resource URN
@@ -143,8 +140,8 @@ public class EventController {
 
     @PATCH
     @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Consumes(value = {MediaType.APPLICATION_JSON,})
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response updateEventPartially(
             @PathParam("id") final long id,
@@ -163,7 +160,7 @@ public class EventController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
             @PathParam("id") final long id
@@ -171,10 +168,9 @@ public class EventController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
         // Deletion attempt
-        if(es.deleteEvent(id)) {
+        if (es.deleteEvent(id))
             return Response.noContent()
                     .build();
-        }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 /*
  * # Summary
@@ -33,7 +32,7 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
 @Component
-public class CommentController extends GlobalControllerAdvice{
+public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
 
     @Autowired
@@ -52,7 +51,7 @@ public class CommentController extends GlobalControllerAdvice{
     private Long postId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listComments(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
@@ -84,7 +83,8 @@ public class CommentController extends GlobalControllerAdvice{
                 size
         );
 
-        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})
+        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(commentsHashCode)
                 .links(links)
@@ -93,7 +93,7 @@ public class CommentController extends GlobalControllerAdvice{
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findComment(
             @PathParam("id") long commentId
     ) {
@@ -116,7 +116,7 @@ public class CommentController extends GlobalControllerAdvice{
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createComment(
             @Valid @NotNull final CommentForm form
     ) {
@@ -140,7 +140,7 @@ public class CommentController extends GlobalControllerAdvice{
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteComment(#commentId)")
     public Response deleteById(
             @PathParam("id") final long commentId
@@ -148,10 +148,10 @@ public class CommentController extends GlobalControllerAdvice{
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
         // Deletion Attempt
-        if(cs.deleteComment(commentId)) {
+        if (cs.deleteComment(commentId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

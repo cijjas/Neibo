@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ShiftService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Shift;
-import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +10,10 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 /*
  * # Summary
@@ -69,7 +65,8 @@ public class ShiftController {
                 .map(s -> ShiftDto.fromShift(s, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
+        return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(shiftsHashCode)
                 .build();
@@ -77,7 +74,7 @@ public class ShiftController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findShift(
             @PathParam("id") final long id
     ) {

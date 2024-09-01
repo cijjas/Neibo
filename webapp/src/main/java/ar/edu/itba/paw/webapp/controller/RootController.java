@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 public class RootController {
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getTreeStructure() {
         // Create the corrected tree structure
         JsonObject tree = createTreeStructure();

@@ -1,19 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.auth.UserAuth;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Link;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ControllerUtils {
+    public static int MAX_AGE_SECONDS = 10800;
     @Autowired
     private UserService us;
 
@@ -40,16 +37,10 @@ public class ControllerUtils {
 
         // Next page link
         if (page < totalPages) {
-            links.add(Link.fromUri(baseUri +"?page=" + (page + 1) + "&size=" + size)
+            links.add(Link.fromUri(baseUri + "?page=" + (page + 1) + "&size=" + size)
                     .rel("next").build());
         }
 
         return links.toArray(new Link[0]);
-    }
-
-    public long getLoggedUser() {
-        String email = (((UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
-        User user = us.findUser(email).orElseThrow(NotFoundException::new);
-        return user.getUserId();
     }
 }

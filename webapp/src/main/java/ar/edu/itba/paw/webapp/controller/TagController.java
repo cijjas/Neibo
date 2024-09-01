@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
-import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.form.TagForm;
 import org.slf4j.Logger;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -20,8 +18,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 /*
  * # Summary
@@ -50,7 +46,7 @@ public class TagController {
     private Long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response listTags(
             @QueryParam("onPost") final String post,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -84,7 +80,8 @@ public class TagController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
+        return Response.ok(new GenericEntity<List<TagDto>>(tagsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(tagsHashCode)
                 .links(links)
@@ -93,7 +90,7 @@ public class TagController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findTags(
             @PathParam("id") final long tagId
     ) {
@@ -116,7 +113,7 @@ public class TagController {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createTag(
             @Valid @NotNull final TagForm form
     ) {
@@ -141,17 +138,17 @@ public class TagController {
     @DELETE
     @Path("/{id}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("id") final long tagId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
         // Deletion Attempt
-        if(ts.deleteTag(neighborhoodId, tagId)) {
+        if (ts.deleteTag(neighborhoodId, tagId))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

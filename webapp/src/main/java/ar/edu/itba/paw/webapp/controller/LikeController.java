@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Path("likes")
 @Component
-public class LikeController extends GlobalControllerAdvice{
+public class LikeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
 
     @Autowired
@@ -44,10 +44,8 @@ public class LikeController extends GlobalControllerAdvice{
     @Context
     private Request request;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     @PreAuthorize("@accessControlHelper.canListLikes(#post, #user)")
     public Response listLikes(
             @QueryParam("onPost") final String post,
@@ -90,7 +88,8 @@ public class LikeController extends GlobalControllerAdvice{
                 page,
                 size);
 
-        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {})
+        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(likesHashCode)
@@ -99,31 +98,34 @@ public class LikeController extends GlobalControllerAdvice{
 
     @GET
     @Path("/count")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response countLikes(
             @QueryParam("onPost") final String post,
             @QueryParam("likedBy") final String user
-    ){
+    ) {
         LOGGER.info("GET request arrived at '/likes/count'");
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
 
         // Content
         int count = ls.countLikes(post, user);
-        LikeCountDto dto = LikeCountDto.fromLikeCount(count, post, user,  uriInfo);
+        String countHashCode = String.valueOf(count);
 
-        return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        LikeCountDto dto = LikeCountDto.fromLikeCount(count, post, user, uriInfo);
+
+        return Response.ok(new GenericEntity<LikeCountDto>(dto) {
+                })
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(countHashCode)
                 .build();
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response createLike(
             @Valid @NotNull LikeForm form
     ) {
@@ -156,7 +158,7 @@ public class LikeController extends GlobalControllerAdvice{
     }
 
     @DELETE
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteLike(#user)")
     public Response deleteById(
             @QueryParam("likedBy") final String user,
@@ -164,10 +166,10 @@ public class LikeController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("DELETE request arrived at '/likes'");
 
-        if(ls.deleteLike(post, user)) {
+        if (ls.deleteLike(post, user))
             return Response.noContent()
                     .build();
-        }
+
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }

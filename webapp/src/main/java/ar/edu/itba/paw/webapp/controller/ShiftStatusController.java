@@ -7,14 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+
 
 /*
  * # Summary
@@ -57,7 +60,8 @@ public class ShiftStatusController {
                 .map(tt -> ShiftStatusDto.fromShiftStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ShiftStatusDto>>(shiftStatusDto){})
+        return Response.ok(new GenericEntity<List<ShiftStatusDto>>(shiftStatusDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(shiftStatusesHashCode)
                 .build();
@@ -65,10 +69,9 @@ public class ShiftStatusController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON })
+    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findShiftStatus(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/shift-statuses/{}'", id);
 
