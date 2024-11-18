@@ -3,9 +3,11 @@ package ar.edu.itba.paw.webapp.uniDto;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.form.validation.constraints.PostURNInLikeFormConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsURNConstraint;
+import ar.edu.itba.paw.webapp.groups.Create;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
@@ -16,8 +18,6 @@ import java.util.List;
 
 @Validated
 public class AmenityDto {
-    public interface Create{}
-
     @NotNull()
     @Size(min = 0, max = 100)
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {Create.class})

@@ -91,7 +91,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
 
-
         ds.setUrl("jdbc:postgresql://localhost/paw-2023b-02");
         ds.setUsername("paw-2023b-02");
         ds.setPassword("Totw34tOi");
@@ -131,7 +130,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
                 .setCacheControl(CacheControl.maxAge(120, TimeUnit.SECONDS)
                         .noTransform()
                         .mustRevalidate());
-        ;
     }
 
     @Bean
@@ -176,6 +174,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     //------------------------------------ EMAIL CONFIG ------------------------------------------
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

@@ -1,4 +1,3 @@
 package ar.edu.itba.paw.webapp.groups;
 
-public interface Create {
-}
+public interface Create {}

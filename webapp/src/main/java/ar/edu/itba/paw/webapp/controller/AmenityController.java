@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.*;
@@ -35,8 +36,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  */
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
-@Component
 @Validated
+@Component
 public class AmenityController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);
 
@@ -116,24 +117,14 @@ public class AmenityController {
                 .build();
     }
 
-
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Validated(value = {Create.class})
+    @Validated({Create.class})
     public Response createAmenity(
-            @Validated AmenityDto form
+            @Valid AmenityDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
-
-        Validator validator;
-        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
-            validator = factory.getValidator();
-        }
-        Set<ConstraintViolation<AmenityDto>> violations = validator.validate(form, Create.class);
-        for (ConstraintViolation<AmenityDto> violation : violations) {
-            System.out.println(violation.getMessage());
-        }
 
         // Creation & HashCode Generation
         Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
@@ -185,5 +176,23 @@ public class AmenityController {
         // If deletion fails, return not found status
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
+    }
+
+    @GET
+    @Path("/test")
+    public Response test(){
+        AmenityDto dto = new AmenityDto();
+        dto.setName("Invalid!@#$"); // Set a value that should fail validation
+        dto.setDescription(null); // Should fail @NotNull
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        Set<ConstraintViolation<AmenityDto>> violations = validator.validate(dto, Create.class);
+
+        for (ConstraintViolation<AmenityDto> violation : violations) {
+            System.out.println("Violation: " + violation.getPropertyPath() + " - " + violation.getMessage());
+        }
+        return null;
     }
 }
