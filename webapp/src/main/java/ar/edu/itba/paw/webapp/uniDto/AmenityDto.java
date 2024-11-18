@@ -1,15 +1,12 @@
 package ar.edu.itba.paw.webapp.uniDto;
 
 import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.webapp.form.validation.constraints.PostURNInLikeFormConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsURNConstraint;
-import ar.edu.itba.paw.webapp.groups.Create;
-import org.hibernate.validator.constraints.NotBlank;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.groups.OnUpdate;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
@@ -18,14 +15,14 @@ import java.util.List;
 
 @Validated
 public class AmenityDto {
-    @NotNull()
-    @Size(min = 0, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {Create.class})
+    @NotNull(groups = {OnCreate.class})
+    @Size(min = 0, max = 100, groups = {OnCreate.class, OnUpdate.class})
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {OnCreate.class, OnUpdate.class})
     private String name;
 
-    @NotNull()
-    @Size(min = 0, max = 1000)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {Create.class})
+    @NotNull(groups = {OnCreate.class})
+    @Size(min = 0, max = 1000, groups = {OnCreate.class, OnUpdate.class})
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {OnCreate.class, OnUpdate.class})
     private String description;
 
     @ShiftsURNConstraint()

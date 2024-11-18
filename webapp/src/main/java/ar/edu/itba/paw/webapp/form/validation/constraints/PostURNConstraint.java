@@ -9,11 +9,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Documented
-
 @Constraint(validatedBy = PostURNValidator.class)
-
 @Retention(RetentionPolicy.RUNTIME)
-
 public @interface PostURNConstraint {
 
     String message() default "Error in the URN";

@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import ar.edu.itba.paw.webapp.security.service.impl.JwtTokenIssuer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,9 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -74,6 +78,26 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
         auth.authenticationProvider(jwtAuthenticationProvider);
+    }
+
+    /*
+     * Spring creates a proxy around the bean to enable method-level validation.
+     * However, this proxy can sometimes cause issues with dependency injection or the initialization of certain components,
+     * such as our custom ConstraintValidator.
+     * So the solution is to avoid using the default bean validator and instead choosing a custom one which is constraint aware.
+     * */
+    @Bean
+    public LocalValidatorFactoryBean validatorFactoryBean(AutowireCapableBeanFactory beanFactory) {
+        LocalValidatorFactoryBean factoryBean = new LocalValidatorFactoryBean();
+        factoryBean.setConstraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory));
+        return factoryBean;
+    }
+
+    @Bean
+    public MethodValidationPostProcessor methodValidationPostProcessor(LocalValidatorFactoryBean validatorFactoryBean) {
+        MethodValidationPostProcessor postProcessor = new MethodValidationPostProcessor();
+        postProcessor.setValidator(validatorFactoryBean);
+        return postProcessor;
     }
 
     @Override

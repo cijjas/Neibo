@@ -2,14 +2,15 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
-import ar.edu.itba.paw.webapp.dto.AffiliationDto;
-import ar.edu.itba.paw.webapp.form.AffiliationForm;
-import ar.edu.itba.paw.webapp.form.CreateAffiliationForm;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.uniDto.AffiliationDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -47,6 +48,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  */
 
 @Path("/affiliations")
+@Validated
 @Component
 public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
@@ -112,8 +114,9 @@ public class AffiliationController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    public Response addAffiliation(
-            @Valid @NotNull final CreateAffiliationForm form
+    @Validated(OnCreate.class)
+    public Response createAffiliation(
+            @Valid AffiliationDto form
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
 
@@ -142,10 +145,11 @@ public class AffiliationController {
     @PATCH
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhood)")
+    @Validated(OnUpdate.class)
     public Response updateAffiliation(
             @QueryParam("inNeighborhood") String neighborhood,
             @QueryParam("forWorker") String worker,
-            @Valid @NotNull final AffiliationForm form
+            @Valid AffiliationDto form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 

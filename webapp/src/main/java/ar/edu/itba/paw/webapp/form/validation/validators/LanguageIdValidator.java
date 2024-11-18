@@ -8,8 +8,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class LanguageIdValidator implements ConstraintValidator<LanguageIdConstraint, Long> {
-    @Autowired
-
     @Override
     public void initialize(LanguageIdConstraint languageConstraint) {
 

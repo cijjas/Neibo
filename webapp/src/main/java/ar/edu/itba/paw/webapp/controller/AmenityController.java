@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.webapp.form.AmenityForm;
-import ar.edu.itba.paw.webapp.groups.Create;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.uniDto.AmenityDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,13 +14,11 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.groups.Default;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -120,7 +118,7 @@ public class AmenityController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Validated({Create.class})
+    @Validated(OnCreate.class)
     public Response createAmenity(
             @Valid AmenityDto form
     ) {
@@ -143,9 +141,10 @@ public class AmenityController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(OnUpdate.class)
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final AmenityDto partialUpdate
+            @Valid AmenityDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
