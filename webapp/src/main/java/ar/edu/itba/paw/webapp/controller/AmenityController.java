@@ -177,22 +177,4 @@ public class AmenityController {
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }
-
-    @GET
-    @Path("/test")
-    public Response test(){
-        AmenityDto dto = new AmenityDto();
-        dto.setName("Invalid!@#$"); // Set a value that should fail validation
-        dto.setDescription(null); // Should fail @NotNull
-
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        Set<ConstraintViolation<AmenityDto>> violations = validator.validate(dto, Create.class);
-
-        for (ConstraintViolation<AmenityDto> violation : violations) {
-            System.out.println("Violation: " + violation.getPropertyPath() + " - " + violation.getMessage());
-        }
-        return null;
-    }
 }
