@@ -1,14 +1,29 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.uniDto;
 
 import ar.edu.itba.paw.models.Entities.Contact;
+import ar.edu.itba.paw.webapp.dto.Links;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.groups.OnUpdate;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 
 public class ContactDto {
 
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 64, groups = {OnCreate.class, OnUpdate.class})
     private String contactName;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 64, groups = {OnCreate.class, OnUpdate.class})
     private String contactAddress;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 20, groups = {OnCreate.class, OnUpdate.class})
     private String contactPhone;
+
     private Links _links;
 
     public static ContactDto fromContact(Contact contact, UriInfo uriInfo) {
@@ -31,6 +46,14 @@ public class ContactDto {
                 .build());
         dto.set_links(links);
         return dto;
+    }
+
+    public Links get_links() {
+        return _links;
+    }
+
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 
     public String getContactName() {
@@ -57,11 +80,4 @@ public class ContactDto {
         this.contactPhone = contactPhone;
     }
 
-    public Links get_links() {
-        return _links;
-    }
-
-    public void set_links(Links _links) {
-        this._links = _links;
-    }
 }

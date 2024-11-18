@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.mappers;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Context;
@@ -24,7 +25,10 @@ public class ValidationExceptionMapper  implements ExceptionMapper<ValidationExc
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setStatus(status.getStatusCode());
         errorDetails.setTitle(status.getReasonPhrase());
-        errorDetails.setMessage(exception.getCause().getMessage());
+
+        if (exception.getCause() != null)
+            errorDetails.setMessage(exception.getCause().getMessage());
+
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
 
         return Response.status(status).entity(errorDetails).type(MediaType.APPLICATION_JSON).build();

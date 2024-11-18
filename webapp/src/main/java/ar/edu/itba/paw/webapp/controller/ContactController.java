@@ -2,13 +2,15 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
-import ar.edu.itba.paw.webapp.dto.ContactDto;
-import ar.edu.itba.paw.webapp.form.ContactForm;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.uniDto.ContactDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -35,6 +37,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/contacts")
 @Component
+@Validated
 public class ContactController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
 
@@ -118,8 +121,9 @@ public class ContactController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(OnCreate.class)
     public Response createContact(
-            @Valid @NotNull final ContactForm form
+            @Valid final ContactDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
@@ -140,9 +144,10 @@ public class ContactController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(OnUpdate.class)
     public Response updateContactPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final ContactForm partialUpdate
+            @Valid ContactDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 

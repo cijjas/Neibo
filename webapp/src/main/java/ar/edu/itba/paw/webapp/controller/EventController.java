@@ -2,13 +2,15 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.webapp.dto.EventDto;
-import ar.edu.itba.paw.webapp.form.EventForm;
+import ar.edu.itba.paw.webapp.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.uniDto.EventDto;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -37,6 +39,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/events")
 @Component
+@Validated
 public class EventController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
 
@@ -121,8 +124,9 @@ public class EventController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(OnCreate.class)
     public Response createEvent(
-            @Valid @NotNull final EventForm form
+            @Valid EventDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
@@ -143,9 +147,10 @@ public class EventController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(OnUpdate.class)
     public Response updateEventPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final EventForm partialUpdate
+            @Valid EventDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 

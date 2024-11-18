@@ -117,9 +117,11 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
                 ar.edu.itba.paw.webapp.controller,
+                ar.edu.itba.paw.webapp.security
+
+                <!-- comment these to deactivate exception catchers -->
                 ar.edu.itba.paw.webapp.mappers,
                 ar.edu.itba.paw.webapp.mappersJax,
-                ar.edu.itba.paw.webapp.security
             </param-value>
         </init-param>
         <!-- pass to next filter if Jersey/App returns 404 -->

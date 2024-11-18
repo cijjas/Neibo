@@ -1,17 +1,39 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.uniDto;
 
 import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.webapp.dto.Links;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationDateConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ValidTimeRangeConstraint;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.groups.OnUpdate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
+@ValidTimeRangeConstraint
 public class EventDto {
 
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 100, groups = {OnCreate.class, OnUpdate.class})
     private String name;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 2000, groups = {OnCreate.class, OnUpdate.class})
     private String description;
-    private Date date;
-    private String startTime; // localhost:8080/neighborhood/{id}
-    private String endTime; // localhost:8080/neighborhood/{id}
+
+    @NotNull(groups = OnCreate.class)
+    @ReservationDateConstraint(groups = {OnCreate.class, OnUpdate.class})
+    private String date;
+
+    @NotNull(groups = OnCreate.class)
+    private String startTime;
+
+    @NotNull(groups = OnCreate.class)
+    private String endTime;
+
     private Links _links;
 
     public static EventDto fromEvent(Event event, UriInfo uriInfo) {
@@ -19,7 +41,7 @@ public class EventDto {
 
         dto.name = event.getName();
         dto.description = event.getDescription();
-        dto.date = event.getDate();
+        dto.date = event.getDate().toString();
         dto.startTime = event.getStartTime().toString();
         dto.endTime = event.getEndTime().toString();
 
@@ -61,11 +83,11 @@ public class EventDto {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

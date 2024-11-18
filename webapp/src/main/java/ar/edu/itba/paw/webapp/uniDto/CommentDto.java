@@ -1,13 +1,27 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.uniDto;
 
 import ar.edu.itba.paw.models.Entities.Comment;
+import ar.edu.itba.paw.webapp.dto.Links;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
 public class CommentDto {
 
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 500, groups = OnCreate.class)
     private String comment;
+
+    @NotNull(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    private String user;
+
     private Date date;
     private Links _links;
 
@@ -64,5 +78,13 @@ public class CommentDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

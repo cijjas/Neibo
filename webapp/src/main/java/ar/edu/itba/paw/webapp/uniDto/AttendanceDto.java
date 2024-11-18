@@ -1,12 +1,21 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.uniDto;
 
 import ar.edu.itba.paw.models.Entities.Attendance;
+import ar.edu.itba.paw.webapp.dto.Links;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 
 public class AttendanceDto {
 
     private Links _links;
+
+    @NotNull(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    private String user;
 
     public static AttendanceDto fromAttendance(Attendance attendance, UriInfo uriInfo) {
         final AttendanceDto dto = new AttendanceDto();
@@ -34,6 +43,14 @@ public class AttendanceDto {
                 .build());
         dto.set_links(links);
         return dto;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getUser() {
+        return user;
     }
 
     public Links get_links() {

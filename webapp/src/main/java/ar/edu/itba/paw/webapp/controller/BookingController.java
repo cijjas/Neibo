@@ -2,13 +2,14 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.webapp.dto.BookingDto;
-import ar.edu.itba.paw.webapp.form.BookingForm;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.uniDto.BookingDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -36,6 +37,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
+@Validated
 public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
@@ -122,8 +124,9 @@ public class BookingController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createBooking(
-            @Valid @NotNull BookingForm form
+            @Valid BookingDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 

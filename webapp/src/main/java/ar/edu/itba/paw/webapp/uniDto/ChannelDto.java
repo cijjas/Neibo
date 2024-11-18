@@ -1,11 +1,19 @@
-package ar.edu.itba.paw.webapp.dto;
+package ar.edu.itba.paw.webapp.uniDto;
 
 import ar.edu.itba.paw.models.Entities.Channel;
+import ar.edu.itba.paw.webapp.dto.Links;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class ChannelDto {
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 20, groups = OnCreate.class)
+    private String name;
 
     private String channel;
     private Links _links;
@@ -47,4 +55,13 @@ public class ChannelDto {
     public void set_links(Links _links) {
         this._links = _links;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

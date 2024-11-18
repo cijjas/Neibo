@@ -2,13 +2,14 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.models.Entities.Comment;
-import ar.edu.itba.paw.webapp.dto.CommentDto;
-import ar.edu.itba.paw.webapp.form.CommentForm;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.uniDto.CommentDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -32,6 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
 @Component
+@Validated
 public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
 
@@ -116,8 +118,9 @@ public class CommentController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createComment(
-            @Valid @NotNull final CommentForm form
+            @Valid final CommentDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 

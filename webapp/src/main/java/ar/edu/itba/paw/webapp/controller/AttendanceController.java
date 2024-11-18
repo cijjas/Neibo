@@ -2,13 +2,14 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
-import ar.edu.itba.paw.webapp.dto.AttendanceDto;
-import ar.edu.itba.paw.webapp.form.AttendanceForm;
+import ar.edu.itba.paw.webapp.groups.OnCreate;
+import ar.edu.itba.paw.webapp.uniDto.AttendanceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -32,6 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
 @Component
+@Validated
 public class AttendanceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceController.class);
 
@@ -117,8 +119,9 @@ public class AttendanceController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createAttendance(
-            @Valid @NotNull final AttendanceForm form
+            @Valid final AttendanceDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
