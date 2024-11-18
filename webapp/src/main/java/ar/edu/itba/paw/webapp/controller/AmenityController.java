@@ -2,21 +2,24 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.form.AmenityForm;
-import ar.edu.itba.paw.webapp.form.AmenityUpdateForm;
+import ar.edu.itba.paw.webapp.groups.Create;
+import ar.edu.itba.paw.webapp.uniDto.AmenityDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
+import javax.validation.*;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -33,6 +36,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
 @Component
+@Validated
 public class AmenityController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);
 
@@ -116,10 +120,20 @@ public class AmenityController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(value = {Create.class})
     public Response createAmenity(
-            @Valid @NotNull final AmenityForm form
+            @Validated AmenityDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
+
+        Validator validator;
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            validator = factory.getValidator();
+        }
+        Set<ConstraintViolation<AmenityDto>> violations = validator.validate(form, Create.class);
+        for (ConstraintViolation<AmenityDto> violation : violations) {
+            System.out.println(violation.getMessage());
+        }
 
         // Creation & HashCode Generation
         Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
@@ -140,12 +154,12 @@ public class AmenityController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final AmenityUpdateForm partialUpdate
+            @Valid @NotNull final AmenityDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getShifts());
+        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getSelectedShifts());
         String updatedAmenityHashCode = String.valueOf(updatedAmenity.hashCode());
 
         // Return the updated resource along with the EntityLevelETag

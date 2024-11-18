@@ -24,7 +24,7 @@ public class ValidationExceptionMapper  implements ExceptionMapper<ValidationExc
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setStatus(status.getStatusCode());
         errorDetails.setTitle(status.getReasonPhrase());
-        errorDetails.setMessage(exception.getMessage());
+        errorDetails.setMessage(exception.getCause().getMessage());
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
 
         return Response.status(status).entity(errorDetails).type(MediaType.APPLICATION_JSON).build();

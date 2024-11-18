@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsURNConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -13,7 +14,7 @@ public class AmenityForm {
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String name;
 
-    @NotBlank
+    @NotEmpty
     @Size(min = 0, max = 1000)
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String description;

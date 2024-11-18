@@ -28,7 +28,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setStatus(status.getStatusCode());
         errorDetails.setTitle(status.getReasonPhrase());
-        errorDetails.setMessage("Validation error. The request contains invalid data.");
+        errorDetails.setMessage("The form contains invalid data.");
 
         // Extract details of each constraint violation
         Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();

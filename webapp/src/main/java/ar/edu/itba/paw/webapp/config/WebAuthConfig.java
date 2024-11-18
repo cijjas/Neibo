@@ -104,7 +104,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/request-statuses", "/request-statuses/*",
                         "/shifts", "/shifts/*",
                         "/shift-statuses", "/shift-statuses/*",
-                        "/transaction-types", "/transaction-types/*", // todo delete
+                        "/transaction-types", "/transaction-types/*",
                         "/user-roles", "/user-roles/*",
                         "/worker-roles", "/worker-roles/*",
                         "/worker-statuses", "/worker-statuses/*",

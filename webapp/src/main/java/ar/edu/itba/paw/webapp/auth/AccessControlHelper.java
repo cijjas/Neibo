@@ -213,7 +213,7 @@ public class AccessControlHelper {
 
         long neighborhoodId = extractTwoURNIds(userURN).getFirstId();
         long userId = extractTwoURNIds(userURN).getSecondId();
-        us.findUser(userId, neighborhoodId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        us.findUser(userId, neighborhoodId).orElseThrow(() -> new NotFoundException("Referenced User was not found"));
 
         if (isSuperAdministrator(authentication))
             return true;
@@ -237,7 +237,7 @@ public class AccessControlHelper {
             return true;
 
         TwoIds twoIds = extractTwoURNIds(postURN);
-        ps.findPost(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        ps.findPost(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Referenced Post was not found."));
         return getRequestingUserNeighborhoodId(authentication) == twoIds.getFirstId();
     }
 
