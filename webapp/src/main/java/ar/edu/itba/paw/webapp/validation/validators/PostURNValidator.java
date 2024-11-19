@@ -9,7 +9,6 @@ import javax.validation.ConstraintValidatorContext;
 public class PostURNValidator implements ConstraintValidator<PostURNConstraint, String> {
 
     @Override
-
     public void initialize(PostURNConstraint postURNConstraint) {
     }
 

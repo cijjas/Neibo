@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Comment;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
@@ -17,7 +17,7 @@ public class CommentDto {
     private String comment;
 
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraintCreate(groups = OnCreate.class)
     private String user;
 
     private Date date;

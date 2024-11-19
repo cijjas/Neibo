@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.validation.constraints.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.TagsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
@@ -34,7 +34,7 @@ public class PostDto {
     private String channel;
 
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraintCreate(groups = OnCreate.class)
     private String user;
 
     private Date date;

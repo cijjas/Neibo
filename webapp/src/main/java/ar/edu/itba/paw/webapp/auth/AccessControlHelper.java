@@ -85,8 +85,31 @@ public class AccessControlHelper {
     // Verifies that the User URN received matches the authenticated User
     // Commonly used by forms that require an author
     // Neighbors can only reference themselves whilst Administrators and the Super Admin can reference all Users
-    public boolean canReferenceUser(String userURN) {
-        LOGGER.info("Verifying Accessibility for the User's entities");
+    public boolean canReferenceUserInCreation(String userURN) {
+        LOGGER.info("Verifying reference to the User's entities");
+
+        if (userURN == null)
+            return false;
+
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        TwoId userTwoId = extractTwoURNIds(userURN);
+        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
+
+        return getRequestingUserId(authentication) == userTwoId.getSecondId();
+    }
+
+    // This version is required so userURN is nullable in patches
+    // Temp solution until group sequence
+    public boolean canReferenceUserInUpdate(String userURN) {
+        LOGGER.info("Verifying reference to the User's entities");
+
+        if (userURN == null)
+            return true;
+
         Authentication authentication = getAuthentication();
 
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
@@ -317,7 +340,8 @@ public class AccessControlHelper {
 
     // todo: Only SuperAdmins can create affiliations with a worker role that is not unverified
     public boolean canReferenceWorkerRoleInAffiliationForm(String workerRoleURN){
-
+        if (workerRoleURN == null)
+            return false;
         return true;
     }
 

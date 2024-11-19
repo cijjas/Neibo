@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -27,6 +28,7 @@ import java.net.URI;
 
 @Path("images")
 @Component
+@Transactional
 public class ImageController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 

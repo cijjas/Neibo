@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 
-@ValidTimeRangeConstraint
+// @ValidTimeRangeConstraint
 public class EventDto {
 
     @NotNull(groups = OnCreate.class)

@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.validation.constraints.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.ReservationDateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.ShiftURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
@@ -26,7 +26,7 @@ public class BookingDto {
     private String reservationDate;
 
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraintCreate(groups = OnCreate.class)
     private String user;
 
     private Date bookingDate;

@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.validation.constraints.ProductURNInRequestFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.RequestStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import org.hibernate.validator.constraints.Range;
@@ -28,7 +28,7 @@ public class RequestDto {
     private Integer units;
 
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraintCreate(groups = OnCreate.class)
     private String user;
 
     @RequestStatusURNConstraint(groups = OnUpdate.class)

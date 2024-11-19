@@ -3,7 +3,8 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.validation.constraints.DepartmentURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.ImagesURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintUpdate;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import org.hibernate.validator.constraints.Range;
@@ -40,8 +41,10 @@ public class ProductDto {
     @NotNull(groups = OnCreate.class)
     private Boolean used;
 
+    // Temporal fix
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @UserURNReferenceConstraintCreate(groups = {OnCreate.class})
+    @UserURNReferenceConstraintUpdate(groups = {OnUpdate.class})
     private String user;
 
     private Date creationDate;
