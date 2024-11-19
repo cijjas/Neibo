@@ -23,7 +23,7 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Product updateProductPartially(long productId, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, Long stock);
+    Product updateProductPartially(long productId, String name, String description, Double price, Boolean used, String departmentURN, String[] imageURNs, Long stock);
 
     // -----------------------------------------------------------------------------------------------------------------
 

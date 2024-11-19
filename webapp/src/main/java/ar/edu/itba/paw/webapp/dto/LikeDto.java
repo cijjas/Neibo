@@ -1,13 +1,27 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.webapp.validation.constraints.PostURNInLikeFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNInLikeFormConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 
 public class LikeDto {
 
+    @NotNull(groups = OnCreate.class)
+    @PostURNInLikeFormConstraint(groups = OnCreate.class)
+    private String post;
+
+    @NotNull(groups = OnCreate.class)
+    @UserURNInLikeFormConstraint(groups = OnCreate.class)
+    private String user;
+
     private Date likeDate;
+    private int likeCount;
     private Links _links;
 
     public static LikeDto fromLike(Like like, UriInfo uriInfo) {
@@ -64,4 +78,29 @@ public class LikeDto {
     public void set_links(Links _links) {
         this._links = _links;
     }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
 }

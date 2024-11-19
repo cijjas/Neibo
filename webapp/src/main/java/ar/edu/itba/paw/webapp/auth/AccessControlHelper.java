@@ -208,15 +208,15 @@ public class AccessControlHelper {
         LOGGER.info("Verifying User Reference In Like Form");
         Authentication authentication = getAuthentication();
 
+        if (isSuperAdministrator(authentication))
+            return true;
+
         if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
             return false;
 
         long neighborhoodId = extractTwoURNIds(userURN).getFirstId();
         long userId = extractTwoURNIds(userURN).getSecondId();
         us.findUser(userId, neighborhoodId).orElseThrow(() -> new NotFoundException("Referenced User was not found"));
-
-        if (isSuperAdministrator(authentication))
-            return true;
 
         if (isAdministrator(authentication))
             return getRequestingUserNeighborhoodId(authentication) == extractTwoURNIds(userURN).getFirstId();

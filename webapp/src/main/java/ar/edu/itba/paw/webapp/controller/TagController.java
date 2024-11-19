@@ -3,12 +3,13 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.dto.TagDto;
-import ar.edu.itba.paw.webapp.form.TagForm;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 @Path("neighborhoods/{neighborhoodId}/tags")
 @Component
+@Validated
 public class TagController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagController.class);
 
@@ -113,13 +115,14 @@ public class TagController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createTag(
-            @Valid @NotNull final TagForm form
+            @Valid TagDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
         // Creation & HashCode Generation
-        final Tag tag = ts.createTag(neighborhoodId, form.getName());
+        final Tag tag = ts.createTag(neighborhoodId, form.getTag());
         String tagHashCode = String.valueOf(tag.hashCode());
 
         // Resource URN

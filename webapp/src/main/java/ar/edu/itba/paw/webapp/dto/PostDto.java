@@ -1,15 +1,42 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.validation.constraints.ChannelURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.TagsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 
 public class PostDto {
-
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 100, groups = OnCreate.class)
     private String title;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 2000, groups = OnCreate.class)
     private String description;
+
+    @TagsURNConstraint(groups = OnCreate.class)
+    private List<String> tags;
+
+    @ImageURNConstraint(groups = OnCreate.class)
+    private String image;
+
+    @ChannelURNConstraint(groups = OnCreate.class)
+    @NotNull(groups = OnCreate.class)
+    private String channel;
+
+    @NotNull(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    private String user;
+
     private Date date;
     private Links _links;
 
@@ -97,5 +124,37 @@ public class PostDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }

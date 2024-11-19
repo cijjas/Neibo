@@ -3,18 +3,18 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
-import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
-import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -35,6 +35,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("/workers")
 @Component
+@Validated
 public class WorkerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
@@ -124,8 +125,9 @@ public class WorkerController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createWorker(
-            @Valid @NotNull final WorkerSignupForm form
+            @Valid WorkerDto form
     ) {
         LOGGER.info("POST request arrived at '/workers'");
 
@@ -145,9 +147,10 @@ public class WorkerController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateWorker(#workerId)")
+    @Validated(OnUpdate.class)
     public Response updateWorkerPartially(
             @PathParam("id") final long workerId,
-            @Valid @NotNull final WorkerUpdateForm partialUpdate
+            @Valid WorkerDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 

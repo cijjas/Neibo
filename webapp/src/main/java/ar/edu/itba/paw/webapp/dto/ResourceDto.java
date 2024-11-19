@@ -1,13 +1,26 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Resource;
+import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 
 public class ResourceDto {
 
-    private String title;
+    @Size(max = 1000, groups = {OnCreate.class, OnUpdate.class})
     private String description;
+
+    @ImageURNConstraint(groups = {OnCreate.class, OnUpdate.class})
+    private String image;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
+    private String title;
+
     private Links _links;
 
     public static ResourceDto fromResource(Resource resource, UriInfo uriInfo) {
@@ -59,5 +72,13 @@ public class ResourceDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

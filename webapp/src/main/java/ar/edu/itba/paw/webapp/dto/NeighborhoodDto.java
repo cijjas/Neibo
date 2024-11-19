@@ -1,13 +1,19 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class NeighborhoodDto {
 
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 20, groups = OnCreate.class)
     private String name;
+
     private Links _links;
 
     public static NeighborhoodDto fromNeighborhood(Neighborhood neighborhood, UriInfo uriInfo) {

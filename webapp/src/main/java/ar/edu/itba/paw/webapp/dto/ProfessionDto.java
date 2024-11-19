@@ -1,13 +1,19 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Profession;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class ProfessionDto {
-
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 20, groups = OncePerRequestFilter.class)
     private String profession;
+
     private Links _links;
 
     public static ProfessionDto fromProfession(Profession profession, UriInfo uriInfo) {

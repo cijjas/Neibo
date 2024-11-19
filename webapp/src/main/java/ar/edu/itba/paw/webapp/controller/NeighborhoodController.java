@@ -2,17 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
-import ar.edu.itba.paw.webapp.form.NewNeighborhoodForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -33,6 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods")
 @Component
+@Validated
 public class NeighborhoodController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodController.class);
 
@@ -115,8 +116,9 @@ public class NeighborhoodController {
     @POST
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createNeighborhood(
-            @Valid @NotNull final NewNeighborhoodForm form
+            @Valid NeighborhoodDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 

@@ -2,17 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
-import ar.edu.itba.paw.webapp.form.InquiryForm;
-import ar.edu.itba.paw.webapp.form.ReplyForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -35,6 +35,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/products/{productId}/inquiries")
 @Component
+@Validated
 public class InquiryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryController.class);
 
@@ -121,8 +122,9 @@ public class InquiryController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
+    @Validated(OnCreate.class)
     public Response createInquiry(
-            @Valid @NotNull final InquiryForm form,
+            @Valid InquiryDto form,
             @PathParam("productId") final long productId
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
@@ -145,9 +147,10 @@ public class InquiryController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
+    @Validated(OnUpdate.class)
     public Response updateInquiry(
             @PathParam("id") final long inquiryId,
-            @Valid @NotNull final ReplyForm form
+            @Valid InquiryDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 

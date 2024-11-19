@@ -45,16 +45,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
-                               final long neighborhoodId, String languageURN, final String identification) {
+                               final long neighborhoodId, String languageURN, final Integer identification) {
         LOGGER.info("Creating Neighbor with mail {}", mail);
-
-        int id = 0;
-        try {
-            id = Integer.parseInt(identification);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Error whilst formatting Identification");
-            throw new UnexpectedException("Unexpected Error while creating Neighbor");
-        }
 
         Language language = Language.ENGLISH;
         if (languageURN != null) {
@@ -65,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
         User n = findUser(mail).orElse(null);
         if (n == null) {
-            User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, id);
+            User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
 
             //if user created is a neighbor (not worker), send admin email notifying new neighbor
             if (neighborhoodId != 0) {
@@ -77,7 +69,7 @@ public class UserServiceImpl implements UserService {
             n.setPassword(passwordEncoder.encode(password));
             n.setLanguage(language);
             n.setRole(UserRole.UNVERIFIED_NEIGHBOR);
-            n.setIdentification(id);
+            n.setIdentification(identification);
             n.setDarkMode(false);
             n.setName(name);
             n.setSurname(surname);

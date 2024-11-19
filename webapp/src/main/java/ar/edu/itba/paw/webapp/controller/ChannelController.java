@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
-import ar.edu.itba.paw.webapp.groups.OnCreate;
-import ar.edu.itba.paw.webapp.uniDto.ChannelDto;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.dto.ChannelDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

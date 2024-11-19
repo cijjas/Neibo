@@ -1,13 +1,22 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Tag;
+import ar.edu.itba.paw.webapp.validation.constraints.TagsConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class TagDto {
 
+    @NotNull(groups = OnCreate.class)
+    @TagsConstraint(groups = OnCreate.class)
+    @Size(min = 1, max = 20, groups = OnCreate.class)
     private String tag;
+
     private Links _links;
 
     public static TagDto fromTag(final Tag tag, final long neighborhoodId, final UriInfo uriInfo) {

@@ -3,17 +3,18 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.form.SignupForm;
-import ar.edu.itba.paw.webapp.form.UserUpdateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -35,6 +36,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/users")
 @Component
+@Validated
+@Transactional
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -122,13 +125,14 @@ public class UserController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createUser(
-            @Valid @NotNull final SignupForm form
+            @Valid UserDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         // Creation & ETag Generation
-        final User user = us.createNeighbor(form.getEmail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, form.getLanguage(), form.getIdentification());
+        final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, form.getLanguage(), form.getIdentification());
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN
@@ -143,16 +147,16 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateUser(#id, #neighborhoodId)")
+    @Validated(OnUpdate.class)
     public Response updateUserPartially(
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId,
-            @Valid @NotNull final UserUpdateForm partialUpdate
+            @Valid UserDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
-
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguage(), partialUpdate.getUserRole());
+        final User updatedUser = us.updateUser(id, partialUpdate.getMail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguage(), partialUpdate.getUserRole());
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

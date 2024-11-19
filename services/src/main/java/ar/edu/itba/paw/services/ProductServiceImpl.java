@@ -111,11 +111,8 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, Long stock) {
+    public Product updateProductPartially(long productId, String name, String description, Double price, Boolean used, String departmentURN, String[] imageURNs, Long stock) {
         LOGGER.info("Updating Product {}", productId);
-
-        long departmentId = ValidationUtils.extractURNId(departmentURN);
-        ValidationUtils.checkDepartmentId(departmentId);
 
         Product product = findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
         if (name != null && !name.isEmpty())
@@ -124,10 +121,13 @@ public class ProductServiceImpl implements ProductService {
             product.setDescription(description);
         if (price != null)
             product.setPrice(price);
-        if (used != product.isUsed())
+        if (used != null)
             product.setUsed(used);
-        if (departmentId != 0)
+        if (departmentURN != null) {
+            long departmentId = ValidationUtils.extractURNId(departmentURN);
+            ValidationUtils.checkDepartmentId(departmentId);
             product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(() -> new NotFoundException("Department Not Found")));
+        }
         if (stock != null)
             product.setRemainingUnits(stock);
 

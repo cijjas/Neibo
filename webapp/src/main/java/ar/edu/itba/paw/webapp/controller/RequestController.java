@@ -2,17 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
-import ar.edu.itba.paw.webapp.form.RequestForm;
-import ar.edu.itba.paw.webapp.form.UpdateRequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -33,6 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/requests")
 @Component
+@Validated
 public class RequestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
 
@@ -121,13 +122,14 @@ public class RequestController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createRequest(
-            @Valid @NotNull final RequestForm form
+            @Valid RequestDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Request request = rs.createRequest(form.getUser(), form.getProduct(), form.getRequestMessage(), form.getQuantity());
+        final Request request = rs.createRequest(form.getUser(), form.getProduct(), form.getRequestMessage(), form.getUnits());
         String requestHashCode = String.valueOf(request.hashCode());
 
         // Resource URN
@@ -143,9 +145,10 @@ public class RequestController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateRequest(#requestId)")
+    @Validated(OnUpdate.class)
     public Response updateRequest(
             @PathParam("id") final long requestId,
-            @Valid @NotNull final UpdateRequestForm form
+            @Valid RequestDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 

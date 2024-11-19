@@ -49,7 +49,6 @@ public class ShiftController {
 
         // Content
         List<Shift> shifts = ss.getShifts(amenity, date);
-        System.out.println(shifts);
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control

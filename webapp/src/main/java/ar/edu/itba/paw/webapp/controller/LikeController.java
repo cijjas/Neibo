@@ -2,17 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
-import ar.edu.itba.paw.webapp.form.LikeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 
 @Path("likes")
 @Component
+@Validated
 public class LikeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
 
@@ -125,8 +126,9 @@ public class LikeController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createLike(
-            @Valid @NotNull LikeForm form
+            @Valid LikeDto form
     ) {
         LOGGER.info("POST request arrived at '/likes'");
 

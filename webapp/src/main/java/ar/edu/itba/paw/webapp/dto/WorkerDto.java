@@ -1,17 +1,48 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.ProfessionsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class WorkerDto {
+    @NotNull(groups = OnCreate.class)
+    @UserURNConstraint(groups = OnCreate.class)
+    private String user;
 
+    @NotNull(groups = OnCreate.class)
+    @ProfessionsURNConstraint(groups = OnCreate.class)
+    private String[] professions;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
+    @Pattern(regexp = "^[0-9+\\- ]*", groups = {OnCreate.class, OnUpdate.class})
     private String phoneNumber;
+
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = {OnCreate.class, OnUpdate.class})
+    @Size(min = 1, max = 128, groups = {OnCreate.class, OnUpdate.class})
     private String businessName;
+
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = {OnCreate.class, OnUpdate.class})
+    @Size(min = 1, max = 128, groups = {OnCreate.class, OnUpdate.class})
     private String address;
+
+    @Size(max = 1000, groups = OnUpdate.class)
     private String bio;
+
+    @ImageURNConstraint(groups = OnUpdate.class)
+    private String backgroundPicture;
+
     private Float averageRating;
     private Links _links;
 
@@ -111,5 +142,29 @@ public class WorkerDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String[] getProfessions() {
+        return professions;
+    }
+
+    public void setProfessions(String[] professions) {
+        this.professions = professions;
+    }
+
+    public String getBackgroundPicture() {
+        return backgroundPicture;
+    }
+
+    public void setBackgroundPicture(String backgroundPicture) {
+        this.backgroundPicture = backgroundPicture;
     }
 }

@@ -1,22 +1,38 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
 public class InquiryDto {
 
-    private String message;
-    private String reply;
+    @NotNull(groups = OnCreate.class)
+    @Size(max = 500, groups = OnCreate.class)
+    private String questionMessage;
+
+    @NotNull(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    private String user;
+
+    @NotNull(groups = OnUpdate.class)
+    @Size(max = 500, groups = OnUpdate.class)
+    private String replyMessage;
+
     private Date inquiryDate;
+
     private Links _links;
 
     public static InquiryDto fromInquiry(Inquiry inquiry, UriInfo uriInfo) {
         final InquiryDto dto = new InquiryDto();
 
-        dto.message = inquiry.getMessage();
-        dto.reply = inquiry.getReply();
+        dto.questionMessage = inquiry.getMessage();
+        dto.replyMessage = inquiry.getReply();
         dto.inquiryDate = inquiry.getInquiryDate();
 
         Links links = new Links();
@@ -44,21 +60,6 @@ public class InquiryDto {
         return dto;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getReply() {
-        return reply;
-    }
-
-    public void setReply(String reply) {
-        this.reply = reply;
-    }
 
     public Date getInquiryDate() {
         return inquiryDate;
@@ -74,5 +75,29 @@ public class InquiryDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getQuestionMessage() {
+        return questionMessage;
+    }
+
+    public String getReplyMessage() {
+        return replyMessage;
+    }
+
+    public void setReplyMessage(String replyMessage) {
+        this.replyMessage = replyMessage;
+    }
+
+    public void setQuestionMessage(String questionMessage) {
+        this.questionMessage = questionMessage;
     }
 }

@@ -2,21 +2,61 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
-import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.webapp.validation.constraints.EmailConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.LanguageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserRoleURNConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
 
 public class UserDto {
-
-    private String mail;
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
+    @Pattern(regexp = "^[a-zA-Z ]*", groups = {OnCreate.class, OnUpdate.class})
     private String name;
+
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = "^[a-zA-Z ]*", groups = {OnCreate.class, OnUpdate.class})
+    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
     private String surname;
-    private Boolean darkMode;
-    private String phoneNumber;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 6, max = 128, groups = {OnCreate.class, OnUpdate.class})
+    @Email(groups = {OnCreate.class, OnUpdate.class})
+    @EmailConstraint(groups = {OnCreate.class, OnUpdate.class})
+    private String mail;
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 50, groups = {OnCreate.class, OnUpdate.class})
+    private String password;
+
+    @NotNull(groups = OnCreate.class)
     private Integer identification;
+
+    @NotNull(groups = OnCreate.class)
+    @LanguageURNConstraint(groups = {OnCreate.class, OnUpdate.class})
+    private String language;
+
+    @UserRoleURNConstraint(groups = OnUpdate.class)
+    private String userRole;
+
+    @Pattern(regexp = "^[0-9]*", groups = OnUpdate.class)
+    private String phoneNumber;
+
+    @ImageURNConstraint(groups = OnUpdate.class)
+    private String profilePicture;
+
+    private Boolean darkMode;
+
     private Date creationDate;
     private Links _links;
 
@@ -182,5 +222,37 @@ public class UserDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

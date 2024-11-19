@@ -2,16 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
-import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Path("neighborhoods/{neighborhoodId}/resources")
 @Component
+@Validated
 public class ResourceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
@@ -101,8 +103,9 @@ public class ResourceController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(OnCreate.class)
     public Response createResource(
-            @Valid @NotNull final ResourceForm form
+            @Valid ResourceDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
@@ -122,9 +125,10 @@ public class ResourceController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Validated(OnUpdate.class)
     public Response updateResourcePartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final ResourceForm partialUpdate
+            @Valid ResourceDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 

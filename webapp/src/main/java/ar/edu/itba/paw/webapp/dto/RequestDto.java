@@ -1,22 +1,47 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.webapp.validation.constraints.ProductURNInRequestFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.RequestStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
 public class RequestDto {
 
-    private String message;
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 500, groups = OnCreate.class)
+    private String requestMessage;
+
+    @NotNull(groups = OnCreate.class)
+    @ProductURNInRequestFormConstraint(groups = OnCreate.class)
+    private String product;
+
+    @NotNull(groups = OnCreate.class)
+    @Range(min = 1, max = 100, groups = OnCreate.class)
+    private Integer units;
+
+    @NotNull(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    private String user;
+
+    @RequestStatusURNConstraint(groups = OnUpdate.class)
+    private String requestStatus;
+
     private Date requestDate;
     private Date purchaseDate;
-    private Integer units;
     private Links _links;
 
     public static RequestDto fromRequest(Request request, UriInfo uriInfo) {
         final RequestDto dto = new RequestDto();
 
-        dto.message = request.getMessage();
+        dto.requestMessage = request.getMessage();
         dto.requestDate = request.getRequestDate();
         dto.units = request.getUnits();
         dto.purchaseDate = request.getPurchaseDate();
@@ -48,12 +73,12 @@ public class RequestDto {
         return dto;
     }
 
-    public String getMessage() {
-        return message;
+    public String getRequestMessage() {
+        return requestMessage;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setRequestMessage(String requestMessage) {
+        this.requestMessage = requestMessage;
     }
 
     public Date getRequestDate() {
@@ -86,5 +111,29 @@ public class RequestDto {
 
     public void setUnits(Integer units) {
         this.units = units;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(String requestStatus) {
+        this.requestStatus = requestStatus;
     }
 }

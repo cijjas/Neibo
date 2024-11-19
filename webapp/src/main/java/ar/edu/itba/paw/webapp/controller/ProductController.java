@@ -2,17 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
-import ar.edu.itba.paw.webapp.form.ListingForm;
-import ar.edu.itba.paw.webapp.form.UpdateProductForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -33,6 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/products")
 @Component
+@Validated
 public class ProductController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
@@ -119,13 +120,14 @@ public class ProductController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @Validated(OnCreate.class)
     public Response createProduct(
-            @Valid @NotNull final ListingForm form
+            @Valid final ProductDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(form.getUser(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartment(), form.getImages(), form.getQuantity());
+        final Product product = ps.createProduct(form.getUser(), form.getName(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartment(), form.getImages(), form.getRemainingUnits());
         String productHashCode = String.valueOf(product.hashCode());
 
         // Resource URN
@@ -141,14 +143,24 @@ public class ProductController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateProduct(#id)")
+    @Validated(OnUpdate.class)
     public Response updateProductPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final UpdateProductForm partialUpdate
+            @Valid final ProductDto partialUpdate
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Product updatedProduct = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartment(), partialUpdate.getImages(), partialUpdate.getQuantity());
+        final Product updatedProduct = ps.updateProductPartially(
+                id,
+                partialUpdate.getName(),
+                partialUpdate.getDescription(),
+                partialUpdate.getPrice(),
+                partialUpdate.getUsed(),
+                partialUpdate.getDepartment(),
+                partialUpdate.getImages(),
+                partialUpdate.getRemainingUnits()
+        );
         String productHashCode = String.valueOf(updatedProduct.hashCode());
 
         return Response.ok(ProductDto.fromProduct(updatedProduct, uriInfo))

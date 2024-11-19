@@ -2,16 +2,16 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.dto.PostDto;
-import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -34,6 +34,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/posts")
 @Component
+@Validated
 public class PostController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
 
@@ -121,13 +122,14 @@ public class PostController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @Validated(OnCreate.class)
     public Response createPost(
-            @Valid @NotNull PublishForm publishForm
+            @Valid PostDto publishForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), publishForm.getUser(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImage(), neighborhoodId);
+        final Post post = ps.createPost(publishForm.getTitle(), publishForm.getDescription(), publishForm.getUser(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImage(), neighborhoodId);
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN

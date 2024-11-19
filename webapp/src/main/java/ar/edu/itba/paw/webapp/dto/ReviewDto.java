@@ -1,14 +1,28 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Review;
+import ar.edu.itba.paw.webapp.validation.constraints.UserURNInReviewFormConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
 public class ReviewDto {
+    @NotNull(groups = OnCreate.class)
+    @Range(min = 0, max = 5, groups = OnCreate.class)
+    private Float rating;
 
-    private float rating;
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 255, groups = OnCreate.class)
     private String review;
+
+    @NotNull(groups = OnCreate.class)
+    @UserURNInReviewFormConstraint(groups = OnCreate.class)
+    private String user;
+
     private Date date;
     private Links _links;
 
@@ -70,5 +84,17 @@ public class ReviewDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }
