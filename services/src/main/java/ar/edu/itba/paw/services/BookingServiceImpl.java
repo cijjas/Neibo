@@ -5,7 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.TwoIds;
+import ar.edu.itba.paw.models.TwoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class BookingServiceImpl implements BookingService {
     public Booking createBooking(String userURN, String amenityURN, String shiftURN, String reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityURN, reservationDate, userURN);
 
-        TwoIds twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
+        TwoId twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
         long neighborhoodId = twoIds.getFirstId();
         long amenityId = twoIds.getSecondId();
 
