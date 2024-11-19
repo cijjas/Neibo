@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators;
 
 import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
+import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.UserURNInReviewFormConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services;
+package ar.edu.itba.paw.webapp.validation;
 
 import ar.edu.itba.paw.enums.ShiftStatus;
 import ar.edu.itba.paw.enums.WorkerRole;
@@ -14,9 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ValidationUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationUtils.class);
@@ -257,7 +255,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(workerStatusURN, "workerStatus")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long workerStatusId = ValidationUtils.extractURNId(workerStatusURN);
+        Long workerStatusId = ValidationUtils.extractId(workerStatusURN);
         ValidationUtils.checkWorkerStatusId(workerStatusId);
         return workerStatusId;
     }
@@ -268,7 +266,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(workerRoleURN, "workerRoles")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
+        Long workerRoleId = ValidationUtils.extractId(workerRoleURN);
         ValidationUtils.checkWorkerRoleId(workerRoleId);
         return workerRoleId;
     }
@@ -279,7 +277,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(postStatusURN, "postStatuses")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long postStatusId = ValidationUtils.extractURNId(postStatusURN);
+        Long postStatusId = ValidationUtils.extractId(postStatusURN);
         ValidationUtils.checkPostStatusId(postStatusId);
         return postStatusId;
     }
@@ -290,7 +288,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(professionURN, "professions")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long professionId = ValidationUtils.extractURNId(professionURN);
+        Long professionId = ValidationUtils.extractId(professionURN);
         ValidationUtils.checkProfessionId(professionId);
         return professionId;
     }
@@ -301,7 +299,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(userRoleURN, "userRole")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long userRoleId = ValidationUtils.extractURNId(userRoleURN);
+        Long userRoleId = ValidationUtils.extractId(userRoleURN);
         ValidationUtils.checkUserRoleId(userRoleId);
         return userRoleId;
     }
@@ -312,7 +310,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(departmentURN, "departments")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long departmentId = ValidationUtils.extractURNId(departmentURN);
+        Long departmentId = ValidationUtils.extractId(departmentURN);
         ValidationUtils.checkDepartmentId(departmentId);
         return departmentId;
     }
@@ -323,7 +321,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(productStatusURN, "productStatuses")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long productStatusId = ValidationUtils.extractURNId(productStatusURN);
+        Long productStatusId = ValidationUtils.extractId(productStatusURN);
         ValidationUtils.checkProductStatusId(productStatusId);
         return productStatusId;
     }
@@ -334,7 +332,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(neighborhoodURN, "neighborhood")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+        Long neighborhoodId = ValidationUtils.extractId(neighborhoodURN);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         return neighborhoodId;
     }
@@ -345,7 +343,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(workerURN, "workers")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        Long workerId = ValidationUtils.extractURNId(workerURN);
+        Long workerId = ValidationUtils.extractId(workerURN);
         ValidationUtils.checkWorkerId(workerId);
         return workerId;
     }
@@ -356,7 +354,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(userURN, "users")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoId userTwoId = ValidationUtils.extractTwoURNIds(userURN);
+        TwoId userTwoId = ValidationUtils.extractTwoId(userURN);
         ValidationUtils.checkNeighborhoodId(userTwoId.getFirstId());
         ValidationUtils.checkUserId(userTwoId.getSecondId());
         return userTwoId.getSecondId();
@@ -368,7 +366,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(userURN, "users")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoId userTwoId = ValidationUtils.extractTwoURNIds(userURN);
+        TwoId userTwoId = ValidationUtils.extractTwoId(userURN);
         ValidationUtils.checkUserId(userTwoId.getSecondId());
         return userTwoId.getSecondId();
     }
@@ -379,7 +377,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(productURN, "product")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoId productTwoId = ValidationUtils.extractTwoURNIds(productURN);
+        TwoId productTwoId = ValidationUtils.extractTwoId(productURN);
         ValidationUtils.checkNeighborhoodId(productTwoId.getFirstId());
         ValidationUtils.checkProductId(productTwoId.getSecondId());
         return productTwoId.getSecondId();
@@ -391,7 +389,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(requestStatusURN, "request-statuses")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        return ValidationUtils.extractURNId(requestStatusURN);
+        return ValidationUtils.extractId(requestStatusURN);
     }
 
     public static Long checkURNAndExtractTransactionTypeId(String typeURN) {
@@ -400,7 +398,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(typeURN, "transaction-type")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        return ValidationUtils.extractURNId(typeURN);
+        return ValidationUtils.extractId(typeURN);
     }
 
     public static Long checkURNAndExtractAmenityId(String amenityURN) {
@@ -409,7 +407,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(amenityURN, "amenity")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoId amenityTwoId = ValidationUtils.extractTwoURNIds(amenityURN);
+        TwoId amenityTwoId = ValidationUtils.extractTwoId(amenityURN);
         ValidationUtils.checkNeighborhoodId(amenityTwoId.getFirstId());
         ValidationUtils.checkAmenityId(amenityTwoId.getSecondId());
         return amenityTwoId.getSecondId();
@@ -421,7 +419,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(postURN, "posts")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoId postTwoId = ValidationUtils.extractTwoURNIds(postURN);
+        TwoId postTwoId = ValidationUtils.extractTwoId(postURN);
         ValidationUtils.checkNeighborhoodId(postTwoId.getFirstId());
         ValidationUtils.checkPostId(postTwoId.getSecondId());
         return postTwoId.getSecondId();
@@ -433,7 +431,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(channelURN, "channel")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoId channelTwoId = ValidationUtils.extractTwoURNIds(channelURN);
+        TwoId channelTwoId = ValidationUtils.extractTwoId(channelURN);
         ValidationUtils.checkNeighborhoodId(channelTwoId.getFirstId());
         ValidationUtils.checkChannelId(channelTwoId.getSecondId());
         return channelTwoId.getSecondId();
@@ -445,7 +443,7 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(tagURN, "tags")) {
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoId tagTwoId = ValidationUtils.extractTwoURNIds(tagURN);
+        TwoId tagTwoId = ValidationUtils.extractTwoId(tagURN);
         ValidationUtils.checkNeighborhoodId(tagTwoId.getFirstId());
         ValidationUtils.checkTagId(tagTwoId.getSecondId());
         return tagTwoId.getSecondId();
@@ -459,7 +457,7 @@ public class ValidationUtils {
     }
     // --------------------------------------------------------------------------------------------------------------
 
-    public static long extractURNId(String URN) {
+    public static long extractId(String URN) {
         String[] URNParts = URN.split("/");
         if (URNParts.length < 5) { // Check if there are enough parts for an ID
             throw new IllegalArgumentException("Invalid URN format.");
@@ -468,7 +466,13 @@ public class ValidationUtils {
         return Long.parseLong(URNParts[4]);
     }
 
-    public static TwoId extractTwoURNIds(String URN) {
+    public static Long extractOptionalId(String URN) {
+        if (URN == null)
+            return null;
+        return extractId(URN);
+    }
+
+    public static TwoId extractTwoId(String URN) {
         String[] URNParts = URN.split("/");
         if (URNParts.length < 7) { // Check if there are enough parts for two IDs
             throw new IllegalArgumentException("Invalid URN format.");
@@ -480,7 +484,13 @@ public class ValidationUtils {
         return new TwoId(firstId, secondId);
     }
 
-    public static ThreeId extractThreeURNIds(String URN) {
+    public static TwoId extractOptionalTwoId(String URN) {
+        if (URN == null)
+            return null;
+        return extractTwoId(URN);
+    }
+
+    public static ThreeId extractThreeId(String URN) {
         String[] URNParts = URN.split("/");
         if (URNParts.length < 9) { // Check if there are enough parts for three IDs
             throw new IllegalArgumentException("Invalid URN format.");
@@ -491,5 +501,23 @@ public class ValidationUtils {
         long thirdId = Long.parseLong(URNParts[8]);
 
         return new ThreeId(firstId, secondId, thirdId);
+    }
+
+    public static List<Long> extractIds(List<String> URNs){
+        List<Long> ids = new ArrayList<>();
+        if (URNs == null || URNs.isEmpty())
+            return Collections.emptyList();
+        for (String URN : URNs)
+            ids.add(ValidationUtils.extractId(URN));
+        return ids;
+    }
+
+    public static List<TwoId> extractTwoIds(List<String> URNs){
+        List<TwoId> ids = new ArrayList<>();
+        if (URNs == null || URNs.isEmpty())
+            return Collections.emptyList();
+        for (String URN : URNs)
+            ids.add(ValidationUtils.extractTwoId(URN));
+        return ids;
     }
 }

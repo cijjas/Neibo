@@ -11,7 +11,7 @@ import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.models.TwoIds;
+import ar.edu.itba.paw.models.TwoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +49,9 @@ public class RequestServiceImpl implements RequestService {
     public Request createRequest(String userURN, String productURN, String message, int quantity) {
         LOGGER.info("Creating a Request for Product {} by User {}", productURN, userURN);
 
-        TwoIds twoIds = ValidationUtils.extractTwoURNIds(productURN);
-        long neighborhoodId = twoIds.getFirstId();
-        long productId = twoIds.getSecondId();
+        TwoId twoId = ValidationUtils.extractTwoURNIds(productURN);
+        long neighborhoodId = twoId.getFirstId();
+        long productId = twoId.getSecondId();
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkProductId(productId);

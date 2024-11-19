@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.models;
 
-public class TwoIds {
+public class TwoId {
     private final long firstId;
     private final long secondId;
 
-    public TwoIds(long firstId, long secondId) {
+    public TwoId(long firstId, long secondId) {
         this.firstId = firstId;
         this.secondId = secondId;
     }

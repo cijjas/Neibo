@@ -3,7 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.models.TwoIds;
+import ar.edu.itba.paw.models.TwoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,9 @@ public class LikeServiceImpl implements LikeService {
     public Like createLike(String postURN, String userURN) {
         LOGGER.info("Creating Like for Post {} by User {}", postURN, userURN);
 
-        TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
-        long neighborhoodId = twoIds.getFirstId();
-        long postId = twoIds.getSecondId();
+        TwoId twoId = ValidationUtils.extractTwoURNIds(postURN);
+        long neighborhoodId = twoId.getFirstId();
+        long postId = twoId.getSecondId();
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostId(postId);
 
@@ -90,15 +90,15 @@ public class LikeServiceImpl implements LikeService {
         if (postURN == null || userURN == null)
             throw new IllegalArgumentException("Both the Post and the User have to be specified when deleting");
 
-        TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
-        ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
-        ValidationUtils.checkPostId(postTwoIds.getSecondId());
-        long postId = postTwoIds.getSecondId();
+        TwoId postTwoId = ValidationUtils.extractTwoURNIds(postURN);
+        ValidationUtils.checkNeighborhoodId(postTwoId.getFirstId());
+        ValidationUtils.checkPostId(postTwoId.getSecondId());
+        long postId = postTwoId.getSecondId();
 
-        TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-        ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-        ValidationUtils.checkUserId(userTwoIds.getSecondId());
-        long userId = userTwoIds.getSecondId();
+        TwoId userTwoId = ValidationUtils.extractTwoURNIds(userURN);
+        ValidationUtils.checkNeighborhoodId(userTwoId.getFirstId());
+        ValidationUtils.checkUserId(userTwoId.getSecondId());
+        long userId = userTwoId.getSecondId();
 
         return likeDao.deleteLike(postId, userId);
     }

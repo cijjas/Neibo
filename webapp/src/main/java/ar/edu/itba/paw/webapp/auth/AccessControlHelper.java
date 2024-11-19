@@ -4,7 +4,7 @@ import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
-import ar.edu.itba.paw.models.TwoIds;
+import ar.edu.itba.paw.models.TwoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,10 +92,10 @@ public class AccessControlHelper {
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
-        TwoIds userTwoIds = extractTwoURNIds(userURN);
-        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
+        TwoId userTwoId = extractTwoURNIds(userURN);
+        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
 
-        return getRequestingUserId(authentication) == userTwoIds.getSecondId();
+        return getRequestingUserId(authentication) == userTwoId.getSecondId();
     }
 
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
@@ -236,9 +236,9 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication))
             return true;
 
-        TwoIds twoIds = extractTwoURNIds(postURN);
-        ps.findPost(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Referenced Post was not found."));
-        return getRequestingUserNeighborhoodId(authentication) == twoIds.getFirstId();
+        TwoId twoId = extractTwoURNIds(postURN);
+        ps.findPost(twoId.getSecondId(), twoId.getFirstId()).orElseThrow(()-> new NotFoundException("Referenced Post was not found."));
+        return getRequestingUserNeighborhoodId(authentication) == twoId.getFirstId();
     }
 
     // Restricted from Anonymous, Unverified and Rejected
@@ -255,27 +255,27 @@ public class AccessControlHelper {
             return true;
 
 
-        TwoIds postTwoIds;
-        TwoIds userTwoIds;
+        TwoId postTwoId;
+        TwoId userTwoId;
         if (userURN != null && postURN == null) {
-            userTwoIds = extractTwoURNIds(userURN);
-            us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
-            return getRequestingUserNeighborhoodId(authentication) == userTwoIds.getFirstId();
+            userTwoId = extractTwoURNIds(userURN);
+            us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
+            return getRequestingUserNeighborhoodId(authentication) == userTwoId.getFirstId();
         }
 
         if (userURN == null) {
-            postTwoIds = extractTwoURNIds(postURN);
-            ps.findPost(postTwoIds.getSecondId(), postTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
-            return getRequestingUserNeighborhoodId(authentication) == postTwoIds.getFirstId();
+            postTwoId = extractTwoURNIds(postURN);
+            ps.findPost(postTwoId.getSecondId(), postTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
+            return getRequestingUserNeighborhoodId(authentication) == postTwoId.getFirstId();
         }
 
-        userTwoIds = extractTwoURNIds(userURN);
-        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
-        postTwoIds = extractTwoURNIds(postURN);
-        ps.findPost(postTwoIds.getSecondId(), postTwoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        userTwoId = extractTwoURNIds(userURN);
+        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
+        postTwoId = extractTwoURNIds(postURN);
+        ps.findPost(postTwoId.getSecondId(), postTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
 
-        return getRequestingUserNeighborhoodId(authentication) == postTwoIds.getFirstId()
-                &&  getRequestingUserNeighborhoodId(authentication) == userTwoIds.getFirstId();
+        return getRequestingUserNeighborhoodId(authentication) == postTwoId.getFirstId()
+                &&  getRequestingUserNeighborhoodId(authentication) == userTwoId.getFirstId();
     }
 
     // Restricted from Anonymous, Unverified and Rejected
@@ -285,8 +285,8 @@ public class AccessControlHelper {
         LOGGER.info("Verifying Accessibility for the User's entities");
         Authentication authentication = getAuthentication();
 
-        TwoIds userTwoIds = extractTwoURNIds(userURN);
-        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
+        TwoId userTwoId = extractTwoURNIds(userURN);
+        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
 
         if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
             return false;
@@ -294,12 +294,12 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication))
             return true;
 
-        TwoIds twoIds = extractTwoURNIds(userURN);
+        TwoId twoId = extractTwoURNIds(userURN);
 
         if (isAdministrator(authentication))
-            return getRequestingUserNeighborhoodId(authentication) == twoIds.getFirstId();
+            return getRequestingUserNeighborhoodId(authentication) == twoId.getFirstId();
 
-        return getRequestingUserNeighborhoodId(authentication) == twoIds.getFirstId() && getRequestingUserId(authentication) == twoIds.getSecondId();
+        return getRequestingUserNeighborhoodId(authentication) == twoId.getFirstId() && getRequestingUserId(authentication) == twoId.getSecondId();
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -313,6 +313,12 @@ public class AccessControlHelper {
             return true;
 
         return getRequestingUserId(authentication) == extractURNId(workerURN);
+    }
+
+    // todo: Only SuperAdmins can create affiliations with a worker role that is not unverified
+    public boolean canReferenceWorkerRoleInAffiliationForm(String workerRoleURN){
+
+        return true;
     }
 
     // Workers can delete Affiliations with Neighborhoods if it includes them
@@ -344,13 +350,13 @@ public class AccessControlHelper {
         LOGGER.info("Verifying Review Creation Accessibility");
         Authentication authentication = getAuthentication();
 
-        TwoIds userTwoIds = extractTwoURNIds(userURN);
-        us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
+        TwoId userTwoId = extractTwoURNIds(userURN);
+        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
 
         if (isSuperAdministrator(authentication))
             return true;
 
-        return getRequestingUserId(authentication) == userTwoIds.getSecondId();
+        return getRequestingUserId(authentication) == userTwoId.getSecondId();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -487,13 +493,13 @@ public class AccessControlHelper {
             return isSuperAdministrator(authentication) || isAdministrator(authentication);
 
         if (userURN != null) {
-            TwoIds userTwoIds = extractTwoURNIds(userURN);
-            us.findUser(userTwoIds.getSecondId(), userTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
+            TwoId userTwoId = extractTwoURNIds(userURN);
+            us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
             return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
         }
 
-        TwoIds productTwoIds = extractTwoURNIds(productURN);
-        Product product = prs.findProduct(productTwoIds.getSecondId(), productTwoIds.getFirstId()).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        TwoId productTwoId = extractTwoURNIds(productURN);
+        Product product = prs.findProduct(productTwoId.getSecondId(), productTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("Product Not Found"));
         return product.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
@@ -517,8 +523,8 @@ public class AccessControlHelper {
         if (isSuperAdministrator(authentication) || isAdministrator(authentication))
             return true;
 
-        TwoIds twoIds = extractTwoURNIds(productURN);
-        Product p = prs.findProduct(twoIds.getSecondId(), twoIds.getFirstId()).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        TwoId twoId = extractTwoURNIds(productURN);
+        Product p = prs.findProduct(twoId.getSecondId(), twoId.getFirstId()).orElseThrow(()-> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() != getRequestingUserId(authentication);
     }
 
@@ -591,7 +597,7 @@ public class AccessControlHelper {
         return Long.parseLong(URNParts[4]);
     }
 
-    public static TwoIds extractTwoURNIds(String URN) {
+    public static TwoId extractTwoURNIds(String URN) {
         String[] URNParts = URN.split("/");
         if (URNParts.length < 7) { // Check if there are enough parts for two IDs
             throw new IllegalArgumentException("Invalid URN format.");
@@ -600,6 +606,6 @@ public class AccessControlHelper {
         long firstId = Long.parseLong(URNParts[4]);
         long secondId = Long.parseLong(URNParts[6]);
 
-        return new TwoIds(firstId, secondId);
+        return new TwoId(firstId, secondId);
     }
 }

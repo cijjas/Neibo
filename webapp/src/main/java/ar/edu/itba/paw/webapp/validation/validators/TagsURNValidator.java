@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators;
 
+import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.TagsURNConstraint;
 
 import javax.validation.ConstraintValidator;

@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.validation.validators;
+package ar.edu.itba.paw.webapp.validation;
 
 import java.util.HashMap;
 import java.util.Map;
