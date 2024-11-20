@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.enums.Authority;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
@@ -40,15 +41,6 @@ public class AccessControlHelper {
 
     @Autowired
     private UserService us;
-/*
-* Revisar si no se puede verificar el uso de query params en la filter chain, creo que no seria practico esto
-* Tal vez se puede mejorar la filter chain para disminuir la logica de los access control helpers a lo estrictamente necesario
-* por ejemplo que haya un permit all si sos super admin
-* que dentro de neighborhoods admins tengan el permit all
-*
-*
- * Verificar con los tests
-* */
 
     // The Super Admin can perform all the actions
     // A Neighborhood Administrator can perform all the actions that correspond to that specific Neighborhood
@@ -338,11 +330,15 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == extractURNId(workerURN);
     }
 
-    // todo: Only SuperAdmins can create affiliations with a worker role that is not unverified
+    // Admins can change the status of the affiliation, workers can only use the unverified status
     public boolean canReferenceWorkerRoleInAffiliationForm(String workerRoleURN){
-        if (workerRoleURN == null)
-            return false;
-        return true;
+        LOGGER.info("Verifying Create Affiliation Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication) || isAdministrator(authentication))
+            return true;
+
+        return  extractURNId(workerRoleURN) == WorkerRole.UNVERIFIED_WORKER.getId();
     }
 
     // Workers can delete Affiliations with Neighborhoods if it includes them

@@ -14,13 +14,12 @@ public class ChannelDto {
     @Size(min = 1, max = 20, groups = OnCreate.class)
     private String name;
 
-    private String channel;
     private Links _links;
 
     public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodId) {
         final ChannelDto dto = new ChannelDto();
 
-        dto.channel = channel.getChannel();
+        dto.name= channel.getChannel();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -36,15 +35,6 @@ public class ChannelDto {
                 .build());
         dto.set_links(links);
         return dto;
-    }
-
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public void setChannel(String channel) {
-        this.channel = channel;
     }
 
     public Links get_links() {

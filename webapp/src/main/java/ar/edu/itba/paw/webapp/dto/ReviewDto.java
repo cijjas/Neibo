@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Review;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNInReviewFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import org.hibernate.validator.constraints.Range;
 
@@ -20,7 +22,9 @@ public class ReviewDto {
     private String review;
 
     @NotNull(groups = OnCreate.class)
-    @UserURNInReviewFormConstraint(groups = OnCreate.class)
+    @UserURNFormConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    @UserURNReferenceInReviewConstraint(groups = OnCreate.class)
     private String user;
 
     private Date date;

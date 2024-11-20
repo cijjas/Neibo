@@ -1,9 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Request;
-import ar.edu.itba.paw.webapp.validation.constraints.ProductURNInRequestFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.RequestStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.RequestStatusURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import org.hibernate.validator.constraints.Range;
@@ -20,7 +25,9 @@ public class RequestDto {
     private String requestMessage;
 
     @NotNull(groups = OnCreate.class)
-    @ProductURNInRequestFormConstraint(groups = OnCreate.class)
+    @ProductURNFormConstraint(groups = OnCreate.class)
+    @ProductURNReferenceConstraint(groups = OnCreate.class)
+    @ProductURNInRequestConstraint(groups = OnCreate.class)
     private String product;
 
     @NotNull(groups = OnCreate.class)
@@ -28,10 +35,13 @@ public class RequestDto {
     private Integer units;
 
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraintCreate(groups = OnCreate.class)
+    @UserURNFormConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    @UserURNCreateReferenceConstraint(groups = OnCreate.class)
     private String user;
 
-    @RequestStatusURNConstraint(groups = OnUpdate.class)
+    @RequestStatusURNFormConstraint(groups = OnUpdate.class)
+    @RequestStatusURNReferenceConstraint(groups = OnUpdate.class)
     private String requestStatus;
 
     private Date requestDate;

@@ -1,25 +1,33 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Affiliation;
-import ar.edu.itba.paw.webapp.validation.constraints.NeighborhoodURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.WorkerRoleURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.WorkerURNInAffiliationFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerRoleURNReferenceInAffiliationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURNReferenceInAffiliationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerRoleURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 
 public class AffiliationDto {
 
-    @WorkerRoleURNConstraint
+    @NotNull(groups = OnCreate.class)
+    @WorkerRoleURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @WorkerRoleURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @WorkerRoleURNReferenceInAffiliationConstraint(groups = {OnCreate.class, OnUpdate.class})
     private String workerRole;
 
     @NotNull(groups = OnCreate.class)
-    @WorkerURNInAffiliationFormConstraint(groups = OnCreate.class)
+    @WorkerURNFormConstraint(groups = {OnCreate.class})
+    @WorkerURNReferenceConstraint(groups = {OnCreate.class})
+    @WorkerURNReferenceInAffiliationConstraint(groups = OnCreate.class)
     private String worker;
 
     @NotNull(groups = OnCreate.class)
-    @NeighborhoodURNConstraint(groups = OnCreate.class)
     private String neighborhood;
 
     private Links _links;

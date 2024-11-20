@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Resource;
-import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
@@ -14,7 +15,8 @@ public class ResourceDto {
     @Size(max = 1000, groups = {OnCreate.class, OnUpdate.class})
     private String description;
 
-    @ImageURNConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @ImageURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @ImageURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
     private String image;
 
     @NotNull(groups = OnCreate.class)

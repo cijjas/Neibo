@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Tag;
-import ar.edu.itba.paw.webapp.validation.constraints.TagsConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.TagsConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

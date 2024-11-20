@@ -1,9 +1,10 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.ProfessionsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
@@ -15,11 +16,11 @@ import java.net.URI;
 
 public class WorkerDto {
     @NotNull(groups = OnCreate.class)
-    @UserURNConstraint(groups = OnCreate.class)
     private String user;
 
     @NotNull(groups = OnCreate.class)
-    @ProfessionsURNConstraint(groups = OnCreate.class)
+    @ProfessionsURNFormConstraint(groups = OnCreate.class)
+    @ProfessionURNReferenceConstraint(groups = OnCreate.class)
     private String[] professions;
 
     @NotNull(groups = OnCreate.class)
@@ -40,7 +41,8 @@ public class WorkerDto {
     @Size(max = 1000, groups = OnUpdate.class)
     private String bio;
 
-    @ImageURNConstraint(groups = OnUpdate.class)
+    @ImageURNFormConstraint(groups = OnUpdate.class)
+    @ImageURNReferenceConstraint(groups = OnUpdate.class)
     private String backgroundPicture;
 
     private Float averageRating;

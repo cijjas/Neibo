@@ -1,10 +1,15 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.validation.constraints.ChannelURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.TagsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ChannelURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.TagsURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
@@ -23,18 +28,23 @@ public class PostDto {
     @Size(min = 0, max = 2000, groups = OnCreate.class)
     private String description;
 
-    @TagsURNConstraint(groups = OnCreate.class)
+    @TagsURNFormConstraint(groups = OnCreate.class)
+    @TagsURNReferenceConstraint(groups = OnCreate.class)
     private List<String> tags;
 
-    @ImageURNConstraint(groups = OnCreate.class)
+    @ImageURNFormConstraint(groups = OnCreate.class)
+    @ImageURNReferenceConstraint(groups = OnCreate.class)
     private String image;
 
-    @ChannelURNConstraint(groups = OnCreate.class)
     @NotNull(groups = OnCreate.class)
+    @ChannelURNFormConstraint(groups = OnCreate.class)
+    @ChannelURNReferenceConstraint(groups = OnCreate.class)
     private String channel;
 
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraintCreate(groups = OnCreate.class)
+    @UserURNFormConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    @UserURNCreateReferenceConstraint(groups = OnCreate.class)
     private String user;
 
     private Date date;

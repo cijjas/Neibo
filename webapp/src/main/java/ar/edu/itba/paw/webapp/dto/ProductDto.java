@@ -1,10 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.validation.constraints.DepartmentURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.ImagesURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintCreate;
-import ar.edu.itba.paw.webapp.validation.constraints.UserURNReferenceConstraintUpdate;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImagesURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceConstraintUpdate;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ImagesURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import org.hibernate.validator.constraints.Range;
@@ -23,7 +27,8 @@ public class ProductDto {
     @NotNull(groups = OnCreate.class)
     private Double price;
 
-    @ImagesURNConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @ImagesURNFormConstraint(groups = OnCreate.class)
+    @ImagesURNReferenceConstraint(groups = OnCreate.class)
     private String[] images;
 
     @NotNull(groups = OnCreate.class)
@@ -31,7 +36,8 @@ public class ProductDto {
     private String description;
 
     @NotNull(groups = OnCreate.class)
-    @DepartmentURNConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @DepartmentURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @DepartmentURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
     private String department;
 
     @NotNull(groups = OnCreate.class)
@@ -41,9 +47,11 @@ public class ProductDto {
     @NotNull(groups = OnCreate.class)
     private Boolean used;
 
-    // Temporal fix
     @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraintCreate(groups = {OnCreate.class})
+    @UserURNFormConstraint(groups = OnCreate.class)
+    @UserURNReferenceConstraint(groups = OnCreate.class)
+    // Temporal fix until group sequences are resolved
+    @UserURNCreateReferenceConstraint(groups = {OnCreate.class})
     @UserURNReferenceConstraintUpdate(groups = {OnUpdate.class})
     private String user;
 

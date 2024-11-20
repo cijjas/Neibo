@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.webapp.validation.constraints.ShiftsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftsURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ShiftsURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +26,8 @@ public class AmenityDto {
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {OnCreate.class, OnUpdate.class})
     private String description;
 
-    @ShiftsURNConstraint()
+    @ShiftsURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @ShiftsURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
     private List<String> selectedShifts;
 
     private Links _links;

@@ -3,10 +3,13 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.validation.constraints.EmailConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.LanguageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.UserRoleURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.LanguageURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.LanguageURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserRoleURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
@@ -43,16 +46,19 @@ public class UserDto {
     private Integer identification;
 
     @NotNull(groups = OnCreate.class)
-    @LanguageURNConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @LanguageURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @LanguageURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
     private String language;
 
-    @UserRoleURNConstraint(groups = OnUpdate.class)
+    @UserRoleURNFormConstraint(groups = OnUpdate.class)
+    @UserRoleURNReferenceConstraint(groups = OnUpdate.class)
     private String userRole;
 
     @Pattern(regexp = "^[0-9]*", groups = OnUpdate.class)
     private String phoneNumber;
 
-    @ImageURNConstraint(groups = OnUpdate.class)
+    @ImageURNFormConstraint(groups = OnCreate.class)
+    @ImageURNReferenceConstraint(groups = OnCreate.class)
     private String profilePicture;
 
     private Boolean darkMode;

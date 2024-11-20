@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.webapp.validation.constraints.ReservationDateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.ValidTimeRangeConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.ReservationDateConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 
