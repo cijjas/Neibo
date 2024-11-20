@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +122,7 @@ public class PostController {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createPost(
             @Valid PostDto publishForm
     ) {

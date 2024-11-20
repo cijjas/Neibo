@@ -1,14 +1,15 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.ReservationDateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.AmenityURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ShiftURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.ReservationDateConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
@@ -16,26 +17,28 @@ import java.util.Date;
 
 public class BookingDto {
 
-    @NotNull(groups = OnCreate.class)
-    @AmenityURNFormConstraint(groups = OnCreate.class)
-    @AmenityURNReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @AmenityURNFormConstraint(groups = Form.class)
+    @AmenityURNReferenceConstraint(groups = Reference.class)
     private String amenity; // http://localhost:8080/neighborhoods/{neighborhoodId}/amenities/{amenityId}
 
-    @NotNull(groups = OnCreate.class)
-    @ShiftURNFormConstraint(groups = OnCreate.class)
-    @ShiftURNReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @ShiftURNFormConstraint(groups = Form.class)
+    @ShiftURNReferenceConstraint(groups = Reference.class)
     private String shift; // http://localhost:8080/shifts/{shiftId}
 
-    @NotNull(groups = OnCreate.class)
-    @ReservationDateConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @ReservationDateConstraint(groups = Specific.class)
     private String reservationDate;
 
-    @NotNull(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    @UserURNCreateReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
     private Date bookingDate;
+
     private Links _links;
 
     public static BookingDto fromBooking(Booking booking, UriInfo uriInfo) {

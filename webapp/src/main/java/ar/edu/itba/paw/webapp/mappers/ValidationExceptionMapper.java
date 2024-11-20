@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.mappers;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 
 import javax.validation.ValidationException;
 import javax.ws.rs.core.Context;

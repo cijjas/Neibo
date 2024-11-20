@@ -13,11 +13,9 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = RequestStatusURNFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestStatusURNFormConstraint {
-
-    String message() default "Error in the URN";
+    String message() default "Malformed URN";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

@@ -3,9 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,7 +125,7 @@ public class WorkerController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createWorker(
             @Valid WorkerDto form
     ) {
@@ -147,7 +147,7 @@ public class WorkerController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateWorker(#workerId)")
-    @Validated(OnUpdate.class)
+    @Validated(UpdateValidationSequence.class)
     public Response updateWorkerPartially(
             @PathParam("id") final long workerId,
             @Valid WorkerDto partialUpdate

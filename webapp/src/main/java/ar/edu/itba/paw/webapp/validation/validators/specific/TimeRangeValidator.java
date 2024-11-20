@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.specific;
 
-import ar.edu.itba.paw.webapp.validation.constraints.specific.ValidTimeRangeConstraint;
 import ar.edu.itba.paw.webapp.dto.EventDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.ValidTimeRangeConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

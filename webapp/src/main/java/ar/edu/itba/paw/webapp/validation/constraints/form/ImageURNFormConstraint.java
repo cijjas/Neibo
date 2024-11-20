@@ -12,11 +12,9 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = ImageURNFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ImageURNFormConstraint {
-
-    String message() default "Error in the URN";
+    String message() default "Malformed URN";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

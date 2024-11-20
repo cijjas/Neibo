@@ -1,12 +1,13 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.RequestStatus;
-import ar.edu.itba.paw.enums.TransactionType;
 
 import javax.ws.rs.core.UriInfo;
 
 public class RequestStatusDto {
+
     private RequestStatus requestStatus;
+
     private Links _links;
 
     public static RequestStatusDto fromRequestStatus(RequestStatus requestStatus, UriInfo uriInfo) {

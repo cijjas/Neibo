@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = TagsURNReferenceValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TagsURNReferenceConstraint {
-    String message() default "Error in the URN";
+    String message() default "Invalid URN Reference";
 
     Class<?>[] groups() default {};
 

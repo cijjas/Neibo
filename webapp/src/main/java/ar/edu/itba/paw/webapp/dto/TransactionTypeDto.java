@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 public class TransactionTypeDto {
 
     private TransactionType transactionType;
+
     private Links _links;
 
     public static TransactionTypeDto fromTransactionType(TransactionType transactionType, UriInfo uriInfo) {

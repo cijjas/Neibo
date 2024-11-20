@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = DepartmentURNReferenceValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DepartmentURNReferenceConstraint {
-    String message() default "Error in the URN";
+    String message() default "Invalid URN Reference";
 
     Class<?>[] groups() default {};
 

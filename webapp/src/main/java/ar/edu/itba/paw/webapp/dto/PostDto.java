@@ -1,53 +1,58 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ChannelURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.TagsURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
+import java.lang.ref.Reference;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
 public class PostDto {
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 100, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 100, groups = Basic.class)
     private String title;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 2000, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 2000, groups = Basic.class)
     private String description;
 
-    @TagsURNFormConstraint(groups = OnCreate.class)
-    @TagsURNReferenceConstraint(groups = OnCreate.class)
+    @TagsURNFormConstraint(groups = Form.class)
+    @TagsURNReferenceConstraint(groups = Reference.class)
     private List<String> tags;
 
-    @ImageURNFormConstraint(groups = OnCreate.class)
-    @ImageURNReferenceConstraint(groups = OnCreate.class)
+    @ImageURNFormConstraint(groups = Form.class)
+    @ImageURNReferenceConstraint(groups = Reference.class)
     private String image;
 
-    @NotNull(groups = OnCreate.class)
-    @ChannelURNFormConstraint(groups = OnCreate.class)
-    @ChannelURNReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @ChannelURNFormConstraint(groups = Form.class)
+    @ChannelURNReferenceConstraint(groups = Reference.class)
     private String channel;
 
-    @NotNull(groups = OnCreate.class)
-    @UserURNFormConstraint(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    @UserURNCreateReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
     private Date date;
+
     private Links _links;
 
     public static PostDto fromPost(Post post, UriInfo uriInfo) {

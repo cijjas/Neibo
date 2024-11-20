@@ -7,8 +7,8 @@ import javax.ws.rs.core.UriInfo;
 public class ImageDto {
 
     private byte[] image;
-    private Links _links;
 
+    private Links _links;
 
     public static ImageDto fromImage(Image image, UriInfo uriInfo) {
         final ImageDto dto = new ImageDto();

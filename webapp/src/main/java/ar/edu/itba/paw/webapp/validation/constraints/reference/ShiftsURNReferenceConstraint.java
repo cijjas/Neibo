@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = ShiftsURNReferenceValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ShiftsURNReferenceConstraint {
-    String message() default "Error in the URN";
+    String message() default "Invalid URN Reference";
 
     Class<?>[] groups() default {};
 

@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ImagesURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceConstraintUpdate;
+import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImagesURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ImagesURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -20,42 +19,43 @@ import java.net.URI;
 import java.util.Date;
 
 public class ProductDto {
-    @NotNull(groups = OnCreate.class)
-    @Size(max = 100, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(max = 100, groups = Basic.class)
     private String name;
 
-    @NotNull(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
     private Double price;
 
-    @ImagesURNFormConstraint(groups = OnCreate.class)
-    @ImagesURNReferenceConstraint(groups = OnCreate.class)
+    @ImagesURNFormConstraint(groups = Form.class)
+    @ImagesURNReferenceConstraint(groups = Reference.class)
     private String[] images;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(max = 2000, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(max = 2000, groups = Basic.class)
     private String description;
 
-    @NotNull(groups = OnCreate.class)
-    @DepartmentURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
-    @DepartmentURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @DepartmentURNFormConstraint(groups = Form.class)
+    @DepartmentURNReferenceConstraint(groups = Reference.class)
     private String department;
 
-    @NotNull(groups = OnCreate.class)
-    @Range(min = 1, max = 100, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Range(min = 1, max = 100, groups = Basic.class)
     private Long remainingUnits;
 
-    @NotNull(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
     private Boolean used;
 
-    @NotNull(groups = OnCreate.class)
-    @UserURNFormConstraint(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    // Temporal fix until group sequences are resolved
-    @UserURNCreateReferenceConstraint(groups = {OnCreate.class})
-    @UserURNReferenceConstraintUpdate(groups = {OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    // Temporal fix until group sequences are resolved they are fixed and i dont what i should do hehehe
+    @UserURNCreateReferenceConstraint(groups = Authorization.class)
+    @UserURNReferenceConstraintUpdate(groups = Authorization.class)
     private String user;
 
     private Date creationDate;
+
     private Links _links;
 
     public static ProductDto fromProduct(Product product, UriInfo uriInfo) {

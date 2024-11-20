@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.*;
+import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.Path;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
@@ -117,7 +116,7 @@ public class AmenityController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createAmenity(
             @Valid AmenityDto form
     ) {
@@ -140,7 +139,7 @@ public class AmenityController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Validated(OnUpdate.class)
+    @Validated(UpdateValidationSequence.class)
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
             @Valid AmenityDto partialUpdate

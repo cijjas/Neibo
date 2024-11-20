@@ -3,15 +3,14 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.LanguageURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.LanguageURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserRoleURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -22,48 +21,50 @@ import java.net.URI;
 import java.util.Date;
 
 public class UserDto {
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
-    @Pattern(regexp = "^[a-zA-Z ]*", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 64, groups = Basic.class)
+    @Pattern(regexp = "^[a-zA-Z ]*", groups = Basic.class)
     private String name;
 
-    @NotNull(groups = OnCreate.class)
-    @Pattern(regexp = "^[a-zA-Z ]*", groups = {OnCreate.class, OnUpdate.class})
-    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Pattern(regexp = "^[a-zA-Z ]*", groups = Basic.class)
+    @Size(min = 1, max = 64, groups = Basic.class)
     private String surname;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 6, max = 128, groups = {OnCreate.class, OnUpdate.class})
-    @Email(groups = {OnCreate.class, OnUpdate.class})
-    @EmailConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 6, max = 128, groups = Basic.class)
+    @Email(groups = Basic.class)
+    @EmailConstraint(groups = Specific.class)
     private String mail;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 50, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 50, groups = Basic.class)
     private String password;
 
-    @NotNull(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
     private Integer identification;
 
-    @NotNull(groups = OnCreate.class)
-    @LanguageURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
-    @LanguageURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @LanguageURNFormConstraint(groups = Form.class)
+    @LanguageURNReferenceConstraint(groups = Reference.class)
     private String language;
 
-    @UserRoleURNFormConstraint(groups = OnUpdate.class)
-    @UserRoleURNReferenceConstraint(groups = OnUpdate.class)
+    @UserRoleURNFormConstraint(groups = Form.class)
+    @UserRoleURNReferenceConstraint(groups = Reference.class)
     private String userRole;
 
-    @Pattern(regexp = "^[0-9]*", groups = OnUpdate.class)
+    @Size(min = 1, max = 50, groups = Basic.class)
+    @Pattern(regexp = "^[0-9]*", groups = Basic.class)
     private String phoneNumber;
 
-    @ImageURNFormConstraint(groups = OnCreate.class)
-    @ImageURNReferenceConstraint(groups = OnCreate.class)
+    @ImageURNFormConstraint(groups = Form.class)
+    @ImageURNReferenceConstraint(groups = Reference.class)
     private String profilePicture;
 
     private Boolean darkMode;
 
     private Date creationDate;
+
     private Links _links;
 
     public static UserDto fromUser(final User user, final UriInfo uriInfo) {

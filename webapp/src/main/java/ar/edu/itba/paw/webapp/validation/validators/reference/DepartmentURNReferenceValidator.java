@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.validation.validators.reference;
 
-import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNReferenceConstraint;
 
 import javax.validation.ConstraintValidator;
@@ -13,7 +12,7 @@ public class DepartmentURNReferenceValidator implements ConstraintValidator<Depa
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null)
-            return true;
+            return false;
         // URNValidator or ReferenceValidator
         return true;
     }

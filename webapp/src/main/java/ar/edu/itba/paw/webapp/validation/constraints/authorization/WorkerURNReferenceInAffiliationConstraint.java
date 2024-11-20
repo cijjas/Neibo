@@ -12,8 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = WorkerURNInAffiliationFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WorkerURNReferenceInAffiliationConstraint {
-
-    String message() default "Error in the URN";
+    String message() default "Unauthorized URN Reference";
 
     Class<?>[] groups() default {};
 

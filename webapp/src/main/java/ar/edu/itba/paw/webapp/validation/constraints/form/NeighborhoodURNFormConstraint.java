@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = NeighborhoodURNFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NeighborhoodURNFormConstraint {
-    String message() default "Error in the URN";
+    String message() default "Malformed URN";
 
     Class<?>[] groups() default {};
 

@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = ProfessionsURNFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProfessionsURNFormConstraint {
-    String message() default "Error in the URN";
+    String message() default "Malformed URN";
 
     Class<?>[] groups() default {};
 

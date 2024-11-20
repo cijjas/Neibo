@@ -1,6 +1,6 @@
-package ar.edu.itba.paw.webapp.validation.constraints.form;
+package ar.edu.itba.paw.webapp.validation.constraints.reference;
 
-import ar.edu.itba.paw.webapp.validation.validators.form.WorkerURNFormValidator;
+import ar.edu.itba.paw.webapp.validation.validators.reference.ProfessionsURNReferenceValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,10 +9,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Documented
-@Constraint(validatedBy = WorkerURNFormValidator.class)
+@Constraint(validatedBy = ProfessionsURNReferenceValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface WorkerURNFormConstraint {
-    String message() default "Malformed URN";
+public @interface ProfessionsURNReferenceConstraint {
+    String message() default "Invalid URN Reference";
 
     Class<?>[] groups() default {};
 

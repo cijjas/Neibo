@@ -6,6 +6,7 @@ import javax.ws.rs.core.UriInfo;
 public class LikeCountDto {
 
     private int likeCount;
+
     private Links _links;
 
     public static LikeCountDto fromLikeCount(int likeCount, String postURN, String userURN, UriInfo uriInfo) {

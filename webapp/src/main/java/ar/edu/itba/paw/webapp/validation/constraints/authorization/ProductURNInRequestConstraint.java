@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = ProductURNInRequestValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProductURNInRequestConstraint {
-    String message() default "Error in the URN";
+    String message() default "Unauthorized URN Reference";
 
     Class<?>[] groups() default {};
 

@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.webapp.validation.groups.sequences;
 
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Form;
-import ar.edu.itba.paw.webapp.validation.groups.Reference;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 
 import javax.validation.GroupSequence;
 
-@GroupSequence({Form.class, Reference.class, Authorization.class})
+@GroupSequence({Basic.class, Form.class, Reference.class, Specific.class, Authorization.class})
 public interface UpdateValidationSequence {}

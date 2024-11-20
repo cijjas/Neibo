@@ -3,8 +3,10 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftsURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ShiftsURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Reference;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
@@ -16,18 +18,19 @@ import java.util.List;
 
 @Validated
 public class AmenityDto {
-    @NotNull(groups = {OnCreate.class})
-    @Size(min = 0, max = 100, groups = {OnCreate.class, OnUpdate.class})
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {OnCreate.class, OnUpdate.class})
+
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 100, groups = Basic.class)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
     private String name;
 
-    @NotNull(groups = {OnCreate.class})
-    @Size(min = 0, max = 1000, groups = {OnCreate.class, OnUpdate.class})
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 1000, groups = Basic.class)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
     private String description;
 
-    @ShiftsURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
-    @ShiftsURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @ShiftsURNFormConstraint(groups = Form.class)
+    @ShiftsURNReferenceConstraint(groups = Reference.class)
     private List<String> selectedShifts;
 
     private Links _links;

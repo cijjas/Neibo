@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.security.api.jwt;
 
 import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.webapp.auth.UserAuth;
-import ar.edu.itba.paw.webapp.security.api.model.AuthenticationToken;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
-import ar.edu.itba.paw.webapp.security.service.impl.JwtTokenIssuer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,16 +14,12 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Link;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Set;

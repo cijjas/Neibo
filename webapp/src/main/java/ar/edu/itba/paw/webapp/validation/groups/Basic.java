@@ -1,3 +1,3 @@
 package ar.edu.itba.paw.webapp.validation.groups;
 
-public interface OnCreate {}
+public interface Basic {}

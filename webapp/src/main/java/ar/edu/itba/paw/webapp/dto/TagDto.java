@@ -2,7 +2,9 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.TagsConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Specific;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,9 +13,9 @@ import java.net.URI;
 
 public class TagDto {
 
-    @NotNull(groups = OnCreate.class)
-    @TagsConstraint(groups = OnCreate.class)
-    @Size(min = 1, max = 20, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 20, groups = Basic.class)
+    @TagsConstraint(groups = Specific.class)
     private String tag;
 
     private Links _links;

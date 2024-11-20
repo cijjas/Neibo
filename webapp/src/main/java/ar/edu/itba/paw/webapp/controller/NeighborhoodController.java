@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +116,7 @@ public class NeighborhoodController {
     @POST
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createNeighborhood(
             @Valid NeighborhoodDto form
     ) {

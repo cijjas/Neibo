@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 public class PostStatusDto {
 
     private PostStatus postStatus;
+
     private Links _links;
 
     public static PostStatusDto fromPostStatus(PostStatus postStatus, UriInfo uriInfo) {

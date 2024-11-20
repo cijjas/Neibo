@@ -4,10 +4,10 @@ package ar.edu.itba.paw.webapp.security.service.impl;
 import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
 import ar.edu.itba.paw.webapp.security.exception.AuthenticationTokenRefreshmentException;
+import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 
 import java.time.ZonedDateTime;
 import java.util.Set;

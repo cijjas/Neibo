@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = WorkerRoleURNReferenceInAffiliationValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WorkerRoleURNReferenceInAffiliationConstraint {
-    String message() default "Error in the URN";
+    String message() default "Unauthorized URN Reference";
 
     Class<?>[] groups() default {};
 

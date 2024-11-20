@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 public class WorkerStatusDto {
 
     private WorkerStatus workerStatus;
+
     private Links _links;
 
     public static WorkerStatusDto fromWorkerStatus(WorkerStatus workerStatus, UriInfo uriInfo) {

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface WorkerService {
 
-    Worker createWorker(String userURN, String phoneNumber, String address, String[] professionURNs, String businessName);
+    Worker createWorker(String userURN, String phoneNumber, String address, List<String> professionURNs, String businessName);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.mappersJax;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
-
-import ar.edu.itba.paw.webapp.controller.TransactionTypeController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

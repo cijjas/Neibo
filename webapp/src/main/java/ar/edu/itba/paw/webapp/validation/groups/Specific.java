@@ -1,3 +1,3 @@
 package ar.edu.itba.paw.webapp.validation.groups;
 
-public interface OnUpdate {}
+public interface Specific {}

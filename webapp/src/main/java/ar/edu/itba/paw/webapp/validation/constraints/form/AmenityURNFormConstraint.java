@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = AmenityURNFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AmenityURNFormConstraint {
-    String message() default "Error in the URN";
+    String message() default "Malformed URN";
 
     Class<?>[] groups() default {};
 

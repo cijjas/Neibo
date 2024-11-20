@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +122,7 @@ public class InquiryController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createInquiry(
             @Valid InquiryDto form,
             @PathParam("productId") final long productId
@@ -147,7 +147,7 @@ public class InquiryController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
-    @Validated(OnUpdate.class)
+    @Validated(UpdateValidationSequence.class)
     public Response updateInquiry(
             @PathParam("id") final long inquiryId,
             @Valid InquiryDto form

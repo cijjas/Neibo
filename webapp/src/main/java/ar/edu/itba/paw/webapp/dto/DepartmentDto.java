@@ -5,6 +5,7 @@ import javax.ws.rs.core.UriInfo;
 public class DepartmentDto {
 
     private ar.edu.itba.paw.enums.Department department;
+
     private Links _links;
 
     public static DepartmentDto fromDepartment(ar.edu.itba.paw.enums.Department department, UriInfo uriInfo) {

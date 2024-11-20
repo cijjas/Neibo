@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.security.api.jwt;
 
 import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -9,8 +11,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Authentication provider for JWT token-based authentication.

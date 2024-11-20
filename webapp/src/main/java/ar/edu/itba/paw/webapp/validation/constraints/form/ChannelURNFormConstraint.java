@@ -12,11 +12,9 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = ChannelURNFormValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ChannelURNFormConstraint {
-
-    String message() default "Error in the URN";
+    String message() default "Malformed URN";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

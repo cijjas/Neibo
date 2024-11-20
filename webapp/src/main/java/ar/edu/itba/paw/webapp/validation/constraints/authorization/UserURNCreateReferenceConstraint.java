@@ -12,11 +12,9 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = UserURNCreateReferenceValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UserURNCreateReferenceConstraint {
-
-    String message() default "Error in the URN";
+    String message() default "Unauthorized URN Reference";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +103,7 @@ public class ResourceController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createResource(
             @Valid ResourceDto form
     ) {
@@ -125,7 +125,7 @@ public class ResourceController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Validated(OnUpdate.class)
+    @Validated(UpdateValidationSequence.class)
     public Response updateResourcePartially(
             @PathParam("id") final long id,
             @Valid ResourceDto partialUpdate

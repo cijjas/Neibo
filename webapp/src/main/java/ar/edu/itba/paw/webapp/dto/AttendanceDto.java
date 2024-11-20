@@ -4,20 +4,23 @@ import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Reference;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 
 public class AttendanceDto {
 
-    private Links _links;
-
-    @NotNull(groups = OnCreate.class)
-    @UserURNFormConstraint(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    @UserURNCreateReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
+
+    private Links _links;
 
     public static AttendanceDto fromAttendance(Attendance attendance, UriInfo uriInfo) {
         final AttendanceDto dto = new AttendanceDto();

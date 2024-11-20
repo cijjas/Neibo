@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Profession;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import org.springframework.web.filter.OncePerRequestFilter;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,8 +10,8 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class ProfessionDto {
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 20, groups = OncePerRequestFilter.class)
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 20, groups = Basic.class)
     private String profession;
 
     private Links _links;

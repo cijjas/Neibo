@@ -80,9 +80,6 @@ public class AccessControlHelper {
     public boolean canReferenceUserInCreation(String userURN) {
         LOGGER.info("Verifying reference to the User's entities");
 
-        if (userURN == null)
-            return false;
-
         Authentication authentication = getAuthentication();
 
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))

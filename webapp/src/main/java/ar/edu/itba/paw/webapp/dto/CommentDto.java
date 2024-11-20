@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,15 +13,14 @@ import java.util.Date;
 
 public class CommentDto {
 
-
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 500, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 500, groups = Basic.class)
     private String comment;
 
-    @NotNull(groups = OnCreate.class)
-    @UserURNFormConstraint(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    @UserURNCreateReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
     private Date date;

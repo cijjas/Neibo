@@ -2,12 +2,10 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.webapp.auth.UserDetailsService;
-import ar.edu.itba.paw.webapp.security.api.filter.HttpMethodFilter;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationProvider;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationTokenFilter;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
-import ar.edu.itba.paw.webapp.security.service.impl.JwtTokenIssuer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -25,7 +23,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
@@ -38,8 +35,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;

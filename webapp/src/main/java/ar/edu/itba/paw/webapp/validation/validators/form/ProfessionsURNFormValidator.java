@@ -5,14 +5,15 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNFormCons
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.List;
 
-public class ProfessionsURNFormValidator implements ConstraintValidator<ProfessionsURNFormConstraint, String[]> {
+public class ProfessionsURNFormValidator implements ConstraintValidator<ProfessionsURNFormConstraint, List<String>> {
     @Override
     public void initialize(ProfessionsURNFormConstraint professionsURNConstraint) {
     }
 
     @Override
-    public boolean isValid(String[] professionsURN, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(List<String> professionsURN, ConstraintValidatorContext constraintValidatorContext) {
         if (professionsURN == null)
             return true;
         for (String urn : professionsURN)

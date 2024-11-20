@@ -4,30 +4,35 @@ import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
+import java.lang.ref.Reference;
 import java.util.Date;
 
 public class ReviewDto {
-    @NotNull(groups = OnCreate.class)
-    @Range(min = 0, max = 5, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Range(min = 0, max = 5, groups = Basic.class)
     private Float rating;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 255, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 255, groups = Basic.class)
     private String review;
 
-    @NotNull(groups = OnCreate.class)
-    @UserURNFormConstraint(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    @UserURNReferenceInReviewConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNReferenceInReviewConstraint(groups = Authorization.class)
     private String user;
 
     private Date date;
+
     private Links _links;
 
     public static ReviewDto fromReview(Review review, UriInfo uriInfo) {

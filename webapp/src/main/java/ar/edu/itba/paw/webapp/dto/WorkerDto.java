@@ -5,47 +5,52 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint
 import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionsURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Reference;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.List;
 
 public class WorkerDto {
-    @NotNull(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
     private String user;
 
-    @NotNull(groups = OnCreate.class)
-    @ProfessionsURNFormConstraint(groups = OnCreate.class)
-    @ProfessionURNReferenceConstraint(groups = OnCreate.class)
-    private String[] professions;
+    @NotNull(groups = Null.class)
+    @ProfessionsURNFormConstraint(groups = Form.class)
+    @ProfessionsURNReferenceConstraint(groups = Reference.class)
+    private List<String> professions;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
-    @Pattern(regexp = "^[0-9+\\- ]*", groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 64, groups = Basic.class)
+    @Pattern(regexp = "^[0-9+\\- ]*", groups = Basic.class)
     private String phoneNumber;
 
-    @NotNull(groups = OnCreate.class)
-    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = {OnCreate.class, OnUpdate.class})
-    @Size(min = 1, max = 128, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 128, groups = Basic.class)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = Basic.class)
     private String businessName;
 
-    @NotNull(groups = OnCreate.class)
-    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = {OnCreate.class, OnUpdate.class})
-    @Size(min = 1, max = 128, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 128, groups = Basic.class)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = Basic.class)
     private String address;
 
-    @Size(max = 1000, groups = OnUpdate.class)
+    @Size(max = 1000, groups = Basic.class)
     private String bio;
 
-    @ImageURNFormConstraint(groups = OnUpdate.class)
-    @ImageURNReferenceConstraint(groups = OnUpdate.class)
+    @ImageURNFormConstraint(groups = Form.class)
+    @ImageURNReferenceConstraint(groups = Reference.class)
     private String backgroundPicture;
 
     private Float averageRating;
+
     private Links _links;
 
     public static WorkerDto fromWorker(Worker worker, Float averageRating, UriInfo uriInfo) {
@@ -154,11 +159,11 @@ public class WorkerDto {
         this.user = user;
     }
 
-    public String[] getProfessions() {
+    public List<String> getProfessions() {
         return professions;
     }
 
-    public void setProfessions(String[] professions) {
+    public void setProfessions(List<String> professions) {
         this.professions = professions;
     }
 

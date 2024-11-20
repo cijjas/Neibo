@@ -3,24 +3,26 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
+import java.lang.ref.Reference;
 
 public class ResourceDto {
 
-    @Size(max = 1000, groups = {OnCreate.class, OnUpdate.class})
+    @Size(max = 1000, groups = Basic.class)
     private String description;
 
-    @ImageURNFormConstraint(groups = {OnCreate.class, OnUpdate.class})
-    @ImageURNReferenceConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @ImageURNFormConstraint(groups = Form.class)
+    @ImageURNReferenceConstraint(groups = Reference.class)
     private String image;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 64, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 1, max = 64, groups = Basic.class)
     private String title;
 
     private Links _links;

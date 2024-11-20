@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +120,7 @@ public class ProductController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createProduct(
             @Valid final ProductDto form
     ) {
@@ -143,7 +143,7 @@ public class ProductController {
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateProduct(#id)")
-    @Validated(OnUpdate.class)
+    @Validated(UpdateValidationSequence.class)
     public Response updateProductPartially(
             @PathParam("id") final long id,
             @Valid final ProductDto partialUpdate

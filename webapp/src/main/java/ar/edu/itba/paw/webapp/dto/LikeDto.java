@@ -7,25 +7,27 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.PostURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.PostURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-
-import java.util.Date;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Reference;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
+import java.util.Date;
 
 public class LikeDto {
 
-    @NotNull(groups = OnCreate.class)
-    @PostURNFormConstraint(groups = OnCreate.class)
-    @PostURNReferenceConstraint(groups = OnCreate.class)
-    @PostURNReferenceInLikeConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @PostURNFormConstraint(groups = Form.class)
+    @PostURNReferenceConstraint(groups = Reference.class)
+    @PostURNReferenceInLikeConstraint(groups = Authorization.class)
     private String post;
 
-    @NotNull(groups = OnCreate.class)
-    @UserURNFormConstraint(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    @UserURNReferenceInLikeConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNReferenceInLikeConstraint(groups = Authorization.class)
     private String user;
 
     private Date likeDate;

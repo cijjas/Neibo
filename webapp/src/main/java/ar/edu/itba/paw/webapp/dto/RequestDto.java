@@ -2,15 +2,14 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.RequestStatusURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -20,32 +19,34 @@ import java.util.Date;
 
 public class RequestDto {
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 500, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 500, groups = Basic.class)
     private String requestMessage;
 
-    @NotNull(groups = OnCreate.class)
-    @ProductURNFormConstraint(groups = OnCreate.class)
-    @ProductURNReferenceConstraint(groups = OnCreate.class)
-    @ProductURNInRequestConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @ProductURNFormConstraint(groups = Form.class)
+    @ProductURNReferenceConstraint(groups = Reference.class)
+    @ProductURNInRequestConstraint(groups = Authorization.class)
     private String product;
 
-    @NotNull(groups = OnCreate.class)
-    @Range(min = 1, max = 100, groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @Range(min = 1, max = 100, groups = Basic.class)
     private Integer units;
 
-    @NotNull(groups = OnCreate.class)
-    @UserURNFormConstraint(groups = OnCreate.class)
-    @UserURNReferenceConstraint(groups = OnCreate.class)
-    @UserURNCreateReferenceConstraint(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
+    @UserURNFormConstraint(groups = Form.class)
+    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
-    @RequestStatusURNFormConstraint(groups = OnUpdate.class)
-    @RequestStatusURNReferenceConstraint(groups = OnUpdate.class)
+    @RequestStatusURNFormConstraint(groups = Form.class)
+    @RequestStatusURNReferenceConstraint(groups = Reference.class)
     private String requestStatus;
 
     private Date requestDate;
+
     private Date purchaseDate;
+
     private Links _links;
 
     public static RequestDto fromRequest(Request request, UriInfo uriInfo) {

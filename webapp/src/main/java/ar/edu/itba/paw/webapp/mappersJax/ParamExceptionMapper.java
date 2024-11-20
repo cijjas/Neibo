@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.mappersJax;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
+import org.glassfish.jersey.server.ParamException;
 
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -8,7 +9,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.glassfish.jersey.server.ParamException;
 
 @Provider
 public class ParamExceptionMapper implements ExceptionMapper<ParamException> {

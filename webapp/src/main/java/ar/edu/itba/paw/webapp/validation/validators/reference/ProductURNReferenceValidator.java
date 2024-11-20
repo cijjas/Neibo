@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.validation.validators.reference;
 
-import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductURNReferenceConstraint;
 
 import javax.validation.ConstraintValidator;

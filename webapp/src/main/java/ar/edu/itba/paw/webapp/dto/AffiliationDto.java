@@ -2,20 +2,23 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerRoleURNReferenceInAffiliationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURNReferenceInAffiliationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURNReferenceInAffiliationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.NeighborhoodURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerRoleURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Reference;
 
-import javax.validation.GroupSequence;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 
 public class AffiliationDto {
+
     @NotNull(groups = Null.class)
     @WorkerRoleURNFormConstraint(groups = Form.class)
     @WorkerRoleURNReferenceConstraint(groups = Reference.class)

@@ -12,11 +12,9 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = PostURNReferenceInLikeValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PostURNReferenceInLikeConstraint {
-
-    String message() default "Error in the URN";
+    String message() default "Unauthorized URN Reference";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

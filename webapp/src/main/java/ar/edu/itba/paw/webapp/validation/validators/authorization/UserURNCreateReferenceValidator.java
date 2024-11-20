@@ -18,6 +18,6 @@ public class UserURNCreateReferenceValidator implements ConstraintValidator<User
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
-        return URNValidator.validateURN(userURN, "users") && accessControlHelper.canReferenceUserInCreation(userURN);
+        return accessControlHelper.canReferenceUserInCreation(userURN);
     }
 }

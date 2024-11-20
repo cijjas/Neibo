@@ -7,8 +7,11 @@ import javax.ws.rs.core.UriInfo;
 public class ShiftDto {
 
     private String day;
+
     private String startTime;
+
     private Boolean isBooked;
+
     private Links _links;
 
     public static ShiftDto fromShift(Shift shift, UriInfo uriInfo) {

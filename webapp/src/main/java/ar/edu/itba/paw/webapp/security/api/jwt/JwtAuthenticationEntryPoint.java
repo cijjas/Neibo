@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.webapp.security.api.jwt;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
-import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
 import ar.edu.itba.paw.webapp.security.exception.InvalidAuthenticationTokenException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -10,8 +11,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

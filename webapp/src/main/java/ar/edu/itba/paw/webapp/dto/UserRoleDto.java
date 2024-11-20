@@ -3,11 +3,11 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.enums.UserRole;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class UserRoleDto {
 
     private UserRole userRole;
+
     private Links _links;
 
     public static UserRoleDto fromUserRole(UserRole userRole, UriInfo uriInfo) {

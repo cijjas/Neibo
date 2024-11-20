@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 public class ShiftStatusDto {
 
     private ShiftStatus shiftStatus;
+
     private Links _links;
 
     public static ShiftStatusDto fromShiftStatus(ShiftStatus shiftStatus, UriInfo uriInfo) {

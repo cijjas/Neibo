@@ -39,7 +39,7 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker createWorker(String userURN, String phoneNumber, String address, String[] professionURNs, String businessName) {
+    public Worker createWorker(String userURN, String phoneNumber, String address, List<String> professionURNs, String businessName) {
         LOGGER.info("Creating Worker associated with User {}", userURN);
 
         Long userId = ValidationUtils.checkURNAndExtractUserWorkerId(userURN);

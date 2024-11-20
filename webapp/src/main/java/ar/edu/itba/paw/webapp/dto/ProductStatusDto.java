@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 public class ProductStatusDto {
 
     private ProductStatus productStatus;
+
     private Links _links;
 
     public static ProductStatusDto fromProductStatus(ProductStatus productStatus, UriInfo uriInfo) {

@@ -2,8 +2,9 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.ReservationDateConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
-import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Specific;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,22 +13,22 @@ import javax.ws.rs.core.UriInfo;
 // @ValidTimeRangeConstraint
 public class EventDto {
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 100, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 100, groups = Basic.class)
     private String name;
 
-    @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 2000, groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 2000, groups = Basic.class)
     private String description;
 
-    @NotNull(groups = OnCreate.class)
-    @ReservationDateConstraint(groups = {OnCreate.class, OnUpdate.class})
+    @NotNull(groups = Null.class)
+    @ReservationDateConstraint(groups = Specific.class)
     private String date;
 
-    @NotNull(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
     private String startTime;
 
-    @NotNull(groups = OnCreate.class)
+    @NotNull(groups = Null.class)
     private String endTime;
 
     private Links _links;

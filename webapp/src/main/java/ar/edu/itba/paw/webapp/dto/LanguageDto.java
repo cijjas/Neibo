@@ -7,6 +7,7 @@ import javax.ws.rs.core.UriInfo;
 public class LanguageDto {
 
     private Language language;
+
     private Links _links;
 
     public static LanguageDto fromLanguage(Language language, UriInfo uriInfo) {
