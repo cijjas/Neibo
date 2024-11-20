@@ -90,6 +90,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public LocalValidatorFactoryBean validatorFactoryBean(AutowireCapableBeanFactory beanFactory) {
         LocalValidatorFactoryBean factoryBean = new LocalValidatorFactoryBean();
         factoryBean.setConstraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory));
+        // This is required so the Group Sequences fail instantly instead of executing the whole sequence
+        factoryBean.getValidationPropertyMap().put("hibernate.validator.fail_fast", "true");
         return factoryBean;
     }
 

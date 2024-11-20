@@ -13,8 +13,6 @@ public class WorkerRoleURNFormValidator implements ConstraintValidator<WorkerRol
 
     @Override
     public boolean isValid(String workerRoleURN, ConstraintValidatorContext constraintValidatorContext) {
-        if (workerRoleURN == null)
-            return true;
         return URNValidator.validateURN(workerRoleURN, "workerRole");
     }
 }

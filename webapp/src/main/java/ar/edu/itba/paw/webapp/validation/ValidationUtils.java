@@ -469,7 +469,11 @@ public class ValidationUtils {
     public static Long extractOptionalId(String URN) {
         if (URN == null)
             return null;
-        return extractId(URN);
+        String[] URNParts = URN.split("/");
+        if (URNParts.length < 5) { // Check if there are enough parts for an ID
+            return null;
+        }
+        return Long.parseLong(URNParts[4]);
     }
 
     public static TwoId extractTwoId(String URN) {

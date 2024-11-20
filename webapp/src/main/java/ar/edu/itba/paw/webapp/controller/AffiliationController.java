@@ -2,9 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
-import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -113,11 +118,28 @@ public class AffiliationController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @Validated(OnCreate.class)
+    @Validated(CreateValidationSequence.class)
     public Response createAffiliation(
             @Valid AffiliationDto form
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
+
+        // --------------------------------------------------------------
+
+        AffiliationDto dto = new AffiliationDto();
+        dto.setWorkerRole(null);
+        dto.setWorker("http://localhost:8080/workers/6");
+        dto.setNeighborhood("http://localhost:8080/neighborhoods/4");
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<AffiliationDto>> violations =
+                validator.validate(dto, CreateValidationSequence.class);
+
+        for (ConstraintViolation<AffiliationDto> violation : violations) {
+            System.out.println(violation.getMessage());
+        }
+
+        // --------------------------------------------------------------
 
         // Creation & HashCode Generation
         Affiliation affiliation = nws.createAffiliation(form.getWorker(), form.getNeighborhood(), form.getWorkerRole());
@@ -144,7 +166,7 @@ public class AffiliationController {
     @PATCH
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhood)")
-    @Validated(OnUpdate.class)
+    @Validated(UpdateValidationSequence.class)
     public Response updateAffiliation(
             @QueryParam("inNeighborhood") String neighborhood,
             @QueryParam("forWorker") String worker,
