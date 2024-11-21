@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
 
 /*
  * # Summary
@@ -72,8 +71,14 @@ public class RequestController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
+        // ID Extraction
+        Long userId = extractOptionalSecondId(user);
+        Long productId = extractOptionalSecondId(product);
+        Long transactionTypeId = extractOptionalFirstId(type);
+        Long requestStatusId = extractOptionalFirstId(status);
+
         // Content
-        final List<Request> requests = rs.getRequests(user, product, type, status, page, size, neighborhoodId);
+        final List<Request> requests = rs.getRequests(userId, productId, transactionTypeId, requestStatusId, page, size, neighborhoodId);
         String requestsHashCode = String.valueOf(requests.hashCode());
 
         // Cache Control
@@ -93,7 +98,7 @@ public class RequestController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests",
-                rs.calculateRequestPages(product, user, type, status, neighborhoodId, size),
+                rs.calculateRequestPages(productId, userId, transactionTypeId, requestStatusId, neighborhoodId, size),
                 page,
                 size
         );

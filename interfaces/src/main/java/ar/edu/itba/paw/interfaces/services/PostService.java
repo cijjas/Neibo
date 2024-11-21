@@ -15,11 +15,11 @@ public interface PostService {
 
     Optional<Post> findPost(long postId, long neighborhoodId);
 
-    List<Post> getPosts(String channelURN, int page, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN);
+    List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
 
     // ---------------------------------------------------
 
-    int calculatePostPages(String channelURN, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN);
+    int calculatePostPages(Long channelId, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

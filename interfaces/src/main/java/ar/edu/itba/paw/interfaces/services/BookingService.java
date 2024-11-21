@@ -13,11 +13,11 @@ public interface BookingService {
 
     Optional<Booking> findBooking(long bookingId, long neighborhoodId);
 
-    List<Booking> getBookings(String userURN, String amenityURN, long neighborhoodId, int page, int size);
+    List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size);
 
     // ---------------------------------------------------
 
-    int calculateBookingPages(String userURN, String amenityURN, long neighborhoodId, int size);
+    int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

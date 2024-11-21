@@ -67,8 +67,11 @@ public class UserController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
+        // ID Extraction
+        Long userRoleId = extractOptionalFirstId(userRole);
+
         // Content
-        final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
+        final List<User> users = us.getUsers(userRoleId, neighborhoodId, page, size);
         String usersHashCode = String.valueOf(users.hashCode());
 
         // Cache Control
@@ -85,7 +88,7 @@ public class UserController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users",
-                us.calculateUserPages(userRole, neighborhoodId, size),
+                us.calculateUserPages(userRoleId, neighborhoodId, size),
                 page,
                 size
         );

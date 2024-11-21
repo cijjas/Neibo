@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalSecondId;
+
 
 /*
  * # Summary
@@ -57,8 +59,11 @@ public class TagController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
 
+        // ID Extraction
+        Long postId = extractOptionalSecondId(post);
+
         // Content
-        List<Tag> tags = ts.getTags(post, neighborhoodId, page, size);
+        List<Tag> tags = ts.getTags(postId, neighborhoodId, page, size);
         String tagsHashCode = String.valueOf(tags.hashCode());
 
         // Cache Control
@@ -78,7 +83,7 @@ public class TagController {
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags",
-                ts.calculateTagPages(post, neighborhoodId, size),
+                ts.calculateTagPages(postId, neighborhoodId, size),
                 page,
                 size
         );

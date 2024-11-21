@@ -68,8 +68,13 @@ public class ProductController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
+        // ID Extraction
+        Long departmentId = extractOptionalFirstId(department);
+        Long userId = extractOptionalSecondId(user);
+        Long productStatusId = extractOptionalFirstId(productStatus);
+
         // Content
-        final List<Product> products = ps.getProducts(neighborhoodId, department, user, productStatus, page, size);
+        final List<Product> products = ps.getProducts(neighborhoodId, departmentId, userId, productStatusId, page, size);
         String productsHashCode = String.valueOf(products.hashCode());
 
         // Cache Control
@@ -89,7 +94,7 @@ public class ProductController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products",
-                ps.calculateProductPages(neighborhoodId, size, department, user, productStatus),
+                ps.calculateProductPages(neighborhoodId, size, departmentId, userId, productStatusId),
                 page,
                 size
         );

@@ -15,11 +15,11 @@ public interface TagService {
 
     Optional<Tag> findTag(long tagId, long neighborhoodId);
 
-    List<Tag> getTags(String postURN, long neighborhoodId, int page, int size);
+    List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    int calculateTagPages(String postURN, long neighborhoodId, int size);
+    int calculateTagPages(Long postId, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

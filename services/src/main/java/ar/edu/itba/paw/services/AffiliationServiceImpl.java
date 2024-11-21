@@ -43,24 +43,15 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Affiliation> getAffiliations(String workerURN, String neighborhoodURN, int page, int size) {
-        LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
-
-        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
-        Long neighborhoodId = ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN);
-
-        ValidationUtils.checkPageAndSize(page, size);
+    public List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
         return affiliationDao.getAffiliations(workerId, neighborhoodId, page, size);
     }
 
     @Override
-    public int calculateAffiliationPages(String workerURN, String neighborhoodURN, int size) {
-        LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
-
-        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
-        Long neighborhoodId = ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN);
-        ValidationUtils.checkSize(size);
+    public int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size) {
+        LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
         return PaginationUtils.calculatePages(affiliationDao.countAffiliations(workerId, neighborhoodId), size);
     }
@@ -68,19 +59,10 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Affiliation updateAffiliation(String workerURN, String neighborhoodURN, Long workerRoleId) {
-        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerURN, neighborhoodURN, workerRoleId);
-
-        // check not null workerURN and neighborhoodURN
-
-        long workerId = ValidationUtils.extractURNId(workerURN);
-        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+    public Affiliation updateAffiliation(long workerId, long neighborhoodId, Long workerRoleId) {
+        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerId, neighborhoodId, workerRoleId);
 
         Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(() -> new NotFoundException("Affiliation Not Found"));
-
         if (workerRoleId != null)
             affiliation.setRole(WorkerRole.fromId(workerRoleId));
 
@@ -90,14 +72,8 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteAffiliation(String workerURN, String neighborhoodURN) {
-        LOGGER.info("Deleting Affiliation between Worker {} from Neighborhood {}", workerURN, neighborhoodURN);
-
-        long workerId = ValidationUtils.extractURNId(workerURN);
-        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+    public boolean deleteAffiliation(long workerId, long neighborhoodId) {
+        LOGGER.info("Deleting Affiliation between Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
         return affiliationDao.deleteAffiliation(workerId, neighborhoodId);
     }

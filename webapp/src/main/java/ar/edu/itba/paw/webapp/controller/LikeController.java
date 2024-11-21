@@ -17,12 +17,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalSecondId;
 import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
 
 /*
@@ -62,8 +64,12 @@ public class LikeController {
     ) {
         LOGGER.info("GET request arrived at '/likes'");
 
+        // ID Extraction
+        Long postId = extractOptionalSecondId(post);
+        Long userId = extractOptionalSecondId(user);
+
         // Content
-        final List<Like> likes = ls.getLikes(post, user, page, size);
+        final List<Like> likes = ls.getLikes(postId, userId, page, size);
         String likesHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -91,7 +97,7 @@ public class LikeController {
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "/likes",
-                ls.calculateLikePages(post, user, size),
+                ls.calculateLikePages(postId, userId, size),
                 page,
                 size);
 
@@ -112,7 +118,7 @@ public class LikeController {
         LOGGER.info("GET request arrived at '/likes/count'");
 
         // Content
-        int count = ls.countLikes(post, user);
+        int count = ls.countLikes(extractOptionalSecondId(post), extractOptionalSecondId(user));
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -168,12 +174,12 @@ public class LikeController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteLike(#user)")
     public Response deleteById(
-            @QueryParam("onPost") @PostURNFormConstraint @PostURNReferenceConstraint final String post,
-            @QueryParam("likedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user
+            @QueryParam("onPost") @NotNull @PostURNFormConstraint @PostURNReferenceConstraint final String post,
+            @QueryParam("likedBy") @NotNull @UserURNFormConstraint @UserURNReferenceConstraint final String user
     ) {
         LOGGER.info("DELETE request arrived at '/likes'");
 
-        if (ls.deleteLike(post, user))
+        if (ls.deleteLike(extractOptionalSecondId(post), extractOptionalSecondId(user)))
             return Response.noContent()
                     .build();
 

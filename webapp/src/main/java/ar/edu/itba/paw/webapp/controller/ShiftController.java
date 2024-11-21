@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalSecondId;
 
 /*
  * # Summary
@@ -50,7 +51,7 @@ public class ShiftController {
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Content
-        List<Shift> shifts = ss.getShifts(amenity, date);
+        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(amenity), date);
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control

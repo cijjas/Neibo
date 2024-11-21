@@ -15,11 +15,11 @@ public interface RequestService {
 
     Optional<Request> findRequest(long requestId, long neighborhoodId);
 
-    List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId);
+    List<Request> getRequests(Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int page, int size, long neighborhoodId);
 
     // ---------------------------------------------------
 
-    int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, long neighborhoodId, int size);
+    int calculateRequestPages(Long productId, Long userId, Long transactionTypeURN, Long requestStatusURN, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

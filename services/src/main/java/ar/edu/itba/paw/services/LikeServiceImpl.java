@@ -36,13 +36,8 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Like> getLikes(String postURN, String userURN, int page, int size) {
-        LOGGER.info("Getting Likes for Post {} by User {}", postURN, userURN);
-
-        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-
-        ValidationUtils.checkPageAndSize(page, size);
+    public List<Like> getLikes(Long postId, Long userId, int page, int size) {
+        LOGGER.info("Getting Likes for Post {} by User {}", postId, userId);
 
         return likeDao.getLikes(postId, userId, page, size);
     }
@@ -50,24 +45,15 @@ public class LikeServiceImpl implements LikeService {
     // ---------------------------------------------------
 
     @Override
-    public int countLikes(String postURN, String userURN) {
-        LOGGER.info("Counting Likes for Post {} by User {}", userURN, postURN);
-
-
-        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+    public int countLikes(Long postId, Long userId) {
+        LOGGER.info("Counting Likes for Post {} by User {}", userId, postId);
 
         return likeDao.countLikes(postId, userId);
     }
 
     @Override
-    public int calculateLikePages(String postURN, String userURN, int size) {
-        LOGGER.info("Calculating Like Pages for Post {} by User {}", userURN, postURN);
-
-        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-
-        ValidationUtils.checkSize(size);
+    public int calculateLikePages(Long postId, Long userId, int size) {
+        LOGGER.info("Calculating Like Pages for Post {} by User {}", userId, postId);
 
         return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId), size);
     }
@@ -76,21 +62,8 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteLike(String postURN, String userURN) {
-        LOGGER.info("Removing Like from Post {} given by User {}", postURN, userURN);
-
-        if (postURN == null || userURN == null)
-            throw new IllegalArgumentException("Both the Post and the User have to be specified when deleting");
-
-        TwoId postTwoId = ValidationUtils.extractTwoURNIds(postURN);
-        ValidationUtils.checkNeighborhoodId(postTwoId.getFirstId());
-        ValidationUtils.checkPostId(postTwoId.getSecondId());
-        long postId = postTwoId.getSecondId();
-
-        TwoId userTwoId = ValidationUtils.extractTwoURNIds(userURN);
-        ValidationUtils.checkNeighborhoodId(userTwoId.getFirstId());
-        ValidationUtils.checkUserId(userTwoId.getSecondId());
-        long userId = userTwoId.getSecondId();
+    public boolean deleteLike(Long postId, Long userId) {
+        LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
 
         return likeDao.deleteLike(postId, userId);
     }

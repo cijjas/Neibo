@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.TwoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,16 +75,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getBookings(String userURN, String amenityURN, long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userURN, amenityURN, neighborhoodId);
+    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long amenityId = ValidationUtils.checkURNAndExtractAmenityId(amenityURN);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+        // todo this should do something with the neighborhoodId! sino esta trayendo las bookings de la gente otros barrios!
 
         return bookingDao.getBookings(userId, amenityId, page, size);
     }
@@ -93,16 +86,10 @@ public class BookingServiceImpl implements BookingService {
     // ---------------------------------------------------
 
     @Override
-    public int calculateBookingPages(String userURN, String amenityURN, long neighborhoodId, int size) {
-        LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userURN, amenityURN, neighborhoodId);
+    public int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long amenityId = ValidationUtils.checkURNAndExtractAmenityId(amenityURN);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkSize(size);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+        // todo this should do something with the neighborhoodId! sino esta contando las bookings de la gente otros barrios!
 
         return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId), size);
     }

@@ -21,6 +21,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
+
 
 /*
  * # Summary
@@ -56,7 +58,7 @@ public class ProfessionController {
         LOGGER.info("GET request arrived at '/professions'");
 
         // Content
-        List<Profession> professions = ps.getProfessions(worker);
+        List<Profession> professions = ps.getProfessions(extractOptionalFirstId(worker));
         String professionsHashCode = String.valueOf(professions.hashCode());
 
         // Cache Control

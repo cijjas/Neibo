@@ -13,11 +13,11 @@ public interface WorkerService {
 
     Optional<Worker> findWorker(long workerId);
 
-    List<Worker> getWorkers(int page, int size, List<String> professionURNs, List<String> neighborhoodURNs, String workerRoleURN, String workerStatusURN);
+    List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
 
     // ---------------------------------------------------
 
-    int calculateWorkerPages(List<String> professionURNs, List<String> neighborhoodURNs, int size, String workerRoleURN, String workerStatusURN);
+    int calculateWorkerPages(List<Long> professionIds, List<Long> neighborhoodIds, int size, Long workerRoleId, Long workerStatusId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

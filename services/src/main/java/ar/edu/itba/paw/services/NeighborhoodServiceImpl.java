@@ -67,12 +67,8 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(int page, int size, String workerURN) {
+    public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
         LOGGER.info("Getting Neighborhoods");
-
-        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
-
-        ValidationUtils.checkPageAndSize(page, size);
 
         return neighborhoodDao.getNeighborhoods(page, size, workerId);
     }
@@ -80,12 +76,8 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     // ---------------------------------------------------
 
     @Override
-    public int calculateNeighborhoodPages(String workerURN, int size) {
+    public int calculateNeighborhoodPages(Long workerId, int size) {
         LOGGER.info("Calculating Neighborhood Pages");
-
-        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
-
-        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(workerId), size);
     }

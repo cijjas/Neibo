@@ -9,7 +9,7 @@ public interface ProfessionService {
 
     Profession createProfession(String name);
 
-    List<Profession> getProfessions(String workerURN);
+    List<Profession> getProfessions(Long workerId);
 
     Optional<Profession> findProfession(long professionId);
 

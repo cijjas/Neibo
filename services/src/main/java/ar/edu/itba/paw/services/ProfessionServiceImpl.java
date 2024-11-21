@@ -35,10 +35,8 @@ public class ProfessionServiceImpl implements ProfessionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Profession> getProfessions(String workerURN) {
-        LOGGER.info("Getting Professions for Worker {}", workerURN);
-
-        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
+    public List<Profession> getProfessions(Long workerId) {
+        LOGGER.info("Getting Professions for Worker {}", workerId);
 
         return professionDao.getProfessions(workerId);
     }

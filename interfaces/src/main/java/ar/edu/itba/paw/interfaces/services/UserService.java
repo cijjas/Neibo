@@ -18,11 +18,11 @@ public interface UserService {
 
     Optional<User> findUser(final String mail);
 
-    List<User> getUsers(String userRoleURN, long neighborhoodId, int page, int size);
+    List<User> getUsers(Long userRoleId, long neighborhoodId, int page, int size);
 
     // ---------------------------------------------------
 
-    int calculateUserPages(String userRoleURN, long neighborhoodId, int size);
+    int calculateUserPages(Long userRoleId, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

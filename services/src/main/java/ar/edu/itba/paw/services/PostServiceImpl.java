@@ -83,21 +83,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getPosts(String channelURN, int page, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
-        LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
-        Long postStatusId = ValidationUtils.checkURNAndExtractPostStatusId(postStatusURN);
-        List<Long> tagIds = new ArrayList<>();
-        if (tagURNs != null && !tagURNs.isEmpty())
-            for (String tagURN : tagURNs)
-                tagIds.add(ValidationUtils.checkURNAndExtractTagId(tagURN));
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+    public List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
+        LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusId, channelId, tagIds, userId, neighborhoodId);
 
         return postDao.getPosts(channelId, page, size, tagIds, neighborhoodId, postStatusId, userId);
     }
@@ -106,19 +93,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculatePostPages(String channelURN, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
-        LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
-        Long postStatusId = ValidationUtils.checkURNAndExtractPostStatusId(postStatusURN);
-        List<Long> tagIds = new ArrayList<>();
-        if (tagURNs != null && !tagURNs.isEmpty())
-            for (String tagURN : tagURNs)
-                tagIds.add(ValidationUtils.checkURNAndExtractTagId(tagURN));
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkSize(size);
+    public int calculatePostPages(Long channelId, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
+        LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusId, channelId, tagIds, userId, neighborhoodId);
 
         return PaginationUtils.calculatePages(postDao.countPosts(channelId, tagIds, neighborhoodId, postStatusId, userId), size);
     }
@@ -128,10 +104,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public boolean deletePost(long postId, long neighborhoodId) {
         LOGGER.info("Deleting Post {}", postId);
-
-        ValidationUtils.checkPostId(postId);
-
-        findPost(postId).orElseThrow(NotFoundException::new);
 
         // Delete categorizations associated with the Post
         categorizationDao.deleteCategorization(null, postId);

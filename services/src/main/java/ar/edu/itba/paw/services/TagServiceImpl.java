@@ -70,13 +70,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getTags(String postURN, long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postURN, neighborhoodId);
-
-        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPageAndSize(page, size);
+    public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return tagDao.getTags(postId, neighborhoodId, page, size);
     }
@@ -84,14 +79,8 @@ public class TagServiceImpl implements TagService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public int calculateTagPages(String postURN, long neighborhoodId, int size) {
-        LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postURN, neighborhoodId);
-
-        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
-
-        ValidationUtils.checkPostId(postId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkSize(size);
+    public int calculateTagPages(Long postId, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
     }

@@ -6,16 +6,13 @@ import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
-import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
-import org.hibernate.annotations.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,17 +71,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts(long neighborhoodId, String departmentURN, String userURN, String productStatusURN, int page, int size) {
-        LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long departmentId = ValidationUtils.checkURNAndExtractUserDepartmentId(departmentURN);
-        Long productStatusId = ValidationUtils.checkURNAndExtractUserProductStatusId(productStatusURN);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+    public List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size) {
+        LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
         return productDao.getProducts(neighborhoodId, departmentId, userId, productStatusId, page, size);
     }
@@ -92,15 +80,8 @@ public class ProductServiceImpl implements ProductService {
     // ---------------------------------------------------
 
     @Override
-    public int calculateProductPages(long neighborhoodId, int size, String departmentURN, String userURN, String productStatusURN) {
-        LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long departmentId = ValidationUtils.checkURNAndExtractUserDepartmentId(departmentURN);
-        Long productStatusId = ValidationUtils.checkURNAndExtractUserProductStatusId(productStatusURN);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkSize(size);
+    public int calculateProductPages(long neighborhoodId, int size, Long departmentId, Long userId, Long productStatusId) {
+        LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
         return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, departmentId, userId, productStatusId), size);
     }
@@ -128,10 +109,8 @@ public class ProductServiceImpl implements ProductService {
 
         if (imageIds != null && !imageIds.isEmpty()) {
             product.setPrimaryPicture(imageService.findImage(imageIds.get(0)).orElseThrow(() -> new NotFoundException("Image Not Found")));
-
             if (imageIds.size() > 1)
                 product.setSecondaryPicture(imageService.findImage(imageIds.get(1)).orElseThrow(() -> new NotFoundException("Image Not Found")));
-
             if (imageIds.size() > 2)
                 product.setTertiaryPicture(imageService.findImage(imageIds.get(2)).orElseThrow(() -> new NotFoundException("Image Not Found")));
         }

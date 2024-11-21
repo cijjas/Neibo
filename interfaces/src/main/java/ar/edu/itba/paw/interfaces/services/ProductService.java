@@ -15,11 +15,11 @@ public interface ProductService {
 
     Optional<Product> findProduct(final long productId, long neighborhoodId);
 
-    List<Product> getProducts(long neighborhoodId, String departmentURN, String userURN, String productStatusURN, int page, int size);
+    List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size);
 
     // ---------------------------------------------------
 
-    int calculateProductPages(long neighborhoodId, int size, String departmentURN, String userURN, String productStatusURN);
+    int calculateProductPages(long neighborhoodId, int size, Long departmentId, Long userId, Long productStatusId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

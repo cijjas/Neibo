@@ -71,8 +71,14 @@ public class PostController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
+        // ID Extraction
+        Long channelId = extractOptionalSecondId(channel);
+        List<Long> tagIds = extractSecondIds(tags); // handles null an empty list correctly
+        Long postStatusId = extractOptionalFirstId(postStatus);
+        Long userId = extractOptionalSecondId(user);
+
         // Content
-        final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, user);
+        final List<Post> posts = ps.getPosts(channelId, page, size, tagIds, neighborhoodId, postStatusId, userId);
         String postsHashCode = String.valueOf(posts.hashCode());
 
         // Cache Control
@@ -92,8 +98,7 @@ public class PostController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts",
-                ps.calculatePostPages(channel, size, tags, neighborhoodId,
-                        postStatus, user),
+                ps.calculatePostPages(channelId, size, tagIds, neighborhoodId, postStatusId, userId),
                 page,
                 size
         );

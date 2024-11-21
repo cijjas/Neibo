@@ -70,8 +70,14 @@ public class WorkerController {
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
+        // ID Extraction
+        List<Long> professionIds = extractSecondIds(professions);
+        List<Long> neighborhoodIds = extractSecondIds(neighborhoods);
+        Long workerRoleId = extractOptionalFirstId(workerRole);
+        Long workerStatusId = extractOptionalFirstId(workerRole);
+
         // Content
-        List<Worker> workers = ws.getWorkers(page, size, professions, neighborhoods, workerRole, workerStatus);
+        List<Worker> workers = ws.getWorkers(page, size, professionIds, neighborhoodIds, workerRoleId, workerStatusId);
         String workersHashCode = String.valueOf(workers.hashCode());
 
         // Cache Control
@@ -91,7 +97,7 @@ public class WorkerController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "/workers",
-                ws.calculateWorkerPages(professions, neighborhoods, size, workerRole, workerStatus),
+                ws.calculateWorkerPages(professionIds, neighborhoodIds, size, workerRoleId, workerStatusId),
                 page,
                 size
         );

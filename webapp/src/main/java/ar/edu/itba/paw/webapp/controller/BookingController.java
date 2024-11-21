@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
 
 /*
  * # Summary
@@ -68,8 +67,12 @@ public class BookingController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
+        // ID Extraction
+        Long userId = extractOptionalSecondId(user);
+        Long amenityId = extractOptionalSecondId(amenity);
+
         // Content
-        final List<Booking> bookings = bs.getBookings(user, amenity, neighborhoodId, page, size);
+        final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
         String bookingsHashCode = String.valueOf(bookings.hashCode());
 
         // Cache Control
@@ -89,7 +92,7 @@ public class BookingController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/bookings",
-                bs.calculateBookingPages(user, amenity, neighborhoodId, size),
+                bs.calculateBookingPages(userId, amenityId, neighborhoodId, size),
                 page,
                 size
         );

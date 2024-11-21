@@ -86,22 +86,13 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId) {
-        LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productURN, userURN, neighborhoodId);
+    public List<Request> getRequests(Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int page, int size, long neighborhoodId) {
+        LOGGER.info("Getting Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
         // DAO function can only handle both or neither
-        if ((typeURN == null && userURN != null) || (typeURN != null && userURN == null))
+        // todo make this not an issue? can it be validated in controllers somehow?
+        if ((transactionTypeId == null && userId != null) || (transactionTypeId != null && userId == null))
             throw new IllegalArgumentException("Either both user and type have to be specified or none of them");
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long productId = ValidationUtils.checkURNAndExtractProductId(productURN);
-        Long transactionTypeId = ValidationUtils.checkURNAndExtractTransactionTypeId(typeURN);
-        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(statusURN);
-
-        ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId, page, size);
     }
@@ -109,15 +100,8 @@ public class RequestServiceImpl implements RequestService {
     // ---------------------------------------------------
 
     @Override
-    public int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, long neighborhoodId, int size) {
-        LOGGER.info("Calculating Request Pages for Product {} made by User {}", productURN, userURN);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long productId = ValidationUtils.checkURNAndExtractProductId(productURN);
-        Long transactionTypeId = ValidationUtils.checkURNAndExtractTransactionTypeId(typeURN);
-        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(statusURN);
-
-        ValidationUtils.checkSize(size);
+    public int calculateRequestPages(Long productId, Long userId, Long transactionTypeId, Long requestStatusId, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
         return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId), size);
     }

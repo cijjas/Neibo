@@ -10,15 +10,15 @@ public interface AffiliationService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Affiliation> getAffiliations(String workerURN, String neighborhoodURN, int page, int size);
+    List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
 
-    int calculateAffiliationPages(String workerURN, String neighborhoodURN, int size);
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    Affiliation updateAffiliation(String workerURN, String neighborhoodURNs, Long workerRoleId);
+    int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteAffiliation(String workerURN, String neighborhoodURNs);
+    Affiliation updateAffiliation(long workerId, long neighborhoodId, Long workerRoleId);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteAffiliation(long workerId, long neighborhoodId);
 }

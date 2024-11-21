@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 /*
  * # Summary
@@ -81,13 +83,12 @@ public class AffiliationController {
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
-        System.out.println(page);
-        System.out.println(size);
-        System.out.println(neighborhood);
-        System.out.println(worker);
+        // ID Extraction
+        Long workerId = extractOptionalFirstId(worker);
+        Long neighborhoodId = extractOptionalFirstId(neighborhood);
 
         // Content
-        List<Affiliation> affiliations = nws.getAffiliations(worker, neighborhood, page, size);
+        List<Affiliation> affiliations = nws.getAffiliations(workerId, neighborhoodId, page, size);
         String affiliationsHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -114,7 +115,7 @@ public class AffiliationController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "affiliations/",
-                nws.calculateAffiliationPages(worker, neighborhood, size),
+                nws.calculateAffiliationPages(workerId, neighborhoodId, size),
                 page,
                 size
         );
@@ -161,14 +162,14 @@ public class AffiliationController {
     @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhood)")
     @Validated(UpdateValidationSequence.class)
     public Response updateAffiliation(
-            @QueryParam("inNeighborhood") @NeighborhoodURNFormConstraint @NeighborhoodURNReferenceConstraint String neighborhood,
-            @QueryParam("forWorker") @WorkerURNFormConstraint @WorkerURNReferenceConstraint String worker,
+            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNFormConstraint @NeighborhoodURNReferenceConstraint String neighborhood,
+            @QueryParam("forWorker") @NotNull @WorkerURNFormConstraint @WorkerURNReferenceConstraint String worker,
             @Valid AffiliationDto form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(worker, neighborhood, extractFirstId(form.getWorkerRole()));
+        final Affiliation updatedAffiliation = nws.updateAffiliation(extractFirstId(worker), extractFirstId(neighborhood), extractFirstId(form.getWorkerRole()));
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
@@ -180,13 +181,13 @@ public class AffiliationController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteAffiliation(#worker)")
     public Response removeWorkerFromNeighborhood(
-            @QueryParam("inNeighborhood") @NeighborhoodURNFormConstraint @NeighborhoodURNReferenceConstraint String neighborhood,
-            @QueryParam("forWorker") @WorkerURNFormConstraint @WorkerURNReferenceConstraint String worker
+            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNFormConstraint @NeighborhoodURNReferenceConstraint String neighborhood,
+            @QueryParam("forWorker") @NotNull @WorkerURNFormConstraint @WorkerURNReferenceConstraint String worker
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 
         // Deletion Attempt
-        if (nws.deleteAffiliation(worker, neighborhood))
+        if (nws.deleteAffiliation(extractFirstId(worker), extractFirstId(neighborhood)))
             return Response.noContent()
                     .build();
 

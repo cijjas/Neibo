@@ -10,15 +10,15 @@ public interface LikeService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Like> getLikes(String postURN, String userURN, int page, int size);
+    List<Like> getLikes(Long postId, Long userId, int page, int size);
 
     // ---------------------------------------------------
 
-    int countLikes(String postURN, String userURN);
+    int countLikes(Long postId, Long userId);
 
-    int calculateLikePages(String postURN, String userURN, int size);
+    int calculateLikePages(Long postId, Long userId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteLike(String postURN, String userURN);
+    boolean deleteLike(Long postId, Long userId);
 }

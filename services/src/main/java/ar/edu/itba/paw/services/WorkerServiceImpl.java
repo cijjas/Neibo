@@ -64,21 +64,8 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public List<Worker> getWorkers(int page, int size, List<String> professionURNs, List<String> neighborhoodURNs, String workerRoleURN, String workerStatusURN) {
-        LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
-
-        Long workerRoleId = ValidationUtils.checkURNAndExtractWorkerRoleId(workerRoleURN);
-        Long workerStatusId = ValidationUtils.checkURNAndExtractWorkerStatusId(workerStatusURN);
-        List<Long> professionIds = new ArrayList<>();
-        if (professionURNs != null)
-            for (String professionURN : professionURNs)
-                professionIds.add(ValidationUtils.checkURNAndExtractProfessionId(professionURN));
-        List<Long> neighborhoodIds = new ArrayList<>();
-        if (neighborhoodURNs != null)
-            for (String neighborhoodURN : neighborhoodURNs)
-                neighborhoodIds.add(ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN));
-
-        ValidationUtils.checkPageAndSize(page, size);
+    public List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId) {
+        LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
         return workerDao.getWorkers(page, size, professionIds, neighborhoodIds, workerRoleId, workerStatusId);
     }
@@ -86,21 +73,8 @@ public class WorkerServiceImpl implements WorkerService {
     // ---------------------------------------------------
 
     @Override
-    public int calculateWorkerPages(List<String> professionURNs, List<String> neighborhoodURNs, int size, String workerRoleURN, String workerStatusURN) {
-        LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
-
-        Long workerRoleId = ValidationUtils.checkURNAndExtractWorkerRoleId(workerRoleURN);
-        Long workerStatusId = ValidationUtils.checkURNAndExtractWorkerStatusId(workerStatusURN);
-        List<Long> professionIds = new ArrayList<>();
-        if (professionURNs != null)
-            for (String professionURN : professionURNs)
-                professionIds.add(ValidationUtils.checkURNAndExtractProfessionId(professionURN));
-        List<Long> neighborhoodIds = new ArrayList<>();
-        if (neighborhoodURNs != null)
-            for (String neighborhoodURN : neighborhoodURNs)
-                neighborhoodIds.add(ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN));
-
-        ValidationUtils.checkSize(size);
+    public int calculateWorkerPages(List<Long> professionIds, List<Long> neighborhoodIds, int size, Long workerRoleId, Long workerStatusId) {
+        LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
         return PaginationUtils.calculatePages(workerDao.countWorkers(professionIds, neighborhoodIds, workerRoleId, workerStatusId), size);
     }
