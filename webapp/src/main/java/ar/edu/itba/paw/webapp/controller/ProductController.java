@@ -158,7 +158,7 @@ public class ProductController {
                 partialUpdate.getDescription(),
                 partialUpdate.getPrice(),
                 partialUpdate.getUsed(),
-                extractOptionalId(partialUpdate.getDepartment()),
+                extractOptionalFirstId(partialUpdate.getDepartment()),
                 extractFirstIds(partialUpdate.getImages()),
                 partialUpdate.getRemainingUnits()
         );

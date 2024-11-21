@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 /*
  * # Summary
@@ -134,7 +133,7 @@ public class UserController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         // Creation & ETag Generation
-        final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, extractOptionalId(form.getLanguage()), form.getIdentification());
+        final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, extractOptionalFirstId(form.getLanguage()), form.getIdentification());
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN
@@ -158,7 +157,7 @@ public class UserController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(id, partialUpdate.getMail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguage(), partialUpdate.getUserRole());
+        final User updatedUser = us.updateUser(id, partialUpdate.getMail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), extractOptionalFirstId(partialUpdate.getProfilePicture()), partialUpdate.getIdentification(), extractOptionalFirstId(partialUpdate.getLanguage()), extractOptionalFirstId(partialUpdate.getUserRole()));
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

@@ -16,7 +16,7 @@ public interface AffiliationService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Affiliation updateAffiliation(String workerURN, String neighborhoodURNs, String workerRole);
+    Affiliation updateAffiliation(String workerURN, String neighborhoodURNs, Long workerRoleId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

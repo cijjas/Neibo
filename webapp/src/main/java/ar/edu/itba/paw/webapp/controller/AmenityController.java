@@ -143,12 +143,12 @@ public class AmenityController {
     @Validated(UpdateValidationSequence.class)
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
-            @Valid AmenityDto partialUpdate
+            @Valid AmenityDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getSelectedShifts());
+        final Amenity updatedAmenity = as.updateAmenityPartially(id, form.getName(), form.getDescription(), extractFirstIds(form.getSelectedShifts()));
         String updatedAmenityHashCode = String.valueOf(updatedAmenity.hashCode());
 
         // Return the updated resource along with the EntityLevelETag

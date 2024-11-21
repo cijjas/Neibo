@@ -158,7 +158,7 @@ public class AffiliationController {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(worker, neighborhood, form.getWorkerRole());
+        final Affiliation updatedAffiliation = nws.updateAffiliation(worker, neighborhood, extractFirstId(form.getWorkerRole()));
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))

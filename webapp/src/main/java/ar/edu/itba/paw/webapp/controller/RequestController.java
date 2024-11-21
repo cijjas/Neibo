@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
 
 /*
@@ -154,7 +155,7 @@ public class RequestController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
         // Modification & HashCode Generation
-        final Request updatedRequest = rs.updateRequest(requestId, form.getRequestStatus());
+        final Request updatedRequest = rs.updateRequest(requestId, extractOptionalFirstId(form.getRequestStatus()));
         String requestHashCode = String.valueOf(updatedRequest.hashCode());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))

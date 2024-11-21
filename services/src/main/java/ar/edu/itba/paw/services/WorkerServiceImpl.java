@@ -108,7 +108,7 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, String backgroundPictureURN, String bio) {
+    public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, Long backgroundPictureId, String bio) {
         LOGGER.info("Updating Worker {}", workerId);
 
         Worker worker = workerDao.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
@@ -120,10 +120,8 @@ public class WorkerServiceImpl implements WorkerService {
             worker.setBusinessName(businessName);
         if (bio != null && !bio.isEmpty())
             worker.setBio(bio);
-        if (backgroundPictureURN != null) {
-            long imageId = ValidationUtils.extractURNId(backgroundPictureURN);
-            ValidationUtils.checkImageId(imageId);
-            Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
+        if (backgroundPictureId != null) {
+            Image i = imageService.findImage(backgroundPictureId).orElseThrow(() -> new NotFoundException("Image not found"));
             worker.setBackgroundPictureId(i.getImageId());
         }
 

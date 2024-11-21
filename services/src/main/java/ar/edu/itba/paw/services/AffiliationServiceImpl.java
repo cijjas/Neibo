@@ -68,8 +68,8 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Affiliation updateAffiliation(String workerURN, String neighborhoodURN, String workerRoleURN) {
-        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerURN, neighborhoodURN, workerRoleURN);
+    public Affiliation updateAffiliation(String workerURN, String neighborhoodURN, Long workerRoleId) {
+        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerURN, neighborhoodURN, workerRoleId);
 
         // check not null workerURN and neighborhoodURN
 
@@ -80,8 +80,9 @@ public class AffiliationServiceImpl implements AffiliationService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(() -> new NotFoundException("Affiliation Not Found"));
-        long workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
-        affiliation.setRole(WorkerRole.fromId(workerRoleId));
+
+        if (workerRoleId != null)
+            affiliation.setRole(WorkerRole.fromId(workerRoleId));
 
         return affiliation;
     }

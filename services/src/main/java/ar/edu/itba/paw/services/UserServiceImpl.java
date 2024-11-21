@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, String profilePictureURN, Integer identification, String languageURN, String userRoleURN) {
+    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, Long profilePictureId, Integer identification, Long languageId, Long userRoleId) {
         LOGGER.info("Updating User {}", userId);
 
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
@@ -156,24 +156,16 @@ public class UserServiceImpl implements UserService {
             user.setDarkMode(darkMode);
         if (phoneNumber != null && !phoneNumber.isEmpty())
             user.setPhoneNumber(phoneNumber);
-        if (profilePictureURN != null) {
-            long imageId = ValidationUtils.extractURNId(profilePictureURN);
-            ValidationUtils.checkImageId(imageId);
-            Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
+        if (profilePictureId != null) {
+            Image i = imageService.findImage(profilePictureId).orElseThrow(() -> new NotFoundException("Image not found"));
             user.setProfilePicture(i);
         }
         if (identification != null)
             user.setIdentification(identification);
-        if (languageURN != null) {
-            long languageId = ValidationUtils.extractURNId(languageURN);
-            ValidationUtils.checkLanguageId(languageId);
+        if (languageId != null)
             user.setLanguage(Language.fromId(languageId));
-        }
-        if (userRoleURN != null) {
-            long userRoleId = ValidationUtils.extractURNId(userRoleURN);
-            ValidationUtils.checkUserRoleId(userRoleId);
+        if (userRoleId != null)
             user.setRole(UserRole.fromId(userRoleId));
-        }
 
         return user;
     }

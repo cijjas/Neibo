@@ -149,12 +149,12 @@ public class EventController {
     @Validated(UpdateValidationSequence.class)
     public Response updateEventPartially(
             @PathParam("id") final long id,
-            @Valid EventDto partialUpdate
+            @Valid EventDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Event updatedEvent = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
+        final Event updatedEvent = es.updateEventPartially(id, form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime());
         String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
         return Response.ok(EventDto.fromEvent(updatedEvent, uriInfo))

@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstIds;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
 
 /*
  * # Summary
@@ -134,7 +133,7 @@ public class WorkerController {
         LOGGER.info("POST request arrived at '/workers'");
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(extractFirstId(form.getUser()), form.getPhoneNumber(), form.getAddress(), extractFirstIds(form.getProfessions()), form.getBusinessName());
+        final Worker worker = ws.createWorker(extractSecondId(form.getUser()), form.getPhoneNumber(), form.getAddress(), extractFirstIds(form.getProfessions()), form.getBusinessName());
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN
@@ -157,7 +156,7 @@ public class WorkerController {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 
         // Modification & HashCode Generation
-        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
+        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), extractOptionalFirstId(partialUpdate.getBackgroundPicture()), partialUpdate.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
         return Response.ok(WorkerDto.fromWorker(updatedWorker, rs.findAverageRating(updatedWorker.getWorkerId()), uriInfo))

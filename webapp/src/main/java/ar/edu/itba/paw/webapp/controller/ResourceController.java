@@ -19,7 +19,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 /*
  * # Summary
@@ -112,7 +112,7 @@ public class ResourceController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), extractOptionalId(form.getImage()));
+        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), extractOptionalFirstId(form.getImage()));
         String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Resource URN
@@ -135,7 +135,7 @@ public class ResourceController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImage());
+        final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), extractOptionalFirstId(partialUpdate.getImage()));
         String resourceHashCode = String.valueOf(updatedResource.hashCode());
 
         return Response.ok(ResourceDto.fromResource(updatedResource, uriInfo))

@@ -11,7 +11,6 @@ import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.models.TwoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,15 +125,16 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Request updateRequest(long requestId, String requestStatusURN) {
-        LOGGER.info("Updating Request {} as {}", requestId, requestStatusURN);
-
-        ValidationUtils.checkRequestId(requestId);
-        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(requestStatusURN);
+    public Request updateRequest(long requestId, Long requestStatusId) {
+        LOGGER.info("Updating Request {} as {}", requestId, requestStatusId);
 
         Request request = requestDao.findRequest(requestId).orElseThrow(() -> new NotFoundException("Request Not Found"));
-        request.setStatus(RequestStatus.fromId(requestStatusId));
-        request.setPurchaseDate(new Date(System.currentTimeMillis()));
+
+        if (requestStatusId != null){
+            request.setStatus(RequestStatus.fromId(requestStatusId));
+            if (requestStatusId == RequestStatus.ACCEPTED.getId())
+                request.setPurchaseDate(new Date(System.currentTimeMillis()));
+        }
 
         return request;
     }

@@ -27,7 +27,7 @@ public class Specialization implements Serializable {
     }
 
     public Specialization(Worker worker, Profession profession) {
-        this.id = new SpecializationKey(worker.getUser().getUserId(), profession.getProfessionId());
+        this.id = new SpecializationKey(worker.getWorkerId(), profession.getProfessionId());
         this.worker = worker;
         this.profession = profession;
     }

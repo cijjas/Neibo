@@ -146,12 +146,12 @@ public class ContactController {
     @Validated(UpdateValidationSequence.class)
     public Response updateContactPartially(
             @PathParam("id") final long id,
-            @Valid ContactDto partialUpdate
+            @Valid ContactDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Contact updatedContact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
+        final Contact updatedContact = cs.updateContact(id, form.getContactName(), form.getContactAddress(), form.getContactPhone());
         String updatedContactHashCode = String.valueOf(updatedContact.hashCode());
 
         return Response.ok(ContactDto.fromContact(updatedContact, uriInfo))

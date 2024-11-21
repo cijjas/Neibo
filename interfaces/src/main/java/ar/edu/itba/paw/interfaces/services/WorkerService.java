@@ -21,7 +21,7 @@ public interface WorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, String backgroundPictureURN, String bio);
+    Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, Long backgroundPictureId, String bio);
 
     // -----------------------------------------------------------------------------------------------------------------
 

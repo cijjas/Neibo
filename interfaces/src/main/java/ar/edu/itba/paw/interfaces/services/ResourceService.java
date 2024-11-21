@@ -17,7 +17,7 @@ public interface ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Resource updateResource(long resourceId, String title, String description, String imageURN);
+    Resource updateResource(long resourceId, String title, String description, Long imageId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -21,7 +21,7 @@ public interface AmenityService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Amenity updateAmenityPartially(long amenityId, String name, String description, List<String> shiftURNs);
+    Amenity updateAmenityPartially(long amenityId, String name, String description, List<Long> shiftIds);
 
     // -----------------------------------------------------------------------------------------------------------------
 

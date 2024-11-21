@@ -1,19 +1,10 @@
 package ar.edu.itba.paw.webapp.validation;
 
-import ar.edu.itba.paw.enums.ShiftStatus;
-import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.exceptions.InvalidEnumValueException;
-import ar.edu.itba.paw.models.LinkEntry;
 import ar.edu.itba.paw.models.ThreeId;
 import ar.edu.itba.paw.models.TwoId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ValidationUtils {
@@ -31,7 +22,7 @@ public class ValidationUtils {
         return extractId(URN);
     }
 
-    public static Long extractOptionalId(String URN) {
+    public static Long extractOptionalFirstId(String URN) {
         if (URN == null)
             return null;
         String[] URNParts = URN.split("/");

@@ -143,7 +143,7 @@ public class Worker {
     @Override
     public String toString() {
         return "Worker{" +
-                "user=" + user.getUserId()+
+                "user=" + getWorkerId()+
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +

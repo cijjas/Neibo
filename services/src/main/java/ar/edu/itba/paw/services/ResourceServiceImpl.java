@@ -78,7 +78,7 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Resource updateResource(long resourceId, String title, String description, String imageURN) {
+    public Resource updateResource(long resourceId, String title, String description, Long imageId) {
         LOGGER.info("Updating Resource {}", resourceId);
 
         Resource resource = findResource(resourceId).orElseThrow(() -> new NotFoundException("Resource Not Found"));
@@ -88,9 +88,7 @@ public class ResourceServiceImpl implements ResourceService {
         if (description != null && !description.isEmpty())
             resource.setDescription(description);
 
-        if (imageURN != null) {
-            long imageId = ValidationUtils.extractURNId(imageURN);
-            ValidationUtils.checkImageId(imageId);
+        if (imageId != null) {
             Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
             resource.setImage(i);
         }

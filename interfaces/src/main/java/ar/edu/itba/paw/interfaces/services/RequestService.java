@@ -23,7 +23,7 @@ public interface RequestService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Request updateRequest(long requestId, String requestStatusURN);
+    Request updateRequest(long requestId, Long requestStatusId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

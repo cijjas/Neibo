@@ -130,7 +130,7 @@ public class PostController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(form.getTitle(), form.getDescription(), extractSecondId(form.getUser()), extractSecondId(form.getChannel()), extractSecondIds(form.getTags()), extractOptionalId(form.getImage()), neighborhoodId);
+        final Post post = ps.createPost(form.getTitle(), form.getDescription(), extractSecondId(form.getUser()), extractSecondId(form.getChannel()), extractSecondIds(form.getTags()), extractOptionalFirstId(form.getImage()), neighborhoodId);
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN

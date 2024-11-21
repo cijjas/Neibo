@@ -48,6 +48,8 @@ public class AmenityServiceImpl implements AmenityService {
         LOGGER.info("Creating Amenity {}", name);
 
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
+        for (Long shiftId: selectedShiftsIds)
+            availabilityDao.createAvailability(amenity.getAmenityId(), shiftId);
 
         emailService.sendBatchNewAmenityMail(neighborhoodId, name, description);
 
@@ -117,7 +119,7 @@ public class AmenityServiceImpl implements AmenityService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Amenity updateAmenityPartially(long amenityId, String name, String description, List<String> shiftURNs) {
+    public Amenity updateAmenityPartially(long amenityId, String name, String description, List<Long> shiftIds) {
         LOGGER.info("Updating Amenity {}", amenityId);
 
         Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(() -> new NotFoundException("Amenity Not Found"));
@@ -125,14 +127,10 @@ public class AmenityServiceImpl implements AmenityService {
             amenity.setName(name);
         if (description != null && !description.isEmpty())
             amenity.setDescription(description);
-        if (shiftURNs != null && !shiftURNs.isEmpty()) {
-            for (String shiftURN : shiftURNs) {
-                long shiftId = ValidationUtils.extractURNId(shiftURN);
-                ValidationUtils.checkShiftId(shiftId);
-                Optional<Shift> shift = shiftDao.findShift(shiftId);
-                if(shift.isPresent()) {
-                    availabilityDao.findAvailability(amenityId, shiftId).orElseGet(() -> availabilityDao.createAvailability(amenityId, shiftId));
-                }
+        if (shiftIds != null && !shiftIds.isEmpty()) {
+            for (Long shiftId: shiftIds) {
+                // todo logica para remover los que no estan en este update?
+                availabilityDao.findAvailability(amenityId, shiftId).orElseGet(() -> availabilityDao.createAvailability(amenityId, shiftId));
             }
         }
         return amenity;
