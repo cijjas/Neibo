@@ -9,15 +9,17 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class UserURNUpdateAuthorizationValidator implements ConstraintValidator<UserURNReferenceConstraintUpdate, String> {
+
     @Autowired
     private AccessControlHelper accessControlHelper;
 
     @Override
-    public void initialize(UserURNReferenceConstraintUpdate userURNReferenceConstraintUpdate) {
-    }
+    public void initialize(UserURNReferenceConstraintUpdate userURNReferenceConstraintUpdate) {}
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
-        return URNValidator.validateURN(userURN, "users") && accessControlHelper.canReferenceUserInUpdate(userURN);
+        if (userURN == null)
+            return true;
+        return accessControlHelper.canReferenceUserInUpdate(userURN);
     }
 }

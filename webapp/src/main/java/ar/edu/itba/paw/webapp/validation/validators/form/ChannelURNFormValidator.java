@@ -9,12 +9,12 @@ import javax.validation.ConstraintValidatorContext;
 public class ChannelURNFormValidator implements ConstraintValidator<ChannelURNFormConstraint, String> {
 
     @Override
-    public void initialize(ChannelURNFormConstraint channelURNConstraint) {
-    }
+    public void initialize(ChannelURNFormConstraint channelURNConstraint) {}
 
     @Override
     public boolean isValid(String channelURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (channelURN == null)
+            return true;
         return URNValidator.validateURN(channelURN, "channel");
-
     }
 }

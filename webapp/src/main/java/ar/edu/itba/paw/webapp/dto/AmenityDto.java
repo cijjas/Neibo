@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
 
-@Validated
 public class AmenityDto {
 
     @NotNull(groups = Null.class)
@@ -103,36 +102,5 @@ public class AmenityDto {
                 ", selectedShifts=" + selectedShifts +
                 ", _links=" + _links +
                 '}';
-    }
-
-    public static class Links {
-        private URI self;
-        private URI neighborhood;
-        private URI shifts;
-
-        // Getters and setters
-        public URI getSelf() {
-            return self;
-        }
-
-        public void setSelf(URI self) {
-            this.self = self;
-        }
-
-        public URI getNeighborhood() {
-            return neighborhood;
-        }
-
-        public void setNeighborhood(URI neighborhood) {
-            this.neighborhood = neighborhood;
-        }
-
-        public URI getShifts() {
-            return shifts;
-        }
-
-        public void setShifts(URI shifts) {
-            this.shifts = shifts;
-        }
     }
 }

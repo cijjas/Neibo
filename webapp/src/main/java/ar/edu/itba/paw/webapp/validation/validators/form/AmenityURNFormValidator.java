@@ -8,12 +8,14 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class AmenityURNFormValidator implements ConstraintValidator<AmenityURNFormConstraint, String> {
+
     @Override
-    public void initialize(AmenityURNFormConstraint amenityURNConstraint) {
-    }
+    public void initialize(AmenityURNFormConstraint amenityURNConstraint) {}
 
     @Override
     public boolean isValid(String amenityURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (amenityURN == null)
+            return true;
         return URNValidator.validateURN(amenityURN, "amenity");
     }
 }

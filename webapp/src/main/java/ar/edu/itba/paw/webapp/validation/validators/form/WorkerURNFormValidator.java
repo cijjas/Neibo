@@ -7,6 +7,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class WorkerURNFormValidator implements ConstraintValidator<WorkerURNFormConstraint, String> {
+
     @Override
     public void initialize(WorkerURNFormConstraint constraintAnnotation) {}
 

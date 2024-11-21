@@ -8,12 +8,14 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
 public class ShiftsURNFormValidator implements ConstraintValidator<ShiftsURNFormConstraint, List<String>> {
+
     @Override
-    public void initialize(ShiftsURNFormConstraint shiftsURNConstraint) {
-    }
+    public void initialize(ShiftsURNFormConstraint shiftsURNConstraint) {}
 
     @Override
     public boolean isValid(List<String> shiftsURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (shiftsURN == null)
+            return true;
         for (String urn : shiftsURN)
             if (!URNValidator.validateURN(urn, "shifts")) return false;
         return true;

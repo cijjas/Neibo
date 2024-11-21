@@ -8,16 +8,17 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
 public class TagsURNVFormValidator implements ConstraintValidator<TagsURNFormConstraint, List<String>> {
+
     @Override
-    public void initialize(TagsURNFormConstraint tagsURNConstraint) {
-    }
+    public void initialize(TagsURNFormConstraint tagsURNConstraint) {}
 
     @Override
     public boolean isValid(List<String> tagURNs, ConstraintValidatorContext constraintValidatorContext) {
         if (tagURNs == null)
             return true;
         for (String urn : tagURNs)
-            if (!URNValidator.validateURN(urn, "tags")) return false;
+            if (!URNValidator.validateURN(urn, "tags"))
+                return false;
         return true;
     }
 }

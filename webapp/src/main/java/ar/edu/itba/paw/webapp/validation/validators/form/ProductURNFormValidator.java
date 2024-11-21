@@ -7,6 +7,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class ProductURNFormValidator implements ConstraintValidator<ProductURNFormConstraint, String> {
+
     @Override
     public void initialize(ProductURNFormConstraint constraintAnnotation) {}
 
@@ -14,7 +15,6 @@ public class ProductURNFormValidator implements ConstraintValidator<ProductURNFo
     public boolean isValid(String productURN, ConstraintValidatorContext context) {
         if (productURN == null)
             return true;
-        // URNValidator or ReferenceValidator
         return URNValidator.validateURN(productURN, "product");
     }
 }

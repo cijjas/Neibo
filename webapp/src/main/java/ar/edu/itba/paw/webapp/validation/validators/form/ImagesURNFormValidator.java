@@ -9,16 +9,15 @@ import javax.validation.ConstraintValidatorContext;
 public class ImagesURNFormValidator implements ConstraintValidator<ImagesURNFormConstraint, String[]> {
 
     @Override
-    public void initialize(ImagesURNFormConstraint imagesURNConstraint) {
-    }
+    public void initialize(ImagesURNFormConstraint imagesURNConstraint) {}
 
     @Override
-    public boolean isValid(String[] imagesURN, ConstraintValidatorContext constraintValidatorContext) {
-        if (imagesURN == null)
+    public boolean isValid(String[] imagesURNs, ConstraintValidatorContext constraintValidatorContext) {
+        if (imagesURNs == null)
             return true;
-        for (String urn : imagesURN)
-            if (!URNValidator.validateURN(urn, "images")) return false;
-
+        for (String urn : imagesURNs)
+            if (!URNValidator.validateURN(urn, "images"))
+                return false;
         return true;
     }
 }

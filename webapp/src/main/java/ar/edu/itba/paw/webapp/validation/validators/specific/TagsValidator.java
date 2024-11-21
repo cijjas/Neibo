@@ -8,25 +8,20 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Locale;
 
-public class TagsValidator implements
-        ConstraintValidator<TagsConstraint, String> {
-
+public class TagsValidator implements ConstraintValidator<TagsConstraint, String> {
     private static final String TAG_PATTERN = "^[A-Za-z0-9_]+$";
     private static final int MAX_TAG_LENGTH = 20;
+
     @Autowired
     private MessageSource messageSource;
 
     @Override
-    public void initialize(TagsConstraint tagsConstraint) {
-
-    }
+    public void initialize(TagsConstraint tagsConstraint) {}
 
     @Override
     public boolean isValid(String tag, ConstraintValidatorContext context) {
-        if (tag == null) {
-            return false; // Null values are invalid
-        }
-
+        if (tag == null)
+            return false;
 
         if (!tag.matches(TAG_PATTERN)) {
             String tagError1 = messageSource.getMessage("TagError1", null, Locale.getDefault());

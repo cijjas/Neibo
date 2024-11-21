@@ -8,12 +8,12 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class DuplicateEmailValidator implements ConstraintValidator<EmailConstraint, String> {
+
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
-    public void initialize(EmailConstraint emailConstraint) {
-    }
+    public void initialize(EmailConstraint emailConstraint) {}
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {

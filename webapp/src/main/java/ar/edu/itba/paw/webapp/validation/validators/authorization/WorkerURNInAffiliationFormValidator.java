@@ -8,6 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class WorkerURNInAffiliationFormValidator implements ConstraintValidator<WorkerURNReferenceInAffiliationConstraint, String> {
+
     @Autowired
     private AccessControlHelper accessControlHelper;
 

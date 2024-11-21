@@ -13,13 +13,13 @@ public class ProductURNInRequestValidator implements ConstraintValidator<Product
     private AccessControlHelper accessControlHelper;
 
     @Override
-    public void initialize(ProductURNInRequestConstraint productURNInRequestFormConstraint) {
-    }
+    public void initialize(ProductURNInRequestConstraint productURNInRequestFormConstraint) {}
 
     @Override
 
     public boolean isValid(String productURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (productURN == null)
+            return true;
         return accessControlHelper.canReferenceProductInRequestForm(productURN);
-
     }
 }

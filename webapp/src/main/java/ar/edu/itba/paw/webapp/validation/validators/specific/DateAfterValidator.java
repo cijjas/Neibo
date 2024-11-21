@@ -6,17 +6,15 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Date;
 
-public class DateAfterValidator implements
-        ConstraintValidator<DateAfterConstraint, Date> {
-
+public class DateAfterValidator implements ConstraintValidator<DateAfterConstraint, Date> {
 
     @Override
-    public void initialize(DateAfterConstraint dateAfterConstraint) {
-
-    }
+    public void initialize(DateAfterConstraint dateAfterConstraint) {}
 
     @Override
     public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
+        if (date == null)
+            return true;
         return date.after(new Date(System.currentTimeMillis()));
     }
 }

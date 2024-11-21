@@ -8,12 +8,14 @@ import javax.validation.ConstraintValidatorContext;
 
 
 public class UserRoleURNFormValidator implements ConstraintValidator<UserRoleURNFormConstraint, String> {
+
     @Override
-    public void initialize(UserRoleURNFormConstraint userRoleURNConstraint) {
-    }
+    public void initialize(UserRoleURNFormConstraint userRoleURNConstraint) {}
 
     @Override
     public boolean isValid(String userRoleURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (userRoleURN == null)
+            return true;
         return URNValidator.validateURN(userRoleURN, "userRole");
     }
 }

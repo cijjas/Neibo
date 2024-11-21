@@ -8,15 +8,17 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class UserURNReferenceInReviewValidator implements ConstraintValidator<UserURNReferenceInReviewConstraint, String> {
+
     @Autowired
     private AccessControlHelper accessControlHelper;
 
     @Override
-    public void initialize(UserURNReferenceInReviewConstraint userURNInReviewFormConstraint) {
-    }
+    public void initialize(UserURNReferenceInReviewConstraint userURNInReviewFormConstraint) {}
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (userURN == null)
+            return true;
         return accessControlHelper.canCreateReview(userURN);
     }
 }

@@ -11,15 +11,12 @@ import java.util.Date;
 public class ReservationDateValidator implements ConstraintValidator<ReservationDateConstraint, String> {
 
     @Override
-    public void initialize(ReservationDateConstraint constraint) {
-    }
+    public void initialize(ReservationDateConstraint constraint) {}
 
     @Override
     public boolean isValid(String date, ConstraintValidatorContext context) {
-        if (date == null || date.trim().isEmpty()) {
-            // Allow null or empty values, as @NotNull will handle it
+        if (date == null || date.trim().isEmpty())
             return true;
-        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(true);

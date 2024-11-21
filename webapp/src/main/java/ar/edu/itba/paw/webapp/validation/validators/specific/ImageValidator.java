@@ -12,14 +12,12 @@ public class ImageValidator implements ConstraintValidator<ImageConstraint, Mult
     private static final long MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 
     @Override
-    public void initialize(ImageConstraint imageConstraint) {
-    }
+    public void initialize(ImageConstraint imageConstraint) {}
 
     @Override
     public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
-        if (multipartFile == null || multipartFile.isEmpty()) {
+        if (multipartFile == null || multipartFile.isEmpty())
             return true;
-        }
 
         if (multipartFile.getContentType().startsWith("image/")) {
             if (multipartFile.getSize() <= MAX_IMAGE_SIZE_BYTES) {

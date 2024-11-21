@@ -9,11 +9,12 @@ import javax.validation.ConstraintValidatorContext;
 public class DepartmentURNFormValidator implements ConstraintValidator<DepartmentURNFormConstraint, String> {
 
     @Override
-    public void initialize(DepartmentURNFormConstraint departmentURNConstraint) {
-    }
+    public void initialize(DepartmentURNFormConstraint departmentURNConstraint) {}
 
     @Override
     public boolean isValid(String departmentURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (departmentURN == null)
+            return true;
         return URNValidator.validateURN(departmentURN, "departments");
     }
 }

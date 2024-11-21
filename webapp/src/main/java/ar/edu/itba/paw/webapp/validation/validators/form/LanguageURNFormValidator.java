@@ -7,12 +7,14 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class LanguageURNFormValidator implements ConstraintValidator<LanguageURNFormConstraint, String> {
+
     @Override
-    public void initialize(LanguageURNFormConstraint languageURNConstraint) {
-    }
+    public void initialize(LanguageURNFormConstraint languageURNConstraint) {}
 
     @Override
     public boolean isValid(String languageURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (languageURN == null)
+            return true;
         return URNValidator.validateURN(languageURN, "language");
     }
 }

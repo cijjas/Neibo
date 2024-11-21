@@ -8,15 +8,17 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class UserURNReferenceInLikeValidator implements ConstraintValidator<UserURNReferenceInLikeConstraint, String> {
+
     @Autowired
     private AccessControlHelper accessControlHelper;
 
     @Override
-    public void initialize(UserURNReferenceInLikeConstraint userURNInLikeFormConstraint) {
-    }
+    public void initialize(UserURNReferenceInLikeConstraint userURNInLikeFormConstraint) {}
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (userURN == null)
+            return true;
         return accessControlHelper.canReferenceUserInLikeForm(userURN);
     }
 }

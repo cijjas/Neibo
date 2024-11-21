@@ -13,15 +13,12 @@ public class TimeRangeValidator implements ConstraintValidator<ValidTimeRangeCon
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("H:mm"); // Handles both `9:00` and `09:00`
 
     @Override
-    public void initialize(ValidTimeRangeConstraint constraintAnnotation) {
-    }
+    public void initialize(ValidTimeRangeConstraint constraintAnnotation) {}
 
     @Override
     public boolean isValid(EventDto eventForm, ConstraintValidatorContext context) {
-        if (eventForm.getStartTime() == null || eventForm.getEndTime() == null) {
-            // Allow @Null validation to handle null cases
+        if (eventForm.getStartTime() == null || eventForm.getEndTime() == null)
             return true;
-        }
 
         try {
             // Parse and normalize the times

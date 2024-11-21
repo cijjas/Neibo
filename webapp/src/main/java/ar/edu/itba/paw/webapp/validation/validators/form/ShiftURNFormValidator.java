@@ -7,12 +7,14 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class ShiftURNFormValidator implements ConstraintValidator<ShiftURNFormConstraint, String> {
+
     @Override
-    public void initialize(ShiftURNFormConstraint shiftURNConstraint) {
-    }
+    public void initialize(ShiftURNFormConstraint shiftURNConstraint) {}
 
     @Override
     public boolean isValid(String shiftURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (shiftURN == null)
+            return true;
         return URNValidator.validateURN(shiftURN, "shifts");
     }
 }

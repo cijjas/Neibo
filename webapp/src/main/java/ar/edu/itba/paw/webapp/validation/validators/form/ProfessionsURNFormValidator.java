@@ -8,16 +8,17 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
 public class ProfessionsURNFormValidator implements ConstraintValidator<ProfessionsURNFormConstraint, List<String>> {
-    @Override
-    public void initialize(ProfessionsURNFormConstraint professionsURNConstraint) {
-    }
 
     @Override
-    public boolean isValid(List<String> professionsURN, ConstraintValidatorContext constraintValidatorContext) {
-        if (professionsURN == null)
+    public void initialize(ProfessionsURNFormConstraint professionsURNConstraint) {}
+
+    @Override
+    public boolean isValid(List<String> professionURNs, ConstraintValidatorContext constraintValidatorContext) {
+        if (professionURNs == null)
             return true;
-        for (String urn : professionsURN)
-            if (!URNValidator.validateURN(urn, "professions")) return false;
+        for (String urn : professionURNs)
+            if (!URNValidator.validateURN(urn, "professions"))
+                return false;
         return true;
     }
 }

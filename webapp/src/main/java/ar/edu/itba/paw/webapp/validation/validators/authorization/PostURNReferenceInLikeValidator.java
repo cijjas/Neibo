@@ -9,15 +9,17 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class PostURNReferenceInLikeValidator implements ConstraintValidator<PostURNReferenceInLikeConstraint, String> {
+
     @Autowired
     private AccessControlHelper accessControlHelper;
 
     @Override
-    public void initialize(PostURNReferenceInLikeConstraint postURNInLikeFormConstraint) {
-    }
+    public void initialize(PostURNReferenceInLikeConstraint postURNInLikeFormConstraint) {}
 
     @Override
     public boolean isValid(String postURN, ConstraintValidatorContext constraintValidatorContext) {
-        return URNValidator.validateURN(postURN, "posts") && accessControlHelper.canReferencePostInLikeForm(postURN);
+        if (postURN == null)
+            return true;
+        return accessControlHelper.canReferencePostInLikeForm(postURN);
     }
 }

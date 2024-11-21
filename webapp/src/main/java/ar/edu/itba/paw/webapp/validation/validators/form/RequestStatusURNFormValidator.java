@@ -9,13 +9,13 @@ import javax.validation.ConstraintValidatorContext;
 public class RequestStatusURNFormValidator implements ConstraintValidator<RequestStatusURNFormConstraint, String> {
 
     @Override
-    public void initialize(RequestStatusURNFormConstraint requestStatusURNConstraint) {
-    }
+    public void initialize(RequestStatusURNFormConstraint requestStatusURNConstraint) {}
 
     @Override
     public boolean isValid(String requestStatusURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (requestStatusURN == null)
+            return true;
         return URNValidator.validateURN(requestStatusURN, "requestStatus");
-
     }
 
 }
