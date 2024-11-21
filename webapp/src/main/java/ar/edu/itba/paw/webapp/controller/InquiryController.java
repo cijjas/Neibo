@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -49,15 +51,11 @@ public class InquiryController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
-    @PathParam("productId")
-    private Long productId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listInquiries(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("productId") @NeighborhoodIdConstraint final Long productId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -100,7 +98,9 @@ public class InquiryController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findInquiry(
-            @PathParam("id") final long inquiryId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("productId") @NeighborhoodIdConstraint final Long productId,
+            @PathParam("id") @GenericIdConstraint final long inquiryId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
@@ -125,8 +125,9 @@ public class InquiryController {
     @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
     @Validated(CreateValidationSequence.class)
     public Response createInquiry(
-            @Valid InquiryDto form,
-            @PathParam("productId") final long productId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("productId") @NeighborhoodIdConstraint final Long productId,
+            @Valid InquiryDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
@@ -150,7 +151,9 @@ public class InquiryController {
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateInquiry(
-            @PathParam("id") final long inquiryId,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("productId") @NeighborhoodIdConstraint final Long productId,
+            @PathParam("id") @GenericIdConstraint final long inquiryId,
             @Valid InquiryDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
@@ -169,7 +172,9 @@ public class InquiryController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteInquiry(#inquiryId)")
     public Response deleteById(
-            @PathParam("id") final long inquiryId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("productId") @NeighborhoodIdConstraint final Long productId,
+            @PathParam("id") @GenericIdConstraint final long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 

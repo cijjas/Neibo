@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -72,7 +73,7 @@ public class DepartmentController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findDepartment(
-            @PathParam("id") final int departmentId
+            @PathParam("id") @GenericIdConstraint final Long departmentId
     ) {
         LOGGER.info("GET request arrived at '/departments/{}'", departmentId);
 

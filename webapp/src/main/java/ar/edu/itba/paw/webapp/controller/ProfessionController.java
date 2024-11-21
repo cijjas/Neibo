@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.webapp.dto.ProfessionDto;
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +86,7 @@ public class ProfessionController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findProfession(
-            @PathParam("id") final long id
+            @PathParam("id") @GenericIdConstraint final long id
     ) {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
 
@@ -135,7 +136,7 @@ public class ProfessionController {
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteProfessionById(
-            @PathParam("id") final long id
+            @PathParam("id") @GenericIdConstraint final long id
     ) {
         LOGGER.info("DELETE request arrived at '/professions/{}'", id);
 

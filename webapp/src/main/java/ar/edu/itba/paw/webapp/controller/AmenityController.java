@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -47,12 +50,10 @@ public class AmenityController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAmenities(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -94,7 +95,8 @@ public class AmenityController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAmenity(
-            @PathParam("id") final long id
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final Long id
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
@@ -119,6 +121,7 @@ public class AmenityController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createAmenity(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @Valid AmenityDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
@@ -142,7 +145,8 @@ public class AmenityController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateAmenityPartially(
-            @PathParam("id") final long id,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final Long id,
             @Valid AmenityDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
@@ -162,7 +166,8 @@ public class AmenityController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
-            @PathParam("id") final long id
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final Long id
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 

@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -49,12 +51,10 @@ public class ContactController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listContacts(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -97,7 +97,8 @@ public class ContactController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findContact(
-            @PathParam("id") long contactId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint long contactId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
@@ -122,6 +123,7 @@ public class ContactController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createContact(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @Valid final ContactDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
@@ -145,7 +147,8 @@ public class ContactController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateContactPartially(
-            @PathParam("id") final long id,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id,
             @Valid ContactDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
@@ -164,7 +167,8 @@ public class ContactController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
-            @PathParam("id") final long id
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 

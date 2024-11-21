@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,7 +100,7 @@ public class NeighborhoodController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findNeighborhood(
-            @PathParam("id") final long neighborhoodId
+            @PathParam("id") @NeighborhoodIdConstraint final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", neighborhoodId);
 
@@ -149,7 +150,7 @@ public class NeighborhoodController {
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
-            @PathParam("id") final long neighborhoodId
+            @PathParam("id") @NeighborhoodIdConstraint final long neighborhoodId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}'", neighborhoodId);
 

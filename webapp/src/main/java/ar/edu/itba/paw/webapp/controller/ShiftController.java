@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
 import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.AmenityURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class ShiftController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findShift(
-            @PathParam("id") final long id
+            @PathParam("id") @GenericIdConstraint final long id
     ) {
         LOGGER.info("GET request arrived at '/shifts/{}'", id);
 

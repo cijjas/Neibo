@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.webapp.dto.RequestStatusDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -66,7 +67,7 @@ public class RequestStatusController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findRequestStatus(
-            @PathParam("id") final int id
+            @PathParam("id") @GenericIdConstraint final Long id
     ) {
         LOGGER.info("GET request arrived at '/request-status/{}'", id);
 

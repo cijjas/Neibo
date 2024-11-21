@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,15 +48,11 @@ public class CommentController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
-    @PathParam("postId")
-    private Long postId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listComments(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint final Long postId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -96,7 +94,9 @@ public class CommentController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findComment(
-            @PathParam("id") long commentId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint final Long postId,
+            @PathParam("id") @GenericIdConstraint long commentId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
@@ -120,6 +120,8 @@ public class CommentController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createComment(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint final Long postId,
             @Valid final CommentDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
@@ -145,7 +147,9 @@ public class CommentController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteComment(#commentId)")
     public Response deleteById(
-            @PathParam("id") final long commentId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint final Long postId,
+            @PathParam("id") @GenericIdConstraint final long commentId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 

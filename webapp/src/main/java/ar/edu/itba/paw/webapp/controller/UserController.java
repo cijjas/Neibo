@@ -6,6 +6,8 @@ import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserRoleURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -53,17 +55,14 @@ public class UserController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     @PreAuthorize("@accessControlHelper.canListUsers(#neighborhoodId)")
     public Response listUsers(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withRole") @UserRoleURNFormConstraint @UserRoleURNReferenceConstraint final String userRole,
-            @PathParam("neighborhoodId") final long neighborhoodId
+            @QueryParam("withRole") @UserRoleURNFormConstraint @UserRoleURNReferenceConstraint final String userRole
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
@@ -107,8 +106,8 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canFindUser(#neighborhoodId, #id)")
     public Response findUser(
-            @PathParam("id") final long id,
-            @PathParam("neighborhoodId") final long neighborhoodId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id
 
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
@@ -133,6 +132,7 @@ public class UserController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createUser(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @Valid UserDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
@@ -155,8 +155,8 @@ public class UserController {
     @PreAuthorize("@accessControlHelper.canUpdateUser(#id, #neighborhoodId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUserPartially(
-            @PathParam("id") final long id,
-            @PathParam("neighborhoodId") final long neighborhoodId,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id,
             @Valid UserDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
@@ -170,11 +170,15 @@ public class UserController {
                 .build();
     }
 
-/*    @DELETE
+    /*
+    @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(@PathParam("id") final long userId) {
+    public Response deleteById(
+        @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+        @PathParam("id") @GenericIdConstraint final long userId
+    ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
 
         // Deletion Attempt
@@ -184,5 +188,6 @@ public class UserController {
 
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
-    }*/
+    }
+    */
 }

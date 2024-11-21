@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.webapp.dto.EventDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -51,12 +53,10 @@ public class EventController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listEventsByDate(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("forDate") final Date date,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
@@ -100,7 +100,8 @@ public class EventController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findEvent(
-            @PathParam("id") final long eventId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long eventId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 
@@ -125,6 +126,7 @@ public class EventController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createEvent(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @Valid EventDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
@@ -148,7 +150,8 @@ public class EventController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateEventPartially(
-            @PathParam("id") final long id,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id,
             @Valid EventDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
@@ -167,7 +170,8 @@ public class EventController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
-            @PathParam("id") final long id
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 

@@ -11,6 +11,8 @@ import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductURNReferen
 import ar.edu.itba.paw.webapp.validation.constraints.reference.RequestStatusURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.TransactionTypeURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -55,13 +57,11 @@ public class RequestController {
     @Context
     private javax.ws.rs.core.Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canAccessRequests(#userURN, #productId)")
     public Response listRequests(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("requestedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user,
@@ -115,6 +115,7 @@ public class RequestController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") final long requestId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
@@ -139,6 +140,7 @@ public class RequestController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createRequest(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @Valid RequestDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
@@ -162,7 +164,8 @@ public class RequestController {
     @PreAuthorize("@accessControlHelper.canUpdateRequest(#requestId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateRequest(
-            @PathParam("id") final long requestId,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long requestId,
             @Valid RequestDto form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
@@ -181,7 +184,8 @@ public class RequestController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteById(
-            @PathParam("id") final long requestId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long requestId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 

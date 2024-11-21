@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class ImageController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findById(
-            @PathParam("id") long imageId
+            @PathParam("id") @GenericIdConstraint long imageId
     ) {
         LOGGER.info("GET request arrived at '/images/{}'", imageId);
 
@@ -97,7 +98,7 @@ public class ImageController {
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
-            @PathParam("id") final long imageId
+            @PathParam("id") @GenericIdConstraint final long imageId
     ) {
         LOGGER.info("DELETE request arrived at '/images/{}'", imageId);
 

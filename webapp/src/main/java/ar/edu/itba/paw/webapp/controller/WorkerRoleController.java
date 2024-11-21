@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.webapp.dto.WorkerRoleDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -60,7 +61,7 @@ public class WorkerRoleController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findWorkerRole(
-            @PathParam("id") final int id
+            @PathParam("id") @GenericIdConstraint final Long id
     ) {
         LOGGER.info("GET request arrived at '/worker-roles/{}'", id);
 

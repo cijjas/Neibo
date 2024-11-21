@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.validation.constraints.form.PostURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.PostURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +49,10 @@ public class TagController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response listTags(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("onPost") @PostURNFormConstraint @PostURNReferenceConstraint final String post,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
@@ -99,7 +99,8 @@ public class TagController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findTags(
-            @PathParam("id") final long tagId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long tagId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
@@ -123,6 +124,7 @@ public class TagController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createTag(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @Valid TagDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
@@ -148,7 +150,8 @@ public class TagController {
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
-            @PathParam("id") final long tagId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long tagId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 

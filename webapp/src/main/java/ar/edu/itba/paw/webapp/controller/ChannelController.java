@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.webapp.dto.ChannelDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +49,10 @@ public class ChannelController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listChannels(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -95,7 +95,8 @@ public class ChannelController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findChannel(
-            @PathParam("id") long channelId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint long channelId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
@@ -120,6 +121,7 @@ public class ChannelController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createChannel(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @Valid ChannelDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
@@ -145,7 +147,8 @@ public class ChannelController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
-            @PathParam("id") final long channelId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long channelId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 

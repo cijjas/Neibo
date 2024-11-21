@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.webapp.dto.LanguageDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -72,7 +73,7 @@ public class LanguageController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findLanguage(
-            @PathParam("id") final long languageId
+            @PathParam("id") @GenericIdConstraint final long languageId
     ) {
         LOGGER.info("GET request arrived at '/languages/{}'", languageId);
 

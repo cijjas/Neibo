@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.ShiftStatus;
 import ar.edu.itba.paw.webapp.dto.ShiftStatusDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -70,7 +71,7 @@ public class ShiftStatusController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findShiftStatus(
-            @PathParam("id") final int id
+            @PathParam("id") @GenericIdConstraint final Long id
     ) {
         LOGGER.info("GET request arrived at '/shift-statuses/{}'", id);
 

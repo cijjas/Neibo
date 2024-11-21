@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.webapp.dto.PostStatusDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -69,7 +70,7 @@ public class PostStatusController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findPostStatus(
-            @PathParam("id") final int id
+            @PathParam("id") @GenericIdConstraint final Long id
     ) {
         LOGGER.info("GET request arrived at '/post-statuses/{}'", id);
 

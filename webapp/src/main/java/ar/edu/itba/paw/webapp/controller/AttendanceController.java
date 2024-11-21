@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,15 +48,11 @@ public class AttendanceController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
-    @PathParam("eventId")
-    private Long eventId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAttendance(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint final Long eventId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -97,7 +95,9 @@ public class AttendanceController {
     @Path("/{userId}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAttendance(
-            @PathParam("userId") final long userId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint final Long eventId,
+            @PathParam("userId") @GenericIdConstraint final Long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
@@ -121,6 +121,8 @@ public class AttendanceController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createAttendance(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint final Long eventId,
             @Valid final AttendanceDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
@@ -146,7 +148,9 @@ public class AttendanceController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteAttendance(#userId)")
     public Response deleteById(
-            @PathParam("userId") final long userId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint final Long eventId,
+            @PathParam("userId") @GenericIdConstraint final long userId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 

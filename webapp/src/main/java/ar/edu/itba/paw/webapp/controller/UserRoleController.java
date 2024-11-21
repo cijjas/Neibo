@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.webapp.dto.UserRoleDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -60,7 +61,7 @@ public class UserRoleController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findUserRole(
-            @PathParam("id") final int userRoleId
+            @PathParam("id") @GenericIdConstraint final Long userRoleId
     ) {
         LOGGER.info("GET request arrived at '/user-roles/{}'", userRoleId);
 

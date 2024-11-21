@@ -7,6 +7,8 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNFormConstrai
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.AmenityURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,12 +56,10 @@ public class BookingController {
     @Context
     private Request request;
 
-    @PathParam("neighborhoodId")
-    private long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listBookings(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("bookedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user,
@@ -108,7 +108,8 @@ public class BookingController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findBooking(
-            @PathParam("id") final long bookingId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long bookingId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
@@ -134,6 +135,7 @@ public class BookingController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createBooking(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @Valid BookingDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
@@ -155,8 +157,8 @@ public class BookingController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteById(
-            @PathParam("id") final long bookingId,
-            @PathParam("neighborhoodId") final long neighborhoodId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long bookingId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 

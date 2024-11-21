@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +46,10 @@ public class ReviewController {
     @Context
     private Request request;
 
-    @PathParam("workerId")
-    private Long workerId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listReviews(
+            @PathParam("workerId") @GenericIdConstraint final long workerId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -93,7 +92,8 @@ public class ReviewController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findReview(
-            @PathParam("id") final long id
+            @PathParam("workerId") @GenericIdConstraint final long workerId,
+            @PathParam("id") @GenericIdConstraint final long id
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 
@@ -118,6 +118,7 @@ public class ReviewController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createReview(
+            @PathParam("workerId") @GenericIdConstraint final long workerId,
             @Valid ReviewDto form
     ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
@@ -139,7 +140,8 @@ public class ReviewController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     public Response deleteById(
-            @PathParam("id") final long reviewId
+            @PathParam("workerId") @GenericIdConstraint final long workerId,
+            @PathParam("id") @GenericIdConstraint final long reviewId
     ) {
         LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 

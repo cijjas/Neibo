@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNFormCons
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerStatusURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.*;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -115,7 +116,7 @@ public class WorkerController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findWorker(
-            @PathParam("id") final long workerId
+            @PathParam("id") @GenericIdConstraint final long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
@@ -161,7 +162,7 @@ public class WorkerController {
     @PreAuthorize("@accessControlHelper.canUpdateWorker(#workerId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateWorkerPartially(
-            @PathParam("id") final long workerId,
+            @PathParam("id") @GenericIdConstraint final long workerId,
             @Valid WorkerDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
@@ -175,11 +176,14 @@ public class WorkerController {
                 .build();
     }
 
-/*    @DELETE
+    /*
+    @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(@PathParam("id") final long workerId) {
+    public Response deleteById(
+        @PathParam("id") @GenericIdConstraint final long workerId
+    ) {
         LOGGER.info("DELETE request arrived at '/workers/{}", workerId);
 
         // Deletion Attempt

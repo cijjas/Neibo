@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductStatusURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -53,13 +55,10 @@ public class ProductController {
     @Context
     private Request request;
 
-
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listProducts(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inDepartment") @DepartmentURNFormConstraint @DepartmentURNReferenceConstraint final String department,
@@ -110,7 +109,8 @@ public class ProductController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findProduct(
-            @PathParam("id") final long productId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long productId
     ) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
@@ -134,6 +134,7 @@ public class ProductController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createProduct(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @Valid final ProductDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
@@ -157,7 +158,8 @@ public class ProductController {
     @PreAuthorize("@accessControlHelper.canUpdateProduct(#id)")
     @Validated(UpdateValidationSequence.class)
     public Response updateProductPartially(
-            @PathParam("id") final long id,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id,
             @Valid final ProductDto partialUpdate
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
@@ -185,7 +187,8 @@ public class ProductController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
     public Response deleteById(
-            @PathParam("id") final long productId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long productId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 

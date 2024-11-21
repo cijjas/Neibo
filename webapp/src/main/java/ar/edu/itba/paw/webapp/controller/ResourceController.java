@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -45,13 +47,11 @@ public class ResourceController {
     @Context
     private Request request;
 
-
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    public Response listResources() {
+    public Response listResources(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
         // Content
@@ -82,7 +82,8 @@ public class ResourceController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findResource(
-            @PathParam("id") final long resourceId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long resourceId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
@@ -107,6 +108,7 @@ public class ResourceController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createResource(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @Valid ResourceDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
@@ -129,7 +131,8 @@ public class ResourceController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateResourcePartially(
-            @PathParam("id") final long id,
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id,
             @Valid ResourceDto partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
@@ -148,7 +151,8 @@ public class ResourceController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteResourceById(
-            @PathParam("id") final long id
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @PathParam("id") @GenericIdConstraint final long id
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
