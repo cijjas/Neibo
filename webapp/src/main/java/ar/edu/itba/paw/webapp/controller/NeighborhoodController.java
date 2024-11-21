@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +54,7 @@ public class NeighborhoodController {
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withWorker") final String worker
+            @QueryParam("withWorker") @WorkerURNFormConstraint @WorkerURNReferenceConstraint final String worker
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 

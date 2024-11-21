@@ -20,7 +20,7 @@ public class ChannelURNReferenceValidator implements ConstraintValidator<Channel
 
     @Override
     public boolean isValid(String channelURN, ConstraintValidatorContext context) {
-        if (channelURN == null)
+        if (channelURN == null || channelURN.trim().isEmpty())
             return true;
         TwoId twoId = extractTwoId(channelURN);
         return channelService.findChannel(twoId.getSecondId(), twoId.getFirstId()).isPresent();

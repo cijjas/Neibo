@@ -16,7 +16,7 @@ public class RequestStatusURNReferenceValidator implements ConstraintValidator<R
 
     @Override
     public boolean isValid(String requestStatusURN, ConstraintValidatorContext context) {
-        if (requestStatusURN == null)
+        if (requestStatusURN == null || requestStatusURN.trim().isEmpty())
             return true;
         try {
             RequestStatus.fromId(extractId(requestStatusURN));

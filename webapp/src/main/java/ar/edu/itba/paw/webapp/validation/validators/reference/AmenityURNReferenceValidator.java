@@ -21,7 +21,7 @@ public class AmenityURNReferenceValidator implements ConstraintValidator<Amenity
 
     @Override
     public boolean isValid(String amenityURN, ConstraintValidatorContext context) {
-        if (amenityURN == null)
+        if (amenityURN == null || amenityURN.trim().isEmpty())
             return true;
         TwoId twoId = extractTwoId(amenityURN);
         return amenityService.findAmenity(twoId.getSecondId(), twoId.getFirstId()).isPresent();

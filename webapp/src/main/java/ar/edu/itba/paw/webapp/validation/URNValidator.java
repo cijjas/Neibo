@@ -22,7 +22,11 @@ public class URNValidator {
     private static final String REQUEST_STATUS_URN_REGEX = "^(https?://[^/]+)?/request-statuses/\\d+$";
     private static final String PROFESSION_URN_REGEX = "^(https?://[^/]+)?/professions/\\d+$";
     private static final String USER_ROLE_URN_REGEX = "^(https?://[^/]+)?/user-roles/\\d+$";
+    private static final String POST_STATUS_URN_REGEX = "^(https?://[^/]+)?/post-statuses/\\d+$";
+    private static final String PRODUCT_STATUS_URN_REGEX = "^(https?://[^/]+)?/product-statuses/\\d+$";
+    private static final String WORKER_STATUS_URN_REGEX = "^(https?://[^/]+)?/worker-statuses/\\d+$";
     private static final String WORKER_ROLE_URN_REGEX = "^(https?://[^/]+)?/worker-roles/\\d+$";
+    private static final String TRANSACTION_TYPE_URN_REGEX = "^(https?://[^/]+)?/transaction-types/\\d+$";
     private static final String IMAGE_URN_REGEX = "^(https?://[^/]+)?/images/\\d+$";
     private static final String TAGS_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/tags/\\d+$";
 
@@ -46,6 +50,10 @@ public class URNValidator {
         patternMap.put("workerRole", Pattern.compile(WORKER_ROLE_URN_REGEX));
         patternMap.put("requestStatus", Pattern.compile(REQUEST_STATUS_URN_REGEX));
         patternMap.put("tags", Pattern.compile(TAGS_URN_REGEX));
+        patternMap.put("post-status", Pattern.compile(POST_STATUS_URN_REGEX));
+        patternMap.put("product-status", Pattern.compile(PRODUCT_STATUS_URN_REGEX));
+        patternMap.put("transaction-type", Pattern.compile(TRANSACTION_TYPE_URN_REGEX));
+        patternMap.put("worker-status", Pattern.compile(WORKER_STATUS_URN_REGEX));
     }
 
     // Method to validate a URN based on its type

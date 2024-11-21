@@ -15,7 +15,7 @@ public class ProfessionURNReferenceValidator implements ConstraintValidator<Prof
 
     @Override
     public boolean isValid(String professionURN, ConstraintValidatorContext context) {
-        if (professionURN == null)
+        if (professionURN == null || professionURN.trim().isEmpty())
             return true;
         try {
             Profession.fromId(extractId(professionURN));

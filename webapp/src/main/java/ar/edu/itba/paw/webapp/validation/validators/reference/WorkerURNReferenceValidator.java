@@ -19,7 +19,7 @@ public class WorkerURNReferenceValidator implements ConstraintValidator<WorkerUR
 
     @Override
     public boolean isValid(String workerURN, ConstraintValidatorContext context) {
-        if (workerURN == null)
+        if (workerURN == null || workerURN.trim().isEmpty())
             return true;
         return workerService.findWorker(extractId(workerURN)).isPresent();
     }

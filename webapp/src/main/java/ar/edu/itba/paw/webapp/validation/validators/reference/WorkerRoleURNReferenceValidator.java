@@ -16,7 +16,7 @@ public class WorkerRoleURNReferenceValidator implements ConstraintValidator<Work
 
     @Override
     public boolean isValid(String workerRoleURN, ConstraintValidatorContext context) {
-        if (workerRoleURN == null)
+        if (workerRoleURN == null || workerRoleURN.trim().isEmpty())
             return true;
         long workerRoleId = extractId(workerRoleURN);
         try {

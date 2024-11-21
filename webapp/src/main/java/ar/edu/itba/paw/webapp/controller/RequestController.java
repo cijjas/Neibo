@@ -3,6 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.TransactionTypeURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.RequestStatusURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.TransactionTypeURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -57,10 +65,10 @@ public class RequestController {
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("requestedBy") final String user,
-            @QueryParam("forProduct") final String product,
-            @QueryParam("withType") final String type,
-            @QueryParam("withStatus") final String status
+            @QueryParam("requestedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user,
+            @QueryParam("forProduct") @ProductURNFormConstraint @ProductURNReferenceConstraint final String product,
+            @QueryParam("withType") @TransactionTypeURNFormConstraint @TransactionTypeURNReferenceConstraint final String type,
+            @QueryParam("withStatus") @RequestStatusURNFormConstraint @RequestStatusURNReferenceConstraint final String status
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 

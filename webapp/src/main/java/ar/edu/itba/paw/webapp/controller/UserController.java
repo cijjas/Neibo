@@ -4,6 +4,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserRoleURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -60,7 +62,7 @@ public class UserController {
     public Response listUsers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withRole") final String userRole,
+            @QueryParam("withRole") @UserRoleURNFormConstraint @UserRoleURNReferenceConstraint final String userRole,
             @PathParam("neighborhoodId") final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);

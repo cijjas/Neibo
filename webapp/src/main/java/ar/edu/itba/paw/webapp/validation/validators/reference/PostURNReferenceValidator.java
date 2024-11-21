@@ -20,7 +20,7 @@ public class PostURNReferenceValidator implements ConstraintValidator<PostURNRef
 
     @Override
     public boolean isValid(String postURN, ConstraintValidatorContext context) {
-        if (postURN == null)
+        if (postURN == null || postURN.trim().isEmpty())
             return true;
         TwoId twoId = extractTwoId(postURN);
         return postService.findPost(twoId.getSecondId(), twoId.getFirstId()).isPresent();

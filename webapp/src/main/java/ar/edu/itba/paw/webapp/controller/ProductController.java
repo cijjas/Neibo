@@ -3,6 +3,12 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ProductStatusURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductStatusURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -56,9 +62,9 @@ public class ProductController {
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inDepartment") final String department,
-            @QueryParam("forUser") final String user,
-            @QueryParam("withStatus") final String productStatus
+            @QueryParam("inDepartment") @DepartmentURNFormConstraint @DepartmentURNReferenceConstraint final String department,
+            @QueryParam("forUser") @UserURNFormConstraint @UserURNReferenceConstraint final String user,
+            @QueryParam("withStatus") @ProductStatusURNFormConstraint @ProductStatusURNReferenceConstraint final String productStatus
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 

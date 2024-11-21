@@ -16,7 +16,7 @@ public class UserRoleURNReferenceValidator implements ConstraintValidator<UserRo
 
     @Override
     public boolean isValid(String userRoleURN, ConstraintValidatorContext context) {
-        if (userRoleURN == null)
+        if (userRoleURN == null || userRoleURN.trim().isEmpty())
             return true;
         try {
             UserRole.fromId(extractId(userRoleURN));

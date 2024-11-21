@@ -20,7 +20,7 @@ public class ProductURNReferenceValidator implements ConstraintValidator<Product
 
     @Override
     public boolean isValid(String productURN, ConstraintValidatorContext context) {
-        if (productURN == null)
+        if (productURN == null || productURN.trim().isEmpty())
             return true;
         TwoId twoId = extractTwoId(productURN);
         return productService.findProduct(twoId.getSecondId(), twoId.getFirstId()).isPresent();

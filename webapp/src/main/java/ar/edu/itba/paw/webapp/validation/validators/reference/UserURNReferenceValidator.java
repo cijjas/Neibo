@@ -20,7 +20,7 @@ public class UserURNReferenceValidator implements ConstraintValidator<UserURNRef
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext context) {
-        if (userURN == null)
+        if (userURN == null || userURN.trim().isEmpty())
             return true;
         TwoId twoId = extractTwoId(userURN);
         return userService.findUser(twoId.getSecondId(), twoId.getFirstId()).isPresent();

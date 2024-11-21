@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.AmenityURNReferenceConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ public class ShiftController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts(
-            @QueryParam("forAmenity") final String amenity,
+            @QueryParam("forAmenity") @AmenityURNFormConstraint @AmenityURNReferenceConstraint final String amenity,
             @QueryParam("forDate") final Date date
     ) {
         LOGGER.info("GET request arrived at '/shifts'");

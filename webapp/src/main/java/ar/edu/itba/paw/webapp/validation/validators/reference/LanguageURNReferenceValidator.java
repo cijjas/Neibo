@@ -16,7 +16,7 @@ public class LanguageURNReferenceValidator implements ConstraintValidator<Langua
 
     @Override
     public boolean isValid(String languageURN, ConstraintValidatorContext context) {
-        if (languageURN == null)
+        if (languageURN == null || languageURN.trim().isEmpty())
             return true;
         try {
             Language.fromId(extractId(languageURN));

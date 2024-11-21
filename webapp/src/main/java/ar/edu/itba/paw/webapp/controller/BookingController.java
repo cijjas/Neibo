@@ -3,6 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.AmenityURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +61,10 @@ public class BookingController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listBookings(
-            @QueryParam("bookedBy") final String user,
-            @QueryParam("forAmenity") final String amenity,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @QueryParam("bookedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user,
+            @QueryParam("forAmenity") @AmenityURNFormConstraint @AmenityURNReferenceConstraint final String amenity
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 

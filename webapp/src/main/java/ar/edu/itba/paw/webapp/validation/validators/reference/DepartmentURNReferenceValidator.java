@@ -17,7 +17,7 @@ public class DepartmentURNReferenceValidator implements ConstraintValidator<Depa
 
     @Override
     public boolean isValid(String departmentURN, ConstraintValidatorContext context) {
-        if (departmentURN == null)
+        if (departmentURN == null || departmentURN.trim().isEmpty())
             return true;
         try {
             Department.fromId(extractId(departmentURN));

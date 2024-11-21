@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.dto.TagDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.PostURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.PostURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +51,7 @@ public class TagController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
     public Response listTags(
-            @QueryParam("onPost") final String post,
+            @QueryParam("onPost") @PostURNFormConstraint @PostURNReferenceConstraint final String post,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {

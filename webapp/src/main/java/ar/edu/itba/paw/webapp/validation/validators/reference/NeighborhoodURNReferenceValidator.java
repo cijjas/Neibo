@@ -19,7 +19,7 @@ public class NeighborhoodURNReferenceValidator implements ConstraintValidator<Ne
 
     @Override
     public boolean isValid(String neighborhoodURN, ConstraintValidatorContext context) {
-        if (neighborhoodURN == null)
+        if (neighborhoodURN == null || neighborhoodURN.trim().isEmpty())
             return true;
         return neighborhoodService.findNeighborhood(extractId(neighborhoodURN)).isPresent();
     }

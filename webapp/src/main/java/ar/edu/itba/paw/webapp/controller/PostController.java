@@ -3,6 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.PostStatusURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ChannelURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.PostStatusURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.TagsURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,10 +64,10 @@ public class PostController {
     public Response listPosts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inChannel") final String channel,
-            @QueryParam("withTags") final List<String> tags,
-            @QueryParam("withStatus") final String postStatus,
-            @QueryParam("postedBy") final String user
+            @QueryParam("inChannel") @ChannelURNFormConstraint @ChannelURNReferenceConstraint final String channel,
+            @QueryParam("withTags") @TagsURNFormConstraint @TagsURNReferenceConstraint final List<String> tags,
+            @QueryParam("withStatus") @PostStatusURNFormConstraint @PostStatusURNReferenceConstraint final String postStatus,
+            @QueryParam("postedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 

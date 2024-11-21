@@ -20,7 +20,7 @@ public class ImageURNReferenceValidator implements ConstraintValidator<ImageURNR
 
     @Override
     public boolean isValid(String imageURN, ConstraintValidatorContext context) {
-        if (imageURN == null)
+        if (imageURN == null || imageURN.trim().isEmpty())
             return true;
         return imageService.findImage(extractId(imageURN)).isPresent();
     }

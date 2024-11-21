@@ -19,7 +19,7 @@ public class ShiftURNReferenceValidator implements ConstraintValidator<ShiftURNR
 
     @Override
     public boolean isValid(String shiftURN, ConstraintValidatorContext context) {
-        if (shiftURN == null)
+        if (shiftURN == null || shiftURN.trim().isEmpty())
             return true;
         return shiftService.findShift(extractId(shiftURN)).isPresent();
     }
