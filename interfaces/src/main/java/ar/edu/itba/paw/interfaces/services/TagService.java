@@ -9,7 +9,7 @@ public interface TagService {
 
     Tag createTag(long neighborhoodId, String name);
 
-    void categorizePost(long postId, List<String> tagURIs, long neighborhoodId);
+    void categorizePost(long postId, List<Long> tagIds);
 
     // -----------------------------------------------------------------------------------------------------------------
 

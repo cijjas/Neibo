@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PostService {
 
-    Post createPost(String title, String description, String userURN, String channelURN, List<String> tagURNs, String imageURN, long neighborhoodId);
+    Post createPost(String title, String description, long userId, long channelId, List<Long> tagIds, Long imageId, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

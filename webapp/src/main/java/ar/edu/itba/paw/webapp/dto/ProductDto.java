@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 
 public class ProductDto {
     @NotNull(groups = Null.class)
@@ -28,7 +29,7 @@ public class ProductDto {
 
     @ImagesURNFormConstraint(groups = Form.class)
     @ImagesURNReferenceConstraint(groups = Reference.class)
-    private String[] images;
+    private List<String> images;
 
     @NotNull(groups = Null.class)
     @Size(max = 2000, groups = Basic.class)
@@ -180,11 +181,11 @@ public class ProductDto {
         this._links = _links;
     }
 
-    public String[] getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(String[] images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 

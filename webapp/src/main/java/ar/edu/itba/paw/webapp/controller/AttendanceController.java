@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
 
 /*
  * # Summary
@@ -125,7 +126,7 @@ public class AttendanceController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Creation & HashCode Generation
-        final Attendance attendance = as.createAttendance(form.getUser(), eventId);
+        final Attendance attendance = as.createAttendance(extractSecondId(form.getUser()), eventId);
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Resource URN

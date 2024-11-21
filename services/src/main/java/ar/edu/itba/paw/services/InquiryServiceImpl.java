@@ -36,15 +36,13 @@ public class InquiryServiceImpl implements InquiryService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Inquiry createInquiry(String userURN, long productId, String message) {
-        LOGGER.info("Creating Inquiry for Product {} from User {}", productId, userURN);
+    public Inquiry createInquiry(long userId, long productId, String message) {
+        LOGGER.info("Creating Inquiry for Product {} from User {}", productId, userId);
 
-        //Send email to seller
+        // Send email to seller, product will always exist due to validation in previous layer
         Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         User receiver = product.getSeller();
         emailService.sendInquiryMail(receiver, product, message, false);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // Cant be null due to form validation
 
         return inquiryDao.createInquiry(userId, productId, message);
     }

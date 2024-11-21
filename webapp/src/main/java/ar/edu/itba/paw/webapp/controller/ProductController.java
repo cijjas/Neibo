@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
 
 /*
  * # Summary
@@ -127,7 +128,7 @@ public class ProductController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(form.getUser(), form.getName(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartment(), form.getImages(), form.getRemainingUnits());
+        final Product product = ps.createProduct(extractSecondId(form.getUser()), form.getName(), form.getDescription(), form.getPrice(), form.getUsed(), extractFirstId(form.getDepartment()), extractFirstIds(form.getImages()), form.getRemainingUnits());
         String productHashCode = String.valueOf(product.hashCode());
 
         // Resource URN
@@ -157,8 +158,8 @@ public class ProductController {
                 partialUpdate.getDescription(),
                 partialUpdate.getPrice(),
                 partialUpdate.getUsed(),
-                partialUpdate.getDepartment(),
-                partialUpdate.getImages(),
+                extractOptionalId(partialUpdate.getDepartment()),
+                extractFirstIds(partialUpdate.getImages()),
                 partialUpdate.getRemainingUnits()
         );
         String productHashCode = String.valueOf(updatedProduct.hashCode());

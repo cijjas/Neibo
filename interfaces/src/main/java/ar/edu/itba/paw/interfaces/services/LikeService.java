@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface LikeService {
 
-    Like createLike(String postURN, String userURN);
+    Like createLike(long postId, long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

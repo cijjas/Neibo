@@ -32,12 +32,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Attendance createAttendance(String userURN, long eventId) {
-        LOGGER.info("Adding User {} as Attendee for Event {}", userURN, eventId);
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        ValidationUtils.checkAttendanceId(userId, eventId);
+    public Attendance createAttendance(long user, long event) {
+        LOGGER.info("Adding User {} as Attendee for Event {}", user, event);
 
-        return attendanceDao.createAttendee(userId, eventId);
+        return attendanceDao.createAttendee(user, event);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

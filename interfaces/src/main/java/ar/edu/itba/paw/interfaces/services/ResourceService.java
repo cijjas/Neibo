@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ResourceService {
 
-    Resource createResource(long neighborhoodId, String title, String description, String imageURN);
+    Resource createResource(long neighborhoodId, String title, String description, Long imageId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

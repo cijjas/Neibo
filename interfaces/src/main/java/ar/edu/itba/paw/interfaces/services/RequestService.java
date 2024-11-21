@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RequestService {
-    Request createRequest(final String userURN, final String productURN, final String message, final int quantity);
+
+    Request createRequest(final long userId, final long productId, final String message, final int quantity);
 
     // -----------------------------------------------------------------------------------------------------------------
 

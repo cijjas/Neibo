@@ -44,7 +44,6 @@ public class UserDto {
     @NotNull(groups = Null.class)
     private Integer identification;
 
-    @NotNull(groups = Null.class)
     @LanguageURNFormConstraint(groups = Form.class)
     @LanguageURNReferenceConstraint(groups = Reference.class)
     private String language;

@@ -39,17 +39,14 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker createWorker(String userURN, String phoneNumber, String address, List<String> professionURNs, String businessName) {
-        LOGGER.info("Creating Worker associated with User {}", userURN);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserWorkerId(userURN);
+    public Worker createWorker(long userId, String phoneNumber, String address, List<Long> professionIds, String businessName) {
+        LOGGER.info("Creating Worker associated with User {}", userId);
 
         Worker worker = workerDao.createWorker(userId, phoneNumber, address, businessName);
-        for (String urn : professionURNs) {
-            long professionId = ValidationUtils.extractURNId(urn);
-            ValidationUtils.checkProfessionId(professionId);
-            professionWorkerDao.findSpecialization(userId, professionId).orElseGet(() -> professionWorkerDao.createSpecialization(userId, professionId));
+        for (long id: professionIds) {
+            professionWorkerDao.findSpecialization(userId, id).orElseGet(() -> professionWorkerDao.createSpecialization(userId, id));
         }
+
         return worker;
     }
 

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CommentService {
 
-    Comment createComment(final String comment, final String userURN, final long postId);
+    Comment createComment(final String comment, final long userId, final long postId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface AttendanceService {
 
-    Attendance createAttendance(String userURN, long eventId);
+    Attendance createAttendance(long userId, long eventId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

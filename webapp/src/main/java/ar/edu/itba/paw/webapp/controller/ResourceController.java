@@ -19,6 +19,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalId;
+
 /*
  * # Summary
  *   - A Neighborhood has many Resources, like a map, the emblem, etc
@@ -110,7 +112,7 @@ public class ResourceController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImage());
+        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), extractOptionalId(form.getImage()));
         String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Resource URN

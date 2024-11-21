@@ -45,6 +45,7 @@ public class UserRoleController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         List<UserRoleDto> userRoleDto = Arrays.stream(UserRole.values())
                 .map(tt -> UserRoleDto.fromUserRole(tt, uriInfo))
                 .collect(Collectors.toList());

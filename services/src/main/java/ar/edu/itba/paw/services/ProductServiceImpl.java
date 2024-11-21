@@ -8,12 +8,14 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
+import org.hibernate.annotations.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,18 +41,13 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product createProduct(String userURN, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, long units) {
-        LOGGER.info("Creating Product {} from User {}", name, userURN);
-
-        long departmentId = ValidationUtils.extractURNId(departmentURN);
-        ValidationUtils.checkDepartmentId(departmentId);
+    public Product createProduct(long userId, String name, String description, Double price, boolean used, long departmentId, List<Long> imageIds, long units) {
+        LOGGER.info("Creating Product {} from User {}", name, userId);
 
         Long[] idArray = {0L, 0L, 0L};
-        int imageURNsLength = imageURNs == null ? 0 : imageURNs.length;
-        for (int i = 0; i < imageURNsLength; i++)
-            idArray[i] = getImageId(imageURNs[i]);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        int imageURNsLength = imageIds == null ? 0 : imageIds.size();
+        for (int i = 0; i < imageURNsLength && i < idArray.length; i++)
+            idArray[i] = imageIds.get(i);
 
         return productDao.createProduct(userId, name, description, price, used, departmentId, idArray[0], idArray[1], idArray[2], units);
     }
@@ -111,50 +108,37 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, Double price, Boolean used, String departmentURN, String[] imageURNs, Long stock) {
+    public Product updateProductPartially(long productId, String name, String description, Double price, Boolean used, Long departmentId, List<Long> imageIds, Long stock) {
         LOGGER.info("Updating Product {}", productId);
 
         Product product = findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
-        if (name != null && !name.isEmpty())
+
+        if (name != null)
             product.setName(name);
-        if (description != null && !description.isEmpty())
+        if (description != null )
             product.setDescription(description);
         if (price != null)
             product.setPrice(price);
         if (used != null)
             product.setUsed(used);
-        if (departmentURN != null) {
-            long departmentId = ValidationUtils.extractURNId(departmentURN);
-            ValidationUtils.checkDepartmentId(departmentId);
+        if (departmentId!= null)
             product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(() -> new NotFoundException("Department Not Found")));
-        }
         if (stock != null)
             product.setRemainingUnits(stock);
 
-        if (imageURNs != null && imageURNs.length > 0 && imageURNs[0] != null) {
-            int pictureFilesLength = imageURNs.length;
+        if (imageIds != null && !imageIds.isEmpty()) {
+            product.setPrimaryPicture(imageService.findImage(imageIds.get(0)).orElseThrow(() -> new NotFoundException("Image Not Found")));
 
-            long imageId = ValidationUtils.extractURNId(imageURNs[0]);
-            ValidationUtils.checkImageId(imageId);
-            Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
-            product.setPrimaryPicture(i);
+            if (imageIds.size() > 1)
+                product.setSecondaryPicture(imageService.findImage(imageIds.get(1)).orElseThrow(() -> new NotFoundException("Image Not Found")));
 
-            if (pictureFilesLength >= 2) {
-                imageId = ValidationUtils.extractURNId(imageURNs[1]);
-                ValidationUtils.checkImageId(imageId);
-                i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
-                product.setSecondaryPicture(i);
-            }
-
-            if (pictureFilesLength == 3) {
-                imageId = ValidationUtils.extractURNId(imageURNs[2]);
-                ValidationUtils.checkImageId(imageId);
-                i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
-                product.setTertiaryPicture(i);
-            }
+            if (imageIds.size() > 2)
+                product.setTertiaryPicture(imageService.findImage(imageIds.get(2)).orElseThrow(() -> new NotFoundException("Image Not Found")));
         }
+
         return product;
     }
+
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -163,16 +147,5 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Deleting Product {}", productId);
         ValidationUtils.checkProductId(productId);
         return productDao.deleteProduct(productId);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private Long getImageId(String imageURN) {
-        if (imageURN != null) {
-            long imageId = ValidationUtils.extractURNId(imageURN);
-            ValidationUtils.checkImageId(imageId);
-            return imageId;
-        }
-        return 0L;
     }
 }

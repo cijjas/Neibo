@@ -27,16 +27,8 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Like createLike(String postURN, String userURN) {
-        LOGGER.info("Creating Like for Post {} by User {}", postURN, userURN);
-
-        TwoId twoId = ValidationUtils.extractTwoURNIds(postURN);
-        long neighborhoodId = twoId.getFirstId();
-        long postId = twoId.getSecondId();
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPostId(postId);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cant be null, the form verifies that
+    public Like createLike(long postId, long userId) {
+        LOGGER.info("Creating Like for Post {} by User {}", postId, userId);
 
         return likeDao.createLike(postId, userId);
     }

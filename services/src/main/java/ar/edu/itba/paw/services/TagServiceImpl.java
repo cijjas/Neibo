@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.interfaces.persistence.TagMappingDao;
 import ar.edu.itba.paw.interfaces.services.TagService;
@@ -48,18 +47,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void categorizePost(long postId, List<String> tagURNs, long neighborhoodId) {
-        LOGGER.info("Associating Tags {} with Post {}", tagURNs, postId);
+    public void categorizePost(long postId, List<Long> tagIds) {
+        LOGGER.info("Associating Tags {} with Post {}", tagIds, postId);
 
         ValidationUtils.checkPostId(postId);
 
-        // Cycle array of URI's extracting the id of each tag
-        for (String tagURI : tagURNs) {
-            Long tagId = ValidationUtils.checkURNAndExtractTagId(tagURI);
-            tagDao.findTag(tagId, neighborhoodId).orElseThrow(() -> new NotFoundException("Tag Not Found"));
-            // If categorization doesn't exist, create it
-            categorizationDao.findCategorization(tagId, postId).orElseGet(() -> categorizationDao.createCategorization(tagId, postId));
-        }
+        for (long tag: tagIds)
+            categorizationDao.findCategorization(tag, postId).orElseGet(() -> categorizationDao.createCategorization(tag, postId));
     }
 
     // -----------------------------------------------------------------------------------------------------------------

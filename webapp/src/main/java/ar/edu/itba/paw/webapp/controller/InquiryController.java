@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
 
 /*
  * # Summary
@@ -130,7 +131,7 @@ public class InquiryController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
         // Creation & HashCode Generation
-        final Inquiry inquiry = is.createInquiry(form.getUser(), productId, form.getQuestionMessage());
+        final Inquiry inquiry = is.createInquiry(extractSecondId(form.getUser()), productId, form.getQuestionMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Resource URN

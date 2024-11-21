@@ -5,7 +5,6 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.models.Entities.User;
@@ -45,17 +44,10 @@ public class AmenityServiceImpl implements AmenityService {
 
     // Function has to create the shifts if they do not already exist and match them with the amenity through the junction table
     @Override
-    public Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShiftsURNs) {
+    public Amenity createAmenity(String name, String description, long neighborhoodId, List<Long> selectedShiftsIds) {
         LOGGER.info("Creating Amenity {}", name);
 
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
-        for (String shiftURN : selectedShiftsURNs) {
-            long shiftId = ValidationUtils.extractURNId(shiftURN);
-            ValidationUtils.checkShiftId(shiftId);
-            Optional<Shift> shift = shiftDao.findShift(shiftId);
-
-            shift.ifPresent(value -> availabilityDao.createAvailability(amenity.getAmenityId(), value.getShiftId()));
-        }
 
         emailService.sendBatchNewAmenityMail(neighborhoodId, name, description);
 

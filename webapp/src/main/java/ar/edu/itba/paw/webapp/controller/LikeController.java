@@ -19,6 +19,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+
 /*
  * # Summary
  *   - Junction Table between Users and Posts, representing when a User likes the Post
@@ -133,7 +135,7 @@ public class LikeController {
         LOGGER.info("POST request arrived at '/likes'");
 
         // Creation & HashCode Generation
-        final Like like = ls.createLike(form.getPost(), form.getUser());
+        final Like like = ls.createLike(extractSecondId(form.getPost()), extractSecondId(form.getUser()));
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN

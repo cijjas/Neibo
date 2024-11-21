@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
 
 /*
  * # Summary
@@ -124,12 +125,12 @@ public class PostController {
     @Produces(MediaType.APPLICATION_JSON)
     @Validated(CreateValidationSequence.class)
     public Response createPost(
-            @Valid PostDto publishForm
+            @Valid PostDto form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(publishForm.getTitle(), publishForm.getDescription(), publishForm.getUser(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImage(), neighborhoodId);
+        final Post post = ps.createPost(form.getTitle(), form.getDescription(), extractSecondId(form.getUser()), extractSecondId(form.getChannel()), extractSecondIds(form.getTags()), extractOptionalId(form.getImage()), neighborhoodId);
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN

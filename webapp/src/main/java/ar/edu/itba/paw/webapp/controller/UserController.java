@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalId;
 
 /*
  * # Summary
@@ -132,7 +134,7 @@ public class UserController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         // Creation & ETag Generation
-        final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, form.getLanguage(), form.getIdentification());
+        final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, extractOptionalId(form.getLanguage()), form.getIdentification());
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN

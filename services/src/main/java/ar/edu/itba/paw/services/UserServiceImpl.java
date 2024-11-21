@@ -3,7 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
@@ -45,18 +44,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
-                               final long neighborhoodId, String languageURN, final Integer identification) {
+                               final long neighborhoodId, Long languageId, final Integer identification) {
         LOGGER.info("Creating Neighbor with mail {}", mail);
 
         Language language = Language.ENGLISH;
-        if (languageURN != null) {
-            long languageId = ValidationUtils.extractURNId(languageURN);
-            ValidationUtils.checkLanguageId(languageId);
+        if (languageId != null)
             language = Language.fromId(languageId);
-        }
 
-        User n = findUser(mail).orElse(null);
-        if (n == null) {
+        Optional<User> n = findUser(mail);
+        if (!n.isPresent()) {
             User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
 
             //if user created is a neighbor (not worker), send admin email notifying new neighbor
@@ -64,17 +60,21 @@ public class UserServiceImpl implements UserService {
                 emailService.sendNewUserMail(neighborhoodId, name, UserRole.NEIGHBOR);
             }
             return createdUser;
-        } else if (n.getPassword() == null) {
+        } else if (n.get().getPassword() == null) {
+            User earlyAccessUser = n.get();
             // n is a user from an early version where signing up was not a requirement
-            n.setPassword(passwordEncoder.encode(password));
-            n.setLanguage(language);
-            n.setRole(UserRole.UNVERIFIED_NEIGHBOR);
-            n.setIdentification(identification);
-            n.setDarkMode(false);
-            n.setName(name);
-            n.setSurname(surname);
+            earlyAccessUser.setPassword(passwordEncoder.encode(password));
+            earlyAccessUser.setLanguage(language);
+            earlyAccessUser.setRole(UserRole.UNVERIFIED_NEIGHBOR);
+            earlyAccessUser.setIdentification(identification);
+            earlyAccessUser.setDarkMode(false);
+            earlyAccessUser.setName(name);
+            earlyAccessUser.setSurname(surname);
         }
-        return n;
+
+        // Case where a User already exists with this email
+
+        return n.get();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

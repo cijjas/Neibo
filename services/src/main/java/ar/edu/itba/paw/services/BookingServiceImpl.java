@@ -40,17 +40,8 @@ public class BookingServiceImpl implements BookingService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public Booking createBooking(String userURN, String amenityURN, String shiftURN, String reservationDate) {
-        LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityURN, reservationDate, userURN);
-
-        TwoId twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
-        long neighborhoodId = twoIds.getFirstId();
-        long amenityId = twoIds.getSecondId();
-
-        // Validating neighborhoodId and amenityId
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkAmenityId(amenityId);
-        amenityDao.findAmenity(amenityId, neighborhoodId).orElseThrow(NotFoundException::new);
+    public Booking createBooking(long user, long amenity, long shift, String reservationDate) {
+        LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenity, reservationDate, user);
 
         // Check Date Format
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,18 +54,9 @@ public class BookingServiceImpl implements BookingService {
         }
         java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
 
-        // Extracting shiftId from shiftURN
-        long shiftId = ValidationUtils.extractURNId(shiftURN);
-        ValidationUtils.checkShiftId(shiftId);
-        shiftDao.findShift(shiftId).orElseThrow(() -> new NotFoundException("Shift not found."));
+        Availability availability = availabilityDao.findAvailability(amenity, shift).orElseThrow(() -> new NotFoundException("Availability not found."));
 
-        // Finding availabilityId using amenityId and shiftId
-        Availability availability = availabilityDao.findAvailability(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // Cant be null due to check from the form
-
-        // Creating booking
-        return bookingDao.createBooking(userId, availability.getAmenityAvailabilityId(), parsedSqlDate);
+        return bookingDao.createBooking(user, availability.getAmenityAvailabilityId(), parsedSqlDate);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

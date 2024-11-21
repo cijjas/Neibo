@@ -4,10 +4,7 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.CommentService;
-import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
-import ar.edu.itba.paw.models.Entities.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +31,10 @@ public class CommentServiceImpl implements CommentService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Comment createComment(String comment, String userURN, long postId) {
-        LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userURN, postId);
+    public Comment createComment(String comment, long user, long postId) {
+        LOGGER.info("Creating Comment {} from User {} for Post {}", comment, user, postId);
 
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cannot be null as it is checked by the form, the strategy should be unified
-        return commentDao.createComment(comment, userId, postId);
+        return commentDao.createComment(comment, user, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

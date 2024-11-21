@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,25 +44,12 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, String userURN, String channelURN, List<String> tagURNs, String imageURN, long neighborhoodId) {
-        LOGGER.info("Creating Post with Title {} by User {}", title, userURN);
+    public Post createPost(String title, String description, long userId, long channelId, List<Long> tagIds, Long imageId, long neighborhoodId) {
+        LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
-        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
-
-        channelService.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
-
-        Image i = null;
-        if (imageURN != null) {
-            long imageId = ValidationUtils.extractURNId(imageURN);
-            ValidationUtils.checkImageId(imageId);
-            i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
-        }
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cannot be null due to form validation
-
-        Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
-        if (tagURNs != null && !tagURNs.isEmpty())
-            tagService.categorizePost(p.getPostId(), tagURNs, neighborhoodId);
+        Post p = postDao.createPost(title, description, userId, channelId, imageId == null ? 0 : imageId);
+        if (tagIds != null && !tagIds.isEmpty())
+            tagService.categorizePost(p.getPostId(), tagIds);
 
         if(channelId == BaseChannel.ANNOUNCEMENTS.getId())
             emailService.sendBatchAnnouncementMail(p, neighborhoodId);

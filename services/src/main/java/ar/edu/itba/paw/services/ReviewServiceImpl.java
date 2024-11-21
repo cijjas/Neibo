@@ -31,9 +31,8 @@ public class ReviewServiceImpl implements ReviewService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Review createReview(long workerId, String userURN, float rating, String review) {
-        LOGGER.info("Creating a Review for Worker {} made by User {}", workerId, userURN);
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+    public Review createReview(long workerId, long userId, float rating, String review) {
+        LOGGER.info("Creating a Review for Worker {} made by User {}", workerId, userId);
 
         // Check if user has already created a review this same day for the same worker
         // Deactivated for testing should check, uses java.sql which is weird

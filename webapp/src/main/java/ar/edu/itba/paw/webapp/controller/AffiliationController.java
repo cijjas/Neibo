@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 /*
  * # Summary
@@ -123,25 +124,8 @@ public class AffiliationController {
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
 
-        // --------------------------------------------------------------
-
-        AffiliationDto dto = new AffiliationDto();
-        dto.setWorkerRole(null);
-        dto.setWorker("http://localhost:8080/workers/6");
-        dto.setNeighborhood("http://localhost:8080/neighborhoods/4");
-
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<AffiliationDto>> violations =
-                validator.validate(dto, CreateValidationSequence.class);
-
-        for (ConstraintViolation<AffiliationDto> violation : violations) {
-            System.out.println(violation.getMessage());
-        }
-
-        // --------------------------------------------------------------
-
         // Creation & HashCode Generation
-        Affiliation affiliation = nws.createAffiliation(form.getWorker(), form.getNeighborhood(), form.getWorkerRole());
+        Affiliation affiliation = nws.createAffiliation(extractFirstId(form.getWorker()), extractFirstId(form.getNeighborhood()), extractFirstId(form.getWorkerRole()));
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URN

@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import java.util.List;
+
 import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
 
-public class ImagesURNReferenceValidator implements ConstraintValidator<ImagesURNReferenceConstraint, String[]> {
+public class ImagesURNReferenceValidator implements ConstraintValidator<ImagesURNReferenceConstraint, List<String>> {
 
     @Autowired
     private ImageService imageService;
@@ -18,7 +20,7 @@ public class ImagesURNReferenceValidator implements ConstraintValidator<ImagesUR
     public void initialize(ImagesURNReferenceConstraint constraintAnnotation) {}
 
     @Override
-    public boolean isValid(String[] imagesURNs, ConstraintValidatorContext context) {
+    public boolean isValid(List<String> imagesURNs, ConstraintValidatorContext context) {
         if (imagesURNs == null)
             return true;
         for (String urn : imagesURNs)

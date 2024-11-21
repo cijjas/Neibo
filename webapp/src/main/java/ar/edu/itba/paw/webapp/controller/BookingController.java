@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
 
 /*
  * # Summary
@@ -130,7 +132,7 @@ public class BookingController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Booking booking = bs.createBooking(form.getUser(), form.getAmenity(), form.getShift(), form.getReservationDate());
+        final Booking booking = bs.createBooking(extractSecondId(form.getUser()), extractSecondId(form.getAmenity()), extractFirstId(form.getShift()), form.getReservationDate());
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN

@@ -35,16 +35,10 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Resource createResource(long neighborhoodId, String title, String description, String imageURN) {
+    public Resource createResource(long neighborhoodId, String title, String description, Long imageId) {
         LOGGER.info("Creating Resource {} for Neighborhood {}", title, neighborhoodId);
 
-        Image i = null;
-        if (imageURN != null) {
-            long imageId = ValidationUtils.extractURNId(imageURN);
-            ValidationUtils.checkImageId(imageId);
-            i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
-        }
-        return resourceDao.createResource(neighborhoodId, title, description, i == null ? 0 : i.getImageId());
+        return resourceDao.createResource(neighborhoodId, title, description, imageId == null ? 0 : imageId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

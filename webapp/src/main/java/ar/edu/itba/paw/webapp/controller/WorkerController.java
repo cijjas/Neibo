@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstIds;
 
 /*
  * # Summary
@@ -132,7 +134,7 @@ public class WorkerController {
         LOGGER.info("POST request arrived at '/workers'");
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(form.getUser(), form.getPhoneNumber(), form.getAddress(), form.getProfessions(), form.getBusinessName());
+        final Worker worker = ws.createWorker(extractFirstId(form.getUser()), form.getPhoneNumber(), form.getAddress(), extractFirstIds(form.getProfessions()), form.getBusinessName());
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN

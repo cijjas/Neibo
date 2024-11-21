@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
 
 /*
  * # Summary
@@ -124,7 +125,7 @@ public class CommentController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
         // Creation & HashCode Generation
-        final Comment comment = cs.createComment(form.getComment(), form.getUser(), postId);
+        final Comment comment = cs.createComment(form.getComment(), extractSecondId(form.getUser()), postId);
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Resource URN

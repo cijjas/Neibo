@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstIds;
 
 /*
  * # Summary
@@ -123,7 +124,7 @@ public class AmenityController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
         // Creation & HashCode Generation
-        Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
+        Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, extractFirstIds(form.getSelectedShifts()));
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Resource URN

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AffiliationService {
 
-    Affiliation createAffiliation(String workerURN, String neighborhoodURNs, String workerRoleURN);
+    Affiliation createAffiliation(long workerId, long neighborhoodId, long workerRoleId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
