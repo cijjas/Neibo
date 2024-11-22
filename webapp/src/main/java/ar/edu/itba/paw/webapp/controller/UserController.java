@@ -56,7 +56,7 @@ public class UserController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @PreAuthorize("@accessControlHelper.canListUsers(#neighborhoodId)")
+    @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhoodId)")
     public Response listUsers(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -103,7 +103,7 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canFindUser(#neighborhoodId, #id)")
+    @PreAuthorize("@pathAccessControlHelper.canFindUser(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long id
@@ -151,7 +151,7 @@ public class UserController {
     @PATCH
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateUser(#id, #neighborhoodId)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#id, #neighborhoodId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUserPartially(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,

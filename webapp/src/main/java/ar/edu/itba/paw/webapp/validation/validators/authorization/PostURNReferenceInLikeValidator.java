@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.authorization;
 
-import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
+import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.PostURNReferenceInLikeConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 public class PostURNReferenceInLikeValidator implements ConstraintValidator<PostURNReferenceInLikeConstraint, String> {
 
     @Autowired
-    private AccessControlHelper accessControlHelper;
+    private FormAccessControlHelper formAccessControlHelper;
 
     @Override
     public void initialize(PostURNReferenceInLikeConstraint postURNInLikeFormConstraint) {}
@@ -19,6 +19,6 @@ public class PostURNReferenceInLikeValidator implements ConstraintValidator<Post
     public boolean isValid(String postURN, ConstraintValidatorContext constraintValidatorContext) {
         if (postURN == null)
             return true;
-        return accessControlHelper.canReferencePostInLikeForm(postURN);
+        return formAccessControlHelper.canReferencePostInLike(postURN);
     }
 }

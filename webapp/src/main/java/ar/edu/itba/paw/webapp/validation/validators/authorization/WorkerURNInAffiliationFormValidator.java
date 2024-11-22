@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.authorization;
 
-import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
+import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURNReferenceInAffiliationConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 public class WorkerURNInAffiliationFormValidator implements ConstraintValidator<WorkerURNReferenceInAffiliationConstraint, String> {
 
     @Autowired
-    private AccessControlHelper accessControlHelper;
+    private FormAccessControlHelper formAccessControlHelper;
 
     @Override
     public void initialize(WorkerURNReferenceInAffiliationConstraint workerURNInAffiliationFormConstraint) {}
@@ -19,6 +19,6 @@ public class WorkerURNInAffiliationFormValidator implements ConstraintValidator<
     public boolean isValid(String workerURN, ConstraintValidatorContext constraintValidatorContext) {
         if (workerURN == null)
             return true;
-        return accessControlHelper.canCreateAffiliation(workerURN);
+        return formAccessControlHelper.canReferenceWorkerInAffiliation(workerURN);
     }
 }

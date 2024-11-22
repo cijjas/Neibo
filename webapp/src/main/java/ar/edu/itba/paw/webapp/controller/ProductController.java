@@ -152,7 +152,7 @@ public class ProductController {
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateProduct(#id)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#id)")
     @Validated(UpdateValidationSequence.class)
     public Response updateProductPartially(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -182,7 +182,7 @@ public class ProductController {
     @DELETE
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long productId

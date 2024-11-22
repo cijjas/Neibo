@@ -166,7 +166,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 ).access(
                         "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
-                                "@accessControlHelper.isNeighborhoodMember(request)"
+                                "@pathAccessControlHelper.isNeighborhoodMember(request)"
                 )
                 .antMatchers(
                         "/neighborhoods/*/posts/*/comments", "/neighborhoods/*/posts/*/comments/*",
@@ -184,7 +184,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
-                                "@accessControlHelper.isNeighborhoodMember(request)"
+                                "@pathAccessControlHelper.isNeighborhoodMember(request)"
                 )
 
                 .anyRequest().denyAll();

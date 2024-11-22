@@ -160,7 +160,7 @@ public class PostController {
     @DELETE
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeletePost(#postId)")
+    @PreAuthorize("@pathAccessControlHelper.canDeletePost(#postId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long postId

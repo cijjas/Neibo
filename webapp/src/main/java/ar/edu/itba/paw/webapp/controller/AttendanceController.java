@@ -146,7 +146,7 @@ public class AttendanceController {
     @DELETE
     @Path("/{userId}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteAttendance(#userId)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#userId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("eventId") @GenericIdConstraint final Long eventId,

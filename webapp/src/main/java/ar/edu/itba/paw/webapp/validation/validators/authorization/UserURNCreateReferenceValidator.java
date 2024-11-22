@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.authorization;
 
-import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
+import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
+import ar.edu.itba.paw.webapp.auth.PathAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,7 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 public class UserURNCreateReferenceValidator implements ConstraintValidator<UserURNCreateReferenceConstraint, String> {
 
     @Autowired
-    private AccessControlHelper accessControlHelper;
+    private FormAccessControlHelper formAccessControlHelper;
 
     @Override
     public void initialize(UserURNCreateReferenceConstraint userURNReferenceConstraintCreate) {}
@@ -19,6 +20,6 @@ public class UserURNCreateReferenceValidator implements ConstraintValidator<User
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
         if (userURN == null)
             return true;
-        return accessControlHelper.canReferenceUserInCreation(userURN);
+        return formAccessControlHelper.canReferenceUserInCreation(userURN);
     }
 }

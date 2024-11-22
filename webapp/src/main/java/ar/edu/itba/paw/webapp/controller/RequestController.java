@@ -55,7 +55,7 @@ public class RequestController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canAccessRequests(#userURN, #productId)")
+    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#userURN, #productId)")
     public Response listRequests(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -109,7 +109,7 @@ public class RequestController {
     @GET
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
+    @PreAuthorize("@pathAccessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") final long requestId
@@ -157,7 +157,7 @@ public class RequestController {
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateRequest(#requestId)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateRequest(#requestId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateRequest(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -178,7 +178,7 @@ public class RequestController {
     @DELETE
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteRequest(#requestId)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long requestId

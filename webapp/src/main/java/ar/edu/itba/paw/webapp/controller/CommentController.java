@@ -145,7 +145,7 @@ public class CommentController {
     @DELETE
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteComment(#commentId)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteComment(#commentId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("postId") @GenericIdConstraint final Long postId,

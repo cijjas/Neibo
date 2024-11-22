@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.authorization;
 
-import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
+import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 public class UserURNReferenceInReviewValidator implements ConstraintValidator<UserURNReferenceInReviewConstraint, String> {
 
     @Autowired
-    private AccessControlHelper accessControlHelper;
+    private FormAccessControlHelper formAccessControlHelper;
 
     @Override
     public void initialize(UserURNReferenceInReviewConstraint userURNInReviewFormConstraint) {}
@@ -19,6 +19,6 @@ public class UserURNReferenceInReviewValidator implements ConstraintValidator<Us
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
         if (userURN == null)
             return true;
-        return accessControlHelper.canCreateReview(userURN);
+        return formAccessControlHelper.canReferenceUserInAttendance(userURN);
     }
 }

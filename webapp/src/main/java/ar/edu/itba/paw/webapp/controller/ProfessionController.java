@@ -51,7 +51,7 @@ public class ProfessionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @PreAuthorize("@accessControlHelper.canUseWorkerQPInProfessions(#worker)")
+    @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInProfessions(#worker)")
     public Response listProfessions(
             @QueryParam("forWorker") @WorkerURNConstraint final String worker
     ) {

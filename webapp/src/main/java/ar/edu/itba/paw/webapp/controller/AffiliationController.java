@@ -152,7 +152,7 @@ public class AffiliationController {
 
     @PATCH
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhood)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateAffiliation(#neighborhood)")
     @Validated(UpdateValidationSequence.class)
     public Response updateAffiliation(
             @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
@@ -172,7 +172,7 @@ public class AffiliationController {
 
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteAffiliation(#worker)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteAffiliation(#worker)")
     public Response removeWorkerFromNeighborhood(
             @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
             @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker

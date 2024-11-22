@@ -158,7 +158,7 @@ public class WorkerController {
     @PATCH
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateWorker(#workerId)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateWorker(#workerId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateWorkerPartially(
             @PathParam("id") @GenericIdConstraint final long workerId,

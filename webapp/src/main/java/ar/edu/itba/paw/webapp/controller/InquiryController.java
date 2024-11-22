@@ -122,7 +122,7 @@ public class InquiryController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
+    @PreAuthorize("@pathAccessControlHelper.canCreateInquiry(#productId)")
     @Validated(CreateValidationSequence.class)
     public Response createInquiry(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
@@ -148,7 +148,7 @@ public class InquiryController {
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
+    @PreAuthorize("@pathAccessControlHelper.canAnswerInquiry(#inquiryId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateInquiry(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
@@ -170,7 +170,7 @@ public class InquiryController {
     @DELETE
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteInquiry(#inquiryId)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteInquiry(#inquiryId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("productId") @GenericIdConstraint final Long productId,

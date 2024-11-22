@@ -53,7 +53,7 @@ public class LikeController {
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})
-    @PreAuthorize("@accessControlHelper.canListLikes(#post, #user)")
+    @PreAuthorize("@pathAccessControlHelper.canListLikes(#post, #user)")
     public Response listLikes(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -170,7 +170,7 @@ public class LikeController {
 
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteLike(#user)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
     public Response deleteById(
             @QueryParam("onPost") @NotNull @PostURNConstraint final String post,
             @QueryParam("likedBy") @NotNull @UserURNConstraint final String user

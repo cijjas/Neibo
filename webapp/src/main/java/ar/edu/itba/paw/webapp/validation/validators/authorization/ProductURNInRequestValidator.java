@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.authorization;
 
-import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
+import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 public class ProductURNInRequestValidator implements ConstraintValidator<ProductURNInRequestConstraint, String> {
 
     @Autowired
-    private AccessControlHelper accessControlHelper;
+    private FormAccessControlHelper formAccessControlHelper;
 
     @Override
     public void initialize(ProductURNInRequestConstraint productURNInRequestFormConstraint) {}
@@ -20,6 +20,6 @@ public class ProductURNInRequestValidator implements ConstraintValidator<Product
     public boolean isValid(String productURN, ConstraintValidatorContext constraintValidatorContext) {
         if (productURN == null)
             return true;
-        return accessControlHelper.canReferenceProductInRequestForm(productURN);
+        return formAccessControlHelper.canReferenceProductInRequest(productURN);
     }
 }
