@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = ProductStatusURNValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ProductStatusURNConstraint {
-    String message() default "Malformed URN";
+    String message() default "Invalid URN";
 
     Class<?>[] groups() default {};
 

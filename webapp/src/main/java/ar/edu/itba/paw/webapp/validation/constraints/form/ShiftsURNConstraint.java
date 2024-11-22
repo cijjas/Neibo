@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = ShiftsURNValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ShiftsURNConstraint {
-    String message() default "Malformed URNs";
+    String message() default "Invalid URN";
 
     Class<?>[] groups() default {};
 

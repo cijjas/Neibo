@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalTwoId;
 import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
 
 public class ChannelURNValidator implements ConstraintValidator<ChannelURNConstraint, String> {

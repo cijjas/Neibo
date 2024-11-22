@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = WorkerRoleURNValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WorkerRoleURNConstraint {
-    String message() default "Malformed URN";
+    String message() default "Invalid URN";
 
     Class<?>[] groups() default {};
 

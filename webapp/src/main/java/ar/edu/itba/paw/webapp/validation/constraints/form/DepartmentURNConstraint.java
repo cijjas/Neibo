@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = DepartmentURNValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DepartmentURNConstraint {
-    String message() default "Malformed URN";
+    String message() default "Invalid URN";
 
     Class<?>[] groups() default {};
 
