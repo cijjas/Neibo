@@ -3,12 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ProductStatusURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductStatusURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ProductStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -61,9 +58,9 @@ public class ProductController {
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inDepartment") @DepartmentURNFormConstraint @DepartmentURNReferenceConstraint final String department,
-            @QueryParam("forUser") @UserURNFormConstraint @UserURNReferenceConstraint final String user,
-            @QueryParam("withStatus") @ProductStatusURNFormConstraint @ProductStatusURNReferenceConstraint final String productStatus
+            @QueryParam("inDepartment") @DepartmentURNConstraint final String department,
+            @QueryParam("forUser") @UserURNConstraint final String user,
+            @QueryParam("withStatus") @ProductStatusURNConstraint final String productStatus
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 

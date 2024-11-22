@@ -3,12 +3,9 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceConstraintUpdate;
-import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ImagesURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ImagesURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImagesURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.*;
 import org.hibernate.validator.constraints.Range;
 
@@ -27,8 +24,7 @@ public class ProductDto {
     @NotNull(groups = Null.class)
     private Double price;
 
-    @ImagesURNFormConstraint(groups = Form.class)
-    @ImagesURNReferenceConstraint(groups = Reference.class)
+    @ImagesURNConstraint(groups = URN.class)
     private List<String> images;
 
     @NotNull(groups = Null.class)
@@ -36,8 +32,7 @@ public class ProductDto {
     private String description;
 
     @NotNull(groups = Null.class)
-    @DepartmentURNFormConstraint(groups = Form.class)
-    @DepartmentURNReferenceConstraint(groups = Reference.class)
+    @DepartmentURNConstraint(groups = URN.class)
     private String department;
 
     @NotNull(groups = Null.class)
@@ -48,8 +43,7 @@ public class ProductDto {
     private Boolean used;
 
     @NotNull(groups = Null.class)
-    @UserURNFormConstraint(groups = Form.class)
-    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNConstraint(groups = URN.class)
     // Temporal fix until group sequences are resolved they are fixed and i dont what i should do hehehe
     @UserURNCreateReferenceConstraint(groups = Authorization.class)
     @UserURNReferenceConstraintUpdate(groups = Authorization.class)

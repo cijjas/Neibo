@@ -3,16 +3,12 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerRoleURNReferenceInAffiliationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURNReferenceInAffiliationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.NeighborhoodURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerRoleURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.Reference;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
@@ -20,20 +16,17 @@ import javax.ws.rs.core.UriInfo;
 public class AffiliationDto {
 
     @NotNull(groups = Null.class)
-    @WorkerRoleURNFormConstraint(groups = Form.class)
-    @WorkerRoleURNReferenceConstraint(groups = Reference.class)
+    @WorkerRoleURNConstraint(groups = URN.class)
     @WorkerRoleURNReferenceInAffiliationConstraint(groups = Authorization.class)
     private String workerRole;
 
     @NotNull(groups = Null.class)
-    @WorkerURNFormConstraint(groups = Form.class)
-    @WorkerURNReferenceConstraint(groups = Reference.class)
+    @WorkerURNConstraint(groups = URN.class)
     @WorkerURNReferenceInAffiliationConstraint(groups = Authorization.class)
     private String worker;
 
     @NotNull(groups = Null.class)
-    @NeighborhoodURNFormConstraint(groups = Form.class)
-    @NeighborhoodURNReferenceConstraint(groups = Authorization.class)
+    @NeighborhoodURNConstraint(groups = URN.class)
     private String neighborhood;
 
     private Links _links;

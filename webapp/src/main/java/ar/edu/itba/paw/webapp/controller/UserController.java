@@ -4,8 +4,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserRoleURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -62,7 +61,7 @@ public class UserController {
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withRole") @UserRoleURNFormConstraint @UserRoleURNReferenceConstraint final String userRole
+            @QueryParam("withRole") @UserRoleURNConstraint final String userRole
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 

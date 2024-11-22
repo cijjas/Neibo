@@ -4,14 +4,10 @@ import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodsURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerStatusURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.NeighborhoodsURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionsURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerRoleURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerStatusURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerStatusURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
@@ -67,10 +63,10 @@ public class WorkerController {
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withProfessions") @ProfessionsURNFormConstraint @ProfessionsURNReferenceConstraint final List<String> professions,
-            @QueryParam("inNeighborhoods") @NeighborhoodsURNFormConstraint @NeighborhoodsURNReferenceConstraint final List<String> neighborhoods,
-            @QueryParam("withRole") @WorkerRoleURNFormConstraint @WorkerRoleURNReferenceConstraint final String workerRole,
-            @QueryParam("withStatus") @WorkerStatusURNFormConstraint @WorkerStatusURNReferenceConstraint final String workerStatus
+            @QueryParam("withProfessions") @ProfessionsURNConstraint final List<String> professions,
+            @QueryParam("inNeighborhoods") @NeighborhoodsURNConstraint final List<String> neighborhoods,
+            @QueryParam("withRole") @WorkerRoleURNConstraint final String workerRole,
+            @QueryParam("withStatus") @WorkerStatusURNConstraint final String workerStatus
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 

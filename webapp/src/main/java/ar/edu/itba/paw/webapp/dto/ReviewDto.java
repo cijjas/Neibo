@@ -2,18 +2,16 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
-import java.lang.ref.Reference;
 import java.util.Date;
 
 public class ReviewDto {
@@ -26,8 +24,7 @@ public class ReviewDto {
     private String review;
 
     @NotNull(groups = Null.class)
-    @UserURNFormConstraint(groups = Form.class)
-    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNConstraint(groups = URN.class)
     @UserURNReferenceInReviewConstraint(groups = Authorization.class)
     private String user;
 

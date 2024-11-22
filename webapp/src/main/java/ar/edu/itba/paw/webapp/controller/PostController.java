@@ -3,14 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.PostDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.PostStatusURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ChannelURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.PostStatusURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.TagsURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.PostStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -64,10 +60,10 @@ public class PostController {
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inChannel") @ChannelURNFormConstraint @ChannelURNReferenceConstraint final String channel,
-            @QueryParam("withTags") @TagsURNFormConstraint @TagsURNReferenceConstraint final List<String> tags,
-            @QueryParam("withStatus") @PostStatusURNFormConstraint @PostStatusURNReferenceConstraint final String postStatus,
-            @QueryParam("postedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user
+            @QueryParam("inChannel") @ChannelURNConstraint final String channel,
+            @QueryParam("withTags") @TagsURNConstraint final List<String> tags,
+            @QueryParam("withStatus") @PostStatusURNConstraint final String postStatus,
+            @QueryParam("postedBy") @UserURNConstraint final String user
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 

@@ -2,23 +2,18 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ChannelURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.TagsURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Form;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
-import java.lang.ref.Reference;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
@@ -32,22 +27,18 @@ public class PostDto {
     @Size(min = 0, max = 2000, groups = Basic.class)
     private String description;
 
-    @TagsURNFormConstraint(groups = Form.class)
-    @TagsURNReferenceConstraint(groups = Reference.class)
+    @TagsURNConstraint(groups = URN.class)
     private List<String> tags;
 
-    @ImageURNFormConstraint(groups = Form.class)
-    @ImageURNReferenceConstraint(groups = Reference.class)
+    @ImageURNConstraint(groups = URN.class)
     private String image;
 
     @NotNull(groups = Null.class)
-    @ChannelURNFormConstraint(groups = Form.class)
-    @ChannelURNReferenceConstraint(groups = Reference.class)
+    @ChannelURNConstraint(groups = URN.class)
     private String channel;
 
     @NotNull(groups = Null.class)
-    @UserURNFormConstraint(groups = Form.class)
-    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNConstraint(groups = URN.class)
     @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 

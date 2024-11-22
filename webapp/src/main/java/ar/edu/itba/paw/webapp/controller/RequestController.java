@@ -3,14 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TransactionTypeURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.RequestStatusURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.TransactionTypeURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.TransactionTypeURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -64,10 +60,10 @@ public class RequestController {
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("requestedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user,
-            @QueryParam("forProduct") @ProductURNFormConstraint @ProductURNReferenceConstraint final String product,
-            @QueryParam("withType") @TransactionTypeURNFormConstraint @TransactionTypeURNReferenceConstraint final String type,
-            @QueryParam("withStatus") @RequestStatusURNFormConstraint @RequestStatusURNReferenceConstraint final String status
+            @QueryParam("requestedBy") @UserURNConstraint final String user,
+            @QueryParam("forProduct") @ProductURNConstraint final String product,
+            @QueryParam("withType") @TransactionTypeURNConstraint final String type,
+            @QueryParam("withStatus") @RequestStatusURNConstraint final String status
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 

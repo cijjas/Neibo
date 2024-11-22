@@ -4,10 +4,8 @@ import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
 import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.PostURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.PostURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.PostURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,8 +57,8 @@ public class LikeController {
     public Response listLikes(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("onPost") @PostURNFormConstraint @PostURNReferenceConstraint final String post,
-            @QueryParam("likedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user
+            @QueryParam("onPost") @PostURNConstraint final String post,
+            @QueryParam("likedBy") @UserURNConstraint final String user
     ) {
         LOGGER.info("GET request arrived at '/likes'");
 
@@ -112,8 +110,8 @@ public class LikeController {
     @Path("/count")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response countLikes(
-            @QueryParam("onPost") @PostURNFormConstraint @PostURNReferenceConstraint final String post,
-            @QueryParam("likedBy") @UserURNFormConstraint @UserURNReferenceConstraint final String user
+            @QueryParam("onPost") @PostURNConstraint final String post,
+            @QueryParam("likedBy") @UserURNConstraint final String user
     ) {
         LOGGER.info("GET request arrived at '/likes/count'");
 
@@ -174,8 +172,8 @@ public class LikeController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteLike(#user)")
     public Response deleteById(
-            @QueryParam("onPost") @NotNull @PostURNFormConstraint @PostURNReferenceConstraint final String post,
-            @QueryParam("likedBy") @NotNull @UserURNFormConstraint @UserURNReferenceConstraint final String user
+            @QueryParam("onPost") @NotNull @PostURNConstraint final String post,
+            @QueryParam("likedBy") @NotNull @UserURNConstraint final String user
     ) {
         LOGGER.info("DELETE request arrived at '/likes'");
 

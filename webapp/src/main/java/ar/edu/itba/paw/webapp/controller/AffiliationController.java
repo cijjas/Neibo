@@ -3,10 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.NeighborhoodURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -73,8 +71,8 @@ public class AffiliationController {
     public Response listAffiliations(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inNeighborhood") @NeighborhoodURNFormConstraint @NeighborhoodURNReferenceConstraint String neighborhood,
-            @QueryParam("forWorker") @WorkerURNFormConstraint @WorkerURNReferenceConstraint String worker
+            @QueryParam("inNeighborhood") @NeighborhoodURNConstraint String neighborhood,
+            @QueryParam("forWorker") @WorkerURNConstraint String worker
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
@@ -157,8 +155,8 @@ public class AffiliationController {
     @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhood)")
     @Validated(UpdateValidationSequence.class)
     public Response updateAffiliation(
-            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNFormConstraint @NeighborhoodURNReferenceConstraint String neighborhood,
-            @QueryParam("forWorker") @NotNull @WorkerURNFormConstraint @WorkerURNReferenceConstraint String worker,
+            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
+            @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker,
             @Valid AffiliationDto form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
@@ -176,8 +174,8 @@ public class AffiliationController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteAffiliation(#worker)")
     public Response removeWorkerFromNeighborhood(
-            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNFormConstraint @NeighborhoodURNReferenceConstraint String neighborhood,
-            @QueryParam("forWorker") @NotNull @WorkerURNFormConstraint @WorkerURNReferenceConstraint String worker
+            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
+            @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 

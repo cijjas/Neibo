@@ -3,12 +3,9 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.LanguageURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.LanguageURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserRoleURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.LanguageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.*;
 
@@ -44,20 +41,17 @@ public class UserDto {
     @NotNull(groups = Null.class)
     private Integer identification;
 
-    @LanguageURNFormConstraint(groups = Form.class)
-    @LanguageURNReferenceConstraint(groups = Reference.class)
+    @LanguageURNConstraint(groups = URN.class)
     private String language;
 
-    @UserRoleURNFormConstraint(groups = Form.class)
-    @UserRoleURNReferenceConstraint(groups = Reference.class)
+    @UserRoleURNConstraint(groups = URN.class)
     private String userRole;
 
     @Size(min = 1, max = 50, groups = Basic.class)
     @Pattern(regexp = "^[0-9]*", groups = Basic.class)
     private String phoneNumber;
 
-    @ImageURNFormConstraint(groups = Form.class)
-    @ImageURNReferenceConstraint(groups = Reference.class)
+    @ImageURNConstraint(groups = URN.class)
     private String profilePicture;
 
     private Boolean darkMode;

@@ -2,12 +2,9 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.AmenityURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ShiftURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.UserURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.ReservationDateConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.*;
 
@@ -18,13 +15,11 @@ import java.util.Date;
 public class BookingDto {
 
     @NotNull(groups = Null.class)
-    @AmenityURNFormConstraint(groups = Form.class)
-    @AmenityURNReferenceConstraint(groups = Reference.class)
+    @AmenityURNConstraint(groups = URN.class)
     private String amenity; // http://localhost:8080/neighborhoods/{neighborhoodId}/amenities/{amenityId}
 
     @NotNull(groups = Null.class)
-    @ShiftURNFormConstraint(groups = Form.class)
-    @ShiftURNReferenceConstraint(groups = Reference.class)
+    @ShiftURNConstraint(groups = URN.class)
     private String shift; // http://localhost:8080/shifts/{shiftId}
 
     @NotNull(groups = Null.class)
@@ -32,8 +27,7 @@ public class BookingDto {
     private String reservationDate;
 
     @NotNull(groups = Null.class)
-    @UserURNFormConstraint(groups = Form.class)
-    @UserURNReferenceConstraint(groups = Reference.class)
+    @UserURNConstraint(groups = URN.class)
     @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
