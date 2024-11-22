@@ -11,8 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
 
 @Component
 public class FormAccessControlHelper {
@@ -53,10 +52,7 @@ public class FormAccessControlHelper {
         if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
             return true;
 
-        TwoId userTwoId = extractTwoId(userURN);
-        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
-
-        return authHelper.getRequestingUserId(authentication) == userTwoId.getSecondId();
+        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
     }
 
     public boolean canReferenceUserInUpdate(String userURN) {
@@ -71,10 +67,7 @@ public class FormAccessControlHelper {
         if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
             return true;
 
-        TwoId userTwoId = extractTwoId(userURN);
-        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
-
-        return authHelper.getRequestingUserId(authentication) == userTwoId.getSecondId();
+        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
     }
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
@@ -91,14 +84,10 @@ public class FormAccessControlHelper {
         if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
             return false;
 
-        long neighborhoodId = extractTwoId(userURN).getFirstId();
-        long userId = extractTwoId(userURN).getSecondId();
-        us.findUser(userId, neighborhoodId).orElseThrow(() -> new NotFoundException("Referenced User was not found"));
-
         if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractTwoId(userURN).getFirstId();
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
 
-        return authHelper.getRequestingUserId(authentication) == extractTwoId(userURN).getSecondId();
+        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
     }
 
     // Restricted from Anonymous, Unverified and Rejected
@@ -113,10 +102,7 @@ public class FormAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        // Dangerous
-        TwoId twoId = extractTwoId(postURN);
-        ps.findPost(twoId.getSecondId(), twoId.getFirstId()).orElseThrow(()-> new NotFoundException("Referenced Post was not found."));
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == twoId.getFirstId();
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN);
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -140,7 +126,7 @@ public class FormAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        return  extractFirstId(workerRoleURN) == WorkerRole.UNVERIFIED_WORKER.getId();
+        return extractFirstId(workerRoleURN) == WorkerRole.UNVERIFIED_WORKER.getId();
     }
 
     // ------------------------------------------------ REVIEWS --------------------------------------------------------
@@ -150,14 +136,10 @@ public class FormAccessControlHelper {
         LOGGER.info("Verifying Review Creation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
-        // Dangerous
-        TwoId userTwoId = extractTwoId(userURN);
-        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
-
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == userTwoId.getSecondId();
+        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
     }
 
     // ---------------------------------------------- REQUESTS ---------------------------------------------------------
@@ -170,9 +152,7 @@ public class FormAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        // Dangerous
-        TwoId twoId = extractTwoId(productURN);
-        Product p = prs.findProduct(twoId.getSecondId(), twoId.getFirstId()).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(extractSecondId(productURN)).orElseThrow(()-> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() != authHelper.getRequestingUserId(authentication);
     }
 }
