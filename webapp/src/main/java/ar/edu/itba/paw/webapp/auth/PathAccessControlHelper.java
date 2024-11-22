@@ -6,6 +6,9 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
 import ar.edu.itba.paw.models.TwoId;
+import ar.edu.itba.paw.webapp.controller.UserRoleController;
+import ar.edu.itba.paw.webapp.validation.URNValidator;
+import ar.edu.itba.paw.webapp.validation.validators.form.PostURNValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +19,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
 
 @Component
 public class PathAccessControlHelper {
@@ -31,6 +33,8 @@ public class PathAccessControlHelper {
     private final BookingService bs;
     private final UserService us;
     private final AuthHelper authHelper;
+    @Autowired
+    private UserRoleController userRoleController;
 
     @Autowired
     public PathAccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs, UserService us){
@@ -79,7 +83,7 @@ public class PathAccessControlHelper {
 
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
 
-    // Usage of Worker Query Param in '/neighborhoods' is restricted for anonymous Users
+    // Usage of optional Worker Query Param in '/neighborhoods' is restricted for anonymous Users
     public boolean canUseWorkerQPInNeighborhoods(Long workerId) {
         LOGGER.info("Verifying Query Params Accessibility");
 
@@ -110,8 +114,9 @@ public class PathAccessControlHelper {
     }
 
     // Restricted from Anonymous Users
-    // Rejected and Unverified Users can access their User Find
+    // Rejected and Unverified Users can access their User (self find)
     // Neighbors and Administrators can access the find for all the Users in their Neighborhood
+    // Find in Worker Neighborhoods can be executed by all the registered users
     public boolean canFindUser(long neighborhoodId, long userId) {
         LOGGER.info("Verifying Detail User Accessibility");
 
@@ -130,7 +135,7 @@ public class PathAccessControlHelper {
     }
 
     // Restricted from Anonymous Users
-    // Rejected, Unverified and Neighbors can update their own profile
+    // Rejected, Unverified, Workers and Neighbors can update their own profile
     // Administrators can update the profiles of the Neighbors in their Neighborhood
     public boolean canUpdateUser(long userId, long neighborhoodId) {
         LOGGER.info("Verifying Update User Accessibility");
@@ -187,34 +192,20 @@ public class PathAccessControlHelper {
         Authentication authentication = authHelper.getAuthentication();
 
         // In this case all likes in the application are returned (only Super Admin allowed)
-        if (postURN == null && userURN == null)
-            return authHelper.isSuperAdministrator(authentication);
-
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        // Dangerous
-        TwoId postTwoId;
-        TwoId userTwoId;
-        if (userURN != null && postURN == null) {
-            userTwoId = extractTwoId(userURN);
-            us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == userTwoId.getFirstId();
-        }
+        if (postURN == null && userURN == null)
+            return false;
 
-        if (userURN == null) {
-            postTwoId = extractTwoId(postURN);
-            ps.findPost(postTwoId.getSecondId(), postTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == postTwoId.getFirstId();
-        }
+        if (userURN != null && postURN == null)
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
 
-        userTwoId = extractTwoId(userURN);
-        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("User Not Found"));
-        postTwoId = extractTwoId(postURN);
-        ps.findPost(postTwoId.getSecondId(), postTwoId.getFirstId()).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        if (userURN == null)
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN);
 
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == postTwoId.getFirstId()
-                &&  authHelper.getRequestingUserNeighborhoodId(authentication) == userTwoId.getFirstId();
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN)
+                &&  authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
     }
 
     // Restricted from Anonymous, Unverified and Rejected
@@ -224,21 +215,17 @@ public class PathAccessControlHelper {
         LOGGER.info("Verifying Accessibility for the User's entities");
         Authentication authentication = authHelper.getAuthentication();
 
-        TwoId userTwoId = extractTwoId(userURN);
-        us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
-
         if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
             return false;
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        TwoId twoId = extractTwoId(userURN);
-
         if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == twoId.getFirstId();
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
 
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == twoId.getFirstId() && authHelper.getRequestingUserId(authentication) == twoId.getSecondId();
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN)
+                && authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -399,14 +386,10 @@ public class PathAccessControlHelper {
             return authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication);
 
         if (userURN != null) {
-            // Dangerous
-            TwoId userTwoId = extractTwoId(userURN);
-            us.findUser(userTwoId.getSecondId(), userTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("User Not Found"));
-            return authHelper.getRequestingUserId(authentication) == extractTwoId(userURN).getSecondId();
+            return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
         }
 
-        TwoId productTwoId = extractTwoId(productURN);
-        Product product = prs.findProduct(productTwoId.getSecondId(), productTwoId.getFirstId()).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        Product product = prs.findProduct(extractSecondId(productURN)).orElseThrow(() -> new NotFoundException("Product Not Found"));
         return product.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 

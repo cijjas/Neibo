@@ -21,7 +21,7 @@ public class PostURNValidator implements ConstraintValidator<PostURNConstraint, 
 
     @Override
     public boolean isValid(String postURN, ConstraintValidatorContext context) {
-        if (postURN== null)
+        if (postURN == null)
             return true;
         if (!URNValidator.validateURN(postURN, "posts"))
             return false;
