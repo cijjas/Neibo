@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class ProfessionsURNReferenceValidator implements ConstraintValidator<ProfessionsURNReferenceConstraint, List<String>> {
 
@@ -19,12 +19,16 @@ public class ProfessionsURNReferenceValidator implements ConstraintValidator<Pro
     public boolean isValid(List<String> professionURNs, ConstraintValidatorContext context) {
         if (professionURNs == null)
             return true;
-        for (String urn : professionURNs)
-            try {
-                Profession.fromId(extractFirstId(urn));
-            } catch (NotFoundException e){
-                return false;
+        for (String professionURN : professionURNs) {
+            Long professionId = extractOptionalFirstId(professionURN);
+            if (professionId != null) {
+                try {
+                    Profession.fromId(professionId);
+                } catch (NotFoundException e) {
+                    return false;
+                }
             }
+        }
         return true;
     }
 }

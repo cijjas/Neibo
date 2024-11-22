@@ -7,7 +7,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.reference.TransactionTypeUR
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class TransactionTypeURNReferenceValidator implements ConstraintValidator<TransactionTypeURNReferenceConstraint, String> {
 
@@ -18,8 +18,11 @@ public class TransactionTypeURNReferenceValidator implements ConstraintValidator
     public boolean isValid(String transactionTypeURN, ConstraintValidatorContext context) {
         if (transactionTypeURN == null)
             return true;
+        Long transactionTypeId = extractOptionalFirstId(transactionTypeURN);
+        if (transactionTypeId == null)
+            return true;
         try {
-            TransactionType.fromId(extractFirstId(transactionTypeURN));
+            TransactionType.fromId(transactionTypeId);
         } catch (NotFoundException e){
             return false;
         }

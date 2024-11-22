@@ -7,7 +7,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.reference.DepartmentURNRefe
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class DepartmentURNReferenceValidator implements ConstraintValidator<DepartmentURNReferenceConstraint, String> {
 
@@ -18,8 +18,11 @@ public class DepartmentURNReferenceValidator implements ConstraintValidator<Depa
     public boolean isValid(String departmentURN, ConstraintValidatorContext context) {
         if (departmentURN == null || departmentURN.trim().isEmpty())
             return true;
+        Long departmentId = extractOptionalFirstId(departmentURN);
+        if (departmentId == null)
+            return true;
         try {
-            Department.fromId(extractFirstId(departmentURN));
+            Department.fromId(departmentId);
         } catch (NotFoundException e){
             return false;
         }

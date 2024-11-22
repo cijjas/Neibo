@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class ShiftsURNReferenceValidator implements ConstraintValidator<ShiftsURNReferenceConstraint, List<String>> {
 
@@ -22,9 +22,12 @@ public class ShiftsURNReferenceValidator implements ConstraintValidator<ShiftsUR
     public boolean isValid(List<String> shiftURNs, ConstraintValidatorContext context) {
         if (shiftURNs == null)
             return true;
-        for (String urn : shiftURNs)
-            if (!shiftService.findShift(extractFirstId(urn)).isPresent())
-                return false;
+        for (String shiftURN : shiftURNs) {
+            Long id = extractOptionalFirstId(shiftURN);
+            if (id != null)
+                if (!shiftService.findShift(id).isPresent())
+                    return false;
+        }
         return true;
     }
 }

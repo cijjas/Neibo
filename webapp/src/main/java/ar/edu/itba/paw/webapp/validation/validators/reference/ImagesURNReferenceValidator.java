@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class ImagesURNReferenceValidator implements ConstraintValidator<ImagesURNReferenceConstraint, List<String>> {
 
@@ -22,9 +22,12 @@ public class ImagesURNReferenceValidator implements ConstraintValidator<ImagesUR
     public boolean isValid(List<String> imagesURNs, ConstraintValidatorContext context) {
         if (imagesURNs == null)
             return true;
-        for (String urn : imagesURNs)
-            if (!imageService.findImage(extractFirstId(urn)).isPresent())
-                return false;
+        for (String imageURN : imagesURNs) {
+            Long id = extractOptionalFirstId(imageURN);
+            if (id != null)
+                if (!imageService.findImage(id).isPresent())
+                    return false;
+        }
         return true;
     }
 }

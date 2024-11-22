@@ -8,7 +8,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class NeighborhoodsURNReferenceValidator implements ConstraintValidator<NeighborhoodsURNReferenceConstraint, List<String>> {
 
@@ -22,9 +22,12 @@ public class NeighborhoodsURNReferenceValidator implements ConstraintValidator<N
     public boolean isValid(List<String> neighborhoodURNs, ConstraintValidatorContext context) {
         if (neighborhoodURNs == null)
             return true;
-        for (String neighborhoodURN: neighborhoodURNs)
-            if (!neighborhoodService.findNeighborhood(extractFirstId(neighborhoodURN)).isPresent())
-                return false;
+        for (String neighborhoodURN: neighborhoodURNs) {
+            Long id = extractOptionalFirstId(neighborhoodURN);
+            if (id != null)
+                if (!neighborhoodService.findNeighborhood(id).isPresent())
+                    return false;
+        }
         return true;
     }
 }

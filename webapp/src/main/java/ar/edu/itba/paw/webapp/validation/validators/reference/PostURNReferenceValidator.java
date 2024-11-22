@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalTwoId;
 
 public class PostURNReferenceValidator implements ConstraintValidator<PostURNReferenceConstraint, String> {
 
@@ -22,7 +22,7 @@ public class PostURNReferenceValidator implements ConstraintValidator<PostURNRef
     public boolean isValid(String postURN, ConstraintValidatorContext context) {
         if (postURN == null || postURN.trim().isEmpty())
             return true;
-        TwoId twoId = extractTwoId(postURN);
-        return postService.findPost(twoId.getSecondId(), twoId.getFirstId()).isPresent();
+        TwoId twoId = extractOptionalTwoId(postURN);
+        return twoId == null || postService.findPost(twoId.getSecondId(), twoId.getFirstId()).isPresent();
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalTwoId;
 
 public class ProductURNReferenceValidator implements ConstraintValidator<ProductURNReferenceConstraint, String> {
 
@@ -22,7 +22,7 @@ public class ProductURNReferenceValidator implements ConstraintValidator<Product
     public boolean isValid(String productURN, ConstraintValidatorContext context) {
         if (productURN == null || productURN.trim().isEmpty())
             return true;
-        TwoId twoId = extractTwoId(productURN);
-        return productService.findProduct(twoId.getSecondId(), twoId.getFirstId()).isPresent();
+        TwoId twoId = extractOptionalTwoId(productURN);
+        return twoId == null || productService.findProduct(twoId.getSecondId(), twoId.getFirstId()).isPresent();
     }
 }

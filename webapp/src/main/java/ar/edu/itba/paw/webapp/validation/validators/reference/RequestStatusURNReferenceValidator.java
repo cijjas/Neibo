@@ -7,7 +7,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.reference.RequestStatusURNR
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class RequestStatusURNReferenceValidator implements ConstraintValidator<RequestStatusURNReferenceConstraint, String> {
 
@@ -18,8 +18,11 @@ public class RequestStatusURNReferenceValidator implements ConstraintValidator<R
     public boolean isValid(String requestStatusURN, ConstraintValidatorContext context) {
         if (requestStatusURN == null || requestStatusURN.trim().isEmpty())
             return true;
+        Long requestStatusId = extractOptionalFirstId(requestStatusURN);
+        if (requestStatusId == null)
+            return true;
         try {
-            RequestStatus.fromId(extractFirstId(requestStatusURN));
+            RequestStatus.fromId(requestStatusId);
         } catch (NotFoundException e){
             return false;
         }

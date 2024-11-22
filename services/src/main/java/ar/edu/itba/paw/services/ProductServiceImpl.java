@@ -38,8 +38,8 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Creating Product {} from User {}", name, userId);
 
         Long[] idArray = {0L, 0L, 0L};
-        int imageURNsLength = imageIds == null ? 0 : imageIds.size();
-        for (int i = 0; i < imageURNsLength && i < idArray.length; i++)
+        int imagesLength = imageIds == null ? 0 : imageIds.size();
+        for (int i = 0; i < imagesLength && i < idArray.length; i++)
             idArray[i] = imageIds.get(i);
 
         return productDao.createProduct(userId, name, description, price, used, departmentId, idArray[0], idArray[1], idArray[2], units);

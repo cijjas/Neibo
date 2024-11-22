@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
 
 public class WorkerURNReferenceValidator implements ConstraintValidator<WorkerURNReferenceConstraint, String> {
 
@@ -21,6 +21,7 @@ public class WorkerURNReferenceValidator implements ConstraintValidator<WorkerUR
     public boolean isValid(String workerURN, ConstraintValidatorContext context) {
         if (workerURN == null || workerURN.trim().isEmpty())
             return true;
-        return workerService.findWorker(extractFirstId(workerURN)).isPresent();
+        Long workerId = extractOptionalFirstId(workerURN);
+        return workerId == null || workerService.findWorker(workerId).isPresent();
     }
 }

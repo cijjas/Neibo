@@ -35,6 +35,17 @@ public class ValidationUtils {
         return new TwoId(firstId, secondId);
     }
 
+    public static TwoId extractOptionalTwoId(String URN) {
+        String[] URNParts = URN.split("/");
+        if (URNParts.length < 7)
+            return null;
+
+        long firstId = Long.parseLong(URNParts[4]);
+        long secondId = Long.parseLong(URNParts[6]);
+
+        return new TwoId(firstId, secondId);
+    }
+
     public static Long extractOptionalSecondId(String URN) {
         if (URN == null)
             return null;

@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalTwoId;
 
 public class TagsURNReferenceValidator implements ConstraintValidator<TagsURNReferenceConstraint, List<String>> {
 
@@ -24,9 +24,10 @@ public class TagsURNReferenceValidator implements ConstraintValidator<TagsURNRef
         if (tagURNs == null)
             return true;
         for (String urn : tagURNs) {
-            TwoId twoId = extractTwoId(urn);
-            if (!tagService.findTag(twoId.getSecondId(), twoId.getFirstId()).isPresent())
-                return false;
+            TwoId twoId = extractOptionalTwoId(urn);
+            if (twoId != null)
+                if (!tagService.findTag(twoId.getSecondId(), twoId.getFirstId()).isPresent())
+                    return false;
         }
         return true;
     }
