@@ -1,17 +1,13 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,18 +33,16 @@ public class EventServiceImpl implements EventService {
     private final TimeDao timeDao;
     private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
-    private final UserDao userDao;
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
-    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService, NeighborhoodDao neighborhoodDao, UserDao userDao) {
+    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService, NeighborhoodDao neighborhoodDao) {
         this.eventDao = eventDao;
         this.timeDao = timeDao;
         this.emailService = emailService;
         this.neighborhoodDao = neighborhoodDao;
-        this.userDao = userDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -83,9 +77,6 @@ public class EventServiceImpl implements EventService {
     public Optional<Event> findEvent(long eventId, long neighborhoodId) {
         LOGGER.info("Finding Event {} from Neighborhood {}", eventId, neighborhoodId);
 
-        ValidationUtils.checkEventId(eventId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
         return eventDao.findEvent(eventId, neighborhoodId);
     }
 
@@ -94,20 +85,12 @@ public class EventServiceImpl implements EventService {
     public List<Event> getEvents(Date date, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-
         return eventDao.getEvents(date, neighborhoodId, page, size);
     }
 
     @Override
     public int calculateEventPages(Date date, long neighborhoodId, int size) {
         LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(eventDao.countEvents(date, neighborhoodId), size);
     }
@@ -117,8 +100,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event updateEventPartially(long eventId, String name, String description, String date, String startTime, String endTime) {
         LOGGER.info("Updating Event {}", eventId);
-
-        ValidationUtils.checkEventId(eventId);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setLenient(true);
@@ -151,8 +132,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public boolean deleteEvent(long eventId) {
         LOGGER.info("Delete Event {}", eventId);
-
-        ValidationUtils.checkEventId(eventId);
 
         return eventDao.deleteEvent(eventId);
     }

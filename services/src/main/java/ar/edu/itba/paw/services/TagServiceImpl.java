@@ -50,8 +50,6 @@ public class TagServiceImpl implements TagService {
     public void categorizePost(long postId, List<Long> tagIds) {
         LOGGER.info("Associating Tags {} with Post {}", tagIds, postId);
 
-        ValidationUtils.checkPostId(postId);
-
         for (long tag: tagIds)
             categorizationDao.findCategorization(tag, postId).orElseGet(() -> categorizationDao.createCategorization(tag, postId));
     }
@@ -62,9 +60,6 @@ public class TagServiceImpl implements TagService {
     @Transactional(readOnly = true)
     public Optional<Tag> findTag(long tagId, long neighborhoodId) {
         LOGGER.info("Finding Tag {} from Neighborhood {}", tagId, neighborhoodId);
-
-        ValidationUtils.checkTagId(tagId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return tagDao.findTag(tagId, neighborhoodId);
     }
@@ -91,9 +86,6 @@ public class TagServiceImpl implements TagService {
     public boolean deleteTag(long neighborhoodId, long tagId) {
         LOGGER.info("Deleting Tag {}", tagId);
 
-        ValidationUtils.checkTagId(tagId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
         tagDao.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
         tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
 
@@ -101,9 +93,8 @@ public class TagServiceImpl implements TagService {
         categorizationDao.deleteCategorization(tagId, null);
 
         //if the channel was only being used by this neighborhood, it gets deleted
-        if(tagMappingDao.countTagMappings(tagId, null) == 0) {
+        if(tagMappingDao.countTagMappings(tagId, null) == 0)
             return tagDao.deleteTag(tagId);
-        }
 
         return true;
     }

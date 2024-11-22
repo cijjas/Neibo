@@ -2,13 +2,12 @@ package ar.edu.itba.paw.webapp.validation.validators.reference;
 
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.TransactionTypeURNReferenceConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class TransactionTypeURNReferenceValidator implements ConstraintValidator<TransactionTypeURNReferenceConstraint, String> {
 
@@ -20,7 +19,7 @@ public class TransactionTypeURNReferenceValidator implements ConstraintValidator
         if (transactionTypeURN == null)
             return true;
         try {
-            TransactionType.fromId(extractId(transactionTypeURN));
+            TransactionType.fromId(extractFirstId(transactionTypeURN));
         } catch (NotFoundException e){
             return false;
         }

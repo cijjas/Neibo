@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.BaseChannel;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
-import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.PostService;
+import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,21 +22,15 @@ public class PostServiceImpl implements PostService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
     private final PostDao postDao;
-    private final NeighborhoodDao neighborhoodDao;
     private final CategorizationDao categorizationDao;
     private final TagService tagService;
-    private final ImageService imageService;
-    private final ChannelService channelService;
     private final EmailService emailService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, CategorizationDao categorizationDao, TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao, ChannelService channelService, EmailService emailService) {
+    public PostServiceImpl(final PostDao postDao, CategorizationDao categorizationDao, TagService tagService, EmailService emailService) {
         this.categorizationDao = categorizationDao;
-        this.imageService = imageService;
         this.tagService = tagService;
         this.postDao = postDao;
-        this.neighborhoodDao = neighborhoodDao;
-        this.channelService = channelService;
         this.emailService = emailService;
     }
 
@@ -65,8 +58,6 @@ public class PostServiceImpl implements PostService {
     public Optional<Post> findPost(final long postId) {
         LOGGER.info("Finding Post {}", postId);
 
-        ValidationUtils.checkPostId(postId);
-
         return postDao.findPost(postId);
     }
 
@@ -74,9 +65,6 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public Optional<Post> findPost(final long postId, long neighborhoodId) {
         LOGGER.info("Finding Post {} from Neighborhood {}", postId, neighborhoodId);
-
-        ValidationUtils.checkPostId(postId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return postDao.findPost(postId, neighborhoodId);
     }

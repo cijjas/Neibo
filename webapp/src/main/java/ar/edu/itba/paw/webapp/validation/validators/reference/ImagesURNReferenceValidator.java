@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class ImagesURNReferenceValidator implements ConstraintValidator<ImagesURNReferenceConstraint, List<String>> {
 
@@ -24,7 +23,7 @@ public class ImagesURNReferenceValidator implements ConstraintValidator<ImagesUR
         if (imagesURNs == null)
             return true;
         for (String urn : imagesURNs)
-            if (!imageService.findImage(extractId(urn)).isPresent())
+            if (!imageService.findImage(extractFirstId(urn)).isPresent())
                 return false;
         return true;
     }

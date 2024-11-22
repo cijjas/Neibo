@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -30,16 +29,13 @@ public class RequestServiceImpl implements RequestService {
     private final UserDao userDao;
     private final ProductDao productDao;
     private final EmailService emailService;
-    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public RequestServiceImpl(final RequestDao requestDao, final UserDao userDao, final ProductDao productDao,
-                              final EmailService emailService, final NeighborhoodDao neighborhoodDao) {
+    public RequestServiceImpl(final RequestDao requestDao, final UserDao userDao, final ProductDao productDao, final EmailService emailService) {
         this.requestDao = requestDao;
         this.userDao = userDao;
         this.productDao = productDao;
         this.emailService = emailService;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -59,8 +55,6 @@ public class RequestServiceImpl implements RequestService {
     public boolean deleteRequest(long requestId) {
         LOGGER.info("Deleting Request {}", requestId);
 
-        ValidationUtils.checkRequestId(requestId);
-
         return requestDao.deleteRequest(requestId);
     }
 
@@ -68,19 +62,12 @@ public class RequestServiceImpl implements RequestService {
     public Optional<Request> findRequest(long requestId) {
         LOGGER.info("Finding Request {}", requestId);
 
-        ValidationUtils.checkRequestId(requestId);
-
         return requestDao.findRequest(requestId);
     }
 
     @Override
     public Optional<Request> findRequest(long requestId, long neighborhoodId) {
         LOGGER.info("Finding Request {} from Neighborhood {}", requestId, neighborhoodId);
-
-        ValidationUtils.checkRequestId(requestId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return requestDao.findRequest(requestId);
     }

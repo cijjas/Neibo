@@ -8,7 +8,10 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodsURNFormCo
 import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerStatusURNFormConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.*;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.NeighborhoodsURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionsURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerRoleURNReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerStatusURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;

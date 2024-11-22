@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
@@ -22,17 +21,14 @@ public class ProductServiceImpl implements ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     private final ProductDao productDao;
-    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
     private final DepartmentDao departmentDao;
 
     @Autowired
-    public ProductServiceImpl(final ProductDao productDao, final ImageService imageService,
-                              DepartmentDao departmentDao, NeighborhoodDao neighborhoodDao) {
+    public ProductServiceImpl(final ProductDao productDao, final ImageService imageService, DepartmentDao departmentDao) {
         this.productDao = productDao;
         this.imageService = imageService;
         this.departmentDao = departmentDao;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -55,17 +51,12 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> findProduct(long productId) {
         LOGGER.info("Finding Product {}", productId);
 
-        ValidationUtils.checkProductId(productId);
-
         return productDao.findProduct(productId);
     }
 
     @Override
     public Optional<Product> findProduct(long productId, long neighborhoodId) {
         LOGGER.info("Finding Product {} from Neighborhood {}", productId, neighborhoodId);
-
-        ValidationUtils.checkProductId(productId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return productDao.findProduct(productId, neighborhoodId);
     }
@@ -124,7 +115,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean deleteProduct(long productId) {
         LOGGER.info("Deleting Product {}", productId);
-        ValidationUtils.checkProductId(productId);
+
         return productDao.deleteProduct(productId);
     }
 }

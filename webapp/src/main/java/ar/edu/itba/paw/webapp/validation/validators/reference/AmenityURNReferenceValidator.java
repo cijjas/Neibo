@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.validation.validators.reference;
 
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.TwoId;
-import ar.edu.itba.paw.webapp.auth.AccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.AmenityURNReferenceConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 

@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Booking;
@@ -24,17 +25,11 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingDao bookingDao;
     private final AvailabilityDao availabilityDao;
-    private final NeighborhoodDao neighborhoodDao;
-    private final AmenityDao amenityDao;
-    private final ShiftDao shiftDao;
 
     @Autowired
-    public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao, final NeighborhoodDao neighborhoodDao, final AmenityDao amenityDao, final ShiftDao shiftDao) {
+    public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao) {
         this.availabilityDao = availabilityDao;
         this.bookingDao = bookingDao;
-        this.neighborhoodDao = neighborhoodDao;
-        this.amenityDao = amenityDao;
-        this.shiftDao = shiftDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -65,11 +60,6 @@ public class BookingServiceImpl implements BookingService {
     public Optional<Booking> findBooking(long bookingId, long neighborhoodId) {
         LOGGER.info("Finding Booking {}", bookingId);
 
-        ValidationUtils.checkBookingId(bookingId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-
         return bookingDao.findBooking(bookingId);
     }
 
@@ -99,8 +89,6 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
-
-        ValidationUtils.checkBookingId(bookingId);
 
         return bookingDao.deleteBooking(bookingId);
     }

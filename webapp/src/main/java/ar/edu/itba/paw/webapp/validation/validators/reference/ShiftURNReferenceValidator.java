@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class ShiftURNReferenceValidator implements ConstraintValidator<ShiftURNReferenceConstraint, String> {
 
@@ -21,6 +21,6 @@ public class ShiftURNReferenceValidator implements ConstraintValidator<ShiftURNR
     public boolean isValid(String shiftURN, ConstraintValidatorContext context) {
         if (shiftURN == null || shiftURN.trim().isEmpty())
             return true;
-        return shiftService.findShift(extractId(shiftURN)).isPresent();
+        return shiftService.findShift(extractFirstId(shiftURN)).isPresent();
     }
 }

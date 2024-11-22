@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
 import org.slf4j.Logger;
@@ -20,12 +19,10 @@ public class ContactServiceImpl implements ContactService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactServiceImpl.class);
 
     private final ContactDao contactDao;
-    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public ContactServiceImpl(final ContactDao contactDao, final NeighborhoodDao neighborhoodDao) {
+    public ContactServiceImpl(final ContactDao contactDao) {
         this.contactDao = contactDao;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -43,8 +40,6 @@ public class ContactServiceImpl implements ContactService {
     public Optional<Contact> findContact(long contactId) {
         LOGGER.info("Finding Contact {}", contactId);
 
-        ValidationUtils.checkContactId(contactId);
-
         return contactDao.findContact(contactId);
     }
 
@@ -52,19 +47,12 @@ public class ContactServiceImpl implements ContactService {
     public Optional<Contact> findContact(long contactId, long neighborhoodId) {
         LOGGER.info("Finding Contact {} from Neighborhood {}", contactId, neighborhoodId);
 
-        ValidationUtils.checkContactId(contactId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
         return contactDao.findContact(contactId, neighborhoodId);
     }
 
     @Override
     public List<Contact> getContacts(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return contactDao.getContacts(neighborhoodId, page, size);
     }
@@ -74,9 +62,6 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public int calculateContactPages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Contact Pages for Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(contactDao.countContacts(neighborhoodId), size);
     }
@@ -104,8 +89,6 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public boolean deleteContact(long contactId) {
         LOGGER.info("Deleting Contact {}", contactId);
-
-        ValidationUtils.checkContactId(contactId);
 
         return contactDao.deleteContact(contactId);
     }

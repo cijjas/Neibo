@@ -3,8 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AffiliationDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
-import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import org.slf4j.Logger;
@@ -21,14 +19,10 @@ public class AffiliationServiceImpl implements AffiliationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationServiceImpl.class);
 
     private final AffiliationDao affiliationDao;
-    private final WorkerDao workerDao;
-    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public AffiliationServiceImpl(AffiliationDao affiliationDao, NeighborhoodDao neighborhoodDao, WorkerDao workerDao) {
+    public AffiliationServiceImpl(AffiliationDao affiliationDao){
         this.affiliationDao = affiliationDao;
-        this.neighborhoodDao = neighborhoodDao;
-        this.workerDao = workerDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

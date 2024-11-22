@@ -7,7 +7,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.reference.LanguageURNRefere
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class LanguageURNReferenceValidator implements ConstraintValidator<LanguageURNReferenceConstraint, String> {
 
@@ -19,7 +19,7 @@ public class LanguageURNReferenceValidator implements ConstraintValidator<Langua
         if (languageURN == null || languageURN.trim().isEmpty())
             return true;
         try {
-            Language.fromId(extractId(languageURN));
+            Language.fromId(extractFirstId(languageURN));
         } catch (NotFoundException e){
             return false;
         }

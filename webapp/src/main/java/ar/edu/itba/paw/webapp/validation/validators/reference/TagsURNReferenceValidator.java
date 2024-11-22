@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import java.util.List;
 
 import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;

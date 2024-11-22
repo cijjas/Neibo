@@ -41,8 +41,6 @@ public class ImageServiceImpl implements ImageService {
     public Optional<Image> findImage(long imageId) {
         LOGGER.info("Finding Image {}", imageId);
 
-        ValidationUtils.checkImageId(imageId);
-
         return imageDao.findImage(imageId);
     }
 
@@ -51,8 +49,6 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public boolean deleteImage(long imageId) {
         LOGGER.info("Deleting Neighborhood {}", imageId);
-
-        ValidationUtils.checkImageId(imageId);
 
         return imageDao.deleteImage(imageId);
     }

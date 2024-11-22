@@ -39,6 +39,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Transactional(readOnly = true)
     public Optional<Neighborhood> findNeighborhood(String name) {
         LOGGER.info("Finding Neighborhood {}", name);
+
         return neighborhoodDao.findNeighborhood(name);
     }
 
@@ -46,8 +47,6 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Transactional(readOnly = true)
     public Optional<Neighborhood> findNeighborhood(long neighborhoodId) {
         LOGGER.info("Finding Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return neighborhoodDao.findNeighborhood(neighborhoodId);
     }
@@ -85,8 +84,6 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     public boolean deleteNeighborhood(long neighborhoodId) {
         LOGGER.info("Deleting Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return neighborhoodDao.deleteNeighborhood(neighborhoodId);
     }

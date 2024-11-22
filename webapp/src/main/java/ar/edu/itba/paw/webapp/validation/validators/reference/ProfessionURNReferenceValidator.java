@@ -7,7 +7,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionURNRefe
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class ProfessionURNReferenceValidator implements ConstraintValidator<ProfessionURNReferenceConstraint, String> {
     @Override
@@ -18,7 +18,7 @@ public class ProfessionURNReferenceValidator implements ConstraintValidator<Prof
         if (professionURN == null || professionURN.trim().isEmpty())
             return true;
         try {
-            Profession.fromId(extractId(professionURN));
+            Profession.fromId(extractFirstId(professionURN));
         } catch (NotFoundException e){
             return false;
         }

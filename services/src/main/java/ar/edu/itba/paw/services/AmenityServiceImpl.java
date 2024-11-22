@@ -2,11 +2,12 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
+import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,20 +24,16 @@ public class AmenityServiceImpl implements AmenityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
 
     private final AmenityDao amenityDao;
-    private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
-    private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
     private final UserDao userDao;
 
     @Autowired
-    public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao,
-                              final EmailService emailService, final NeighborhoodDao neighborhoodDao, UserDao userDao) {
+    public AmenityServiceImpl(final AmenityDao amenityDao, final AvailabilityDao availabilityDao,
+                              final EmailService emailService, UserDao userDao) {
         this.availabilityDao = availabilityDao;
-        this.shiftDao = shiftDao;
         this.amenityDao = amenityDao;
         this.emailService = emailService;
-        this.neighborhoodDao = neighborhoodDao;
         this.userDao = userDao;
     }
 
@@ -78,17 +75,12 @@ public class AmenityServiceImpl implements AmenityService {
     public Optional<Amenity> findAmenity(long amenityId) {
         LOGGER.info("Finding Amenity Amenity {}", amenityId);
 
-        ValidationUtils.checkAmenityId(amenityId);
-
         return amenityDao.findAmenity(amenityId);
     }
 
     @Override
     public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
         LOGGER.info("Finding Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
-
-        ValidationUtils.checkAmenityId(amenityId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return amenityDao.findAmenity(amenityId, neighborhoodId);
     }
@@ -98,20 +90,12 @@ public class AmenityServiceImpl implements AmenityService {
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 
     @Override
     public int calculateAmenityPages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Amenity Pages for Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(amenityDao.countAmenities(neighborhoodId), size);
     }
@@ -141,8 +125,6 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public boolean deleteAmenity(long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
-
-        ValidationUtils.checkAmenityId(amenityId);
 
         return amenityDao.deleteAmenity(amenityId);
     }

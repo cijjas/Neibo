@@ -3,7 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -26,18 +25,16 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserDao userDao;
-    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService, final NeighborhoodDao neighborhoodDao) {
+    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService) {
         this.emailService = emailService;
         this.imageService = imageService;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -84,17 +81,12 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUser(long userId) {
         LOGGER.info("Finding User {}", userId);
 
-        ValidationUtils.checkUserId(userId);
-
         return userDao.findUser(userId);
     }
 
     @Override
     public Optional<User> findUser(long userId, long neighborhoodId) {
         LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
 
         return userDao.findUser(userId, neighborhoodId);
     }
@@ -164,8 +156,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean deleteUser(long userId) {
         LOGGER.info("Deleting User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
 
         return userDao.deleteUser(userId);
     }

@@ -7,7 +7,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.reference.WorkerRoleURNRefe
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class WorkerRoleURNReferenceValidator implements ConstraintValidator<WorkerRoleURNReferenceConstraint, String> {
 
@@ -18,7 +18,7 @@ public class WorkerRoleURNReferenceValidator implements ConstraintValidator<Work
     public boolean isValid(String workerRoleURN, ConstraintValidatorContext context) {
         if (workerRoleURN == null || workerRoleURN.trim().isEmpty())
             return true;
-        long workerRoleId = extractId(workerRoleURN);
+        long workerRoleId = extractFirstId(workerRoleURN);
         try {
             WorkerRole.fromId(workerRoleId);
         } catch (NotFoundException e){

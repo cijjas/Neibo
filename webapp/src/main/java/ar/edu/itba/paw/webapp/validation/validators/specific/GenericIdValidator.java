@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.webapp.validation.validators.specific;
 
-import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 public class GenericIdValidator implements ConstraintValidator<GenericIdConstraint, Long> {
+
     @Override
     public void initialize(GenericIdConstraint constraintAnnotation) {}
 

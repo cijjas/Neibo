@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ReviewDao;
-import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import org.slf4j.Logger;
@@ -20,12 +18,10 @@ public class ReviewServiceImpl implements ReviewService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewServiceImpl.class);
 
     private final ReviewDao reviewDao;
-    private final WorkerDao workerDao;
 
     @Autowired
-    public ReviewServiceImpl(ReviewDao reviewDao, WorkerDao workerDao) {
+    public ReviewServiceImpl(ReviewDao reviewDao) {
         this.reviewDao = reviewDao;
-        this.workerDao = workerDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -51,11 +47,6 @@ public class ReviewServiceImpl implements ReviewService {
     public Optional<Review> findReview(long reviewId, long workerId) {
         LOGGER.info("Finding Review {} from Worker {}", reviewId, workerId);
 
-        ValidationUtils.checkReviewId(reviewId);
-        ValidationUtils.checkWorkerId(workerId);
-
-        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
-
         return reviewDao.findReview(reviewId, workerId);
     }
 
@@ -63,11 +54,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId, int page, int size) {
         LOGGER.info("Getting Reviews for Worker {}", workerId);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
 
         return reviewDao.getReviews(workerId, page, size);
     }
@@ -78,9 +64,6 @@ public class ReviewServiceImpl implements ReviewService {
     public int calculateReviewPages(long workerId, int size) {
         LOGGER.info("Calculating Review Pages for Worker {}", workerId);
 
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkSize(size);
-
         return PaginationUtils.calculatePages(reviewDao.countReviews(workerId), size);
     }
 
@@ -89,8 +72,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public boolean deleteReview(long reviewId) {
         LOGGER.info("Deleting Review {}", reviewId);
-
-        ValidationUtils.checkReviewId(reviewId);
 
         return reviewDao.deleteReview(reviewId);
     }

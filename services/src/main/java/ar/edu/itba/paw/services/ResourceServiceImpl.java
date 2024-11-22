@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ResourceService;
@@ -22,14 +21,12 @@ public class ResourceServiceImpl implements ResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
     private final ResourceDao resourceDao;
-    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
 
     @Autowired
-    public ResourceServiceImpl(final ResourceDao resourceDao, ImageService imageService, NeighborhoodDao neighborhoodDao) {
+    public ResourceServiceImpl(final ResourceDao resourceDao, ImageService imageService) {
         this.resourceDao = resourceDao;
         this.imageService = imageService;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -46,8 +43,6 @@ public class ResourceServiceImpl implements ResourceService {
     public Optional<Resource> findResource(long resourceId) {
         LOGGER.info("Finding Resource {}", resourceId);
 
-        ValidationUtils.checkResourceId(resourceId);
-
         return resourceDao.findResource(resourceId);
     }
 
@@ -56,21 +51,12 @@ public class ResourceServiceImpl implements ResourceService {
     public List<Resource> getResources(final long neighborhoodId) {
         LOGGER.info("Getting Resources from Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-
         return resourceDao.getResources(neighborhoodId);
     }
 
     @Override
     public Optional<Resource> findResource(long resourceId, long neighborhoodId) {
         LOGGER.info("Finding Resource {} from Neighborhood {}", resourceId, neighborhoodId);
-
-        ValidationUtils.checkResourceId(resourceId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return resourceDao.findResource(resourceId);
     }
@@ -101,8 +87,6 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public boolean deleteResource(final long resourceId) {
         LOGGER.info("Deleting Resource {}", resourceId);
-
-        ValidationUtils.checkResourceId(resourceId);
 
         return resourceDao.deleteResource(resourceId);
     }

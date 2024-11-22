@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNFormConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ImageURNReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ProfessionsURNReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Form;

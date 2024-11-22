@@ -2,14 +2,12 @@ package ar.edu.itba.paw.webapp.validation.validators.reference;
 
 import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.reference.ProductStatusURNReferenceConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class ProductStatusURNReferenceValidator implements ConstraintValidator<ProductStatusURNReferenceConstraint, String> {
 
@@ -21,7 +19,7 @@ public class ProductStatusURNReferenceValidator implements ConstraintValidator<P
         if (productStatusURN == null)
             return true;
         try {
-            ProductStatus.fromId(extractId(productStatusURN));
+            ProductStatus.fromId(extractFirstId(productStatusURN));
         } catch (NotFoundException e){
             return false;
         }

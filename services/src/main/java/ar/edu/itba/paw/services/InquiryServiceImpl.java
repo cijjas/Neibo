@@ -53,18 +53,12 @@ public class InquiryServiceImpl implements InquiryService {
     public Optional<Inquiry> findInquiry(long inquiryId) {
         LOGGER.info("Finding Inquiry {}", inquiryId);
 
-        ValidationUtils.checkInquiryId(inquiryId);
-
         return inquiryDao.findInquiry(inquiryId);
     }
 
     @Override
     public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
         LOGGER.info("Finding Inquiry {} for Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
-
-        ValidationUtils.checkInquiryId(inquiryId);
-        ValidationUtils.checkProductId(productId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return inquiryDao.findInquiry(inquiryId, productId, neighborhoodId);
     }
@@ -74,12 +68,6 @@ public class InquiryServiceImpl implements InquiryService {
     public List<Inquiry> getInquiries(long productId, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Inquiries for Product {} from Neighborhood {}", productId, neighborhoodId);
 
-        ValidationUtils.checkProductId(productId);
-        ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        productDao.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new);
-
         return inquiryDao.getInquiries(productId, page, size);
     }
 
@@ -88,9 +76,6 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public int calculateInquiryPages(long productId, int size) {
         LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
-
-        ValidationUtils.checkProductId(productId);
-        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(inquiryDao.countInquiries(productId), size);
     }
@@ -117,8 +102,6 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public boolean deleteInquiry(long inquiryId) {
         LOGGER.info("Deleting Inquiry {}", inquiryId);
-
-        ValidationUtils.checkInquiryId(inquiryId);
 
         return inquiryDao.deleteInquiry(inquiryId);
     }

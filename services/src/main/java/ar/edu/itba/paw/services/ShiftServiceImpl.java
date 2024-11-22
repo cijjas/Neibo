@@ -40,8 +40,6 @@ public class ShiftServiceImpl implements ShiftService {
     public Optional<Shift> findShift(long shiftId) {
         LOGGER.info("Finding Shift {}", shiftId);
 
-        ValidationUtils.checkShiftId(shiftId);
-
         return shiftDao.findShift(shiftId);
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +22,7 @@ import java.util.Optional;
 @Transactional
 public class WorkerServiceImpl implements WorkerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class);
+
     private final WorkerDao workerDao;
     private final ProfessionWorkerDao professionWorkerDao;
     private final UserDao userDao;
@@ -56,8 +56,6 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional(readOnly = true)
     public Optional<Worker> findWorker(long userId) {
         LOGGER.info("Finding Worker {}", userId);
-
-        ValidationUtils.checkUserId(userId);
 
         Optional<User> optionalUser = userDao.findUser(userId);
         return optionalUser.isPresent() ? workerDao.findWorker(userId) : Optional.empty();
@@ -107,8 +105,6 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public boolean deleteWorker(long workerId) {
         LOGGER.info("Deleting Worker {}", workerId);
-
-        ValidationUtils.checkTagId(workerId);
 
         return workerDao.deleteWorker(workerId);
     }

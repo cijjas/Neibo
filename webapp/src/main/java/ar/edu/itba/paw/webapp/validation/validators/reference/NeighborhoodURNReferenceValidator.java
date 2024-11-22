@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractId;
+import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
 
 public class NeighborhoodURNReferenceValidator implements ConstraintValidator<NeighborhoodURNReferenceConstraint, String> {
 
@@ -21,6 +21,6 @@ public class NeighborhoodURNReferenceValidator implements ConstraintValidator<Ne
     public boolean isValid(String neighborhoodURN, ConstraintValidatorContext context) {
         if (neighborhoodURN == null || neighborhoodURN.trim().isEmpty())
             return true;
-        return neighborhoodService.findNeighborhood(extractId(neighborhoodURN)).isPresent();
+        return neighborhoodService.findNeighborhood(extractFirstId(neighborhoodURN)).isPresent();
     }
 }
