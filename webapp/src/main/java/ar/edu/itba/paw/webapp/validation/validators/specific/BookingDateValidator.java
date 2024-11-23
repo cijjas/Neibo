@@ -32,10 +32,8 @@ public class BookingDateValidator implements ConstraintValidator<BookingDateCons
     public boolean isValid(BookingDto bookingDto, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
-        if (bookingDto.getAmenity() == null || bookingDto.getReservationDate() == null
-                || bookingDto.getShift() == null || bookingDto.getUser() == null) {
+        if (bookingDto == null || bookingDto.getAmenity() == null || bookingDto.getReservationDate() == null || bookingDto.getShift() == null || bookingDto.getUser() == null)
             return true;
-        }
 
         LocalDate reservationDate;
         try {

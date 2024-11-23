@@ -18,7 +18,7 @@ public class TimeRangeValidator implements ConstraintValidator<TimeRangeConstrai
 
     @Override
     public boolean isValid(EventDto eventForm, ConstraintValidatorContext context) {
-        if (eventForm.getStartTime() == null || eventForm.getEndTime() == null)
+        if (eventForm == null || eventForm.getStartTime() == null || eventForm.getEndTime() == null)
             return true;
 
         try {

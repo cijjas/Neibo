@@ -12,6 +12,11 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.Optional;
+
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
@@ -25,18 +30,18 @@ public class PathAccessControlHelper {
     private final RequestService rs;
     private final CommentService cs;
     private final BookingService bs;
+    private final ReviewService rvs;
     private final AuthHelper authHelper;
-    @Autowired
-    private UserRoleController userRoleController;
 
     @Autowired
-    public PathAccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs) {
+    public PathAccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs, ReviewService rvs) {
         this.prs = prs;
         this.ps = ps;
         this.is = is;
         this.rs = rs;
         this.cs = cs;
         this.bs = bs;
+        this.rvs = rvs;
         this.authHelper = new AuthHelper();
     }
 
@@ -242,6 +247,21 @@ public class PathAccessControlHelper {
             return true;
 
         return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(neighborhoodURN);
+    }
+
+    // ----------------------------------------------- REVIEWS ---------------------------------------------------------
+
+    public boolean canCreateReview(long workerId, String user) {
+        LOGGER.info("Verifying Review Creation Accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        Optional<Review> latestReview = rvs.findLatestReview(workerId, extractSecondId(user));
+
+        return latestReview.map(review -> ChronoUnit.HOURS.between(review.getDate().toInstant(), Instant.now()) >= 24).orElse(true);
+
     }
 
     // -----------------------------------------------------------------------------------------------------------------

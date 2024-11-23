@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
+import ar.edu.itba.paw.webapp.auth.PathAccessControlHelper;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.WorkerIdConstraint;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -46,6 +48,8 @@ public class ReviewController {
 
     @Context
     private Request request;
+    @Autowired
+    private PathAccessControlHelper pathAccessControlHelper;
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -119,6 +123,7 @@ public class ReviewController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
+    @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #form.user)")
     public Response createReview(
             @PathParam("workerId") @WorkerIdConstraint final long workerId,
             @Valid ReviewDto form

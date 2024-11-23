@@ -13,6 +13,8 @@ public interface ReviewService {
 
     Optional<Review> findReview(long reviewId, long workerId);
 
+    Optional<Review> findLatestReview(long workerId, long userId);
+
     List<Review> getReviews(long workerId, int page, int size);
 
     // ---------------------------------------------------

@@ -60,12 +60,8 @@ public class ReviewDto {
         return dto;
     }
 
-    public float getRating() {
+    public Float getRating() {
         return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
     }
 
     public void setRating(Float rating) {

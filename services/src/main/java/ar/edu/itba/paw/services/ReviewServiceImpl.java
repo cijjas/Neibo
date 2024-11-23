@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,13 @@ public class ReviewServiceImpl implements ReviewService {
         LOGGER.info("Finding Review {} from Worker {}", reviewId, workerId);
 
         return reviewDao.findReview(reviewId, workerId);
+    }
+
+    @Override
+    public Optional<Review> findLatestReview(long workerId, long userId) {
+        LOGGER.info("Finding Latest from Review User {} to Worker {}", userId, workerId);
+
+        return reviewDao.findLatestReview(workerId, userId);
     }
 
     @Override
