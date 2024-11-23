@@ -20,7 +20,7 @@ public class ChannelDto {
     public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodId) {
         final ChannelDto dto = new ChannelDto();
 
-        dto.name= channel.getChannel();
+        dto.name = channel.getChannel();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()

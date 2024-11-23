@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
 
 
 /*
@@ -87,7 +87,8 @@ public class TagController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<TagDto>>(tagsDto) {})
+        return Response.ok(new GenericEntity<List<TagDto>>(tagsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(tagsHashCode)
                 .links(links)

@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class ShiftURNValidator implements ConstraintValidator<ShiftURNConstraint, String> {
 
@@ -16,7 +16,8 @@ public class ShiftURNValidator implements ConstraintValidator<ShiftURNConstraint
     private ShiftService shiftService;
 
     @Override
-    public void initialize(ShiftURNConstraint shiftURNConstraint) {}
+    public void initialize(ShiftURNConstraint shiftURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String shiftURN, ConstraintValidatorContext constraintValidatorContext) {

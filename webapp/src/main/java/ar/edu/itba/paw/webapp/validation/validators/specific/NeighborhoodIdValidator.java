@@ -13,7 +13,8 @@ public class NeighborhoodIdValidator implements ConstraintValidator<Neighborhood
     private NeighborhoodService neighborhoodService;
 
     @Override
-    public void initialize(NeighborhoodIdConstraint constraintAnnotation) {}
+    public void initialize(NeighborhoodIdConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(Long neighborhoodId, ConstraintValidatorContext context) {

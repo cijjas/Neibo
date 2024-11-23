@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class ChannelURNValidator implements ConstraintValidator<ChannelURNConstraint, String> {
 
@@ -17,7 +17,8 @@ public class ChannelURNValidator implements ConstraintValidator<ChannelURNConstr
     private ChannelService channelService;
 
     @Override
-    public void initialize(ChannelURNConstraint channelURNConstraint) {}
+    public void initialize(ChannelURNConstraint channelURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String channelURN, ConstraintValidatorContext constraintValidatorContext) {

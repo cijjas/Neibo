@@ -8,12 +8,13 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNConstrain
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class DepartmentURNValidator implements ConstraintValidator<DepartmentURNConstraint, String> {
 
     @Override
-    public void initialize(DepartmentURNConstraint departmentURNConstraint) {}
+    public void initialize(DepartmentURNConstraint departmentURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String departmentURN, ConstraintValidatorContext constraintValidatorContext) {
@@ -23,7 +24,7 @@ public class DepartmentURNValidator implements ConstraintValidator<DepartmentURN
             return false;
         try {
             Department.fromId(extractFirstId(departmentURN));
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return false;
         }
         return true;

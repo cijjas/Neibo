@@ -1,3 +1,4 @@
 package ar.edu.itba.paw.webapp.validation.groups;
 
-public interface Authorization {}
+public interface Authorization {
+}

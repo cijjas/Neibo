@@ -6,8 +6,8 @@ import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNRefere
 import ar.edu.itba.paw.webapp.validation.constraints.form.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;

@@ -27,7 +27,8 @@ public class InvalidEnumValueExceptionMapper implements ExceptionMapper<InvalidE
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
         errorDetails.setLinks(addRootToLinks(exception.getLinks()));
 
-        return Response.status(status).entity(new GenericEntity<ApiErrorDetails>(errorDetails){})
+        return Response.status(status).entity(new GenericEntity<ApiErrorDetails>(errorDetails) {
+                })
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }
@@ -36,7 +37,7 @@ public class InvalidEnumValueExceptionMapper implements ExceptionMapper<InvalidE
         Set<LinkEntry> appendedLinks = new HashSet<>();
         String root = uriInfo.getBaseUri().toString();
 
-        for ( LinkEntry link : links){
+        for (LinkEntry link : links) {
             link.setLink(root + link.getLink());
             appendedLinks.add(link);
         }

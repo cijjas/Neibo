@@ -1,25 +1,19 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.enums.Authority;
-import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
-import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.controller.UserRoleController;
-import ar.edu.itba.paw.webapp.validation.URNValidator;
-import ar.edu.itba.paw.webapp.validation.validators.form.PostURNValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 @Component
 public class PathAccessControlHelper {
@@ -31,20 +25,18 @@ public class PathAccessControlHelper {
     private final RequestService rs;
     private final CommentService cs;
     private final BookingService bs;
-    private final UserService us;
     private final AuthHelper authHelper;
     @Autowired
     private UserRoleController userRoleController;
 
     @Autowired
-    public PathAccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs, UserService us){
+    public PathAccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs) {
         this.prs = prs;
         this.ps = ps;
         this.is = is;
         this.rs = rs;
         this.cs = cs;
         this.bs = bs;
-        this.us = us;
         this.authHelper = new AuthHelper();
     }
 
@@ -159,7 +151,7 @@ public class PathAccessControlHelper {
     // ----------------------------------------------- WORKERS ---------------------------------------------------------
 
     // Workers can update their own profile
-    public boolean canUpdateWorker(long workerId){
+    public boolean canUpdateWorker(long workerId) {
         LOGGER.info("Verifying Worker Update Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -205,7 +197,7 @@ public class PathAccessControlHelper {
             return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN);
 
         return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN)
-                &&  authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
+                && authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
     }
 
     // Restricted from Anonymous, Unverified and Rejected
@@ -279,7 +271,7 @@ public class PathAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Comment c = cs.findComment(commentId).orElseThrow(()-> new NotFoundException("Comment Not Found"));
+        Comment c = cs.findComment(commentId).orElseThrow(() -> new NotFoundException("Comment Not Found"));
         return authHelper.getRequestingUserId(authentication) == c.getUser().getUserId();
     }
 
@@ -293,92 +285,92 @@ public class PathAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Booking b = bs.findBooking(bookingId, neighborhoodId).orElseThrow(()-> new NotFoundException("Booking Not Found"));
+        Booking b = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found"));
         return authHelper.getRequestingUserId(authentication) == b.getUser().getUserId();
     }
 
     // ------------------------------------------------ PRODUCTS ----------------------------------------------------------
 
     // Sellers can delete their own Product
-    public boolean canDeleteProduct(long productId){
+    public boolean canDeleteProduct(long productId) {
         LOGGER.info("Verifying Product Delete Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Product p = prs.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // Sellers can Update their own Product
-    public boolean canUpdateProduct(long productId){
+    public boolean canUpdateProduct(long productId) {
         LOGGER.info("Verifying Product Update Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Product p = prs.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // ------------------------------------------------ POSTS ----------------------------------------------------------
 
     // Neighbors can delete their own Post
-    public boolean canDeletePost(long postId){
+    public boolean canDeletePost(long postId) {
         LOGGER.info("Verifying Post Delete Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Post p = ps.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        Post p = ps.findPost(postId).orElseThrow(() -> new NotFoundException("Post Not Found"));
         return p.getUser().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // ---------------------------------------------- INQUIRIES --------------------------------------------------------
 
     // Sellers can not create an Inquiry for their own Product
-    public boolean canCreateInquiry(long productId){
+    public boolean canCreateInquiry(long productId) {
         LOGGER.info("Verifying Inquiry Creation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Product p = prs.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
         return p.getSeller().getUserId() != authHelper.getRequestingUserId(authentication);
     }
 
     // The Inquirer can delete their Inquiry
-    public boolean canDeleteInquiry(long inquiryId){
+    public boolean canDeleteInquiry(long inquiryId) {
         LOGGER.info("Verifying Inquiry Delete Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Inquiry Not Found"));
+        Inquiry i = is.findInquiry(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry Not Found"));
         return i.getUser().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // Sellers can answer the Inquiries for their own Product
-    public boolean canAnswerInquiry(long inquiryId){
+    public boolean canAnswerInquiry(long inquiryId) {
         LOGGER.info("Verifying Inquiry Answering Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Inquiry Not Found"));
+        Inquiry i = is.findInquiry(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry Not Found"));
         return i.getProduct().getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // ---------------------------------------------- REQUESTS ---------------------------------------------------------
 
     // Sellers can view the Requests for their Products and their Requests overall
-    public boolean canAccessRequests(String userURN, String productURN){
+    public boolean canAccessRequests(String userURN, String productURN) {
         LOGGER.info("Verifying Requests Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -394,38 +386,38 @@ public class PathAccessControlHelper {
     }
 
     // The Seller and the Requester can access the particular Request that they take part in
-    public boolean canAccessRequest(long requestId){
+    public boolean canAccessRequest(long requestId) {
         LOGGER.info("Verifying Request Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
-        return r.getUser().getUserId() == authHelper.getRequestingUserId(authentication)|| r.getProduct().getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
+        Request r = rs.findRequest(requestId).orElseThrow(() -> new NotFoundException("Request Not Found"));
+        return r.getUser().getUserId() == authHelper.getRequestingUserId(authentication) || r.getProduct().getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // Sellers can update their own Products
-    public boolean canUpdateRequest(long requestId){
+    public boolean canUpdateRequest(long requestId) {
         LOGGER.info("Verifying Update Request Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
+        Request r = rs.findRequest(requestId).orElseThrow(() -> new NotFoundException("Request Not Found"));
         return r.getProduct().getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // Requesters can delete their own Requests
-    public boolean canDeleteRequest(long requestId){
+    public boolean canDeleteRequest(long requestId) {
         LOGGER.info("Verifying List Transactions Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
+        Request r = rs.findRequest(requestId).orElseThrow(() -> new NotFoundException("Request Not Found"));
         return r.getUser().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 }

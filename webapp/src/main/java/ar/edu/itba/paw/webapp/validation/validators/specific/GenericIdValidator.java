@@ -8,7 +8,8 @@ import javax.validation.ConstraintValidatorContext;
 public class GenericIdValidator implements ConstraintValidator<GenericIdConstraint, Long> {
 
     @Override
-    public void initialize(GenericIdConstraint constraintAnnotation) {}
+    public void initialize(GenericIdConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(Long genericId, ConstraintValidatorContext context) {

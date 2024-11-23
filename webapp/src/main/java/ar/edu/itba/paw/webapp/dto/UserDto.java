@@ -7,7 +7,10 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.LanguageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Specific;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

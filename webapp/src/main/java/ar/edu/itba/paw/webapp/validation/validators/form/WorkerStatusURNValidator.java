@@ -8,11 +8,12 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerStatusURNConstra
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class WorkerStatusURNValidator implements ConstraintValidator<WorkerStatusURNConstraint, String> {
     @Override
-    public void initialize(WorkerStatusURNConstraint constraintAnnotation) {}
+    public void initialize(WorkerStatusURNConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(String workerStatusURN, ConstraintValidatorContext context) {
@@ -22,7 +23,7 @@ public class WorkerStatusURNValidator implements ConstraintValidator<WorkerStatu
             return false;
         try {
             WorkerStatus.fromId(extractFirstId(workerStatusURN));
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return false;
         }
         return true;

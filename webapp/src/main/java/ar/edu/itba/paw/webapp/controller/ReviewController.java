@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
  * # Summary
@@ -82,7 +82,8 @@ public class ReviewController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto) {})
+        return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(reviewsHashCode)

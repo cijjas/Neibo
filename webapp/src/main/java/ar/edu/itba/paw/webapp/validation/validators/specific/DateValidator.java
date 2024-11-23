@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.specific;
 
-import ar.edu.itba.paw.webapp.validation.constraints.specific.ReservationDateConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -8,28 +8,24 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ReservationDateValidator implements ConstraintValidator<ReservationDateConstraint, String> {
+public class DateValidator implements ConstraintValidator<DateConstraint, String> {
 
     @Override
-    public void initialize(ReservationDateConstraint constraint) {}
+    public void initialize(DateConstraint constraint) {
+    }
 
     @Override
     public boolean isValid(String date, ConstraintValidatorContext context) {
         if (date == null || date.trim().isEmpty())
             return true;
 
+        Date parsedDate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setLenient(true);
         try {
-            Date parsedDate = dateFormat.parse(date);
+            parsedDate = dateFormat.parse(date);
         } catch (ParseException e) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Invalid Date Format. Please use YYYY-MM-DD.")
-                    .addConstraintViolation();
             return false;
         }
-
-        return true;
+        return parsedDate.after(new Date(System.currentTimeMillis()));
     }
-
 }

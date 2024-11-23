@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 /*
  * # Summary
@@ -93,7 +93,8 @@ public class UserController {
 
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {})
+        return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(usersHashCode)
                 .links(links)

@@ -63,7 +63,8 @@ public class LanguageController {
                 .map(l -> LanguageDto.fromLanguage(l, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<LanguageDto>>(languagesDto) {})
+        return Response.ok(new GenericEntity<List<LanguageDto>>(languagesDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(languagesHashCode)
                 .build();

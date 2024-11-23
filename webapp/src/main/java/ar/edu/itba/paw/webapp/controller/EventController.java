@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractDate;
 
 
 /*
@@ -89,7 +90,8 @@ public class EventController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<EventDto>>(eventsDto) {})
+        return Response.ok(new GenericEntity<List<EventDto>>(eventsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(eventsHashCode)
                 .links(links)
@@ -132,7 +134,7 @@ public class EventController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime(), neighborhoodId);
+        final Event event = es.createEvent(form.getName(), form.getDescription(), extractDate(form.getDate()), form.getStartTime(), form.getEndTime(), neighborhoodId);
         String eventHashCode = String.valueOf(event.hashCode());
 
         // Resource URN
@@ -157,7 +159,7 @@ public class EventController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Event updatedEvent = es.updateEventPartially(id, form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime());
+        final Event updatedEvent = es.updateEventPartially(id, form.getName(), form.getDescription(), extractDate(form.getDate()), form.getStartTime(), form.getEndTime());
         String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
         return Response.ok(EventDto.fromEvent(updatedEvent, uriInfo))

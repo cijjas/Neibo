@@ -11,7 +11,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class HttpMessageNotReadableExceptionMapper  implements ExceptionMapper<HttpMessageNotReadableException> {
+public class HttpMessageNotReadableExceptionMapper implements ExceptionMapper<HttpMessageNotReadableException> {
 
     @Context
     private UriInfo uriInfo;

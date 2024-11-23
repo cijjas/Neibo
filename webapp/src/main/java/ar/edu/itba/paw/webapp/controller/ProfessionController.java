@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 
 /*
@@ -75,7 +75,8 @@ public class ProfessionController {
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto) {})
+        return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(professionsHashCode)
                 .build();

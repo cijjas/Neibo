@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 @Documented
 @Constraint(validatedBy = NeighborhoodIdValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NeighborhoodIdConstraint{
+public @interface NeighborhoodIdConstraint {
     String message() default "Invalid Neighborhood ID in Path";
 
     Class<?>[] groups() default {};

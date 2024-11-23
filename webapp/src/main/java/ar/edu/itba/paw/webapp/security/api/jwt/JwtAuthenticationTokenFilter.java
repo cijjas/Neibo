@@ -98,6 +98,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // Issue Token
             String token = authenticationTokenService.issueToken(username, authorities);
             // Get neighborhoodId and userId to build the URN
+
+            // could somehow utilize current url to build a more useful version of this
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             String urn = String.format("/neighborhoods/%d/users/%d", userAuth.getNeighborhoodId(), userAuth.getUserId());
             Link userURN = Link.fromUri(urn).rel("urn").build();

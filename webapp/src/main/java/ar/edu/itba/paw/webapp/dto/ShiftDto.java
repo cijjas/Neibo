@@ -22,7 +22,7 @@ public class ShiftDto {
         dto.day = shift.getDay().getDayName();
 
         if (shift.getTaken() != null)
-            dto.isBooked= shift.getTaken();
+            dto.isBooked = shift.getTaken();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()

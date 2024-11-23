@@ -51,7 +51,8 @@ public class WorkerRoleController {
                 .map(tt -> WorkerRoleDto.fromWorkerRole(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<WorkerRoleDto>>(workerRoleDto) {})
+        return Response.ok(new GenericEntity<List<WorkerRoleDto>>(workerRoleDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(workerRolesHashCode)
                 .build();

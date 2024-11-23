@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, List<String>> {
 
@@ -18,7 +18,8 @@ public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, 
     private TagService tagService;
 
     @Override
-    public void initialize(TagsURNConstraint tagsURNConstraint) {}
+    public void initialize(TagsURNConstraint tagsURNConstraint) {
+    }
 
     @Override
     public boolean isValid(List<String> tagURNs, ConstraintValidatorContext constraintValidatorContext) {

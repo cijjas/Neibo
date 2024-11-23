@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstIds;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstIds;
 
 /*
  * # Summary
@@ -83,7 +83,8 @@ public class AmenityController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {})
+        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(amenitiesHashCode)

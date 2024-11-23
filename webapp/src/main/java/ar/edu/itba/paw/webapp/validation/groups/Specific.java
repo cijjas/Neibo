@@ -1,3 +1,4 @@
 package ar.edu.itba.paw.webapp.validation.groups;
 
-public interface Specific {}
+public interface Specific {
+}

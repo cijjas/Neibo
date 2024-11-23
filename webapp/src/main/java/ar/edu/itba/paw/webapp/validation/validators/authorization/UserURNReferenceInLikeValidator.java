@@ -13,7 +13,8 @@ public class UserURNReferenceInLikeValidator implements ConstraintValidator<User
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(UserURNReferenceInLikeConstraint userURNInLikeFormConstraint) {}
+    public void initialize(UserURNReferenceInLikeConstraint userURNInLikeFormConstraint) {
+    }
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {

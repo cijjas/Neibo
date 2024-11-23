@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class NeighborhoodURNValidator implements ConstraintValidator<NeighborhoodURNConstraint, String> {
 
@@ -16,7 +16,8 @@ public class NeighborhoodURNValidator implements ConstraintValidator<Neighborhoo
     private NeighborhoodService neighborhoodService;
 
     @Override
-    public void initialize(NeighborhoodURNConstraint constraintAnnotation) {}
+    public void initialize(NeighborhoodURNConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(String neighborhoodURN, ConstraintValidatorContext context) {

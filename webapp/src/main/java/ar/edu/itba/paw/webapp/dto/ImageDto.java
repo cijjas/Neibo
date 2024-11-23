@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.ImageConstraint;
 
 import javax.ws.rs.core.UriInfo;
 
 public class ImageDto {
 
+    @ImageConstraint
     private byte[] image;
 
     private Links _links;

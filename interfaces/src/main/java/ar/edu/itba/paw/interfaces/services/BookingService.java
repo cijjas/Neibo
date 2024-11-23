@@ -2,12 +2,13 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Booking;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public interface BookingService {
 
-    Booking createBooking(long userId, long amenityId, long shiftId, String reservationDate);
+    Booking createBooking(long userId, long amenityId, long shiftId, Date reservationDate);
 
     // -----------------------------------------------------------------------------------------------------------------
 

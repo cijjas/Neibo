@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
  * # Summary
@@ -95,7 +95,8 @@ public class ProductController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ProductDto>>(productsDto) {})
+        return Response.ok(new GenericEntity<List<ProductDto>>(productsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(productsHashCode)
                 .links(links)

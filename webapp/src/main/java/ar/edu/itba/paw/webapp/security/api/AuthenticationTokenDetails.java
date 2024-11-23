@@ -23,6 +23,16 @@ public final class AuthenticationTokenDetails {
     private final int refreshCount;
     private final int refreshLimit;
 
+    private AuthenticationTokenDetails(String id, String username, Set<Authority> authorities, ZonedDateTime issuedDate, ZonedDateTime expirationDate, int refreshCount, int refreshLimit) {
+        this.id = id;
+        this.username = username;
+        this.authorities = authorities;
+        this.issuedDate = issuedDate;
+        this.expirationDate = expirationDate;
+        this.refreshCount = refreshCount;
+        this.refreshLimit = refreshLimit;
+    }
+
     public String getId() {
         return id;
     }
@@ -58,16 +68,6 @@ public final class AuthenticationTokenDetails {
      */
     public boolean isEligibleForRefreshment() {
         return refreshCount < refreshLimit;
-    }
-
-    private AuthenticationTokenDetails(String id, String username, Set<Authority> authorities, ZonedDateTime issuedDate, ZonedDateTime expirationDate, int refreshCount, int refreshLimit) {
-        this.id = id;
-        this.username = username;
-        this.authorities = authorities;
-        this.issuedDate = issuedDate;
-        this.expirationDate = expirationDate;
-        this.refreshCount = refreshCount;
-        this.refreshLimit = refreshLimit;
     }
 
     /**

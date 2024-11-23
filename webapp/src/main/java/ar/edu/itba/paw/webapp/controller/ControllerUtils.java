@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Link;
@@ -11,8 +9,6 @@ import java.util.List;
 @Component
 public class ControllerUtils {
     public static int MAX_AGE_SECONDS = 10800;
-    @Autowired
-    private UserService us;
 
     public static Link[] createPaginationLinks(String baseUri, int totalPages, int page, int size) {
         List<Link> links = new ArrayList<>();

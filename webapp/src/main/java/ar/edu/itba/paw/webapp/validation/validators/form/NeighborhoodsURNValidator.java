@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class NeighborhoodsURNValidator implements ConstraintValidator<NeighborhoodsURNConstraint, List<String>> {
 
@@ -17,13 +17,14 @@ public class NeighborhoodsURNValidator implements ConstraintValidator<Neighborho
     private NeighborhoodService neighborhoodService;
 
     @Override
-    public void initialize(NeighborhoodsURNConstraint constraintAnnotation) {}
+    public void initialize(NeighborhoodsURNConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(List<String> neighborhoodURNs, ConstraintValidatorContext context) {
         if (neighborhoodURNs == null)
             return true;
-        for (String neighborhoodURN: neighborhoodURNs) {
+        for (String neighborhoodURN : neighborhoodURNs) {
             if (!URNValidator.validateURN(neighborhoodURN, "neighborhood"))
                 return false;
             if (!neighborhoodService.findNeighborhood(extractFirstId(neighborhoodURN)).isPresent())

@@ -11,7 +11,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class MailingExceptionMapper  implements ExceptionMapper<MailingException> {
+public class MailingExceptionMapper implements ExceptionMapper<MailingException> {
 
     @Context
     private UriInfo uriInfo;

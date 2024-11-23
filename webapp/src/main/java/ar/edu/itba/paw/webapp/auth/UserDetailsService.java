@@ -31,7 +31,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws NotFoundException {
-        LOGGER.info("Loading user with mail {}" , mail);
+        LOGGER.info("Loading user with mail {}", mail);
 
         final User n = us.findUser(mail).orElseThrow(() -> new NotFoundException("User not found"));
         final Set<GrantedAuthority> authorities = new HashSet<>();

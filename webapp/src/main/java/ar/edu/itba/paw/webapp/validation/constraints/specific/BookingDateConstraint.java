@@ -1,17 +1,17 @@
 package ar.edu.itba.paw.webapp.validation.constraints.specific;
 
-import ar.edu.itba.paw.webapp.validation.validators.specific.TimeRangeValidator;
+import ar.edu.itba.paw.webapp.validation.validators.specific.BookingDateValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = TimeRangeValidator.class)
+@Constraint(validatedBy = BookingDateValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidTimeRangeConstraint {
-    String message() default "Start time must be before end time";
+public @interface BookingDateConstraint {
+    String message() default "The specified shift is unavailable for the amenity on the chosen date";
 
     Class<?>[] groups() default {};
 

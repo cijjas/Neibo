@@ -1,17 +1,17 @@
 package ar.edu.itba.paw.webapp.validation.constraints.specific;
 
-import ar.edu.itba.paw.webapp.validation.validators.specific.DateAfterValidator;
+import ar.edu.itba.paw.webapp.validation.validators.specific.TimeRangeValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = DateAfterValidator.class)
-@Target({ElementType.METHOD, ElementType.FIELD})
+@Constraint(validatedBy = TimeRangeValidator.class)
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DateAfterConstraint {
-    String message() default "Date must be after today";
+public @interface TimeRangeConstraint {
+    String message() default "Start time must be before end time";
 
     Class<?>[] groups() default {};
 

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
  * # Summary
@@ -84,7 +84,8 @@ public class AttendanceController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto) {})
+        return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(attendanceHashCode)
                 .links(links)

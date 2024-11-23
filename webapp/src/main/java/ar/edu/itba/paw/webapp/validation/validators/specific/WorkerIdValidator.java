@@ -13,7 +13,8 @@ public class WorkerIdValidator implements ConstraintValidator<WorkerIdConstraint
     private WorkerService workerService;
 
     @Override
-    public void initialize(WorkerIdConstraint constraintAnnotation) {}
+    public void initialize(WorkerIdConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(Long workerId, ConstraintValidatorContext context) {

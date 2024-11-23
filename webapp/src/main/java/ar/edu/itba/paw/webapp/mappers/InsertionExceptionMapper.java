@@ -11,7 +11,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class InsertionExceptionMapper  implements ExceptionMapper<InsertionException> {
+public class InsertionExceptionMapper implements ExceptionMapper<InsertionException> {
 
     @Context
     private UriInfo uriInfo;

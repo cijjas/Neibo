@@ -45,7 +45,7 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-@ComponentScan({"ar.edu.itba.paw.webapp.auth","ar.edu.itba.paw.webapp.security", "ar.edu.itba.paw.webapp.validation"})
+@ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.security", "ar.edu.itba.paw.webapp.validation"})
 @CrossOrigin(origins = "http://localhost:4200/")
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Value("classpath:rememberme.key")
@@ -141,7 +141,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/neighborhoods/*/users/*",
                         "/workers/*",
 
-                        "/images/*",
+                        "/images", "/images/*",
                         "/affiliations", "/affiliations/*",
                         "/workers/*/reviews", "/workers/*/reviews/*"
                 ).hasAnyRole(
@@ -236,7 +236,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
 //        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200/"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.addAllowedHeader(ALL);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Link", "Location", "ETag", "Total-Elements"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

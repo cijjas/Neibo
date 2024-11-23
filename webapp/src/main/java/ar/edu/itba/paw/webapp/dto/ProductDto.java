@@ -6,7 +6,10 @@ import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNRefere
 import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ImagesURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -147,10 +150,6 @@ public class ProductDto {
         return used;
     }
 
-    public void setUsed(boolean used) {
-        this.used = used;
-    }
-
     public Long getRemainingUnits() {
         return remainingUnits;
     }
@@ -193,6 +192,10 @@ public class ProductDto {
 
     public Boolean getUsed() {
         return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
     public void setUsed(Boolean used) {

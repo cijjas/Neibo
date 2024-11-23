@@ -58,7 +58,8 @@ public class WorkerStatusController {
                 .map(tt -> WorkerStatusDto.fromWorkerStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<WorkerStatusDto>>(workerStatusDto) {})
+        return Response.ok(new GenericEntity<List<WorkerStatusDto>>(workerStatusDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(workerStatusesHashCode)
                 .build();

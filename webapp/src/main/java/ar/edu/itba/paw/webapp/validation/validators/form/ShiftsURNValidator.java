@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class ShiftsURNValidator implements ConstraintValidator<ShiftsURNConstraint, List<String>> {
 
@@ -17,7 +17,8 @@ public class ShiftsURNValidator implements ConstraintValidator<ShiftsURNConstrai
     private ShiftService shiftService;
 
     @Override
-    public void initialize(ShiftsURNConstraint shiftsURNConstraint) {}
+    public void initialize(ShiftsURNConstraint shiftsURNConstraint) {
+    }
 
     @Override
     public boolean isValid(List<String> shiftsURN, ConstraintValidatorContext constraintValidatorContext) {

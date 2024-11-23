@@ -9,12 +9,13 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class ProfessionsURNValidator implements ConstraintValidator<ProfessionsURNConstraint, List<String>> {
 
     @Override
-    public void initialize(ProfessionsURNConstraint professionsURNConstraint) {}
+    public void initialize(ProfessionsURNConstraint professionsURNConstraint) {
+    }
 
     @Override
     public boolean isValid(List<String> professionURNs, ConstraintValidatorContext constraintValidatorContext) {

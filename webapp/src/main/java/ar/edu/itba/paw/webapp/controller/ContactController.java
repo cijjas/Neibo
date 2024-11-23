@@ -86,7 +86,8 @@ public class ContactController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto) {})
+        return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(contactsHashCode)
                 .links(links)

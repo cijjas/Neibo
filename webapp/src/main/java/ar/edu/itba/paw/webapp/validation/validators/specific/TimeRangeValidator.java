@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.specific;
 
 import ar.edu.itba.paw.webapp.dto.EventDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.ValidTimeRangeConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.TimeRangeConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -9,11 +9,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class TimeRangeValidator implements ConstraintValidator<ValidTimeRangeConstraint, EventDto> {
+public class TimeRangeValidator implements ConstraintValidator<TimeRangeConstraint, EventDto> {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("H:mm"); // Handles both `9:00` and `09:00`
 
     @Override
-    public void initialize(ValidTimeRangeConstraint constraintAnnotation) {}
+    public void initialize(TimeRangeConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(EventDto eventForm, ConstraintValidatorContext context) {
@@ -21,14 +22,11 @@ public class TimeRangeValidator implements ConstraintValidator<ValidTimeRangeCon
             return true;
 
         try {
-            // Parse and normalize the times
             LocalTime startTime = parseTime(eventForm.getStartTime());
             LocalTime endTime = parseTime(eventForm.getEndTime());
 
-            // Check if startTime is before endTime
             return startTime.isBefore(endTime);
         } catch (DateTimeParseException e) {
-            // Invalid time format; return false or true based on desired behavior
             return false;
         }
     }

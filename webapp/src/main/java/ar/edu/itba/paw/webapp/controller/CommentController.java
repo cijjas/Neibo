@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
  * # Summary
@@ -83,7 +83,8 @@ public class CommentController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto) {})
+        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(commentsHashCode)
                 .links(links)

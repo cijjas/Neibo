@@ -16,7 +16,8 @@ public class TagsValidator implements ConstraintValidator<TagsConstraint, String
     private MessageSource messageSource;
 
     @Override
-    public void initialize(TagsConstraint tagsConstraint) {}
+    public void initialize(TagsConstraint tagsConstraint) {
+    }
 
     @Override
     public boolean isValid(String tag, ConstraintValidatorContext context) {
@@ -53,8 +54,6 @@ public class TagsValidator implements ConstraintValidator<TagsConstraint, String
                     .disableDefaultConstraintViolation();
             return false;
         }
-
-
         return true; // Tag is valid
     }
 }

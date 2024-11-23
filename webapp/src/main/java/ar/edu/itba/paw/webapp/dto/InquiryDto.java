@@ -3,7 +3,10 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -89,15 +92,15 @@ public class InquiryDto {
         return questionMessage;
     }
 
+    public void setQuestionMessage(String questionMessage) {
+        this.questionMessage = questionMessage;
+    }
+
     public String getReplyMessage() {
         return replyMessage;
     }
 
     public void setReplyMessage(String replyMessage) {
         this.replyMessage = replyMessage;
-    }
-
-    public void setQuestionMessage(String questionMessage) {
-        this.questionMessage = questionMessage;
     }
 }

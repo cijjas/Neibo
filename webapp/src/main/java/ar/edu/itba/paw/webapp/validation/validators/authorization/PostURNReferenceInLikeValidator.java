@@ -13,7 +13,8 @@ public class PostURNReferenceInLikeValidator implements ConstraintValidator<Post
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(PostURNReferenceInLikeConstraint postURNInLikeFormConstraint) {}
+    public void initialize(PostURNReferenceInLikeConstraint postURNInLikeFormConstraint) {
+    }
 
     @Override
     public boolean isValid(String postURN, ConstraintValidatorContext constraintValidatorContext) {

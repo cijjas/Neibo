@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class UserURNValidator implements ConstraintValidator<UserURNConstraint, String> {
 
@@ -17,7 +17,8 @@ public class UserURNValidator implements ConstraintValidator<UserURNConstraint, 
     private UserService userService;
 
     @Override
-    public void initialize(UserURNConstraint constraintAnnotation) {}
+    public void initialize(UserURNConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext context) {

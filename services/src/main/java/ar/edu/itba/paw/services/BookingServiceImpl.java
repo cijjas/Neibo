@@ -34,23 +34,12 @@ public class BookingServiceImpl implements BookingService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public Booking createBooking(long user, long amenity, long shift, String reservationDate) {
+    public Booking createBooking(long user, long amenity, long shift, Date reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenity, reservationDate, user);
-
-        // Check Date Format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setLenient(false);
-        Date parsedDate;
-        try {
-            parsedDate = dateFormat.parse(reservationDate);
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Invalid Date Format. Please use YYYY-MM-DD.");
-        }
-        java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
 
         Availability availability = availabilityDao.findAvailability(amenity, shift).orElseThrow(() -> new NotFoundException("Availability not found."));
 
-        return bookingDao.createBooking(user, availability.getAmenityAvailabilityId(), parsedSqlDate);
+        return bookingDao.createBooking(user, availability.getAmenityAvailabilityId(), reservationDate);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

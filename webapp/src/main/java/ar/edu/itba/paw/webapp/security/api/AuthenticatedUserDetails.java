@@ -15,8 +15,8 @@ import java.util.Set;
 public final class AuthenticatedUserDetails implements UserDetails, CredentialsContainer {
 
     private final String username;
-    private String password;
     private final Set<GrantedAuthority> authorities;
+    private String password;
 
     private AuthenticatedUserDetails(String username, String password, Set<GrantedAuthority> authorities) {
         this.username = username;

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class PostURNValidator implements ConstraintValidator<PostURNConstraint, String> {
 
@@ -17,7 +17,8 @@ public class PostURNValidator implements ConstraintValidator<PostURNConstraint, 
     private PostService postService;
 
     @Override
-    public void initialize(PostURNConstraint constraintAnnotation) {}
+    public void initialize(PostURNConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(String postURN, ConstraintValidatorContext context) {

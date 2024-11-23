@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 /*
  * # Summary
@@ -72,7 +72,8 @@ public class ResourceController {
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto) {})
+        return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(resourcesHashCode)
                 .build();

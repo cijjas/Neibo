@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 /*
  * # Summary
@@ -113,7 +113,8 @@ public class AffiliationController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {})
+        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(affiliationsHashCode)
                 .links(links)

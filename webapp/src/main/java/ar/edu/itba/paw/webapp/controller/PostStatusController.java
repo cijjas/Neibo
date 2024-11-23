@@ -60,7 +60,8 @@ public class PostStatusController {
                 .map(tt -> PostStatusDto.fromPostStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto) {})
+        return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(postStatusesHashCode)
                 .build();

@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthHelper {
-    Authentication getAuthentication(){
+    Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
@@ -20,23 +20,23 @@ public class AuthHelper {
         return authentication == null || authentication instanceof AnonymousAuthenticationToken;
     }
 
-    boolean isAdministrator(Authentication authentication){
+    boolean isAdministrator(Authentication authentication) {
         return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_ADMINISTRATOR.name()));
     }
 
-    boolean isSuperAdministrator(Authentication authentication){
+    boolean isSuperAdministrator(Authentication authentication) {
         return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_SUPER_ADMINISTRATOR.name()));
     }
 
-    long getRequestingUserId(Authentication authentication){
+    long getRequestingUserId(Authentication authentication) {
         return getRequestingUser(authentication).getUserId();
     }
 
-    long getRequestingUserNeighborhoodId(Authentication authentication){
+    long getRequestingUserNeighborhoodId(Authentication authentication) {
         return getRequestingUser(authentication).getNeighborhoodId();
     }
 
-    UserAuth getRequestingUser(Authentication authentication){
+    UserAuth getRequestingUser(Authentication authentication) {
         return (UserAuth) authentication.getPrincipal();
     }
 }

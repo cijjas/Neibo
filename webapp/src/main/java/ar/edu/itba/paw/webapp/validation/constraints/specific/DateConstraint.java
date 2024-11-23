@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.constraints.specific;
 
 
-import ar.edu.itba.paw.webapp.validation.validators.specific.ReservationDateValidator;
+import ar.edu.itba.paw.webapp.validation.validators.specific.DateValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -11,9 +11,9 @@ import java.lang.annotation.RetentionPolicy;
 
 
 @Documented
-@Constraint(validatedBy = ReservationDateValidator.class)
+@Constraint(validatedBy = DateValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReservationDateConstraint {
+public @interface DateConstraint {
     String message() default "Invalid Reservation Date";
 
     Class<?>[] groups() default {};

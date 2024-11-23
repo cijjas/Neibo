@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
 
 /*
  * # Summary
@@ -70,7 +70,8 @@ public class ShiftController {
                 .map(s -> ShiftDto.fromShift(s, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
+        return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(shiftsHashCode)
                 .build();

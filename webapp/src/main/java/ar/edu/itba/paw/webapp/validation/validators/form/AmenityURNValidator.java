@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractTwoId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class AmenityURNValidator implements ConstraintValidator<AmenityURNConstraint, String> {
 
@@ -18,7 +18,8 @@ public class AmenityURNValidator implements ConstraintValidator<AmenityURNConstr
     private AmenityService amenityService;
 
     @Override
-    public void initialize(AmenityURNConstraint amenityURNConstraint) {}
+    public void initialize(AmenityURNConstraint amenityURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String amenityURN, ConstraintValidatorContext constraintValidatorContext) {

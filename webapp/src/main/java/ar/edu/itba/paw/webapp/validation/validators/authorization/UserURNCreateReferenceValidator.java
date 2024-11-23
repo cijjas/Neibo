@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.authorization;
 
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
-import ar.edu.itba.paw.webapp.auth.PathAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,7 +13,8 @@ public class UserURNCreateReferenceValidator implements ConstraintValidator<User
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(UserURNCreateReferenceConstraint userURNReferenceConstraintCreate) {}
+    public void initialize(UserURNCreateReferenceConstraint userURNReferenceConstraintCreate) {
+    }
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {

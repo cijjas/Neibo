@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.*;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
  * # Summary
@@ -99,7 +99,8 @@ public class RequestController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {})
+        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {
+                })
                 .links(links)
                 .tag(requestsHashCode)
                 .cacheControl(cacheControl)

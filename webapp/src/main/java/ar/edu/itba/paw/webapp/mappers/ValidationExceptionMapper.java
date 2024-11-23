@@ -12,7 +12,7 @@ import javax.ws.rs.ext.Provider;
 
 
 @Provider
-public class ValidationExceptionMapper  implements ExceptionMapper<ValidationException> {
+public class ValidationExceptionMapper implements ExceptionMapper<ValidationException> {
 
     @Context
     private UriInfo uriInfo;

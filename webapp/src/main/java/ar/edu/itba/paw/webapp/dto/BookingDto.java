@@ -5,13 +5,18 @@ import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreate
 import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.ReservationDateConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.BookingDateConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.Specific;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
+@BookingDateConstraint
 public class BookingDto {
 
     @NotNull(groups = Null.class)
@@ -23,7 +28,7 @@ public class BookingDto {
     private String shift; // http://localhost:8080/shifts/{shiftId}
 
     @NotNull(groups = Null.class)
-    @ReservationDateConstraint(groups = Specific.class)
+    @DateConstraint(groups = Specific.class)
     private String reservationDate;
 
     @NotNull(groups = Null.class)

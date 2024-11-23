@@ -8,12 +8,13 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.LanguageURNConstraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class LanguageURNValidator implements ConstraintValidator<LanguageURNConstraint, String> {
 
     @Override
-    public void initialize(LanguageURNConstraint languageURNConstraint) {}
+    public void initialize(LanguageURNConstraint languageURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String languageURN, ConstraintValidatorContext constraintValidatorContext) {
@@ -23,7 +24,7 @@ public class LanguageURNValidator implements ConstraintValidator<LanguageURNCons
             return false;
         try {
             Language.fromId(extractFirstId(languageURN));
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return false;
         }
         return true;

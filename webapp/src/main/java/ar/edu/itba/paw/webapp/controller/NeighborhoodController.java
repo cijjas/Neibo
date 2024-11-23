@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 /*
  * # Summary
@@ -88,7 +88,8 @@ public class NeighborhoodController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto) {})
+        return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(neighborhoodsHashCode)
                 .links(links)

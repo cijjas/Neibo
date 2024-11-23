@@ -13,7 +13,8 @@ public class WorkerURNInAffiliationFormValidator implements ConstraintValidator<
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(WorkerURNReferenceInAffiliationConstraint workerURNInAffiliationFormConstraint) {}
+    public void initialize(WorkerURNReferenceInAffiliationConstraint workerURNInAffiliationFormConstraint) {
+    }
 
     @Override
     public boolean isValid(String workerURN, ConstraintValidatorContext constraintValidatorContext) {

@@ -58,7 +58,8 @@ public class ProductStatusController {
                 .map(tt -> ProductStatusDto.fromProductStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ProductStatusDto>>(productStatusDto) {})
+        return Response.ok(new GenericEntity<List<ProductStatusDto>>(productStatusDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(productStatusesHashCode)
                 .build();

@@ -59,7 +59,8 @@ public class TransactionTypeController {
                 .map(tt -> TransactionTypeDto.fromTransactionType(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<TransactionTypeDto>>(transactionDto) {})
+        return Response.ok(new GenericEntity<List<TransactionTypeDto>>(transactionDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(transactionTypesHashCode)
                 .build();

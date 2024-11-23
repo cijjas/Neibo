@@ -13,7 +13,8 @@ public class ProductURNInRequestValidator implements ConstraintValidator<Product
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(ProductURNInRequestConstraint productURNInRequestFormConstraint) {}
+    public void initialize(ProductURNInRequestConstraint productURNInRequestFormConstraint) {
+    }
 
     @Override
 

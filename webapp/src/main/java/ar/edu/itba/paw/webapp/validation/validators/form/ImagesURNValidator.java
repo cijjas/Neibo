@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class ImagesURNValidator implements ConstraintValidator<ImagesURNConstraint, List<String>> {
 
@@ -17,13 +17,14 @@ public class ImagesURNValidator implements ConstraintValidator<ImagesURNConstrai
     private ImageService imageService;
 
     @Override
-    public void initialize(ImagesURNConstraint imagesURNConstraint) {}
+    public void initialize(ImagesURNConstraint imagesURNConstraint) {
+    }
 
     @Override
     public boolean isValid(List<String> imagesURNs, ConstraintValidatorContext constraintValidatorContext) {
         if (imagesURNs == null)
             return true;
-        for (String imageURN : imagesURNs){
+        for (String imageURN : imagesURNs) {
             if (!URNValidator.validateURN(imageURN, "images"))
                 return false;
             if (!imageService.findImage(extractFirstId(imageURN)).isPresent())

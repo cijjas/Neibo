@@ -13,7 +13,8 @@ public class WorkerRoleURNReferenceInAffiliationValidator implements ConstraintV
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(WorkerRoleURNReferenceInAffiliationConstraint constraintAnnotation) {}
+    public void initialize(WorkerRoleURNReferenceInAffiliationConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(String workerRole, ConstraintValidatorContext context) {

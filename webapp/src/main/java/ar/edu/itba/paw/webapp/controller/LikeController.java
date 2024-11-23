@@ -22,8 +22,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractOptionalSecondId;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
  * # Summary
@@ -99,7 +99,8 @@ public class LikeController {
                 page,
                 size);
 
-        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {})
+        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(likesHashCode)

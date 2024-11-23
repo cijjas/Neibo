@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class WorkerURNValidator implements ConstraintValidator<WorkerURNConstraint, String> {
 
@@ -16,7 +16,8 @@ public class WorkerURNValidator implements ConstraintValidator<WorkerURNConstrai
     private WorkerService workerService;
 
     @Override
-    public void initialize(WorkerURNConstraint constraintAnnotation) {}
+    public void initialize(WorkerURNConstraint constraintAnnotation) {
+    }
 
     @Override
     public boolean isValid(String workerURN, ConstraintValidatorContext context) {

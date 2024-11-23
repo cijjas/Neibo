@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
  * # Summary
@@ -87,7 +87,8 @@ public class InquiryController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto) {})
+        return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto) {
+                })
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(inquiriesHashCode)

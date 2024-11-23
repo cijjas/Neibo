@@ -8,13 +8,14 @@ import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerRoleURNConstrain
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import static ar.edu.itba.paw.webapp.validation.ValidationUtils.extractFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 
 public class WorkerRoleURNValidator implements ConstraintValidator<WorkerRoleURNConstraint, String> {
 
     @Override
-    public void initialize(WorkerRoleURNConstraint workerRoleURNConstraint) {}
+    public void initialize(WorkerRoleURNConstraint workerRoleURNConstraint) {
+    }
 
     @Override
     public boolean isValid(String workerRoleURN, ConstraintValidatorContext constraintValidatorContext) {
@@ -24,7 +25,7 @@ public class WorkerRoleURNValidator implements ConstraintValidator<WorkerRoleURN
             return false;
         try {
             WorkerRole.fromId(extractFirstId(workerRoleURN));
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             return false;
         }
         return true;

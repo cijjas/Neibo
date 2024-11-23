@@ -6,7 +6,10 @@ import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreate
 import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.Authorization;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.URN;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;

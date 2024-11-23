@@ -2,11 +2,14 @@ package ar.edu.itba.paw.webapp.validation;
 
 import ar.edu.itba.paw.models.TwoId;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
-public class ValidationUtils {
+public class ExtractionUtils {
     public static long extractFirstId(String URN) {
         String[] URNParts = URN.split("/");
         if (URNParts.length < 5) { // Check if there are enough parts for an ID
@@ -44,28 +47,37 @@ public class ValidationUtils {
         return Long.parseLong(URNParts[6]);
     }
 
-    public static long extractSecondId(String URN){
+    public static long extractSecondId(String URN) {
         String[] URNParts = URN.split("/");
         if (URNParts.length < 7)
             throw new IllegalArgumentException("Invalid URN format.");
         return Long.parseLong(URNParts[6]);
     }
 
-    public static List<Long> extractFirstIds(List<String> URNs){
+    public static List<Long> extractFirstIds(List<String> URNs) {
         List<Long> ids = new ArrayList<>();
         if (URNs == null || URNs.isEmpty())
             return Collections.emptyList();
         for (String URN : URNs)
-            ids.add(ValidationUtils.extractFirstId(URN));
+            ids.add(ExtractionUtils.extractFirstId(URN));
         return ids;
     }
 
-    public static List<Long> extractSecondIds(List<String> URNs){
+    public static List<Long> extractSecondIds(List<String> URNs) {
         List<Long> ids = new ArrayList<>();
         if (URNs == null || URNs.isEmpty())
             return Collections.emptyList();
         for (String URN : URNs)
-            ids.add(ValidationUtils.extractSecondId(URN));
+            ids.add(ExtractionUtils.extractSecondId(URN));
         return ids;
+    }
+
+    public static Date extractDate(String date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid Date");
+        }
     }
 }

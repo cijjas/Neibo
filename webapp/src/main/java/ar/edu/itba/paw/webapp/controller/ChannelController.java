@@ -84,7 +84,8 @@ public class ChannelController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto) {})
+        return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(channelsHashCode)
                 .links(links)

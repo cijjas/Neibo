@@ -63,7 +63,8 @@ public class DepartmentController {
                 .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<DepartmentDto>>(departmentDto) {})
+        return Response.ok(new GenericEntity<List<DepartmentDto>>(departmentDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(departmentsHashCode)
                 .build();
