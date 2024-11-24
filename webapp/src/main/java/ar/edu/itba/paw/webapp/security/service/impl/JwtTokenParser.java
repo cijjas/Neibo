@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.security.service.impl;
 
 import ar.edu.itba.paw.enums.Authority;
-import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
-import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
+import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.enums.TokenType;
 import ar.edu.itba.paw.webapp.security.exception.InvalidAuthenticationTokenException;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;

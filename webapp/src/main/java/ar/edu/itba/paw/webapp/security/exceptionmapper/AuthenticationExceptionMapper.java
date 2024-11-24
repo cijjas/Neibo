@@ -1,29 +1,30 @@
-package ar.edu.itba.paw.webapp.mappersJax;
+package ar.edu.itba.paw.webapp.security.exceptionmapper;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
+import org.springframework.security.core.AuthenticationException;
 
-import javax.ws.rs.NotAllowedException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class NotAllowedExceptionMapper implements ExceptionMapper<NotAllowedException> {
+public class AuthenticationExceptionMapper implements ExceptionMapper<AuthenticationException> {
 
     @Context
     private UriInfo uriInfo;
 
     @Override
-    public Response toResponse(NotAllowedException exception) {
-        Response.Status status = Response.Status.METHOD_NOT_ALLOWED;
+    public Response toResponse(AuthenticationException exception) {
+        Status status = Status.FORBIDDEN;
 
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setStatus(status.getStatusCode());
         errorDetails.setTitle(status.getReasonPhrase());
-        errorDetails.setMessage("Method not allowed for the requested resource.");
+        errorDetails.setMessage(exception.getMessage());
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
 
         return Response.status(status).entity(errorDetails).type(MediaType.APPLICATION_JSON).build();

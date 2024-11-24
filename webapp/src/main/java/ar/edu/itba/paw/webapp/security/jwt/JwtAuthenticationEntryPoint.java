@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.security.api.jwt;
+package ar.edu.itba.paw.webapp.security.jwt;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import ar.edu.itba.paw.webapp.security.exception.InvalidAuthenticationTokenException;
@@ -34,7 +34,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        LOGGER.info("Handling Authentication Exception");
+        LOGGER.debug("Handling Authentication Exception");
 
         HttpStatus status = authException instanceof InvalidAuthenticationTokenException ||
                 authException instanceof InvalidTokenTypeException
@@ -47,7 +47,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        LOGGER.info("Handling Access Denied Exception");
+        LOGGER.debug("Handling Access Denied Exception");
 
         HttpStatus status = HttpStatus.FORBIDDEN;
         ApiErrorDetails errorDetails = createErrorDetails(status.getReasonPhrase(), accessDeniedException, status, request);

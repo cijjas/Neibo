@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.webapp.auth.UserDetailsService;
-import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationEntryPoint;
-import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationProvider;
-import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationTokenFilter;
+import ar.edu.itba.paw.webapp.security.UserDetailsService;
+import ar.edu.itba.paw.webapp.security.jwt.JwtAuthenticationEntryPoint;
+import ar.edu.itba.paw.webapp.security.jwt.JwtAuthenticationProvider;
+import ar.edu.itba.paw.webapp.security.jwt.JwtAuthenticationTokenFilter;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,6 +62,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
@@ -188,47 +194,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 )
 
                 .anyRequest().denyAll();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return (request, response, authentication) -> {
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-            for (GrantedAuthority authority : authorities) {
-                String authorityName = authority.getAuthority();
-
-                switch (authorityName) {
-                    case "ROLE_UNVERIFIED_NEIGHBOR":
-                        String unverifiedRedirectUrl = request.getContextPath() + "/unverified";
-                        response.sendRedirect(unverifiedRedirectUrl);
-                        return;
-                    case "ROLE_WORKER":
-                        String workerRedirectUrl = request.getContextPath() + "/services";
-                        response.sendRedirect(workerRedirectUrl);
-                        return;
-                    case "ROLE_REJECTED":
-                        String rejectedRedirectUrl = request.getContextPath() + "/rejected";
-                        response.sendRedirect(rejectedRedirectUrl);
-                        return;
-                }
-            }
-
-            String defaultRedirectUrl = request.getContextPath() + "/";
-            response.sendRedirect(defaultRedirectUrl);
-        };
-    }
-
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Override
-    public void configure(final WebSecurity web) {
-        web.ignoring()
-                .antMatchers("/postImages/*", "/resources/**", "/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
     }
 
     @Bean

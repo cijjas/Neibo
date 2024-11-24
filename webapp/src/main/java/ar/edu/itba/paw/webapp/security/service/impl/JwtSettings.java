@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.security.service.impl;
 
-import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

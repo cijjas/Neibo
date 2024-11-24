@@ -1,7 +1,7 @@
-package ar.edu.itba.paw.webapp.security.api.jwt;
+package ar.edu.itba.paw.webapp.security.jwt;
 
-import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
-import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
+import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.enums.TokenType;
 import ar.edu.itba.paw.webapp.security.exception.InvalidTokenTypeException;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        LOGGER.info("Authenticating Token through the JWT Authentication Provider");
+        LOGGER.debug("Authenticating Token through the JWT Authentication Provider");
 
         String authenticationToken = (String) authentication.getCredentials();
         AuthenticationTokenDetails authenticationTokenDetails = authenticationTokenService.parseToken(authenticationToken);
@@ -37,7 +37,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationTokenDetails.getUsername());
 
-        LOGGER.info("UserForm Authorities : {}", userDetails.getAuthorities());
+        LOGGER.debug("UserForm Authorities : {}", userDetails.getAuthorities());
 
         return new JwtAuthenticationToken(userDetails, authenticationTokenDetails, userDetails.getAuthorities());
     }

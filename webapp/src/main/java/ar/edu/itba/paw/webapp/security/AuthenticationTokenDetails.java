@@ -1,8 +1,8 @@
-package ar.edu.itba.paw.webapp.security.api;
+package ar.edu.itba.paw.webapp.security;
 
 
 import ar.edu.itba.paw.enums.Authority;
-import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
+import ar.edu.itba.paw.webapp.security.enums.TokenType;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class AuthenticationTokenDetails {
-
 
     private TokenType tokenType;
     private final String id;

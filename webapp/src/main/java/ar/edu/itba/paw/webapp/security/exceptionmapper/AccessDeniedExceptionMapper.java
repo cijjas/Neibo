@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.security.api.exceptionmapper;
+package ar.edu.itba.paw.webapp.security.exceptionmapper;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import org.springframework.security.access.AccessDeniedException;

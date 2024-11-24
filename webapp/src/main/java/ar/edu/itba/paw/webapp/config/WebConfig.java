@@ -78,16 +78,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public ViewResolver viewResolver() {
-        final InternalResourceViewResolver vr = new InternalResourceViewResolver();
-        vr.setViewClass(JstlView.class);
-        vr.setPrefix("/WEB-INF/jsp/");
-        vr.setSuffix(".jsp");
-        return vr;
-    }
-
-
-    @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
@@ -124,21 +114,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return new JpaTransactionManager(emf);
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        super.addResourceHandlers(registry);
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/")
-                .setCacheControl(CacheControl.maxAge(120, TimeUnit.SECONDS)
-                        .noTransform()
-                        .mustRevalidate());
-    }
-
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
         dsi.setDataSource(ds);
         dsi.setDatabasePopulator(databasePopulator());
-
         return dsi;
     }
 
@@ -167,7 +147,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
-    //------------------------------------ EMAIL CONFIG ------------------------------------------
+    //---------------------------------------------- EMAIL CONFIG ------------------------------------------------------
 
     @Bean
     public JavaMailSender getJavaMailSender() {

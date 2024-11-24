@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.security.service;
 
 
 import ar.edu.itba.paw.enums.Authority;
-import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
 
 import java.util.Set;
 

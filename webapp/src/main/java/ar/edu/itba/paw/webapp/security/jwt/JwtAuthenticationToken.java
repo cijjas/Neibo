@@ -1,6 +1,6 @@
-package ar.edu.itba.paw.webapp.security.api.jwt;
+package ar.edu.itba.paw.webapp.security.jwt;
 
-import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

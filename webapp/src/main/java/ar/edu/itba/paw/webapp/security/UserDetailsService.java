@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.auth;
+package ar.edu.itba.paw.webapp.security;
 
 import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.exceptions.NotFoundException;
@@ -31,7 +31,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws NotFoundException {
-        LOGGER.info("Loading user with mail {}", mail);
+        LOGGER.debug("Loading user with mail {}", mail);
 
         final User n = us.findUser(mail).orElseThrow(() -> new NotFoundException("User not found"));
         final Set<GrantedAuthority> authorities = new HashSet<>();

@@ -1,9 +1,9 @@
-package ar.edu.itba.paw.webapp.security.api.jwt;
+package ar.edu.itba.paw.webapp.security.jwt;
 
 import ar.edu.itba.paw.enums.Authority;
-import ar.edu.itba.paw.webapp.auth.UserAuth;
-import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
-import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
+import ar.edu.itba.paw.webapp.security.UserAuth;
+import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.enums.TokenType;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        LOGGER.info("JWT Authentication Token Filter activated");
+        LOGGER.debug("JWT Authentication Token Filter activated");
 
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader != null) {
@@ -67,7 +67,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             if (!handleRefreshToken(refreshHeader, request, response))
                 return;
 
-        LOGGER.info("Filter Chaining");
+        LOGGER.debug("Continuing Filter Chain");
         filterChain.doFilter(request, response);
     }
 
@@ -109,11 +109,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     userAuth.getNeighborhoodId(), userAuth.getUserId());
             response.addHeader("X-User-URN", Link.fromUri(fullURL).rel("urn").build().toString());
         } catch (AuthenticationException e) {
-            // Clear security context and invoke authentication entry point on failure
+            LOGGER.debug("Invalid Basic Authentication provided");
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
             return false;
         }
+        LOGGER.debug("Valid Basic Authentication provided");
         return true;
     }
 
@@ -128,10 +129,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             context.setAuthentication(authenticationResult);
             SecurityContextHolder.setContext(context);
         } catch (AuthenticationException e) {
+            LOGGER.debug("Invalid access token provided");
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
             return false;
         }
+        LOGGER.debug("Valid access token provided");
         return true;
     }
 
@@ -153,17 +156,17 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String newAccessToken = authenticationTokenService.issueAccessToken(tokenDetails.getUsername(), tokenDetails.getAuthorities());
             response.addHeader("X-JSON-Web-Token", "Bearer " + newAccessToken);
 
-            LOGGER.info("Refresh token successfully processed for user: {}", tokenDetails.getUsername());
         } catch (AuthenticationException e) {
-            LOGGER.error("Error processing refresh token", e);
+            LOGGER.debug("Error processing refresh token", e);
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
             return false;
         } catch (IllegalArgumentException e) {
-            LOGGER.error("Invalid refresh token provided", e);
+            LOGGER.debug("Invalid refresh token provided", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid refresh token");
             return false;
         }
+        LOGGER.debug("Valid refresh token provided");
         return true;
     }
 }
