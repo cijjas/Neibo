@@ -113,7 +113,7 @@ public class UserController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         // Content
-        User user = us.findUser(id, neighborhoodId).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new);
         String userHashCode = String.valueOf(user.hashCode());
 
         // Cache Control

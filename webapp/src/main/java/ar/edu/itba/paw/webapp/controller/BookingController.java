@@ -112,7 +112,7 @@ public class BookingController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
-        Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found"));
+        Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new);
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Cache Control

@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProductPartially(long productId, String name, String description, Double price, Boolean used, Long departmentId, List<Long> imageIds, Long stock) {
         LOGGER.info("Updating Product {}", productId);
 
-        Product product = findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        Product product = findProduct(productId).orElseThrow(NotFoundException::new);
 
         if (name != null)
             product.setName(name);
@@ -94,16 +94,16 @@ public class ProductServiceImpl implements ProductService {
         if (used != null)
             product.setUsed(used);
         if (departmentId!= null)
-            product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(() -> new NotFoundException("Department Not Found")));
+            product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(NotFoundException::new));
         if (stock != null)
             product.setRemainingUnits(stock);
 
         if (imageIds != null && !imageIds.isEmpty()) {
-            product.setPrimaryPicture(imageService.findImage(imageIds.get(0)).orElseThrow(() -> new NotFoundException("Image Not Found")));
+            product.setPrimaryPicture(imageService.findImage(imageIds.get(0)).orElseThrow(NotFoundException::new));
             if (imageIds.size() > 1)
-                product.setSecondaryPicture(imageService.findImage(imageIds.get(1)).orElseThrow(() -> new NotFoundException("Image Not Found")));
+                product.setSecondaryPicture(imageService.findImage(imageIds.get(1)).orElseThrow(NotFoundException::new));
             if (imageIds.size() > 2)
-                product.setTertiaryPicture(imageService.findImage(imageIds.get(2)).orElseThrow(() -> new NotFoundException("Image Not Found")));
+                product.setTertiaryPicture(imageService.findImage(imageIds.get(2)).orElseThrow(NotFoundException::new));
         }
 
         return product;

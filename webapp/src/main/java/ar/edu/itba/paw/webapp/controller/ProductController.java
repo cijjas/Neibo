@@ -113,7 +113,7 @@ public class ProductController {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Content
-        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product not found"));
+        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new);
         String productHashCode = String.valueOf(product.hashCode());
 
         // Cache Control

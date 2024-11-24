@@ -102,7 +102,7 @@ public class ChannelController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
         // Content
-        Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(() -> new NotFoundException("Channel Not Found"));
+        Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
         String channelHashCode = String.valueOf(channel.hashCode());
 
         // Cache Control

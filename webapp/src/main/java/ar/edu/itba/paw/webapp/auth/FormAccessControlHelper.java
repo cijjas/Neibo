@@ -140,7 +140,7 @@ public class FormAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Product p = prs.findProduct(extractSecondId(productURN)).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        Product p = prs.findProduct(extractSecondId(productURN)).orElseThrow(NotFoundException::new);
         return p.getSeller().getUserId() != authHelper.getRequestingUserId(authentication);
     }
 }

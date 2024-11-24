@@ -37,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
     public Booking createBooking(long user, long amenity, long shift, Date reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenity, reservationDate, user);
 
-        Availability availability = availabilityDao.findAvailability(amenity, shift).orElseThrow(() -> new NotFoundException("Availability not found."));
+        Availability availability = availabilityDao.findAvailability(amenity, shift).orElseThrow(NotFoundException::new);
 
         return bookingDao.createBooking(user, availability.getAmenityAvailabilityId(), reservationDate);
     }

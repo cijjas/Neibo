@@ -106,7 +106,7 @@ public class AmenityServiceImpl implements AmenityService {
     public Amenity updateAmenityPartially(long amenityId, String name, String description, List<Long> shiftIds) {
         LOGGER.info("Updating Amenity {}", amenityId);
 
-        Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(() -> new NotFoundException("Amenity Not Found"));
+        Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(NotFoundException::new);
         if (name != null && !name.isEmpty())
             amenity.setName(name);
         if (description != null && !description.isEmpty())

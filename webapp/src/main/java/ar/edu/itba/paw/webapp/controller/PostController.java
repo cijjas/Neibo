@@ -117,7 +117,7 @@ public class PostController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
         // Content
-        Post post = ps.findPost(postId, neighborhoodId).orElseThrow(() -> new NotFoundException("Post not found"));
+        Post post = ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
         String postHashCode = String.valueOf(post.hashCode());
 
         // Cache Control

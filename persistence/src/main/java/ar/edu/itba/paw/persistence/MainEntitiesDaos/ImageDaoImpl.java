@@ -32,7 +32,6 @@ public class ImageDaoImpl implements ImageDao {
             // Read the input stream into a byte array
             imageBytes = IOUtils.toByteArray(imageStream);
         } catch (IOException e) {
-            LOGGER.error("Error reading Image InputStream", e);
             throw new UnexpectedException("An error occurred while storing the image");
         }
 

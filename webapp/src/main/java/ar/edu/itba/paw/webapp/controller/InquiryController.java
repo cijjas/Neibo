@@ -106,7 +106,7 @@ public class InquiryController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Content
-        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Inquiry not found"));
+        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new);
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Cache Control

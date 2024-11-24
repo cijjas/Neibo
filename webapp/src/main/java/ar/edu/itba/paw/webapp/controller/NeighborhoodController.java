@@ -105,7 +105,7 @@ public class NeighborhoodController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", neighborhoodId);
 
         // Content
-        Neighborhood neighborhood = ns.findNeighborhood(neighborhoodId).orElseThrow(() -> new NotFoundException("Neighborhood not found"));
+        Neighborhood neighborhood = ns.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
         String neighborhoodHashCode = String.valueOf(neighborhood.hashCode());
 
         // Cache Control

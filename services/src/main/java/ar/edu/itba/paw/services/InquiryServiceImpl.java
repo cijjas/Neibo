@@ -39,8 +39,8 @@ public class InquiryServiceImpl implements InquiryService {
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.info("Creating Inquiry for Product {} from User {}", productId, userId);
 
-        // Send email to seller, product will always exist due to validation in previous layer
-        Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        // Send email to seller
+        Product product = productDao.findProduct(productId).orElseThrow(NotFoundException::new);
         User receiver = product.getSeller();
         emailService.sendInquiryMail(receiver, product, message, false);
 
@@ -87,7 +87,7 @@ public class InquiryServiceImpl implements InquiryService {
         LOGGER.info("Creating a reply for Inquiry {}", inquiryId);
 
         //Send email to inquirer
-        Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));
+        Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(NotFoundException::new);
         inquiry.setReply(reply);
 
         Product product = inquiry.getProduct();

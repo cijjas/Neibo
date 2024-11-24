@@ -67,7 +67,7 @@ public class ResourceServiceImpl implements ResourceService {
     public Resource updateResource(long resourceId, String title, String description, Long imageId) {
         LOGGER.info("Updating Resource {}", resourceId);
 
-        Resource resource = findResource(resourceId).orElseThrow(() -> new NotFoundException("Resource Not Found"));
+        Resource resource = findResource(resourceId).orElseThrow(NotFoundException::new);
 
         if (title != null && !title.isEmpty())
             resource.setTitle(title);
@@ -75,7 +75,7 @@ public class ResourceServiceImpl implements ResourceService {
             resource.setDescription(description);
 
         if (imageId != null) {
-            Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
+            Image i = imageService.findImage(imageId).orElseThrow(NotFoundException::new);
             resource.setImage(i);
         }
 

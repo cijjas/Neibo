@@ -51,7 +51,7 @@ public class ImageController {
         LOGGER.info("GET request arrived at '/images/{}'", imageId);
 
         // Content
-        Image image = is.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
+        Image image = is.findImage(imageId).orElseThrow(NotFoundException::new);
         String imageHashCode = String.valueOf(image.hashCode());
 
         // Cache Control

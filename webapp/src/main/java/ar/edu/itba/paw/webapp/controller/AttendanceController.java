@@ -103,7 +103,7 @@ public class AttendanceController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
         // Content
-        Attendance attendance = as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Attendance Not Found"));
+        Attendance attendance = as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new);
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Cache Control

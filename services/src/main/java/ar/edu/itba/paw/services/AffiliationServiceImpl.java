@@ -56,7 +56,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public Affiliation updateAffiliation(long workerId, long neighborhoodId, Long workerRoleId) {
         LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerId, neighborhoodId, workerRoleId);
 
-        Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(() -> new NotFoundException("Affiliation Not Found"));
+        Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(NotFoundException::new);
         if (workerRoleId != null)
             affiliation.setRole(WorkerRole.fromId(workerRoleId));
 

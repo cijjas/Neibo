@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, Long profilePictureId, Integer identification, Long languageId, Long userRoleId) {
         LOGGER.info("Updating User {}", userId);
 
-        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userDao.findUser(userId).orElseThrow(NotFoundException::new);
 
         if (mail != null && !mail.isEmpty())
             user.setMail(mail);
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
         if (phoneNumber != null && !phoneNumber.isEmpty())
             user.setPhoneNumber(phoneNumber);
         if (profilePictureId != null) {
-            Image i = imageService.findImage(profilePictureId).orElseThrow(() -> new NotFoundException("Image not found"));
+            Image i = imageService.findImage(profilePictureId).orElseThrow(NotFoundException::new);
             user.setProfilePicture(i);
         }
         if (identification != null)

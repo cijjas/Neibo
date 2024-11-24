@@ -105,7 +105,7 @@ public class TagController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
         // Content
-        Tag tag = ts.findTag(tagId, neighborhoodId).orElseThrow(() -> new NotFoundException("Tag not found"));
+        Tag tag = ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
         String tagHashCode = String.valueOf(tag.hashCode());
 
         // Cache Control

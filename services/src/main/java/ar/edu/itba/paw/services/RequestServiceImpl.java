@@ -44,8 +44,8 @@ public class RequestServiceImpl implements RequestService {
     public Request createRequest(long userId, long productId, String message, int quantity) {
         LOGGER.info("Creating a Request for Product {} by User {}", productId, userId);
 
-        Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
-        User seller = userDao.findUser(product.getSeller().getUserId()).orElseThrow(() -> new NotFoundException("User not found"));
+        Product product = productDao.findProduct(productId).orElseThrow(NotFoundException::new);
+        User seller = userDao.findUser(product.getSeller().getUserId()).orElseThrow(NotFoundException::new);
         emailService.sendNewRequestMail(product, seller, message);
 
         return requestDao.createRequest(userId, productId, message, quantity);
@@ -99,7 +99,7 @@ public class RequestServiceImpl implements RequestService {
     public Request updateRequest(long requestId, Long requestStatusId) {
         LOGGER.info("Updating Request {} as {}", requestId, requestStatusId);
 
-        Request request = requestDao.findRequest(requestId).orElseThrow(() -> new NotFoundException("Request Not Found"));
+        Request request = requestDao.findRequest(requestId).orElseThrow(NotFoundException::new);
 
         if (requestStatusId != null){
             request.setStatus(RequestStatus.fromId(requestStatusId));

@@ -102,7 +102,7 @@ public class CommentController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
         // Content
-        Comment comment = cs.findComment(commentId, postId, neighborhoodId).orElseThrow(() -> new NotFoundException("Comment Not Found"));
+        Comment comment = cs.findComment(commentId, postId, neighborhoodId).orElseThrow(NotFoundException::new);
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Cache Control

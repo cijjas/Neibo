@@ -86,7 +86,7 @@ public class ShiftController {
         LOGGER.info("GET request arrived at '/shifts/{}'", id);
 
         // Content
-        Shift shift = ss.findShift(id).orElseThrow(() -> new NotFoundException("Shift not found"));
+        Shift shift = ss.findShift(id).orElseThrow(NotFoundException::new);
         String shiftHashCode = String.valueOf(shift.hashCode());
 
         // Cache Control

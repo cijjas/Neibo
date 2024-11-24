@@ -104,7 +104,7 @@ public class ReviewController {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 
         // Content
-        Review review = rs.findReview(id, workerId).orElseThrow(() -> new NotFoundException("Review not found"));
+        Review review = rs.findReview(id, workerId).orElseThrow(NotFoundException::new);
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Cache Control

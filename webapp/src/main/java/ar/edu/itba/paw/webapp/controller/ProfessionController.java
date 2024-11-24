@@ -91,7 +91,7 @@ public class ProfessionController {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
 
         // Content
-        Profession profession = ps.findProfession(id).orElseThrow(() -> new NotFoundException("Profession Not Found"));
+        Profession profession = ps.findProfession(id).orElseThrow(NotFoundException::new);
         String professionHashCode = String.valueOf(profession.hashCode());
 
         // Cache Control

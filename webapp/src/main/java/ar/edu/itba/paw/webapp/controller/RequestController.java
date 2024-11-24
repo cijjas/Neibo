@@ -118,7 +118,7 @@ public class RequestController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
         // Content
-        Request productRequest = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request not found"));
+        Request productRequest = rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new);
         String requestHashCode = String.valueOf(productRequest.hashCode());
 
         // Cache Control

@@ -121,7 +121,7 @@ public class WorkerController {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
         // Content
-        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
+        Worker worker = ws.findWorker(workerId).orElseThrow(NotFoundException::new);
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Cache Control

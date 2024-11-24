@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
@@ -101,7 +102,7 @@ public class AmenityController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Content
-        Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(() -> new ar.edu.itba.paw.exceptions.NotFoundException("Amenity Not Found"));
+        Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new);
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Cache Control

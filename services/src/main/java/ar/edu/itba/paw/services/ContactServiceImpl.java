@@ -72,7 +72,7 @@ public class ContactServiceImpl implements ContactService {
     public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
 
-        Contact contact = findContact(contactId).orElseThrow(() -> new NotFoundException("Contact Not Found"));
+        Contact contact = findContact(contactId).orElseThrow(NotFoundException::new);
 
         if (contactName != null && !contactName.isEmpty())
             contact.setContactName(contactName);

@@ -91,7 +91,8 @@ public class EventServiceImpl implements EventService {
     public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime) {
         LOGGER.info("Updating Event {}", eventId);
 
-        Event event = eventDao.findEvent(eventId).orElseThrow(() -> new NotFoundException("Event Not Found"));
+        Event event = eventDao.findEvent(eventId).orElseThrow(NotFoundException::new);
+
         if (name != null && !name.isEmpty())
             event.setName(name);
         if (description != null && !description.isEmpty())
@@ -128,11 +129,10 @@ public class EventServiceImpl implements EventService {
             startTimeInTime = new Time(parsedStartTime.getTime());
             endTimeInTime = new Time(parsedEndTime.getTime());
         } catch (ParseException e) {
-            LOGGER.error("Error whilst creating the Event");
             throw new UnexpectedException("Unexpected error while creating the Event");
         }
-        OptionalLong startTimeId = getTimeId(startTimeInTime);
-        OptionalLong endTimeId = getTimeId(endTimeInTime);
+        OptionalLong startTimeId = timeDao.findId(startTimeInTime);
+        OptionalLong endTimeId = timeDao.findId(endTimeInTime);
 
         Long[] timeArray = new Long[2];
         if (startTimeId.isPresent() && endTimeId.isPresent()) {
@@ -150,11 +150,5 @@ public class EventServiceImpl implements EventService {
             timeArray[1] = endTimeId.getAsLong();
         }
         return timeArray;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private OptionalLong getTimeId(Time time) {
-        return timeDao.findId(time);
     }
 }

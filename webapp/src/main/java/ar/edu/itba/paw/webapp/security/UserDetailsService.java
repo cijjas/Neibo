@@ -21,19 +21,17 @@ public class UserDetailsService implements org.springframework.security.core.use
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsService.class);
 
     private final UserService us;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserDetailsService(final UserService us, final PasswordEncoder passwordEncoder) {
+    public UserDetailsService(final UserService us) {
         this.us = us;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws NotFoundException {
         LOGGER.debug("Loading user with mail {}", mail);
 
-        final User n = us.findUser(mail).orElseThrow(() -> new NotFoundException("User not found"));
+        final User n = us.findUser(mail).orElseThrow(NotFoundException::new);
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
         // Add roles based on user data from the database

@@ -83,7 +83,7 @@ public class WorkerServiceImpl implements WorkerService {
     public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, Long backgroundPictureId, String bio) {
         LOGGER.info("Updating Worker {}", workerId);
 
-        Worker worker = workerDao.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
+        Worker worker = workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
         if (phoneNumber != null && !phoneNumber.isEmpty())
             worker.setPhoneNumber(phoneNumber);
         if (address != null && !address.isEmpty())
@@ -93,7 +93,7 @@ public class WorkerServiceImpl implements WorkerService {
         if (bio != null && !bio.isEmpty())
             worker.setBio(bio);
         if (backgroundPictureId != null) {
-            Image i = imageService.findImage(backgroundPictureId).orElseThrow(() -> new NotFoundException("Image not found"));
+            Image i = imageService.findImage(backgroundPictureId).orElseThrow(NotFoundException::new);
             worker.setBackgroundPictureId(i.getImageId());
         }
 

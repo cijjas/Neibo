@@ -108,7 +108,7 @@ public class EventController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 
         // Content
-        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Event not found"));
+        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
         String eventHashCode = String.valueOf(event.hashCode());
 
         // Cache Control
