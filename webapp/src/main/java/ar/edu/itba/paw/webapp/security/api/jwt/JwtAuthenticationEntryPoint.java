@@ -54,9 +54,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
         prepareAndWriteResponse(request, response, errorDetails, status);
     }
 
-    /**
-     * Creates an ApiErrorDetails object populated with the error information.
-     */
     private ApiErrorDetails createErrorDetails(String title, Throwable exception, HttpStatus status, HttpServletRequest request) {
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setTitle(title);
@@ -69,9 +66,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
         return errorDetails;
     }
 
-    /**
-     * Determines the response content type and writes the error response.
-     */
     private void prepareAndWriteResponse(HttpServletRequest request, HttpServletResponse response, ApiErrorDetails errorDetails, HttpStatus status) throws IOException {
         response.setStatus(status.value());
 
@@ -81,9 +75,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
         writeResponse(response, errorDetails, contentType);
     }
 
-    /**
-     * Determines the response content type based on the request's Accept header.
-     */
     private String determineContentType(HttpServletRequest request) {
         String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
         if (acceptHeader != null && acceptHeader.contains(MediaType.APPLICATION_XML_VALUE)) {
@@ -92,9 +83,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
         return MediaType.APPLICATION_JSON_VALUE;
     }
 
-    /**
-     * Writes the error details to the response body in the specified format.
-     */
     private void writeResponse(HttpServletResponse response, ApiErrorDetails errorDetails, String contentType) throws IOException {
         String responseBody;
         if (MediaType.APPLICATION_XML_VALUE.equals(contentType)) {

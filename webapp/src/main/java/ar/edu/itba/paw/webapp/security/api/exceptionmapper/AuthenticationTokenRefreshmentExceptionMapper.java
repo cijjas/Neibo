@@ -11,11 +11,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-/**
- * Exception mapper for {@link AuthenticationTokenRefreshmentException}s.
- *
- * @author cassiomolin
- */
 @Provider
 public class AuthenticationTokenRefreshmentExceptionMapper implements ExceptionMapper<AuthenticationTokenRefreshmentException> {
 

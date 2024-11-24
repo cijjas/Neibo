@@ -8,35 +8,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-/**
- * An {@link org.springframework.security.core.Authentication} implementation designed for presentation of a JWT token.
- *
- * @author cassiomolin
- */
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     private String authenticationToken;
     private UserDetails userDetails;
     private AuthenticationTokenDetails authenticationTokenDetails;
 
-    /**
-     * Creates a {@link JwtAuthenticationToken} instance for an unauthenticated token.
-     *
-     * @param authenticationToken
-     */
     public JwtAuthenticationToken(String authenticationToken) {
         super(AuthorityUtils.NO_AUTHORITIES);
         this.authenticationToken = authenticationToken;
         this.setAuthenticated(false);
     }
 
-    /**
-     * Creates a {@link JwtAuthenticationToken} instance for an authenticated token.
-     *
-     * @param userDetails
-     * @param authenticationTokenDetails
-     * @param authorities
-     */
     public JwtAuthenticationToken(UserDetails userDetails, AuthenticationTokenDetails authenticationTokenDetails,
                                   Collection<? extends GrantedAuthority> authorities) {
         super(authorities);

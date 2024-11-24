@@ -28,17 +28,6 @@ import java.util.Base64;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Filter for JWT token-based authentication.
- * <p>
- * Authentication tokens must be sent in the <code>Authorization</code> header and prefixed with <code>Bearer</code>:
- * <p>
- * <pre>
- *     Authorization: Bearer xxx.yyy.zzz
- * </pre>
- *
- * @author cassiomolin
- */
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);

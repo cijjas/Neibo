@@ -1,10 +1,5 @@
 package ar.edu.itba.paw.webapp.security.api.model;
 
-/**
- * API model user credentials.
- *
- * @author cassiomolin
- */
 public class UserCredentials {
 
     private String username;

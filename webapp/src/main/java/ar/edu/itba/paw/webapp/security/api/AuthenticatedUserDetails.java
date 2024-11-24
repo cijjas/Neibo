@@ -9,9 +9,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Default implementation for the {@link UserDetails} interface.
- */
 public final class AuthenticatedUserDetails implements UserDetails, CredentialsContainer {
 
     private final String username;

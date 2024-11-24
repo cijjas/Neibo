@@ -8,23 +8,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-/**
- * Component which provides operations for issuing JWT tokens.
- *
- * @author cassiomolin
- */
 @Component
 public class JwtTokenIssuer {
 
     @Autowired
     private JwtSettings settings;
 
-    /**
-     * Issue a JWT token
-     *
-     * @param authenticationTokenDetails
-     * @return
-     */
     public String issueToken(AuthenticationTokenDetails authenticationTokenDetails) {
 
         return Jwts.builder()

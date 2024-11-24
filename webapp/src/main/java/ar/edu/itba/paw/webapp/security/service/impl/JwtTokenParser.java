@@ -16,23 +16,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Component which provides operations for parsing JWT tokens.
- *
- * @author cassiomolin
- */
 @Component
 public class JwtTokenParser {
 
     @Autowired
     private JwtSettings settings;
 
-    /**
-     * Parse a JWT token.
-     *
-     * @param token
-     * @return
-     */
     public AuthenticationTokenDetails parseToken(String token) {
 
         try {
@@ -62,22 +51,10 @@ public class JwtTokenParser {
         }
     }
 
-    /**
-     * Extract the token identifier from the token claims.
-     *
-     * @param claims
-     * @return Identifier of the JWT token
-     */
     private String extractTokenIdFromClaims(@NotNull Claims claims) {
         return (String) claims.get(Claims.ID);
     }
 
-    /**
-     * Extract the username from the token claims.
-     *
-     * @param claims
-     * @return Username from the JWT token
-     */
     private String extractUsernameFromClaims(@NotNull Claims claims) {
         return claims.getSubject();
     }
@@ -91,33 +68,15 @@ public class JwtTokenParser {
         }
     }
 
-    /**
-     * Extract the user authorities from the token claims.
-     *
-     * @param claims
-     * @return UserForm authorities from the JWT token
-     */
     private Set<Authority> extractAuthoritiesFromClaims(@NotNull Claims claims) {
         List<String> rolesAsString = (List<String>) claims.getOrDefault(settings.getAuthoritiesClaimName(), new ArrayList<>());
         return rolesAsString.stream().map(Authority::valueOf).collect(Collectors.toSet());
     }
 
-    /**
-     * Extract the issued date from the token claims.
-     *
-     * @param claims
-     * @return Issued date of the JWT token
-     */
     private ZonedDateTime extractIssuedDateFromClaims(@NotNull Claims claims) {
         return ZonedDateTime.ofInstant(claims.getIssuedAt().toInstant(), ZoneId.systemDefault());
     }
 
-    /**
-     * Extract the expiration date from the token claims.
-     *
-     * @param claims
-     * @return Expiration date of the JWT token
-     */
     private ZonedDateTime extractExpirationDateFromClaims(@NotNull Claims claims) {
         return ZonedDateTime.ofInstant(claims.getExpiration().toInstant(), ZoneId.systemDefault());
     }

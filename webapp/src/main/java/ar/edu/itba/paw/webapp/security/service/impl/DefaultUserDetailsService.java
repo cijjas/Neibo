@@ -16,11 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Default implementation for the {@link UserDetailsService}.
- *
- * @author cassiomolin
- */
 @Service
 public class DefaultUserDetailsService implements UserDetailsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultUserDetailsService.class);

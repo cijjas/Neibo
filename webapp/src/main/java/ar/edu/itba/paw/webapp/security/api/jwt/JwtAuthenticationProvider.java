@@ -14,11 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-/**
- * Authentication provider for JWT token-based authentication.
- *
- * @author cassiomolin
- */
 @Component
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 

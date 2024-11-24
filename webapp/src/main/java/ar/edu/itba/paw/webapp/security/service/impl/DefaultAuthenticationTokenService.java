@@ -15,11 +15,6 @@ import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Default implementation for the {@link AuthenticationTokenService}.
- *
- * @author cassiomolin
- */
 @Service
 public class DefaultAuthenticationTokenService implements AuthenticationTokenService {
 
@@ -75,11 +70,6 @@ public class DefaultAuthenticationTokenService implements AuthenticationTokenSer
         return tokenParser.parseToken(token);
     }
 
-    /**
-     * Generate a token identifier.
-     *
-     * @return
-     */
     private String generateTokenIdentifier() {
         return UUID.randomUUID().toString();
     }
