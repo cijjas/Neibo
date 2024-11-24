@@ -69,7 +69,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 handleBasicAuthentication(authorizationHeader, request, response);
         }
 
-        System.out.println("Arrived here");
         String refreshHeader = request.getHeader("X-Refresh-Token");
         if (refreshHeader != null)
             handleRefreshToken(refreshHeader, request, response);
@@ -145,7 +144,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                          HttpServletResponse response) throws IOException, ServletException {
         try {
             String refreshToken = refreshHeader.substring(7);
-            System.out.println(refreshToken);
             AuthenticationTokenDetails tokenDetails = authenticationTokenService.parseToken(refreshToken);
 
             if (tokenDetails.getTokenType() != TokenType.REFRESH)

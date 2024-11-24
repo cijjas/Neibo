@@ -20,7 +20,6 @@ public class DuplicateEmailValidator implements ConstraintValidator<EmailConstra
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
         if (email == null)
             return true;
-
-        return userService.findUser(email).isPresent();
+        return !userService.findUser(email).isPresent();
     }
 }

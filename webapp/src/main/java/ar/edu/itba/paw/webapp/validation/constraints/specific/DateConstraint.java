@@ -14,7 +14,7 @@ import java.lang.annotation.RetentionPolicy;
 @Constraint(validatedBy = DateValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DateConstraint {
-    String message() default "Invalid Reservation Date";
+    String message() default "Invalid Date";
 
     Class<?>[] groups() default {};
 
