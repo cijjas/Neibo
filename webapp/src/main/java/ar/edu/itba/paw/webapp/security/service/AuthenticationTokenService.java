@@ -20,7 +20,7 @@ public interface AuthenticationTokenService {
      * @param authorities
      * @return
      */
-    String issueToken(String username, Set<Authority> authorities);
+    String issueAccessToken(String username, Set<Authority> authorities);
 
     /**
      * Parse an authentication token.
@@ -30,11 +30,5 @@ public interface AuthenticationTokenService {
      */
     AuthenticationTokenDetails parseToken(String token);
 
-    /**
-     * Refresh an authentication token.
-     *
-     * @param currentAuthenticationTokenDetails
-     * @return
-     */
-    String refreshToken(AuthenticationTokenDetails currentAuthenticationTokenDetails);
+    String issueRefreshToken(String username, Set<Authority> authorities);
 }

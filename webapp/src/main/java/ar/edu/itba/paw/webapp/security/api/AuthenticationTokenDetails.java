@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.security.api;
 
 
 import ar.edu.itba.paw.enums.Authority;
+import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -15,22 +16,21 @@ import java.util.Set;
  */
 public final class AuthenticationTokenDetails {
 
+
+    private TokenType tokenType;
     private final String id;
     private final String username;
     private final Set<Authority> authorities;
     private final ZonedDateTime issuedDate;
     private final ZonedDateTime expirationDate;
-    private final int refreshCount;
-    private final int refreshLimit;
 
-    private AuthenticationTokenDetails(String id, String username, Set<Authority> authorities, ZonedDateTime issuedDate, ZonedDateTime expirationDate, int refreshCount, int refreshLimit) {
+    private AuthenticationTokenDetails(String id, String username, Set<Authority> authorities, ZonedDateTime issuedDate, ZonedDateTime expirationDate, TokenType tokenType) {
         this.id = id;
         this.username = username;
         this.authorities = authorities;
         this.issuedDate = issuedDate;
         this.expirationDate = expirationDate;
-        this.refreshCount = refreshCount;
-        this.refreshLimit = refreshLimit;
+        this.tokenType = tokenType;
     }
 
     public String getId() {
@@ -53,21 +53,12 @@ public final class AuthenticationTokenDetails {
         return expirationDate;
     }
 
-    public int getRefreshCount() {
-        return refreshCount;
+    public TokenType getTokenType() {
+        return tokenType;
     }
 
-    public int getRefreshLimit() {
-        return refreshLimit;
-    }
-
-    /**
-     * Check if the authentication token is eligible for refreshment.
-     *
-     * @return
-     */
-    public boolean isEligibleForRefreshment() {
-        return refreshCount < refreshLimit;
+    public void setTokenType(TokenType tokenType) {
+        this.tokenType = tokenType;
     }
 
     /**
@@ -80,8 +71,7 @@ public final class AuthenticationTokenDetails {
         private Set<Authority> authorities;
         private ZonedDateTime issuedDate;
         private ZonedDateTime expirationDate;
-        private int refreshCount;
-        private int refreshLimit;
+        private TokenType tokenType;
 
         public Builder withId(String id) {
             this.id = id;
@@ -108,18 +98,13 @@ public final class AuthenticationTokenDetails {
             return this;
         }
 
-        public Builder withRefreshCount(int refreshCount) {
-            this.refreshCount = refreshCount;
-            return this;
-        }
-
-        public Builder withRefreshLimit(int refreshLimit) {
-            this.refreshLimit = refreshLimit;
+        public Builder withTokenType(TokenType tokenType){
+            this.tokenType = tokenType;
             return this;
         }
 
         public AuthenticationTokenDetails build() {
-            return new AuthenticationTokenDetails(id, username, authorities, issuedDate, expirationDate, refreshCount, refreshLimit);
+            return new AuthenticationTokenDetails(id, username, authorities, issuedDate, expirationDate, tokenType);
         }
     }
 }

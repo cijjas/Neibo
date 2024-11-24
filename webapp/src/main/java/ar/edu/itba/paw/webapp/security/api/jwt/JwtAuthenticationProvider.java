@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.security.api.jwt;
 
 import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
+import ar.edu.itba.paw.webapp.security.exception.InvalidTokenTypeException;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +36,14 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
         String authenticationToken = (String) authentication.getCredentials();
         AuthenticationTokenDetails authenticationTokenDetails = authenticationTokenService.parseToken(authenticationToken);
+
+        if (authenticationTokenDetails.getTokenType() != TokenType.ACCESS)
+            throw new InvalidTokenTypeException("Invalid token type: " + authenticationTokenDetails.getTokenType());
+
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationTokenDetails.getUsername());
 
         LOGGER.info("UserForm Authorities : {}", userDetails.getAuthorities());
 
-        // I create an almost identical JWT Authentication Token but this time it has true in the authenticated field
         return new JwtAuthenticationToken(userDetails, authenticationTokenDetails, userDetails.getAuthorities());
     }
 

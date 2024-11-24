@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.security.service.impl;
 
+import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -42,14 +43,8 @@ class JwtSettings {
     /**
      * JWT claim for the token refreshment count.
      */
-    @Value("${jwt.refreshCountClaim}")
-    private String refreshCountClaimName;
-
-    /**
-     * JWT claim for the maximum times that a token can be refreshed.
-     */
-    @Value("${refreshLimitClaim}")
-    private String refreshLimitClaimName;
+    @Value("${jwt.tokenType}")
+    private String tokenType;
 
     public String getSecret() {
         return secret;
@@ -71,11 +66,7 @@ class JwtSettings {
         return authoritiesClaimName;
     }
 
-    public String getRefreshCountClaimName() {
-        return refreshCountClaimName;
-    }
-
-    public String getRefreshLimitClaimName() {
-        return refreshLimitClaimName;
+    public String getTokenTypeClaimName() {
+        return tokenType;
     }
 }

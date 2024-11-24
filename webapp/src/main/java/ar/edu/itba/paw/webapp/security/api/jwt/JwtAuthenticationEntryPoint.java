@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.security.api.jwt;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import ar.edu.itba.paw.webapp.security.exception.InvalidAuthenticationTokenException;
+import ar.edu.itba.paw.webapp.security.exception.InvalidTokenTypeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,10 +32,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
         HttpStatus status;
         ApiErrorDetails errorDetails = new ApiErrorDetails();
 
-        if (authException instanceof InvalidAuthenticationTokenException) {
+        if (authException instanceof InvalidAuthenticationTokenException || authException instanceof InvalidTokenTypeException) {
             status = HttpStatus.UNAUTHORIZED;
             errorDetails.setTitle(authException.getMessage());
-            errorDetails.setMessage(authException.getCause().getMessage());
+            if (authException.getCause() != null)
+                errorDetails.setMessage(authException.getCause().getMessage());
         } else {
             status = HttpStatus.FORBIDDEN;
             errorDetails.setTitle(status.getReasonPhrase());
@@ -51,6 +53,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
     }
 
     // todo improve this temp solution, maybe using a jackson mapper is the only way to go :(((
+    // this is being called twice for some weird reason, ill have to trace an understand exceptions in this area
     private void writeJsonResponse(HttpServletResponse response, ApiErrorDetails errorDetails) throws IOException {
         String jsonResponse = "{"
                 + "\"status\":\"" + errorDetails.getStatus() + "\","

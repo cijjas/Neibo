@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.security.service.impl;
 
 import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.api.model.AuthenticationToken;
+import ar.edu.itba.paw.webapp.security.api.model.enums.TokenType;
 import ar.edu.itba.paw.webapp.security.exception.AuthenticationTokenRefreshmentException;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +23,11 @@ import java.util.UUID;
 @Service
 public class DefaultAuthenticationTokenService implements AuthenticationTokenService {
 
-    /**
-     * How long the token is valid for (in seconds).
-     */
-    @Value("3600")
-    private Long validFor;
+    @Value("3600") // 60 minutes
+    private Long accessTokenValidity; // How long the access token is valid for, in seconds
 
-    /**
-     * How many times the token can be refreshed.
-     */
-    @Value("3")
-    private Integer refreshLimit;
+    @Value("604800") // 7 days
+    private Long refreshTokenValidity; // How long the refresh token is valid for, in seconds
 
     @Autowired
     private JwtTokenIssuer tokenIssuer;
@@ -40,20 +36,35 @@ public class DefaultAuthenticationTokenService implements AuthenticationTokenSer
     private JwtTokenParser tokenParser;
 
     @Override
-    public String issueToken(String username, Set<Authority> authorities) {
-
-        String id = generateTokenIdentifier();
+    public String issueAccessToken(String username, Set<Authority> authorities) {
         ZonedDateTime issuedDate = ZonedDateTime.now();
-        ZonedDateTime expirationDate = calculateExpirationDate(issuedDate);
-
         AuthenticationTokenDetails authenticationTokenDetails = new AuthenticationTokenDetails.Builder()
-                .withId(id)
+                .withId(generateTokenIdentifier())
                 .withUsername(username)
                 .withAuthorities(authorities)
                 .withIssuedDate(issuedDate)
-                .withExpirationDate(expirationDate)
-                .withRefreshCount(0)
-                .withRefreshLimit(refreshLimit)
+                .withExpirationDate(issuedDate.plusSeconds(accessTokenValidity))
+                .withTokenType(TokenType.ACCESS)
+                .build();
+
+        return tokenIssuer.issueToken(authenticationTokenDetails);
+    }
+
+    /*
+    * Improvements:
+    * - The information stored in the Refresh Token should be minimized, limiting only to userId ideally
+    * - The Refresh Token should be stored in the DB, this would allow for Refreshing Limit, and for Token Invalidation
+    * */
+    @Override
+    public String issueRefreshToken(String username, Set<Authority> authorities) {
+        ZonedDateTime issuedDate = ZonedDateTime.now();
+        AuthenticationTokenDetails authenticationTokenDetails = new AuthenticationTokenDetails.Builder()
+                .withId(generateTokenIdentifier())
+                .withUsername(username)
+                .withAuthorities(authorities)
+                .withIssuedDate(issuedDate)
+                .withExpirationDate(issuedDate.plusSeconds(refreshTokenValidity))
+                .withTokenType(TokenType.REFRESH)
                 .build();
 
         return tokenIssuer.issueToken(authenticationTokenDetails);
@@ -62,39 +73,6 @@ public class DefaultAuthenticationTokenService implements AuthenticationTokenSer
     @Override
     public AuthenticationTokenDetails parseToken(String token) {
         return tokenParser.parseToken(token);
-    }
-
-    @Override
-    public String refreshToken(AuthenticationTokenDetails currentTokenDetails) {
-
-        if (!currentTokenDetails.isEligibleForRefreshment()) {
-            throw new AuthenticationTokenRefreshmentException("This token cannot be refreshed.");
-        }
-
-        ZonedDateTime issuedDate = ZonedDateTime.now();
-        ZonedDateTime expirationDate = calculateExpirationDate(issuedDate);
-
-        AuthenticationTokenDetails newTokenDetails = new AuthenticationTokenDetails.Builder()
-                .withId(currentTokenDetails.getId()) // Reuse the same id
-                .withUsername(currentTokenDetails.getUsername())
-                .withAuthorities(currentTokenDetails.getAuthorities())
-                .withIssuedDate(issuedDate)
-                .withExpirationDate(expirationDate)
-                .withRefreshCount(currentTokenDetails.getRefreshCount() + 1)
-                .withRefreshLimit(refreshLimit)
-                .build();
-
-        return tokenIssuer.issueToken(newTokenDetails);
-    }
-
-    /**
-     * Calculate the expiration date for a token.
-     *
-     * @param issuedDate
-     * @return
-     */
-    private ZonedDateTime calculateExpirationDate(ZonedDateTime issuedDate) {
-        return issuedDate.plusSeconds(validFor);
     }
 
     /**

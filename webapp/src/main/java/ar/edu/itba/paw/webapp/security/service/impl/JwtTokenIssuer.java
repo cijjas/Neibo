@@ -35,8 +35,7 @@ public class JwtTokenIssuer {
                 .setIssuedAt(Date.from(authenticationTokenDetails.getIssuedDate().toInstant()))
                 .setExpiration(Date.from(authenticationTokenDetails.getExpirationDate().toInstant()))
                 .claim(settings.getAuthoritiesClaimName(), authenticationTokenDetails.getAuthorities())
-                .claim(settings.getRefreshCountClaimName(), authenticationTokenDetails.getRefreshCount())
-                .claim(settings.getRefreshLimitClaimName(), authenticationTokenDetails.getRefreshLimit())
+                .claim(settings.getTokenTypeClaimName(), authenticationTokenDetails.getTokenType())
                 .signWith(SignatureAlgorithm.HS256, settings.getSecret())
                 .compact();
     }
