@@ -64,24 +64,25 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader != null) {
             if (authorizationHeader.startsWith("Bearer ")) {
-                handleJwtAuthentication(authorizationHeader, request, response);
-                return;
+                if (!handleJwtAuthentication(authorizationHeader, request, response))
+                    return;
             }
             else if (authorizationHeader.startsWith("Basic ")) {
-                handleBasicAuthentication(authorizationHeader, request, response);
-                return;
+                if (!handleBasicAuthentication(authorizationHeader, request, response))
+                    return;
             }
         }
 
         String refreshHeader = request.getHeader("X-Refresh-Token");
         if (refreshHeader != null)
-            handleRefreshToken(refreshHeader, request, response);
+            if (!handleRefreshToken(refreshHeader, request, response))
+                return;
 
         LOGGER.info("Filter Chaining");
         filterChain.doFilter(request, response);
     }
 
-    private void handleBasicAuthentication(String authorizationHeader, HttpServletRequest request,
+    private boolean handleBasicAuthentication(String authorizationHeader, HttpServletRequest request,
                                            HttpServletResponse response) throws IOException, ServletException {
         try {
             // Decode the credentials from the Authorization header
@@ -122,10 +123,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // Clear security context and invoke authentication entry point on failure
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
+            return false;
         }
+        return true;
     }
 
-    private void handleJwtAuthentication(String authorizationHeader, HttpServletRequest request,
+    private boolean handleJwtAuthentication(String authorizationHeader, HttpServletRequest request,
                                          HttpServletResponse response) throws IOException, ServletException {
         try {
             String authenticationToken = authorizationHeader.substring(7);
@@ -138,13 +141,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         } catch (AuthenticationException e) {
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
+            return false;
         }
+        return true;
     }
 
     /*
     * If persistence is implemented as well as the Refreshing strategy, this method should verify this info with the DB
     * */
-    private void handleRefreshToken(String refreshHeader, HttpServletRequest request,
+    private boolean handleRefreshToken(String refreshHeader, HttpServletRequest request,
                                          HttpServletResponse response) throws IOException, ServletException {
         try {
             String refreshToken = refreshHeader.substring(7);
@@ -164,9 +169,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             LOGGER.error("Error processing refresh token", e);
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
+            return false;
         } catch (IllegalArgumentException e) {
             LOGGER.error("Invalid refresh token provided", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid refresh token");
+            return false;
         }
+        return true;
     }
 }
