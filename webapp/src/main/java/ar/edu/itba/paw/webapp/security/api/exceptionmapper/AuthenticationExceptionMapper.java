@@ -24,7 +24,6 @@ public class AuthenticationExceptionMapper implements ExceptionMapper<Authentica
 
     @Override
     public Response toResponse(AuthenticationException exception) {
-
         Status status = Status.FORBIDDEN;
 
         ApiErrorDetails errorDetails = new ApiErrorDetails();

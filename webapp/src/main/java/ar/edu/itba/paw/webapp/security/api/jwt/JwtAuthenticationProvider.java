@@ -38,7 +38,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         AuthenticationTokenDetails authenticationTokenDetails = authenticationTokenService.parseToken(authenticationToken);
 
         if (authenticationTokenDetails.getTokenType() != TokenType.ACCESS)
-            throw new InvalidTokenTypeException("Invalid token type: " + authenticationTokenDetails.getTokenType());
+            throw new InvalidTokenTypeException("Invalid token type: " + authenticationTokenDetails.getTokenType()); // this throws
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationTokenDetails.getUsername());
 

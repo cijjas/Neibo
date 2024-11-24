@@ -63,10 +63,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader != null) {
-            if (authorizationHeader.startsWith("Bearer "))
+            if (authorizationHeader.startsWith("Bearer ")) {
                 handleJwtAuthentication(authorizationHeader, request, response);
-            else if (authorizationHeader.startsWith("Basic "))
+                return;
+            }
+            else if (authorizationHeader.startsWith("Basic ")) {
                 handleBasicAuthentication(authorizationHeader, request, response);
+                return;
+            }
         }
 
         String refreshHeader = request.getHeader("X-Refresh-Token");

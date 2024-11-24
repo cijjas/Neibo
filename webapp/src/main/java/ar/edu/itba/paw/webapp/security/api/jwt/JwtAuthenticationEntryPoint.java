@@ -3,8 +3,11 @@ package ar.edu.itba.paw.webapp.security.api.jwt;
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import ar.edu.itba.paw.webapp.security.exception.InvalidAuthenticationTokenException;
 import ar.edu.itba.paw.webapp.security.exception.InvalidTokenTypeException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,54 +19,30 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
 
-/**
- * Entry point for JWT token-based authentication. Simply returns error details related to authentication failures.
- */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, AccessDeniedHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private XmlMapper xmlMapper;
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        LOGGER.info("Handling Exception");
+        LOGGER.info("Handling Authentication Exception");
 
-        HttpStatus status;
-        ApiErrorDetails errorDetails = new ApiErrorDetails();
+        HttpStatus status = authException instanceof InvalidAuthenticationTokenException ||
+                authException instanceof InvalidTokenTypeException
+                ? HttpStatus.UNAUTHORIZED
+                : HttpStatus.FORBIDDEN;
 
-        if (authException instanceof InvalidAuthenticationTokenException || authException instanceof InvalidTokenTypeException) {
-            status = HttpStatus.UNAUTHORIZED;
-            errorDetails.setTitle(authException.getMessage());
-            if (authException.getCause() != null)
-                errorDetails.setMessage(authException.getCause().getMessage());
-        } else {
-            status = HttpStatus.FORBIDDEN;
-            errorDetails.setTitle(status.getReasonPhrase());
-            errorDetails.setMessage(authException.getMessage());
-        }
-
-        errorDetails.setStatus(status.value());
-        errorDetails.setPath(request.getRequestURI());
-
-        response.setStatus(status.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        writeJsonResponse(response, errorDetails);
-    }
-
-    // todo improve this temp solution, maybe using a jackson mapper is the only way to go :(((
-    // this is being called twice for some weird reason, ill have to trace an understand exceptions in this area
-    private void writeJsonResponse(HttpServletResponse response, ApiErrorDetails errorDetails) throws IOException {
-        String jsonResponse = "{"
-                + "\"status\":\"" + errorDetails.getStatus() + "\","
-                + "\"title\":\"" + errorDetails.getTitle() + "\","
-                + "\"message\":\"" + errorDetails.getMessage() + "\","
-                + "\"path\":\"" + errorDetails.getPath() + "\""
-                + "}";
-
-
-        response.getWriter().write(jsonResponse);
+        ApiErrorDetails errorDetails = createErrorDetails(authException.getMessage(), authException.getCause(), status, request);
+        prepareAndWriteResponse(request, response, errorDetails, status);
     }
 
     @Override
@@ -71,15 +50,58 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
         LOGGER.info("Handling Access Denied Exception");
 
         HttpStatus status = HttpStatus.FORBIDDEN;
+        ApiErrorDetails errorDetails = createErrorDetails(status.getReasonPhrase(), accessDeniedException, status, request);
+        prepareAndWriteResponse(request, response, errorDetails, status);
+    }
+
+    /**
+     * Creates an ApiErrorDetails object populated with the error information.
+     */
+    private ApiErrorDetails createErrorDetails(String title, Throwable exception, HttpStatus status, HttpServletRequest request) {
         ApiErrorDetails errorDetails = new ApiErrorDetails();
-        errorDetails.setTitle(status.getReasonPhrase());
-        errorDetails.setMessage(accessDeniedException.getMessage());
+        errorDetails.setTitle(title);
+        // Only set the message if it's not null
+        if (exception != null && exception.getMessage() != null) {
+            errorDetails.setMessage(exception.getMessage());
+        }
         errorDetails.setStatus(status.value());
         errorDetails.setPath(request.getRequestURI());
+        return errorDetails;
+    }
 
+    /**
+     * Determines the response content type and writes the error response.
+     */
+    private void prepareAndWriteResponse(HttpServletRequest request, HttpServletResponse response, ApiErrorDetails errorDetails, HttpStatus status) throws IOException {
         response.setStatus(status.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        writeJsonResponse(response, errorDetails);
+        String contentType = determineContentType(request);
+        response.setContentType(contentType);
+
+        writeResponse(response, errorDetails, contentType);
+    }
+
+    /**
+     * Determines the response content type based on the request's Accept header.
+     */
+    private String determineContentType(HttpServletRequest request) {
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+        if (acceptHeader != null && acceptHeader.contains(MediaType.APPLICATION_XML_VALUE)) {
+            return MediaType.APPLICATION_XML_VALUE;
+        }
+        return MediaType.APPLICATION_JSON_VALUE;
+    }
+
+    /**
+     * Writes the error details to the response body in the specified format.
+     */
+    private void writeResponse(HttpServletResponse response, ApiErrorDetails errorDetails, String contentType) throws IOException {
+        String responseBody;
+        if (MediaType.APPLICATION_XML_VALUE.equals(contentType)) {
+            responseBody = xmlMapper.writeValueAsString(errorDetails);
+        } else {
+            responseBody = objectMapper.writeValueAsString(errorDetails);
+        }
+        response.getWriter().write(responseBody);
     }
 }
