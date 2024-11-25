@@ -57,14 +57,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
 
-    @Autowired
-    private AffiliationService nws;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final AffiliationService nws;
+
+    @Autowired
+    public AffiliationController(AffiliationService nws) {
+        this.nws = nws;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

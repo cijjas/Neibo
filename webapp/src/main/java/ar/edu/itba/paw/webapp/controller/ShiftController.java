@@ -33,14 +33,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
 public class ShiftController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiftController.class);
 
-    @Autowired
-    private ShiftService ss;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ShiftService ss;
+
+    @Autowired
+    public ShiftController(ShiftService ss) {
+        this.ss = ss;
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

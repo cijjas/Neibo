@@ -39,14 +39,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
 public class TagController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagController.class);
 
-    @Autowired
-    private TagService ts;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final TagService ts;
+
+    @Autowired
+    public TagController(TagService ts) {
+        this.ts = ts;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})

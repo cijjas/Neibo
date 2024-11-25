@@ -43,14 +43,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 public class ProductController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
-    @Autowired
-    private ProductService ps;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ProductService ps;
+
+    @Autowired
+    public ProductController(ProductService ps) {
+        this.ps = ps;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

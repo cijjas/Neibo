@@ -39,14 +39,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 public class AttendanceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceController.class);
 
-    @Autowired
-    private AttendanceService as;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final AttendanceService as;
+
+    @Autowired
+    public AttendanceController(AttendanceService as) {
+        this.as = as;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

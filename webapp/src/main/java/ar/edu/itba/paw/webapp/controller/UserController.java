@@ -45,14 +45,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
-    private UserService us;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final UserService us;
+
+    @Autowired
+    public UserController(UserService us) {
+        this.us = us;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})

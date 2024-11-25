@@ -42,14 +42,18 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class ContactController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
 
-    @Autowired
-    private ContactService cs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ContactService cs;
+
+    @Autowired
+    public ContactController(ContactService cs) {
+        this.cs = cs;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

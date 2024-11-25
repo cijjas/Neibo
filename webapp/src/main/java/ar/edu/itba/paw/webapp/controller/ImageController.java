@@ -33,14 +33,18 @@ import java.net.URI;
 public class ImageController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
-    @Autowired
-    private ImageService is;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ImageService is;
+
+    @Autowired
+    public ImageController(ImageService is) {
+        this.is = is;
+    }
 
     @GET
     @Path("/{id}")

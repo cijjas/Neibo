@@ -40,14 +40,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 public class ProfessionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionController.class);
 
-    @Autowired
-    private ProfessionService ps;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ProfessionService ps;
+
+    @Autowired
+    public ProfessionController(ProfessionService ps) {
+        this.ps = ps;
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

@@ -40,16 +40,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 public class ReviewController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
-    @Autowired
-    private ReviewService rs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ReviewService rs;
+
     @Autowired
-    private PathAccessControlHelper pathAccessControlHelper;
+    public ReviewController(ReviewService rs) {
+        this.rs = rs;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

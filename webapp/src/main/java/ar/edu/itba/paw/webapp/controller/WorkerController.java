@@ -45,17 +45,20 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 public class WorkerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
-    @Autowired
-    private WorkerService ws;
-
-    @Autowired
-    private ReviewService rs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ReviewService rs;
+    private final WorkerService ws;
+
+    @Autowired
+    public WorkerController(ReviewService rs, WorkerService ws) {
+        this.rs = rs;
+        this.ws = ws;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

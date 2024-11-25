@@ -45,14 +45,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
-    @Autowired
-    private BookingService bs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final BookingService bs;
+
+    @Autowired
+    public BookingController(BookingService bs) {
+        this.bs = bs;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

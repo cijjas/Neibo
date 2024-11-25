@@ -44,14 +44,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 public class RequestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
 
-    @Autowired
-    private RequestService rs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private javax.ws.rs.core.Request request;
+
+    private final RequestService rs;
+
+    @Autowired
+    public RequestController(RequestService rs) {
+        this.rs = rs;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

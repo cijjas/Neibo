@@ -42,14 +42,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 public class LikeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
 
-    @Autowired
-    private LikeService ls;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final LikeService ls;
+
+    @Autowired
+    public LikeController(LikeService ls) {
+        this.ls = ls;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON})

@@ -41,14 +41,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstIds;
 public class AmenityController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);
 
-    @Autowired
-    private AmenityService as;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final AmenityService as;
+
+    @Autowired
+    public AmenityController(AmenityService as) {
+        this.as = as;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

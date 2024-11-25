@@ -40,14 +40,18 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class ChannelController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelController.class);
 
-    @Autowired
-    private ChannelService cs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ChannelService cs;
+
+    @Autowired
+    public ChannelController(ChannelService cs) {
+        this.cs = cs;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

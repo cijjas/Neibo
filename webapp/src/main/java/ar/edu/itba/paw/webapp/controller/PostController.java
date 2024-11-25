@@ -45,14 +45,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 public class PostController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
 
-    @Autowired
-    private PostService ps;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final PostService ps;
+
+    @Autowired
+    public PostController(PostService ps) {
+        this.ps = ps;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

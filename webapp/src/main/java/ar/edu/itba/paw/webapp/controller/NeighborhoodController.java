@@ -40,14 +40,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 public class NeighborhoodController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodController.class);
 
-    @Autowired
-    private NeighborhoodService ns;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final NeighborhoodService ns;
+
+    @Autowired
+    public NeighborhoodController(NeighborhoodService ns) {
+        this.ns = ns;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

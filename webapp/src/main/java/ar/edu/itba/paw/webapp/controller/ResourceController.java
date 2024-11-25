@@ -39,14 +39,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 public class ResourceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
-    @Autowired
-    private ResourceService rs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final ResourceService rs;
+
+    @Autowired
+    public ResourceController(ResourceService rs) {
+        this.rs = rs;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

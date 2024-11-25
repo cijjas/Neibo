@@ -45,14 +45,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractDate;
 public class EventController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
 
-    @Autowired
-    private EventService es;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final EventService es;
+
+    @Autowired
+    public EventController(EventService es) {
+        this.es = es;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

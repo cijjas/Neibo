@@ -42,14 +42,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 public class InquiryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryController.class);
 
-    @Autowired
-    private InquiryService is;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final InquiryService is;
+
+    @Autowired
+    public InquiryController(InquiryService is) {
+        this.is = is;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})

@@ -39,14 +39,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
 
-    @Autowired
-    private CommentService cs;
-
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
+
+    private final CommentService cs;
+
+    @Autowired
+    public CommentController(CommentService cs) {
+        this.cs = cs;
+    }
 
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
