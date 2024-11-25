@@ -54,10 +54,9 @@ public class BookingDaoImpl implements BookingDao {
         return Optional.ofNullable(em.find(Booking.class, bookingId));
     }
 
-
     @Override
-    public List<Booking> getBookings(Long userId, Long amenityId, int page, int size) {
-        LOGGER.debug("Selecting Bookings from userId {} and amenityId {}", userId, amenityId);
+    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Bookings from userId {}, amenityId {}, and neighborhoodId {}", userId, amenityId, neighborhoodId);
 
         StringBuilder query = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
         query.append(" WHERE 1 = 1");
@@ -70,12 +69,13 @@ public class BookingDaoImpl implements BookingDao {
             query.append(" AND asa.amenityid = :amenityId");
         }
 
-        query.append(" ORDER BY uav.date, asa.amenityid, timeinterval asc");
+        query.append(" AND a.neighborhoodid = :neighborhoodId");
+
+        query.append(" ORDER BY uav.date, asa.amenityid, timeinterval ASC");
         query.append(" LIMIT :limit OFFSET :offset");
 
         String sql = query.toString();
 
-        // Specify the result class (Booking.class) in createNativeQuery
         Query sqlQuery = em.createNativeQuery(sql, Booking.class);
 
         if (userId != null) {
@@ -86,6 +86,8 @@ public class BookingDaoImpl implements BookingDao {
             sqlQuery.setParameter("amenityId", amenityId);
         }
 
+        sqlQuery.setParameter("neighborhoodId", neighborhoodId);
+
         int offset = (page - 1) * size;
         sqlQuery.setParameter("limit", size);
         sqlQuery.setParameter("offset", offset);
@@ -94,8 +96,8 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public int countBookings(Long userId, Long amenityId) {
-        LOGGER.debug("Counting Bookings for userId {} and amenityId {}", userId, amenityId);
+    public int countBookings(Long userId, Long amenityId, long neighborhoodId) {
+        LOGGER.debug("Counting Bookings for userId {}, amenityId {}, and neighborhoodId {}", userId, amenityId, neighborhoodId);
 
         StringBuilder countQuery = new StringBuilder("WITH CountCTE AS (SELECT COUNT(*) FROM ");
         countQuery.append(" users_availability uav ");
@@ -114,6 +116,9 @@ public class BookingDaoImpl implements BookingDao {
             countQuery.append(" AND asa.amenityid = :amenityId");
         }
 
+        // Filter by neighborhoodId
+        countQuery.append(" AND a.neighborhoodid = :neighborhoodId");
+
         countQuery.append(") SELECT * FROM CountCTE");
 
         String sql = countQuery.toString();
@@ -127,6 +132,8 @@ public class BookingDaoImpl implements BookingDao {
         if (amenityId != null) {
             sqlQuery.setParameter("amenityId", amenityId);
         }
+
+        sqlQuery.setParameter("neighborhoodId", neighborhoodId);
 
         return ((Number) sqlQuery.getSingleResult()).intValue();
     }

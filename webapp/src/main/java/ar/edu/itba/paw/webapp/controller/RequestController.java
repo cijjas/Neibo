@@ -73,7 +73,7 @@ public class RequestController {
         Long transactionTypeId = extractOptionalFirstId(type);
         Long requestStatusId = extractOptionalFirstId(status);
 
-        // Validate userId and transactionType
+        // Validate userId and transactionType, suboptimal solution
         if ((transactionTypeId == null && userId != null) || (transactionTypeId != null && userId == null))
             throw new IllegalArgumentException("Either both user and type have to be specified or none of them");
 

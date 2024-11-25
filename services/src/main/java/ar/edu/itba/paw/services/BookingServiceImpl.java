@@ -57,9 +57,7 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
-        // todo this should do something with the neighborhoodId! sino esta trayendo las bookings de la gente otros barrios!
-
-        return bookingDao.getBookings(userId, amenityId, page, size);
+        return bookingDao.getBookings(userId, amenityId, neighborhoodId, page, size);
     }
 
     // ---------------------------------------------------
@@ -70,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
 
         // todo this should do something with the neighborhoodId! sino esta contando las bookings de la gente otros barrios!
 
-        return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId), size);
+        return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId, neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
