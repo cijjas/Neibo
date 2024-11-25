@@ -13,11 +13,14 @@ public interface ResourceDao {
 
     // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
-    List<Resource> getResources(final long neighborhoodId);
+    Optional<Resource> findResource(final long resourceId);
+
+    List<Resource> getResources(final long neighborhoodId, int page, int size);
+
+    int countResources(final long neighborhoodId);
 
     // --------------------------------------------- RESOURCE DELETE ----------------------------------------------------
 
     boolean deleteResource(final long resourceId);
 
-    Optional<Resource> findResource(final long resourceId);
 }

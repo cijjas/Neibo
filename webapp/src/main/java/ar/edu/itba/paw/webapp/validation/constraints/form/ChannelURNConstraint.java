@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.constraints.form;
 
-import ar.edu.itba.paw.webapp.validation.validators.form.ChannelURNValidator;
+import ar.edu.itba.paw.webapp.validation.validators.urn.ChannelURNValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

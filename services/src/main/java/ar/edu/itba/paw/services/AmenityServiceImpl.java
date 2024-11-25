@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -113,8 +117,28 @@ public class AmenityServiceImpl implements AmenityService {
             amenity.setDescription(description);
         if (shiftIds != null && !shiftIds.isEmpty()) {
             for (Long shiftId: shiftIds) {
-                // todo logica para remover los que no estan en este update?
-                availabilityDao.findAvailability(amenityId, shiftId).orElseGet(() -> availabilityDao.createAvailability(amenityId, shiftId));
+                List<Shift> currentShifts = amenity.getAvailableShifts();
+
+                Set<Long> currentShiftIds = currentShifts.stream()
+                        .map(Shift::getShiftId)
+                        .collect(Collectors.toSet());
+
+                Set<Long> newShiftIds = new HashSet<>(shiftIds);
+
+                Set<Long> shiftsToRemove = new HashSet<>(currentShiftIds);
+                shiftsToRemove.removeAll(newShiftIds);
+
+                Set<Long> shiftsToAdd = new HashSet<>(newShiftIds);
+                shiftsToAdd.removeAll(currentShiftIds);
+
+                for (Long id: shiftsToRemove) {
+                    availabilityDao.deleteAvailability(amenityId, id);
+                }
+
+                for (Long id: shiftsToAdd) {
+                    availabilityDao.findAvailability(amenityId, shiftId)
+                            .orElseGet(() -> availabilityDao.createAvailability(amenityId, id));
+                }
             }
         }
         return amenity;

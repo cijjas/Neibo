@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.validation.validators.form;
+package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.webapp.validation.URNValidator;

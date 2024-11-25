@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.enums.*;
-import ar.edu.itba.paw.enums.Profession;
 import ar.edu.itba.paw.exceptions.InsertionException;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.models.Entities.Department;
@@ -504,7 +503,7 @@ public class TestInserter {
     }
 
     public long createProfession() {
-        return createProfession(Profession.PLUMBER.name());
+        return createProfession("Happy Developer");
     }
 
     public long createProduct(long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,

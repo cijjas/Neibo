@@ -26,11 +26,13 @@ public class TestConstants {
     public static final String WORKER_MAIL_3 = "workermail3@test.com";
     public static final String WORKER_MAIL_4 = "workermail4@test.com";
 
-
     public static final String NEIGHBORHOOD_NAME_1 = "Neighborhood 1";
     public static final String NEIGHBORHOOD_NAME_2 = "Neighborhood 2";
     public static final String NEIGHBORHOOD_NAME_3 = "Neighborhood 3";
     public static final String NEIGHBORHOOD_NAME_4 = "Neighborhood 4";
+
+    public static final String PROFESSION_NAME_1 = "Plumber";
+    public static final String PROFESSION_NAME_2 = "Thief";
 
     public static final int NO_ELEMENTS = 0;
     public static final int ONE_ELEMENT = 1;

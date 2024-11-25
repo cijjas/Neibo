@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
-import ar.edu.itba.paw.enums.Profession;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.Entities.Worker;
@@ -490,8 +489,8 @@ public class WorkerDaoImplTest {
         uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
         uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey1);
         uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey1);
-        pKey1 = testInserter.createProfession(Profession.PLUMBER.name());
-        pKey2 = testInserter.createProfession(Profession.CARPENTER.name());
+        pKey1 = testInserter.createProfession(PROFESSION_NAME_1);
+        pKey2 = testInserter.createProfession(PROFESSION_NAME_2);
         testInserter.createWorker(uKey1);
         testInserter.createWorker(uKey2);
         testInserter.createWorker(uKey3);
@@ -890,8 +889,8 @@ public class WorkerDaoImplTest {
         uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey1);
         uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey1);
 
-        pKey1 = testInserter.createProfession(Profession.PLUMBER.name());
-        pKey2 = testInserter.createProfession(Profession.CARPENTER.name());
+        pKey1 = testInserter.createProfession(PROFESSION_NAME_1);
+        pKey2 = testInserter.createProfession(PROFESSION_NAME_2);
 
         testInserter.createWorker(uKey1);
         testInserter.createWorker(uKey2);

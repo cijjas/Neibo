@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
-import ar.edu.itba.paw.enums.Profession;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -29,6 +28,7 @@ import static org.junit.Assert.*;
 @Transactional
 @Rollback
 public class ProfessionDaoImplTest {
+
     @Autowired
     private DataSource ds;
     @Autowired
@@ -62,12 +62,12 @@ public class ProfessionDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        ar.edu.itba.paw.models.Entities.Profession profession = professionDaoImpl.createProfession(Profession.PLUMBER.name());
+        ar.edu.itba.paw.models.Entities.Profession profession = professionDaoImpl.createProfession(PROFESSION_NAME_1);
 
         // Validations & Post Conditions
         em.flush();
         assertNotNull(profession);
-        assertEquals(Profession.PLUMBER.name(), profession.getProfession());
+        assertEquals(PROFESSION_NAME_1, profession.getProfession());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.professions.name()));
     }
 
@@ -174,8 +174,8 @@ public class ProfessionDaoImplTest {
         uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey1);
         uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey1);
 
-        pKey1 = testInserter.createProfession(Profession.PLUMBER.name());
-        pKey2 = testInserter.createProfession(Profession.CARPENTER.name());
+        pKey1 = testInserter.createProfession(PROFESSION_NAME_1);
+        pKey2 = testInserter.createProfession(PROFESSION_NAME_2);
 
         testInserter.createWorker(uKey1);
         testInserter.createWorker(uKey2);

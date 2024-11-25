@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 /*
@@ -50,12 +51,14 @@ public class ResourceController {
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listResources(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
+            @QueryParam("page") @DefaultValue("1") final int page,
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
         // Content
-        final List<Resource> resources = rs.getResources(neighborhoodId);
+        final List<Resource> resources = rs.getResources(neighborhoodId, page, size);
         String resourcesHashCode = String.valueOf(resources.hashCode());
 
         // Cache Control
@@ -72,10 +75,19 @@ public class ResourceController {
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/resources",
+                rs.calculateResourcePages(neighborhoodId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto) {
                 })
                 .cacheControl(cacheControl)
                 .tag(resourcesHashCode)
+                .links(links)
                 .build();
     }
 

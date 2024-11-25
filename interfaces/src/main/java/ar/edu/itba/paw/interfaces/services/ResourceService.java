@@ -11,9 +11,13 @@ public interface ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Resource> getResources(final long neighborhoodId);
+    List<Resource> getResources(final long neighborhoodId, int page, int size);
 
     Optional<Resource> findResource(final long resourceId, final long neighborhoodId);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    int calculateResourcePages(long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

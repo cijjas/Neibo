@@ -111,7 +111,7 @@ public class ResourceDaoImplTest {
         testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        List<Resource> resourceList = resourceDaoImpl.getResources(nhKey);
+        List<Resource> resourceList = resourceDaoImpl.getResources(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, resourceList.size());
@@ -123,10 +123,29 @@ public class ResourceDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        List<Resource> resourceList = resourceDaoImpl.getResources(nhKey);
+        List<Resource> resourceList = resourceDaoImpl.getResources(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(resourceList.isEmpty());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        testInserter.createResource(nhKey, iKey);
+        testInserter.createResource(nhKey, iKey);
+        testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        List<Resource> resourceList = resourceDaoImpl.getResources(nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, resourceList.size());
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------

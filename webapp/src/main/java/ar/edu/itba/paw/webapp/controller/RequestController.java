@@ -73,6 +73,10 @@ public class RequestController {
         Long transactionTypeId = extractOptionalFirstId(type);
         Long requestStatusId = extractOptionalFirstId(status);
 
+        // Validate userId and transactionType
+        if ((transactionTypeId == null && userId != null) || (transactionTypeId != null && userId == null))
+            throw new IllegalArgumentException("Either both user and type have to be specified or none of them");
+
         // Content
         final List<Request> requests = rs.getRequests(userId, productId, transactionTypeId, requestStatusId, page, size, neighborhoodId);
         String requestsHashCode = String.valueOf(requests.hashCode());

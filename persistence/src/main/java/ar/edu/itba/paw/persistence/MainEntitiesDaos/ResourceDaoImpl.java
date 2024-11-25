@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,12 +50,50 @@ public class ResourceDaoImpl implements ResourceDao {
         return Optional.ofNullable(em.find(Resource.class, resourceId));
     }
 
-    public List<Resource> getResources(long neighborhoodId) {
-        LOGGER.debug("Selecting Resources from Neighborhood {}", neighborhoodId);
+    @Override
+    public List<Resource> getResources(long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting paginated Resources from Neighborhood {}", neighborhoodId);
 
-        TypedQuery<Resource> query = em.createQuery("SELECT r FROM Resource r WHERE r.neighborhood.neighborhoodId = :neighborhoodId", Resource.class);
-        query.setParameter("neighborhoodId", neighborhoodId);
-        return query.getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
+        Root<Resource> idRoot = idQuery.from(Resource.class);
+        idQuery.select(idRoot.get("resourceId"));
+        idQuery.where(cb.equal(idRoot.get("neighborhood").get("neighborhoodId"), neighborhoodId));
+        idQuery.orderBy(cb.asc(idRoot.get("resourceId")));
+        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
+        idTypedQuery.setFirstResult((page - 1) * size);
+        idTypedQuery.setMaxResults(size);
+        List<Long> resourceIds = idTypedQuery.getResultList();
+
+        if (resourceIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        CriteriaQuery<Resource> dataQuery = cb.createQuery(Resource.class);
+        Root<Resource> dataRoot = dataQuery.from(Resource.class);
+        dataQuery.where(dataRoot.get("resourceId").in(resourceIds));
+        dataQuery.orderBy(cb.asc(dataRoot.get("resourceId")));
+        TypedQuery<Resource> dataTypedQuery = em.createQuery(dataQuery);
+
+        return dataTypedQuery.getResultList();
+    }
+
+    @Override
+    public int countResources(long neighborhoodId) {
+        LOGGER.debug("Counting Resources from Neighborhood {}", neighborhoodId);
+
+        // Initialize Query Builder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
+        Root<Resource> root = criteriaQuery.from(Resource.class);
+
+        // Count the number of Resources in the neighborhood
+        criteriaQuery.select(cb.count(root));
+        criteriaQuery.where(cb.equal(root.get("neighborhood").get("neighborhoodId"), neighborhoodId));
+        TypedQuery<Long> query = em.createQuery(criteriaQuery);
+
+        return query.getSingleResult().intValue();
     }
 
     // --------------------------------------------- RESOURCE DELETE ----------------------------------------------------

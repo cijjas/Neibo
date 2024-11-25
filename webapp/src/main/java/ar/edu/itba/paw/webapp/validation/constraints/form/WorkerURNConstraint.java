@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.constraints.form;
 
-import ar.edu.itba.paw.webapp.validation.validators.form.WorkerURNValidator;
+import ar.edu.itba.paw.webapp.validation.validators.urn.WorkerURNValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

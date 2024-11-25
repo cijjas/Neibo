@@ -76,11 +76,6 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequests(Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
-        // DAO function can only handle both or neither
-        // todo make this not an issue? can it be validated in controllers somehow?
-        if ((transactionTypeId == null && userId != null) || (transactionTypeId != null && userId == null))
-            throw new IllegalArgumentException("Either both user and type have to be specified or none of them");
-
         return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId, page, size);
     }
 

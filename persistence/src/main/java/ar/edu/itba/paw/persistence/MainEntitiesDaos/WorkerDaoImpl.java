@@ -68,9 +68,7 @@ public class WorkerDaoImpl implements WorkerDao {
         }
 
         if (professionIds != null && !professionIds.isEmpty()) {
-            queryStringBuilder.append("AND EXISTS (SELECT 1 FROM workers_professions wp, professions p ");
-            queryStringBuilder.append("WHERE w.userid = wp.workerid AND wp.professionid = p.professionid ");
-            queryStringBuilder.append("AND p.professionid IN :professions) ");
+            queryStringBuilder.append("AND (SELECT COUNT(*) FROM workers_professions wp WHERE wp.workerid = w.userid AND wp.professionid IN :professions) = :professionCount ");
         }
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
@@ -92,6 +90,7 @@ public class WorkerDaoImpl implements WorkerDao {
 
         if (professionIds != null && !professionIds.isEmpty()) {
             nativeQuery.setParameter("professions", professionIds);
+            nativeQuery.setParameter("professionCount", professionIds.size());
         }
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
@@ -115,14 +114,12 @@ public class WorkerDaoImpl implements WorkerDao {
             queryStringBuilder.append("AND (SELECT AVG(rating) FROM reviews r WHERE r.workerid = w.userid) > 4 ");
         }
 
-        if (workerRoleId != null ) {
+        if (workerRoleId != null) {
             queryStringBuilder.append("AND wn.role = :workerRole ");
         }
 
         if (professionIds != null && !professionIds.isEmpty()) {
-            queryStringBuilder.append("AND EXISTS (SELECT 1 FROM workers_professions wp, professions p ");
-            queryStringBuilder.append("WHERE w.userid = wp.workerid AND wp.professionid = p.professionid ");
-            queryStringBuilder.append("AND p.professionid IN :professions) ");
+            queryStringBuilder.append("AND (SELECT COUNT(*) FROM workers_professions wp WHERE wp.workerid = w.userid AND wp.professionid IN :professions) = :professionCount ");
         }
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
@@ -139,11 +136,13 @@ public class WorkerDaoImpl implements WorkerDao {
 
         if (professionIds != null && !professionIds.isEmpty()) {
             countQuery.setParameter("professions", professionIds);
+            countQuery.setParameter("professionCount", professionIds.size());
         }
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
             countQuery.setParameter("neighborhoodIds", neighborhoodIds);
         }
+
         Object result = countQuery.getSingleResult();
         return Integer.parseInt(result.toString());
     }

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.constraints.form;
 
-import ar.edu.itba.paw.webapp.validation.validators.form.ShiftsURNValidator;
+import ar.edu.itba.paw.webapp.validation.validators.urn.ShiftsURNValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -48,10 +48,10 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Resource> getResources(final long neighborhoodId) {
+    public List<Resource> getResources(final long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Resources from Neighborhood {}", neighborhoodId);
 
-        return resourceDao.getResources(neighborhoodId);
+        return resourceDao.getResources(neighborhoodId, page, size);
     }
 
     @Override
@@ -59,6 +59,15 @@ public class ResourceServiceImpl implements ResourceService {
         LOGGER.info("Finding Resource {} from Neighborhood {}", resourceId, neighborhoodId);
 
         return resourceDao.findResource(resourceId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public int calculateResourcePages(long neighborhoodId, int size) {
+        LOGGER.info("Calculating Contact Pages for Neighborhood {}", neighborhoodId);
+
+        return PaginationUtils.calculatePages(resourceDao.countResources(neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
