@@ -45,23 +45,14 @@ public class CategorizationDaoImpl implements CategorizationDao {
     // ---------------------------------------------- CATEGORIZATION DELETE ------------------------------------------------------
 
     @Override
-    public boolean deleteCategorization(Long tagId, Long postId) {
+    public boolean deleteCategorization(long tagId, long postId) {
         LOGGER.debug("Deleting Category for Post {} and Tag {}", postId, tagId);
 
-        if(postId != null && tagId != null) {
-            return em.createQuery("DELETE FROM Categorization c WHERE c.post.postId = :postId AND c.tag.tagId = :tagId")
-                    .setParameter("postId", postId)
-                    .setParameter("tagId", tagId)
-                    .executeUpdate() > 0;
-        } else if(tagId != null) {
-            return em.createQuery("DELETE FROM Categorization c WHERE c.tag.tagId = :tagId")
-                    .setParameter("tagId", tagId)
-                    .executeUpdate() > 0;
-        } else if (postId != null) {
-            return em.createQuery("DELETE FROM Categorization c WHERE c.post.postId = :postId")
-                    .setParameter("postId", postId)
-                    .executeUpdate() > 0;
-        }
-        return false; // If both are null, return false
+        int deleteCount = em.createQuery("DELETE FROM Categorization c WHERE c.post.postId = :postId AND c.tag.tagId = :tagId")
+                .setParameter("postId", postId)
+                .setParameter("tagId", tagId)
+                .executeUpdate();
+
+        return deleteCount > 0;
     }
 }

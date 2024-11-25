@@ -16,5 +16,5 @@ public interface CategorizationDao {
 
     // -------------------------------------------- POSTS TAGS DELETE --------------------------------------------------
 
-    boolean deleteCategorization(Long tagId, Long postId);
+    boolean deleteCategorization(long tagId, long postId);
 }

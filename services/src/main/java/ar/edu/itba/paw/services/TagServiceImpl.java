@@ -2,9 +2,11 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
+import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.interfaces.persistence.TagMappingDao;
 import ar.edu.itba.paw.interfaces.services.TagService;
+import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +26,14 @@ public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private final CategorizationDao categorizationDao;
     private final TagMappingDao tagMappingDao;
+    private final PostDao postDao;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, TagMappingDao tagMappingDao) {
+    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, TagMappingDao tagMappingDao, PostDao postDao) {
         this.tagDao = tagDao;
         this.categorizationDao = categorizationDao;
         this.tagMappingDao = tagMappingDao;
+        this.postDao = postDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -86,13 +91,23 @@ public class TagServiceImpl implements TagService {
     public boolean deleteTag(long neighborhoodId, long tagId) {
         LOGGER.info("Deleting Tag {}", tagId);
 
-        tagDao.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
+        // Delete Tag-Neighborhood association
         tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
 
-        // Will delete all categorizations associated with the tag
-        categorizationDao.deleteCategorization(tagId, null);
+        // Delete Tag-Posts associations
+        int page = 1;
+        int batchSize = 100;
+        List<Long> tags = Collections.singletonList(tagId);
+        int totalPosts = postDao.countPosts(null, tags, neighborhoodId, null, null);
 
-        //if the channel was only being used by this neighborhood, it gets deleted
+        while ((page - 1) * batchSize < totalPosts) {
+            List<Post> posts = postDao.getPosts(null, page, batchSize, tags, neighborhoodId, null, null);
+            for (Post post : posts)
+                categorizationDao.deleteCategorization(tagId, post.getPostId());
+            page++;
+        }
+
+        // If the channel was only being used by this neighborhood, it gets deleted
         if(tagMappingDao.countTagMappings(tagId, null) == 0)
             return tagDao.deleteTag(tagId);
 

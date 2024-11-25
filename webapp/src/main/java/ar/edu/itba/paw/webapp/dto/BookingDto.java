@@ -21,29 +21,27 @@ public class BookingDto {
 
     @NotNull(groups = Null.class)
     @AmenityURNConstraint(groups = URN.class)
-    private String amenity; // http://localhost:8080/neighborhoods/{neighborhoodId}/amenities/{amenityId}
+    private String amenity;
 
     @NotNull(groups = Null.class)
     @ShiftURNConstraint(groups = URN.class)
-    private String shift; // http://localhost:8080/shifts/{shiftId}
+    private String shift;
 
     @NotNull(groups = Null.class)
     @DateConstraint(groups = Specific.class)
-    private String reservationDate;
+    private String bookingDate;
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
     @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
-    private Date bookingDate;
-
     private Links _links;
 
     public static BookingDto fromBooking(Booking booking, UriInfo uriInfo) {
         final BookingDto dto = new BookingDto();
 
-        dto.bookingDate = booking.getBookingDate();
+        dto.bookingDate = booking.getBookingDate().toString();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -73,15 +71,6 @@ public class BookingDto {
     public void set_links(Links _links) {
         this._links = _links;
     }
-
-    public Date getBookingDate() {
-        return bookingDate;
-    }
-
-    public void setBookingDate(Date bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
     public String getAmenity() {
         return amenity;
     }
@@ -106,12 +95,11 @@ public class BookingDto {
         this.user = user;
     }
 
-    public String getReservationDate() {
-        return reservationDate;
+    public String getBookingDate() {
+        return bookingDate;
     }
 
-    public void setReservationDate(String reservationDate) {
-        this.reservationDate = reservationDate;
+    public void setBookingDate(String bookingDate) {
+        this.bookingDate = bookingDate;
     }
-
 }

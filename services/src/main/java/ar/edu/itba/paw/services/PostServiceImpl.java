@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.BaseChannel;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -93,8 +96,11 @@ public class PostServiceImpl implements PostService {
     public boolean deletePost(long postId, long neighborhoodId) {
         LOGGER.info("Deleting Post {}", postId);
 
-        // Delete categorizations associated with the Post
-        categorizationDao.deleteCategorization(null, postId);
+        // Delete tag associations
+        Set<Tag> tags = postDao.findPost(postId).orElseThrow(NotFoundException::new).getTags();
+        if (tags != null)
+            for (Tag tag: tags)
+                categorizationDao.deleteCategorization(tag.getTagId(), postId);
 
         return postDao.deletePost(postId);
     }

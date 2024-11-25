@@ -32,13 +32,13 @@ public class BookingDateValidator implements ConstraintValidator<BookingDateCons
     public boolean isValid(BookingDto bookingDto, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
-        if (bookingDto == null || bookingDto.getAmenity() == null || bookingDto.getReservationDate() == null || bookingDto.getShift() == null || bookingDto.getUser() == null)
+        if (bookingDto == null || bookingDto.getAmenity() == null || bookingDto.getBookingDate() == null || bookingDto.getShift() == null || bookingDto.getUser() == null)
             return true;
 
         LocalDate reservationDate;
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            reservationDate = LocalDate.parse(bookingDto.getReservationDate(), formatter);
+            reservationDate = LocalDate.parse(bookingDto.getBookingDate(), formatter);
         } catch (DateTimeParseException e) {
             context.buildConstraintViolationWithTemplate("Invalid reservation date format. Expected format: yyyy-MM-dd")
                     .addConstraintViolation();

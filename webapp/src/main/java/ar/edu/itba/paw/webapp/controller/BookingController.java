@@ -140,7 +140,7 @@ public class BookingController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Booking booking = bs.createBooking(extractSecondId(form.getUser()), extractSecondId(form.getAmenity()), extractFirstId(form.getShift()), extractDate(form.getReservationDate()));
+        final Booking booking = bs.createBooking(extractSecondId(form.getUser()), extractSecondId(form.getAmenity()), extractFirstId(form.getShift()), extractDate(form.getBookingDate()));
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN
