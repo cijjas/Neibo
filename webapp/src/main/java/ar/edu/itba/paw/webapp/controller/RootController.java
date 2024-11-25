@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+
 @Path("")
 @Component
 public class RootController {
@@ -28,39 +29,46 @@ public class RootController {
     }
 
     private JsonObject createTreeStructure() {
-        // Build the corrected tree structure using javax.json
         JsonObjectBuilder treeBuilder = Json.createObjectBuilder();
 
-        // Neighborhoods
-        JsonObjectBuilder neighborhoodsBuilder = Json.createObjectBuilder();
-        JsonObjectBuilder idBuilder = Json.createObjectBuilder();
-        idBuilder.add("tags", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        idBuilder.add("amenities", Json.createObjectBuilder().add("id", Json.createObjectBuilder().add("availability", Json.createObjectBuilder())));
-        idBuilder.add("products", Json.createObjectBuilder().add("id", Json.createObjectBuilder().add("requests", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))));
-        idBuilder.add("posts", Json.createObjectBuilder().add("id", Json.createObjectBuilder().add("comments", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))));
-        idBuilder.add("users", Json.createObjectBuilder().add("id", Json.createObjectBuilder().add("purchases", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))));
-        idBuilder.add("resources", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        idBuilder.add("contacts", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        idBuilder.add("events", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        idBuilder.add("channels", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
+        // First layer entities
+        addEndpoints(treeBuilder, "affiliations", "departments", "images", "neighborhoods",
+                "languages", "product-statuses", "professions", "post-statuses", "shifts",
+                "shift-statuses", "transaction-types", "user-roles", "worker-roles", "workers",
+                "request-status");
 
-        neighborhoodsBuilder.add("id", idBuilder);
-        treeBuilder.add("neighborhoods", neighborhoodsBuilder);
+        // Second layer: Nested within neighborhoods
+        treeBuilder.add("neighborhoods", Json.createObjectBuilder()
+                .add("id", Json.createObjectBuilder()
+                        .add("amenities", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
+                        .add("bookings", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
+                        .add("channels", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
+                        .add("contacts", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
+                        .add("events", Json.createObjectBuilder()
+                                .add("id", Json.createObjectBuilder()
+                                        .add("attendance", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))))
+                        .add("posts", Json.createObjectBuilder()
+                                .add("id", Json.createObjectBuilder()
+                                        .add("comments", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))))
+                        .add("products", Json.createObjectBuilder()
+                                .add("id", Json.createObjectBuilder()
+                                        .add("inquiries", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))))
+                        .add("requests", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
+                        .add("resources", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
+                        .add("tags", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
+                        .add("users", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))));
 
-        // Other sections
-        treeBuilder.add("images", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        treeBuilder.add("professions", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-
-        // Workers
-        JsonObjectBuilder workersBuilder = Json.createObjectBuilder();
-        workersBuilder.add("id", Json.createObjectBuilder().add("reviews", Json.createObjectBuilder().add("id", Json.createObjectBuilder())));
-        treeBuilder.add("workers", workersBuilder);
-
-        treeBuilder.add("shifts", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        treeBuilder.add("likes", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        treeBuilder.add("departments", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        treeBuilder.add("times", Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
+        // Second layer: Nested within workers
+        treeBuilder.add("workers", Json.createObjectBuilder()
+                .add("id", Json.createObjectBuilder()
+                        .add("reviews", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))));
 
         return treeBuilder.build();
+    }
+
+    private void addEndpoints(JsonObjectBuilder treeBuilder, String... endpoints) {
+        for (String endpoint : endpoints) {
+            treeBuilder.add(endpoint, Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
+        }
     }
 }

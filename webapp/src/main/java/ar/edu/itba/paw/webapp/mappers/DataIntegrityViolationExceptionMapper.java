@@ -43,5 +43,4 @@ public class DataIntegrityViolationExceptionMapper implements ExceptionMapper<Da
             return "UnknownKey";
         }
     }
-
 }
