@@ -9,15 +9,11 @@ public interface TagService {
 
     Tag createTag(long neighborhoodId, String name);
 
-    void categorizePost(long postId, List<Long> tagIds);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Tag> findTag(long tagId, long neighborhoodId);
 
     List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     int calculateTagPages(Long postId, long neighborhoodId, int size);
 

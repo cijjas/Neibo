@@ -31,18 +31,13 @@ public class EventServiceImpl implements EventService {
 
     private final EventDao eventDao;
     private final TimeDao timeDao;
-    private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Autowired
-    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService, NeighborhoodDao neighborhoodDao) {
+    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService) {
         this.eventDao = eventDao;
         this.timeDao = timeDao;
         this.emailService = emailService;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -79,6 +74,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int calculateEventPages(Date date, long neighborhoodId, int size) {
         LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
 
@@ -101,8 +97,8 @@ public class EventServiceImpl implements EventService {
             event.setDate(date);
         if (startTime != null && endTime != null) {
             Long[] times = stringToTime(startTime, endTime);
-            event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
-            event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
+            event.setStartTime(timeDao.findTime(times[0]).orElseThrow(NotFoundException::new));
+            event.setEndTime(timeDao.findTime(times[1]).orElseThrow(NotFoundException::new));
         }
         return event;
     }

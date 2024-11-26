@@ -123,6 +123,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public List<User> getEventUsers(long eventId) {
+        LOGGER.debug("Selecting Users that will attend Event {}", eventId);
+
+        String hql = "SELECT u FROM User u " +
+                "JOIN u.eventsSubscribed e " +
+                "WHERE e.eventId = :eventId";
+        return em.createQuery(hql, User.class)
+                .setParameter("eventId", eventId)
+                .getResultList();
+    }
+
+    @Override
     public int countUsers(Long userRoleId, long neighborhoodId) {
         LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", userRoleId, neighborhoodId);
 
@@ -137,30 +149,5 @@ public class UserDaoImpl implements UserDao {
         if (neighborhoodId > 0)
             query.setParameter("neighborhoodId", neighborhoodId);
         return query.getSingleResult().intValue();
-    }
-
-    @Override
-    public List<User> getEventUsers(long eventId) {
-        LOGGER.debug("Selecting Users that will attend Event {}", eventId);
-
-        String hql = "SELECT u FROM User u " +
-                "JOIN u.eventsSubscribed e " +
-                "WHERE e.eventId = :eventId";
-        return em.createQuery(hql, User.class)
-                .setParameter("eventId", eventId)
-                .getResultList();
-    }
-
-    // ---------------------------------------------- USERS DELETE-----------------------------------------------------
-
-    @Override
-    public boolean deleteUser(long userId) {
-        LOGGER.debug("Deleting User with Id {}", userId);
-        User user = em.find(User.class, userId);
-        if (user != null) {
-            em.remove(user);
-            return true;
-        }
-        return false;
     }
 }

@@ -52,6 +52,8 @@ public class ImageDaoImpl implements ImageDao {
         return Optional.ofNullable(em.find(Image.class, imageId));
     }
 
+    // --------------------------------------------- IMAGES DELETE -----------------------------------------------------
+
     @Override
     public boolean deleteImage(long imageId) {
         LOGGER.debug("Deleting Image with imageId {}", imageId);

@@ -11,11 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -132,18 +127,6 @@ public class EventDaoImpl implements EventDao {
 
         return query.getSingleResult().intValue();
     }
-
-//    @Override
-//    public List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate) {
-//        LOGGER.debug("Selecting Events from Neighborhood {} between {} and {}", neighborhoodId, startDate, endDate);
-//
-//        String jpql = "SELECT e FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId AND e.date BETWEEN :startDate AND :endDate";
-//        TypedQuery<Event> query = em.createQuery(jpql, Event.class);
-//        query.setParameter("neighborhoodId", neighborhoodId);
-//        query.setParameter("startDate", startDate);
-//        query.setParameter("endDate", endDate);
-//        return query.getResultList();
-//    }
 
     // ---------------------------------------------- EVENT DELETE -----------------------------------------------------
 

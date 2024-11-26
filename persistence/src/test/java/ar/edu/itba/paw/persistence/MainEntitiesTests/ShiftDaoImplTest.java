@@ -21,7 +21,6 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
-import java.util.Date;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;

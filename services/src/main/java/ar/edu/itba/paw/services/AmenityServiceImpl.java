@@ -76,13 +76,6 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Amenity> findAmenity(long amenityId) {
-        LOGGER.info("Finding Amenity Amenity {}", amenityId);
-
-        return amenityDao.findAmenity(amenityId);
-    }
-
-    @Override
     public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
         LOGGER.info("Finding Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
 
@@ -98,6 +91,7 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int calculateAmenityPages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Amenity Pages for Neighborhood {}", neighborhoodId);
 

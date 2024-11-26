@@ -10,9 +10,13 @@ public interface DepartmentService {
 
     Department createDepartment(String departmentName);
 
-    List<Department> getDepartments();
+    // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Department> findDepartment(long departmentId);
+
+    List<Department> getDepartments();
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteDepartment(long departmentId);
 }

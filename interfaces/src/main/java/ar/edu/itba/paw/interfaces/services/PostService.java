@@ -17,8 +17,6 @@ public interface PostService {
 
     List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
 
-    // ---------------------------------------------------
-
     int calculatePostPages(Long channelId, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
 
     // -----------------------------------------------------------------------------------------------------------------

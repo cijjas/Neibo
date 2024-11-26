@@ -106,7 +106,7 @@ public class UserDto {
                 .path("posts")
                 .queryParam("postedBy", self)
                 .build());
-        //If not a worker, also add the following URIs:
+        // If not a worker, also add the following URIs:
         if (user.getNeighborhood().getNeighborhoodId() != 0) {
             links.setBookings(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")

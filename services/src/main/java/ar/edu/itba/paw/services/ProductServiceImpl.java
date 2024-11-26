@@ -48,6 +48,7 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Product> findProduct(long productId) {
         LOGGER.info("Finding Product {}", productId);
 
@@ -55,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Product> findProduct(long productId, long neighborhoodId) {
         LOGGER.info("Finding Product {} from Neighborhood {}", productId, neighborhoodId);
 
@@ -62,15 +64,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size) {
         LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
         return productDao.getProducts(neighborhoodId, departmentId, userId, productStatusId, page, size);
     }
 
-    // ---------------------------------------------------
-
     @Override
+    @Transactional(readOnly = true)
     public int calculateProductPages(long neighborhoodId, int size, Long departmentId, Long userId, Long productStatusId) {
         LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
@@ -108,7 +110,6 @@ public class ProductServiceImpl implements ProductService {
 
         return product;
     }
-
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -158,7 +158,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         mailSender.setPassword(env.getProperty("mail.password"));
 
         Properties props = mailSender.getJavaMailProperties();
-        //remove the following TLSv line if we upgrade javaxmail version
+        // Remove the following TLSv line if we upgrade javax mail version
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");

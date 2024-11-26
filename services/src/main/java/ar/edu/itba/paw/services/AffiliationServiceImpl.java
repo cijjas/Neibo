@@ -37,6 +37,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    @Transactional(readOnly = true)
     public List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
@@ -44,6 +45,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size) {
         LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 

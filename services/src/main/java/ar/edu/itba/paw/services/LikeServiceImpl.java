@@ -35,28 +35,28 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    @Transactional(readOnly = true)
     public List<Like> getLikes(Long postId, Long userId, int page, int size) {
         LOGGER.info("Getting Likes for Post {} by User {}", postId, userId);
 
         return likeDao.getLikes(postId, userId, page, size);
     }
 
-    // ---------------------------------------------------
-
     @Override
-    public int countLikes(Long postId, Long userId) {
-        LOGGER.info("Counting Likes for Post {} by User {}", userId, postId);
-
-        return likeDao.countLikes(postId, userId);
-    }
-
-    @Override
+    @Transactional(readOnly = true)
     public int calculateLikePages(Long postId, Long userId, int size) {
         LOGGER.info("Calculating Like Pages for Post {} by User {}", userId, postId);
 
         return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId), size);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public int countLikes(Long postId, Long userId) {
+        LOGGER.info("Counting Likes for Post {} by User {}", userId, postId);
+
+        return likeDao.countLikes(postId, userId);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

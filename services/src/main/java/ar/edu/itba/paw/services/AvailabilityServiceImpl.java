@@ -23,7 +23,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         this.availabilityDao = availabilityDao;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public Optional<Availability> findAvailability(long amenityId, long shiftId) {
         LOGGER.info("Finding Availability from Amenity {} on Shift {}", amenityId, shiftId);
 

@@ -50,6 +50,7 @@ public class InquiryServiceImpl implements InquiryService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Inquiry> findInquiry(long inquiryId) {
         LOGGER.info("Finding Inquiry {}", inquiryId);
 
@@ -57,6 +58,7 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
         LOGGER.info("Finding Inquiry {} for Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
 
@@ -65,15 +67,15 @@ public class InquiryServiceImpl implements InquiryService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public List<Inquiry> getInquiries(long productId, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Inquiries for Product {} from Neighborhood {}", productId, neighborhoodId);
 
         return inquiryDao.getInquiries(productId, page, size);
     }
 
-    // ---------------------------------------------------
-
     @Override
+    @Transactional(readOnly = true)
     public int calculateInquiryPages(long productId, int size) {
         LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
 
@@ -86,7 +88,7 @@ public class InquiryServiceImpl implements InquiryService {
     public Inquiry replyInquiry(long inquiryId, String reply) {
         LOGGER.info("Creating a reply for Inquiry {}", inquiryId);
 
-        //Send email to inquirer
+        // Send email to inquirer
         Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(NotFoundException::new);
         inquiry.setReply(reply);
 

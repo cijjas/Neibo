@@ -37,31 +37,10 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Neighborhood> findNeighborhood(String name) {
-        LOGGER.info("Finding Neighborhood {}", name);
-
-        return neighborhoodDao.findNeighborhood(name);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Neighborhood> findNeighborhood(long neighborhoodId) {
         LOGGER.info("Finding Neighborhood {}", neighborhoodId);
 
         return neighborhoodDao.findNeighborhood(neighborhoodId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods() {
-        LOGGER.info("Getting Neighborhoods");
-
-        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
-        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
-        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
-        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -2);
-
-        return neighborhoods;
     }
 
     @Override
@@ -72,14 +51,15 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         return neighborhoodDao.getNeighborhoods(page, size, workerId);
     }
 
-    // ---------------------------------------------------
-
     @Override
+    @Transactional(readOnly = true)
     public int calculateNeighborhoodPages(Long workerId, int size) {
         LOGGER.info("Calculating Neighborhood Pages");
 
         return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(workerId), size);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteNeighborhood(long neighborhoodId) {

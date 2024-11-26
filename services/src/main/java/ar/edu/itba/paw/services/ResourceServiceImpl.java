@@ -40,8 +40,10 @@ public class ResourceServiceImpl implements ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public Optional<Resource> findResource(long resourceId) {
-        LOGGER.info("Finding Resource {}", resourceId);
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Resource> findResource(long resourceId, long neighborhoodId) {
+        LOGGER.info("Finding Resource {} from Neighborhood {}", resourceId, neighborhoodId);
 
         return resourceDao.findResource(resourceId);
     }
@@ -55,15 +57,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Optional<Resource> findResource(long resourceId, long neighborhoodId) {
-        LOGGER.info("Finding Resource {} from Neighborhood {}", resourceId, neighborhoodId);
-
-        return resourceDao.findResource(resourceId);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
+    @Transactional(readOnly = true)
     public int calculateResourcePages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Contact Pages for Neighborhood {}", neighborhoodId);
 
@@ -76,7 +70,7 @@ public class ResourceServiceImpl implements ResourceService {
     public Resource updateResource(long resourceId, String title, String description, Long imageId) {
         LOGGER.info("Updating Resource {}", resourceId);
 
-        Resource resource = findResource(resourceId).orElseThrow(NotFoundException::new);
+        Resource resource = resourceDao.findResource(resourceId).orElseThrow(NotFoundException::new);
 
         if (title != null && !title.isEmpty())
             resource.setTitle(title);

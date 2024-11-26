@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
@@ -66,5 +66,160 @@ public class CategorizationDaoImplTest {
         assertEquals(tKey, categorization.getTag().getTagId().longValue());
         assertEquals(pKey, categorization.getPost().getPostId().longValue());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_tags.name()));
+    }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
+    @Test
+    public void find_tagId_postId_valid() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(tKey1, pKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalCategorization.isPresent());
+        assertEquals(tKey1, optionalCategorization.get().getTag().getTagId().longValue());
+        assertEquals(pKey, optionalCategorization.get().getPost().getPostId().longValue());
+    }
+
+    @Test
+    public void find_tagId_postId_invalid_tagId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(INVALID_ID, pKey);
+
+        // Validations & Post Conditions
+        assertFalse(optionalCategorization.isPresent());
+    }
+
+    @Test
+    public void find_tagId_postId_invalid_postId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(tKey1, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalCategorization.isPresent());
+    }
+
+    @Test
+    public void find_tagId_postId_invalid_tagId_postId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalCategorization.isPresent());
+    }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+    public void delete_tagId_postId_valid() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        boolean deleted = categorizationDaoImpl.deleteCategorization(tKey1, pKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_tags.name()));
+    }
+
+    @Test
+    public void delete_tagId_postId_invalid_tagId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        boolean deleted = categorizationDaoImpl.deleteCategorization(INVALID_ID, pKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_tagId_postId_invalid_postId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        boolean deleted = categorizationDaoImpl.deleteCategorization(tKey1, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_tagId_postId_invalid_tagId_postId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long uKey = testInserter.createUser(nhKey1);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag();
+        testInserter.createCategorization(tKey1, pKey);
+
+        // Exercise
+        boolean deleted = categorizationDaoImpl.deleteCategorization(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
     }
 }

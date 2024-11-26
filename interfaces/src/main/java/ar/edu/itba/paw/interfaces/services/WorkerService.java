@@ -15,15 +15,9 @@ public interface WorkerService {
 
     List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
 
-    // ---------------------------------------------------
-
     int calculateWorkerPages(List<Long> professionIds, List<Long> neighborhoodIds, int size, Long workerRoleId, Long workerStatusId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, Long backgroundPictureId, String bio);
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    boolean deleteWorker(long workerId);
 }

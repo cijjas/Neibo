@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.ProductStatus;
-import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.models.Entities.Image;

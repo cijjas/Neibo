@@ -16,8 +16,6 @@ public interface BookingService {
 
     List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size);
 
-    // ---------------------------------------------------
-
     int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------

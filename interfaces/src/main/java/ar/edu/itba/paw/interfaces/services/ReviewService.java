@@ -15,15 +15,13 @@ public interface ReviewService {
 
     Optional<Review> findLatestReview(long workerId, long userId);
 
-    List<Review> getReviews(long workerId, int page, int size);
+    Float findAverageRating(long workerId);
 
-    // ---------------------------------------------------
+    List<Review> getReviews(long workerId, int page, int size);
 
     int calculateReviewPages(long workerId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteReview(long reviewId);
-
-    Float findAverageRating(long workerId);
 }

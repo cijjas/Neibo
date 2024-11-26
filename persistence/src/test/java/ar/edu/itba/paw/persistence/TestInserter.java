@@ -1,9 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.enums.*;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.RequestStatus;
+import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.exceptions.InsertionException;
-import ar.edu.itba.paw.models.Entities.Channel;
-import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.models.Entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -13,9 +13,9 @@ public interface ProfessionDao {
 
     // --------------------------------------------- PROFESSIONS SELECT -------------------------------------------------
 
-    List<Profession> getProfessions(Long workerId);
-
     Optional<Profession> findProfession(long professionId);
+
+    List<Profession> getProfessions(Long workerId);
 
     // --------------------------------------------- PROFESSIONS DELETE -------------------------------------------------
 

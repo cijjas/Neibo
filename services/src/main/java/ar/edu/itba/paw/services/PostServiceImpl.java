@@ -26,13 +26,11 @@ public class PostServiceImpl implements PostService {
 
     private final PostDao postDao;
     private final CategorizationDao categorizationDao;
-    private final TagService tagService;
     private final EmailService emailService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, CategorizationDao categorizationDao, TagService tagService, EmailService emailService) {
+    public PostServiceImpl(final PostDao postDao, CategorizationDao categorizationDao, EmailService emailService) {
         this.categorizationDao = categorizationDao;
-        this.tagService = tagService;
         this.postDao = postDao;
         this.emailService = emailService;
     }
@@ -45,7 +43,8 @@ public class PostServiceImpl implements PostService {
 
         Post p = postDao.createPost(title, description, userId, channelId, imageId == null ? 0 : imageId);
         if (tagIds != null && !tagIds.isEmpty())
-            tagService.categorizePost(p.getPostId(), tagIds);
+            for (long tag: tagIds)
+                categorizationDao.findCategorization(tag, p.getPostId()).orElseGet(() -> categorizationDao.createCategorization(tag, p.getPostId()));
 
         if(channelId == BaseChannel.ANNOUNCEMENTS.getId())
             emailService.sendBatchAnnouncementMail(p, neighborhoodId);
@@ -79,8 +78,6 @@ public class PostServiceImpl implements PostService {
 
         return postDao.getPosts(channelId, page, size, tagIds, neighborhoodId, postStatusId, userId);
     }
-
-    // ---------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)

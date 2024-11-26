@@ -37,6 +37,7 @@ public class ContactServiceImpl implements ContactService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Contact> findContact(long contactId) {
         LOGGER.info("Finding Contact {}", contactId);
 
@@ -44,6 +45,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Contact> findContact(long contactId, long neighborhoodId) {
         LOGGER.info("Finding Contact {} from Neighborhood {}", contactId, neighborhoodId);
 
@@ -51,15 +53,15 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Contact> getContacts(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
 
         return contactDao.getContacts(neighborhoodId, page, size);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
+    @Transactional(readOnly = true)
     public int calculateContactPages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Contact Pages for Neighborhood {}", neighborhoodId);
 

@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -367,37 +366,6 @@ public class UserDaoImplTest {
 
         // Validations
         assertEquals(NO_ELEMENTS, countUser);
-    }
-
-    // ------------------------------------------------ DELETES --------------------------------------------------------
-
-    @Test
-    public void delete_valid() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-
-        // Exercise
-        boolean deleted = userDaoImpl.deleteUser(uKey1);
-
-        // Validations & Post Conditions
-        em.flush();
-        assertTrue(deleted);
-        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
-    }
-
-    @Test
-    public void delete_invalid_userId() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-
-        // Exercise
-        boolean deleted = userDaoImpl.deleteUser(INVALID_ID);
-
-        // Validations & Post Conditions
-        em.flush();
-        assertFalse(deleted);
     }
 
     // ----------------------------------------------- POPULATION ------------------------------------------------------

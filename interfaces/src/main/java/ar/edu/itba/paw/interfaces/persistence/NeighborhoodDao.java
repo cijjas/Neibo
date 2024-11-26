@@ -17,11 +17,8 @@ public interface NeighborhoodDao {
 
     Optional<Neighborhood> findNeighborhood(String name);
 
-    List<Neighborhood> getNeighborhoods();
-
     List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
 
-    // Only used by Email Service
     List<Long> getNeighborhoodIds();
 
     int countNeighborhoods(Long workerId);

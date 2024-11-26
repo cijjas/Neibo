@@ -29,17 +29,17 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Shift> getShifts(Long amenityId, Date date) {
-        LOGGER.info("Getting Shifts");
-
-        return shiftDao.getShifts(amenityId, date);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Shift> findShift(long shiftId) {
         LOGGER.info("Finding Shift {}", shiftId);
 
         return shiftDao.findShift(shiftId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Shift> getShifts(Long amenityId, Date date) {
+        LOGGER.info("Getting Shifts");
+
+        return shiftDao.getShifts(amenityId, date);
     }
 }

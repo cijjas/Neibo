@@ -34,6 +34,7 @@ public class BookingServiceImpl implements BookingService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Override
     public Booking createBooking(long user, long amenity, long shift, Date reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenity, reservationDate, user);
 
@@ -60,13 +61,10 @@ public class BookingServiceImpl implements BookingService {
         return bookingDao.getBookings(userId, amenityId, neighborhoodId, page, size);
     }
 
-    // ---------------------------------------------------
-
     @Override
+    @Transactional(readOnly = true)
     public int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size) {
         LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
-
-        // todo this should do something with the neighborhoodId! sino esta contando las bookings de la gente otros barrios!
 
         return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId, neighborhoodId), size);
     }

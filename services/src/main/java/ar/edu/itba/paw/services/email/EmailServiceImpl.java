@@ -100,7 +100,9 @@ public class EmailServiceImpl implements EmailService {
         LOGGER.info("Sending New User message to {}", userName);
 
         Map<String, Object> variables = new HashMap<>();
+        // There is only one admin per neighborhood, maybe using size 1 could be better?
         List<User> admins = userDao.getUsers((long) UserRole.ADMINISTRATOR.getId(), neighborhoodId, 1, 10);
+        // This logic is scuffed
         Neighborhood neighborhood = neighborhoodDao.findNeighborhood(neighborhoodId).orElse(null);
         assert neighborhood != null;
 

@@ -33,6 +33,16 @@ public class ProfessionServiceImpl implements ProfessionService {
         return professionDao.createProfession(name);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Profession> findProfession(long professionId) {
+        LOGGER.info("Finding Profession {}", professionId);
+
+        return professionDao.findProfession(professionId);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<Profession> getProfessions(Long workerId) {
@@ -41,12 +51,7 @@ public class ProfessionServiceImpl implements ProfessionService {
         return professionDao.getProfessions(workerId);
     }
 
-    @Override
-    public Optional<Profession> findProfession(long professionId) {
-        LOGGER.info("Finding Profession {}", professionId);
-
-        return professionDao.findProfession(professionId);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteProfession(long professionId) {

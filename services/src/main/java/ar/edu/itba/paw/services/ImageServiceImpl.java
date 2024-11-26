@@ -33,7 +33,6 @@ public class ImageServiceImpl implements ImageService {
         return imageDao.storeImage(imageStream);
     }
 
-
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

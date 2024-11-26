@@ -18,8 +18,4 @@ public interface WorkerDao {
     List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
 
     int countWorkers(List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
-
-    // ---------------------------------------------- WORKERS DELETE ---------------------------------------------------
-
-    boolean deleteWorker(long workerId);
 }

@@ -25,14 +25,12 @@ public class WorkerServiceImpl implements WorkerService {
 
     private final WorkerDao workerDao;
     private final ProfessionWorkerDao professionWorkerDao;
-    private final UserDao userDao;
     private final ImageService imageService;
 
     @Autowired
-    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService) {
+    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, ImageService imageService) {
         this.workerDao = workerDao;
         this.professionWorkerDao = professionWorkerDao;
-        this.userDao = userDao;
         this.imageService = imageService;
     }
 
@@ -54,23 +52,22 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Worker> findWorker(long userId) {
-        LOGGER.info("Finding Worker {}", userId);
+    public Optional<Worker> findWorker(long workerId) {
+        LOGGER.info("Finding Worker {}", workerId);
 
-        Optional<User> optionalUser = userDao.findUser(userId);
-        return optionalUser.isPresent() ? workerDao.findWorker(userId) : Optional.empty();
+        return workerDao.findWorker(workerId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId) {
         LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
         return workerDao.getWorkers(page, size, professionIds, neighborhoodIds, workerRoleId, workerStatusId);
     }
 
-    // ---------------------------------------------------
-
     @Override
+    @Transactional(readOnly = true)
     public int calculateWorkerPages(List<Long> professionIds, List<Long> neighborhoodIds, int size, Long workerRoleId, Long workerStatusId) {
         LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
@@ -98,14 +95,5 @@ public class WorkerServiceImpl implements WorkerService {
         }
 
         return worker;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean deleteWorker(long workerId) {
-        LOGGER.info("Deleting Worker {}", workerId);
-
-        return workerDao.deleteWorker(workerId);
     }
 }

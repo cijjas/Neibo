@@ -13,11 +13,11 @@ public interface TagDao {
 
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
-    List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
-
     Optional<Tag> findTag(long tagId, long neighborhoodId);
 
     Optional<Tag> findTag(String tagName);
+
+    List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
 
     int countTags(Long postId, long neighborhoodId);
 

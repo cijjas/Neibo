@@ -34,19 +34,25 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentDao.createDepartment(departmentName);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Department> findDepartment(long departmentId) {
+        LOGGER.info("Finding Department {}", departmentId);
+
+        return departmentDao.findDepartment(departmentId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Department> getDepartments() {
         LOGGER.info("Getting Departments");
 
         return departmentDao.getDepartments();
     }
 
-    @Override
-    public Optional<Department> findDepartment(long departmentId) {
-        LOGGER.info("Finding Department {}", departmentId);
-
-        return departmentDao.findDepartment(departmentId);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteDepartment(long departmentId) {

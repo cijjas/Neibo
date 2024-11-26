@@ -42,21 +42,13 @@ public class TagServiceImpl implements TagService {
     public Tag createTag(long neighborhoodId, String name) {
         LOGGER.info("Creating Tag {} in Neighborhood {}", name, neighborhoodId);
 
-        //find tag by name, if it doesn't exist create it
+        // Find tag by name, if it doesn't exist create it
         Tag tag = tagDao.findTag(name).orElseGet(() -> tagDao.createTag(name));
 
         if(!tagMappingDao.findTagMapping(tag.getTagId(), neighborhoodId).isPresent())
             tagMappingDao.createTagMappingDao(tag.getTagId(), neighborhoodId);
 
         return tag;
-    }
-
-    @Override
-    public void categorizePost(long postId, List<Long> tagIds) {
-        LOGGER.info("Associating Tags {} with Post {}", tagIds, postId);
-
-        for (long tag: tagIds)
-            categorizationDao.findCategorization(tag, postId).orElseGet(() -> categorizationDao.createCategorization(tag, postId));
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -70,22 +62,22 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return tagDao.getTags(postId, neighborhoodId, page, size);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
+    @Transactional(readOnly = true)
     public int calculateTagPages(Long postId, long neighborhoodId, int size) {
         LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
     }
 
-    // ---------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteTag(long neighborhoodId, long tagId) {
@@ -113,5 +105,4 @@ public class TagServiceImpl implements TagService {
 
         return true;
     }
-
 }

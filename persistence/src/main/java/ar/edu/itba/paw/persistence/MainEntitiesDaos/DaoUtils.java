@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.PostStatus;
-import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.enums.WorkerStatus;
 
 import java.util.List;
 

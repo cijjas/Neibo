@@ -45,6 +45,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
 
@@ -52,6 +53,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int calculateAttendancePages(long eventId, int size) {
         LOGGER.info("Calculating Attendance Pages for Event {}", eventId);
 

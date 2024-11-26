@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TestConstants {
     public static final int BASE_PAGE = 1;

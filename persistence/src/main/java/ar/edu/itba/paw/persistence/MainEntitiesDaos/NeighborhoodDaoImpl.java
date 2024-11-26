@@ -54,15 +54,6 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public List<Neighborhood> getNeighborhoods() {
-        LOGGER.debug("Selecting All Neighborhoods");
-
-        String jpql = "SELECT n FROM Neighborhood n";
-        TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);
-        return query.getResultList();
-    }
-
-    @Override
     public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
         LOGGER.debug("Selecting Neighborhoods");
 

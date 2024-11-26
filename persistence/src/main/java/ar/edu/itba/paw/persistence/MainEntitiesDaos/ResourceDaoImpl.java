@@ -83,12 +83,9 @@ public class ResourceDaoImpl implements ResourceDao {
     public int countResources(long neighborhoodId) {
         LOGGER.debug("Counting Resources from Neighborhood {}", neighborhoodId);
 
-        // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Resource> root = criteriaQuery.from(Resource.class);
-
-        // Count the number of Resources in the neighborhood
         criteriaQuery.select(cb.count(root));
         criteriaQuery.where(cb.equal(root.get("neighborhood").get("neighborhoodId"), neighborhoodId));
         TypedQuery<Long> query = em.createQuery(criteriaQuery);

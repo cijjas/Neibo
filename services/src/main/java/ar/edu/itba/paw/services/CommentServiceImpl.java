@@ -59,8 +59,7 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.getComments(postId, page, size);
     }
 
-    // ---------------------------------------------------
-
+    @Override
     @Transactional(readOnly = true)
     public int calculateCommentPages(long postId, int size) {
         LOGGER.info("Calculating Comment for Post {}", postId);
@@ -76,5 +75,4 @@ public class CommentServiceImpl implements CommentService {
 
         return commentDao.deleteComment(commentId);
     }
-
 }

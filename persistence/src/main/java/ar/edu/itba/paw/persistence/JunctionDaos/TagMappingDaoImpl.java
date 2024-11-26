@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.TagMappingDao;
-import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Tag;
+import ar.edu.itba.paw.models.Entities.TagMapping;
 import ar.edu.itba.paw.models.compositeKeys.TagMappingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

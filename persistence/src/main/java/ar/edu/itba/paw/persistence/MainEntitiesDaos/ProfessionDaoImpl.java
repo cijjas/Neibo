@@ -34,6 +34,13 @@ public class ProfessionDaoImpl implements ProfessionDao {
     // ------------------------------------------------ PROFESSION SELECT ----------------------------------------------
 
     @Override
+    public Optional<Profession> findProfession(long professionId) {
+        LOGGER.debug("Selecting Profession {}", professionId);
+
+        return Optional.ofNullable(em.find(Profession.class, professionId));
+    }
+
+    @Override
     public List<Profession> getProfessions(Long workerId) {
         LOGGER.debug("Selecting Professions for workerId {}", workerId);
 
@@ -52,12 +59,7 @@ public class ProfessionDaoImpl implements ProfessionDao {
         return query.getResultList();
     }
 
-    @Override
-    public Optional<Profession> findProfession(long professionId) {
-        LOGGER.debug("Selecting Profession {}", professionId);
-
-        return Optional.ofNullable(em.find(Profession.class, professionId));
-    }
+    // ------------------------------------------------ PROFESSION DELETE ----------------------------------------------
 
     @Override
     public boolean deleteProfession(long professionId) {

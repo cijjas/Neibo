@@ -71,12 +71,17 @@ public class RequestDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
-        Request request = requestDaoImpl.createRequest(uKey3, pKey, REQUEST_MESSAGE, REQUEST_QUANTITY); //TODO: arreglar quantity?
+        Request request = requestDaoImpl.createRequest(uKey3, pKey, REQUEST_MESSAGE, REQUEST_QUANTITY);
 
         // Validations & Post Conditions
         em.flush();
         assertNotNull(request);
+        assertEquals(uKey3, request.getUser().getUserId().longValue());
+        assertEquals(pKey, request.getProduct().getProductId().longValue());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
+        assertEquals(REQUEST_MESSAGE, request.getMessage());
+        assertEquals(REQUEST_QUANTITY, request.getUnits().longValue());
+
     }
 
     // -------------------------------------------------- FINDS --------------------------------------------------------

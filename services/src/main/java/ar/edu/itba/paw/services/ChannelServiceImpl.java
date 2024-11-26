@@ -54,6 +54,7 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Channel> getChannels(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Channels for Neighborhood {}", neighborhoodId);
 
@@ -61,6 +62,7 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int calculateChannelPages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Channel Pages for Neighborhood {}", neighborhoodId);
 
@@ -76,7 +78,7 @@ public class ChannelServiceImpl implements ChannelService {
         channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
         channelMappingDao.deleteChannelMapping(channelId, neighborhoodId);
 
-        //if the channel was only being used by this neighborhood, it gets deleted
+        // If the channel was only being used by this neighborhood, it gets deleted
         if(channelMappingDao.channelMappingsCount(channelId, null) == 0)
             channelDao.deleteChannel(channelId);
 

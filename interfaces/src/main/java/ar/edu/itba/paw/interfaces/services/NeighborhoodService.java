@@ -13,13 +13,7 @@ public interface NeighborhoodService {
 
     Optional<Neighborhood> findNeighborhood(long neighborhoodId);
 
-    Optional<Neighborhood> findNeighborhood(String name);
-
-    List<Neighborhood> getNeighborhoods();
-
     List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
-
-    // ---------------------------------------------------
 
     int calculateNeighborhoodPages(Long workerId, int size);
 

@@ -65,17 +65,6 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public List<Review> getReviews(long workerId, int page, int size) {
-        LOGGER.debug("Selecting Reviews from Worker {}", workerId);
-
-        TypedQuery<Review> query = em.createQuery("SELECT r FROM Review r WHERE r.worker.user.userId = :workerId ORDER BY r.date DESC", Review.class);
-        query.setParameter("workerId", workerId);
-        query.setFirstResult((page - 1) * size);
-        query.setMaxResults(size);
-        return query.getResultList();
-    }
-
-    @Override
     public Optional<Review> findLatestReview(long workerId, long userId) {
         LOGGER.debug("Selecting Latest Review from Worker {} made by User {}", workerId, userId);
 
@@ -101,6 +90,17 @@ public class ReviewDaoImpl implements ReviewDao {
         if (query.getSingleResult() == null)
             return 0.0f;
         return query.getSingleResult().floatValue();
+    }
+
+    @Override
+    public List<Review> getReviews(long workerId, int page, int size) {
+        LOGGER.debug("Selecting Reviews from Worker {}", workerId);
+
+        TypedQuery<Review> query = em.createQuery("SELECT r FROM Review r WHERE r.worker.user.userId = :workerId ORDER BY r.date DESC", Review.class);
+        query.setParameter("workerId", workerId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
     }
 
     @Override

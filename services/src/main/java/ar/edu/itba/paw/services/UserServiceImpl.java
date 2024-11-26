@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         if (!n.isPresent()) {
             User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
 
-            //if user created is a neighbor (not worker), send admin email notifying new neighbor
+            // If user created is a neighbor (not worker), send admin email notifying new neighbor
             if (neighborhoodId != 0) {
                 emailService.sendNewUserMail(neighborhoodId, name, UserRole.NEIGHBOR);
             }
@@ -78,13 +78,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findUser(long userId) {
-        LOGGER.info("Finding User {}", userId);
-
-        return userDao.findUser(userId);
-    }
-
-    @Override
     public Optional<User> findUser(long userId, long neighborhoodId) {
         LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
 
@@ -106,8 +99,6 @@ public class UserServiceImpl implements UserService {
 
         return userDao.getUsers(userRoleId, neighborhoodId, page, size);
     }
-
-    // ---------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
@@ -149,14 +140,5 @@ public class UserServiceImpl implements UserService {
             user.setRole(UserRole.fromId(userRoleId));
 
         return user;
-    }
-
-    // ---------------------------------------------- USERS DELETE -----------------------------------------------------
-
-    @Override
-    public boolean deleteUser(long userId) {
-        LOGGER.info("Deleting User {}", userId);
-
-        return userDao.deleteUser(userId);
     }
 }

@@ -828,46 +828,6 @@ public class WorkerDaoImplTest {
         assertEquals(NO_ELEMENTS, countWorker);
     }
 
-    // ------------------------------------------------ DELETES --------------------------------------------------------
-
-    @Test
-	public void delete_valid() {
-	    // Pre Conditions
-        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
-        long pKey = testInserter.createProfession();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
-        testInserter.createWorker(uKey);
-        testInserter.createSpecialization(uKey, pKey);
-        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
-
-	    // Exercise
-        boolean deleted = workerDaoImpl.deleteWorker(uKey);
-
-	    // Validations & Post Conditions
-		em.flush();
-	    assertTrue(deleted);
-	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
-	}
-
-	@Test
-	public void delete_invalid_workerId() {
-	    // Pre Conditions
-        long pKey = testInserter.createProfession();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
-        testInserter.createWorker(uKey);
-        testInserter.createSpecialization(uKey, pKey);
-
-	    // Exercise
-	    boolean deleted = workerDaoImpl.deleteWorker(INVALID_ID);
-
-	    // Validations & Post Conditions
-		em.flush();
-	    assertFalse(deleted);
-	}
-
-
     // ----------------------------------------------- POPULATION ------------------------------------------------------
 
     private void populateWorkers() {
