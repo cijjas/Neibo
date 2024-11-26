@@ -29,7 +29,6 @@ import java.net.URI;
 
 @Path("images")
 @Component
-@Transactional
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class ImageController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);

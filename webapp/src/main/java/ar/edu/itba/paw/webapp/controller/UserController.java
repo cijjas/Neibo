@@ -42,7 +42,6 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Path("neighborhoods/{neighborhoodId}/users")
 @Component
 @Validated
-@Transactional
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
