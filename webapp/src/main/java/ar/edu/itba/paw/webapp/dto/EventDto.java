@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.TimeConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.TimeRangeConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -28,8 +29,10 @@ public class EventDto {
     private String date;
 
     @NotNull(groups = Null.class)
+    @TimeConstraint
     private String startTime;
 
+    @TimeConstraint
     @NotNull(groups = Null.class)
     private String endTime;
 
@@ -41,8 +44,8 @@ public class EventDto {
         dto.name = event.getName();
         dto.description = event.getDescription();
         dto.date = event.getDate().toString();
-        dto.startTime = event.getStartTime().getTimeInterval().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-        dto.endTime = event.getEndTime().getTimeInterval().toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm"));
+        dto.startTime = event.getStartTime().getTimeInterval().toString();
+        dto.endTime = event.getEndTime().getTimeInterval().toString();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()

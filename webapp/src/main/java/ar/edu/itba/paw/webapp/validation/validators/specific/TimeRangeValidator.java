@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class TimeRangeValidator implements ConstraintValidator<TimeRangeConstraint, EventDto> {
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("H:mm"); // Handles both `9:00` and `09:00`
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @Override
     public void initialize(TimeRangeConstraint constraintAnnotation) {

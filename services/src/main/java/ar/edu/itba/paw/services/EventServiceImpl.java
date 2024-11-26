@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.models.Entities.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,8 +46,12 @@ public class EventServiceImpl implements EventService {
     public Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
 
-        Long[] times = stringToTime(startTime, endTime);
-        Event createdEvent = eventDao.createEvent(name, description, date, times[0], times[1], neighborhoodId);
+        java.sql.Time sqlStartTime = java.sql.Time.valueOf(startTime);
+        java.sql.Time sqlEndTime = java.sql.Time.valueOf(endTime);
+        Time startTimeEntity = timeDao.findTime(sqlStartTime).orElseGet(() -> timeDao.createTime(sqlStartTime));
+        Time endTimeEntity = timeDao.findTime(sqlEndTime).orElseGet(() -> timeDao.createTime(sqlEndTime));
+
+        Event createdEvent = eventDao.createEvent(name, description, date, startTimeEntity.getTimeId(), endTimeEntity.getTimeId(), neighborhoodId);
 
         emailService.sendBatchEventMail(createdEvent, "event.custom.message2", neighborhoodId);
 
@@ -95,11 +99,15 @@ public class EventServiceImpl implements EventService {
             event.setDescription(description);
         if (date != null)
             event.setDate(date);
-        if (startTime != null && endTime != null) {
-            Long[] times = stringToTime(startTime, endTime);
-            event.setStartTime(timeDao.findTime(times[0]).orElseThrow(NotFoundException::new));
-            event.setEndTime(timeDao.findTime(times[1]).orElseThrow(NotFoundException::new));
+        if (startTime != null && !startTime.isEmpty()) {
+            java.sql.Time sqlStartTime = java.sql.Time.valueOf(startTime);
+            event.setStartTime(timeDao.findTime(sqlStartTime).orElseGet(() -> timeDao.createTime(sqlStartTime)));
         }
+        if (endTime != null && !endTime.isEmpty()) {
+            java.sql.Time sqlEndTime = java.sql.Time.valueOf(endTime);
+            event.setEndTime(timeDao.findTime(sqlEndTime).orElseGet(() -> timeDao.createTime(sqlEndTime)));
+        }
+
         return event;
     }
 
@@ -110,41 +118,5 @@ public class EventServiceImpl implements EventService {
         LOGGER.info("Delete Event {}", eventId);
 
         return eventDao.deleteEvent(eventId);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private Long[] stringToTime(String startTime, String endTime) {
-        Time startTimeInTime = null;
-        Time endTimeInTime = null;
-
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            java.util.Date parsedStartTime = sdf.parse(startTime);
-            java.util.Date parsedEndTime = sdf.parse(endTime);
-            startTimeInTime = new Time(parsedStartTime.getTime());
-            endTimeInTime = new Time(parsedEndTime.getTime());
-        } catch (ParseException e) {
-            throw new UnexpectedException("Unexpected error while creating the Event");
-        }
-        OptionalLong startTimeId = timeDao.findId(startTimeInTime);
-        OptionalLong endTimeId = timeDao.findId(endTimeInTime);
-
-        Long[] timeArray = new Long[2];
-        if (startTimeId.isPresent() && endTimeId.isPresent()) {
-            timeArray[0] = startTimeId.getAsLong();
-            timeArray[1] = endTimeId.getAsLong();
-        } else {
-            // Handle the case where one or both Time objects were not found
-            if (!startTimeId.isPresent()) {
-                startTimeId = OptionalLong.of(timeDao.createTime(startTimeInTime).getTimeId());
-            }
-            if (!endTimeId.isPresent()) {
-                endTimeId = OptionalLong.of(timeDao.createTime(endTimeInTime).getTimeId());
-            }
-            timeArray[0] = startTimeId.getAsLong();
-            timeArray[1] = endTimeId.getAsLong();
-        }
-        return timeArray;
     }
 }

@@ -94,27 +94,27 @@ public class TimeDaoImplTest {
     }
 
     @Test
-    public void findId_timeName_valid() {
+    public void find_sqlTime_valid() {
         // Pre Conditions
         long timeKey = testInserter.createTime(TIME_MILLISECONDS);
 
         // Exercise
-        OptionalLong optionalLong = timeDaoImpl.findId(TIME_MILLISECONDS);
+        Optional<Time> optionalTime = timeDaoImpl.findTime(TIME_MILLISECONDS);
 
         // Validations & Post Conditions
-        assertTrue(optionalLong.isPresent());
-        assertEquals(timeKey, optionalLong.getAsLong());
+        assertTrue(optionalTime.isPresent());
+        assertEquals(timeKey, optionalTime.get().getTimeId().longValue());
     }
 
     @Test
-    public void findId_timeName_invalid_timeName() {
+    public void find_sqlTime_invalid_sqlTime() {
         // Pre Conditions
         long timeKey = testInserter.createTime(TIME_MILLISECONDS);
 
         // Exercise
-        OptionalLong optionalLong = timeDaoImpl.findId(INVALID_TIME_MILLISECONDS);
+        Optional<Time> optionalTime = timeDaoImpl.findTime(INVALID_TIME_MILLISECONDS);
 
         // Validations & Post Conditions
-        assertFalse(optionalLong.isPresent());
+        assertFalse(optionalTime.isPresent());
     }
 }

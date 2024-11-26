@@ -43,12 +43,12 @@ public class TimeDaoImpl implements TimeDao {
     }
 
     @Override
-    public OptionalLong findId(java.sql.Time time) {
-        LOGGER.debug("Selecting Id with time {}", time);
+    public Optional<Time> findTime(java.sql.Time time) {
+        LOGGER.debug("Selecting Time Entity with time {}", time);
 
-        TypedQuery<Long> query = em.createQuery("SELECT t.id FROM Time t WHERE t.timeInterval = :timeInterval", Long.class);
+        TypedQuery<Time> query = em.createQuery("SELECT t FROM Time t WHERE t.timeInterval = :timeInterval", Time.class);
         query.setParameter("timeInterval", time);
-        List<Long> resultList = query.getResultList();
-        return resultList.isEmpty() ? OptionalLong.empty() : OptionalLong.of(resultList.get(0));
+        List<Time> resultList = query.getResultList();
+        return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
     }
 }

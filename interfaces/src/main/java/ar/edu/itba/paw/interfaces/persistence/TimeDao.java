@@ -15,5 +15,5 @@ public interface TimeDao {
 
     Optional<Time> findTime(long timeId);
 
-    OptionalLong findId(java.sql.Time time);
+    Optional<Time> findTime(java.sql.Time time);
 }
