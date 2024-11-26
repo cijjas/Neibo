@@ -38,6 +38,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstIds;
 @Path("neighborhoods/{neighborhoodId}/amenities")
 @Validated
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class AmenityController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);
 
@@ -55,7 +56,6 @@ public class AmenityController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAmenities(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -98,7 +98,6 @@ public class AmenityController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAmenity(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final Long id
@@ -122,7 +121,6 @@ public class AmenityController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createAmenity(
@@ -146,7 +144,6 @@ public class AmenityController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateAmenityPartially(
@@ -168,7 +165,6 @@ public class AmenityController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,

@@ -41,6 +41,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Path("neighborhoods/{neighborhoodId}/requests")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class RequestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
 
@@ -58,7 +59,6 @@ public class RequestController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#userURN, #productId)")
     public Response listRequests(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -117,7 +117,6 @@ public class RequestController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -142,7 +141,6 @@ public class RequestController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createRequest(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -165,7 +163,6 @@ public class RequestController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateRequest(#requestId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateRequest(
@@ -186,7 +183,6 @@ public class RequestController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,

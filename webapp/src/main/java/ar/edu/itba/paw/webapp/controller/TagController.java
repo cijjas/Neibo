@@ -36,6 +36,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
 @Path("neighborhoods/{neighborhoodId}/tags")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class TagController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagController.class);
 
@@ -53,7 +54,6 @@ public class TagController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response listTags(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("onPost") @PostURNConstraint final String post,
@@ -101,7 +101,6 @@ public class TagController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findTags(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long tagId
@@ -125,7 +124,6 @@ public class TagController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createTag(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -152,7 +150,6 @@ public class TagController {
     @DELETE
     @Path("/{id}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long tagId

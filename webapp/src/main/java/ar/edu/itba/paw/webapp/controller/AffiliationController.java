@@ -54,6 +54,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Path("/affiliations")
 @Validated
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
 
@@ -71,7 +72,6 @@ public class AffiliationController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAffiliations(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -126,7 +126,6 @@ public class AffiliationController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createAffiliation(
             @Valid AffiliationDto form
@@ -156,7 +155,6 @@ public class AffiliationController {
     }
 
     @PATCH
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateAffiliation(#neighborhood)")
     @Validated(UpdateValidationSequence.class)
     public Response updateAffiliation(
@@ -176,7 +174,6 @@ public class AffiliationController {
     }
 
     @DELETE
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeleteAffiliation(#worker)")
     public Response removeWorkerFromNeighborhood(
             @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,

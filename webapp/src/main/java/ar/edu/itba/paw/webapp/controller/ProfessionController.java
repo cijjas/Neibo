@@ -37,6 +37,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Path("professions")
 @Component
 @Validated
+@Produces(MediaType.APPLICATION_JSON)
 public class ProfessionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionController.class);
 
@@ -54,7 +55,6 @@ public class ProfessionController {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInProfessions(#worker)")
     public Response listProfessions(
             @QueryParam("forWorker") @WorkerURNConstraint final String worker
@@ -88,7 +88,6 @@ public class ProfessionController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findProfession(
             @PathParam("id") @GenericIdConstraint final long id
     ) {
@@ -112,7 +111,6 @@ public class ProfessionController {
 
     @POST
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createProfession(
             @Valid ProfessionDto form
@@ -138,7 +136,6 @@ public class ProfessionController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteProfessionById(
             @PathParam("id") @GenericIdConstraint final long id
     ) {

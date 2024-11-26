@@ -31,6 +31,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("shift-statuses")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class ShiftStatusController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiftStatusController.class);
 
@@ -41,7 +42,6 @@ public class ShiftStatusController {
     private Request request;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response listShiftStatuses() {
         LOGGER.info("GET request arrived at '/shift-statuses'");
 
@@ -70,7 +70,6 @@ public class ShiftStatusController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findShiftStatus(
             @PathParam("id") @GenericIdConstraint final Long id
     ) {

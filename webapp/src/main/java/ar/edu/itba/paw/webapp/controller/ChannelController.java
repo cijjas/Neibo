@@ -37,6 +37,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 @Path("neighborhoods/{neighborhoodId}/channels")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class ChannelController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelController.class);
 
@@ -54,7 +55,6 @@ public class ChannelController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listChannels(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -98,7 +98,6 @@ public class ChannelController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findChannel(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("id") @GenericIdConstraint long channelId
@@ -123,7 +122,6 @@ public class ChannelController {
 
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createChannel(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
@@ -150,7 +148,6 @@ public class ChannelController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long channelId

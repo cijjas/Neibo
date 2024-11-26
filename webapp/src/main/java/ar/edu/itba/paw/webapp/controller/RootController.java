@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.json.Json;
@@ -14,15 +16,17 @@ import javax.ws.rs.core.Response;
 
 @Path("")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class RootController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RootController.class);
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response getTreeStructure() {
-        // Create the corrected tree structure
+        LOGGER.info("GET request arrived at '/'");
+
+        // Content
         JsonObject tree = createTreeStructure();
 
-        // Build the Response object
         return Response.ok(tree.toString())
                 .header("Content-Type", "application/json")
                 .build();

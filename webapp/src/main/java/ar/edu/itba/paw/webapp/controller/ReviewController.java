@@ -37,6 +37,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Path("workers/{workerId}/reviews")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class ReviewController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
@@ -54,7 +55,6 @@ public class ReviewController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listReviews(
             @PathParam("workerId") @WorkerIdConstraint final long workerId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -98,7 +98,6 @@ public class ReviewController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findReview(
             @PathParam("workerId") @WorkerIdConstraint final long workerId,
             @PathParam("id") @GenericIdConstraint final long id
@@ -123,7 +122,6 @@ public class ReviewController {
 
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #form.user)")
     public Response createReview(
@@ -146,7 +144,6 @@ public class ReviewController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     public Response deleteById(
             @PathParam("workerId") @WorkerIdConstraint final long workerId,

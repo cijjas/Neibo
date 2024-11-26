@@ -29,6 +29,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("product-statuses")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class ProductStatusController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductStatusController.class);
 
@@ -39,7 +40,6 @@ public class ProductStatusController {
     private Request request;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response listProductStatuses() {
         LOGGER.info("GET request arrived at '/product-statuses'");
 
@@ -67,7 +67,6 @@ public class ProductStatusController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findProductStatus(
             @PathParam("id") @GenericIdConstraint final Long id
     ) {

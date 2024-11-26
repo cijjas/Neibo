@@ -39,6 +39,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 @Path("neighborhoods/{neighborhoodId}/contacts")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class ContactController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
 
@@ -56,7 +57,6 @@ public class ContactController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listContacts(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -100,7 +100,6 @@ public class ContactController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findContact(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("id") @GenericIdConstraint long contactId
@@ -124,7 +123,6 @@ public class ContactController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createContact(
@@ -148,7 +146,6 @@ public class ContactController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateContactPartially(
@@ -169,7 +166,6 @@ public class ContactController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,

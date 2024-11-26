@@ -37,6 +37,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Path("neighborhoods")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class NeighborhoodController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodController.class);
 
@@ -54,7 +55,6 @@ public class NeighborhoodController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#workerId)")
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -102,7 +102,6 @@ public class NeighborhoodController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findNeighborhood(
             @PathParam("id") @NeighborhoodIdConstraint final long neighborhoodId
     ) {
@@ -126,7 +125,6 @@ public class NeighborhoodController {
 
     @POST
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createNeighborhood(
             @Valid NeighborhoodDto form
@@ -152,7 +150,6 @@ public class NeighborhoodController {
     @DELETE
     @Path("/{id}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("id") @NeighborhoodIdConstraint final long neighborhoodId
     ) {

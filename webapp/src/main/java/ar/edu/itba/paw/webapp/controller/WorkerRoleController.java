@@ -21,6 +21,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("worker-roles")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class WorkerRoleController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerRoleController.class);
 
@@ -31,7 +32,6 @@ public class WorkerRoleController {
     private Request request;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response listWorkerRoles() {
         LOGGER.info("GET request arrived at '/worker-roles'");
 
@@ -60,7 +60,6 @@ public class WorkerRoleController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findWorkerRole(
             @PathParam("id") @GenericIdConstraint final Long id
     ) {

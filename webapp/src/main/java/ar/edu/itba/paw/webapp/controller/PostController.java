@@ -42,6 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Path("neighborhoods/{neighborhoodId}/posts")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class PostController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
 
@@ -59,7 +60,6 @@ public class PostController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listPosts(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -113,7 +113,6 @@ public class PostController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findPostById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long postId
@@ -137,7 +136,6 @@ public class PostController {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Validated(CreateValidationSequence.class)
     public Response createPost(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -164,7 +162,6 @@ public class PostController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeletePost(#postId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,

@@ -29,6 +29,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("transaction-types")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class TransactionTypeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionTypeController.class);
 
@@ -39,7 +40,6 @@ public class TransactionTypeController {
     private Request request;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response listTransactionTypes() {
         LOGGER.info("GET request arrived at '/transaction-type'");
 
@@ -68,7 +68,6 @@ public class TransactionTypeController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findTransactionType(
             @PathParam("id") @GenericIdConstraint final Long id
     ) {

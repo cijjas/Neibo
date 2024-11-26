@@ -31,6 +31,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("post-statuses")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class PostStatusController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostStatusController.class);
 
@@ -41,7 +42,6 @@ public class PostStatusController {
     private Request request;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response listPostStatuses() {
         LOGGER.info("GET request arrived at '/post-statuses'");
 
@@ -69,7 +69,6 @@ public class PostStatusController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findPostStatus(
             @PathParam("id") @GenericIdConstraint final Long id
     ) {

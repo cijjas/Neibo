@@ -36,6 +36,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
 
@@ -53,7 +54,6 @@ public class CommentController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listComments(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("postId") @GenericIdConstraint final Long postId,
@@ -97,7 +97,6 @@ public class CommentController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findComment(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("postId") @GenericIdConstraint final Long postId,
@@ -122,7 +121,6 @@ public class CommentController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createComment(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
@@ -149,7 +147,6 @@ public class CommentController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeleteComment(#commentId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,

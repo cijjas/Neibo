@@ -36,6 +36,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class AttendanceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceController.class);
 
@@ -53,7 +54,6 @@ public class AttendanceController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("eventId") @GenericIdConstraint final Long eventId,
@@ -98,7 +98,6 @@ public class AttendanceController {
 
     @GET
     @Path("/{userId}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("eventId") @GenericIdConstraint final Long eventId,
@@ -123,7 +122,6 @@ public class AttendanceController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
@@ -150,7 +148,6 @@ public class AttendanceController {
 
     @DELETE
     @Path("/{userId}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#userId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,

@@ -39,6 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Path("likes")
 @Component
 @Validated
+@Produces(MediaType.APPLICATION_JSON)
 public class LikeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
 
@@ -56,7 +57,6 @@ public class LikeController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @PreAuthorize("@pathAccessControlHelper.canListLikes(#post, #user)")
     public Response listLikes(
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -113,7 +113,6 @@ public class LikeController {
 
     @GET
     @Path("/count")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response countLikes(
             @QueryParam("onPost") @PostURNConstraint final String post,
             @QueryParam("likedBy") @UserURNConstraint final String user
@@ -140,7 +139,6 @@ public class LikeController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createLike(
             @Valid LikeDto form
@@ -174,7 +172,6 @@ public class LikeController {
     }
 
     @DELETE
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
     public Response deleteById(
             @QueryParam("onPost") @NotNull @PostURNConstraint final String post,

@@ -30,6 +30,7 @@ import java.net.URI;
 @Path("images")
 @Component
 @Transactional
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class ImageController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
@@ -48,7 +49,6 @@ public class ImageController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findById(
             @PathParam("id") @GenericIdConstraint long imageId
     ) {
@@ -72,7 +72,6 @@ public class ImageController {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response storeImage(
             @FormDataParam("imageFile") InputStream fileInputStream,
             @FormDataParam("imageFile") FormDataContentDisposition fileDetail
@@ -100,7 +99,6 @@ public class ImageController {
     @DELETE
     @Path("/{id}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteById(
             @PathParam("id") @GenericIdConstraint final long imageId
     ) {

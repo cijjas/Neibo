@@ -40,6 +40,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Path("neighborhoods/{neighborhoodId}/products")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class ProductController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
@@ -57,7 +58,6 @@ public class ProductController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listProducts(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -109,7 +109,6 @@ public class ProductController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findProduct(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long productId
@@ -133,7 +132,6 @@ public class ProductController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createProduct(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -156,7 +154,6 @@ public class ProductController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#id)")
     @Validated(UpdateValidationSequence.class)
     public Response updateProductPartially(
@@ -186,7 +183,6 @@ public class ProductController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,

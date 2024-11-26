@@ -30,6 +30,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
 
 @Path("shifts")
 @Component
+@Produces(MediaType.APPLICATION_JSON)
 public class ShiftController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiftController.class);
 
@@ -47,7 +48,6 @@ public class ShiftController {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts(
             @QueryParam("forAmenity") @AmenityURNConstraint final String amenity,
             @QueryParam("forDate") final Date date
@@ -83,7 +83,6 @@ public class ShiftController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findShift(
             @PathParam("id") @GenericIdConstraint final long id
     ) {

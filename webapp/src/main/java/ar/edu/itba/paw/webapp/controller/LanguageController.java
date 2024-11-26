@@ -34,6 +34,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("languages")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class LanguageController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguageController.class);
 
@@ -44,7 +45,6 @@ public class LanguageController {
     private Request request;
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response listLanguages() {
         LOGGER.info("GET request arrived at '/languages'");
 
@@ -72,7 +72,6 @@ public class LanguageController {
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response findLanguage(
             @PathParam("id") @GenericIdConstraint final long languageId
     ) {

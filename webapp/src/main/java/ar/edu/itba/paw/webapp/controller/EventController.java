@@ -42,6 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractDate;
 @Path("neighborhoods/{neighborhoodId}/events")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class EventController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
 
@@ -59,7 +60,6 @@ public class EventController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listEventsByDate(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("forDate") final Date date,
@@ -104,7 +104,6 @@ public class EventController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findEvent(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long eventId
@@ -128,7 +127,6 @@ public class EventController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createEvent(
@@ -152,7 +150,6 @@ public class EventController {
     @PATCH
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateEventPartially(
@@ -173,7 +170,6 @@ public class EventController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,

@@ -42,6 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
 
@@ -59,7 +60,6 @@ public class BookingController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listBookings(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -109,7 +109,6 @@ public class BookingController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findBooking(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long bookingId
@@ -135,7 +134,6 @@ public class BookingController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createBooking(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
@@ -157,7 +155,6 @@ public class BookingController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,

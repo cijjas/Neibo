@@ -36,6 +36,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Path("neighborhoods/{neighborhoodId}/resources")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class ResourceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
@@ -53,7 +54,6 @@ public class ResourceController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listResources(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -97,7 +97,6 @@ public class ResourceController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findResource(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long resourceId
@@ -121,7 +120,6 @@ public class ResourceController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createResource(
@@ -144,7 +142,6 @@ public class ResourceController {
 
     @PATCH
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
     public Response updateResourcePartially(
@@ -165,7 +162,6 @@ public class ResourceController {
 
     @DELETE
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteResourceById(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,

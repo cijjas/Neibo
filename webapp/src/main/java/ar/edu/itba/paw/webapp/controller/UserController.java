@@ -43,6 +43,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Component
 @Validated
 @Transactional
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -60,7 +61,6 @@ public class UserController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON})
     @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhoodId)")
     public Response listUsers(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -108,7 +108,6 @@ public class UserController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canFindUser(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -134,7 +133,6 @@ public class UserController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createUser(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
@@ -156,7 +154,6 @@ public class UserController {
 
     @PATCH
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#id, #neighborhoodId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUserPartially(

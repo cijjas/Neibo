@@ -42,6 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Path("/workers")
 @Component
 @Validated
+@Produces(value = {MediaType.APPLICATION_JSON})
 public class WorkerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
@@ -61,7 +62,6 @@ public class WorkerController {
     }
 
     @GET
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
@@ -117,7 +117,6 @@ public class WorkerController {
     @GET
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findWorker(
             @PathParam("id") @GenericIdConstraint final long workerId
     ) {
@@ -140,7 +139,6 @@ public class WorkerController {
     }
 
     @POST
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createWorker(
             @Valid WorkerDto form
@@ -161,7 +159,6 @@ public class WorkerController {
 
     @PATCH
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateWorker(#workerId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateWorkerPartially(

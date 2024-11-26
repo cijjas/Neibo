@@ -38,6 +38,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 @Path("departments")
 @Component
+@Produces(value = {MediaType.APPLICATION_JSON,})
 public class DepartmentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
 
@@ -55,7 +56,6 @@ public class DepartmentController {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     public Response listDepartments() {
         LOGGER.info("GET request arrived at '/departments'");
 
@@ -86,7 +86,6 @@ public class DepartmentController {
 
     @GET
     @Path("/{id}")
-    @Produces(value = {MediaType.APPLICATION_JSON})
     public Response findDepartment(
             @PathParam("id") @GenericIdConstraint final Long departmentId
     ) {
@@ -110,7 +109,6 @@ public class DepartmentController {
 
     @POST
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     @Validated(CreateValidationSequence.class)
     public Response createDepartment(
             @Valid DepartmentDto form
@@ -136,7 +134,6 @@ public class DepartmentController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response deleteDepartmentById(
             @PathParam("id") @GenericIdConstraint final long id
     ) {
