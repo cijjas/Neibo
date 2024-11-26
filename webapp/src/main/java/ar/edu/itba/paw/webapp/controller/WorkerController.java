@@ -178,23 +178,4 @@ public class WorkerController {
                 .tag(workerHashCode)
                 .build();
     }
-
-    /*
-    @DELETE
-    @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(
-        @PathParam("id") @GenericIdConstraint final long workerId
-    ) {
-        LOGGER.info("DELETE request arrived at '/workers/{}", workerId);
-
-        // Deletion Attempt
-        if(ws.deleteWorker(workerId))
-            return Response.noContent()
-                    .build();
-
-        return Response.status(Response.Status.NOT_FOUND)
-                .build();
-    }*/
 }

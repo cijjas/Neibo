@@ -12,6 +12,7 @@ import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequen
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,25 +174,4 @@ public class UserController {
                 .tag(updatedUserHashCode)
                 .build();
     }
-
-    /*
-    @DELETE
-    @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(
-        @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-        @PathParam("id") @GenericIdConstraint final long userId
-    ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
-
-        // Deletion Attempt
-        if(us.deleteUser(userId))
-            return Response.noContent()
-                    .build();
-
-        return Response.status(Response.Status.NOT_FOUND)
-                .build();
-    }
-    */
 }

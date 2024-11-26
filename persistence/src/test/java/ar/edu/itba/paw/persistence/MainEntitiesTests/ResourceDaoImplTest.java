@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Resource;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.ContactDaoImpl;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.ResourceDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -43,6 +44,8 @@ public class ResourceDaoImplTest {
 
     @PersistenceContext
     private EntityManager em;
+    @Autowired
+    private ContactDaoImpl contactDaoImpl;
 
     @Before
     public void setUp() {
@@ -134,7 +137,6 @@ public class ResourceDaoImplTest {
     @Test
     public void get_pagination() {
         // Pre Conditions
-
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
         testInserter.createResource(nhKey, iKey);
@@ -146,6 +148,34 @@ public class ResourceDaoImplTest {
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, resourceList.size());
+    }
+
+    // ------------------------------------------------- COUNTS --------------------------------------------------------
+
+    @Test
+    public void count() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        int countResources = resourceDaoImpl.countResources(nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countResources);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+
+        // Exercise
+        int countResources = resourceDaoImpl.countResources(nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, countResources);
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------

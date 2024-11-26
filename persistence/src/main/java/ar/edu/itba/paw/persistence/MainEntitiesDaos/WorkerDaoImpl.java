@@ -173,5 +173,4 @@ public class WorkerDaoImpl implements WorkerDao {
                 .executeUpdate();
         return result > 0;
     }
-
 }
