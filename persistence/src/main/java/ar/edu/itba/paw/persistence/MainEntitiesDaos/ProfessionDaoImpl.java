@@ -62,8 +62,9 @@ public class ProfessionDaoImpl implements ProfessionDao {
     @Override
     public boolean deleteProfession(long professionId) {
         LOGGER.debug("Deleting Profession with id {}", professionId);
+
         Profession profession = em.find(Profession.class, professionId);
-        if (profession!= null) {
+        if (profession != null) {
             em.remove(profession);
             return true;
         }

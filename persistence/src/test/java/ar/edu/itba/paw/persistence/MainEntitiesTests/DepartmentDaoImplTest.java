@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
-import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -53,12 +53,12 @@ public class DepartmentDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Department department = departmentDaoImpl.createDepartment(ar.edu.itba.paw.enums.Department.ELECTRONICS);
+        Department department = departmentDaoImpl.createDepartment(DEPARTMENT_NAME_1);
 
         // Validations & Post Conditions
         em.flush();
         assertNotNull(department);
-        assertEquals(ar.edu.itba.paw.enums.Department.ELECTRONICS.name(), department.getDepartment().name());
+        assertEquals(DEPARTMENT_NAME_1, department.getDepartment());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.departments.name()));
     }
 
@@ -87,5 +87,59 @@ public class DepartmentDaoImplTest {
 
         // Validations & Post Conditions
         assertFalse(optionalDepartment.isPresent());
+    }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
+    @Test
+    public void get() {
+        // Pre Conditions
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long dKey2 = testInserter.createDepartment(DEPARTMENT_NAME_2);
+
+        // Exercise
+        List<Department> departmentList = departmentDaoImpl.getDepartments();
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, departmentList.size());
+    }
+
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+
+        // Exercise
+        List<Department> departmentList = departmentDaoImpl.getDepartments();
+
+        // Validations & Post Conditions
+        assertTrue(departmentList.isEmpty());
+    }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+    public void delete_professionId_valid() {
+        // Pre Conditions
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+
+        // Exercise
+        boolean deleted = departmentDaoImpl.deleteDepartment(dKey1);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.professions.name()));
+    }
+
+    @Test
+    public void delete_professionId_invalid_professionId() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = departmentDaoImpl.deleteDepartment(INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
     }
 }

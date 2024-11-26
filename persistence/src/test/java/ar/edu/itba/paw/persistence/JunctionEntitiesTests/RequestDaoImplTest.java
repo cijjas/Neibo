@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.TransactionType;
@@ -68,7 +67,7 @@ public class RequestDaoImplTest {
         long uKey1 = testInserter.createUser(TestConstants.USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey);
         long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
@@ -88,7 +87,7 @@ public class RequestDaoImplTest {
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(TestConstants.USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long rKey = testInserter.createRequest(pKey, uKey1);
 
@@ -106,7 +105,7 @@ public class RequestDaoImplTest {
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long rKey = testInserter.createRequest(pKey, uKey1);
 
@@ -428,7 +427,7 @@ public class RequestDaoImplTest {
         nhKey = testInserter.createNeighborhood();
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, dKey1);
         pKey3 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
@@ -752,7 +751,7 @@ public class RequestDaoImplTest {
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long rKey = testInserter.createRequest(pKey, uKey1);
 
@@ -771,7 +770,7 @@ public class RequestDaoImplTest {
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long rKey = testInserter.createRequest(pKey, uKey1);
 
@@ -792,7 +791,7 @@ public class RequestDaoImplTest {
         nhKey = testInserter.createNeighborhood();
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, dKey1);
         pKey3 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);

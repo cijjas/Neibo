@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -20,11 +22,11 @@ public class DepartmentDaoImpl implements DepartmentDao {
     // ---------------------------------------------- DEPARTMENT INSERT ------------------------------------------------
 
     @Override
-    public Department createDepartment(ar.edu.itba.paw.enums.Department departmentType) {
-        LOGGER.debug("Inserting Department {}", departmentType);
+    public Department createDepartment(String departmentName) {
+        LOGGER.debug("Inserting Department {}", departmentName);
 
         final Department department = new Department.Builder()
-                .department(departmentType)
+                .department(departmentName)
                 .build();
         em.persist(department);
         return department;
@@ -37,5 +39,29 @@ public class DepartmentDaoImpl implements DepartmentDao {
         LOGGER.debug("Selecting Department with id {}", departmentId);
 
         return Optional.ofNullable(em.find(Department.class, departmentId));
+    }
+
+
+    @Override
+    public List<Department> getDepartments() {
+        LOGGER.debug("Selecting Departments");
+
+        String query = "SELECT d FROM Department d"; // JPQL query
+        return em.createQuery(query, Department.class).getResultList();
+    }
+
+
+    // ---------------------------------------------- DEPARTMENT DELETE ------------------------------------------------
+
+    @Override
+    public boolean deleteDepartment(long departmentId) {
+        LOGGER.debug("Deleting Department with id {}", departmentId);
+
+        Department department = em.find(Department.class, departmentId);
+        if (department != null) {
+            em.remove(department);
+            return true;
+        }
+        return false;
     }
 }

@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
-import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.services.DepartmentService;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNConstraint;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -11,6 +11,9 @@ import javax.validation.ConstraintValidatorContext;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 public class DepartmentURNValidator implements ConstraintValidator<DepartmentURNConstraint, String> {
+
+    @Autowired
+    private DepartmentService departmentService;
 
     @Override
     public void initialize(DepartmentURNConstraint departmentURNConstraint) {
@@ -22,11 +25,6 @@ public class DepartmentURNValidator implements ConstraintValidator<DepartmentURN
             return true;
         if (!URNValidator.validateURN(departmentURN, "departments"))
             return false;
-        try {
-            Department.fromId(extractFirstId(departmentURN));
-        } catch (NotFoundException e) {
-            return false;
-        }
-        return true;
+        return departmentService.findDepartment(extractFirstId(departmentURN)).isPresent();
     }
 }

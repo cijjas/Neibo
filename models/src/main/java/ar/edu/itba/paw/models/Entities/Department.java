@@ -13,8 +13,7 @@ public class Department {
     private Long departmentId;
 
     @Column(length = 64)
-    @Enumerated(EnumType.STRING)
-    private ar.edu.itba.paw.enums.Department department;
+    private String department;
 
     @OneToMany(mappedBy = "department")
     private Set<Product> products;
@@ -35,11 +34,11 @@ public class Department {
         this.departmentId = departmentId;
     }
 
-    public ar.edu.itba.paw.enums.Department getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(ar.edu.itba.paw.enums.Department department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
@@ -74,14 +73,14 @@ public class Department {
 
     public static class Builder {
         private Long departmentId;
-        private ar.edu.itba.paw.enums.Department department;
+        private String department;
 
         public Builder departmentId(Long departmentId) {
             this.departmentId = departmentId;
             return this;
         }
 
-        public Builder department(ar.edu.itba.paw.enums.Department department) {
+        public Builder department(String department) {
             this.department = department;
             return this;
         }

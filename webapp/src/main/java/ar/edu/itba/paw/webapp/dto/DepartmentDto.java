@@ -1,32 +1,42 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.models.Entities.Department;
+import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.Null;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
 
 public class DepartmentDto {
 
-    private ar.edu.itba.paw.enums.Department department;
+    @NotNull(groups = Null.class)
+    @Size(min = 0, max = 64, groups = Basic.class)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
+    private String department;
 
     private Links _links;
 
-    public static DepartmentDto fromDepartment(ar.edu.itba.paw.enums.Department department, UriInfo uriInfo) {
+    public static DepartmentDto fromDepartment(Department department, UriInfo uriInfo) {
         final DepartmentDto dto = new DepartmentDto();
 
-        dto.department = department;
+        dto.department = department.getDepartment();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("departments")
-                .path(String.valueOf(department.getId()))
+                .path(String.valueOf(department.getDepartmentId()))
                 .build());
         dto.set_links(links);
         return dto;
     }
 
-    public ar.edu.itba.paw.enums.Department getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(ar.edu.itba.paw.enums.Department department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 

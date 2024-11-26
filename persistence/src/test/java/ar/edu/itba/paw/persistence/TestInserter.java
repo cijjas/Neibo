@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import static ar.edu.itba.paw.persistence.TestConstants.DATE_1;
+import static ar.edu.itba.paw.persistence.TestConstants.DEPARTMENT_NAME_1;
 
 @Component
 public class TestInserter {
@@ -321,9 +322,9 @@ public class TestInserter {
         return product.getProductId();
     }
 
-    public long createDepartment(ar.edu.itba.paw.enums.Department departmentType) {
+    public long createDepartment(String departmentName) {
         final Department department = new Department.Builder()
-                .department(departmentType)
+                .department(departmentName)
                 .build();
         em.persist(department);
         em.flush();
@@ -531,7 +532,7 @@ public class TestInserter {
     }
 
     public long createDepartment() {
-        return createDepartment(ar.edu.itba.paw.enums.Department.ARTS_CRAFTS);
+        return createDepartment(DEPARTMENT_NAME_1);
     }
 
     public long createInquiry(long productId, long userId) {

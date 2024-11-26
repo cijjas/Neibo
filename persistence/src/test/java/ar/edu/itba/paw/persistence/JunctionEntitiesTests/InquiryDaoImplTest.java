@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.persistence.JunctionDaos.InquiryDaoImpl;
@@ -58,7 +57,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
@@ -69,7 +68,7 @@ public class InquiryDaoImplTest {
         assertNotNull(inquiry);
         assertEquals(uKey2, inquiry.getUser().getUserId().longValue());
         assertEquals(pKey, inquiry.getProduct().getProductId().longValue());
-        assertEquals(inquiry.getMessage(), INQUIRY_MESSAGE);
+        assertEquals(INQUIRY_MESSAGE, inquiry.getMessage());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_inquiries.name()));
     }
 
@@ -82,7 +81,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -101,7 +100,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -119,7 +118,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -138,7 +137,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -156,7 +155,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -174,7 +173,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -192,7 +191,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -210,7 +209,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -228,7 +227,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -246,7 +245,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -266,7 +265,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey1 = testInserter.createInquiry(pKey, uKey2);
         long iqKey2 = testInserter.createInquiry(pKey, uKey2);
@@ -284,7 +283,7 @@ public class InquiryDaoImplTest {
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
@@ -304,7 +303,7 @@ public class InquiryDaoImplTest {
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey1 = testInserter.createInquiry(pKey, uKey2);
         long iqKey2 = testInserter.createInquiry(pKey, uKey2);
@@ -326,7 +325,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey1 = testInserter.createInquiry(pKey, uKey2);
         long iqKey2 = testInserter.createInquiry(pKey, uKey2);
@@ -344,7 +343,7 @@ public class InquiryDaoImplTest {
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
@@ -363,7 +362,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
@@ -383,7 +382,7 @@ public class InquiryDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 

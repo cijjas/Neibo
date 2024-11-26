@@ -34,6 +34,10 @@ public class TestConstants {
     public static final String PROFESSION_NAME_1 = "Plumber";
     public static final String PROFESSION_NAME_2 = "Thief";
 
+    public static final String DEPARTMENT_NAME_1 = "Best department";
+    public static final String DEPARTMENT_NAME_2 = "Not the Best department";
+    public static final String DEPARTMENT_NAME_3 = "Maybe the worst department";
+
     public static final int NO_ELEMENTS = 0;
     public static final int ONE_ELEMENT = 1;
     public static final int TWO_ELEMENTS = 2;
