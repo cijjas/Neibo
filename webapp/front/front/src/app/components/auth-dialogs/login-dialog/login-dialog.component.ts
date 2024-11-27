@@ -1,7 +1,7 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {  FormControl ,FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../shared/services/auth.service';
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'login-dialog',
@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginDialogComponent
-  implements OnInit{
+  implements OnInit {
   @Input() showLoginDialog: boolean = false;
   @Input() showSignupDialog: boolean = false;
   @Output() showLoginDialogChange = new EventEmitter<boolean>();
@@ -22,7 +22,7 @@ export class LoginDialogComponent
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
   ngOnInit() {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),

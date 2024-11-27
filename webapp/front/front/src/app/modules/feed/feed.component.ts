@@ -55,6 +55,8 @@ export class FeedComponent implements OnInit {
 
 
   private getPosts(neighborhood: string, channel: string, tags: string[], postStatus: string, user: string, page: number, size: number): void {
+    console.log("IM ALIVE NIGGA");
+
     this.postService.getPosts(neighborhood, channel, tags, postStatus, user, page, size)
       .subscribe({
         next: (posts: Post[]) => {

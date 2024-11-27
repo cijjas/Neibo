@@ -36,17 +36,19 @@ export class AuthService {
         map(
           (response) => {
             // Check if the response headers contain the Authorization header
-            if (response.headers.has('Authorization')) {
-              const authToken = response.headers.get('Authorization');
+            // todo Guardar refresh token tambien
+            if (response.headers.has('X-Access-Token')) {
+              const authToken = response.headers.get('X-Access-Token');
               // Save the auth token in the storage
               storage.setItem(this.authTokenKey, authHeaderValue);
               this.loggedInService.setAuthToken(authHeaderValue);
               this.loggedInService.setBearerAuthToken(authToken)
               // Look for user with the auth token already in interceptor and urn in the header
-              const rawUrn = response.headers.get('X-User-URN');
+              const rawUrn = response.headers.get('X-User-URL');
               // Extract the URN part (everything before the semicolon, potentially removing angle brackets)
-              const urn = rawUrn.slice(1, rawUrn.indexOf('>')).trim();
-              this.http.get<UserDto>(`${this.apiServerUrl}${urn}`)  // Use the extracted urn
+              const match = rawUrn.match(/<([^>]+)>/);
+              console.log(match[1]);
+              this.http.get<UserDto>(`${match[1]}`)  // Use the extracted urn
                 .subscribe({
                   next: (userDto) => {
                     this.loggedInService.setLoggedUserInformation(userDto);
