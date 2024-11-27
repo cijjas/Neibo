@@ -1,17 +1,17 @@
 import { UserDto } from "./user"
-import { BaseChannelDto } from "./baseChannel"
 import { ImageDto } from "./image"
 import { TagDto } from "./tag"
 import { CommentDto } from "./comment"
 import { Links } from "./links"
 import { LikeDto } from "./like"
+import { ChannelDto } from "./channel"
 
 export interface Post {
     title: string
     description: string
     date: Date
     user: UserDto
-    channel: BaseChannelDto
+    channel: ChannelDto
     postPicture: ImageDto
     comments: CommentDto[]
     tags: TagDto[]
@@ -36,5 +36,4 @@ export interface PostForm {
     imageFile: string
     channel: number
     self: string
-  }
-
+}
