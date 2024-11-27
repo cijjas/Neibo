@@ -50,13 +50,9 @@ export class FeedComponent implements OnInit {
       }),
       take(1) // Take only one emission to avoid continuous subscription
     ).subscribe();
-
   }
 
-
   private getPosts(neighborhood: string, channel: string, tags: string[], postStatus: string, user: string, page: number, size: number): void {
-    console.log("IM ALIVE NIGGA");
-
     this.postService.getPosts(neighborhood, channel, tags, postStatus, user, page, size)
       .subscribe({
         next: (posts: Post[]) => {
