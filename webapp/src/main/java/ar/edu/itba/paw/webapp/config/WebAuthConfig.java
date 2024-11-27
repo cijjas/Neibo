@@ -224,7 +224,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Requested-With",
                 "Access-Control-RequestForm-Method",
                 "Access-Control-RequestForm-Headers",
-                "X-User-Urn",
+                "X-User-URL",
+                "X-Access-Token",
+                "X-Refresh-Token",
                 "Link"
         ));
         corsConfiguration.setExposedHeaders(Arrays.asList(
@@ -237,7 +239,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Requested-With",
                 "Access-Control-RequestForm-Method",
                 "Access-Control-RequestForm-Headers",
-                "X-User-Urn",
+                "X-User-URL",
+                "X-Access-Token",
+                "X-Refresh-Token",
                 "Link"
         ));
         corsConfiguration.setAllowedMethods(Arrays.asList(

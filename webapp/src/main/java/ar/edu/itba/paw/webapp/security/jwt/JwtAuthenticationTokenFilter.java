@@ -107,7 +107,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String fullURL = String.format("%s://%s:%d%s/neighborhoods/%d/users/%d",
                     request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
                     userAuth.getNeighborhoodId(), userAuth.getUserId());
-            response.addHeader("X-User-URN", Link.fromUri(fullURL).rel("urn").build().toString());
+            response.addHeader("X-User-URL", Link.fromUri(fullURL).rel("url").build().toString());
         } catch (AuthenticationException e) {
             LOGGER.debug("Invalid Basic Authentication provided");
             SecurityContextHolder.clearContext();
