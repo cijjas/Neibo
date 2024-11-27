@@ -154,7 +154,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 throw new IllegalArgumentException("Refresh token has expired");
 
             String newAccessToken = authenticationTokenService.issueAccessToken(tokenDetails.getUsername(), tokenDetails.getAuthorities());
-            response.addHeader("X-JSON-Web-Token", "Bearer " + newAccessToken);
+            response.addHeader("X-Access-Token", "Bearer " + newAccessToken);
 
         } catch (AuthenticationException e) {
             LOGGER.debug("Error processing refresh token", e);
