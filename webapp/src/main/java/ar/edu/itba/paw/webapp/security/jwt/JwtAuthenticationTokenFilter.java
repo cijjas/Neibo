@@ -99,7 +99,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String refreshToken = authenticationTokenService.issueRefreshToken(username, authorities);
 
             // Add both tokens to the response headers
-            response.addHeader("X-JSON-Web-Token", "Bearer " + jwtToken);
+            response.addHeader("X-Access-Token", "Bearer " + jwtToken);
             response.addHeader("X-Refresh-Token", "Bearer " + refreshToken);
 
             // Construct a full URL for the User URN and add it to the response headers
