@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import java.net.URI;
 
 public class Links {
+    private URI amenity;
     private URI self;
     private URI worker;
     private URI workers;
@@ -407,5 +408,13 @@ public class Links {
 
     public void setNeighborhoods(URI neighborhoods) {
         this.neighborhoods = neighborhoods;
+    }
+
+    public URI getAmenity() {
+        return amenity;
+    }
+
+    public void setAmenity(URI amenity) {
+        this.amenity = amenity;
     }
 }

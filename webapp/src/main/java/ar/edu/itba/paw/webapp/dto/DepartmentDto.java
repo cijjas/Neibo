@@ -14,14 +14,14 @@ public class DepartmentDto {
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 64, groups = Basic.class)
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
-    private String department;
+    private String name;
 
     private Links _links;
 
     public static DepartmentDto fromDepartment(Department department, UriInfo uriInfo) {
         final DepartmentDto dto = new DepartmentDto();
 
-        dto.department = department.getDepartment();
+        dto.name = department.getDepartment();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -32,12 +32,12 @@ public class DepartmentDto {
         return dto;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getName() {
+        return name;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Links get_links() {

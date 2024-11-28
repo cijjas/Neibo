@@ -21,7 +21,7 @@ public class ReviewDto {
 
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 255, groups = Basic.class)
-    private String review;
+    private String message;
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
@@ -36,7 +36,7 @@ public class ReviewDto {
         final ReviewDto dto = new ReviewDto();
 
         dto.rating = review.getRating();
-        dto.review = review.getReview();
+        dto.message = review.getReview();
         dto.date = review.getDate();
 
         Links links = new Links();
@@ -68,12 +68,12 @@ public class ReviewDto {
         this.rating = rating;
     }
 
-    public String getReview() {
-        return review;
+    public String getMessage() {
+        return message;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Date getDate() {

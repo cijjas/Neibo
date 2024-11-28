@@ -56,6 +56,12 @@ public class BookingDto {
                 .path("users")
                 .path(String.valueOf(booking.getUser().getUserId()))
                 .build());
+        links.setAmenity(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
+                .path("amenities")
+                .path(String.valueOf(booking.getAmenityAvailability().getAmenity().getAmenityId()))
+                .build());
         links.setShift(uriInfo.getBaseUriBuilder()
                 .path("shifts")
                 .path(String.valueOf(booking.getAmenityAvailability().getShift().getShiftId()))

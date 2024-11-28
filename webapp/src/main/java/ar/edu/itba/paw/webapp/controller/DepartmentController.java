@@ -16,11 +16,8 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
 
 
 
@@ -116,7 +113,7 @@ public class DepartmentController {
         LOGGER.info("POST request arrived at '/departments'");
 
         // Content
-        final Department department = ds.createDepartment(form.getDepartment());
+        final Department department = ds.createDepartment(form.getName());
         String departmentHashCode = String.valueOf(department.hashCode());
 
         // Resource URN

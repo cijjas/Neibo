@@ -3,7 +3,7 @@ import { Neighborhood } from "./neighborhood";
 import { Links } from "./links";
 
 export interface AffiliationDto {
-  workerRole: 'VERIFIED' | 'UNVERIFIED' | 'BANNED';
+  workerRole: String;
   _links: Links;
 }
 

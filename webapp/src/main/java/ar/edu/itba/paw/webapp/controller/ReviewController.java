@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
-import ar.edu.itba.paw.webapp.auth.PathAccessControlHelper;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.WorkerIdConstraint;
@@ -131,7 +130,7 @@ public class ReviewController {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
         // Creation & HashCode Generation
-        final Review review = rs.createReview(workerId, extractSecondId(form.getUser()), form.getRating(), form.getReview());
+        final Review review = rs.createReview(workerId, extractSecondId(form.getUser()), form.getRating(), form.getMessage());
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Resource URN
