@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
 import { ShiftDto } from '../models/shift'
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AmenityService {
     private apiServerUrl = environment.apiBaseUrl
     private headers: HttpHeaders
@@ -16,7 +16,7 @@ export class AmenityService {
     constructor(
         private http: HttpClient,
         private loggedInService: LoggedInService,
-    ) { 
+    ) {
         this.headers = new HttpHeaders({
             'Authorization': this.loggedInService.getAuthToken()
         })
@@ -47,8 +47,8 @@ export class AmenityService {
 
     public getAmenities(neighborhood: string, page: number, size: number): Observable<Amenity[]> {
         let params = new HttpParams()
-        if(page) params = params.set('page', page.toString())
-        if(size) params = params.set('size', size.toString())
+        if (page) params = params.set('page', page.toString())
+        if (size) params = params.set('size', size.toString())
 
         return this.http.get<AmenityDto[]>(`${neighborhood}/amenities`, { params, headers: this.headers }).pipe(
             mergeMap((amenitiesDto: AmenityDto[]) => {
@@ -69,16 +69,16 @@ export class AmenityService {
                     )
                 );
 
-                 return forkJoin(amenityObservables);
+                return forkJoin(amenityObservables);
             })
         );
     }
 
-    public addAmenity(amenity: AmenityForm, neighborhood : string): Observable<AmenityForm> {
+    public addAmenity(amenity: AmenityForm, neighborhood: string): Observable<AmenityForm> {
         return this.http.post<AmenityForm>(`${neighborhood}/amenities`, amenity, { headers: this.headers })
     }
 
-    public updateAmenity(amenityForm: AmenityForm, amenity : string): Observable<AmenityForm> {
+    public updateAmenity(amenityForm: AmenityForm, amenity: string): Observable<AmenityForm> {
         return this.http.patch<AmenityForm>(amenity, amenityForm, { headers: this.headers })
     }
 

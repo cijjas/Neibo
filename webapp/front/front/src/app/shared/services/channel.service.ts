@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment'
 import { LoggedInService } from './loggedIn.service'
 import { PostDto } from '../models/post'
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ChannelService {
     private apiServerUrl = environment.apiBaseUrl
     private headers: HttpHeaders
@@ -14,7 +14,7 @@ export class ChannelService {
     constructor(
         private http: HttpClient,
         private loggedInService: LoggedInService
-    ) { 
+    ) {
         this.headers = new HttpHeaders({
             'Authorization': this.loggedInService.getAuthToken()
         })
@@ -30,7 +30,7 @@ export class ChannelService {
                 ]).pipe(
                     map(([posts]) => {
                         return {
-                            channel: channelDto.channel,
+                            channel: channelDto.name,
                             posts: posts,
                             self: channelDto._links.self
                         } as Channel;
@@ -40,10 +40,10 @@ export class ChannelService {
         );
     }
 
-    public getChannels(neighborhood : string, page: number, size: number): Observable<Channel[]> {
+    public getChannels(neighborhood: string, page: number, size: number): Observable<Channel[]> {
         let params = new HttpParams()
-        if(page) params = params.set('page', page.toString())
-        if(size) params = params.set('size', size.toString())
+        if (page) params = params.set('page', page.toString())
+        if (size) params = params.set('size', size.toString())
 
         return this.http.get<ChannelDto[]>(`${neighborhood}/channels`, { params, headers: this.headers }).pipe(
             mergeMap((channelsDto: ChannelDto[]) => {
@@ -53,7 +53,7 @@ export class ChannelService {
                     ]).pipe(
                         map(([posts]) => {
                             return {
-                                channel: channelDto.channel,
+                                channel: channelDto.name,
                                 posts: posts,
                                 self: channelDto._links.self
                             } as Channel;
@@ -61,7 +61,7 @@ export class ChannelService {
                     )
                 );
 
-                 return forkJoin(channelObservables);
+                return forkJoin(channelObservables);
             })
         );
     }

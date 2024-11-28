@@ -24,7 +24,7 @@ export class RoleService {
             map((roleDtos: UserRoleDto[]) => {
                 return roleDtos.map((roleDto: UserRoleDto) => {
                     return {
-                        role: roleDto.role,
+                        userRole: roleDto.userRole,
                         self: roleDto._links.self
                     } as UserRole;
                 });
@@ -38,7 +38,7 @@ export class RoleService {
         return roleDto$.pipe(
             map((roleDto: UserRoleDto) => {
                 return {
-                    role: roleDto.role,
+                    userRole: roleDto.userRole,
                     self: roleDto._links.self
                 } as UserRole;
             })
