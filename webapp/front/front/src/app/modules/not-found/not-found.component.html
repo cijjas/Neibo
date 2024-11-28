@@ -1,20 +1,18 @@
+<div class="error-content-container">
+  <div class="flex-container">
+    <div class="error-code">
+      Oops! {{ errorCode }}
+    </div>
 
-
-
-<div class="error-content-container f-c-c-c">
-  <div class="error-code">
-    Oops! 404 - Page Not Found
+    <p class="error-description">
+      {{ errorMessage }}
+    </p>
+    <div (click)="goBack()" id="goback-button" class="goback-button mt-5 font-weight-bold">
+      <a class="">
+        Go back to home
+      </a>
+    </div>
   </div>
-
-  <p class="error-message m-b-20 m-t-40">
-      <span class="font-weight-bold">
-          The page you are looking for cannot be found. Pleas check the URL or try again later.
-      </span>
-  </p>
-
-  <a routerLink='' id="goback-button" class="goback-button font-weight-bold">Go back to home</a>
-
 </div>
-
 
 <app-background-drawing></app-background-drawing>

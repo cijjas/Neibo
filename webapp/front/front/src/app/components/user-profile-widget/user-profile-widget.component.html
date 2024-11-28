@@ -1,34 +1,12 @@
+<!-- DONE -->
 <a href="${pageContext.request.contextPath}/profile">
   <div class="grey-container" style="width: 200px;text-overflow: ellipsis ">
     <div class="row">
       <div class="col-4 f-c-c-c pr-2">
         <div style="display: flex; justify-content: center; align-items: center;">
+          <img class="big-profile-picture" style="width: 40px; height: 40px;" [src]="profileImageUrl"
+            alt="User profile image" />
 
-         <!-- <img *ngIf="loggedUser?.profilePicture?.imageId !== null"
-               class="big-profile-picture"
-               style="width: 40px; height: 40px"
-               [src]="'/images/' + loggedUser.profilePicture.imageId"
-               alt="profile_picture_img" />
-
-          <img *ngIf="loggedUser?.profilePicture?.imageId === null"
-               class="big-profile-picture"
-               style="width: 40px; height: 40px"
-               src="/resources/images/roundedPlaceholder.png"
-               alt="default_profile_picture_img" />-->
-
-
-          <!--<c:choose>
-            <c:when test="${loggedUser.profilePicture.imageId ne null}">
-              <img class="big-profile-picture" style="width: 40px; height: 40px"
-                   src="${pageContext.request.contextPath}/images/<c:out value="${loggedUser.profilePicture.imageId}"/>"
-              alt="profile_picture_img"/>
-            </c:when>
-            <c:otherwise>
-              <img class="big-profile-picture" style=" width: 40px; height: 40px"
-                   src="${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png"
-                   alt="default_profile_picture_img"/>
-            </c:otherwise>
-          </c:choose>-->
         </div>
       </div>
 
@@ -40,8 +18,6 @@
           <h6>{{ loggedUser?.surname }}</h6>
         </div>
       </div>
-
-
 
     </div>
   </div>

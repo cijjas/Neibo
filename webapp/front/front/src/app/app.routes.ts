@@ -7,19 +7,21 @@ import { MarketplaceComponent } from './modules/marketplace/marketplace.componen
 import { ReservationsComponent } from './modules/reservations/reservations.component'
 import { InformationComponent } from './modules/information/information.component'
 
-import {NotFoundComponent} from "./modules/not-found/not-found.component";
-import {LoginComponent} from "./modules/auth/login/login.component";
-import {authGuard} from "./shared/guards/auth.guard";
+import { NotFoundComponent } from "./modules/not-found/not-found.component";
+import { LoginComponent } from "./modules/auth/login/login.component";
+import { authGuard } from "./shared/guards/auth.guard";
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent},
-  { path: 'login', component: LoginComponent},
+  { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'feed', component: FeedComponent, canActivate: [authGuard] },
   { path: 'post/:postId', component: PostComponent, canActivate: [authGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
   { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },
   { path: 'information', component: InformationComponent, canActivate: [authGuard] },
-  { path: '**', component: NotFoundComponent}
+  { path: 'not-found', component: NotFoundComponent },
+  { path: '**', redirectTo: '/not-found', pathMatch: 'full' }
 ];
+
 
