@@ -1,14 +1,12 @@
-
-
-<div class="dialog" id="loginDialog" style="display: flex"  [ngClass]="{'show-dialog': showLoginDialog}">
+<div class="dialog" id="loginDialog" style="display: flex" [ngClass]="{'show-dialog': showLoginDialog}">
   <div *ngIf="loading; else notLoading">
-    <div  class="dialog-content f-c-c-c">
+    <div class="dialog-content f-c-c-c">
       <div style="font-weight: bold; font-size: 16px">Logging you in. Please wait...</div>
       <div class="loader" style="margin-top: 20px"></div>
     </div>
   </div>
   <ng-template #notLoading>
-    <div  class="dialog-content">
+    <div class="dialog-content">
       <div class="close-button" (click)="closeLoginDialog()">
         <i class="fas fa-close"></i>
       </div>
@@ -20,20 +18,16 @@
       <form (ngSubmit)="tryLogin()" [formGroup]="loginForm" class="login-form" id="loginForm">
         <div class="centered-column">
           <label>
-            <input
-              id="login-email"
-              type="email"
-              placeholder="Email" i18n-placeholder
-              class="input"
-              formControlName="email"
-            >
+            <input id="login-email" type="email" placeholder="Email" i18n-placeholder class="input"
+              formControlName="email">
             <small class="form-error" *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched ">
               *Entered email is not valid
             </small>
           </label>
           <label>
-            <input id="login-password" type="password" placeholder="Password" i18n-placeholder autocomplete="true" class="input" formControlName="password">
-            <small  class="form-error" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched ">
+            <input id="login-password" type="password" placeholder="Password" i18n-placeholder autocomplete="true"
+              class="input" formControlName="password">
+            <small class="form-error" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched ">
               *Password is required
             </small>
           </label>
@@ -44,15 +38,15 @@
         </label>
 
         <div class="centered-column">
-          <small class="form-error centered " *ngIf="loginFailed && loginForm.pristine">
+          <small class="form-error centered" *ngIf="loginFailed">
             *Invalid email or password
           </small>
           <button type="submit" class="action-button font-weight-bolder" [disabled]="loginForm.invalid">
             <span>Login</span>
           </button>
           <span style="color:var(--lighttext); font-size: 14px;">Not a member yet?
-      <a (click)="openSignupDialog()" class="a-link" >Sign up now</a>
-    </span>
+            <a (click)="openSignupDialog()" class="a-link">Sign up now</a>
+          </span>
         </div>
       </form>
 
