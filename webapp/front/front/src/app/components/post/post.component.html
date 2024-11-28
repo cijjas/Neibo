@@ -15,34 +15,28 @@
 
               <div class="f-r-sb-c ">
                 <div>
-            <span style="font-size: 14px" class="font-weight-bold" i18n>
-                {{post.channel}} -
-            </span>
+                  <span style="font-size: 14px" class="font-weight-bold" i18n>
+                    {{post.channel}} -
+                  </span>
                   <span style="font-size: 12px; font-weight: normal" class="ml-1 placeholder-glow">
 
-                        <span i18n>Posted by </span>
+                    <span i18n>Posted by </span>
                     <!--TODO plaeholder sacar? ,o hacerlo bine?-->
-                      <img
-                        *ngIf="post.user._links.profilePicture; else defaultImage"
-                        [src]="post.user._links.profilePicture"
-                        class="small-profile-picture placeholder mb-1"
-                        alt="poster profile picture img"
-                      />
+                    <img *ngIf="post.user._links.profilePicture; else defaultImage"
+                      [src]="post.user._links.profilePicture" class="small-profile-picture placeholder mb-1"
+                      alt="poster profile picture img" />
                     <ng-template #defaultImage>
-                      <img
-                        src="./assets/images/roundedPlaceholder.png"
-                        class="small-profile-picture mb-1"
-                        alt="default profile picture img"
-                      />
+                      <img src="./assets/images/roundedPlaceholder.png" class="small-profile-picture mb-1"
+                        alt="default profile picture img" />
                     </ng-template>
-              <span> {{post.user.name}} </span>
-            </span>
-              </div>
+                    <span> {{post.user.name}} </span>
+                  </span>
+                </div>
 
 
-              <div style="font-size: 12px; font-weight: normal">
-                <span class="post-date" >{{post.date  | timeAgo }}</span>
-              </div>
+                <div style="font-size: 12px; font-weight: normal">
+                  <span class="post-date">{{post.date | timeAgo }}</span>
+                </div>
               </div>
               <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text">{{post.title}}</p>
 
@@ -73,12 +67,7 @@
             <div class="col-6">
               <div class="ml-2 d-flex flex-column justify-content-start align-items-start">
                 <div class="f-r-c-c">
-                  <span
-                    id="post-like-button"
-                    class="post-like-button"
-                    [ngClass]="{'liked': isLikedByUser}"
-
-                  >
+                  <span id="post-like-button" class="post-like-button" [ngClass]="{'liked': isLikedByUser}">
                     <span class="mr-1" id="like-count">{{ likeCount }}</span>
                     <i class="fa-solid fa-thumbs-up"></i>
                   </span>
@@ -90,8 +79,8 @@
                 <div class="mr-2">
                   <div class="w-100 d-flex flex-row justify-content-end align-items-center flex-wrap">
                     <a *ngFor="let tag of post.tags" class="post-tag static m-l-3 m-r-3"
-                       [href]=""><!--TODO VALIDAR TAGS-->
-                      {{ tag.tag }}
+                      [href]=""><!--TODO VALIDAR TAGS-->
+                      {{ tag.name}}
                     </a>
                   </div>
                 </div>
@@ -108,8 +97,8 @@
 
                       <c:forEach var="tag" items="${tags}">
                         <a class="post-tag static m-l-3 m-r-3"
-                           href="${pageContext.request.contextPath}${channelContextPath}?tag=${tag.tag}">
-                          <c:out value="${tag.tag}"/>
+                           href="${pageContext.request.contextPath}${channelContextPath}?tag=${tag.name}">
+                          <c:out value="${tag.name}"/>
                         </a>
                       </c:forEach>
                     </div>
@@ -277,8 +266,7 @@
                     <div class="bold">{{comment.date}}</div>
                   </div>
                   <div class="comment-body placeholder-glow w-100">
-                    <p class="mt-2 w-100 c-light-text normal placeholder col-6"
-                       id="{{comment.self}}">
+                    <p class="mt-2 w-100 c-light-text normal placeholder col-6" id="{{comment.self}}">
                       {{comment.comment}}
                     </p>
                     <!--<script>
@@ -366,4 +354,3 @@
     </div>
   </div>
 </div>
-

@@ -1,11 +1,11 @@
 import { Links } from "./links"
 
 export interface UserRole {
-    role: string
+    userRole: string
     self: string
 }
 
 export interface UserRoleDto {
-    role: string
+    userRole: string
     _links: Links
 }
