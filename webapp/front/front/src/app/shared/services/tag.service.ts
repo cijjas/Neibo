@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TagService {
     private apiServerUrl = environment.apiBaseUrl
     private headers: HttpHeaders
@@ -15,7 +15,7 @@ export class TagService {
     constructor(
         private http: HttpClient,
         private loggedInService: LoggedInService,
-    ) { 
+    ) {
         this.headers = new HttpHeaders({
             'Authorization': this.loggedInService.getAuthToken()
         })
@@ -23,10 +23,10 @@ export class TagService {
 
     public getTags(neighborhood: string, post: string, page: number, size: number): Observable<Tag[]> {
         let params = new HttpParams()
-        
-        if(post) params = params.set('postId', post)
-        if(page) params = params.set('page', page.toString())
-        if(size) params = params.set('size', size.toString())
+
+        if (post) params = params.set('postId', post)
+        if (page) params = params.set('page', page.toString())
+        if (size) params = params.set('size', size.toString())
 
         return this.http.get<TagDto[]>(`${neighborhood}/tags`, { params, headers: this.headers }).pipe(
             mergeMap((tagsDto: TagDto[]) => {
@@ -34,7 +34,7 @@ export class TagService {
                     this.http.get<PostDto[]>(tagDto._links.posts).pipe(
                         map((posts) => {
                             return {
-                                tag: tagDto.tag,
+                                tag: tagDto.name,
                                 posts: posts,
                                 self: tagDto._links.self
                             } as Tag;
@@ -42,7 +42,7 @@ export class TagService {
                     )
                 );
 
-                 return forkJoin(tagObservables);
+                return forkJoin(tagObservables);
             })
         );
     }

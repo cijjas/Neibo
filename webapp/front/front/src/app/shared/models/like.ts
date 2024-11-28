@@ -10,7 +10,7 @@ export interface Like {
 }
 
 export interface LikeDto {
-    likeDate: Date
+    date: Date
     _links: Links
 }
 

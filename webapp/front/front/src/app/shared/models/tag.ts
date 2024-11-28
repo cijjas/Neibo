@@ -8,7 +8,6 @@ export interface Tag {
 }
 
 export interface TagDto {
-    tag: string
+    name: string
     _links: Links
 }
-

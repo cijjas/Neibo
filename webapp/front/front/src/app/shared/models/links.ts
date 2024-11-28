@@ -43,4 +43,5 @@ export interface Links {
     professions: string;
     workerNeighborhoods: string;
     neighborhoods: string;
+    language: string;
 }

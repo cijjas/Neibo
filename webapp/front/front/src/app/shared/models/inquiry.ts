@@ -14,7 +14,7 @@ export interface Inquiry {
 export interface InquiryDto {
     message: string
     reply: string
-    inquiryDate: Date
+    date: Date
     _links: Links
 }
 

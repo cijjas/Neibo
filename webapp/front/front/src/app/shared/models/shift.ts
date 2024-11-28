@@ -12,6 +12,6 @@ export interface Shift {
 export interface ShiftDto {
     day: string
     startTime: string
+    isBooked: boolean
     _links: Links
 }
-

@@ -6,7 +6,7 @@ import { BookingDto } from "./booking"
 import { ProductDto } from "./product"
 import { EventDto } from "./event"
 import { Links } from "./links"
-import { RoleDto } from "./role"
+import { UserRoleDto } from "./userRole"
 
 export interface User {
     mail: string
@@ -27,7 +27,7 @@ export interface User {
     purchases: ProductDto[]
     sales: ProductDto[]
     //eventsSubscribed: EventDto[]
-    userRole: RoleDto
+    userRole: UserRoleDto
     self: string
 }
 
@@ -57,4 +57,3 @@ export interface UserForm {
     darkMode: boolean
     profilePicture: string
 }
-

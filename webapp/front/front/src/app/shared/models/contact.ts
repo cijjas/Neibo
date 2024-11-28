@@ -10,9 +10,9 @@ export interface Contact {
 }
 
 export interface ContactDto {
-    contactName: string
-    contactAddress: string
-    contactPhone: string
+    name: string
+    address: string
+    phone: string
     _links: Links
 }
 
@@ -22,5 +22,4 @@ export interface ContactForm {
     contactAddress: string
     contactPhone: string
     self: string
-  }
-
+}

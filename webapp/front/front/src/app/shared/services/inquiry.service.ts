@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class InquiryService {
     private apiServerUrl = environment.apiBaseUrl
     private headers: HttpHeaders
@@ -16,13 +16,13 @@ export class InquiryService {
     constructor(
         private http: HttpClient,
         private loggedInService: LoggedInService,
-    ) { 
+    ) {
         this.headers = new HttpHeaders({
             'Authorization': this.loggedInService.getAuthToken()
         })
     }
 
-    public getInquiries(product: string, page : number, size : number): Observable<Inquiry[]> {
+    public getInquiries(product: string, page: number, size: number): Observable<Inquiry[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
 
         return this.http.get<InquiryDto[]>(`${product}/inquiries`, { params, headers: this.headers }).pipe(
@@ -36,7 +36,7 @@ export class InquiryService {
                             return {
                                 message: inquiryDto.message,
                                 reply: inquiryDto.reply,
-                                inquiryDate: inquiryDto.inquiryDate,
+                                inquiryDate: inquiryDto.date,
                                 product: product,
                                 user: user,
                                 self: inquiryDto._links.self
@@ -45,7 +45,7 @@ export class InquiryService {
                     )
                 );
 
-                 return forkJoin(inquiryObservables);
+                return forkJoin(inquiryObservables);
             })
         );
     }

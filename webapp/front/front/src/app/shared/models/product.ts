@@ -28,7 +28,7 @@ export interface ProductDto {
     price: number
     used: boolean
     remainingUnits: number
-    creationDate: Date
+    date: Date
     _links: Links
 }
 
@@ -42,4 +42,4 @@ export interface ProductForm {
     quantity: number
     used: boolean
     self: string
-  }
+}

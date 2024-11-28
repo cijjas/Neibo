@@ -8,6 +8,6 @@ export interface Channel {
 }
 
 export interface ChannelDto {
-    channel: string
+    name: string
     _links: Links
 }

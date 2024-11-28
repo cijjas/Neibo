@@ -12,9 +12,9 @@ import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
-import { Role, RoleDto } from '../models/role'
+import { UserRole, UserRoleDto } from '../models/userRole'
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class UserService {
     private apiServerUrl = environment.apiBaseUrl
     private headers: HttpHeaders
@@ -22,7 +22,7 @@ export class UserService {
     constructor(
         private http: HttpClient,
         private loggedInService: LoggedInService,
-    ) { 
+    ) {
         this.headers = new HttpHeaders({
             'Authorization': this.loggedInService.getAuthToken()
         })
@@ -34,19 +34,19 @@ export class UserService {
             mergeMap((userDto: UserDto) => {
                 return forkJoin([
                     this.http.get<NeighborhoodDto>(userDto._links.neighborhood),
-                        this.http.get<ImageDto>(userDto._links.profilePicture),
-                        this.http.get<CommentDto[]>(userDto._links.comments),
-                        this.http.get<PostDto[]>(userDto._links.posts),
-                        this.http.get<BookingDto[]>(userDto._links.bookings),
-                        //this.http.get<PostDto[]>(userDto._links.subscribedPosts),
-                        this.http.get<PostDto[]>(userDto._links.likedPosts),
-                        this.http.get<ProductDto[]>(userDto._links.purchases),
-                        this.http.get<ProductDto[]>(userDto._links.sales),
-                        //this.http.get<EventDto[]>(userDto._links.eventsSubscribed)
-                        this.http.get<RoleDto>(userDto._links.userRole)
+                    this.http.get<ImageDto>(userDto._links.profilePicture),
+                    this.http.get<CommentDto[]>(userDto._links.comments),
+                    this.http.get<PostDto[]>(userDto._links.posts),
+                    this.http.get<BookingDto[]>(userDto._links.bookings),
+                    //this.http.get<PostDto[]>(userDto._links.subscribedPosts),
+                    this.http.get<PostDto[]>(userDto._links.likedPosts),
+                    this.http.get<ProductDto[]>(userDto._links.purchases),
+                    this.http.get<ProductDto[]>(userDto._links.sales),
+                    //this.http.get<EventDto[]>(userDto._links.eventsSubscribed)
+                    this.http.get<UserRoleDto>(userDto._links.userRole)
                 ]).pipe(
                     map(([neighborhood, profilePicture, comments, posts, bookings, likedPosts,
-                            purchases, sales, userRole]) => {
+                        purchases, sales, userRole]) => {
                         return {
                             mail: userDto.mail,
                             name: userDto.name,
@@ -77,10 +77,10 @@ export class UserService {
 
     public getUsers(neighborhood: string, userRole: string, page: number, size: number): Observable<User[]> {
         let params = new HttpParams()
-        
-        if(userRole) params = params.set('withRole', userRole)
-        if(page) params = params.set('page', page.toString())
-        if(size) params = params.set('size', size.toString())
+
+        if (userRole) params = params.set('withRole', userRole)
+        if (page) params = params.set('page', page.toString())
+        if (size) params = params.set('size', size.toString())
 
         return this.http.get<UserDto[]>(`${neighborhood}/users`, { params, headers: this.headers }).pipe(
             mergeMap((usersDto: UserDto[]) => {
@@ -96,36 +96,36 @@ export class UserService {
                         this.http.get<ProductDto[]>(userDto._links.purchases),
                         this.http.get<ProductDto[]>(userDto._links.sales),
                         //this.http.get<EventDto[]>(userDto._links.eventsSubscribed)
-                        this.http.get<RoleDto>(userDto._links.userRole)
+                        this.http.get<UserRoleDto>(userDto._links.userRole)
                     ]).pipe(
                         map(([neighborhood, profilePicture, comments, posts, bookings, likedPosts,
                             purchases, sales, userRole]) => {
-                        return {
-                            mail: userDto.mail,
-                            name: userDto.name,
-                            surname: userDto.surname,
-                            neighborhood: neighborhood,
-                            darkMode: userDto.darkMode,
-                            phoneNumber: userDto.phoneNumber,
-                            profilePicture: profilePicture,
-                            identification: userDto.identification,
-                            creationDate: userDto.creationDate,
-                            comments: comments,
-                            posts: posts,
-                            bookings: bookings,
-                            //subscribedPosts: subscribedPosts,
-                            likedPosts: likedPosts,
-                            purchases: purchases,
-                            sales: sales,
-                            //eventsSubscribed: eventsSubscribed,
-                            userRole: userRole,
-                            self: userDto._links.self
-                        } as User;
-                    })
+                            return {
+                                mail: userDto.mail,
+                                name: userDto.name,
+                                surname: userDto.surname,
+                                neighborhood: neighborhood,
+                                darkMode: userDto.darkMode,
+                                phoneNumber: userDto.phoneNumber,
+                                profilePicture: profilePicture,
+                                identification: userDto.identification,
+                                creationDate: userDto.creationDate,
+                                comments: comments,
+                                posts: posts,
+                                bookings: bookings,
+                                //subscribedPosts: subscribedPosts,
+                                likedPosts: likedPosts,
+                                purchases: purchases,
+                                sales: sales,
+                                //eventsSubscribed: eventsSubscribed,
+                                userRole: userRole,
+                                self: userDto._links.self
+                            } as User;
+                        })
                     )
                 );
 
-                 return forkJoin(userObservables);
+                return forkJoin(userObservables);
             })
         );
     }

@@ -11,7 +11,7 @@ import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
 import { ImageDto } from '../models/image'
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
     private apiServerUrl = environment.apiBaseUrl
     private headers: HttpHeaders
@@ -19,7 +19,7 @@ export class ProductService {
     constructor(
         private http: HttpClient,
         private loggedInService: LoggedInService,
-    ) { 
+    ) {
         this.headers = new HttpHeaders({
             'Authorization': this.loggedInService.getAuthToken()
         })
@@ -46,7 +46,7 @@ export class ProductService {
                             price: productDto.price,
                             used: productDto.used,
                             remainingUnits: productDto.remainingUnits,
-                            creationDate: productDto.creationDate,
+                            creationDate: productDto.date,
                             primaryPicture: primaryPicture,
                             secondaryPicture: secondaryPicture,
                             tertiaryPicture: tertiaryPicture,
@@ -64,12 +64,12 @@ export class ProductService {
 
     public getProducts(neighborhood: string, department: string, user: string, productStatus: string, page: number, size: number): Observable<Product[]> {
         let params = new HttpParams()
-        
-        if(department) params = params.set('inDeparment', department)
-        if(user) params = params.set('listedBy', user)
-        if(productStatus) params = params.set('withStatus', productStatus)
-        if(page) params = params.set('page', page.toString())
-        if(size) params = params.set('size', size.toString());
+
+        if (department) params = params.set('inDeparment', department)
+        if (user) params = params.set('listedBy', user)
+        if (productStatus) params = params.set('withStatus', productStatus)
+        if (page) params = params.set('page', page.toString())
+        if (size) params = params.set('size', size.toString());
 
         return this.http.get<ProductDto[]>(`${neighborhood}/products`, { params, headers: this.headers }).pipe(
             mergeMap((productsDto: ProductDto[]) => {
@@ -90,7 +90,7 @@ export class ProductService {
                                 price: productDto.price,
                                 used: productDto.used,
                                 remainingUnits: productDto.remainingUnits,
-                                creationDate: productDto.creationDate,
+                                creationDate: productDto.date,
                                 primaryPicture: primaryPicture,
                                 secondaryPicture: secondaryPicture,
                                 tertiaryPicture: tertiaryPicture,
@@ -104,7 +104,7 @@ export class ProductService {
                     )
                 );
 
-                 return forkJoin(productObservables);
+                return forkJoin(productObservables);
             })
         );
     }
