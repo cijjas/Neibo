@@ -16,14 +16,14 @@ public class TagDto {
     @NotNull(groups = Null.class)
     @Size(min = 1, max = 20, groups = Basic.class)
     @TagsConstraint(groups = Specific.class)
-    private String tag;
+    private String name;
 
     private Links _links;
 
     public static TagDto fromTag(final Tag tag, final long neighborhoodId, final UriInfo uriInfo) {
         final TagDto dto = new TagDto();
 
-        dto.tag = tag.getTag();
+        dto.name = tag.getTag();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -43,12 +43,12 @@ public class TagDto {
         return dto;
     }
 
-    public String getTag() {
-        return tag;
+    public String getName() {
+        return name;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Links get_links() {

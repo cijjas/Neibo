@@ -132,7 +132,7 @@ public class TagController {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
         // Creation & HashCode Generation
-        final Tag tag = ts.createTag(neighborhoodId, form.getTag());
+        final Tag tag = ts.createTag(neighborhoodId, form.getName());
         String tagHashCode = String.valueOf(tag.hashCode());
 
         // Resource URN

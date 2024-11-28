@@ -132,7 +132,7 @@ public class ContactController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
+        final Contact contact = cs.createContact(neighborhoodId, form.getName(), form.getAddress(), form.getPhone());
         String contactHashCode = String.valueOf(contact.hashCode());
 
         // Resource URN
@@ -156,7 +156,7 @@ public class ContactController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Contact updatedContact = cs.updateContact(id, form.getContactName(), form.getContactAddress(), form.getContactPhone());
+        final Contact updatedContact = cs.updateContact(id, form.getName(), form.getAddress(), form.getPhone());
         String updatedContactHashCode = String.valueOf(updatedContact.hashCode());
 
         return Response.ok(ContactDto.fromContact(updatedContact, uriInfo))

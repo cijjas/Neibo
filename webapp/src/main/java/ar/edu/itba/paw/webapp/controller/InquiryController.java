@@ -135,7 +135,7 @@ public class InquiryController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
         // Creation & HashCode Generation
-        final Inquiry inquiry = is.createInquiry(extractSecondId(form.getUser()), productId, form.getQuestionMessage());
+        final Inquiry inquiry = is.createInquiry(extractSecondId(form.getUser()), productId, form.getMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Resource URN
@@ -161,7 +161,7 @@ public class InquiryController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Modification & HashCode Generation
-        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getReplyMessage());
+        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getReply());
         String inquiryHashCode = String.valueOf(updatedInquiry.hashCode());
 
         return Response.ok(InquiryDto.fromInquiry(updatedInquiry, uriInfo))

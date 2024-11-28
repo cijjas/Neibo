@@ -38,6 +38,7 @@ public class Links {
     private URI requests;
     private URI image;
     private URI profilePicture;
+    private URI language;
     private URI bookings;
     private URI likedPosts;
     private URI purchases;
@@ -158,6 +159,14 @@ public class Links {
 
     public void setProduct(URI product) {
         this.product = product;
+    }
+
+    public URI getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(URI language) {
+        this.language = language;
     }
 
     public URI getProducts() {

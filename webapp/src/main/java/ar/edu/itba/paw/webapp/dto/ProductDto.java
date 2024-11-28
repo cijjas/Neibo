@@ -52,7 +52,7 @@ public class ProductDto {
     @UserURNReferenceConstraintUpdate(groups = Authorization.class)
     private String user;
 
-    private Date creationDate;
+    private Date date;
 
     private Links _links;
 
@@ -64,7 +64,7 @@ public class ProductDto {
         dto.price = product.getPrice();
         dto.used = product.isUsed();
         dto.remainingUnits = product.getRemainingUnits();
-        dto.creationDate = product.getCreationDate();
+        dto.date = product.getCreationDate();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -158,12 +158,12 @@ public class ProductDto {
         this.remainingUnits = remainingUnits;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Links get_links() {

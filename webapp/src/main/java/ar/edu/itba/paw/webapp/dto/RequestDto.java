@@ -21,7 +21,7 @@ public class RequestDto {
 
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 500, groups = Basic.class)
-    private String requestMessage;
+    private String message;
 
     @NotNull(groups = Null.class)
     @ProductURNConstraint(groups = URN.class)
@@ -49,7 +49,7 @@ public class RequestDto {
     public static RequestDto fromRequest(Request request, UriInfo uriInfo) {
         final RequestDto dto = new RequestDto();
 
-        dto.requestMessage = request.getMessage();
+        dto.message = request.getMessage();
         dto.requestDate = request.getRequestDate();
         dto.units = request.getUnits();
         dto.purchaseDate = request.getPurchaseDate();
@@ -81,12 +81,12 @@ public class RequestDto {
         return dto;
     }
 
-    public String getRequestMessage() {
-        return requestMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setRequestMessage(String requestMessage) {
-        this.requestMessage = requestMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Date getRequestDate() {

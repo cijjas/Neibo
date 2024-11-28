@@ -17,7 +17,7 @@ public class InquiryDto {
 
     @NotNull(groups = Null.class)
     @Size(max = 500, groups = Basic.class)
-    private String questionMessage;
+    private String message;
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
@@ -25,18 +25,18 @@ public class InquiryDto {
     private String user;
 
     @Size(max = 500, groups = Basic.class)
-    private String replyMessage;
+    private String reply;
 
-    private Date inquiryDate;
+    private Date date;
 
     private Links _links;
 
     public static InquiryDto fromInquiry(Inquiry inquiry, UriInfo uriInfo) {
         final InquiryDto dto = new InquiryDto();
 
-        dto.questionMessage = inquiry.getMessage();
-        dto.replyMessage = inquiry.getReply();
-        dto.inquiryDate = inquiry.getInquiryDate();
+        dto.message = inquiry.getMessage();
+        dto.reply = inquiry.getReply();
+        dto.date = inquiry.getInquiryDate();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -64,12 +64,12 @@ public class InquiryDto {
     }
 
 
-    public Date getInquiryDate() {
-        return inquiryDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setInquiryDate(Date inquiryDate) {
-        this.inquiryDate = inquiryDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public Links get_links() {
@@ -88,19 +88,19 @@ public class InquiryDto {
         this.user = user;
     }
 
-    public String getQuestionMessage() {
-        return questionMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setQuestionMessage(String questionMessage) {
-        this.questionMessage = questionMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getReplyMessage() {
-        return replyMessage;
+    public String getReply() {
+        return reply;
     }
 
-    public void setReplyMessage(String replyMessage) {
-        this.replyMessage = replyMessage;
+    public void setReply(String reply) {
+        this.reply = reply;
     }
 }

@@ -12,24 +12,24 @@ public class ContactDto {
 
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 64, groups = Basic.class)
-    private String contactName;
+    private String name;
 
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 64, groups = Basic.class)
-    private String contactAddress;
+    private String address;
 
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 20, groups = Basic.class)
-    private String contactPhone;
+    private String phone;
 
     private Links _links;
 
     public static ContactDto fromContact(Contact contact, UriInfo uriInfo) {
         final ContactDto dto = new ContactDto();
 
-        dto.contactName = contact.getContactName();
-        dto.contactAddress = contact.getContactAddress();
-        dto.contactPhone = contact.getContactAddress();
+        dto.name = contact.getContactName();
+        dto.address = contact.getContactAddress();
+        dto.phone = contact.getContactAddress();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -54,28 +54,28 @@ public class ContactDto {
         this._links = _links;
     }
 
-    public String getContactName() {
-        return contactName;
+    public String getName() {
+        return name;
     }
 
-    public void setContactName(String contactName) {
-        this.contactName = contactName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getContactAddress() {
-        return contactAddress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setContactAddress(String contactAddress) {
-        this.contactAddress = contactAddress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getContactPhone() {
-        return contactPhone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setContactPhone(String contactPhone) {
-        this.contactPhone = contactPhone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
 }

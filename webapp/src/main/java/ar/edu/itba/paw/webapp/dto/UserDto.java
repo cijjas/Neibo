@@ -86,7 +86,7 @@ public class UserDto {
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .build());
-        links.setUserRole(uriInfo.getBaseUriBuilder()
+        links.setLanguage(uriInfo.getBaseUriBuilder()
                 .path("languages")
                 .path(String.valueOf(user.getLanguage().getId()))
                 .build());
