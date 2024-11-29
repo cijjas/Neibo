@@ -96,6 +96,11 @@ public class PostDto {
                 .path("likes")
                 .queryParam("onPost", self)
                 .build());
+        links.setLikesCount(uriInfo.getBaseUriBuilder()
+                .path("likes")
+                .path("count")
+                .queryParam("onPost", self)
+                .build());
         dto.set_links(links);
         return dto;
     }

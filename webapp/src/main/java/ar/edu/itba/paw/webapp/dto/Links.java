@@ -49,6 +49,7 @@ public class Links {
     private URI professions;
     private URI workerNeighborhoods;
     private URI neighborhoods;
+    private URI likesCount;
 
     public URI getSelf() {
         return self;
@@ -416,5 +417,13 @@ public class Links {
 
     public void setAmenity(URI amenity) {
         this.amenity = amenity;
+    }
+
+    public URI getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(URI likesCount) {
+        this.likesCount = likesCount;
     }
 }
