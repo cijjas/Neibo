@@ -15,7 +15,7 @@ export class ResourceService {
         );
     }
 
-    public listResources(url: string, page: number, size: number): Observable<Resource[]> {
+    public getResources(url: string, page: number, size: number): Observable<Resource[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

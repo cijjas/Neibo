@@ -22,7 +22,7 @@ export class PostService {
         );
     }
 
-    public listPosts(postsUrl: string, page: number, size: number): Observable<Post[]> {
+    public getPosts(postsUrl: string, page: number, size: number): Observable<Post[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
@@ -51,7 +51,7 @@ export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
                 postImage: imageDto.data,
                 channel: channelDto.name,
                 likeCount: likeCountDto.likeCount,
-                authorUser: user,
+                author: user,
                 self: postDto._links.self
             } as Post;
         })

@@ -19,7 +19,7 @@ export class WorkerService {
         );
     }
 
-    public listWorkers(url: string, page: number, size: number): Observable<Worker[]> {
+    public getWorkers(url: string, page: number, size: number): Observable<Worker[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

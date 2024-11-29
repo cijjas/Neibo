@@ -1,15 +1,9 @@
-import {Component, inject, OnInit} from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { HttpErrorResponse } from "@angular/common/http";
 import { ActivatedRoute } from '@angular/router';
-import { Post } from "../../shared/models/post";
-import {PostService} from "../../shared/services/post.service";
-import {Comment} from "../../shared/models/comment";
-import {CommentService} from "../../shared/services/comment.service";
-import {HttpErrorResponse} from "@angular/common/http";
-import {Channel} from "../../shared/models/channel";
-import {LikeService} from "../../shared/services/like.service";
-import {LikeForm} from "../../shared/models/like";
-import { LikeCount } from '../../shared/models/likeCount';
-import { LoggedInService } from '../../shared/services/loggedIn.service';
+
+import { Comment, Post } from "../../shared/models/index";
+import { PostService, CommentService, LikeService, UserSessionService } from "../../shared/services/index.service";
 
 @Component({
   selector: 'app-post',
@@ -23,26 +17,29 @@ export class PostComponent implements OnInit {
 
   public post: Post | undefined;
   public comments: Comment[] = [];
-  public loggedUserUrn: string | undefined
-
-  public likeCount: LikeCount;
+  public loggedUserUrn: string | undefined;
+  public likeCount: number = 0;
   public isLikedByUser: boolean = false;
 
   constructor(
     private postService: PostService,
     private commentService: CommentService,
     private likeService: LikeService,
-    private loggedInService: LoggedInService
-  ) {}
+    private userSessionService: UserSessionService
+  ) { }
 
-  ngOnInit() {
-    this.getPost();
-    this.getComments();
-    this.getLikeInformation();
+  ngOnInit(): void {
+    this.loadLoggedUserUrn();
+    this.loadPostData();
+  }
 
-    this.loggedInService.getLoggedUserURN().subscribe(
-      (urn: string) => {
-        this.loggedUserUrn = urn;  
+  private loadLoggedUserUrn(): void {
+    this.userSessionService.getLoggedUser().subscribe(
+      (user) => {
+        if (user) {
+          this.loggedUserUrn = user.self;
+          this.getLikeInformation();
+        }
       },
       (error: any) => {
         console.error('Error retrieving logged user URN:', error);
@@ -50,53 +47,69 @@ export class PostComponent implements OnInit {
     );
   }
 
+  private loadPostData(): void {
+    this.getPost();
+    this.getComments();
+  }
 
+  public toggleLike(): void {
+    if (!this.loggedUserUrn || !this.postUrn) {
+      console.error("Cannot toggle like without a logged user or post URN");
+      return;
+    }
 
-  // toggleLike(): void {
-  //   const likeForm: LikeForm = {
-  //     likeId: 0,
-  //     postUrn: this.self,
-  //     self: 'user123',
-  //   };
-
-  //   this.likeService.addLike(likeForm).subscribe(
-  //     () => {
-  //       this.isLikedByUser = !this.isLikedByUser;
-  //       this.likeCount += this.isLikedByUser ? 1 : -1;
-  //     },
-  //     (error: HttpErrorResponse) => {
-  //       console.error('Error toggling like:', error);
-  //     }
-  //   );
-  // }
-
+    // this.likeService.toggleLike(this.postUrn, this.loggedUserUrn).subscribe(
+    //   () => {
+    //     this.isLikedByUser = !this.isLikedByUser;
+    //     this.likeCount += this.isLikedByUser ? 1 : -1;
+    //   },
+    //   (error: HttpErrorResponse) => {
+    //     console.error('Error toggling like:', error);
+    //   }
+    // );
+  }
 
   public getLikeInformation(): void {
-    this.likeService.isLikedByUser(this.postUrn, this.loggedUserUrn)
-      .subscribe(
-        (isLikedByUser: boolean) => {
-          this.isLikedByUser = isLikedByUser;
-        }
-      );
-    //this.likeCount = this.post?.likes.length || 0;
-  }
-  public getComments(): void {
-    this.commentService.getComments(this.postUrn, 1, 10)
-      .subscribe(
-        (comments: Comment[]) => {
-          this.comments = comments;
-        }
-      )
+    if (!this.postUrn || !this.loggedUserUrn) return;
 
+    // this.likeService.isLikedByUser(this.postUrn, this.loggedUserUrn).subscribe(
+    //   (isLikedByUser: boolean) => {
+    //     this.isLikedByUser = isLikedByUser;
+    //   },
+    //   (error: HttpErrorResponse) => {
+    //     console.error('Error fetching like information:', error);
+    //   }
+    // );
+
+    // this.likeService.getLikeCount(this.postUrn).subscribe(
+    //   (likeCount: number) => {
+    //     this.likeCount = likeCount;
+    //   },
+    //   (error: HttpErrorResponse) => {
+    //     console.error('Error fetching like count:', error);
+    //   }
+    // );
   }
-  public getPost(): void {
-    this.postService.getPost(this.postUrn)
-      .subscribe(
-      (post) => {
-        this.post = post;
+
+  public getComments(): void {
+    this.commentService.getComments(this.postUrn, 1, 10).subscribe(
+      (comments: Comment[]) => {
+        this.comments = comments;
+      },
+      (error: HttpErrorResponse) => {
+        console.error('Error fetching comments:', error);
       }
     );
-
   }
 
+  public getPost(): void {
+    this.postService.getPost(this.postUrn).subscribe(
+      (post: Post) => {
+        this.post = post;
+      },
+      (error: HttpErrorResponse) => {
+        console.error('Error fetching post:', error);
+      }
+    );
+  }
 }

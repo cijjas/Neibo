@@ -16,7 +16,7 @@ export class LikeService {
         );
     }
 
-    public listLikes(url: string, page: number, size: number): Observable<Like[]> {
+    public getLikes(url: string, page: number, size: number): Observable<Like[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

@@ -15,7 +15,7 @@ export class TagService {
         );
     }
 
-    public listTags(url: string, page: number, size: number): Observable<Tag[]> {
+    public getTags(url: string, page: number, size: number): Observable<Tag[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

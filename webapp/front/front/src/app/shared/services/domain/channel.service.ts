@@ -15,7 +15,7 @@ export class ChannelService {
         );
     }
 
-    public listChannels(url: string, page: number, size: number): Observable<Channel[]> {
+    public getChannels(url: string, page: number, size: number): Observable<Channel[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

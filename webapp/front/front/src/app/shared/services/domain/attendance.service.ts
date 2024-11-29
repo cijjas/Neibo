@@ -17,7 +17,7 @@ export class AttendanceService {
         );
     }
 
-    public listAttendances(url: string): Observable<Attendance[]> {
+    public getAttendances(url: string): Observable<Attendance[]> {
         return this.http.get<AttendanceDto[]>(url).pipe(
             mergeMap((attendancesDto: AttendanceDto[]) => {
                 const attendanceObservables = attendancesDto.map(attendanceDto =>

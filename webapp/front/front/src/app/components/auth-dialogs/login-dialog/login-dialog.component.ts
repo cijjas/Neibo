@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../shared/services/auth.service';
+import { AuthService } from '../../../shared/services/core/auth.service';
 import { Router } from "@angular/router";
 
 @Component({
@@ -51,6 +51,9 @@ export class LoginDialogComponent
     this.loading = true;
     if (this.loginForm.valid) {
       const { email, password, rememberMe } = this.loginForm.value;
+      console.log('email:', email);
+      console.log('password', password);
+      console.log('rememberMe', rememberMe);
       this.authService.login(email, password, rememberMe)
         .subscribe({
           next: (success) => {

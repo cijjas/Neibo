@@ -17,7 +17,7 @@ export class BookingService {
         );
     }
 
-    public listBookings(url: string, page: number, size: number): Observable<Booking[]> {
+    public getBookings(url: string, page: number, size: number): Observable<Booking[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

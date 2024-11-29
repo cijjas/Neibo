@@ -1,12 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Neighborhood, NeighborhoodDto} from "../../../shared/models/neighborhood";
-import {NeighborhoodService} from "../../../shared/services/neighborhood.service";
-import { environment } from '../../../../environments/environment'
-import { HttpClient, HttpParams } from '@angular/common/http'
-
-import {HttpErrorResponse} from "@angular/common/http";
-import {tap} from "rxjs";
+import { Neighborhood } from "../../../shared/models/neighborhood"; // Updated to use Neighborhood only
+import { environment } from '../../../../environments/environment';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { tap, map } from "rxjs/operators";
 
 @Component({
   selector: 'signup-dialog',
@@ -15,33 +12,44 @@ import {tap} from "rxjs";
 export class SignupDialogComponent implements OnInit {
   @Input() showSignupDialog: boolean = false;
   @Output() showSignupDialogChange = new EventEmitter<boolean>();
-  private apiServerUrl = environment.apiBaseUrl
+  private apiServerUrl = environment.apiBaseUrl;
 
   selectedOption: 'neighbor' | 'service' = 'neighbor';
 
   signupForm: FormGroup;
-  neighborhoodsList: NeighborhoodDto[] = [];
+  neighborhoodsList: Neighborhood[] = []; // Changed to Neighborhood
   constructor(
     private fb: FormBuilder,
-    private neighborhoodService: NeighborhoodService,
     private http: HttpClient
-  ) {}
+  ) { }
 
+  // Method to fetch neighborhoods
   getNeighborhoods(): void {
     const params = new HttpParams()
-          .set('page', '1')
-          .set('size', '10');
+      .set('page', '1')
+      .set('size', '10');
 
-    this.http.get<NeighborhoodDto[]>(`${this.apiServerUrl}/neighborhoods`, { params })
-      .subscribe(
-        (neighborhoods: NeighborhoodDto[]) => {
-          this.neighborhoodsList = neighborhoods;
-        }
+    this.http.get<any[]>(`${this.apiServerUrl}/neighborhoods`, { params }) // Adjusted type
+      .pipe(
+        map((neighborhoodDtos) =>
+          neighborhoodDtos.map((dto) => ({
+            name: dto.name,
+            self: dto._links?.self?.href || '' // Map DTO properties to Neighborhood model
+          }))
+        )
       )
+      .subscribe(
+        (neighborhoods: Neighborhood[]) => {
+          this.neighborhoodsList = neighborhoods;
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error fetching neighborhoods:', error);
+        }
+      );
   }
 
   ngOnInit() {
-    this.getNeighborhoods()
+    this.getNeighborhoods();
     this.signupForm = this.fb.group({
       neighborhoodId: [null, Validators.required],
       name: ['', Validators.required],
@@ -61,7 +69,6 @@ export class SignupDialogComponent implements OnInit {
   selectOption(option: 'neighbor' | 'service'): void {
     this.selectedOption = option;
   }
-
 
   closeSignupDialog(): void {
     this.showSignupDialog = false;

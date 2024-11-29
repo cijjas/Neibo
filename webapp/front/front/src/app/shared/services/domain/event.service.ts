@@ -15,7 +15,7 @@ export class EventService {
         );
     }
 
-    public listEvents(url: string, page: number, size: number): Observable<Event[]> {
+    public getEvents(url: string, page: number, size: number): Observable<Event[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

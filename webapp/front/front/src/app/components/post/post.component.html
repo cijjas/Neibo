@@ -22,14 +22,14 @@
 
                     <span i18n>Posted by </span>
                     <!--TODO plaeholder sacar? ,o hacerlo bine?-->
-                    <img *ngIf="post.user._links.profilePicture; else defaultImage"
+                    <!-- <img *ngIf="post.user._links.profilePicture; else defaultImage"
                       [src]="post.user._links.profilePicture" class="small-profile-picture placeholder mb-1"
-                      alt="poster profile picture img" />
+                      alt="poster profile picture img" /> -->
                     <ng-template #defaultImage>
                       <img src="./assets/images/roundedPlaceholder.png" class="small-profile-picture mb-1"
                         alt="default profile picture img" />
                     </ng-template>
-                    <span> {{post.user.name}} </span>
+                    <span> {{post.author.name}} </span>
                   </span>
                 </div>
 
@@ -43,7 +43,7 @@
 
               <div class="divider m-b-20"></div>
               <div class="postcard-description">
-                {{post.description}}
+                {{post.body}}
               </div>
             </div>
 
@@ -75,16 +75,16 @@
               </div>
             </div>
             <div class="col-6">
-              <ng-container *ngIf="post.tags && post.tags.length > 0; else emptyTags">
+              <!-- <ng-container *ngIf="post.tags && post.tags.length > 0; else emptyTags">
                 <div class="mr-2">
                   <div class="w-100 d-flex flex-row justify-content-end align-items-center flex-wrap">
                     <a *ngFor="let tag of post.tags" class="post-tag static m-l-3 m-r-3"
-                      [href]=""><!--TODO VALIDAR TAGS-->
+                      [href]="">
                       {{ tag.name}}
                     </a>
                   </div>
                 </div>
-              </ng-container>
+              </ng-container> -->
               <ng-template #emptyTags>
                 <!-- Handle the case when tags are empty (if needed) -->
               </ng-template>
@@ -259,7 +259,7 @@
                         })();
                       </script>
       -->
-                      <div class="bold">{{comment.user.name}} {{comment.user.surname}}</div>
+                      <div class="bold">{{comment.author.name}} {{comment.author.surname}}</div>
 
                     </div>
 

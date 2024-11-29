@@ -16,7 +16,7 @@ export class ProductService {
         );
     }
 
-    public listProducts(url: string, page: number, size: number): Observable<Product[]> {
+    public getProducts(url: string, page: number, size: number): Observable<Product[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

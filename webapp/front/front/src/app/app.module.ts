@@ -2,7 +2,6 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http"
 import { AppComponent } from "./app.component"
 import { BrowserModule } from "@angular/platform-browser"
 import { NgModule } from "@angular/core"
-import { AmenityService } from "./shared/services/amenity.service"
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { UserProfileWidgetComponent } from "./components/user-profile-widget/user-profile-widget.component";
@@ -27,7 +26,7 @@ import { BackgroundDrawingComponent } from "./components/background-drawing/back
 import { LoginComponent } from './modules/auth/login/login.component';
 import { LoginDialogComponent } from './components/auth-dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './components/auth-dialogs/signup-dialog/signup-dialog.component';
-import { AuthService } from "./shared/services/auth.service";
+import { AuthService } from "./shared/services/index.service";
 import { JwtInterceptor } from "./shared/interceptors/jwt.interceptor";
 import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
 
@@ -64,7 +63,6 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
     ReactiveFormsModule
   ],
   providers: [
-    AmenityService,
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,

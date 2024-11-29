@@ -15,7 +15,7 @@ export class NeighborhoodService {
         );
     }
 
-    public listNeighborhoods(url: string, page: number, size: number): Observable<Neighborhood[]> {
+    public getNeighborhoods(url: string, page: number, size: number): Observable<Neighborhood[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

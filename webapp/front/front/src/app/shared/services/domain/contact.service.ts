@@ -15,7 +15,7 @@ export class ContactService {
         );
     }
 
-    public listContacts(url: string, page: number, size: number): Observable<Contact[]> {
+    public getContacts(url: string, page: number, size: number): Observable<Contact[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

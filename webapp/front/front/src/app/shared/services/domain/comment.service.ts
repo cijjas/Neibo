@@ -16,7 +16,7 @@ export class CommentService {
         );
     }
 
-    public listComments(url: string, page: number, size: number): Observable<Comment[]> {
+    public getComments(url: string, page: number, size: number): Observable<Comment[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

@@ -7,6 +7,6 @@ export interface Post {
   postImage: Uint8Array;
   channel: string;
   likeCount: number;
-  authorUser: User;
+  author: User;
   self: string;
 }

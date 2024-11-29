@@ -16,7 +16,7 @@ export class AmenityService {
         );
     }
 
-    public listAmenities(amenitiesUrl: string, page: number, size: number): Observable<Amenity[]> {
+    public getAmenities(amenitiesUrl: string, page: number, size: number): Observable<Amenity[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

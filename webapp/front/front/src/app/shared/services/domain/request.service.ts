@@ -16,7 +16,7 @@ export class RequestService {
         );
     }
 
-    public listRequests(url: string, page: number, size: number): Observable<Request[]> {
+    public getRequests(url: string, page: number, size: number): Observable<Request[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

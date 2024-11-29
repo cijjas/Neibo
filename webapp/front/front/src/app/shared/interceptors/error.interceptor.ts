@@ -17,7 +17,6 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
-                console.error('HTTP Error:', error); // Debugging log
                 if (error.status === 404) {
                     this.router.navigate(['/not-found'], {
                         queryParams: {
@@ -30,6 +29,13 @@ export class ErrorInterceptor implements HttpInterceptor {
                         queryParams: {
                             code: '500',
                             message: 'An internal server error occurred. Please try again later.'
+                        }
+                    });
+                } else if (error.status === 401) {
+                    this.router.navigate(['/login'], {
+                        queryParams: {
+                            code: '401',
+                            message: 'You are not authorized to access this resource.'
                         }
                     });
                 }

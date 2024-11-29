@@ -16,7 +16,7 @@ export class InquiryService {
         );
     }
 
-    public listInquiries(url: string, page: number, size: number): Observable<Inquiry[]> {
+    public getInquiries(url: string, page: number, size: number): Observable<Inquiry[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());

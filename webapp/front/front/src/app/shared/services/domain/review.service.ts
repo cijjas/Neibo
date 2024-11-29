@@ -16,7 +16,7 @@ export class ReviewService {
         );
     }
 
-    public listReviews(url: string, page: number, size: number): Observable<Review[]> {
+    public getReviews(url: string, page: number, size: number): Observable<Review[]> {
         let params = new HttpParams();
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
