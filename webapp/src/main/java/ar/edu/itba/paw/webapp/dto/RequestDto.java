@@ -71,7 +71,7 @@ public class RequestDto {
                 .path("products")
                 .path(String.valueOf(request.getProduct().getProductId()))
                 .build());
-        links.setCommentUser(uriInfo.getBaseUriBuilder()
+        links.setRequestUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
