@@ -54,12 +54,21 @@ public class Links {
     private URI attendanceUser;
     private URI bookingUser;
     private URI commentUser;
+    private URI requestUser;
     private URI likeUser;
     private URI postUser;
     private URI postImage;
     private URI userImage;
     private URI resourceImage;
     private URI reviewUser;
+
+    public URI getRequestUser() {
+        return requestUser;
+    }
+
+    public void setRequestUser(URI requestUser) {
+        this.requestUser = requestUser;
+    }
 
     public URI getAmenity() {
         return amenity;

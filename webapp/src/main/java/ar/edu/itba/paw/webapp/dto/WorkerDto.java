@@ -62,7 +62,7 @@ public class WorkerDto {
                 .path(String.valueOf(worker.getWorkerId()))
                 .build();
         links.setSelf(self);
-        links.setCommentUser(uriInfo.getBaseUriBuilder()
+        links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
