@@ -1,0 +1,211 @@
+import { Worker } from "./worker";
+import { Neighborhood } from "./neighborhood";
+
+export interface Affiliation {
+  worker: Worker;
+  workerRole: 'VERIFIED' | 'UNVERIFIED' | 'BANNED';
+  neighborhoodName: string;
+  self: string;
+}
+
+
+import { Shift } from "./shift";
+
+export interface Amenity {
+  name: string;
+  description: string;
+  shiftsAvailable: Shift[];
+  self: string;
+}
+
+
+import { User } from "./user";
+import { Event } from "./event";
+
+export interface Attendance {
+  user: User;
+  event: Event;
+  self: string;
+}
+
+
+import { Amenity } from "./amenity";
+import { Shift } from "./shift";
+
+export interface Booking {
+  shift: Shift;
+  amenity: Amenity;
+  date: Date;
+  self: string;
+}
+
+
+
+export interface Channel {
+  name: string;
+  self: string;
+}
+
+
+import { User } from "./user";
+
+export interface Comment {
+  comment: string;
+  date: Date;
+  author: User;
+  self: string;
+}
+
+
+export interface Contact {
+  name: string;
+  address: string;
+  phone: string;
+  self: string;
+}
+
+
+export interface Event {
+  name: string;
+  description: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  attendeesCount: number;
+  self: string;
+}
+
+
+import { User } from "./user";
+
+export interface Inquiry {
+  message: string;
+  reply: string;
+  date: Date;
+  inquirer: User;
+  replier: User;
+  self: string;
+}
+
+
+import { Post } from "./post";
+
+export interface Like {
+  date: Date;
+  post: Post;
+  self: string;
+}
+
+
+export interface Neighborhood {
+  name: string;
+  self: string;
+}
+
+
+  import { User } from "./user";
+
+  export interface Post {
+    title: string;
+    description: string;
+    date: Date;
+    postImage: Uint8Array;
+    channel: string;
+    likeCount: number;
+    authorUser: User;
+    self: string;
+  }
+
+
+import { User } from "./user";
+
+export interface Product {
+  name: string;
+  description: string;
+  price: number;
+  used: boolean;
+  remainingUnits: number;
+  creationDate: Date;
+  image: Uint8Array;
+  seller: User;
+  department: string;
+  self: string;
+}
+
+
+import { User } from "./user";
+
+export interface Request {
+  message: string;
+  unitsRequested: number;
+  requestDate: Date;
+  purchaseDate: Date;
+  requestStatus: 'FULFILLED' | 'WAITING';
+  requestingUser: User;
+  self: string;
+}
+
+
+export interface Resource {
+  title: string;
+  description: string;
+  image: Uint8Array;
+  self: string;
+}
+
+
+import { User } from "./user";
+
+export interface Review {
+  rating: number;
+  review: string;
+  date: Date;
+  user: User;
+  self: string;
+}
+
+
+export interface Shift {
+  startTime: string;
+  day: string;
+  self: string;
+}
+
+
+export interface Tag {
+  name: string;
+  self: string;
+}
+
+
+export interface User {
+  mail: string;
+  name: string;
+  surname: string;
+  darkMode: boolean;
+  phoneNumber: string;
+  identification: number;
+  creationDate: Date;
+  language: string;
+  userRole: string;
+  image: Uint8Array;
+  self: string;
+}
+
+
+import { User } from "./user";
+
+export interface Worker {
+  phoneNumber: string;
+  businessName: string;
+  address: string;
+  bio: string;
+  averageRating: number;
+  user: User;
+  backgroundImage: Uint8Array;
+  neighborhoodAffiliated: string[];
+  professions: string[];
+  self: string;
+}
+
+
