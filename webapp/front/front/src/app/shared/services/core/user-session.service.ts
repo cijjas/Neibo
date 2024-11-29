@@ -31,6 +31,7 @@ export class UserSessionService {
         this.authToken = token;
         localStorage.setItem('authToken', token);
     }
+    
 
     getAuthToken(): string | null {
         return this.authToken;

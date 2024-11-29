@@ -25,7 +25,7 @@ export class AuthService {
 
         // Store "remember me" preference
         localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
-
+        this.clearAuthToken();
         return this.http.get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
             .pipe(
                 map(response => {
@@ -34,13 +34,16 @@ export class AuthService {
                         storage.setItem(this.authTokenKey, authToken);
                         this.userSessionService.setAuthToken(authToken);
 
-                        const userUrl = response.headers.get('X-User-URL')?.replace(/[<>]/g, '');
+                        const userUrl = response.headers.get('X-User-URL')?.split(';')[0].replace(/[<>]/g, '');
                         if (userUrl) {
                             this.http.get<User>(userUrl).subscribe({
                                 next: (user) => this.userSessionService.setLoggedUserInformation(user),
                                 error: (error) => console.error('Error fetching user:', error),
                             });
+                        } else {
+                            console.warn('No user URL provided in headers.');
                         }
+
                         return true;
                     }
                     return false;
@@ -62,11 +65,18 @@ export class AuthService {
         return storageType.getItem(this.authTokenKey) || '';
     }
 
+
+
     getRememberMe(): boolean {
         return JSON.parse(localStorage.getItem(this.rememberMeKey) || 'false');
     }
 
     isLoggedIn(): boolean {
         return !!this.getAuthToken();
+    }
+
+    clearAuthToken(): void {
+        sessionStorage.removeItem(this.authTokenKey);
+        localStorage.removeItem(this.authTokenKey);
     }
 }

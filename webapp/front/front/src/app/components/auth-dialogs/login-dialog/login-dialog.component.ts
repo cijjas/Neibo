@@ -51,9 +51,7 @@ export class LoginDialogComponent
     this.loading = true;
     if (this.loginForm.valid) {
       const { email, password, rememberMe } = this.loginForm.value;
-      console.log('email:', email);
-      console.log('password', password);
-      console.log('rememberMe', rememberMe);
+      
       this.authService.login(email, password, rememberMe)
         .subscribe({
           next: (success) => {
