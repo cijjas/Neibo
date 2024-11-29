@@ -17,6 +17,7 @@ export class NeighborhoodService {
 
     public getNeighborhoods(url: string, page: number, size: number): Observable<Neighborhood[]> {
         let params = new HttpParams();
+        // QP withWorker=workerUrl
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 
@@ -32,4 +33,3 @@ export function mapNeighborhood(neighborhoodDto: NeighborhoodDto): Neighborhood 
         self: neighborhoodDto._links.self
     };
 }
-

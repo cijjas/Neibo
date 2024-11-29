@@ -21,6 +21,11 @@ export class WorkerService {
 
     public getWorkers(url: string, page: number, size: number): Observable<Worker[]> {
         let params = new HttpParams();
+        // QP withProfessions=professionUrlList
+        // QP inNeighborhoods=neighborhoodUrlList
+        // QP withRole=workerRoleUrl
+        // QP withStatus=workerStatusUrl
+
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 
@@ -38,9 +43,8 @@ export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Wo
         http.get<UserDto>(workerDto._links.user).pipe(mergeMap(userDto => mapUser(http, userDto))),
         http.get<NeighborhoodDto[]>(workerDto._links.neighborhoods),
         http.get<ProfessionDto[]>(workerDto._links.professions),
-        http.get<ImageDto>(workerDto._links.backgroundImage)
     ]).pipe(
-        map(([user, neighborhoods, professions, backgroundImage]) => {
+        map(([user, neighborhoods, professions]) => {
             return {
                 phoneNumber: workerDto.phoneNumber,
                 businessName: workerDto.businessName,
@@ -48,7 +52,7 @@ export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Wo
                 bio: workerDto.bio,
                 averageRating: workerDto.averageRating,
                 user: user,
-                backgroundImage: backgroundImage.data,
+                backgroundImage: workerDto._links.backgroundImage,
                 neighborhoodAffiliated: neighborhoods.map((n) => n.name),
                 professions: professions.map((p) => p.name),
                 self: workerDto._links.self

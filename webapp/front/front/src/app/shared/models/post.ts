@@ -4,7 +4,7 @@ export interface Post {
   title: string;
   body: string;
   date: Date;
-  postImage: Uint8Array;
+  postImage: string;
   channel: string;
   likeCount: number;
   author: User;

@@ -17,6 +17,7 @@ export class EventService {
 
     public getEvents(url: string, page: number, size: number): Observable<Event[]> {
         let params = new HttpParams();
+        // QP forDate=YYYY-MM-DD
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 
@@ -37,4 +38,3 @@ export function mapEvent(eventDto: EventDto): Event {
         self: eventDto._links.self
     };
 }
-

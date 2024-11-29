@@ -18,6 +18,8 @@ export class AttendanceService {
     }
 
     public getAttendances(url: string): Observable<Attendance[]> {
+        // QP page
+        // QP size
         return this.http.get<AttendanceDto[]>(url).pipe(
             mergeMap((attendancesDto: AttendanceDto[]) => {
                 const attendanceObservables = attendancesDto.map(attendanceDto =>

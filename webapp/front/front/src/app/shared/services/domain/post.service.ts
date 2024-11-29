@@ -24,6 +24,10 @@ export class PostService {
 
     public getPosts(postsUrl: string, page: number, size: number): Observable<Post[]> {
         let params = new HttpParams();
+        // QP inChannel=channelUrl
+        // QP withTags=tagUrlList (ie ["http://localhost:8080/neighborhoods/1/tags/2", ["http://localhost:8080/neighborhoods/1/tags/3"]])
+        // QP withStatus=postStatusUrl
+        // QP postedBy=userUrl
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 
@@ -38,19 +42,18 @@ export class PostService {
 
 export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
     return forkJoin([
-        http.get<ImageDto>(postDto._links.postImage),
         http.get<ChannelDto>(postDto._links.channel),
         http.get<LikeCountDto>(postDto._links.likeCount),
         http.get<UserDto>(postDto._links.postUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
     ]).pipe(
-        map(([imageDto, channelDto, likeCountDto, user]) => {
+        map(([channelDto, likeCountDto, user]) => {
             return {
                 title: postDto.title,
                 body: postDto.body,
                 date: postDto.creationDate,
-                postImage: imageDto.data,
+                postImage: postDto._links.postImage,
                 channel: channelDto.name,
-                likeCount: likeCountDto.likeCount,
+                likeCount: likeCountDto.count,
                 author: user,
                 self: postDto._links.self
             } as Post;

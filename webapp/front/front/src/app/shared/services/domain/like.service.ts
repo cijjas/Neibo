@@ -18,6 +18,8 @@ export class LikeService {
 
     public getLikes(url: string, page: number, size: number): Observable<Like[]> {
         let params = new HttpParams();
+        // QP onPost=postUrl
+        // QP likedBy=userUrl
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 
@@ -45,4 +47,3 @@ export function mapLike(http: HttpClient, likeDto: LikeDto): Observable<Like> {
         })
     );
 }
-

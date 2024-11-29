@@ -134,7 +134,7 @@ export interface LikeDto {
 }
 
 export interface LikeCountDto {
-    likeCount: number
+    count: number
     _links: Links
 }
 

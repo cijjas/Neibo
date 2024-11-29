@@ -18,6 +18,11 @@ export class RequestService {
 
     public getRequests(url: string, page: number, size: number): Observable<Request[]> {
         let params = new HttpParams();
+        // QP requestBy=userUrl
+        // QP forProduct=productUrl
+        // QP withType=transactionTypeUrl
+        // QP withStatus=requestStatusUrl
+        // Either both user and type have to be specified or none of them
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 

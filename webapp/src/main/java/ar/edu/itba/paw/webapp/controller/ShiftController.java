@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
 import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class ShiftController {
     @GET
     public Response getShifts(
             @QueryParam("forAmenity") @AmenityURNConstraint final String amenity,
-            @QueryParam("forDate") final Date date
+            @QueryParam("forDate") @DateConstraint final Date date
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 

@@ -7,7 +7,7 @@ export interface Worker {
   bio: string;
   averageRating: number;
   user: User;
-  backgroundImage: Uint8Array;
+  backgroundImage: string;
   neighborhoodAffiliated: string[];
   professions: string[];
   self: string;

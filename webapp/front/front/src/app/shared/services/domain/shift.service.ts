@@ -15,10 +15,10 @@ export class ShiftService {
         );
     }
 
-    public getShifts(url: string, page: number, size: number): Observable<Shift[]> {
+    public getShifts(url: string): Observable<Shift[]> {
         let params = new HttpParams();
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+        // QP forAmenity=amenityUrl
+        // QP forDate=YYYY-MM-DD
 
         return this.http.get<ShiftDto[]>(url, { params }).pipe(
             map((shiftsDto: ShiftDto[]) => shiftsDto.map(mapShift))
@@ -33,4 +33,3 @@ export function mapShift(shiftDto: ShiftDto): Shift {
         self: shiftDto._links.self
     };
 }
-

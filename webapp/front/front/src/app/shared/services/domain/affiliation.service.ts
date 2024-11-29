@@ -21,6 +21,8 @@ export class AffiliationService {
 
     public getAffiliations(url: string, page: number, size: number): Observable<Affiliation[]> {
         let params = new HttpParams();
+        // QP inNeighborhood=neighborhoodUrl
+        // QP forWorker=workerUrl
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 

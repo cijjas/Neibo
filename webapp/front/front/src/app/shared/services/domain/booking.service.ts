@@ -19,6 +19,8 @@ export class BookingService {
 
     public getBookings(url: string, page: number, size: number): Observable<Booking[]> {
         let params = new HttpParams();
+        // QP bookedBy=userUrl
+        // QP forAmenity=amenityUrl
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 

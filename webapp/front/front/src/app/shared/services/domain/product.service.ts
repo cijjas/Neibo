@@ -18,6 +18,9 @@ export class ProductService {
 
     public getProducts(url: string, page: number, size: number): Observable<Product[]> {
         let params = new HttpParams();
+        // QP inDepartment=departmentUrl
+        // QP forUser=userUrl
+        // QP withStatus=productStatusUrl
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 
@@ -45,9 +48,9 @@ export function mapProduct(http: HttpClient, productDto: ProductDto): Observable
                 used: productDto.used,
                 remainingUnits: productDto.remainingUnits,
                 creationDate: productDto.creationDate,
-                firstImage: productDto.firstProductImage,
-                secondImage: productDto.secondProductImage,
-                thirdImage: productDto.thirdProductImage,
+                firstImage: productDto._links.firstProductImage,
+                secondImage: productDto._links.secondProductImage,
+                thirdImage: productDto._links.thirdProductImage,
                 seller: seller,
                 department: department.name,
                 self: productDto._links.self

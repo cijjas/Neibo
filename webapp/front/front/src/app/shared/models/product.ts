@@ -7,9 +7,9 @@ export interface Product {
   used: boolean;
   remainingUnits: number;
   creationDate: Date;
-  firstImage: Uint8Array;
-  secondImage: Uint8Array;
-  thirdImage: Uint8Array;
+  firstImage: string;
+  secondImage: string;
+  thirdImage: string;
   seller: User;
   department: string;
   self: string;

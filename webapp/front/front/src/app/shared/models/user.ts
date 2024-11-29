@@ -8,6 +8,6 @@ export interface User {
   creationDate: Date;
   language: string;
   userRole: string;
-  image: Uint8Array;
+  image: string;
   self: string;
 }

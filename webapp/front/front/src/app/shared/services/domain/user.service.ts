@@ -23,6 +23,7 @@ export class UserService {
     public getUsers(userUrl: string, userRole: string, page: number, size: number): Observable<User[]> {
         let params = new HttpParams();
 
+        // QP withRole=userRoleUrl
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
 
@@ -37,18 +38,17 @@ export class UserService {
 
 export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
     return forkJoin([
-        http.get<ImageDto>(userDto._links.userImage),
         http.get<LanguageDto>(userDto._links.language),
         http.get<UserRoleDto>(userDto._links.posts)
     ]).pipe(
-        map(([profilePicture, language, userRole]) => {
+        map(([language, userRole]) => {
             return {
                 mail: userDto.mail,
                 name: userDto.name,
                 surname: userDto.surname,
                 darkMode: userDto.darkMode,
                 phoneNumber: userDto.phoneNumber,
-                image: profilePicture.data,
+                image: userDto._links.userImage,
                 identification: userDto.identification,
                 creationDate: userDto.creationDate,
                 language: language.name,
