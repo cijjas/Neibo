@@ -21,8 +21,8 @@ export class UserProfileWidgetComponent implements OnInit {
 
       if (user?.image) {
         // Convert Uint8Array to Base64
-        const base64Image = this.convertArrayToBase64(user.image);
-        this.profileImageUrl = `data:image/png;base64,${base64Image}`;
+        // const base64Image = this.convertArrayToBase64(user.image);
+        // this.profileImageUrl = `data:image/png;base64,${base64Image}`;
       }
     });
   }

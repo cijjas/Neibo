@@ -11,7 +11,7 @@ export class ResourceService {
 
     public getResource(url: string): Observable<Resource> {
         return this.http.get<ResourceDto>(url).pipe(
-            mergeMap((resourceDto: ResourceDto) => mapResource(this.http, resourceDto))
+            map((resourceDto: ResourceDto) => mapResource(resourceDto))
         );
     }
 
@@ -21,27 +21,16 @@ export class ResourceService {
         if (size) params = params.set('size', size.toString());
 
         return this.http.get<ResourceDto[]>(url, { params }).pipe(
-            mergeMap((resourcesDto: ResourceDto[]) => {
-                const resourceObservables = resourcesDto.map(resourceDto =>
-                    mapResource(this.http, resourceDto)
-                );
-                return forkJoin(resourceObservables);
-            })
+            map((resourcesDto: ResourceDto[]) => resourcesDto.map(mapResource))
         );
     }
 }
 
-export function mapResource(http: HttpClient, resourceDto: ResourceDto): Observable<Resource> {
-    return forkJoin([
-        http.get<ImageDto>(resourceDto._links.resourceImage)
-    ]).pipe(
-        map(([image]) => {
-            return {
-                title: resourceDto.title,
-                description: resourceDto.description,
-                image: image.data,
-                self: resourceDto._links.self
-            } as Resource;
-        })
-    );
+export function mapResource(resourceDto: ResourceDto): Resource {
+    return {
+        title: resourceDto.title,
+        description: resourceDto.description,
+        image: resourceDto._links.resourceImage,
+        self: resourceDto._links.self
+    }
 }
