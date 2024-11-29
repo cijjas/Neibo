@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Contact } from '../model/contact';
-import { ContactDto } from '../dtos/app-dtos';
+import { Contact } from '../../model/index';
+import { ContactDto } from '../../dtos/app-dtos';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getContact(url: string): Observable<Contact> {
         return this.http.get<ContactDto>(url).pipe(

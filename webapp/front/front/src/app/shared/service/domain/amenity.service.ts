@@ -2,9 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Amenity } from '../model/amenity';
-import { Shift } from '../model/shift';
-import { AmenityDto, ShiftDto } from '../dtos/app-dtos';
+import { Amenity , Shift} from '../../model/index';
+import { AmenityDto, ShiftDto } from '../../dtos/app-dtos';
 import { mapShift } from './shift.service';
 
 @Injectable({ providedIn: 'root' })

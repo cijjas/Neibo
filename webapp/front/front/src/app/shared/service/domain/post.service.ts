@@ -3,9 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Post } from '../model/post';
-import { ChannelDto, ImageDto, PostDto, UserDto } from '../dtos/app-dtos';
-import { LikeCountDto } from '../models/likeCount';
+import { Post } from '../../model/index';
+import { ChannelDto, ImageDto, PostDto, UserDto, LikeCountDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 
 

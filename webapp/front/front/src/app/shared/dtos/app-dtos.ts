@@ -122,6 +122,11 @@ export interface LikeDto {
     _links: Links;
 }
 
+export interface LikeCountDto {
+    likeCount: number
+    _links: Links
+}
+
 export interface NeighborhoodDto {
     name: string;
     _links: Links;

@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Affiliation } from '../model/affiliation';
-import { WorkerDto, NeighborhoodDto, AffiliationDto } from '../dtos/app-dtos';
+import { Affiliation } from '../../model/index';
+import { WorkerDto, NeighborhoodDto, AffiliationDto } from '../../dtos/app-dtos';
 import { mapWorker } from './worker.service';
 
 @Injectable({ providedIn: 'root' })

@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Channel } from '../model/channel';
-import { ChannelDto } from '../dtos/app-dtos';
+import { Channel } from '../../model/index';
+import { ChannelDto } from '../../dtos/app-dtos';
 
 @Injectable({ providedIn: 'root' })
 export class ChannelService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getChannel(url: string): Observable<Channel> {
         return this.http.get<ChannelDto>(url).pipe(

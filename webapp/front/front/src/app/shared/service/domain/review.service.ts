@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Review } from '../model/review';
-import { ReviewDto, UserDto } from '../dtos/app-dtos';
+import { Review } from '../../model/index';
+import { ReviewDto, UserDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getReview(url: string): Observable<Review> {
         return this.http.get<ReviewDto>(url).pipe(

@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Booking } from '../model/booking';
-import { BookingDto, AmenityDto, ShiftDto } from '../dtos/app-dtos';
+import { Booking } from '../../model/index';
+import { BookingDto, AmenityDto, ShiftDto } from '../../dtos/app-dtos';
 import { mapShift } from './shift.service';
 import { mapAmenity } from './amenity.service';
 

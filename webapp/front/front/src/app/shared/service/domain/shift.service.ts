@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Shift } from '../model/shift';
-import { ShiftDto } from '../dtos/app-dtos';
+import { Shift } from '../../model/index';
+import { ShiftDto } from '../../dtos/app-dtos';
 
 @Injectable({ providedIn: 'root' })
 export class ShiftService {

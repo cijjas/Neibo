@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Comment } from '../model/comment';
-import { CommentDto, UserDto } from '../dtos/app-dtos';
+import { Comment } from '../../model/index';
+import { CommentDto, UserDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getComment(url: string): Observable<Comment> {
         return this.http.get<CommentDto>(url).pipe(

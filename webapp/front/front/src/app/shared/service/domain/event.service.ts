@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Event } from '../model/event';
-import { EventDto } from '../dtos/app-dtos';
+import { Event } from '../../model/index';
+import { EventDto } from '../../dtos/app-dtos';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getEvent(url: string): Observable<Event> {
         return this.http.get<EventDto>(url).pipe(

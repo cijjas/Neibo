@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Resource } from '../model/resource';
-import { ImageDto, ResourceDto } from '../dtos/app-dtos';
+import { Resource } from '../../model/index';
+import { ImageDto, ResourceDto } from '../../dtos/app-dtos';
 
 @Injectable({ providedIn: 'root' })
 export class ResourceService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getResource(url: string): Observable<Resource> {
         return this.http.get<ResourceDto>(url).pipe(
