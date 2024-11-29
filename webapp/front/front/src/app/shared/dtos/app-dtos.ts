@@ -43,7 +43,7 @@ export interface Links {
     professions: string;
     workerNeighborhoods: string;
     neighborhoods: string;
-    likesCount: string;
+    likeCount: string;
     replyUser: string;
     inquiryUser: string;
     user: string;
@@ -56,6 +56,7 @@ export interface Links {
     userImage: string;
     resourceImage: string;
     reviewUser: string;
+    requestUser: string;
 }
 
 export interface AffiliationDto {
@@ -160,9 +161,9 @@ export interface ProductDto {
     used: boolean;
     remainingUnits: number;
     creationDate: Date;
-    firstImage: Uint8Array;
-    secondImage: Uint8Array;
-    thirdImage: Uint8Array;
+    firstProductImage: Uint8Array;
+    secondProductImage: Uint8Array;
+    thirdProductImage: Uint8Array;
     _links: Links;
 }
 

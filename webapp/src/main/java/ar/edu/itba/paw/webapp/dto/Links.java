@@ -47,7 +47,7 @@ public class Links {
     private URI professions;
     private URI workerNeighborhoods;
     private URI neighborhoods;
-    private URI likesCount;
+    private URI likeCount;
     private URI replyUser;
     private URI inquiryUser;
     private URI user;
@@ -413,12 +413,12 @@ public class Links {
         this.neighborhoods = neighborhoods;
     }
 
-    public URI getLikesCount() {
-        return likesCount;
+    public URI getLikeCount() {
+        return likeCount;
     }
 
-    public void setLikesCount(URI likesCount) {
-        this.likesCount = likesCount;
+    public void setLikeCount(URI likeCount) {
+        this.likeCount = likeCount;
     }
 
     public URI getReplyUser() {

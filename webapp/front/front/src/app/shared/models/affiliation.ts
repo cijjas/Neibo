@@ -1,5 +1,9 @@
-import { Links } from './links'
+import { Worker } from "./worker";
+import { Neighborhood } from "./neighborhood";
 
-export interface AffiliationDto {
-    _links: Links
+export interface Affiliation {
+  worker: Worker;
+  workerRole: 'VERIFIED' | 'UNVERIFIED' | 'BANNED';
+  neighborhoodName: string;
+  self: string;
 }

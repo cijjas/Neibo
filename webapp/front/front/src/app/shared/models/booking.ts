@@ -1,23 +1,9 @@
-import { UserDto } from "./user"
-import { Links } from "./links"
-import { ShiftDto } from "./shift"
+import { Amenity } from "./amenity";
+import { Shift } from "./shift";
 
 export interface Booking {
-    bookingDate: Date
-    user: UserDto
-    shift: ShiftDto
-    self: string
+  shift: Shift;
+  amenity: Amenity;
+  date: Date;
+  self: string;
 }
-
-export interface BookingDto {
-    bookingDate: Date
-    _links: Links
-}
-
-export interface BookingForm {
-    bookingId: number
-    shiftIds: number[]
-    reservationDate: Date
-    self: string
-}
-
