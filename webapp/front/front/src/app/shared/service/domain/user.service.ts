@@ -2,10 +2,10 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { map, mergeMap } from 'rxjs/operators'
-import { UserRoleDto } from '../models/userRole'
-import { User } from '../model/user'
-import { ImageDto, LanguageDto, UserDto } from '../dtos/app-dtos'
-import { UserForm } from '../models/user'
+import { User } from '../../model/index'
+import { ImageDto, LanguageDto, UserDto, UserRoleDto } from '../../dtos/app-dtos'
+import { UserForm } from '../../models/user'
+// TODO UserForm del user
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

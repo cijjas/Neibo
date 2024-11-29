@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Attendance } from '../model/attendance';
-import { EventDto, UserDto, AttendanceDto } from '../dtos/app-dtos';
+import { Attendance } from '../../model/index';
+import { EventDto, UserDto, AttendanceDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { mapEvent } from './event.service';
 
@@ -34,12 +34,12 @@ export function mapAttendance(http: HttpClient, attendanceDto: AttendanceDto): O
         http.get<UserDto>(attendanceDto._links.user).pipe(mergeMap(userDto => mapUser(http, userDto))),
         http.get<EventDto>(attendanceDto._links.event)
     ]).pipe(
-            map(([user, eventDto]) => {
-                return {
-                    user: user,
-                    event: mapEvent(eventDto),
-                    self: attendanceDto._links.self
-                } as Attendance;
-            })
-        );
+        map(([user, eventDto]) => {
+            return {
+                user: user,
+                event: mapEvent(eventDto),
+                self: attendanceDto._links.self
+            } as Attendance;
+        })
+    );
 }

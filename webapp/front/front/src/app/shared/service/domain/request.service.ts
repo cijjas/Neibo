@@ -2,8 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Request } from '../model/request';
-import { RequestDto, UserDto, RequestStatusDto } from '../dtos/app-dtos';
+import { Request } from '../../model/index';
+import { RequestDto, UserDto, RequestStatusDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 
 @Injectable({ providedIn: 'root' })

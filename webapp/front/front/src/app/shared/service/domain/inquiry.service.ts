@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Inquiry } from '../model/inquiry';
-import { InquiryDto, UserDto } from '../dtos/app-dtos';
+import { Inquiry } from '../../model/index';
+import { InquiryDto, UserDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 
 @Injectable({ providedIn: 'root' })
 export class InquiryService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getInquiry(url: string): Observable<Inquiry> {
         return this.http.get<InquiryDto>(url).pipe(

@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Like } from '../model/like';
-import { LikeDto, PostDto } from '../dtos/app-dtos';
+import { Like } from '../../model/index';
+import { LikeDto, PostDto } from '../../dtos/app-dtos';
 import { mapPost } from './post.service';
 
 @Injectable({ providedIn: 'root' })
 export class LikeService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getLike(url: string): Observable<Like> {
         return this.http.get<LikeDto>(url).pipe(

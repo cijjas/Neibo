@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Tag } from '../model/tag';
-import { TagDto } from '../dtos/app-dtos';
+import { Tag } from '../../model/index';
+import { TagDto } from '../../dtos/app-dtos';
 
 @Injectable({ providedIn: 'root' })
 export class TagService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     public getTag(url: string): Observable<Tag> {
         return this.http.get<TagDto>(url).pipe(
