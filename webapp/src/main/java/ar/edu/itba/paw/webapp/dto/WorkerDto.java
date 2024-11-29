@@ -62,14 +62,14 @@ public class WorkerDto {
                 .path(String.valueOf(worker.getWorkerId()))
                 .build();
         links.setSelf(self);
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setCommentUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(worker.getUser().getUserId()))
                 .build());
         if (worker.getBackgroundPictureId() != null) {
-            links.setBackgroundPicture(uriInfo.getBaseUriBuilder()
+            links.setBackgroundImage(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(worker.getBackgroundPictureId()))
                     .build());

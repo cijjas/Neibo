@@ -17,21 +17,21 @@ public class CommentDto {
 
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 500, groups = Basic.class)
-    private String comment;
+    private String message;
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
     @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
-    private Date date;
+    private Date creationDate;
     private Links _links;
 
     public static CommentDto fromComment(Comment comment, UriInfo uriInfo) {
         final CommentDto dto = new CommentDto();
 
-        dto.comment = comment.getComment();
-        dto.date = comment.getDate();
+        dto.message = comment.getComment();
+        dto.creationDate = comment.getDate();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -42,7 +42,7 @@ public class CommentDto {
                 .path("comments")
                 .path(String.valueOf(comment.getCommentId()))
                 .build());
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setCommentUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
@@ -58,20 +58,20 @@ public class CommentDto {
         return dto;
     }
 
-    public String getComment() {
-        return comment;
+    public String getMessage() {
+        return message;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Links get_links() {

@@ -149,7 +149,7 @@ public class RequestController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Request request = rs.createRequest(extractSecondId(form.getUser()), extractSecondId(form.getProduct()), form.getMessage(), form.getUnits());
+        final Request request = rs.createRequest(extractSecondId(form.getUser()), extractSecondId(form.getProduct()), form.getMessage(), form.getUnitsRequested());
         String requestHashCode = String.valueOf(request.hashCode());
 
         // Resource URN

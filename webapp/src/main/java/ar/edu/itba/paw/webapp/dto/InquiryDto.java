@@ -27,7 +27,7 @@ public class InquiryDto {
     @Size(max = 500, groups = Basic.class)
     private String reply;
 
-    private Date date;
+    private Date inquiryDate;
 
     private Links _links;
 
@@ -36,7 +36,7 @@ public class InquiryDto {
 
         dto.message = inquiry.getMessage();
         dto.reply = inquiry.getReply();
-        dto.date = inquiry.getInquiryDate();
+        dto.inquiryDate = inquiry.getInquiryDate();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -53,23 +53,30 @@ public class InquiryDto {
                 .path("products")
                 .path(String.valueOf(inquiry.getProduct().getProductId()))
                 .build());
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setInquiryUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(inquiry.getUser().getUserId()))
                 .build());
+        if (inquiry.getReply() != null)
+            links.setReplyUser(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
+                    .path("users")
+                    .path(String.valueOf(inquiry.getProduct().getSeller().getUserId()))
+                    .build());
         dto.set_links(links);
         return dto;
     }
 
 
-    public Date getDate() {
-        return date;
+    public Date getInquiryDate() {
+        return inquiryDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setInquiryDate(Date inquiryDate) {
+        this.inquiryDate = inquiryDate;
     }
 
     public Links get_links() {

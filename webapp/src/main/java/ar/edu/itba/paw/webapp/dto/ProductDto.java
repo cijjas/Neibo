@@ -52,7 +52,7 @@ public class ProductDto {
     @UserURNReferenceConstraintUpdate(groups = Authorization.class)
     private String user;
 
-    private Date date;
+    private Date creationDate;
 
     private Links _links;
 
@@ -64,7 +64,7 @@ public class ProductDto {
         dto.price = product.getPrice();
         dto.used = product.isUsed();
         dto.remainingUnits = product.getRemainingUnits();
-        dto.date = product.getCreationDate();
+        dto.creationDate = product.getCreationDate();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -76,26 +76,25 @@ public class ProductDto {
 
         links.setSelf(self);
         if (product.getPrimaryPicture() != null) {
-            links.setPrimaryPicture(uriInfo.getBaseUriBuilder()
+            links.setFirstProductImage(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(product.getPrimaryPicture().getImageId()))
                     .build());
         }
         if (product.getSecondaryPicture() != null) {
-            links.setSecondaryPicture(uriInfo.getBaseUriBuilder()
+            links.setSecondProductImage(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(product.getSecondaryPicture().getImageId()))
                     .build());
         }
         if (product.getTertiaryPicture() != null) {
-            links.setTertiaryPicture(uriInfo.getBaseUriBuilder()
+            links.setThirdProductImage(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(product.getTertiaryPicture().getImageId()))
                     .build());
         }
 
-
-        links.setSeller(uriInfo.getBaseUriBuilder()
+        links.setProductUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("users")
@@ -158,12 +157,12 @@ public class ProductDto {
         this.remainingUnits = remainingUnits;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Links get_links() {

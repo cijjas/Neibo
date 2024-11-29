@@ -14,7 +14,6 @@ import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriInfo;
-import java.util.Date;
 
 @BookingDateConstraint
 public class BookingDto {
@@ -50,7 +49,7 @@ public class BookingDto {
                 .path("bookings")
                 .path(String.valueOf(booking.getBookingId()))
                 .build());
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setBookingUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")

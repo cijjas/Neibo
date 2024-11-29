@@ -6,14 +6,14 @@ import javax.ws.rs.core.UriInfo;
 
 public class LanguageDto {
 
-    private Language language;
+    private Language name;
 
     private Links _links;
 
     public static LanguageDto fromLanguage(Language language, UriInfo uriInfo) {
         final LanguageDto dto = new LanguageDto();
 
-        dto.language = language;
+        dto.name = language;
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -24,12 +24,12 @@ public class LanguageDto {
         return dto;
     }
 
-    public Language getLanguage() {
-        return language;
+    public Language getName() {
+        return name;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setName(Language name) {
+        this.name = name;
     }
 
     public Links get_links() {

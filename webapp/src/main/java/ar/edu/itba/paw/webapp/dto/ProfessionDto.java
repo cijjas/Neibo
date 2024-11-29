@@ -12,14 +12,14 @@ import java.net.URI;
 public class ProfessionDto {
     @NotNull(groups = Null.class)
     @Size(min = 1, max = 20, groups = Basic.class)
-    private String profession;
+    private String name;
 
     private Links _links;
 
     public static ProfessionDto fromProfession(Profession profession, UriInfo uriInfo) {
         final ProfessionDto dto = new ProfessionDto();
 
-        dto.profession = profession.getProfession();
+        dto.name = profession.getProfession();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -37,12 +37,12 @@ public class ProfessionDto {
     }
 
 
-    public String getProfession() {
-        return profession;
+    public String getName() {
+        return name;
     }
 
-    public void setProfession(String profession) {
-        this.profession = profession;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Links get_links() {

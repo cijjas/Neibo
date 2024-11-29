@@ -5,14 +5,14 @@ import javax.ws.rs.core.UriInfo;
 
 public class LikeCountDto {
 
-    private int likeCount;
+    private int count;
 
     private Links _links;
 
     public static LikeCountDto fromLikeCount(int likeCount, String postURN, String userURN, UriInfo uriInfo) {
         final LikeCountDto dto = new LikeCountDto();
 
-        dto.likeCount = likeCount;
+        dto.count = likeCount;
 
         Links links = new Links();
 
@@ -39,12 +39,12 @@ public class LikeCountDto {
     }
 
 
-    public int getLikeCount() {
-        return likeCount;
+    public int getCount() {
+        return count;
     }
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public Links get_links() {

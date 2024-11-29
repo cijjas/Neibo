@@ -6,14 +6,14 @@ import javax.ws.rs.core.UriInfo;
 
 public class RequestStatusDto {
 
-    private RequestStatus requestStatus;
+    private RequestStatus status;
 
     private Links _links;
 
     public static RequestStatusDto fromRequestStatus(RequestStatus requestStatus, UriInfo uriInfo) {
         final RequestStatusDto dto = new RequestStatusDto();
 
-        dto.requestStatus = requestStatus;
+        dto.status = requestStatus;
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -24,12 +24,12 @@ public class RequestStatusDto {
         return dto;
     }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
+    public RequestStatus getStatus() {
+        return status;
     }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
+    public void setStatus(RequestStatus status) {
+        this.status = status;
     }
 
     public Links get_links() {

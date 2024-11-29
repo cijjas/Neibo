@@ -6,14 +6,14 @@ import javax.ws.rs.core.UriInfo;
 
 public class TransactionTypeDto {
 
-    private TransactionType transactionType;
+    private TransactionType type;
 
     private Links _links;
 
     public static TransactionTypeDto fromTransactionType(TransactionType transactionType, UriInfo uriInfo) {
         final TransactionTypeDto dto = new TransactionTypeDto();
 
-        dto.transactionType = transactionType;
+        dto.type = transactionType;
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -24,12 +24,12 @@ public class TransactionTypeDto {
         return dto;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
+    public TransactionType getType() {
+        return type;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 
 

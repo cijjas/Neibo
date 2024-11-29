@@ -25,14 +25,14 @@ public class LikeDto {
     @UserURNReferenceInLikeConstraint(groups = Authorization.class)
     private String user;
 
-    private Date date;
-    private int count;
+    private Date likeDate;
+
     private Links _links;
 
     public static LikeDto fromLike(Like like, UriInfo uriInfo) {
         final LikeDto dto = new LikeDto();
 
-        dto.date = like.getLikeDate();
+        dto.likeDate = like.getLikeDate();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -57,7 +57,7 @@ public class LikeDto {
                         .path("posts")
                         .path(String.valueOf(like.getPost().getPostId()))
                         .build());
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setLikeUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
@@ -68,12 +68,12 @@ public class LikeDto {
         return dto;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getLikeDate() {
+        return likeDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setLikeDate(Date likeDate) {
+        this.likeDate = likeDate;
     }
 
     public Links get_links() {
@@ -82,14 +82,6 @@ public class LikeDto {
 
     public void set_links(Links _links) {
         this._links = _links;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 
     public String getPost() {

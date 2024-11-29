@@ -22,7 +22,6 @@ public class NeighborhoodDto {
 
         dto.name = neighborhood.getName();
 
-
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")

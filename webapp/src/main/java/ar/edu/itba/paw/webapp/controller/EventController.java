@@ -136,7 +136,7 @@ public class EventController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Event event = es.createEvent(form.getName(), form.getDescription(), extractDate(form.getDate()), form.getStartTime(), form.getEndTime(), neighborhoodId);
+        final Event event = es.createEvent(form.getName(), form.getDescription(), extractDate(form.getEventDate()), form.getStartTime(), form.getEndTime(), neighborhoodId);
         String eventHashCode = String.valueOf(event.hashCode());
 
         // Resource URN
@@ -160,7 +160,7 @@ public class EventController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Event updatedEvent = es.updateEventPartially(id, form.getName(), form.getDescription(), extractDate(form.getDate()), form.getStartTime(), form.getEndTime());
+        final Event updatedEvent = es.updateEventPartially(id, form.getName(), form.getDescription(), extractDate(form.getEventDate()), form.getStartTime(), form.getEndTime());
         String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
         return Response.ok(EventDto.fromEvent(updatedEvent, uriInfo))

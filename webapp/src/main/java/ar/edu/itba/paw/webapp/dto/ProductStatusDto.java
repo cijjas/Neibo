@@ -6,14 +6,14 @@ import javax.ws.rs.core.UriInfo;
 
 public class ProductStatusDto {
 
-    private ProductStatus productStatus;
+    private ProductStatus status;
 
     private Links _links;
 
     public static ProductStatusDto fromProductStatus(ProductStatus productStatus, UriInfo uriInfo) {
         final ProductStatusDto dto = new ProductStatusDto();
 
-        dto.productStatus = productStatus;
+        dto.status = productStatus;
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -24,12 +24,12 @@ public class ProductStatusDto {
         return dto;
     }
 
-    public ProductStatus getProductStatus() {
-        return productStatus;
+    public ProductStatus getStatus() {
+        return status;
     }
 
-    public void setProductStatus(ProductStatus productStatus) {
-        this.productStatus = productStatus;
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 
     public Links get_links() {

@@ -11,7 +11,6 @@ import ar.edu.itba.paw.webapp.validation.groups.Specific;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriInfo;
-import java.time.format.DateTimeFormatter;
 
 @TimeRangeConstraint
 public class EventDto {
@@ -26,7 +25,7 @@ public class EventDto {
 
     @NotNull(groups = Null.class)
     @DateConstraint(groups = Specific.class)
-    private String date;
+    private String eventDate;
 
     @NotNull(groups = Null.class)
     @TimeConstraint
@@ -43,7 +42,7 @@ public class EventDto {
 
         dto.name = event.getName();
         dto.description = event.getDescription();
-        dto.date = event.getDate().toString();
+        dto.eventDate = event.getDate().toString();
         dto.startTime = event.getStartTime().getTimeInterval().toString();
         dto.endTime = event.getEndTime().getTimeInterval().toString();
 
@@ -58,7 +57,7 @@ public class EventDto {
                 .path("neighborhoods")
                 .path(String.valueOf(event.getNeighborhood().getNeighborhoodId()))
                 .build());
-        links.setAttendees(uriInfo.getBaseUriBuilder()
+        links.setAttendanceUsers(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(event.getNeighborhood().getNeighborhoodId()))
                 .path("events")
@@ -85,12 +84,12 @@ public class EventDto {
         this.description = description;
     }
 
-    public String getDate() {
-        return date;
+    public String getEventDate() {
+        return eventDate;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setEventDate(String eventDate) {
+        this.eventDate = eventDate;
     }
 
     public String getEndTime() {

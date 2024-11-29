@@ -30,7 +30,7 @@ public class RequestDto {
 
     @NotNull(groups = Null.class)
     @Range(min = 1, max = 100, groups = Basic.class)
-    private Integer units;
+    private Integer unitsRequested;
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
@@ -50,8 +50,8 @@ public class RequestDto {
         final RequestDto dto = new RequestDto();
 
         dto.message = request.getMessage();
+        dto.unitsRequested = request.getUnits();
         dto.requestDate = request.getRequestDate();
-        dto.units = request.getUnits();
         dto.purchaseDate = request.getPurchaseDate();
 
         Links links = new Links();
@@ -71,7 +71,7 @@ public class RequestDto {
                 .path("products")
                 .path(String.valueOf(request.getProduct().getProductId()))
                 .build());
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setCommentUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
@@ -113,12 +113,12 @@ public class RequestDto {
         this.purchaseDate = purchaseDate;
     }
 
-    public Integer getUnits() {
-        return units;
+    public Integer getUnitsRequested() {
+        return unitsRequested;
     }
 
-    public void setUnits(Integer units) {
-        this.units = units;
+    public void setUnitsRequested(Integer unitsRequested) {
+        this.unitsRequested = unitsRequested;
     }
 
     public String getProduct() {

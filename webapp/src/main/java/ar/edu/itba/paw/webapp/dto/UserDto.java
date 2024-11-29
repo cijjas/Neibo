@@ -95,7 +95,7 @@ public class UserDto {
                 .path(String.valueOf(user.getRole().getId()))
                 .build());
         if (user.getProfilePicture() != null) {
-            links.setProfilePicture(uriInfo.getBaseUriBuilder()
+            links.setUserImage(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(user.getProfilePicture().getImageId()))
                     .build());

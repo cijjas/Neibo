@@ -28,7 +28,7 @@ public class ReviewDto {
     @UserURNReferenceInReviewConstraint(groups = Authorization.class)
     private String user;
 
-    private Date date;
+    private Date creationDate;
 
     private Links _links;
 
@@ -37,7 +37,7 @@ public class ReviewDto {
 
         dto.rating = review.getRating();
         dto.message = review.getReview();
-        dto.date = review.getDate();
+        dto.creationDate = review.getDate();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -50,7 +50,7 @@ public class ReviewDto {
                 .path("workers")
                 .path(String.valueOf(review.getWorker().getWorkerId()))
                 .build());
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setReviewUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(review.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
@@ -76,12 +76,12 @@ public class ReviewDto {
         this.message = message;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Links get_links() {

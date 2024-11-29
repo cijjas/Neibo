@@ -118,7 +118,7 @@ public class ProfessionController {
         LOGGER.info("POST request arrived at '/professions'");
 
         // Content
-        final Profession profession = ps.createProfession(form.getProfession());
+        final Profession profession = ps.createProfession(form.getName());
         String professionHashCode = String.valueOf(profession.hashCode());
 
         // Resource URN

@@ -1,6 +1,6 @@
 export interface Links {
-    self: string;
     amenity: string;
+    self: string;
     worker: string;
     workers: string;
     workerRole: string;
@@ -11,10 +11,9 @@ export interface Links {
     shifts: string;
     post: string;
     posts: string;
-    attendees: string;
+    attendanceUsers: string;
     product: string;
     products: string;
-    user: string;
     users: string;
     contacts: string;
     channel: string;
@@ -22,34 +21,44 @@ export interface Links {
     event: string;
     events: string;
     resources: string;
-    postPicture: string;
     comments: string;
     tags: string;
     likes: string;
-    primaryPicture: string;
-    secondaryPicture: string;
-    tertiaryPicture: string;
-    seller: string;
+    firstProductImage: string;
+    secondProductImage: string;
+    thirdProductImage: string;
+    productUser: string;
     department: string;
     inquiries: string;
     requests: string;
     image: string;
     profilePicture: string;
+    language: string;
     bookings: string;
     likedPosts: string;
     purchases: string;
     sales: string;
-    backgroundPicture: string;
+    backgroundImage: string;
     reviews: string;
     professions: string;
     workerNeighborhoods: string;
     neighborhoods: string;
-    language: string;
-    likeCount: string;
+    likesCount: string;
+    replyUser: string;
+    inquiryUser: string;
+    user: string;
+    attendanceUser: string;
+    bookingUser: string;
+    commentUser: string;
+    likeUser: string;
+    postUser: string;
+    postImage: string;
+    userImage: string;
+    resourceImage: string;
+    reviewUser: string;
 }
 
 export interface AffiliationDto {
-    workerRole: String;
     _links: Links;
 }
 
@@ -64,7 +73,7 @@ export interface AttendanceDto {
 }
 
 export interface BookingDto {
-    date: Date;
+    bookingDate: Date;
     _links: Links;
 }
 
@@ -74,8 +83,8 @@ export interface ChannelDto {
 }
 
 export interface CommentDto {
-    comment: string;
-    date: Date;
+    message: string;
+    creationDate: Date;
     _links: Links;
 }
 
@@ -94,31 +103,31 @@ export interface DepartmentDto {
 export interface EventDto {
     name: string;
     description: string;
-    date: Date;
+    eventDate: Date;
     startTime: string;
     endTime: string;
     _links: Links;
 }
 
 export interface ImageDto {
-    image: Uint8Array;
+    data: Uint8Array;
     _links: Links;
 }
 
 export interface InquiryDto {
     message: string;
     reply: string;
-    date: Date;
+    inquiryDate: Date;
     _links: Links;
 }
 
 export interface LanguageDto {
-    language: string
+    name: string
     _links: Links
 }
 
 export interface LikeDto {
-    date: Date;
+    likeDate: Date;
     _links: Links;
 }
 
@@ -129,13 +138,13 @@ export interface NeighborhoodDto {
 
 export interface PostDto {
     title: string;
-    description: string;
-    date: Date;
+    body: string;
+    creationDate: Date;
     _links: Links;
 }
 
 export interface PostStatusDto {
-    postStatus: string
+    status: string
     _links: Links
 }
 
@@ -145,7 +154,7 @@ export interface ProductDto {
     price: number;
     used: boolean;
     remainingUnits: number;
-    date: Date;
+    creationDate: Date;
     firstImage: Uint8Array;
     secondImage: Uint8Array;
     thirdImage: Uint8Array;
@@ -153,12 +162,12 @@ export interface ProductDto {
 }
 
 export interface ProductStatusDto {
-    productStatus: string
+    status: string
     _links: Links
 }
 
 export interface ProfessionDto {
-    profession: string;
+    name: string;
     _links: Links;
 }
 
@@ -171,7 +180,7 @@ export interface RequestDto {
 }
 
 export interface RequestStatusDto {
-    requestStatus: string
+    status: string
     _links: Links
 }
 
@@ -183,14 +192,15 @@ export interface ResourceDto {
 
 export interface ReviewDto {
     rating: number;
-    review: string;
-    date: Date;
+    message: string;
+    creationDate: Date;
     _links: Links;
 }
 
 export interface ShiftDto {
     startTime: string;
     day: string;
+    isBooked: boolean;
     _links: Links;
 }
 
@@ -200,7 +210,7 @@ export interface TagDto {
 }
 
 export interface TransactionTypeDto {
-    transactionType: string
+    type: string
     _links: Links
 }
 
@@ -216,7 +226,7 @@ export interface UserDto {
 }
 
 export interface UserRoleDto {
-    userRole: string
+    role: string
     _links: Links
 }
 
@@ -230,11 +240,11 @@ export interface WorkerDto {
 }
 
 export interface WorkerRoleDto {
-    workerRole: string
+    role: string
     _links: Links
 }
 
 export interface UserRoleDto {
-    userRole: string
+    role: string
     _links: Links
 }

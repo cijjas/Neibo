@@ -6,14 +6,14 @@ import javax.ws.rs.core.UriInfo;
 
 public class UserRoleDto {
 
-    private UserRole userRole;
+    private UserRole role;
 
     private Links _links;
 
     public static UserRoleDto fromUserRole(UserRole userRole, UriInfo uriInfo) {
         final UserRoleDto dto = new UserRoleDto();
 
-        dto.userRole = userRole;
+        dto.role = userRole;
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -24,12 +24,12 @@ public class UserRoleDto {
         return dto;
     }
 
-    public UserRole getUserRole() {
-        return userRole;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     public Links get_links() {

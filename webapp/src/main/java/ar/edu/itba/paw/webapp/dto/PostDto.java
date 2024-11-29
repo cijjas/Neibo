@@ -25,7 +25,7 @@ public class PostDto {
 
     @NotNull(groups = Null.class)
     @Size(min = 0, max = 2000, groups = Basic.class)
-    private String description;
+    private String body;
 
     @TagsURNConstraint(groups = URN.class)
     private List<String> tags;
@@ -42,7 +42,7 @@ public class PostDto {
     @UserURNCreateReferenceConstraint(groups = Authorization.class)
     private String user;
 
-    private Date date;
+    private Date creationDate;
 
     private Links _links;
 
@@ -50,8 +50,8 @@ public class PostDto {
         final PostDto dto = new PostDto();
 
         dto.title = post.getTitle();
-        dto.description = post.getDescription();
-        dto.date = post.getDate();
+        dto.body = post.getDescription();
+        dto.creationDate = post.getDate();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -61,7 +61,7 @@ public class PostDto {
                 .path(String.valueOf(post.getPostId()))
                 .build();
         links.setSelf(self);
-        links.setUser(uriInfo.getBaseUriBuilder()
+        links.setPostUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
@@ -74,7 +74,7 @@ public class PostDto {
                 .path(String.valueOf(post.getChannel().getChannelId()))
                 .build());
         if (post.getPostPicture() != null) {
-            links.setPostPicture(uriInfo.getBaseUriBuilder()
+            links.setPostImage(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(post.getPostPicture().getImageId()))
                     .build());
@@ -113,20 +113,20 @@ public class PostDto {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getBody() {
+        return body;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setBody(String body) {
+        this.body = body;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Links get_links() {

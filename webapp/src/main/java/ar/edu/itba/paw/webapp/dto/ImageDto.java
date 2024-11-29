@@ -8,14 +8,14 @@ import javax.ws.rs.core.UriInfo;
 public class ImageDto {
 
     @ImageConstraint
-    private byte[] image;
+    private byte[] data;
 
     private Links _links;
 
     public static ImageDto fromImage(Image image, UriInfo uriInfo) {
         final ImageDto dto = new ImageDto();
 
-        dto.image = image.getImage();
+        dto.data = image.getImage();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -26,14 +26,13 @@ public class ImageDto {
         return dto;
     }
 
-    public byte[] getImage() {
-        return image;
+    public byte[] getData() {
+        return data;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setData(byte[] data) {
+        this.data = data;
     }
-
 
     public Links get_links() {
         return _links;

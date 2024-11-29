@@ -15,10 +15,9 @@ public class Links {
     private URI shifts;
     private URI post;
     private URI posts;
-    private URI attendees;
+    private URI attendanceUsers;
     private URI product;
     private URI products;
-    private URI user;
     private URI users;
     private URI contacts;
     private URI channel;
@@ -26,14 +25,13 @@ public class Links {
     private URI event;
     private URI events;
     private URI resources;
-    private URI postPicture;
     private URI comments;
     private URI tags;
     private URI likes;
-    private URI primaryPicture;
-    private URI secondaryPicture;
-    private URI tertiaryPicture;
-    private URI seller;
+    private URI firstProductImage;
+    private URI secondProductImage;
+    private URI thirdProductImage;
+    private URI productUser;
     private URI department;
     private URI inquiries;
     private URI requests;
@@ -44,12 +42,32 @@ public class Links {
     private URI likedPosts;
     private URI purchases;
     private URI sales;
-    private URI backgroundPicture;
+    private URI backgroundImage;
     private URI reviews;
     private URI professions;
     private URI workerNeighborhoods;
     private URI neighborhoods;
     private URI likesCount;
+    private URI replyUser;
+    private URI inquiryUser;
+    private URI user;
+    private URI attendanceUser;
+    private URI bookingUser;
+    private URI commentUser;
+    private URI likeUser;
+    private URI postUser;
+    private URI postImage;
+    private URI userImage;
+    private URI resourceImage;
+    private URI reviewUser;
+
+    public URI getAmenity() {
+        return amenity;
+    }
+
+    public void setAmenity(URI amenity) {
+        this.amenity = amenity;
+    }
 
     public URI getSelf() {
         return self;
@@ -75,20 +93,28 @@ public class Links {
         this.workers = workers;
     }
 
-    public URI getRequestStatus() {
-        return requestStatus;
-    }
-
-    public void setRequestStatus(URI requestStatus) {
-        this.requestStatus = requestStatus;
-    }
-
     public URI getWorkerRole() {
         return workerRole;
     }
 
     public void setWorkerRole(URI workerRole) {
         this.workerRole = workerRole;
+    }
+
+    public URI getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(URI userRole) {
+        this.userRole = userRole;
+    }
+
+    public URI getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(URI requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     public URI getNeighborhood() {
@@ -123,14 +149,6 @@ public class Links {
         this.post = post;
     }
 
-    public URI getEvent() {
-        return event;
-    }
-
-    public void setEvent(URI event) {
-        this.event = event;
-    }
-
     public URI getPosts() {
         return posts;
     }
@@ -139,20 +157,12 @@ public class Links {
         this.posts = posts;
     }
 
-    public URI getUserRole() {
-        return userRole;
+    public URI getAttendanceUsers() {
+        return attendanceUsers;
     }
 
-    public void setUserRole(URI userRole) {
-        this.userRole = userRole;
-    }
-
-    public URI getAttendees() {
-        return attendees;
-    }
-
-    public void setAttendees(URI attendees) {
-        this.attendees = attendees;
+    public void setAttendanceUsers(URI attendanceUsers) {
+        this.attendanceUsers = attendanceUsers;
     }
 
     public URI getProduct() {
@@ -163,28 +173,12 @@ public class Links {
         this.product = product;
     }
 
-    public URI getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(URI language) {
-        this.language = language;
-    }
-
     public URI getProducts() {
         return products;
     }
 
     public void setProducts(URI products) {
         this.products = products;
-    }
-
-    public URI getUser() {
-        return user;
-    }
-
-    public void setUser(URI user) {
-        this.user = user;
     }
 
     public URI getUsers() {
@@ -219,6 +213,14 @@ public class Links {
         this.channels = channels;
     }
 
+    public URI getEvent() {
+        return event;
+    }
+
+    public void setEvent(URI event) {
+        this.event = event;
+    }
+
     public URI getEvents() {
         return events;
     }
@@ -233,14 +235,6 @@ public class Links {
 
     public void setResources(URI resources) {
         this.resources = resources;
-    }
-
-    public URI getPostPicture() {
-        return postPicture;
-    }
-
-    public void setPostPicture(URI postPicture) {
-        this.postPicture = postPicture;
     }
 
     public URI getComments() {
@@ -267,36 +261,36 @@ public class Links {
         this.likes = likes;
     }
 
-    public URI getPrimaryPicture() {
-        return primaryPicture;
+    public URI getFirstProductImage() {
+        return firstProductImage;
     }
 
-    public void setPrimaryPicture(URI primaryPicture) {
-        this.primaryPicture = primaryPicture;
+    public void setFirstProductImage(URI firstProductImage) {
+        this.firstProductImage = firstProductImage;
     }
 
-    public URI getSecondaryPicture() {
-        return secondaryPicture;
+    public URI getSecondProductImage() {
+        return secondProductImage;
     }
 
-    public void setSecondaryPicture(URI secondaryPicture) {
-        this.secondaryPicture = secondaryPicture;
+    public void setSecondProductImage(URI secondProductImage) {
+        this.secondProductImage = secondProductImage;
     }
 
-    public URI getTertiaryPicture() {
-        return tertiaryPicture;
+    public URI getThirdProductImage() {
+        return thirdProductImage;
     }
 
-    public void setTertiaryPicture(URI tertiaryPicture) {
-        this.tertiaryPicture = tertiaryPicture;
+    public void setThirdProductImage(URI thirdProductImage) {
+        this.thirdProductImage = thirdProductImage;
     }
 
-    public URI getSeller() {
-        return seller;
+    public URI getProductUser() {
+        return productUser;
     }
 
-    public void setSeller(URI seller) {
-        this.seller = seller;
+    public void setProductUser(URI productUser) {
+        this.productUser = productUser;
     }
 
     public URI getDepartment() {
@@ -339,6 +333,14 @@ public class Links {
         this.profilePicture = profilePicture;
     }
 
+    public URI getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(URI language) {
+        this.language = language;
+    }
+
     public URI getBookings() {
         return bookings;
     }
@@ -371,12 +373,12 @@ public class Links {
         this.sales = sales;
     }
 
-    public URI getBackgroundPicture() {
-        return backgroundPicture;
+    public URI getBackgroundImage() {
+        return backgroundImage;
     }
 
-    public void setBackgroundPicture(URI backgroundPicture) {
-        this.backgroundPicture = backgroundPicture;
+    public void setBackgroundImage(URI backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 
     public URI getReviews() {
@@ -411,19 +413,107 @@ public class Links {
         this.neighborhoods = neighborhoods;
     }
 
-    public URI getAmenity() {
-        return amenity;
-    }
-
-    public void setAmenity(URI amenity) {
-        this.amenity = amenity;
-    }
-
     public URI getLikesCount() {
         return likesCount;
     }
 
     public void setLikesCount(URI likesCount) {
         this.likesCount = likesCount;
+    }
+
+    public URI getReplyUser() {
+        return replyUser;
+    }
+
+    public void setReplyUser(URI replyUser) {
+        this.replyUser = replyUser;
+    }
+
+    public URI getInquiryUser() {
+        return inquiryUser;
+    }
+
+    public void setInquiryUser(URI inquiryUser) {
+        this.inquiryUser = inquiryUser;
+    }
+
+    public URI getUser() {
+        return user;
+    }
+
+    public void setUser(URI user) {
+        this.user = user;
+    }
+
+    public URI getAttendanceUser() {
+        return attendanceUser;
+    }
+
+    public void setAttendanceUser(URI attendanceUser) {
+        this.attendanceUser = attendanceUser;
+    }
+
+    public URI getBookingUser() {
+        return bookingUser;
+    }
+
+    public void setBookingUser(URI bookingUser) {
+        this.bookingUser = bookingUser;
+    }
+
+    public URI getCommentUser() {
+        return commentUser;
+    }
+
+    public void setCommentUser(URI commentUser) {
+        this.commentUser = commentUser;
+    }
+
+    public URI getLikeUser() {
+        return likeUser;
+    }
+
+    public void setLikeUser(URI likeUser) {
+        this.likeUser = likeUser;
+    }
+
+    public URI getPostUser() {
+        return postUser;
+    }
+
+    public void setPostUser(URI postUser) {
+        this.postUser = postUser;
+    }
+
+    public URI getPostImage() {
+        return postImage;
+    }
+
+    public void setPostImage(URI postImage) {
+        this.postImage = postImage;
+    }
+
+    public URI getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(URI userImage) {
+        this.userImage = userImage;
+    }
+
+    public URI getResourceImage() {
+        return resourceImage;
+    }
+
+    public void setResourceImage(URI resourceImage) {
+        this.resourceImage = resourceImage;
+    }
+
+    public URI getReviewUser() {
+        return reviewUser;
+    }
+
+    public void setReviewUser(URI reviewUser) {
+        this.reviewUser = reviewUser;
     }
 }

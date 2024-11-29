@@ -130,7 +130,7 @@ public class CommentController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
         // Creation & HashCode Generation
-        final Comment comment = cs.createComment(form.getComment(), extractSecondId(form.getUser()), postId);
+        final Comment comment = cs.createComment(form.getMessage(), extractSecondId(form.getUser()), postId);
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Resource URN

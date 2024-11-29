@@ -18,9 +18,7 @@ public class ShiftDto {
         final ShiftDto dto = new ShiftDto();
 
         dto.startTime = shift.getStartTime().getTimeInterval().toString();
-
         dto.day = shift.getDay().getDayName();
-
         if (shift.getTaken() != null)
             dto.isBooked = shift.getTaken();
 
