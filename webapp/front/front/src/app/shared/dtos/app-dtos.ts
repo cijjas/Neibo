@@ -1,4 +1,5 @@
 export interface Links {
+    [key: string]: string;
     amenity: string;
     self: string;
     worker: string;

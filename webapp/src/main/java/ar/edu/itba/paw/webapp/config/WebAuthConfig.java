@@ -225,6 +225,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "Access-Control-RequestForm-Method",
                 "Access-Control-RequestForm-Headers",
                 "X-User-URL",
+                "X-Neighborhood-URL",
                 "X-Access-Token",
                 "X-Refresh-Token",
                 "Link"
@@ -240,6 +241,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "Access-Control-RequestForm-Method",
                 "Access-Control-RequestForm-Headers",
                 "X-User-URL",
+                "X-Neighborhood-URL",
                 "X-Access-Token",
                 "X-Refresh-Token",
                 "Link"

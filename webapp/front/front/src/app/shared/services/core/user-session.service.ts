@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { User } from "../../models/index";
+import { Neighborhood, User } from "../../models/index";
 
+// this should manage the static information from both neighborhood and user, which basically are the user na
 @Injectable({
     providedIn: 'root'
 })
@@ -18,22 +19,25 @@ export class UserSessionService {
         this.authToken = localStorage.getItem('authToken');
     }
 
-    setLoggedUserInformation(user: User): void {
+    setUserInformation(user: User): void {
         this.loggedUserSubject.next(user);
         localStorage.setItem('loggedUser', JSON.stringify(user));
+    }
+
+    setNeighborhoodInformation(neighborhood: Neighborhood) {
+        return null
     }
 
     getLoggedUser(): Observable<User | null> {
         return this.loggedUserSubject.asObservable();
     }
 
-    setAuthToken(token: string): void {
+    setAccessToken(token: string): void {
         this.authToken = token;
         localStorage.setItem('authToken', token);
     }
-    
 
-    getAuthToken(): string | null {
+    getAccessToken(): string | null {
         return this.authToken;
     }
 

@@ -102,12 +102,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             response.addHeader("X-Access-Token", "Bearer " + jwtToken);
             response.addHeader("X-Refresh-Token", "Bearer " + refreshToken);
 
-            // Construct a full URL for the User URN and add it to the response headers
+            // Construct a full URL for the User URL and Neighborhood URL and add them to the response headers
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            String fullURL = String.format("%s://%s:%d%s/neighborhoods/%d/users/%d",
+            String neighborhoodURL = String.format("%s://%s:%d%s/neighborhoods/%d",
+                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
+                    userAuth.getNeighborhoodId());
+            response.addHeader("X-Neighborhood-URL", Link.fromUri(neighborhoodURL).rel("neighborhood-url").build().toString());
+            String userURL = String.format("%s://%s:%d%s/neighborhoods/%d/users/%d",
                     request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
                     userAuth.getNeighborhoodId(), userAuth.getUserId());
-            response.addHeader("X-User-URL", Link.fromUri(fullURL).rel("url").build().toString());
+            response.addHeader("X-User-URL", Link.fromUri(userURL).rel("user-url").build().toString());
         } catch (AuthenticationException e) {
             LOGGER.debug("Invalid Basic Authentication provided");
             SecurityContextHolder.clearContext();
