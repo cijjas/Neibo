@@ -146,6 +146,9 @@ export interface ProductDto {
     used: boolean;
     remainingUnits: number;
     date: Date;
+    firstImage: Uint8Array;
+    secondImage: Uint8Array;
+    thirdImage: Uint8Array;
     _links: Links;
 }
 
@@ -165,6 +168,11 @@ export interface RequestDto {
     requestDate: Date;
     purchaseDate: Date;
     _links: Links;
+}
+
+export interface RequestStatusDto {
+    requestStatus: string
+    _links: Links
 }
 
 export interface ResourceDto {
