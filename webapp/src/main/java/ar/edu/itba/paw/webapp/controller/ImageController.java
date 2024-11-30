@@ -53,7 +53,7 @@ public class ImageController {
     ) {
         LOGGER.info("GET request arrived at '/images/{}'", imageId);
 
-        // Content
+        // Retrieve Image
         Image image = is.findImage(imageId).orElseThrow(NotFoundException::new);
         String imageHashCode = String.valueOf(image.hashCode());
 
@@ -63,7 +63,8 @@ public class ImageController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(ImageDto.fromImage(image, uriInfo))
+        // Return image bytes directly
+        return Response.ok(image.getImage(), MediaType.APPLICATION_OCTET_STREAM)
                 .cacheControl(cacheControl)
                 .tag(imageHashCode)
                 .build();

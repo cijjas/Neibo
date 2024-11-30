@@ -49,6 +49,11 @@ public class NeighborhoodDto {
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("contacts")
                     .build());
+            links.setPosts(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("posts")
+                    .build());
             links.setEvents(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
