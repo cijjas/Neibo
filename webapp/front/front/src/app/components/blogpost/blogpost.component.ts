@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Post } from '../../shared/models/index';
 import { ImageService } from '../../shared/services/core/image.service';
 import { SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'blogpost',
@@ -11,7 +12,9 @@ import { SafeUrl } from '@angular/platform-browser';
 export class BlogpostComponent implements OnInit, OnDestroy {
   @Input() post!: Post;
   humanReadableDate!: string;
-  postImageSafeUrl: SafeUrl | null = null; // Safe URL for the post image
+  postImageSafeUrl: SafeUrl | null = null;
+  authorImageSafeUrl: SafeUrl | null = null;
+  private subscriptions: Subscription = new Subscription();
   private timer: any;
 
   constructor(private imageService: ImageService) { }
@@ -20,10 +23,20 @@ export class BlogpostComponent implements OnInit, OnDestroy {
     this.updateHumanReadableDate();
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
+    // Fetch the post image if it exists
     if (this.post.image) {
-      this.imageService.fetchImage(this.post.image).subscribe((safeUrl) => {
+      const postImageSub = this.imageService.fetchImage(this.post.image).subscribe((safeUrl) => {
         this.postImageSafeUrl = safeUrl;
       });
+      this.subscriptions.add(postImageSub);
+    }
+
+    // Fetch the author's profile image if it exists
+    if (this.post.author.image) {
+      const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe((safeUrl) => {
+        this.authorImageSafeUrl = safeUrl;
+      });
+      this.subscriptions.add(authorImageSub);
     }
   }
 
@@ -35,5 +48,14 @@ export class BlogpostComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     clearInterval(this.timer); // Clear the timer when the component is destroyed
+    this.subscriptions.unsubscribe(); // Unsubscribe from all subscriptions
+
+    // Revoke object URLs to prevent memory leaks
+    if (this.postImageSafeUrl) {
+      URL.revokeObjectURL((this.postImageSafeUrl as any).changingThisBreaksApplicationSecurity);
+    }
+    if (this.authorImageSafeUrl) {
+      URL.revokeObjectURL((this.authorImageSafeUrl as any).changingThisBreaksApplicationSecurity);
+    }
   }
 }

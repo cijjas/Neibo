@@ -66,7 +66,7 @@ export class AuthService {
                 if (neighborhoodUrl) {
                     this.http.get<NeighborhoodDto>(neighborhoodUrl).subscribe({
                         next: (neighborhoodDto) => {
-                            this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood'); // Save links
+                            this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood');
                             this.userSessionService.setNeighborhoodInformation(
                                 mapNeighborhood(neighborhoodDto)
                             );

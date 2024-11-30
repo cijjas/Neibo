@@ -24,6 +24,7 @@ export class FeedComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.linkService.logLinks();
     const postsUrl = this.linkService.getLink('neighborhood:posts')
     console.log("Post Url " + postsUrl);
 
