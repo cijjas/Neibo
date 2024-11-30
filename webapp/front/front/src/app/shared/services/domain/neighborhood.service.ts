@@ -15,16 +15,25 @@ export class NeighborhoodService {
         );
     }
 
-    public getNeighborhoods(url: string, page: number, size: number): Observable<Neighborhood[]> {
+    public getNeighborhoods(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            withWorker?: string;
+        } = {}
+    ): Observable<Neighborhood[]> {
         let params = new HttpParams();
-        // QP withWorker=workerUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.withWorker) params = params.set('withWorker', queryParams.withWorker);
 
         return this.http.get<NeighborhoodDto[]>(url, { params }).pipe(
             map((neighborhoodsDto: NeighborhoodDto[]) => neighborhoodsDto.map(mapNeighborhood))
         );
     }
+
 }
 
 export function mapNeighborhood(neighborhoodDto: NeighborhoodDto): Neighborhood {

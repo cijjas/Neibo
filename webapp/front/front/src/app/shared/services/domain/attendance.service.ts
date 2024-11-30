@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
@@ -17,10 +17,19 @@ export class AttendanceService {
         );
     }
 
-    public getAttendances(url: string): Observable<Attendance[]> {
-        // QP page
-        // QP size
-        return this.http.get<AttendanceDto[]>(url).pipe(
+    public getAttendances(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Attendance[]> {
+        let params = new HttpParams();
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+
+        return this.http.get<AttendanceDto[]>(url, { params }).pipe(
             mergeMap((attendancesDto: AttendanceDto[]) => {
                 const attendanceObservables = attendancesDto.map(attendanceDto =>
                     mapAttendance(this.http, attendanceDto)
@@ -29,6 +38,7 @@ export class AttendanceService {
             })
         );
     }
+
 }
 
 export function mapAttendance(http: HttpClient, attendanceDto: AttendanceDto): Observable<Attendance> {

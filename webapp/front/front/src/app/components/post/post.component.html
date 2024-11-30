@@ -35,7 +35,7 @@
 
 
                 <div style="font-size: 12px; font-weight: normal">
-                  <span class="post-date">{{post.date | timeAgo }}</span>
+                  <span class="post-date">{{post.createdAt | timeAgo }}</span>
                 </div>
               </div>
               <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text">{{post.title}}</p>
@@ -259,15 +259,15 @@
                         })();
                       </script>
       -->
-                      <div class="bold">{{comment.author.name}} {{comment.author.surname}}</div>
+                      <div class="bold">{{comment.user.name}} {{comment.user.surname}}</div>
 
                     </div>
 
-                    <div class="bold">{{comment.date}}</div>
+                    <div class="bold">{{comment.createdAt}}</div>
                   </div>
                   <div class="comment-body placeholder-glow w-100">
                     <p class="mt-2 w-100 c-light-text normal placeholder col-6" id="{{comment.self}}">
-                      {{comment.comment}}
+                      {{comment.message}}
                     </p>
                     <!--<script>
                       async function getPostComment(commentId) {

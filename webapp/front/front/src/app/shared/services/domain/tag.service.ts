@@ -15,11 +15,19 @@ export class TagService {
         );
     }
 
-    public getTags(url: string, page: number, size: number): Observable<Tag[]> {
+    public getTags(
+        url: string,
+        queryParams: {
+            onPost?: string;
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Tag[]> {
         let params = new HttpParams();
-        // QP onPost=postUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.onPost) params = params.set('onPost', queryParams.onPost);
 
         return this.http.get<TagDto[]>(url, { params }).pipe(
             map((tagsDto: TagDto[]) => tagsDto.map(mapTag))

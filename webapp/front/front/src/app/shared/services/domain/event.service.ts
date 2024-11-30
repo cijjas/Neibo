@@ -15,23 +15,32 @@ export class EventService {
         );
     }
 
-    public getEvents(url: string, page: number, size: number): Observable<Event[]> {
+    public getEvents(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            forDate?: string;
+        } = {}
+    ): Observable<Event[]> {
         let params = new HttpParams();
-        // QP forDate=YYYY-MM-DD
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.forDate) params = params.set('forDate', queryParams.forDate);
 
         return this.http.get<EventDto[]>(url, { params }).pipe(
             map((eventsDto: EventDto[]) => eventsDto.map(mapEvent))
         );
     }
+
 }
 
 export function mapEvent(eventDto: EventDto): Event {
     return {
         name: eventDto.name,
         description: eventDto.description,
-        date: eventDto.eventDate,
+        eventDate: eventDto.eventDate,
         startTime: eventDto.startTime,
         endTime: eventDto.endTime,
         attendeesCount: null, // TODO eventDto.attendeesCount

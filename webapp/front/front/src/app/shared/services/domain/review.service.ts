@@ -16,20 +16,26 @@ export class ReviewService {
         );
     }
 
-    public getReviews(url: string, page: number, size: number): Observable<Review[]> {
+    public getReviews(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Review[]> {
         let params = new HttpParams();
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<ReviewDto[]>(url, { params }).pipe(
             mergeMap((reviewsDto: ReviewDto[]) => {
-                const reviewObservables = reviewsDto.map((reviewDto) =>
-                    mapReview(this.http, reviewDto)
-                );
+                const reviewObservables = reviewsDto.map(reviewDto => mapReview(this.http, reviewDto));
                 return forkJoin(reviewObservables);
             })
         );
     }
+
 }
 
 export function mapReview(http: HttpClient, reviewDto: ReviewDto): Observable<Review> {
@@ -39,12 +45,11 @@ export function mapReview(http: HttpClient, reviewDto: ReviewDto): Observable<Re
         map(([user]) => {
             return {
                 rating: reviewDto.rating,
-                review: reviewDto.message,
-                date: reviewDto.creationDate,
+                message: reviewDto.message,
+                createdAt: reviewDto.creationDate,
                 user: user,
                 self: reviewDto._links.self
             } as Review;
         })
     );
 }
-

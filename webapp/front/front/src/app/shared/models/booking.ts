@@ -4,6 +4,6 @@ import { Shift } from "./shift";
 export interface Booking {
   shift: Shift;
   amenity: Amenity;
-  date: Date;
+  bookingDate: Date;
   self: string;
 }

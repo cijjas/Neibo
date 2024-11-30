@@ -1,5 +1,5 @@
 export interface User {
-  mail: string;
+  email: string;
   name: string;
   surname: string;
   darkMode: boolean;

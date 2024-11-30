@@ -2,8 +2,8 @@ import { User } from "./user";
 
 export interface Review {
   rating: number;
-  review: string;
-  date: Date;
+  message: string;
+  createdAt: Date;
   user: User;
   self: string;
 }

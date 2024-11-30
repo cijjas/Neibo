@@ -15,15 +15,23 @@ export class ResourceService {
         );
     }
 
-    public getResources(url: string, page: number, size: number): Observable<Resource[]> {
+    public getResources(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Resource[]> {
         let params = new HttpParams();
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<ResourceDto[]>(url, { params }).pipe(
             map((resourcesDto: ResourceDto[]) => resourcesDto.map(mapResource))
         );
     }
+
 }
 
 export function mapResource(resourceDto: ResourceDto): Resource {

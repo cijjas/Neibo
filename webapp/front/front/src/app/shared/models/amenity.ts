@@ -3,6 +3,6 @@ import { Shift } from "./shift";
 export interface Amenity {
   name: string;
   description: string;
-  shiftsAvailable: Shift[];
+  availableShifts: Shift[];
   self: string;
 }

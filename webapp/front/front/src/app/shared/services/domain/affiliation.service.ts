@@ -19,12 +19,21 @@ export class AffiliationService {
         );
     }
 
-    public getAffiliations(url: string, page: number, size: number): Observable<Affiliation[]> {
+    public getAffiliations(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            inNeighborhood?: string;
+            forWorker?: string;
+        } = {}
+    ): Observable<Affiliation[]> {
         let params = new HttpParams();
-        // QP inNeighborhood=neighborhoodUrl
-        // QP forWorker=workerUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.inNeighborhood) params = params.set('inNeighborhood', queryParams.inNeighborhood);
+        if (queryParams.forWorker) params = params.set('forWorker', queryParams.forWorker);
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<AffiliationDto[]>(url, { params }).pipe(
             mergeMap((affiliationsDto: AffiliationDto[]) => {
@@ -44,7 +53,7 @@ export function mapAffiliation(http: HttpClient, affiliationDto: AffiliationDto)
         map(([worker, neighborhoodDto, workerRoleDto]) => {
             return {
                 worker: worker,
-                workerRole: workerRoleDto.role,
+                role: workerRoleDto.role,
                 neighborhoodName: neighborhoodDto.name,
                 self: affiliationDto._links.self
             } as Affiliation;

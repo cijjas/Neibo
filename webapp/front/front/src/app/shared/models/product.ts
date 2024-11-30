@@ -5,8 +5,8 @@ export interface Product {
   description: string;
   price: number;
   used: boolean;
-  remainingUnits: number;
-  creationDate: Date;
+  stock: number;
+  createdAt: Date;
   firstImage: string;
   secondImage: string;
   thirdImage: string;

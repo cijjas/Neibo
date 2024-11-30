@@ -1,8 +1,8 @@
 import { User } from "./user";
 
 export interface Comment {
-  comment: string;
-  date: Date;
-  author: User;
+  message: string;
+  createdAt: Date;
+  user: User;
   self: string;
 }

@@ -16,10 +16,17 @@ export class AmenityService {
         );
     }
 
-    public getAmenities(amenitiesUrl: string, page: number, size: number): Observable<Amenity[]> {
+    public getAmenities(
+        amenitiesUrl: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Amenity[]> {
         let params = new HttpParams();
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<AmenityDto[]>(amenitiesUrl, { params }).pipe(
             mergeMap((amenitiesDto: AmenityDto[]) => {
@@ -42,7 +49,7 @@ export function mapAmenity(http: HttpClient, amenityDto: AmenityDto): Observable
             return {
                 name: amenityDto.name,
                 description: amenityDto.description,
-                shiftsAvailable: shifts,
+                availableShifts: shifts,
                 self: amenityDto._links.self
             } as Amenity;
         })

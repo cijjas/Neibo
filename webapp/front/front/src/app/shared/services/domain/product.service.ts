@@ -16,23 +16,32 @@ export class ProductService {
         );
     }
 
-    public getProducts(url: string, page: number, size: number): Observable<Product[]> {
+    public getProducts(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            inDepartment?: string;
+            forUser?: string;
+            withStatus?: string;
+        } = {}
+    ): Observable<Product[]> {
         let params = new HttpParams();
-        // QP inDepartment=departmentUrl
-        // QP forUser=userUrl
-        // QP withStatus=productStatusUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.inDepartment) params = params.set('inDepartment', queryParams.inDepartment);
+        if (queryParams.forUser) params = params.set('forUser', queryParams.forUser);
+        if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
 
         return this.http.get<ProductDto[]>(url, { params }).pipe(
             mergeMap((productsDto: ProductDto[]) => {
-                const productObservables = productsDto.map((productDto) =>
-                    mapProduct(this.http, productDto)
-                );
+                const productObservables = productsDto.map(productDto => mapProduct(this.http, productDto));
                 return forkJoin(productObservables);
             })
         );
     }
+
 }
 
 export function mapProduct(http: HttpClient, productDto: ProductDto): Observable<Product> {
@@ -46,8 +55,8 @@ export function mapProduct(http: HttpClient, productDto: ProductDto): Observable
                 description: productDto.description,
                 price: productDto.price,
                 used: productDto.used,
-                remainingUnits: productDto.remainingUnits,
-                creationDate: productDto.creationDate,
+                stock: productDto.remainingUnits,
+                createdAt: productDto.creationDate,
                 firstImage: productDto._links.firstProductImage,
                 secondImage: productDto._links.secondProductImage,
                 thirdImage: productDto._links.thirdProductImage,

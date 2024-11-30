@@ -91,25 +91,26 @@ export class PostComponent implements OnInit {
     // );
   }
 
-  public getComments(): void {
-    this.commentService.getComments(this.postUrn, 1, 10).subscribe(
-      (comments: Comment[]) => {
+  public getComments(page: number = 1, size: number = 10): void {
+    this.commentService.getComments(this.postUrn, { page, size }).subscribe({
+      next: (comments: Comment[]) => {
         this.comments = comments;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         console.error('Error fetching comments:', error);
       }
-    );
+    });
   }
 
   public getPost(): void {
-    this.postService.getPost(this.postUrn).subscribe(
-      (post: Post) => {
+    this.postService.getPost(this.postUrn).subscribe({
+      next: (post: Post) => {
         this.post = post;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         console.error('Error fetching post:', error);
       }
-    );
+    });
   }
+
 }

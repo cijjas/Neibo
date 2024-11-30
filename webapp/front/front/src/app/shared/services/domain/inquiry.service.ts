@@ -16,20 +16,26 @@ export class InquiryService {
         );
     }
 
-    public getInquiries(url: string, page: number, size: number): Observable<Inquiry[]> {
+    public getInquiries(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Inquiry[]> {
         let params = new HttpParams();
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<InquiryDto[]>(url, { params }).pipe(
             mergeMap((inquiriesDto: InquiryDto[]) => {
-                const inquiryObservables = inquiriesDto.map((inquiryDto) =>
-                    mapInquiry(this.http, inquiryDto)
-                );
+                const inquiryObservables = inquiriesDto.map(inquiryDto => mapInquiry(this.http, inquiryDto));
                 return forkJoin(inquiryObservables);
             })
         );
     }
+
 }
 
 export function mapInquiry(http: HttpClient, inquiryDto: InquiryDto): Observable<Inquiry> {
@@ -39,11 +45,11 @@ export function mapInquiry(http: HttpClient, inquiryDto: InquiryDto): Observable
     ]).pipe(
         map(([inquirer, replier]) => {
             return {
-                message: inquiryDto.message,
-                reply: inquiryDto.reply,
-                date: inquiryDto.inquiryDate,
-                inquirer: inquirer,
-                replier: replier,
+                inquiryMessage: inquiryDto.message,
+                responseMessage: inquiryDto.reply,
+                inquiryDate: inquiryDto.inquiryDate,
+                inquiryUser: inquirer,
+                responseUser: replier,
                 self: inquiryDto._links.self
             } as Inquiry;
         })

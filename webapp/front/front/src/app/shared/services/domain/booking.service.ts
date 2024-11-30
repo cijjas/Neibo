@@ -17,12 +17,21 @@ export class BookingService {
         );
     }
 
-    public getBookings(url: string, page: number, size: number): Observable<Booking[]> {
+    public getBookings(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            bookedBy?: string;
+            forAmenity?: string;
+        } = {}
+    ): Observable<Booking[]> {
         let params = new HttpParams();
-        // QP bookedBy=userUrl
-        // QP forAmenity=amenityUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.bookedBy) params = params.set('bookedBy', queryParams.bookedBy);
+        if (queryParams.forAmenity) params = params.set('forAmenity', queryParams.forAmenity);
 
         return this.http.get<BookingDto[]>(url, { params }).pipe(
             mergeMap((bookingsDto: BookingDto[]) => {
@@ -44,7 +53,7 @@ export function mapBooking(http: HttpClient, bookingDto: BookingDto): Observable
             return {
                 shift: mapShift(shiftDto),
                 amenity: amenity,
-                date: bookingDto.bookingDate,
+                bookingDate: bookingDto.bookingDate,
                 self: bookingDto._links.self
             } as Booking;
         })

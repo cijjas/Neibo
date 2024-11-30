@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { Post } from '../../shared/models/index';
 import { PostService, UserSessionService } from '../../shared/services/index.service';
+import { HateoasLinksService } from '../../shared/services/core/link.service';
 
 @Component({
   selector: 'app-feed',
@@ -13,62 +14,43 @@ import { PostService, UserSessionService } from '../../shared/services/index.ser
 })
 export class FeedComponent implements OnInit {
   public postList: Post[] = [];
-  public loading: boolean = false; // Optional: Indicates loading state
+  public loading: boolean = true;
 
   constructor(
     private postService: PostService,
     private route: ActivatedRoute,
+    private linkService: HateoasLinksService,
     private userSessionService: UserSessionService
   ) { }
 
   ngOnInit(): void {
-    //this.loadFeedData();
+    const postsUrl = this.linkService.getLink('neighborhood:posts')
+    console.log("Post Url " + postsUrl);
+
+    this.route.queryParams
+      .pipe(
+        switchMap((queryParams) => {
+          const { page, size, inChannel, withTags, withStatus, postedBy } = queryParams;
+
+          return this.postService.getPosts(postsUrl, {
+            page: page ? +page : undefined,
+            size: size ? +size : undefined,
+            inChannel,
+            withTags: withTags ? withTags.split(',') : undefined,
+            withStatus,
+            postedBy,
+          });
+        })
+      )
+      .subscribe({
+        next: (posts: Post[]) => {
+          this.postList = posts;
+          this.loading = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error fetching posts:', error);
+          this.loading = false;
+        }
+      });
   }
-
-  // private loadFeedData(): void {
-  //   combineLatest([
-  //     this.route.queryParams,
-  //     this.userSessionService.getLoggedUser(),
-  //   ])
-  //     .pipe(
-  //       switchMap(([queryParams, user]) => {
-  //         if (user) {
-  //           const neighborhoodUrn = user.neighborhood;
-  //           const channel = queryParams['channel'];
-  //           const tags = queryParams['tag'] ? [].concat(queryParams['tag']) : [];
-  //           const postStatus = queryParams['postStatus'];
-  //           const page = parseInt(queryParams['page'] || '1', 10);
-  //           const size = parseInt(queryParams['size'] || '10', 10);
-
-  //           return this.getPosts(neighborhoodUrn, channel, tags, postStatus, page, size);
-  //         } else {
-  //           console.error('No logged-in user found. Cannot load feed.');
-  //           return of([]); // Return an empty array if user is not found
-  //         }
-  //       })
-  //     )
-  //     .subscribe({
-  //       next: (posts: Post[]) => {
-  //         this.postList = posts;
-  //         this.loading = false;
-  //       },
-  //       error: (error: HttpErrorResponse) => {
-  //         console.error('Error loading feed data:', error);
-  //         this.loading = false;
-  //       }
-  //     });
-  // }
-
-  // private getPosts(
-  //   neighborhood: string,
-  //   channel: string,
-  //   tags: string[],
-  //   postStatus: string,
-  //   page: number,
-  //   size: number
-  // ) {
-  //   this.loading = true; 
-  //   // TODO: add queery params to getPosts
-  //   return this.postService.getPosts(neighborhood, page, size);
-  // }
 }

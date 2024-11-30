@@ -19,15 +19,25 @@ export class WorkerService {
         );
     }
 
-    public getWorkers(url: string, page: number, size: number): Observable<Worker[]> {
+    public getWorkers(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            withProfessions?: string[];
+            inNeighborhoods?: string[];
+            withRole?: string;
+            withStatus?: string;
+        } = {}
+    ): Observable<Worker[]> {
         let params = new HttpParams();
-        // QP withProfessions=professionUrlList
-        // QP inNeighborhoods=neighborhoodUrlList
-        // QP withRole=workerRoleUrl
-        // QP withStatus=workerStatusUrl
 
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.withProfessions) params = params.set('withProfessions', queryParams.withProfessions.join(','));
+        if (queryParams.inNeighborhoods) params = params.set('inNeighborhoods', queryParams.inNeighborhoods.join(','));
+        if (queryParams.withRole) params = params.set('withRole', queryParams.withRole);
+        if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
 
         return this.http.get<WorkerDto[]>(url, { params }).pipe(
             mergeMap((workersDto: WorkerDto[]) => {

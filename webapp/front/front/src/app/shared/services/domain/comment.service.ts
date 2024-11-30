@@ -16,20 +16,28 @@ export class CommentService {
         );
     }
 
-    public getComments(url: string, page: number, size: number): Observable<Comment[]> {
+    public getComments(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Comment[]> {
         let params = new HttpParams();
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<CommentDto[]>(url, { params }).pipe(
             mergeMap((commentsDto: CommentDto[]) => {
-                const commentObservables = commentsDto.map((commentDto) =>
+                const commentObservables = commentsDto.map(commentDto =>
                     mapComment(this.http, commentDto)
                 );
                 return forkJoin(commentObservables);
             })
         );
     }
+
 }
 
 export function mapComment(http: HttpClient, commentDto: CommentDto): Observable<Comment> {
@@ -38,9 +46,9 @@ export function mapComment(http: HttpClient, commentDto: CommentDto): Observable
     ]).pipe(
         map(([author]) => {
             return {
-                comment: commentDto.message,
-                date: commentDto.creationDate,
-                author: author,
+                message: commentDto.message,
+                createdAt: commentDto.creationDate,
+                user: author,
                 self: commentDto._links.self
             } as Comment;
         })

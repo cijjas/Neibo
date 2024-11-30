@@ -5,6 +5,16 @@ import { Links } from '../../dtos/app-dtos';
     providedIn: 'root'
 })
 export class HateoasLinksService {
+    private storageKey = 'hateoas-links';
+
+    constructor() {
+        // Initialize links from sessionStorage if available
+        const storedLinks = sessionStorage.getItem(this.storageKey);
+        if (storedLinks) {
+            this.links = JSON.parse(storedLinks);
+        }
+    }
+
     private links: { [key: string]: string } = {};
 
     /**
@@ -14,6 +24,7 @@ export class HateoasLinksService {
      */
     setLink(key: string, url: string): void {
         this.links[key] = url;
+        this.saveLinksToSession();
     }
 
     /**
@@ -31,6 +42,7 @@ export class HateoasLinksService {
      */
     removeLink(key: string): void {
         delete this.links[key];
+        this.saveLinksToSession();
     }
 
     /**
@@ -38,12 +50,20 @@ export class HateoasLinksService {
      */
     clearLinks(): void {
         this.links = {};
+        this.saveLinksToSession();
     }
 
     /**
-      * Logs all stored links to the console.
-      */
+     * Logs all stored links to the console.
+     */
     logLinks(): void {
         console.log('Stored HATEOAS Links:', this.links);
+    }
+
+    /**
+     * Saves the current links object to sessionStorage.
+     */
+    private saveLinksToSession(): void {
+        sessionStorage.setItem(this.storageKey, JSON.stringify(this.links));
     }
 }

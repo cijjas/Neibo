@@ -3,8 +3,8 @@ import { User } from "./user";
 export interface Request {
   message: string;
   unitsRequested: number;
-  requestDate: Date;
-  purchaseDate: Date;
+  createdAt: Date;
+  fulfilledAt: Date;
   requestStatus: 'FULFILLED' | 'WAITING';
   requestingUser: User;
   self: string;

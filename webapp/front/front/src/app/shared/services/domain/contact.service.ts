@@ -15,22 +15,30 @@ export class ContactService {
         );
     }
 
-    public getContacts(url: string, page: number, size: number): Observable<Contact[]> {
+    public getContacts(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<Contact[]> {
         let params = new HttpParams();
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<ContactDto[]>(url, { params }).pipe(
             map((contactsDto: ContactDto[]) => contactsDto.map(mapContact))
         );
     }
+
 }
 
 export function mapContact(contactDto: ContactDto): Contact {
     return {
         name: contactDto.name,
         address: contactDto.address,
-        phone: contactDto.phone,
+        phoneNumber: contactDto.phone,
         self: contactDto._links.self
     };
 }

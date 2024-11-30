@@ -22,14 +22,25 @@ export class PostService {
         );
     }
 
-    public getPosts(postsUrl: string, page: number, size: number): Observable<Post[]> {
+    public getPosts(
+        postsUrl: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            inChannel?: string;
+            withTags?: string[];
+            withStatus?: string;
+            postedBy?: string;
+        } = {}
+    ): Observable<Post[]> {
         let params = new HttpParams();
-        // QP inChannel=channelUrl
-        // QP withTags=tagUrlList (ie ["http://localhost:8080/neighborhoods/1/tags/2", ["http://localhost:8080/neighborhoods/1/tags/3"]])
-        // QP withStatus=postStatusUrl
-        // QP postedBy=userUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.inChannel) params = params.set('inChannel', queryParams.inChannel);
+        if (queryParams.withTags !== undefined) params = params.set('withTags', queryParams.withTags.join(','));
+        if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
+        if (queryParams.postedBy) params = params.set('postedBy', queryParams.postedBy);
 
         return this.http.get<PostDto[]>(postsUrl, { params }).pipe(
             mergeMap((postsDto: PostDto[]) => {
@@ -38,6 +49,7 @@ export class PostService {
             })
         );
     }
+
 }
 
 export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
@@ -50,8 +62,8 @@ export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
             return {
                 title: postDto.title,
                 body: postDto.body,
-                date: postDto.creationDate,
-                postImage: postDto._links.postImage,
+                createdAt: postDto.creationDate,
+                image: postDto._links.postImage,
                 channel: channelDto.name,
                 likeCount: likeCountDto.count,
                 author: user,

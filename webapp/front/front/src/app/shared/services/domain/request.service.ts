@@ -16,25 +16,38 @@ export class RequestService {
         );
     }
 
-    public getRequests(url: string, page: number, size: number): Observable<Request[]> {
+    public getRequests(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            requestBy?: string;
+            forProduct?: string;
+            withType?: string;
+            withStatus?: string;
+        } = {}
+    ): Observable<Request[]> {
         let params = new HttpParams();
-        // QP requestBy=userUrl
-        // QP forProduct=productUrl
-        // QP withType=transactionTypeUrl
-        // QP withStatus=requestStatusUrl
-        // Either both user and type have to be specified or none of them
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.requestBy) params = params.set('requestBy', queryParams.requestBy);
+        if (queryParams.forProduct) params = params.set('forProduct', queryParams.forProduct);
+        if (queryParams.withType) params = params.set('withType', queryParams.withType);
+        if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
+
+        if ((queryParams.requestBy && !queryParams.withType) || (!queryParams.requestBy && queryParams.withType)) {
+            throw new Error('Both `requestBy` and `withType` must be provided together, or neither of them.');
+        }
 
         return this.http.get<RequestDto[]>(url, { params }).pipe(
             mergeMap((requestsDto: RequestDto[]) => {
-                const requestObservables = requestsDto.map((requestDto) =>
-                    mapRequest(this.http, requestDto)
-                );
+                const requestObservables = requestsDto.map(requestDto => mapRequest(this.http, requestDto));
                 return forkJoin(requestObservables);
             })
         );
     }
+
 }
 
 export function mapRequest(http: HttpClient, requestDto: RequestDto): Observable<Request> {
@@ -46,8 +59,8 @@ export function mapRequest(http: HttpClient, requestDto: RequestDto): Observable
             return {
                 message: requestDto.message,
                 unitsRequested: requestDto.unitsRequested,
-                requestDate: requestDto.requestDate,
-                purchaseDate: requestDto.purchaseDate,
+                createdAt: requestDto.requestDate,
+                fulfilledAt: requestDto.purchaseDate,
                 requestStatus: requestStatusDto.status,
                 requestingUser: requestingUser,
                 self: requestDto._links.self

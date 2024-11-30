@@ -16,22 +16,30 @@ export class LikeService {
         );
     }
 
-    public getLikes(url: string, page: number, size: number): Observable<Like[]> {
+    public getLikes(
+        url: string,
+        queryParams: {
+            page?: number;
+            size?: number;
+            onPost?: string;
+            likedBy?: string;
+        } = {}
+    ): Observable<Like[]> {
         let params = new HttpParams();
-        // QP onPost=postUrl
-        // QP likedBy=userUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.onPost) params = params.set('onPost', queryParams.onPost);
+        if (queryParams.likedBy) params = params.set('likedBy', queryParams.likedBy);
 
         return this.http.get<LikeDto[]>(url, { params }).pipe(
             mergeMap((likesDto: LikeDto[]) => {
-                const likeObservables = likesDto.map((likeDto) =>
-                    mapLike(this.http, likeDto)
-                );
+                const likeObservables = likesDto.map(likeDto => mapLike(this.http, likeDto));
                 return forkJoin(likeObservables);
             })
         );
     }
+
 }
 
 export function mapLike(http: HttpClient, likeDto: LikeDto): Observable<Like> {

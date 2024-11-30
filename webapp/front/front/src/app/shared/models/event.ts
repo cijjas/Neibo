@@ -1,7 +1,7 @@
 export interface Event {
   name: string;
   description: string;
-  date: Date;
+  eventDate: Date;
   startTime: string;
   endTime: string;
   attendeesCount: number;

@@ -15,15 +15,23 @@ export class ShiftService {
         );
     }
 
-    public getShifts(url: string): Observable<Shift[]> {
+    public getShifts(
+        url: string,
+        queryParams: {
+            forAmenity?: string;
+            forDate?: string;
+        } = {}
+    ): Observable<Shift[]> {
         let params = new HttpParams();
-        // QP forAmenity=amenityUrl
-        // QP forDate=YYYY-MM-DD
+
+        if (queryParams.forAmenity) params = params.set('forAmenity', queryParams.forAmenity);
+        if (queryParams.forDate) params = params.set('forDate', queryParams.forDate);
 
         return this.http.get<ShiftDto[]>(url, { params }).pipe(
             map((shiftsDto: ShiftDto[]) => shiftsDto.map(mapShift))
         );
     }
+
 }
 
 export function mapShift(shiftDto: ShiftDto): Shift {

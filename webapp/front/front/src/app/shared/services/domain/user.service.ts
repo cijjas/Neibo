@@ -20,12 +20,20 @@ export class UserService {
         );
     }
 
-    public getUsers(userUrl: string, userRole: string, page: number, size: number): Observable<User[]> {
+    public getUsers(
+        userUrl: string,
+        queryParams: {
+            userRole?: string;
+            page?: number;
+            size?: number;
+        } = {}
+    ): Observable<User[]> {
         let params = new HttpParams();
 
-        // QP withRole=userRoleUrl
-        if (page) params = params.set('page', page.toString());
-        if (size) params = params.set('size', size.toString());
+        // Add query parameters dynamically
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.userRole) params = params.set('withRole', queryParams.userRole);
 
         return this.http.get<UserDto[]>(userUrl, { params }).pipe(
             mergeMap((usersDto: UserDto[]) => {
@@ -43,7 +51,7 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
     ]).pipe(
         map(([language, userRole]) => {
             return {
-                mail: userDto.mail,
+                email: userDto.mail,
                 name: userDto.name,
                 surname: userDto.surname,
                 darkMode: userDto.darkMode,
