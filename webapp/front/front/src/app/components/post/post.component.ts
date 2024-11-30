@@ -34,7 +34,7 @@ export class PostComponent implements OnInit {
   }
 
   private loadLoggedUserUrn(): void {
-    this.userSessionService.getLoggedUser().subscribe(
+    this.userSessionService.getCurrentUser().subscribe(
       (user) => {
         if (user) {
           this.loggedUserUrn = user.self;

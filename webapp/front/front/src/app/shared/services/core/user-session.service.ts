@@ -2,34 +2,45 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Neighborhood, User } from "../../models/index";
 
-// this should manage the static information from both neighborhood and user, which basically are the user na
 @Injectable({
     providedIn: 'root'
 })
 export class UserSessionService {
-    private loggedUserSubject = new BehaviorSubject<User | null>(null);
+    private currentUserSubject = new BehaviorSubject<User | null>(null);
+    private neighborhoodSubject = new BehaviorSubject<Neighborhood | null>(null);
     private authToken: string | null = null;
 
     constructor() {
-        const storedUser = localStorage.getItem('loggedUser');
+        // Load user and token from localStorage
+        const storedUser = localStorage.getItem('currentUser');
         if (storedUser) {
-            this.loggedUserSubject.next(JSON.parse(storedUser));
+            this.currentUserSubject.next(JSON.parse(storedUser));
+        }
+
+        const storedNeighborhood = localStorage.getItem('neighborhood');
+        if (storedNeighborhood) {
+            this.neighborhoodSubject.next(JSON.parse(storedNeighborhood));
         }
 
         this.authToken = localStorage.getItem('authToken');
     }
 
     setUserInformation(user: User): void {
-        this.loggedUserSubject.next(user);
-        localStorage.setItem('loggedUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
     }
 
-    setNeighborhoodInformation(neighborhood: Neighborhood) {
-        return null
+    setNeighborhoodInformation(neighborhood: Neighborhood): void {
+        this.neighborhoodSubject.next(neighborhood);
+        localStorage.setItem('neighborhood', JSON.stringify(neighborhood));
     }
 
-    getLoggedUser(): Observable<User | null> {
-        return this.loggedUserSubject.asObservable();
+    getCurrentUser(): Observable<User | null> {
+        return this.currentUserSubject.asObservable();
+    }
+
+    getNeighborhood(): Observable<Neighborhood | null> {
+        return this.neighborhoodSubject.asObservable();
     }
 
     setAccessToken(token: string): void {
@@ -42,9 +53,11 @@ export class UserSessionService {
     }
 
     clear(): void {
-        this.loggedUserSubject.next(null);
+        this.currentUserSubject.next(null);
+        this.neighborhoodSubject.next(null);
         this.authToken = null;
-        localStorage.removeItem('loggedUser');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('neighborhood');
         localStorage.removeItem('authToken');
     }
 }

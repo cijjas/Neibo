@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { formatDistanceToNow } from 'date-fns';
-import { Post } from '../../shared/models/index';
+import { Post, Tag } from '../../shared/models/index';
 import { ImageService } from '../../shared/services/core/image.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
+import { HateoasLinksService, TagService } from '../../shared/services/index.service';
 
 @Component({
   selector: 'blogpost',
@@ -16,10 +17,29 @@ export class BlogpostComponent implements OnInit, OnDestroy {
   authorImageSafeUrl: SafeUrl | null = null;
   private subscriptions: Subscription = new Subscription();
   private timer: any;
+  tags: Tag[] = [];
 
-  constructor(private imageService: ImageService) { }
+  constructor(
+    private linkStorage: HateoasLinksService,
+    private imageService: ImageService,
+    private tagService: TagService
+  ) { }
 
   ngOnInit(): void {
+    const tagLink = this.linkStorage.getLink('neighborhood:tags')
+
+    // Create query params onPost
+    this.tagService.getTags(tagLink, { onPost: this.post.self }).subscribe({
+      next: (tags) => {
+        this.tags = tags || [];
+      },
+      error: (err) => {
+        console.error('Error fetching tags:', err);
+        this.tags = [];
+      },
+    });
+
+
     this.updateHumanReadableDate();
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 

@@ -64,6 +64,11 @@ public class NeighborhoodDto {
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("resources")
                     .build());
+            links.setTags(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("tags")
+                    .build());
         }
         dto.set_links(links);
         return dto;

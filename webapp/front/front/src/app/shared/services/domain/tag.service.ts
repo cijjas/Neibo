@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Tag } from '../../models/index';
 import { TagDto } from '../../dtos/app-dtos';
 
@@ -30,7 +30,11 @@ export class TagService {
         if (queryParams.onPost) params = params.set('onPost', queryParams.onPost);
 
         return this.http.get<TagDto[]>(url, { params }).pipe(
-            map((tagsDto: TagDto[]) => tagsDto.map(mapTag))
+            map((tagsDto) => tagsDto?.map(mapTag) || []),
+            catchError((err) => {
+                console.error('Error fetching tags:', err);
+                return of([]);
+            })
         );
     }
 }

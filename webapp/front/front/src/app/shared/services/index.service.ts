@@ -25,4 +25,5 @@ export * from './index.service';
 export * from './core/auth.service';
 export * from './core/user-session.service';
 export * from './core/api.service';
-
+export * from './core/link.service';
+export * from './core/image.service';

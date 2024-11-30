@@ -29,7 +29,7 @@
               </div>
 
               <div style="font-size: 12px;color: var(--lighttext);">
-                <span i18n>posted</span>
+                <span class="post-date" i18n>posted </span>
                 <span class="post-date">{{ humanReadableDate }}</span>
 
               </div>
@@ -50,12 +50,12 @@
         </a>
         <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
 
-          <!-- Assuming postTags is an array property in your component -->
-          <!-- <ng-container *ngFor="let tag of post.tags">
+
+          <ng-container *ngFor="let tag of tags">
             <a routerLink="/" [queryParams]="{tag: tag.name}" class="post-tag static m-l-3 m-r-3">
               {{ tag.name}}
             </a>
-          </ng-container> -->
+          </ng-container>
 
           <!--<c:forEach var="postTag" items="${requestScope.postTags}">
             <a href="${pageContext.request.contextPath}${contextPath}?tag=${postTag.name}"

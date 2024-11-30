@@ -16,7 +16,7 @@ export class UserProfileWidgetComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.userSessionService.getLoggedUser().subscribe((user: User) => {
+    this.userSessionService.getCurrentUser().subscribe((user: User) => {
       this.loggedUser = user;
 
       if (user?.image) {
