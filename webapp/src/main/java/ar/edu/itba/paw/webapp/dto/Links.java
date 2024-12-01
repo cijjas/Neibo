@@ -61,6 +61,33 @@ public class Links {
     private URI userImage;
     private URI resourceImage;
     private URI reviewUser;
+    private URI announcements;
+    private URI complaints;
+    private URI images;
+
+    public URI getImages() {
+        return images;
+    }
+
+    public void setImages(URI images) {
+        this.images = images;
+    }
+
+    public URI getComplaints() {
+        return complaints;
+    }
+
+    public void setComplaints(URI complaints) {
+        this.complaints = complaints;
+    }
+
+    public URI getAnnouncements() {
+        return announcements;
+    }
+
+    public void setAnnouncements(URI announcements) {
+        this.announcements = announcements;
+    }
 
     public URI getRequestUser() {
         return requestUser;

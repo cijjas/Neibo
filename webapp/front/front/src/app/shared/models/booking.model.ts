@@ -1,5 +1,4 @@
-import { Amenity } from "./amenity";
-import { Shift } from "./shift";
+import { Amenity, Shift } from "./index";
 
 export interface Booking {
   shift: Shift;

@@ -22,6 +22,7 @@ public class ShiftsURNValidator implements ConstraintValidator<ShiftsURNConstrai
 
     @Override
     public boolean isValid(List<String> shiftsURN, ConstraintValidatorContext constraintValidatorContext) {
+        System.out.println(shiftsURN);
         if (shiftsURN == null)
             return true;
         for (String shiftURN : shiftsURN) {

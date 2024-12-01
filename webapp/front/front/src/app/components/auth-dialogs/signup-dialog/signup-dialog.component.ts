@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Neighborhood } from "../../../shared/models/neighborhood"; // Updated to use Neighborhood only
+import { Neighborhood } from "../../../shared/models/index"; // Updated to use Neighborhood only
 import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { tap, map } from "rxjs/operators";

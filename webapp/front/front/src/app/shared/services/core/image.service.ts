@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -12,27 +12,30 @@ export class ImageService {
 
     constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
 
-    fetchImage(url: string | undefined | null): Observable<SafeUrl> {
+    fetchImage(url: string | undefined | null): Observable<{ safeUrl: SafeUrl; isFallback: boolean }> {
         if (!url) {
-            return of(this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage));
+            return of({ safeUrl: this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage), isFallback: true });
         }
         return this.http.get(url, { responseType: 'blob' }).pipe(
-            switchMap((blob) => {
+            map((blob) => {
                 const reader = new FileReader();
-                return new Observable<SafeUrl>((observer) => {
+                const readerObservable = new Observable<{ safeUrl: SafeUrl; isFallback: boolean }>((observer) => {
                     reader.onloadend = () => {
                         const dataUrl = reader.result as string;
-                        observer.next(this.sanitizer.bypassSecurityTrustUrl(dataUrl));
+                        observer.next({ safeUrl: this.sanitizer.bypassSecurityTrustUrl(dataUrl), isFallback: false });
                         observer.complete();
                     };
                     reader.onerror = () => {
-                        observer.next(this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage));
+                        observer.next({ safeUrl: this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage), isFallback: true });
                         observer.complete();
                     };
                     reader.readAsDataURL(blob);
                 });
+                return readerObservable;
             }),
-            catchError(() => of(this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage))) // Use fallback if there's an error
+            // Flatten the nested Observable
+            switchMap((innerObservable) => innerObservable),
+            catchError(() => of({ safeUrl: this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage), isFallback: true }))
         );
     }
 }

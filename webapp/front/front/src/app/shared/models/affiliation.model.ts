@@ -1,5 +1,4 @@
-import { Worker } from "./worker";
-import { Neighborhood } from "./neighborhood";
+import { Worker } from "./index";
 
 export interface Affiliation {
   worker: Worker;

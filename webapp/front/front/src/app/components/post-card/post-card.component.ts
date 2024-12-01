@@ -21,6 +21,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
   totalPages: number = 1;
   currentPage: number = 1;
   pageSize: number = 10;
+  isPostImageFallback: boolean = false;
   private subscriptions: Subscription = new Subscription();
   private timer: any;
 
@@ -47,13 +48,14 @@ export class PostCardComponent implements OnInit, OnDestroy {
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
     // Fetch post image
-    const postImageSub = this.imageService.fetchImage(this.post.image).subscribe((safeUrl) => {
+    const postImageSub = this.imageService.fetchImage(this.post.image).subscribe(({ safeUrl, isFallback }) => {
       this.postImageSafeUrl = safeUrl;
+      this.isPostImageFallback = isFallback;
     });
     this.subscriptions.add(postImageSub);
 
     // Fetch author's profile image
-    const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe((safeUrl) => {
+    const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe(({ safeUrl }) => {
       this.authorImageSafeUrl = safeUrl;
     });
     this.subscriptions.add(authorImageSub);

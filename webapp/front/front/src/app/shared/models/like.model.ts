@@ -1,4 +1,4 @@
-import { Post } from "./post";
+import { Post } from "./index";
 
 export interface Like {
   date: Date;

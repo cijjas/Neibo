@@ -25,6 +25,7 @@ export class HateoasLinksService {
     setLink(key: string, url: string): void {
         this.links[key] = url;
         this.saveLinksToSession();
+        // this.logLinks()
     }
 
     /**

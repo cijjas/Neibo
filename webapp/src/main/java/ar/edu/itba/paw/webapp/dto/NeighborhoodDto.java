@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -54,6 +55,28 @@ public class NeighborhoodDto {
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("posts")
                     .build());
+            links.setAnnouncements(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("posts")
+                            .queryParam("inChannel",
+                                    uriInfo.getBaseUriBuilder()
+                                        .path("neighborhoods")
+                                        .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                                            .path("channels")
+                                            .path(String.valueOf(BaseChannel.ANNOUNCEMENTS.getId())))
+                    .build());
+            links.setComplaints(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("posts")
+                    .queryParam("inChannel",
+                            uriInfo.getBaseUriBuilder()
+                                    .path("neighborhoods")
+                                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                                    .path("channels")
+                                    .path(String.valueOf(BaseChannel.COMPLAINTS.getId())))
+                    .build());
             links.setEvents(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
@@ -68,6 +91,9 @@ public class NeighborhoodDto {
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("tags")
+                    .build());
+            links.setImages(uriInfo.getBaseUriBuilder()
+                    .path("images")
                     .build());
         }
         dto.set_links(links);

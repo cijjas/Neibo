@@ -1,31 +1,37 @@
-
 <!--<c:if test="${channel != 'Announcements'}">-->
-  <div class="upper-feed-buttons-box  ">
-    <div class="f-r-s-c filters g-05">
-      <a routerLink="/" [queryParams]="{ postStatus: 'none' }"
-        class="cool-feed-button rounded"
-        [ngClass]="{ 'active': postStatus == 'none' }">
-        <i class="fa-solid fa-arrow-up-wide-short"></i>
-        <span i18n>Newest</span>
-      </a>
-    
-      <a routerLink="/" [queryParams]="{ postStatus: 'trending' }"
-        class="cool-feed-button rounded"
-        [ngClass]="{ 'active': postStatus == 'trending' }">
-        <i class="fa-solid fa-arrow-trend-up ml-1"></i>
-        <span i18n>Trending</span>
-      </a>
-    
-      <a routerLink="/" [queryParams]="{ postStatus: 'hot' }"
-        class="coolest-button"
-        [ngClass]="{ 'active': postStatus == 'hot' }">
-        <i class="fa-solid fa-fire ml-1"></i>
-        <span i18n>Hot</span>
-      </a>
-    </div>
-    
-    
-    <!--<c:if test='${loggedUser.role != "ADMINISTRATOR"}'>
+<div class="upper-feed-buttons-box  ">
+  <div class="f-r-s-c filters g-05">
+    <a routerLink="/" [queryParams]="{ postStatus: 'none' }" class="cool-feed-button rounded"
+      [ngClass]="{ 'active': postStatus == 'none' }">
+      <i class="fa-solid fa-arrow-up-wide-short"></i>
+      <span i18n>Newest</span>
+    </a>
+
+    <a routerLink="/" [queryParams]="{ postStatus: 'trending' }" class="cool-feed-button rounded"
+      [ngClass]="{ 'active': postStatus == 'trending' }">
+      <i class="fa-solid fa-arrow-trend-up ml-1"></i>
+      <span i18n>Trending</span>
+    </a>
+
+    <a routerLink="/" [queryParams]="{ postStatus: 'hot' }" class="coolest-button"
+      [ngClass]="{ 'active': postStatus == 'hot' }">
+      <i class="fa-solid fa-fire ml-1"></i>
+      <span i18n>Hot</span>
+    </a>
+  </div>
+
+  <div *ngIf="currentUser.userRole !== 'ADMINISTRATOR'">
+    <button (click)="publishInChannel()" class="cool-feed-button p-3">
+      <i class="fa-solid fa-plus"></i>
+
+      <ng-container [ngSwitch]="channel">
+        <span *ngSwitchCase="'Feed'" i18n>Create post</span>
+        <span *ngSwitchCase="'Complaints'" i18n>Create complaint</span>
+        <span *ngSwitchDefault i18n>Create post</span>
+      </ng-container>
+    </button>
+  </div>
+  <!--<c:if test='${loggedUser.role != "ADMINISTRATOR"}'>
       <a onclick="publishInChannel()" class="cool-feed-button p-3 ">
         <i class="fa-solid fa-plus"></i>
 
@@ -39,7 +45,7 @@
         </c:choose>
       </a>
     </c:if>-->
-  </div>
+</div>
 <!--</c:if>-->
 
 

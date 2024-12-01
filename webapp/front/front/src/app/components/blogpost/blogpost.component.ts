@@ -15,6 +15,7 @@ export class BlogpostComponent implements OnInit, OnDestroy {
   humanReadableDate!: string;
   postImageSafeUrl: SafeUrl | null = null;
   authorImageSafeUrl: SafeUrl | null = null;
+  isPostImageFallback: boolean = false;
   private subscriptions: Subscription = new Subscription();
   private timer: any;
   tags: Tag[] = [];
@@ -28,7 +29,6 @@ export class BlogpostComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const tagLink = this.linkStorage.getLink('neighborhood:tags');
 
-    // Fetch tags associated with the post
     this.tagService.getTags(tagLink, { onPost: this.post.self }).subscribe({
       next: (tags) => {
         this.tags = tags || [];
@@ -42,14 +42,13 @@ export class BlogpostComponent implements OnInit, OnDestroy {
     this.updateHumanReadableDate();
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
-    // Fetch the post image
-    const postImageSub = this.imageService.fetchImage(this.post.image).subscribe((safeUrl) => {
+    const postImageSub = this.imageService.fetchImage(this.post.image).subscribe(({ safeUrl, isFallback }) => {
       this.postImageSafeUrl = safeUrl;
+      this.isPostImageFallback = isFallback;
     });
     this.subscriptions.add(postImageSub);
 
-    // Fetch the author's profile image
-    const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe((safeUrl) => {
+    const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe(({ safeUrl }) => {
       this.authorImageSafeUrl = safeUrl;
     });
     this.subscriptions.add(authorImageSub);
@@ -62,7 +61,7 @@ export class BlogpostComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    clearInterval(this.timer); // Clear the timer when the component is destroyed
-    this.subscriptions.unsubscribe(); // Unsubscribe from all subscriptions
+    clearInterval(this.timer);
+    this.subscriptions.unsubscribe();
   }
 }

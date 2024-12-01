@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { combineLatest, of, switchMap } from "rxjs";
-import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, of, switchMap } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { Post } from '../../shared/models/index';
 import { PostService, UserSessionService } from '../../shared/services/index.service';
@@ -13,46 +13,70 @@ import { HateoasLinksService } from '../../shared/services/core/link.service';
 })
 export class FeedComponent implements OnInit {
   public postList: Post[] = [];
-  public totalPages: number = 0;
-  public currentPage: number = 1;
   public loading: boolean = true;
+
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 0;
 
   constructor(
     private postService: PostService,
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    const postsUrl = this.linkService.getLink('neighborhood:posts')
-
     this.route.queryParams
       .pipe(
-        switchMap((queryParams) => {
-          const { page, size, inChannel, withTags, withStatus, postedBy } = queryParams;
-
-          return this.postService.getPosts(postsUrl, {
-            page: page ? +page : undefined,
-            size: size ? +size : undefined,
-            inChannel,
-            withTags: withTags ? withTags.split(',') : undefined,
-            withStatus,
-            postedBy,
-          });
+        switchMap((params) => {
+          this.currentPage = +params['page'] || 1; // Default to page 1
+          this.pageSize = +params['size'] || 10; // Default to 10 posts per page
+          return this.loadPosts();
         })
       )
-      .subscribe({
-        next: (data: { posts: Post[]; totalPages: number; currentPage: number }) => {
-          this.postList = data.posts;
-          this.totalPages = data.totalPages;
-          this.currentPage = data.currentPage;
+      .subscribe();
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updateQueryParams();
+    this.loadPosts().subscribe();
+  }
+
+  loadPosts(): Observable<void> {
+    const queryParams = { page: this.currentPage, size: this.pageSize };
+    return this.postService
+      .getPosts(this.linkService.getLink('neighborhood:posts'), queryParams)
+      .pipe(
+        map((response) => {
+          if (response) {
+            this.postList = response.posts;
+            this.totalPages = response.totalPages;
+            this.currentPage = response.currentPage;
+          } else {
+            this.postList = [];
+            this.totalPages = 0;
+          }
           this.loading = false;
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error fetching posts:', error);
+        }),
+        catchError((error) => {
+          console.error('Error loading posts:', error);
+          this.postList = [];
+          this.totalPages = 0;
           this.loading = false;
-        }
-      });
+          return of(); // Return an empty observable to continue the stream
+        })
+      );
+  }
+
+
+  private updateQueryParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: this.currentPage, size: this.pageSize },
+      queryParamsHandling: 'merge',
+    });
   }
 }

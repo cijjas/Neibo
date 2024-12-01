@@ -25,7 +25,7 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
       this.currentUser = user;
 
       // Use the unified fetchImage method
-      const imageSub = this.imageService.fetchImage(user?.image).subscribe((safeUrl) => {
+      const imageSub = this.imageService.fetchImage(user?.image).subscribe(({ safeUrl }) => {
         this.profileImageSafeUrl = safeUrl;
       });
       this.subscriptions.add(imageSub);

@@ -1,4 +1,4 @@
-import { Shift } from "./shift";
+import { Shift } from "./index";
 
 export interface Amenity {
   name: string;

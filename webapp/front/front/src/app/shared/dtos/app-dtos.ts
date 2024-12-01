@@ -144,10 +144,18 @@ export interface NeighborhoodDto {
 }
 
 export interface PostDto {
-    title: string;
-    body: string;
-    creationDate: Date;
-    _links: Links;
+    title?: string;
+    body?: string;
+    // solo la api lo devuelve
+    creationDate?: Date;
+    _links?: Links;
+    // solo lo envia en usuario cuando crea
+    tags?: string[];
+    imageFile?: File;
+    image?: string;
+    channel?: string;
+    user?: string;
+
 }
 
 export interface PostStatusDto {

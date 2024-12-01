@@ -37,7 +37,7 @@
           <p class="post-description mb-2">{{post.body}}</p>
 
 
-          <div *ngIf="postImageSafeUrl">
+          <div *ngIf="postImageSafeUrl && !isPostImageFallback">
             <div style="display: flex; justify-content: center; align-items: center;">
               <img [src]="postImageSafeUrl" alt="Post Image" />
             </div>

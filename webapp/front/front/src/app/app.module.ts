@@ -26,6 +26,8 @@ import { LoginDialogComponent } from './components/auth-dialogs/login-dialog/log
 import { SignupDialogComponent } from './components/auth-dialogs/signup-dialog/signup-dialog.component';
 import { PostCardComponent } from "./components/post-card/post-card.component";
 import { PaginatorComponent } from "./components/paginator/paginator.component";
+import { RightColumnComponent } from "./components/right-column/right-column.component";
+import { CalendarWidgetComponent } from './components/calendar-widget/calendar-widget.component'
 
 // MODULES
 import { FeedComponent } from "./modules/feed/feed.component"
@@ -62,7 +64,9 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
     LoginDialogComponent,
     SignupDialogComponent,
     PostCardComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    RightColumnComponent,
+    CalendarWidgetComponent
   ],
   imports: [
     BrowserModule,

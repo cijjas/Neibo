@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "./index";
 
 export interface Product {
   name: string;
