@@ -1,20 +1,21 @@
 <!--<c:if test="${channel != 'Announcements'}">-->
 <div class="upper-feed-buttons-box  ">
   <div class="f-r-s-c filters g-05">
-    <a routerLink="/" [queryParams]="{ postStatus: 'none' }" class="cool-feed-button rounded"
-      [ngClass]="{ 'active': postStatus == 'none' }">
+    <a (click)="changeStatusToLatest()" class="cool-feed-button rounded"
+      [ngClass]="{ 'active': statusClass === 'Latest' }">
       <i class="fa-solid fa-arrow-up-wide-short"></i>
-      <span i18n>Newest</span>
+      <span i18n>Latest</span>
     </a>
 
-    <a routerLink="/" [queryParams]="{ postStatus: 'trending' }" class="cool-feed-button rounded"
-      [ngClass]="{ 'active': postStatus == 'trending' }">
+    <!-- Trending Button -->
+    <a (click)="changeStatusToTrending()" class="cool-feed-button rounded"
+      [ngClass]="{ 'active': statusClass === 'Trending' }">
       <i class="fa-solid fa-arrow-trend-up ml-1"></i>
       <span i18n>Trending</span>
     </a>
 
-    <a routerLink="/" [queryParams]="{ postStatus: 'hot' }" class="coolest-button"
-      [ngClass]="{ 'active': postStatus == 'hot' }">
+    <!-- Hot Button -->
+    <a (click)="changeStatusToHot()" class="cool-feed-button rounded" [ngClass]="{ 'active': statusClass === 'Hot' }">
       <i class="fa-solid fa-fire ml-1"></i>
       <span i18n>Hot</span>
     </a>
@@ -24,7 +25,7 @@
     <button (click)="publishInChannel()" class="cool-feed-button p-3">
       <i class="fa-solid fa-plus"></i>
 
-      <ng-container [ngSwitch]="channel">
+      <ng-container [ngSwitch]="channelClass">
         <span *ngSwitchCase="'Feed'" i18n>Create post</span>
         <span *ngSwitchCase="'Complaints'" i18n>Create complaint</span>
         <span *ngSwitchDefault i18n>Create post</span>

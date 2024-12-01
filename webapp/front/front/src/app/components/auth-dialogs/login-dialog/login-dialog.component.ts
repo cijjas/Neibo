@@ -2,6 +2,7 @@ import { ChangeDetectorRef, ChangeDetectionStrategy, Component, EventEmitter, In
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../shared/services/core/auth.service';
 import { Router } from "@angular/router";
+import { HateoasLinksService } from '../../../shared/services/index.service';
 
 @Component({
   selector: 'login-dialog',
@@ -22,6 +23,7 @@ export class LoginDialogComponent
   constructor(
     private authService: AuthService,
     private router: Router,
+    private linkStorage: HateoasLinksService,
     private cdr: ChangeDetectorRef // Add this
 
   ) { }
@@ -51,13 +53,15 @@ export class LoginDialogComponent
     this.loading = true;
     if (this.loginForm.valid) {
       const { email, password, rememberMe } = this.loginForm.value;
-      
+
       this.authService.login(email, password, rememberMe)
         .subscribe({
           next: (success) => {
             this.loading = false;
             if (success) {
-              this.router.navigate(['/feed']).then(() => {
+              const feedChannelUrl = this.linkStorage.getLink('neighborhood:feedChannel')
+              const nonePostStatus = this.linkStorage.getLink('neighborhood:nonePostStatus')
+              this.router.navigate(['/posts'], { queryParams: { SPAInChannel: feedChannelUrl, SPAWithStatus: nonePostStatus } }).then(() => {
                 this.closeLoginDialog();
               });
             } else {
@@ -95,9 +99,4 @@ export class LoginDialogComponent
     this.loginForm.setErrors(null);
     this.loginForm.markAsDirty(); // Mark the form as dirty to show errors immediately
   }
-
-
-
-
-
 }

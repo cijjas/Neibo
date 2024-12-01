@@ -28,6 +28,7 @@ import { PostCardComponent } from "./components/post-card/post-card.component";
 import { PaginatorComponent } from "./components/paginator/paginator.component";
 import { RightColumnComponent } from "./components/right-column/right-column.component";
 import { CalendarWidgetComponent } from './components/calendar-widget/calendar-widget.component'
+import { CreatePostComponent } from "./components/create-post/create-post.component";
 
 // MODULES
 import { FeedComponent } from "./modules/feed/feed.component"
@@ -66,7 +67,8 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
     PostCardComponent,
     PaginatorComponent,
     RightColumnComponent,
-    CalendarWidgetComponent
+    CalendarWidgetComponent,
+    CreatePostComponent
   ],
   imports: [
     BrowserModule,

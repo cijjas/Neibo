@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Post } from '../../models/index';
 import { ChannelDto, ImageDto, PostDto, UserDto, LikeCountDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
@@ -46,22 +46,41 @@ export class PostService {
         return this.http
             .get<PostDto[]>(postsUrl, { params, observe: 'response' })
             .pipe(
-                mergeMap((response) => {
+                map((response) => {
+                    // Explicitly handle 204 No Content
+                    if (response.status === 204) {
+                        return {
+                            postsDto: [],
+                            paginationInfo: { totalPages: 0, currentPage: 0 },
+                        };
+                    }
+
+                    // Normal response handling
                     const postsDto = response.body || [];
                     const linkHeader = response.headers.get('Link');
-                    const paginationInfo = parseLinkHeader(linkHeader);
+                    const paginationInfo = linkHeader ? parseLinkHeader(linkHeader) : { totalPages: 0, currentPage: 0 };
 
+                    return { postsDto, paginationInfo };
+                }),
+                mergeMap(({ postsDto, paginationInfo }) => {
+                    // Ensure postsDto is an array, even for 204 responses
                     const postObservables = postsDto.map((postDto) => mapPost(this.http, postDto));
 
                     return forkJoin(postObservables).pipe(
                         map((posts) => ({
                             posts,
-                            totalPages: paginationInfo.totalPages,
-                            currentPage: paginationInfo.currentPage,
+                            totalPages: paginationInfo.totalPages || 0,
+                            currentPage: paginationInfo.currentPage || 0,
                         }))
                     );
+                }),
+                catchError((error) => {
+                    console.error('Error fetching posts:', error);
+                    // Return an empty result to prevent application crash
+                    return of({ posts: [], totalPages: 0, currentPage: 0 });
                 })
             );
+
     }
 
 

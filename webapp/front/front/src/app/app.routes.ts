@@ -14,7 +14,7 @@ import { authGuard } from "./shared/guards/auth.guard";
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'feed', component: FeedComponent, canActivate: [authGuard] },
+  { path: 'posts', component: FeedComponent, canActivate: [authGuard] },
   { path: 'post/:id', component: PostDetailComponent },
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },

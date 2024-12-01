@@ -61,9 +61,72 @@ public class Links {
     private URI userImage;
     private URI resourceImage;
     private URI reviewUser;
+    private URI images;
     private URI announcements;
     private URI complaints;
-    private URI images;
+    private URI feed;
+    private URI announcementsChannel;
+    private URI complaintsChannel;
+    private URI feedChannel;
+    private URI hotPostStatus;
+    private URI trendingPostStatus;
+    private URI nonePostStatus;
+
+    public URI getHotPostStatus() {
+        return hotPostStatus;
+    }
+
+    public void setHotPostStatus(URI hotPostStatus) {
+        this.hotPostStatus = hotPostStatus;
+    }
+
+    public URI getTrendingPostStatus() {
+        return trendingPostStatus;
+    }
+
+    public void setTrendingPostStatus(URI trendingPostStatus) {
+        this.trendingPostStatus = trendingPostStatus;
+    }
+
+    public URI getNonePostStatus() {
+        return nonePostStatus;
+    }
+
+    public void setNonePostStatus(URI nonePostStatus) {
+        this.nonePostStatus = nonePostStatus;
+    }
+
+    public URI getComplaintsChannel() {
+        return complaintsChannel;
+    }
+
+    public void setComplaintsChannel(URI complaintsChannel) {
+        this.complaintsChannel = complaintsChannel;
+    }
+
+    public URI getFeedChannel() {
+        return feedChannel;
+    }
+
+    public void setFeedChannel(URI feedChannel) {
+        this.feedChannel = feedChannel;
+    }
+
+    public URI getAnnouncementsChannel() {
+        return announcementsChannel;
+    }
+
+    public void setAnnouncementsChannel(URI announcementsChannel) {
+        this.announcementsChannel = announcementsChannel;
+    }
+
+    public URI getFeed() {
+        return feed;
+    }
+
+    public void setFeed(URI feed) {
+        this.feed = feed;
+    }
 
     public URI getImages() {
         return images;

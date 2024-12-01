@@ -4,7 +4,7 @@ import { Observable, of, switchMap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { Post } from '../../shared/models/index';
-import { PostService, UserSessionService } from '../../shared/services/index.service';
+import { PostService } from '../../shared/services/index.service';
 import { HateoasLinksService } from '../../shared/services/core/link.service';
 
 @Component({
@@ -16,14 +16,16 @@ export class FeedComponent implements OnInit {
   public loading: boolean = true;
 
   currentPage: number = 1;
+
   pageSize: number = 10;
   totalPages: number = 0;
+  channel: string;
+  postStatus: string;
 
   constructor(
     private postService: PostService,
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService,
     private router: Router
   ) { }
 
@@ -33,6 +35,8 @@ export class FeedComponent implements OnInit {
         switchMap((params) => {
           this.currentPage = +params['page'] || 1; // Default to page 1
           this.pageSize = +params['size'] || 10; // Default to 10 posts per page
+          this.channel = params['SPAInChannel'] || this.linkService.getLink('neighborhood:complaintsChannel');
+          this.postStatus = params['SPAWithStatus'] || this.linkService.getLink('neighborhood:nonePostStatus');
           return this.loadPosts();
         })
       )
@@ -46,7 +50,7 @@ export class FeedComponent implements OnInit {
   }
 
   loadPosts(): Observable<void> {
-    const queryParams = { page: this.currentPage, size: this.pageSize };
+    const queryParams = { page: this.currentPage, size: this.pageSize, inChannel: this.channel, withStatus: this.postStatus };
     return this.postService
       .getPosts(this.linkService.getLink('neighborhood:posts'), queryParams)
       .pipe(
@@ -59,6 +63,7 @@ export class FeedComponent implements OnInit {
             this.postList = [];
             this.totalPages = 0;
           }
+
           this.loading = false;
         }),
         catchError((error) => {
@@ -66,7 +71,7 @@ export class FeedComponent implements OnInit {
           this.postList = [];
           this.totalPages = 0;
           this.loading = false;
-          return of(); // Return an empty observable to continue the stream
+          return of();
         })
       );
   }

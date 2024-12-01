@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.BaseChannel;
+import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -77,6 +78,59 @@ public class NeighborhoodDto {
                                     .path("channels")
                                     .path(String.valueOf(BaseChannel.COMPLAINTS.getId())))
                     .build());
+            links.setFeed(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("posts")
+                    .queryParam("inChannel",
+                            uriInfo.getBaseUriBuilder()
+                                    .path("neighborhoods")
+                                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                                    .path("channels")
+                                    .path(String.valueOf(BaseChannel.FEED.getId())))
+                    .build());
+            links.setFeedChannel(
+                    uriInfo.getBaseUriBuilder()
+                            .path("neighborhoods")
+                            .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                            .path("channels")
+                            .path(String.valueOf(BaseChannel.FEED.getId()))
+                    .build()
+            );
+            links.setComplaintsChannel(
+                    uriInfo.getBaseUriBuilder()
+                            .path("neighborhoods")
+                            .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                            .path("channels")
+                            .path(String.valueOf(BaseChannel.COMPLAINTS.getId()))
+                            .build()
+            );
+            links.setAnnouncementsChannel(
+                    uriInfo.getBaseUriBuilder()
+                            .path("neighborhoods")
+                            .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                            .path("channels")
+                            .path(String.valueOf(BaseChannel.ANNOUNCEMENTS.getId()))
+                            .build()
+            );
+            links.setHotPostStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("post-statuses")
+                            .path(String.valueOf(PostStatus.HOT.getId()))
+                            .build()
+            );
+            links.setTrendingPostStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("post-statuses")
+                            .path(String.valueOf(PostStatus.TRENDING.getId()))
+                            .build()
+            );
+            links.setNonePostStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("post-statuses")
+                            .path(String.valueOf(PostStatus.NONE.getId()))
+                            .build()
+            );
             links.setEvents(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
