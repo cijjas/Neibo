@@ -106,9 +106,11 @@ export class UpperFeedButtonsComponent implements OnInit {
   }
 
   publishInChannel(): void {
-    console.log("hola");
-    // go to channel publish
+    this.router.navigate(['/create-post'], {
+      queryParams: { SPAInChannel: this.channel }
+    });
   }
+
 
 
 }

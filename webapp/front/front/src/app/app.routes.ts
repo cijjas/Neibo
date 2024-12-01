@@ -6,6 +6,8 @@ import { ServicesComponent } from './modules/services/services.component'
 import { MarketplaceComponent } from './modules/marketplace/marketplace.component'
 import { ReservationsComponent } from './modules/reservations/reservations.component'
 import { InformationComponent } from './modules/information/information.component'
+import { CreatePostComponent } from './components/create-post/create-post.component'
+
 
 import { NotFoundComponent } from "./modules/not-found/not-found.component";
 import { LoginComponent } from "./modules/auth/login/login.component";
@@ -16,6 +18,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'posts', component: FeedComponent, canActivate: [authGuard] },
   { path: 'post/:id', component: PostDetailComponent },
+  { path: 'create-post', component: CreatePostComponent },
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
   { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },

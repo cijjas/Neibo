@@ -4,10 +4,14 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Tag } from '../../models/index';
 import { TagDto } from '../../dtos/app-dtos';
+import { HateoasLinksService } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class TagService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private linkService: HateoasLinksService,
+    ) { }
 
     public getTag(url: string): Observable<Tag> {
         return this.http.get<TagDto>(url).pipe(
@@ -37,6 +41,26 @@ export class TagService {
             })
         );
     }
+
+    public createTag(name: string): Observable<string | null> {
+        const tagsUrl = this.linkService.getLink('neighborhood:tags');
+        return this.http.post(tagsUrl, { name }, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating tag:', error);
+                return of(null);
+            })
+        );
+    }
+
 }
 
 export function mapTag(tagDto: TagDto): Tag {

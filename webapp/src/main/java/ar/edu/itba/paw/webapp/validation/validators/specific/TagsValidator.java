@@ -25,19 +25,14 @@ public class TagsValidator implements ConstraintValidator<TagsConstraint, String
             return false;
 
         if (!tag.matches(TAG_PATTERN)) {
-            String tagError1 = messageSource.getMessage("TagError1", null, Locale.getDefault());
-            String tagError2 = messageSource.getMessage("TagError2", null, Locale.getDefault());
-
-            String errorMessage = tagError1 + tag + tagError2;
+            String errorMessage = "The tag '" + tag + "' is invalid. It must match the required pattern.";
             context.buildConstraintViolationWithTemplate(errorMessage)
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
             return false; // If tag is invalid, return false
         }
         if (tag.length() > MAX_TAG_LENGTH) {
-            String tagError3 = messageSource.getMessage("TagError3", null, Locale.getDefault());
-
-            String errorMessage = tag + tagError3;
+            String errorMessage = "The tag '" + tag + "' is too long. Maximum allowed length is " + MAX_TAG_LENGTH + " characters.";
             context.buildConstraintViolationWithTemplate(errorMessage)
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
@@ -46,14 +41,14 @@ public class TagsValidator implements ConstraintValidator<TagsConstraint, String
 
         // Check if the first letter is uppercase
         if (!Character.isUpperCase(tag.charAt(0))) {
-            String tagError4 = messageSource.getMessage("TagError4", null, Locale.getDefault());
-
-            String errorMessage = tagError4 + tag;
+            String errorMessage = "The tag '" + tag + "' must start with an uppercase letter.";
             context.buildConstraintViolationWithTemplate(errorMessage)
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
             return false;
         }
+
         return true; // Tag is valid
     }
+
 }

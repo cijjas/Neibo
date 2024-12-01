@@ -21,14 +21,14 @@
     </a>
   </div>
 
-  <div *ngIf="currentUser.userRole !== 'ADMINISTRATOR'">
+  <div *ngIf="currentUser.userRole !== 'ADMINISTRATOR' && channelClass !== 'Announcements'">
     <button (click)="publishInChannel()" class="cool-feed-button p-3">
       <i class="fa-solid fa-plus"></i>
 
       <ng-container [ngSwitch]="channelClass">
-        <span *ngSwitchCase="'Feed'" i18n>Create post</span>
-        <span *ngSwitchCase="'Complaints'" i18n>Create complaint</span>
-        <span *ngSwitchDefault i18n>Create post</span>
+        <span *ngSwitchCase="'Feed'" i18n>Create Post</span>
+        <span *ngSwitchCase="'Complaints'" i18n>Create Complaint</span>
+        <span *ngSwitchDefault i18n>Create Post</span>
       </ng-container>
     </button>
   </div>
@@ -48,7 +48,7 @@
     </c:if>-->
 </div>
 <!--</c:if>-->
-
+<!--
 
 <script>
   function publishInChannel() {
@@ -83,4 +83,4 @@
   }
 
 
-</script>
+</script> -->

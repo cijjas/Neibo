@@ -228,6 +228,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Neighborhood-URL",
                 "X-Access-Token",
                 "X-Refresh-Token",
+                "Location",
                 "Link"
         ));
         corsConfiguration.setExposedHeaders(Arrays.asList(
@@ -244,6 +245,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Neighborhood-URL",
                 "X-Access-Token",
                 "X-Refresh-Token",
+                "Location",
                 "Link"
         ));
         corsConfiguration.setAllowedMethods(Arrays.asList(
