@@ -5,6 +5,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Review } from '../../models/index';
 import { ReviewDto, UserDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewService {
@@ -22,18 +23,31 @@ export class ReviewService {
             page?: number;
             size?: number;
         } = {}
-    ): Observable<Review[]> {
+    ): Observable<{ reviews: Review[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<ReviewDto[]>(url, { params }).pipe(
-            mergeMap((reviewsDto: ReviewDto[]) => {
-                const reviewObservables = reviewsDto.map(reviewDto => mapReview(this.http, reviewDto));
-                return forkJoin(reviewObservables);
-            })
-        );
+        return this.http
+            .get<ReviewDto[]>(url, { params, observe: 'response' })
+            .pipe(
+                mergeMap((response) => {
+                    const reviewsDto = response.body || [];
+                    const linkHeader = response.headers.get('Link');
+                    const paginationInfo = parseLinkHeader(linkHeader);
+
+                    const reviewObservables = reviewsDto.map((reviewDto) => mapReview(this.http, reviewDto));
+
+                    return forkJoin(reviewObservables).pipe(
+                        map((reviews) => ({
+                            reviews,
+                            totalPages: paginationInfo.totalPages,
+                            currentPage: paginationInfo.currentPage,
+                        }))
+                    );
+                })
+            );
     }
 
 }

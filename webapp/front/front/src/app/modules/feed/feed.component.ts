@@ -10,10 +10,11 @@ import { HateoasLinksService } from '../../shared/services/core/link.service';
 @Component({
   selector: 'app-feed',
   templateUrl: './feed.component.html',
-  styleUrls: ['../../app.component.css']
 })
 export class FeedComponent implements OnInit {
   public postList: Post[] = [];
+  public totalPages: number = 0;
+  public currentPage: number = 1;
   public loading: boolean = true;
 
   constructor(
@@ -42,8 +43,10 @@ export class FeedComponent implements OnInit {
         })
       )
       .subscribe({
-        next: (posts: Post[]) => {
-          this.postList = posts;
+        next: (data: { posts: Post[]; totalPages: number; currentPage: number }) => {
+          this.postList = data.posts;
+          this.totalPages = data.totalPages;
+          this.currentPage = data.currentPage;
           this.loading = false;
         },
         error: (error: HttpErrorResponse) => {

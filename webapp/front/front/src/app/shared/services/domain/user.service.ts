@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core'
 import { map, mergeMap } from 'rxjs/operators'
 import { User } from '../../models/index'
 import { ImageDto, LanguageDto, UserDto, UserRoleDto } from '../../dtos/app-dtos'
+import { parseLinkHeader } from './utils'
 // TODO UserForm del user
 
 @Injectable({ providedIn: 'root' })
@@ -27,21 +28,34 @@ export class UserService {
             page?: number;
             size?: number;
         } = {}
-    ): Observable<User[]> {
+    ): Observable<{ users: User[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
-        // Add query parameters dynamically
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
         if (queryParams.userRole) params = params.set('withRole', queryParams.userRole);
 
-        return this.http.get<UserDto[]>(userUrl, { params }).pipe(
-            mergeMap((usersDto: UserDto[]) => {
-                const userObservables = usersDto.map(userDto => mapUser(this.http, userDto));
-                return forkJoin(userObservables);
-            })
-        );
+        return this.http
+            .get<UserDto[]>(userUrl, { params, observe: 'response' })
+            .pipe(
+                mergeMap((response) => {
+                    const usersDto = response.body || [];
+                    const linkHeader = response.headers.get('Link');
+                    const paginationInfo = parseLinkHeader(linkHeader);
+
+                    const userObservables = usersDto.map((userDto) => mapUser(this.http, userDto));
+
+                    return forkJoin(userObservables).pipe(
+                        map((users) => ({
+                            users,
+                            totalPages: paginationInfo.totalPages,
+                            currentPage: paginationInfo.currentPage,
+                        }))
+                    );
+                })
+            );
     }
+
 }
 
 export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {

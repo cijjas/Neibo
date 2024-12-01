@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Channel } from '../../models/index';
 import { ChannelDto } from '../../dtos/app-dtos';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class ChannelService {
@@ -21,17 +22,27 @@ export class ChannelService {
             page?: number;
             size?: number;
         } = {}
-    ): Observable<Channel[]> {
+    ): Observable<{ channels: Channel[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<ChannelDto[]>(url, { params }).pipe(
-            map((channelsDto: ChannelDto[]) => channelsDto.map(mapChannel))
+        return this.http.get<ChannelDto[]>(url, { params, observe: 'response' }).pipe(
+            map((response) => {
+                const channelsDto: ChannelDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
+                const channels = channelsDto.map(mapChannel);
+
+                return {
+                    channels,
+                    totalPages: pagination.totalPages,
+                    currentPage: pagination.currentPage
+                };
+            })
         );
     }
-
 }
 
 export function mapChannel(channelDto: ChannelDto): Channel {

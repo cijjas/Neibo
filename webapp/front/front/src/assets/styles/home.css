@@ -1400,6 +1400,34 @@ input[type=file]::file-selector-button:hover {
   }
 }
 
+button.ellipsis {
+  cursor: default;
+  /* Makes it clear that it's not clickable */
+  pointer-events: none;
+  /* Prevents hover or click interactions */
+  background: transparent;
+  /* Ensure it blends in with the design */
+  color: #888;
+  /* Use a subdued color to differentiate it */
+  border: none;
+  /* Remove any borders to make it visually distinct */
+  padding: 0.5rem;
+  /* Adjust padding to match other buttons */
+}
+
+button.ellipsis:hover {
+  background: transparent;
+  /* Ensure no visual changes on hover */
+  color: #888;
+  /* Keep the same subdued color */
+}
+
+button.ellipsis:disabled {
+  cursor: default;
+}
+
+
+
 /*-------------------SWITCH -----------------------------------*/
 .switch-button {
   display: flex;
@@ -1512,9 +1540,12 @@ footer div {
     transform: translateX(-100%);
   }
 }
+
 app-wave-footer {
-  position: relative; /* Normal flow */
-  z-index: 1; /* Above the background */
+  position: relative;
+  /* Normal flow */
+  z-index: 1;
+  /* Above the background */
 }
 
 /*------------------------------------------------- clouds --------------------*/
@@ -1522,8 +1553,10 @@ app-background-clouds {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: -1; /* Ensures it doesn't overlap other components */
-  pointer-events: none; /* Prevents it from capturing clicks or interactions */
+  z-index: -1;
+  /* Ensures it doesn't overlap other components */
+  pointer-events: none;
+  /* Prevents it from capturing clicks or interactions */
 }
 
 .background-container {
@@ -1532,8 +1565,10 @@ app-background-clouds {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1; /* Ensures it stays in the background */
-  overflow: hidden; /* Prevents any overflow issues */
+  z-index: -1;
+  /* Ensures it stays in the background */
+  overflow: hidden;
+  /* Prevents any overflow issues */
 }
 
 .background-container svg {

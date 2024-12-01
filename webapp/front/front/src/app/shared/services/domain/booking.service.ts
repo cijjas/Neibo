@@ -6,6 +6,7 @@ import { Booking } from '../../models/index';
 import { BookingDto, AmenityDto, ShiftDto } from '../../dtos/app-dtos';
 import { mapShift } from './shift.service';
 import { mapAmenity } from './amenity.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
@@ -25,7 +26,7 @@ export class BookingService {
             bookedBy?: string;
             forAmenity?: string;
         } = {}
-    ): Observable<Booking[]> {
+    ): Observable<{ bookings: Booking[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -33,12 +34,22 @@ export class BookingService {
         if (queryParams.bookedBy) params = params.set('bookedBy', queryParams.bookedBy);
         if (queryParams.forAmenity) params = params.set('forAmenity', queryParams.forAmenity);
 
-        return this.http.get<BookingDto[]>(url, { params }).pipe(
-            mergeMap((bookingsDto: BookingDto[]) => {
+        return this.http.get<BookingDto[]>(url, { params, observe: 'response' }).pipe(
+            mergeMap((response) => {
+                const bookingsDto: BookingDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
                 const bookingObservables = bookingsDto.map((bookingDto) =>
                     mapBooking(this.http, bookingDto)
                 );
-                return forkJoin(bookingObservables);
+
+                return forkJoin(bookingObservables).pipe(
+                    map((bookings) => ({
+                        bookings,
+                        totalPages: pagination.totalPages,
+                        currentPage: pagination.currentPage,
+                    }))
+                );
             })
         );
     }

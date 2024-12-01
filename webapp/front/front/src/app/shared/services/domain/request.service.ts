@@ -5,6 +5,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Request } from '../../models/index';
 import { RequestDto, UserDto, RequestStatusDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class RequestService {
@@ -26,7 +27,7 @@ export class RequestService {
             withType?: string;
             withStatus?: string;
         } = {}
-    ): Observable<Request[]> {
+    ): Observable<{ requests: Request[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -40,14 +41,23 @@ export class RequestService {
             throw new Error('Both `requestBy` and `withType` must be provided together, or neither of them.');
         }
 
-        return this.http.get<RequestDto[]>(url, { params }).pipe(
-            mergeMap((requestsDto: RequestDto[]) => {
+        return this.http.get<RequestDto[]>(url, { params, observe: 'response' }).pipe(
+            map((response) => {
+                const requestsDto: RequestDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
                 const requestObservables = requestsDto.map(requestDto => mapRequest(this.http, requestDto));
-                return forkJoin(requestObservables);
-            })
+                return forkJoin(requestObservables).pipe(
+                    map((requests) => ({
+                        requests,
+                        totalPages: pagination.totalPages,
+                        currentPage: pagination.currentPage
+                    }))
+                );
+            }),
+            mergeMap(result => result) // Flatten the nested observable
         );
     }
-
 }
 
 export function mapRequest(http: HttpClient, requestDto: RequestDto): Observable<Request> {

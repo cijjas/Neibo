@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Contact } from '../../models/index';
 import { ContactDto } from '../../dtos/app-dtos';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
@@ -21,17 +22,27 @@ export class ContactService {
             page?: number;
             size?: number;
         } = {}
-    ): Observable<Contact[]> {
+    ): Observable<{ contacts: Contact[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<ContactDto[]>(url, { params }).pipe(
-            map((contactsDto: ContactDto[]) => contactsDto.map(mapContact))
+        return this.http.get<ContactDto[]>(url, { params, observe: 'response' }).pipe(
+            map((response) => {
+                const contactsDto: ContactDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
+                const contacts = contactsDto.map(mapContact);
+
+                return {
+                    contacts,
+                    totalPages: pagination.totalPages,
+                    currentPage: pagination.currentPage
+                };
+            })
         );
     }
-
 }
 
 export function mapContact(contactDto: ContactDto): Contact {

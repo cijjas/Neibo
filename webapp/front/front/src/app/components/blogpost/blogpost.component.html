@@ -9,19 +9,16 @@
           <span class="like-count c-light-text" id="like-count-{{post.self}}" [attr.data-like-count]="post.likeCount">
             {{post.likeCount}}
           </span>
-
-
         </div>
       </div>
       <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
         <!-- VUELA ${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />-->
-        <a [routerLink]="[post.self]" style="text-decoration: none;">
+        <a [routerLink]="['/post', post.self]" style="text-decoration: none;">
           <div class="post-header">
             <div class="blogpost-author-and-date">
               <div class="f-r-s-c placeholder-glow" style="gap: 3px">
-                <img id="postUserProfilePictureId-{{post.self}}"
-                  [src]="authorImageSafeUrl || 'assets/images/roundedPlaceholder.png'" class="small-profile-picture"
-                  alt="profile_picture_img" />
+                <img id="postUserProfilePictureId-{{post.self}}" [src]="authorImageSafeUrl "
+                  class="small-profile-picture" alt="profile_picture_img" />
 
 
                 <span class="post-author pt-1 pb-1 pl-1">{{post.author.email}}</span>

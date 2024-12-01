@@ -3,7 +3,7 @@ import { Neighborhood } from "./neighborhood";
 
 export interface Affiliation {
   worker: Worker;
-  role: 'VERIFIED' | 'UNVERIFIED' | 'BANNED';
+  role: string;
   neighborhoodName: string;
   self: string;
 }

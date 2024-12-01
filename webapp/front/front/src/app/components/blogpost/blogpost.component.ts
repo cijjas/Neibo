@@ -26,9 +26,9 @@ export class BlogpostComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const tagLink = this.linkStorage.getLink('neighborhood:tags')
+    const tagLink = this.linkStorage.getLink('neighborhood:tags');
 
-    // Create query params onPost
+    // Fetch tags associated with the post
     this.tagService.getTags(tagLink, { onPost: this.post.self }).subscribe({
       next: (tags) => {
         this.tags = tags || [];
@@ -39,25 +39,20 @@ export class BlogpostComponent implements OnInit, OnDestroy {
       },
     });
 
-
     this.updateHumanReadableDate();
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
-    // Fetch the post image if it exists
-    if (this.post.image) {
-      const postImageSub = this.imageService.fetchImage(this.post.image).subscribe((safeUrl) => {
-        this.postImageSafeUrl = safeUrl;
-      });
-      this.subscriptions.add(postImageSub);
-    }
+    // Fetch the post image
+    const postImageSub = this.imageService.fetchImage(this.post.image).subscribe((safeUrl) => {
+      this.postImageSafeUrl = safeUrl;
+    });
+    this.subscriptions.add(postImageSub);
 
-    // Fetch the author's profile image if it exists
-    if (this.post.author.image) {
-      const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe((safeUrl) => {
-        this.authorImageSafeUrl = safeUrl;
-      });
-      this.subscriptions.add(authorImageSub);
-    }
+    // Fetch the author's profile image
+    const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe((safeUrl) => {
+      this.authorImageSafeUrl = safeUrl;
+    });
+    this.subscriptions.add(authorImageSub);
   }
 
   private updateHumanReadableDate(): void {
@@ -69,13 +64,5 @@ export class BlogpostComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearInterval(this.timer); // Clear the timer when the component is destroyed
     this.subscriptions.unsubscribe(); // Unsubscribe from all subscriptions
-
-    // Revoke object URLs to prevent memory leaks
-    if (this.postImageSafeUrl) {
-      URL.revokeObjectURL((this.postImageSafeUrl as any).changingThisBreaksApplicationSecurity);
-    }
-    if (this.authorImageSafeUrl) {
-      URL.revokeObjectURL((this.authorImageSafeUrl as any).changingThisBreaksApplicationSecurity);
-    }
   }
 }

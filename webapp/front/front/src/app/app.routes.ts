@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router'
 import { AppComponent } from './app.component'
-import { PostComponent } from './components/post/post.component'
+import { PostDetailComponent } from './components/post-detail/post-detail.component'
 import { FeedComponent } from './modules/feed/feed.component'
 import { ServicesComponent } from './modules/services/services.component'
 import { MarketplaceComponent } from './modules/marketplace/marketplace.component'
@@ -15,7 +15,7 @@ export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'feed', component: FeedComponent, canActivate: [authGuard] },
-  { path: 'post/:postId', component: PostComponent, canActivate: [authGuard] },
+  { path: 'post/:id', component: PostDetailComponent },
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
   { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },

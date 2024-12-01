@@ -7,6 +7,7 @@ export interface Post {
   image: string;
   channel: string;
   likeCount: number;
+  comments: string;
   author: User;
   self: string;
 }

@@ -1,4 +1,3 @@
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
@@ -6,6 +5,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Post } from '../../models/index';
 import { ChannelDto, ImageDto, PostDto, UserDto, LikeCountDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
+import { parseLinkHeader } from './utils';
 
 
 
@@ -32,23 +32,37 @@ export class PostService {
             withStatus?: string;
             postedBy?: string;
         } = {}
-    ): Observable<Post[]> {
+    ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
         if (queryParams.inChannel) params = params.set('inChannel', queryParams.inChannel);
-        if (queryParams.withTags !== undefined) params = params.set('withTags', queryParams.withTags.join(','));
+        if (queryParams.withTags) params = params.set('withTags', queryParams.withTags.join(','));
         if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
         if (queryParams.postedBy) params = params.set('postedBy', queryParams.postedBy);
 
-        return this.http.get<PostDto[]>(postsUrl, { params }).pipe(
-            mergeMap((postsDto: PostDto[]) => {
-                const postObservables = postsDto.map(postDto => mapPost(this.http, postDto));
-                return forkJoin(postObservables);
-            })
-        );
+        return this.http
+            .get<PostDto[]>(postsUrl, { params, observe: 'response' })
+            .pipe(
+                mergeMap((response) => {
+                    const postsDto = response.body || [];
+                    const linkHeader = response.headers.get('Link');
+                    const paginationInfo = parseLinkHeader(linkHeader);
+
+                    const postObservables = postsDto.map((postDto) => mapPost(this.http, postDto));
+
+                    return forkJoin(postObservables).pipe(
+                        map((posts) => ({
+                            posts,
+                            totalPages: paginationInfo.totalPages,
+                            currentPage: paginationInfo.currentPage,
+                        }))
+                    );
+                })
+            );
     }
+
 
 }
 
@@ -66,6 +80,7 @@ export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
                 image: postDto._links.postImage,
                 channel: channelDto.name,
                 likeCount: likeCountDto.count,
+                comments: postDto._links.comments,
                 author: user,
                 self: postDto._links.self
             } as Post;

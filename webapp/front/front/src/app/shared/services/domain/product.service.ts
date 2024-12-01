@@ -5,6 +5,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Product } from '../../models/index';
 import { ProductDto, UserDto, DepartmentDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -25,7 +26,7 @@ export class ProductService {
             forUser?: string;
             withStatus?: string;
         } = {}
-    ): Observable<Product[]> {
+    ): Observable<{ products: Product[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -34,12 +35,25 @@ export class ProductService {
         if (queryParams.forUser) params = params.set('forUser', queryParams.forUser);
         if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
 
-        return this.http.get<ProductDto[]>(url, { params }).pipe(
-            mergeMap((productsDto: ProductDto[]) => {
-                const productObservables = productsDto.map(productDto => mapProduct(this.http, productDto));
-                return forkJoin(productObservables);
-            })
-        );
+        return this.http
+            .get<ProductDto[]>(url, { params, observe: 'response' })
+            .pipe(
+                mergeMap((response) => {
+                    const productsDto = response.body || [];
+                    const linkHeader = response.headers.get('Link');
+                    const paginationInfo = parseLinkHeader(linkHeader);
+
+                    const productObservables = productsDto.map((productDto) => mapProduct(this.http, productDto));
+
+                    return forkJoin(productObservables).pipe(
+                        map((products) => ({
+                            products,
+                            totalPages: paginationInfo.totalPages,
+                            currentPage: paginationInfo.currentPage,
+                        }))
+                    );
+                })
+            );
     }
 
 }

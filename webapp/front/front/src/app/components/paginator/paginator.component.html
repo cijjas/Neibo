@@ -1,0 +1,22 @@
+<div [class.pagination]="!isMarketplace" [class.pagination-marketplace]="isMarketplace">
+    <button [class.pagination-button]="!isMarketplace" [class.pagination-marketplace-button]="isMarketplace"
+        class="small-a" [disabled]="currentPage <= 1" (click)="prevPage()" aria-label="Previous Page">
+        <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <button *ngFor="let page of pageNumbers" [class.pagination-button]="!isMarketplace"
+        [class.pagination-marketplace-button]="isMarketplace" [class.ellipsis]="page === -1"
+        [class.active]="currentPage === page" (click)="page !== -1 && goToPage(page)" [disabled]="page === -1">
+        <ng-container *ngIf="page !== -1; else ellipsis">
+            {{ page }}
+        </ng-container>
+        <ng-template #ellipsis>
+            ...
+        </ng-template>
+    </button>
+
+    <button [class.pagination-button]="!isMarketplace" [class.pagination-marketplace-button]="isMarketplace"
+        class="small-a" [disabled]="currentPage >= totalPages" (click)="nextPage()" aria-label="Next Page">
+        <i class="fas fa-chevron-right"></i>
+    </button>
+</div>

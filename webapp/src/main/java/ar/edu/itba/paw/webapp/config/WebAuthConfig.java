@@ -136,6 +136,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/worker-roles", "/worker-roles/*",
                         "/worker-statuses", "/worker-statuses/*",
                         "/neighborhoods", "/neighborhoods/*",
+                        "/images", "/images/*",
                         // User and Worker Creation can be accessed by anyone
                         // User and Worker List share the same endpoint so they have additional authentication
                         "/neighborhoods/*/users",
@@ -147,7 +148,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/neighborhoods/*/users/*",
                         "/workers/*",
 
-                        "/images", "/images/*",
                         "/affiliations", "/affiliations/*",
                         "/workers/*/reviews", "/workers/*/reviews/*"
                 ).hasAnyRole(

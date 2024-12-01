@@ -1,0 +1,110 @@
+<div class="card-container">
+    <!-- Post information -->
+    <div class="post-section">
+        <div class="post-info">
+            <div class="f-r-sb-c">
+                <div>
+                    <span style="font-size: 14px" class="font-weight-bold">
+                        {{ post.channel }}
+                    </span>
+                    <span style="font-size: 12px; font-weight: normal" class="ml-1">
+                        - Posted by
+                        <img [src]="authorImageSafeUrl" class="small-profile-picture mb-1" alt="post_profile_image" />
+                        {{ post.author.name }}
+                    </span>
+                </div>
+                <div style="font-size: 12px; font-weight: normal">
+                    <span class="post-date">{{ humanReadableDate }}</span>
+                </div>
+            </div>
+            <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text">{{ post.title }}</p>
+            <div class="divider m-b-20"></div>
+            <div class="postcard-description">
+                {{ post.body }}
+            </div>
+        </div>
+
+        <!-- Image section -->
+        <div *ngIf="postImageSafeUrl" style="display: flex; justify-content: center; align-items: center;">
+            <img [src]="postImageSafeUrl" class="blogpost-image"
+                style="max-width: 100%; max-height: 100vh; border-radius: 5px; height: 300px" alt="post_image" />
+        </div>
+    </div>
+
+    <!-- Like and Tags section -->
+    <!-- <div class="row">
+        <div class="col-6">
+            <div class="ml-2 d-flex flex-column justify-content-start align-items-start">
+                <div class="f-r-c-c">
+                    <span (click)="toggleLike()" class="post-like-button pl-3 pr-3 pt-2 pb-2" [class.liked]="isLiked">
+                        <span class="mr-1">{{ likeCount }}</span>
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="mr-2">
+                <div class="w-100 d-flex flex-row justify-content-end align-items-center flex-wrap"
+                    *ngIf="post.tags && post.tags.length > 0">
+                    <a *ngFor="let tag of post.tags" class="post-tag static m-l-3 m-r-3" [routerLink]="['/posts']"
+                        [queryParams]="{ tag: tag }">
+                        {{ tag }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Comments section -->
+    <div class="comments-section">
+        <!-- Remove or comment out the input box for adding new comments -->
+        <!--
+        <div style="margin: 10px 0 10px 0;">
+            <textarea [(ngModel)]="newComment" class="cool-input grey-input textarea-min-max" rows="3"
+                placeholder="Comment"></textarea>
+            <div class="d-flex flex-column justify-content-center align-items-end">
+                <button (click)="submitComment()" class="cool-button cool-small on-bg w-25 font-weight-bolder"
+                    style="margin-top:5px; font-size: 12px;" [disabled]="!newComment.trim()">
+                    Comment
+                </button>
+            </div>
+        </div>
+        <div class="divider"></div>
+        -->
+        <h3>Comments</h3>
+
+
+        <!-- Pagination Controls -->
+
+        <!-- Display comments if available -->
+        <div *ngIf="comments && comments.length > 0; else noComments">
+            <div *ngFor="let comment of comments" class="cool-comment w-100 p-2">
+                <div class="comment-header f-r-sb-c mb-2">
+                    <div class="f-r-s-c">
+                        <img [src]="comment.user.image || 'assets/images/roundedPlaceholder.png'"
+                            class="small-profile-picture" alt="profile_picture_img" />
+                        <div class="bold">{{ comment.user.name }} {{ comment.user.surname }}</div>
+                    </div>
+                    <div class="bold">{{ comment.humanReadableDate }}</div>
+                </div>
+                <div class="comment-body w-100">
+                    <p class="mt-2 w-100 c-light-text normal">{{ comment.message}}</p>
+                </div>
+            </div>
+        </div>
+        <ng-template #noComments>
+            <div class="cool-comment">
+                <div class="comment-body">
+                    No comments
+                </div>
+            </div>
+        </ng-template>
+
+        <app-paginator [totalPages]="totalPages" [currentPage]="currentPage" [pageSize]="pageSize"
+            [isMarketplace]="false" (pageChange)="onPageChange($event)"></app-paginator>
+
+
+    </div>
+
+</div>

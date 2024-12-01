@@ -6,6 +6,7 @@ import { Attendance } from '../../models/index';
 import { EventDto, UserDto, AttendanceDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { mapEvent } from './event.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class AttendanceService {
@@ -19,26 +20,32 @@ export class AttendanceService {
 
     public getAttendances(
         url: string,
-        queryParams: {
-            page?: number;
-            size?: number;
-        } = {}
-    ): Observable<Attendance[]> {
+        queryParams: { page?: number; size?: number } = {}
+    ): Observable<{ attendances: Attendance[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<AttendanceDto[]>(url, { params }).pipe(
-            mergeMap((attendancesDto: AttendanceDto[]) => {
-                const attendanceObservables = attendancesDto.map(attendanceDto =>
+        return this.http.get<AttendanceDto[]>(url, { params, observe: 'response' }).pipe(
+            mergeMap((response) => {
+                const attendancesDto: AttendanceDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
+                const attendanceObservables = attendancesDto.map((attendanceDto) =>
                     mapAttendance(this.http, attendanceDto)
                 );
-                return forkJoin(attendanceObservables);
+
+                return forkJoin(attendanceObservables).pipe(
+                    map((attendances) => ({
+                        attendances,
+                        totalPages: pagination.totalPages,
+                        currentPage: pagination.currentPage,
+                    }))
+                );
             })
         );
     }
-
 }
 
 export function mapAttendance(http: HttpClient, attendanceDto: AttendanceDto): Observable<Attendance> {

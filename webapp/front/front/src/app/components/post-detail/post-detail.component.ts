@@ -7,13 +7,12 @@ import { PostService, CommentService, LikeService, UserSessionService } from "..
 
 @Component({
   selector: 'app-post',
-  templateUrl: './post.component.html',
+  templateUrl: './post-detail.component.html',
   styleUrls: ['../../app.component.css']
 })
-export class PostComponent implements OnInit {
-
+export class PostDetailComponent implements OnInit {
+  postSelf!: string;
   route: ActivatedRoute = inject(ActivatedRoute);
-  postUrn: string = this.route.snapshot.params['post'];
 
   public post: Post | undefined;
   public comments: Comment[] = [];
@@ -29,6 +28,7 @@ export class PostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.postSelf = this.route.snapshot.paramMap.get('id')!;
     this.loadLoggedUserUrn();
     this.loadPostData();
   }
@@ -49,16 +49,15 @@ export class PostComponent implements OnInit {
 
   private loadPostData(): void {
     this.getPost();
-    this.getComments();
   }
 
   public toggleLike(): void {
-    if (!this.loggedUserUrn || !this.postUrn) {
-      console.error("Cannot toggle like without a logged user or post URN");
+    if (!this.loggedUserUrn || !this.postSelf) {
+      console.error("Cannot toggle like without a logged user or post URI");
       return;
     }
 
-    // this.likeService.toggleLike(this.postUrn, this.loggedUserUrn).subscribe(
+    // this.likeService.toggleLike(this.postSelf, this.loggedUserUrn).subscribe(
     //   () => {
     //     this.isLikedByUser = !this.isLikedByUser;
     //     this.likeCount += this.isLikedByUser ? 1 : -1;
@@ -70,9 +69,9 @@ export class PostComponent implements OnInit {
   }
 
   public getLikeInformation(): void {
-    if (!this.postUrn || !this.loggedUserUrn) return;
+    if (!this.postSelf || !this.loggedUserUrn) return;
 
-    // this.likeService.isLikedByUser(this.postUrn, this.loggedUserUrn).subscribe(
+    // this.likeService.isLikedByUser(this.postSelf, this.loggedUserUrn).subscribe(
     //   (isLikedByUser: boolean) => {
     //     this.isLikedByUser = isLikedByUser;
     //   },
@@ -81,7 +80,7 @@ export class PostComponent implements OnInit {
     //   }
     // );
 
-    // this.likeService.getLikeCount(this.postUrn).subscribe(
+    // this.likeService.getLikeCount(this.postSelf).subscribe(
     //   (likeCount: number) => {
     //     this.likeCount = likeCount;
     //   },
@@ -91,19 +90,8 @@ export class PostComponent implements OnInit {
     // );
   }
 
-  public getComments(page: number = 1, size: number = 10): void {
-    this.commentService.getComments(this.postUrn, { page, size }).subscribe({
-      next: (comments: Comment[]) => {
-        this.comments = comments;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error fetching comments:', error);
-      }
-    });
-  }
-
   public getPost(): void {
-    this.postService.getPost(this.postUrn).subscribe({
+    this.postService.getPost(this.postSelf).subscribe({
       next: (post: Post) => {
         this.post = post;
       },
@@ -112,5 +100,4 @@ export class PostComponent implements OnInit {
       }
     });
   }
-
 }

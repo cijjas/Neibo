@@ -5,6 +5,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Inquiry } from '../../models/index';
 import { InquiryDto, UserDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class InquiryService {
@@ -22,20 +23,30 @@ export class InquiryService {
             page?: number;
             size?: number;
         } = {}
-    ): Observable<Inquiry[]> {
+    ): Observable<{ inquiries: Inquiry[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<InquiryDto[]>(url, { params }).pipe(
-            mergeMap((inquiriesDto: InquiryDto[]) => {
+        return this.http.get<InquiryDto[]>(url, { params, observe: 'response' }).pipe(
+            mergeMap((response) => {
+                const inquiriesDto: InquiryDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
                 const inquiryObservables = inquiriesDto.map(inquiryDto => mapInquiry(this.http, inquiryDto));
-                return forkJoin(inquiryObservables);
+                return forkJoin(inquiryObservables).pipe(
+                    map((inquiries) => {
+                        return {
+                            inquiries,
+                            totalPages: pagination.totalPages,
+                            currentPage: pagination.currentPage
+                        };
+                    })
+                );
             })
         );
     }
-
 }
 
 export function mapInquiry(http: HttpClient, inquiryDto: InquiryDto): Observable<Inquiry> {

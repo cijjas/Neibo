@@ -5,6 +5,7 @@ import { map, mergeMap } from 'rxjs/operators';
 import { Worker } from '../../models/index';
 import { WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class WorkerService {
@@ -29,7 +30,7 @@ export class WorkerService {
             withRole?: string;
             withStatus?: string;
         } = {}
-    ): Observable<Worker[]> {
+    ): Observable<{ workers: Worker[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -39,13 +40,27 @@ export class WorkerService {
         if (queryParams.withRole) params = params.set('withRole', queryParams.withRole);
         if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
 
-        return this.http.get<WorkerDto[]>(url, { params }).pipe(
-            mergeMap((workersDto: WorkerDto[]) => {
-                const workerObservables = workersDto.map(workerDto => mapWorker(this.http, workerDto));
-                return forkJoin(workerObservables);
-            })
-        );
+        return this.http
+            .get<WorkerDto[]>(url, { params, observe: 'response' })
+            .pipe(
+                mergeMap((response) => {
+                    const workersDto = response.body || [];
+                    const linkHeader = response.headers.get('Link');
+                    const paginationInfo = parseLinkHeader(linkHeader);
+
+                    const workerObservables = workersDto.map((workerDto) => mapWorker(this.http, workerDto));
+
+                    return forkJoin(workerObservables).pipe(
+                        map((workers) => ({
+                            workers,
+                            totalPages: paginationInfo.totalPages,
+                            currentPage: paginationInfo.currentPage,
+                        }))
+                    );
+                })
+            );
     }
+
 }
 
 export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Worker> {

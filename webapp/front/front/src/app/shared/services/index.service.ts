@@ -27,3 +27,4 @@ export * from './core/user-session.service';
 export * from './core/api.service';
 export * from './core/link.service';
 export * from './core/image.service';
+export * from './core/pagination.service'

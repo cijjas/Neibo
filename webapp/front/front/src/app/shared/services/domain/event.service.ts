@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Event } from '../../models/index';
 import { EventDto } from '../../dtos/app-dtos';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -22,18 +23,28 @@ export class EventService {
             size?: number;
             forDate?: string;
         } = {}
-    ): Observable<Event[]> {
+    ): Observable<{ events: Event[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
         if (queryParams.forDate) params = params.set('forDate', queryParams.forDate);
 
-        return this.http.get<EventDto[]>(url, { params }).pipe(
-            map((eventsDto: EventDto[]) => eventsDto.map(mapEvent))
+        return this.http.get<EventDto[]>(url, { params, observe: 'response' }).pipe(
+            map((response) => {
+                const eventsDto: EventDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
+                const events = eventsDto.map(mapEvent);
+
+                return {
+                    events,
+                    totalPages: pagination.totalPages,
+                    currentPage: pagination.currentPage
+                };
+            })
         );
     }
-
 }
 
 export function mapEvent(eventDto: EventDto): Event {

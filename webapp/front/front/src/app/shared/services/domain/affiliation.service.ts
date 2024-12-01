@@ -1,17 +1,15 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Affiliation } from '../../models/index';
 import { WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto } from '../../dtos/app-dtos';
 import { mapWorker } from './worker.service';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class AffiliationService {
-
-    constructor(
-        private http: HttpClient
-    ) { }
+    constructor(private http: HttpClient) { }
 
     public getAffiliation(url: string): Observable<Affiliation> {
         return this.http.get<AffiliationDto>(url).pipe(
@@ -27,7 +25,7 @@ export class AffiliationService {
             inNeighborhood?: string;
             forWorker?: string;
         } = {}
-    ): Observable<Affiliation[]> {
+    ): Observable<{ affiliations: Affiliation[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.inNeighborhood) params = params.set('inNeighborhood', queryParams.inNeighborhood);
@@ -35,28 +33,41 @@ export class AffiliationService {
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<AffiliationDto[]>(url, { params }).pipe(
-            mergeMap((affiliationsDto: AffiliationDto[]) => {
-                const affiliationObservables = affiliationsDto.map(affiliationDto => mapAffiliation(this.http, affiliationDto));
-                return forkJoin(affiliationObservables);
-            })
-        );
+        return this.http
+            .get<AffiliationDto[]>(url, { params, observe: 'response' })
+            .pipe(
+                mergeMap((response: HttpResponse<AffiliationDto[]>) => {
+                    const affiliationsDto = response.body || [];
+                    const linkHeader = response.headers.get('Link');
+                    const paginationInfo = parseLinkHeader(linkHeader);
+
+                    const affiliationObservables = affiliationsDto.map((affiliationDto) =>
+                        mapAffiliation(this.http, affiliationDto)
+                    );
+
+                    return forkJoin(affiliationObservables).pipe(
+                        map((affiliations) => ({
+                            affiliations,
+                            totalPages: paginationInfo.totalPages,
+                            currentPage: paginationInfo.currentPage,
+                        }))
+                    );
+                })
+            );
     }
 }
 
 export function mapAffiliation(http: HttpClient, affiliationDto: AffiliationDto): Observable<Affiliation> {
     return forkJoin([
-        http.get<WorkerDto>(affiliationDto._links.worker).pipe(mergeMap(workerDto => mapWorker(http, workerDto))),
+        http.get<WorkerDto>(affiliationDto._links.worker).pipe(mergeMap((workerDto) => mapWorker(http, workerDto))),
         http.get<NeighborhoodDto>(affiliationDto._links.neighborhood),
-        http.get<WorkerRoleDto>(affiliationDto._links.workerRole)
+        http.get<WorkerRoleDto>(affiliationDto._links.workerRole),
     ]).pipe(
-        map(([worker, neighborhoodDto, workerRoleDto]) => {
-            return {
-                worker: worker,
-                role: workerRoleDto.role,
-                neighborhoodName: neighborhoodDto.name,
-                self: affiliationDto._links.self
-            } as Affiliation;
-        })
+        map(([worker, neighborhoodDto, workerRoleDto]) => ({
+            worker: worker,
+            role: workerRoleDto.role,
+            neighborhoodName: neighborhoodDto.name,
+            self: affiliationDto._links.self,
+        }))
     );
 }
