@@ -135,12 +135,12 @@ export class CreatePostComponent implements OnInit {
           formValue.user = user.self;
 
           return combineLatest([
-            this.createTagsObservable(),
+            this.createTagsObservable(), // Handles cases with or without tags
             this.createImageObservable(formValue.imageFile)
           ]);
         }),
         switchMap(([tagUrls, imageUrl]) => {
-          formValue.tags = tagUrls.filter(tag => tag !== null);
+          formValue.tags = tagUrls.filter(tag => tag !== null); // Use an empty array if no tags
           if (imageUrl) formValue.image = imageUrl;
 
           return this.postService.createPost(formValue);
@@ -148,15 +148,8 @@ export class CreatePostComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          console.log('Post created successfully. Navigating...');
           this.router.navigate(['/posts'], {
             queryParams: { SPAInChannel: this.channel }
-          }).then(success => {
-            if (success) {
-              console.log('Navigation successful');
-            } else {
-              console.error('Navigation failed');
-            }
           });
         },
         error: error => console.error('Error creating post:', error)
@@ -164,7 +157,13 @@ export class CreatePostComponent implements OnInit {
   }
 
 
+
   private createTagsObservable(): Observable<string[]> {
+    if (this.tags.length === 0) {
+      // Return an observable of an empty array if no tags are present
+      return of([]);
+    }
+
     return forkJoin(
       this.tags.map(tag =>
         this.tagService.createTag(tag).pipe(
@@ -176,6 +175,7 @@ export class CreatePostComponent implements OnInit {
       )
     );
   }
+
 
   private createImageObservable(imageFile: File | null): Observable<string | null> {
     return imageFile

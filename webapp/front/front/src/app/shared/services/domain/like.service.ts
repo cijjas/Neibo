@@ -6,10 +6,14 @@ import { Like } from '../../models/index';
 import { LikeDto, PostDto } from '../../dtos/app-dtos';
 import { mapPost } from './post.service';
 import { parseLinkHeader } from './utils';
+import { HateoasLinksService } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class LikeService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private linksService: HateoasLinksService
+    ) { }
 
     public getLike(url: string): Observable<Like> {
         return this.http.get<LikeDto>(url).pipe(
@@ -50,6 +54,24 @@ export class LikeService {
                 );
             })
         );
+    }
+
+    public createLike(likeDto: LikeDto): Observable<LikeDto> {
+        const likesUrl = this.linksService.getLink('neighborhood:likes');  // Replace this with the correct URL for your API
+
+        return this.http.post<LikeDto>(likesUrl, likeDto);
+    }
+
+    public deleteLike(onPost: string, likedBy: string): Observable<void> {
+        const likesUrl = this.linksService.getLink('neighborhood:likes'); // Base URL for the likes resource
+
+        // Set up the query parameters for the DELETE request
+        const params = new HttpParams()
+            .set('onPost', onPost)
+            .set('likedBy', likedBy);
+
+        // Send the DELETE request
+        return this.http.delete<void>(likesUrl, { params });
     }
 }
 

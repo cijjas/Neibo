@@ -149,6 +149,9 @@ public class NeighborhoodDto {
             links.setImages(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .build());
+            links.setLikes(uriInfo.getBaseUriBuilder()
+                    .path("likes")
+                    .build());
         }
         dto.set_links(links);
         return dto;

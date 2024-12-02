@@ -61,8 +61,8 @@
                             <div *ngIf="loggedUser.role !== 'WORKER'" class="w-50">
                                 <div class="tags-input w-100">
                                     <label for="tag-input1" class="w-100">
-                                        <input #tagsInputElement type="text" id="tag-input1"
-                                            (keydown)="onTagInput($event)" placeholder="Enter a tag" />
+                                        <input type="text" id="tag-input1" (keydown)="onTagInput($event)"
+                                            placeholder="Enter a tag" />
                                     </label>
                                     <div class="tag-list">
                                         <span *ngFor="let tag of tags" class="tag">

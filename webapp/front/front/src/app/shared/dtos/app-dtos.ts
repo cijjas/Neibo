@@ -129,8 +129,10 @@ export interface LanguageDto {
 }
 
 export interface LikeDto {
-    likeDate: Date;
-    _links: Links;
+    user?: string;
+    post?: string;
+    likeDate?: Date;
+    _links?: Links;
 }
 
 export interface LikeCountDto {

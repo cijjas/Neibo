@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { formatDistanceToNow } from 'date-fns';
 import { Post, Tag } from '../../shared/models/index';
-import { ImageService } from '../../shared/services/core/image.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { HateoasLinksService, TagService } from '../../shared/services/index.service';
+import { ImageService, LikeService, HateoasLinksService, TagService } from '../../shared/services/index.service';
 
 @Component({
   selector: 'blogpost',
@@ -23,7 +22,8 @@ export class BlogpostComponent implements OnInit, OnDestroy {
   constructor(
     private linkStorage: HateoasLinksService,
     private imageService: ImageService,
-    private tagService: TagService
+    private tagService: TagService,
+    private LikeService: LikeService,
   ) { }
 
   ngOnInit(): void {
@@ -64,4 +64,10 @@ export class BlogpostComponent implements OnInit, OnDestroy {
     clearInterval(this.timer);
     this.subscriptions.unsubscribe();
   }
+
+
+
+
+
+
 }
