@@ -140,7 +140,7 @@ export class CreatePostComponent implements OnInit {
           ]);
         }),
         switchMap(([tagUrls, imageUrl]) => {
-          formValue.tags = tagUrls.filter(tag => tag !== null); // Filter out null tags
+          formValue.tags = tagUrls.filter(tag => tag !== null);
           if (imageUrl) formValue.image = imageUrl;
 
           return this.postService.createPost(formValue);
@@ -148,15 +148,21 @@ export class CreatePostComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.showSuccessMessage = true;
-          console.log("YENDO")
+          console.log('Post created successfully. Navigating...');
           this.router.navigate(['/posts'], {
             queryParams: { SPAInChannel: this.channel }
+          }).then(success => {
+            if (success) {
+              console.log('Navigation successful');
+            } else {
+              console.error('Navigation failed');
+            }
           });
         },
         error: error => console.error('Error creating post:', error)
       });
   }
+
 
   private createTagsObservable(): Observable<string[]> {
     return forkJoin(

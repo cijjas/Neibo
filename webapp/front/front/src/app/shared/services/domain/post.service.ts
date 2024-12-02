@@ -83,32 +83,45 @@ export class PostService {
 
     }
 
-    public createPost(postForm: PostDto): Observable<Post> {
+    public createPost(postForm: PostDto): Observable<string | null> {
         const createPostUrl = this.linkService.getLink('neighborhood:posts');
 
-        return this.http.post<PostDto>(createPostUrl, postForm).pipe(
-            mergeMap((postDto: PostDto) => mapPost(this.http, postDto))
+        return this.http.post<PostDto>(createPostUrl, postForm, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating post:', error);
+                return of(null);
+            })
         );
     }
 }
 
+// Cuando se crea un Post la API retorna
 export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
     return forkJoin([
-        http.get<ChannelDto>(postDto._links?.channel),
-        http.get<LikeCountDto>(postDto._links?.likeCount),
-        http.get<UserDto>(postDto._links?.postUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
+        http.get<ChannelDto>(postDto._links.channel),
+        http.get<LikeCountDto>(postDto._links.likeCount),
+        http.get<UserDto>(postDto._links.postUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
     ]).pipe(
         map(([channelDto, likeCountDto, user]) => {
             return {
                 title: postDto.title,
                 body: postDto.body,
                 createdAt: postDto.creationDate,
-                image: postDto._links?.postImage,
+                image: postDto._links.postImage,
                 channel: channelDto.name,
                 likeCount: likeCountDto.count,
-                comments: postDto._links?.comments,
+                comments: postDto._links.comments,
                 author: user,
-                self: postDto._links?.self
+                self: postDto._links.self
             } as Post;
         })
     );
