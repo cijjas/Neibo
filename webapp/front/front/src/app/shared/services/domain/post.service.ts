@@ -94,21 +94,21 @@ export class PostService {
 
 export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
     return forkJoin([
-        http.get<ChannelDto>(postDto._links.channel),
-        http.get<LikeCountDto>(postDto._links.likeCount),
-        http.get<UserDto>(postDto._links.postUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
+        http.get<ChannelDto>(postDto._links?.channel),
+        http.get<LikeCountDto>(postDto._links?.likeCount),
+        http.get<UserDto>(postDto._links?.postUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
     ]).pipe(
         map(([channelDto, likeCountDto, user]) => {
             return {
                 title: postDto.title,
                 body: postDto.body,
                 createdAt: postDto.creationDate,
-                image: postDto._links.postImage,
+                image: postDto._links?.postImage,
                 channel: channelDto.name,
                 likeCount: likeCountDto.count,
-                comments: postDto._links.comments,
+                comments: postDto._links?.comments,
                 author: user,
-                self: postDto._links.self
+                self: postDto._links?.self
             } as Post;
         })
     );

@@ -4,13 +4,19 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
+import { HateoasLinksService } from '../index.service';
+
 @Injectable({
     providedIn: 'root',
 })
 export class ImageService {
     private fallbackImage = 'assets/images/roundedPlaceholder.png';
 
-    constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+    constructor(
+        private http: HttpClient,
+        private sanitizer: DomSanitizer,
+        private linkService: HateoasLinksService
+    ) { }
 
     fetchImage(url: string | undefined | null): Observable<{ safeUrl: SafeUrl; isFallback: boolean }> {
         if (!url) {
@@ -36,6 +42,26 @@ export class ImageService {
             // Flatten the nested Observable
             switchMap((innerObservable) => innerObservable),
             catchError(() => of({ safeUrl: this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage), isFallback: true }))
+        );
+    }
+
+
+
+    createImage(image: File): Observable<string> {
+        const uploadUrl = this.linkService.getLink('neighborhood:images');
+
+        const formData: FormData = new FormData();
+        formData.append('imageFile', image, image.name);
+
+        return this.http.post(uploadUrl, formData, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    throw new Error('Location header not found in the response');
+                }
+            })
         );
     }
 }

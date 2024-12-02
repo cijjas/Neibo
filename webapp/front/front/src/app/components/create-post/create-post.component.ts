@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PostService, TagService, HateoasLinksService, UserSessionService } from '../../shared/services/index.service';
+import { PostService, TagService, HateoasLinksService, UserSessionService, ImageService } from '../../shared/services/index.service';
 import { Tag, Channel } from '../../shared/models/index';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
+import { catchError, combineLatest, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-create-post',
@@ -32,6 +32,7 @@ export class CreatePostComponent implements OnInit {
     private fb: FormBuilder,
     private postService: PostService,
     private tagService: TagService,
+    private imageService: ImageService,
     private linkService: HateoasLinksService,
     private router: Router,
     private route: ActivatedRoute,
@@ -49,7 +50,7 @@ export class CreatePostComponent implements OnInit {
       user: ['']
     });
 
-    // Get query param for channels
+    // Get Channel Query Param
     this.feedChannelUrl = this.linkService.getLink('neighborhood:feedChannel');
     this.announcementsChannelUrl = this.linkService.getLink('neighborhood:announcementsChannel');
     this.complaintsChannelUrl = this.linkService.getLink('neighborhood:complaintsChannel');
@@ -58,9 +59,8 @@ export class CreatePostComponent implements OnInit {
       this.channel = params['SPAInChannel'];
       this.updateChannelTitle();
     });
-    // this.createPostForm.channel = this.channel
 
-    // Fetch initial data
+    // Fetch Tags
     this.fetchTags();
   }
 
@@ -122,59 +122,63 @@ export class CreatePostComponent implements OnInit {
   // ------------------------- Creation Functions
 
   onSubmit() {
-    if (!this.createPostForm.valid) {
+    if (this.createPostForm.invalid) {
       console.error('Form is invalid');
       return;
     }
 
-    const formValue = this.createPostForm.value;
-    formValue.channel = this.channel;
+    const formValue = { ...this.createPostForm.value, channel: this.channel };
 
     this.userSessionService.getCurrentUser()
       .pipe(
         switchMap(user => {
           formValue.user = user.self;
 
-          // Create tags in parallel and collect URLs
-          const createTagObservables = this.tags.map(tag =>
-            this.tagService.createTag(tag).pipe(
-              catchError(error => {
-                console.error(`Error creating tag: ${tag}`, error);
-                return of(null); // Continue even if a tag fails
-              })
-            )
-          );
+          return combineLatest([
+            this.createTagsObservable(),
+            this.createImageObservable(formValue.imageFile)
+          ]);
+        }),
+        switchMap(([tagUrls, imageUrl]) => {
+          formValue.tags = tagUrls.filter(tag => tag !== null); // Filter out null tags
+          if (imageUrl) formValue.image = imageUrl;
 
-          return forkJoin(createTagObservables).pipe(
-            map(tagUrls => tagUrls.filter(url => url !== null)) // Remove null values
-          );
+          return this.postService.createPost(formValue);
         })
       )
       .subscribe({
-        next: tagUrls => {
-          formValue.tags = tagUrls;
-
-          console.log(formValue);
-
-          // Submit the post
-          this.postService.createPost(formValue).subscribe(
-            post => {
-              this.showSuccessMessage = true;
-              setTimeout(() => {
-                this.router.navigate(['/posts', this.channel]);
-              }, 2000);
-            },
-            error => {
-              console.error('Error creating post:', error);
-            }
-          );
+        next: () => {
+          this.showSuccessMessage = true;
+          console.log("YENDO")
+          this.router.navigate(['/posts'], {
+            queryParams: { SPAInChannel: this.channel }
+          });
         },
-        error: error => {
-          console.error('Error during submission:', error);
-        },
-        complete: () => console.log('Post submission process completed')
+        error: error => console.error('Error creating post:', error)
       });
   }
 
+  private createTagsObservable(): Observable<string[]> {
+    return forkJoin(
+      this.tags.map(tag =>
+        this.tagService.createTag(tag).pipe(
+          catchError(error => {
+            console.error(`Error creating tag: ${tag}`, error);
+            return of(null); // Continue even if a tag fails
+          })
+        )
+      )
+    );
+  }
 
+  private createImageObservable(imageFile: File | null): Observable<string | null> {
+    return imageFile
+      ? this.imageService.createImage(imageFile).pipe(
+        catchError(error => {
+          console.error('Error uploading image:', error);
+          return of(null); // Continue even if the image fails to upload
+        })
+      )
+      : of(null);
+  }
 }
