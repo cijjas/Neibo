@@ -57,7 +57,7 @@ export class LikeService {
     }
 
     public createLike(likeDto: LikeDto): Observable<LikeDto> {
-        const likesUrl = this.linksService.getLink('neighborhood:likes');  // Replace this with the correct URL for your API
+        const likesUrl = this.linksService.getLink('neighborhood:likes');
 
         return this.http.post<LikeDto>(likesUrl, likeDto);
     }

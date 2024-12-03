@@ -38,7 +38,6 @@ export class PostDetailComponent implements OnInit {
       (user) => {
         if (user) {
           this.loggedUserUrn = user.self;
-          this.getLikeInformation();
         }
       },
       (error: any) => {
@@ -51,44 +50,8 @@ export class PostDetailComponent implements OnInit {
     this.getPost();
   }
 
-  public toggleLike(): void {
-    if (!this.loggedUserUrn || !this.postSelf) {
-      console.error("Cannot toggle like without a logged user or post URI");
-      return;
-    }
 
-    // this.likeService.toggleLike(this.postSelf, this.loggedUserUrn).subscribe(
-    //   () => {
-    //     this.isLikedByUser = !this.isLikedByUser;
-    //     this.likeCount += this.isLikedByUser ? 1 : -1;
-    //   },
-    //   (error: HttpErrorResponse) => {
-    //     console.error('Error toggling like:', error);
-    //   }
-    // );
-  }
 
-  public getLikeInformation(): void {
-    if (!this.postSelf || !this.loggedUserUrn) return;
-
-    // this.likeService.isLikedByUser(this.postSelf, this.loggedUserUrn).subscribe(
-    //   (isLikedByUser: boolean) => {
-    //     this.isLikedByUser = isLikedByUser;
-    //   },
-    //   (error: HttpErrorResponse) => {
-    //     console.error('Error fetching like information:', error);
-    //   }
-    // );
-
-    // this.likeService.getLikeCount(this.postSelf).subscribe(
-    //   (likeCount: number) => {
-    //     this.likeCount = likeCount;
-    //   },
-    //   (error: HttpErrorResponse) => {
-    //     console.error('Error fetching like count:', error);
-    //   }
-    // );
-  }
 
   public getPost(): void {
     this.postService.getPost(this.postSelf).subscribe({

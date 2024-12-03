@@ -52,6 +52,20 @@ export class CommentService {
                 })
             );
     }
+
+    public createComment(
+        url: string,
+        comment: string,
+        userUrl: string
+    ): Observable<Comment> {
+        const body = {
+            message: comment,
+            user: userUrl,
+        };
+
+        return this.http.post<Comment>(url, body);
+    }
+
 }
 
 export function mapComment(http: HttpClient, commentDto: CommentDto): Observable<Comment> {

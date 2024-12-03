@@ -81,7 +81,6 @@ export class UpperFeedButtonsComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { SPAWithStatus: this.latestUrl },
-      queryParamsHandling: 'merge'
     })
     this.updateStatusClass()
   }
@@ -90,7 +89,6 @@ export class UpperFeedButtonsComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { SPAWithStatus: this.hotUrl },
-      queryParamsHandling: 'merge'
     })
     this.updateStatusClass()
 
@@ -100,7 +98,6 @@ export class UpperFeedButtonsComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { SPAWithStatus: this.trendingUrl },
-      queryParamsHandling: 'merge'
     })
     this.updateStatusClass()
   }

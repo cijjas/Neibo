@@ -33,12 +33,12 @@
     </div>
 
     <!-- Like and Tags section -->
-    <!-- <div class="row">
+    <div class="row">
         <div class="col-6">
             <div class="ml-2 d-flex flex-column justify-content-start align-items-start">
                 <div class="f-r-c-c">
                     <span (click)="toggleLike()" class="post-like-button pl-3 pr-3 pt-2 pb-2" [class.liked]="isLiked">
-                        <span class="mr-1">{{ likeCount }}</span>
+                        <span class="mr-1">{{ post.likeCount }}</span>
                         <i class="fa-solid fa-thumbs-up"></i>
                     </span>
                 </div>
@@ -47,32 +47,31 @@
         <div class="col-6">
             <div class="mr-2">
                 <div class="w-100 d-flex flex-row justify-content-end align-items-center flex-wrap"
-                    *ngIf="post.tags && post.tags.length > 0">
-                    <a *ngFor="let tag of post.tags" class="post-tag static m-l-3 m-r-3" [routerLink]="['/posts']"
-                        [queryParams]="{ tag: tag }">
-                        {{ tag }}
+                    *ngIf="tags.length > 0">
+                    <a *ngFor="let tag of tags" class="post-tag static m-l-3 m-r-3" [routerLink]="['/posts']"
+                        [queryParams]="{ tag: tag.name }">
+                        {{ tag.name }}
                     </a>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Comments section -->
     <div class="comments-section">
-        <!-- Remove or comment out the input box for adding new comments -->
-        <!--
         <div style="margin: 10px 0 10px 0;">
-            <textarea [(ngModel)]="newComment" class="cool-input grey-input textarea-min-max" rows="3"
-                placeholder="Comment"></textarea>
-            <div class="d-flex flex-column justify-content-center align-items-end">
-                <button (click)="submitComment()" class="cool-button cool-small on-bg w-25 font-weight-bolder"
-                    style="margin-top:5px; font-size: 12px;" [disabled]="!newComment.trim()">
-                    Comment
-                </button>
-            </div>
+            <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+                <textarea formControlName="comment" class="cool-input grey-input textarea-min-max" rows="3"
+                    placeholder="Add a comment"></textarea>
+                <div class="d-flex flex-column justify-content-center align-items-end">
+                    <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder"
+                        style="margin-top:5px; font-size: 12px;" [disabled]="commentForm.invalid">
+                        Comment
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="divider"></div>
-        -->
+
         <h3>Comments</h3>
 
 

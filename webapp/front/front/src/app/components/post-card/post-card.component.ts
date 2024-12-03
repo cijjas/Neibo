@@ -1,11 +1,12 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { formatDistanceToNow } from 'date-fns';
-import { Post, Comment } from '../../shared/models';
+import { Post, Comment, Tag } from '../../shared/models';
 import { ImageService } from '../../shared/services/core/image.service';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { CommentService, HateoasLinksService } from '../../shared/services/index.service';
+import { CommentService, HateoasLinksService, LikeService, TagService, UserSessionService } from '../../shared/services/index.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-post-card',
@@ -22,43 +23,158 @@ export class PostCardComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   pageSize: number = 10;
   isPostImageFallback: boolean = false;
+  commentForm: FormGroup;
   private subscriptions: Subscription = new Subscription();
   private timer: any;
 
+  tags: Tag[] = [];
+  isLiked: boolean = false; // Like status
+  likesUrl: string | undefined;
   constructor(
+    private fb: FormBuilder,
     private imageService: ImageService,
     private commentService: CommentService,
     private linkStorage: HateoasLinksService,
+    private likeService: LikeService,
+    private tagService: TagService,
+    private userSessionService: UserSessionService,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    //
+
+    this.commentForm = this.fb.group({
+      comment: ['', [Validators.required, Validators.minLength(3)]],
+    });
+
+    this.likesUrl = this.linkStorage.getLink('neighborhood:likes');
+    const tagLink = this.linkStorage.getLink('neighborhood:tags');
+
+    this.loadLikeStatus();
+    this.fetchTags(tagLink);
+
     // Monitor query parameters
     this.route.queryParams.subscribe((params) => {
       this.currentPage = +params['page'] || 1; // Default to page 1
       this.pageSize = +params['size'] || 10; // Default to size 10
-
-      // Fetch comments based on query parameters
       this.getComments(this.currentPage, this.pageSize);
     });
 
-    // Set human-readable date
     this.updateHumanReadableDate();
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
-    // Fetch post image
     const postImageSub = this.imageService.fetchImage(this.post.image).subscribe(({ safeUrl, isFallback }) => {
       this.postImageSafeUrl = safeUrl;
       this.isPostImageFallback = isFallback;
     });
     this.subscriptions.add(postImageSub);
 
-    // Fetch author's profile image
     const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe(({ safeUrl }) => {
       this.authorImageSafeUrl = safeUrl;
     });
     this.subscriptions.add(authorImageSub);
+  }
+
+
+  /**
+   * Likes
+   */
+  private loadLikeStatus(): void {
+    if (this.likesUrl) {
+      this.likeService.getLikes(this.likesUrl, { onPost: this.post.self }).subscribe({
+        next: (response) => {
+          this.isLiked = response.likes.some((like) => like.post.self === this.post.self);
+        },
+        error: (err) => {
+          console.error('Error fetching like status:', err);
+        },
+      });
+    }
+  }
+
+
+  toggleLike(): void {
+    if (this.isLiked) {
+      this.unlikePost();
+    } else {
+      this.likePost();
+    }
+  }
+
+  private likePost(): void {
+    this.userSessionService.getCurrentUser().subscribe((user) => {
+      if (this.likesUrl) {
+        this.likeService.createLike({ post: this.post.self, user: user.self }).subscribe({
+          next: () => {
+            this.isLiked = true;
+            this.post.likeCount++;
+          },
+          error: (err) => {
+            console.error('Error liking post:', err);
+          },
+        });
+      }
+    });
+  }
+
+  private unlikePost(): void {
+    this.userSessionService.getCurrentUser().subscribe((user) => {
+      if (this.likesUrl) {
+        this.likeService.deleteLike(this.post.self, user.self).subscribe({
+          next: () => {
+            this.isLiked = false;
+            this.post.likeCount--;
+          },
+          error: (err) => {
+            console.error('Error unliking post:', err);
+          },
+        });
+      }
+    });
+  }
+
+  private fetchTags(tagLink: string | undefined): void {
+    if (tagLink) {
+      this.tagService.getTags(tagLink, { onPost: this.post.self }).subscribe({
+        next: (tags) => {
+          this.tags = tags || [];
+        },
+        error: (err) => {
+          console.error('Error fetching tags:', err);
+          this.tags = [];
+        },
+      });
+    }
+  }
+
+
+  /**
+   * Comments
+   */
+  addComment() {
+    if (this.commentForm.invalid) {
+      console.error('Comment form is invalid');
+      return;
+    }
+
+    // Get the current user
+    this.userSessionService.getCurrentUser().subscribe((user) => {
+      // Submit the comment
+      this.commentService.createComment(this.post.comments, this.commentForm.get('comment')?.value, user.self).subscribe({
+        next: (createdComment) => {
+          // Reset the form
+          this.commentForm.reset();
+
+          // Refresh the comments list
+          this.getComments(this.currentPage, this.pageSize);
+        },
+        error: (error) => {
+          console.error('Error creating comment:', error);
+        },
+      });
+    });
   }
 
   getComments(page: number, size: number): void {

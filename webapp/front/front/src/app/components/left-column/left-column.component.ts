@@ -34,7 +34,12 @@ export class LeftColumnComponent implements OnInit {
   }
 
   // This method updates the channelClass based on the current SPAInChannel param
-  updateChannelClass() {
+  updateChannelClass(): void {
+    const defaultChannel = this.linkService.getLink('neighborhood:feedChannel');
+    if (!this.channel) {
+      this.channel = defaultChannel; // Default to Feed if channel is not set
+    }
+
     if (this.channel === this.feedChannelUrl) {
       this.channelClass = 'Feed';
     } else if (this.channel === this.announcementsChannelUrl) {
@@ -44,31 +49,34 @@ export class LeftColumnComponent implements OnInit {
     }
   }
 
+
   changeChannelToComplaints(): void {
-    this.router.navigate([], {
+    this.router.navigate(['/posts'], {
       relativeTo: this.route,
       queryParams: { SPAInChannel: this.complaintsChannelUrl },
-      queryParamsHandling: 'merge'
-    })
-    this.updateChannelClass();
+    }).then(() => {
+      this.updateChannelClass();
+    });
   }
 
   changeChannelToAnnouncements(): void {
-    this.router.navigate([], {
+    this.router.navigate(['/posts'], {
       relativeTo: this.route,
       queryParams: { SPAInChannel: this.announcementsChannelUrl },
-      queryParamsHandling: 'merge'
-    })
-    this.updateChannelClass();
+    }).then(() => {
+      this.updateChannelClass();
 
+    });
   }
 
   changeChannelToFeed(): void {
-    this.router.navigate([], {
+    this.router.navigate(['/posts'], {
       relativeTo: this.route,
       queryParams: { SPAInChannel: this.feedChannelUrl },
-      queryParamsHandling: 'merge'
-    })
-    this.updateChannelClass();
+    }).then(() => {
+      this.updateChannelClass();
+    });
   }
+
+
 }

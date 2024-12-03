@@ -6,6 +6,7 @@ import { Links } from '../../dtos/app-dtos';
 })
 export class HateoasLinksService {
     private storageKey = 'hateoas-links';
+    private links: { [key: string]: string } = {};
 
     constructor() {
         // Initialize links from sessionStorage if available
@@ -15,7 +16,6 @@ export class HateoasLinksService {
         }
     }
 
-    private links: { [key: string]: string } = {};
 
     /**
      * Stores a link with a specific key.

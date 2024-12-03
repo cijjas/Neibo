@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../../../environments/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { catchError, map, mergeMap, Observable, of } from "rxjs";
+import { catchError, forkJoin, map, mergeMap, Observable, of, tap } from "rxjs";
 import { User } from "../../models/index";
 import { UserSessionService } from "./user-session.service";
 import { Links, NeighborhoodDto, UserDto } from "../../dtos/app-dtos";
@@ -33,7 +33,7 @@ export class AuthService {
         this.clearAccessToken(); // Clear old token
 
         return this.http.get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' }).pipe(
-            map((response) => {
+            mergeMap((response) => {
                 // Handle Access Token
                 const accessToken = response.headers.get('X-Access-Token');
                 if (accessToken) {
@@ -41,43 +41,43 @@ export class AuthService {
                     this.userSessionService.setAccessToken(accessToken);
                 }
 
-                // Handle Refresh Token
-                const refreshToken = response.headers.get('X-Refresh-Token');
-                if (refreshToken) {
-                    // Logic for refresh token handling (TODO)
-                }
-
-                // Handle User URL
+                // Extract User and Neighborhood URLs
                 const userUrl = response.headers.get('X-User-URL')?.split(';')[0].replace(/[<>]/g, '');
-                if (userUrl) {
-                    this.http.get<UserDto>(userUrl).pipe(
-                        mergeMap((userDto) => {
-                            this.saveLinksFromDto(userDto._links, 'user'); // Save links
-                            return mapUser(this.http, userDto);
-                        })
-                    ).subscribe({
-                        next: (user) => this.userSessionService.setUserInformation(user),
-                        error: (error) => console.error('Error fetching user:', error),
-                    });
-                }
-
-                // Handle Neighborhood URL
                 const neighborhoodUrl = response.headers.get('X-Neighborhood-URL')?.split(';')[0].replace(/[<>]/g, '');
-                if (neighborhoodUrl) {
-                    this.http.get<NeighborhoodDto>(neighborhoodUrl).subscribe({
-                        next: (neighborhoodDto) => {
-                            this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood');
-                            this.userSessionService.setNeighborhoodInformation(
-                                mapNeighborhood(neighborhoodDto)
-                            );
-                        },
-                        error: (error) => console.error('Error fetching neighborhood:', error),
-                    });
-                }
 
-                this.hateoasLinksService.logLinks();
+                // Prepare Observables for user and neighborhood
+                const userObservable = userUrl ? this.http.get<UserDto>(userUrl).pipe(
+                    mergeMap((userDto) => {
+                        this.saveLinksFromDto(userDto._links, 'user');
+                        return mapUser(this.http, userDto);
+                    }),
+                    tap((user) => this.userSessionService.setUserInformation(user)),
+                    catchError((error) => {
+                        console.error('Error fetching user:', error);
+                        return of(null);
+                    })
+                ) : of(null);
 
-                return true;
+                const neighborhoodObservable = neighborhoodUrl ? this.http.get<NeighborhoodDto>(neighborhoodUrl).pipe(
+                    tap((neighborhoodDto) => {
+                        this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood');
+                        this.userSessionService.setNeighborhoodInformation(
+                            mapNeighborhood(neighborhoodDto)
+                        );
+                    }),
+                    catchError((error) => {
+                        console.error('Error fetching neighborhood:', error);
+                        return of(null);
+                    })
+                ) : of(null);
+
+                // Wait for both Observables to complete
+                return forkJoin([userObservable, neighborhoodObservable]).pipe(
+                    mergeMap(() => {
+                        // Poll until all links are loaded
+                        return this.waitForLinksToLoad();
+                    })
+                );
             }),
             catchError((error) => {
                 console.error('Authentication error:', error);
@@ -110,10 +110,57 @@ export class AuthService {
     }
 
     // Helpers
-
     private saveLinksFromDto(links: Partial<Record<string, string>>, namespace: string): void {
         for (const [key, value] of Object.entries(links)) {
             this.hateoasLinksService.setLink(`${namespace}:${key}`, value);
         }
+    }
+
+    private waitForLinksToLoad(): Observable<boolean> {
+        const requiredLinks = [
+            'neighborhood:announcements',
+            'neighborhood:announcementsChannel',
+            'neighborhood:channels',
+            'neighborhood:complaints',
+            'neighborhood:complaintsChannel',
+            'neighborhood:contacts',
+            'neighborhood:events',
+            'neighborhood:feed',
+            'neighborhood:feedChannel',
+            'neighborhood:hotPostStatus',
+            'neighborhood:images',
+            'neighborhood:likes',
+            'neighborhood:nonePostStatus',
+            'neighborhood:posts',
+            'neighborhood:resources',
+            'neighborhood:self',
+            'neighborhood:tags',
+            'neighborhood:trendingPostStatus',
+            'neighborhood:users',
+            'neighborhood:workers',
+            'user:bookings',
+            'user:language',
+            'user:likedPosts',
+            'user:neighborhood',
+            'user:posts',
+            'user:purchases',
+            'user:requests',
+            'user:sales',
+            'user:self',
+            'user:userRole'
+        ];
+
+        return new Observable<boolean>((observer) => {
+            const interval = setInterval(() => {
+                const allLinksLoaded = requiredLinks.every((link) =>
+                    !!this.hateoasLinksService.getLink(link)
+                );
+                if (allLinksLoaded) {
+                    clearInterval(interval);
+                    observer.next(true);
+                    observer.complete();
+                }
+            }, 100);
+        });
     }
 }

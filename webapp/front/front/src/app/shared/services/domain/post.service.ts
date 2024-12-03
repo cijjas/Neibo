@@ -39,31 +39,29 @@ export class PostService {
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
         if (queryParams.inChannel) params = params.set('inChannel', queryParams.inChannel);
-        if (queryParams.withTags) params = params.set('withTags', queryParams.withTags.join(','));
+        if (queryParams.withTags && queryParams.withTags.length > 0) params = params.set('withTags', queryParams.withTags.join(','));
         if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
         if (queryParams.postedBy) params = params.set('postedBy', queryParams.postedBy);
 
         return this.http
             .get<PostDto[]>(postsUrl, { params, observe: 'response' })
             .pipe(
-                map((response) => {
-                    // Explicitly handle 204 No Content
-                    if (response.status === 204) {
-                        return {
-                            postsDto: [],
-                            paginationInfo: { totalPages: 0, currentPage: 0 },
-                        };
+                mergeMap((response) => {
+                    // Handle 204 No Content response
+                    if (response.status === 204 || !response.body) {
+                        return of({
+                            posts: [],
+                            totalPages: 0,
+                            currentPage: 0,
+                        });
                     }
 
-                    // Normal response handling
+                    // Parse the response for normal cases
                     const postsDto = response.body || [];
                     const linkHeader = response.headers.get('Link');
                     const paginationInfo = linkHeader ? parseLinkHeader(linkHeader) : { totalPages: 0, currentPage: 0 };
 
-                    return { postsDto, paginationInfo };
-                }),
-                mergeMap(({ postsDto, paginationInfo }) => {
-                    // Ensure postsDto is an array, even for 204 responses
+                    // Process the posts
                     const postObservables = postsDto.map((postDto) => mapPost(this.http, postDto));
 
                     return forkJoin(postObservables).pipe(
@@ -76,12 +74,12 @@ export class PostService {
                 }),
                 catchError((error) => {
                     console.error('Error fetching posts:', error);
-                    // Return an empty result to prevent application crash
                     return of({ posts: [], totalPages: 0, currentPage: 0 });
                 })
             );
-
     }
+
+
 
     public createPost(postForm: PostDto): Observable<string | null> {
         const createPostUrl = this.linkService.getLink('neighborhood:posts');

@@ -59,22 +59,22 @@ export class LoginDialogComponent
           next: (success) => {
             this.loading = false;
             if (success) {
-              const feedChannelUrl = this.linkStorage.getLink('neighborhood:feedChannel')
-              const nonePostStatus = this.linkStorage.getLink('neighborhood:nonePostStatus')
+              const feedChannelUrl = this.linkStorage.getLink('neighborhood:feedChannel');
+              const nonePostStatus = this.linkStorage.getLink('neighborhood:nonePostStatus');
               this.router.navigate(['/posts'], { queryParams: { SPAInChannel: feedChannelUrl, SPAWithStatus: nonePostStatus } }).then(() => {
                 this.closeLoginDialog();
               });
             } else {
               this.loginFailed = true;
               this.loading = false;
-              this.clearPasswordField(); // Clear the password field
+              this.clearPasswordField();
               this.triggerViewUpdate();
             }
           },
           error: (error) => {
             this.loginFailed = true;
             this.loading = false;
-            this.clearPasswordField(); // Clear the password field
+            this.clearPasswordField();
             console.error('Login failed:', error);
             this.triggerViewUpdate();
           }
@@ -85,6 +85,7 @@ export class LoginDialogComponent
       this.triggerViewUpdate();
     }
   }
+
 
   clearPasswordField(): void {
     this.loginForm.get('password')?.reset(); // Reset the password field

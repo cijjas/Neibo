@@ -21,6 +21,7 @@ export class FeedComponent implements OnInit {
   totalPages: number = 0;
   channel: string;
   postStatus: string;
+  tags: string[] = [];
 
   constructor(
     private postService: PostService,
@@ -30,13 +31,39 @@ export class FeedComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const defaultChannel = this.linkService.getLink('neighborhood:feedChannel');
+    const defaultStatus = this.linkService.getLink('neighborhood:nonePostStatus');
+
     this.route.queryParams
       .pipe(
         switchMap((params) => {
-          this.currentPage = +params['page'] || 1; // Default to page 1
-          this.pageSize = +params['size'] || 10; // Default to 10 posts per page
-          this.channel = params['SPAInChannel'] || this.linkService.getLink('neighborhood:complaintsChannel');
-          this.postStatus = params['SPAWithStatus'] || this.linkService.getLink('neighborhood:nonePostStatus');
+          this.currentPage = +params['page'] || 1;
+          this.pageSize = +params['size'] || 10;
+          this.channel = params['SPAInChannel'] || defaultChannel;
+          this.postStatus = params['SPAWithStatus'] || defaultStatus;
+          // Tag Handling medio falopa
+          const tagsParam = params['SPAWithTags'];
+          this.tags = tagsParam ? (Array.isArray(tagsParam) ? tagsParam : [tagsParam]) : []; // Ensure tags are always an array
+
+          // Add default query parameters if missing
+          const missingParams: any = {};
+          if (!params['SPAInChannel']) {
+            missingParams['SPAInChannel'] = defaultChannel;
+          }
+          if (!params['SPAWithStatus']) {
+            missingParams['SPAWithStatus'] = defaultStatus;
+          }
+
+          // Navigate to default parameters if any are missing
+          if (Object.keys(missingParams).length > 0) {
+            this.router.navigate([], {
+              relativeTo: this.route,
+              queryParams: { ...missingParams },
+              queryParamsHandling: 'merge',
+            });
+          }
+
+
           return this.loadPosts();
         })
       )
@@ -50,16 +77,19 @@ export class FeedComponent implements OnInit {
   }
 
   loadPosts(): Observable<void> {
-    const queryParams = { page: this.currentPage, size: this.pageSize, inChannel: this.channel, withStatus: this.postStatus };
+    const queryParams = { page: this.currentPage, size: this.pageSize, inChannel: this.channel, withStatus: this.postStatus, withTags: this.tags };
+
     return this.postService
       .getPosts(this.linkService.getLink('neighborhood:posts'), queryParams)
       .pipe(
         map((response) => {
           if (response) {
+
             this.postList = response.posts;
             this.totalPages = response.totalPages;
             this.currentPage = response.currentPage;
           } else {
+
             this.postList = [];
             this.totalPages = 0;
           }
@@ -67,6 +97,7 @@ export class FeedComponent implements OnInit {
           this.loading = false;
         }),
         catchError((error) => {
+
           console.error('Error loading posts:', error);
           this.postList = [];
           this.totalPages = 0;
