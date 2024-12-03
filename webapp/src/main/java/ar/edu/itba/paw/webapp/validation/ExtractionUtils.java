@@ -80,4 +80,10 @@ public class ExtractionUtils {
             throw new IllegalArgumentException("Invalid Date");
         }
     }
+
+    public static Date extractOptionalDate(String date) {
+        if (date == null)
+            return null;
+        return extractDate(date);
+    }
 }

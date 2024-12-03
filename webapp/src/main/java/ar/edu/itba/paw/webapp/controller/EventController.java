@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractDate;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalDate;
 
 
 /*
@@ -63,14 +64,17 @@ public class EventController {
     @GET
     public Response listEventsByDate(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @QueryParam("forDate") @DateConstraint final Date date,
+            @QueryParam("forDate") @DateConstraint final String date,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
+        // Extract Date
+        Date extractedDate = extractOptionalDate(date);
+
         // Content
-        final List<Event> events = es.getEvents(date, neighborhoodId, page, size);
+        final List<Event> events = es.getEvents(extractedDate, neighborhoodId, page, size);
         String eventsHashCode = String.valueOf(events.hashCode());
 
         // Cache Control
@@ -90,7 +94,7 @@ public class EventController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events",
-                es.calculateEventPages(date, neighborhoodId, size),
+                es.calculateEventPages(extractedDate, neighborhoodId, size),
                 page,
                 size
         );

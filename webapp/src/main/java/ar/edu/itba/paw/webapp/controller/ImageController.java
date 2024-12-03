@@ -72,13 +72,13 @@ public class ImageController {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Secured({"ROLE_REJECTED", "ROLE_UNVERIFIED_NEIGHBOR", "ROLE_WORKER", "ROLE_NEIGHBOR", "ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response storeImage(
             @FormDataParam("imageFile") InputStream fileInputStream,
             @FormDataParam("imageFile") FormDataContentDisposition fileDetail
     ) {
         LOGGER.info("POST request arrived at '/images/'");
 
-        // ??
         if (fileInputStream == null) {
             LOGGER.warn("Null Image InputStream");
             return Response.ok().build();

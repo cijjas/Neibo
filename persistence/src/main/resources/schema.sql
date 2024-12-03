@@ -127,7 +127,7 @@ create table if not exists comments
         constraint comments_pkey
             primary key,
     comment varchar(512) not null,
-    commentdate date not null,
+    commentdate timestamp not null,
     userid bigint not null
         constraint fk_comments_users
             references users

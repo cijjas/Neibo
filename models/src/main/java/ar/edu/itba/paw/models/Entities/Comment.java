@@ -19,7 +19,7 @@ public class Comment {
     private String comment;
 
     @Column(name = "commentdate", nullable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @ManyToOne

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
  * # Summary
@@ -51,12 +51,12 @@ public class ShiftController {
     @GET
     public Response getShifts(
             @QueryParam("forAmenity") @AmenityURNConstraint final String amenity,
-            @QueryParam("forDate") @DateConstraint final Date date
+            @QueryParam("forDate") @DateConstraint final String date
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Content
-        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(amenity), date);
+        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(amenity), extractOptionalDate(date));
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control

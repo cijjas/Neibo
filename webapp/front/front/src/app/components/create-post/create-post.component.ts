@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PostService, TagService, HateoasLinksService, UserSessionService, ImageService } from '../../shared/services/index.service';
 import { Tag, Channel } from '../../shared/models/index';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, combineLatest, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, combineLatest, forkJoin, map, Observable, of, switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-create-post',
@@ -131,16 +131,17 @@ export class CreatePostComponent implements OnInit {
 
     this.userSessionService.getCurrentUser()
       .pipe(
+        take(1), // Ensures the observable completes after the first emission
         switchMap(user => {
           formValue.user = user.self;
 
           return combineLatest([
-            this.createTagsObservable(), // Handles cases with or without tags
+            this.createTagsObservable(),
             this.createImageObservable(formValue.imageFile)
           ]);
         }),
         switchMap(([tagUrls, imageUrl]) => {
-          formValue.tags = tagUrls.filter(tag => tag !== null); // Use an empty array if no tags
+          formValue.tags = tagUrls.filter(tag => tag !== null);
           if (imageUrl) formValue.image = imageUrl;
 
           return this.postService.createPost(formValue);
@@ -155,8 +156,6 @@ export class CreatePostComponent implements OnInit {
         error: error => console.error('Error creating post:', error)
       });
   }
-
-
 
   private createTagsObservable(): Observable<string[]> {
     if (this.tags.length === 0) {
