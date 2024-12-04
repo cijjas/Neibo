@@ -19,13 +19,12 @@ public class DateValidator implements ConstraintValidator<DateConstraint, String
         if (date == null || date.trim().isEmpty())
             return true;
 
-        Date parsedDate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            parsedDate = dateFormat.parse(date);
+           dateFormat.parse(date);
         } catch (ParseException e) {
             return false;
         }
-        return parsedDate.after(new Date(System.currentTimeMillis()));
+        return true;
     }
 }

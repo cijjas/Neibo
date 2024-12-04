@@ -1,0 +1,31 @@
+<!-- Include your navbar component here -->
+<app-navbar></app-navbar>
+
+<div class="container f-c-c-c">
+    <div class="row w-100">
+        <div class="col-lg-8 w-100 m-b-20">
+            <!-- Include the calendar box component -->
+            <app-calendar-box [selectedDate]="selectedDate"></app-calendar-box>
+        </div>
+        <div class="col-lg-4 h-100 w-100">
+            <div class="f-c-c-c">
+                <div class="upper-feed-buttons-box w-100" style="padding: 20px">
+                    <div class="f-c-c-c w-100">
+                        <div>
+                            <p style="font-size: 32px; color: var(--primary); text-align: center">
+                                Events
+                            </p>
+                            <p style="font-size: 16px;">{{ formattedSelectedDate }}</p>
+                        </div>
+                        <div class="divider m-b-20"></div>
+                        <!-- Include the events column component -->
+                        <app-calendar-events-column [selectedDate]="selectedDate"></app-calendar-events-column>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include your footer component here -->
+<app-wave-footer></app-wave-footer>

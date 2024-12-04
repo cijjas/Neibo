@@ -120,8 +120,10 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
                 ar.edu.itba.paw.webapp.security
 
                 <!-- comment these to deactivate exception catchers -->
+<!--
                 ar.edu.itba.paw.webapp.mappers,
                 ar.edu.itba.paw.webapp.mappers.jax,
+-->
             </param-value>
         </init-param>
         <!-- pass to next filter if Jersey/App returns 404 -->

@@ -1,0 +1,27 @@
+<div class="blogpost p-3">
+    <div class="row w-100">
+        <div class="col-{{ isAdmin ? '10' : '12' }}" style="overflow: hidden; text-overflow: ellipsis;">
+            <a [routerLink]="['/events', event.self]">
+                <div>{{ event.name }}</div>
+            </a>
+        </div>
+        <div class="col-2" *ngIf="isAdmin">
+            <span class="admin-link">
+                <a [routerLink]="['/admin/delete-event', event.self]" [queryParams]="{ timestamp: selectedTimestamp }"
+                    class="btn btn-link">
+                    <i class="fas fa-trash" style="color: var(--error);"></i>
+                </a>
+            </span>
+        </div>
+    </div>
+    <a [routerLink]="['/events', event.self]">
+        <p style="font-size: 12px; font-weight: normal">
+            {{ event.startTime }} - {{ event.endTime }}
+        </p>
+        <p style="font-size: 12px; font-weight: normal">{{ event.duration }} Minutes</p>
+        <div class="divider"></div>
+        <div class="postcard-description m-t-40" style="overflow: clip">
+            {{ event.description }}
+        </div>
+    </a>
+</div>

@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { EventService } from '../../shared/services/domain/event.service';
 import { HateoasLinksService } from '../../shared/services/index.service';
 
 @Component({
-  selector: 'app-calendar-widget',
-  templateUrl: './calendar-widget.component.html',
+  selector: 'app-calendar-box',
+  templateUrl: './calendar-box.component.html',
 })
-export class CalendarWidgetComponent implements OnInit {
+export class CalendarBoxComponent implements OnInit {
+  @Input() selectedDate: Date;
   isLoading = true;
   currentDate: string = '';
-  weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  days: Array<{ date: number; month: number; year: number; inactive: boolean; today: boolean; event: boolean }> = [];
+  weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  days: Array<any> = [];
   eventTimestamps: number[] = [];
   date = new Date();
   placeholders = Array(5).fill(0);
-
-  events: Event
+  isAdmin = false; // Set this based on your authentication logic
 
   constructor(
     private eventService: EventService,
@@ -23,6 +23,7 @@ export class CalendarWidgetComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.date = new Date(this.selectedDate);
     this.renderCalendar();
     this.loadEventTimestamps();
   }
@@ -48,7 +49,6 @@ export class CalendarWidgetComponent implements OnInit {
       },
     });
   }
-
   private getDatesInMonth(year: number, month: number): Date[] {
     const date = new Date(year, month, 1);
     const dates = [];
@@ -58,7 +58,6 @@ export class CalendarWidgetComponent implements OnInit {
     }
     return dates;
   }
-
   private updateEventDays(): void {
     this.days = this.days.map((day) => {
       // Create a date at midnight in UTC for the calendar day
@@ -79,11 +78,20 @@ export class CalendarWidgetComponent implements OnInit {
     });
   }
 
-
   renderCalendar(): void {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
     const firstDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1).getDay();
@@ -148,18 +156,12 @@ export class CalendarWidgetComponent implements OnInit {
   }
 
   changeMonth(direction: number): void {
-    // Update the current month
     this.date.setMonth(this.date.getMonth() + direction);
-
-    // Re-render the calendar for the new month
     this.renderCalendar();
-
-    // Request events for the new month
     this.loadEventTimestamps();
   }
 
-
-  navigateToDay(day: { date: number; month: number; year: number; inactive: boolean }): void {
+  navigateToDay(day: any): void {
     const selectedDate = new Date(day.year, day.month, day.date);
     window.location.href = `/calendar?timestamp=${selectedDate.getTime()}`;
   }

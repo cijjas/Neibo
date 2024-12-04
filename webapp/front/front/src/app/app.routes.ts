@@ -12,6 +12,7 @@ import { CreatePostComponent } from './components/create-post/create-post.compon
 import { NotFoundComponent } from "./modules/not-found/not-found.component";
 import { LoginComponent } from "./modules/auth/login/login.component";
 import { authGuard } from "./shared/guards/auth.guard";
+import { CalendarComponent } from './modules/calendar/calendar.component'
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
   { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },
   { path: 'information', component: InformationComponent, canActivate: [authGuard] },
+  { path: 'calendar', component: CalendarComponent, canActivate: [authGuard] },
   { path: 'not-found', component: NotFoundComponent },
   { path: '**', redirectTo: '/not-found', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent }

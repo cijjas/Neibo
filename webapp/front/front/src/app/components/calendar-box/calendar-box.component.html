@@ -1,0 +1,54 @@
+<div class="f-c-c-c w-100">
+    <div class="wrapper">
+        <div id="calendar-box" class="f-c-c-c" *ngIf="!isLoading">
+            <header class="f-r-sb-c w-100">
+                <div class="icons">
+                    <span id="prev" (click)="changeMonth(-1)"><i class="fa-solid fa-angle-left"></i></span>
+                </div>
+                <p class="current-date" style="font-weight: bold">{{ currentDate }}</p>
+                <div class="icons">
+                    <span id="next" (click)="changeMonth(1)"><i class="fa-solid fa-angle-right"></i></span>
+                </div>
+            </header>
+            <div class="divider m-b-20 m-t-40"></div>
+            <div class="f-c-c-c h-100 m-b-20">
+                <div class="calendar">
+                    <ul class="weeks">
+                        <li *ngFor="let day of weekDays">{{ day }}</li>
+                    </ul>
+                    <ul class="days">
+                        <li *ngFor="let day of days" [class.inactive]="day.inactive" [class.today]="day.today"
+                            [class.event]="day.event && !day.today" (click)="navigateToDay(day)">
+                            {{ day.date }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="f-c-c-c" *ngIf="isAdmin">
+                <a [routerLink]="['/admin/add-event']" [queryParams]="{ date: selectedDate | date: 'yyyy-MM-dd' }"
+                    class="accept-button outlined on-background">
+                    Create New Event
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </div>
+        </div>
+
+        <div id="calendar-box-placeholder" class="f-c-c-c placeholder-glow w-100" *ngIf="isLoading">
+            <header class="f-r-sb-c w-100 m-t-40">
+                <div class="f-r-sb-c w-100">
+                    <div class="placeholder col-2"></div>
+                    <div class="placeholder col-5"></div>
+                    <div class="placeholder col-2"></div>
+                </div>
+            </header>
+            <div class="divider"></div>
+            <div class="f-c-c-c h-100 w-100">
+                <div class="calendar w-100">
+                    <div class="f-r-sb-c w-100 mt-3" *ngFor="let i of placeholders">
+                        <div class="placeholder w-7-12 h-5rem" *ngFor="let j of [1, 2, 3, 4, 5, 6, 7]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

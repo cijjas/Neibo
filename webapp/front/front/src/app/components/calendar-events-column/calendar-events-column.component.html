@@ -1,0 +1,18 @@
+<div class="w-100">
+    <div id="placeholder-events" *ngIf="isLoading">
+        <div *ngFor="let index of placeholders">
+            <!-- Include your placeholder component or HTML here -->
+            <!-- <app-placeholder-blogpost></app-placeholder-blogpost> -->
+        </div>
+    </div>
+
+    <div id="actual-events" *ngIf="!isLoading">
+        <div *ngIf="events.length === 0" class="no-posts-found">
+            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            No Events Found
+        </div>
+        <div *ngFor="let event of events">
+            <app-calendar-event [event]="event" [isAdmin]="isAdmin" [selectedDate]="selectedDate"></app-calendar-event>
+        </div>
+    </div>
+</div>
