@@ -23,8 +23,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Date;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -165,35 +164,38 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void testCreateNeighborWhenEmailFoundAndPasswordSet() {
-/*
+    public void testCreateNeighbor_UserExistsWithNullPassword() {
         // Arrange
-        String email = "neighbor5@example.com";
-        String password = "password";
+        String mail = "test@example.com";
+        String password = "password123";
+        String encodedPassword = "encodedPassword123";
         String name = "John";
         String surname = "Doe";
-        long neighborhoodId = 1L;
-        Long languageId = null; // No languageId
-        Integer identification = 123;
+        long neighborhoodId = 123L;
+        Long languageId = 1L; // Assuming 1L corresponds to Language.ENGLISH
+        Integer identification = 456;
 
-        // Mock the existing user and its behavior
-        User existingUser = mock(User.class);
-        when(userDao.findUser(email)).thenReturn(Optional.of(existingUser));
-        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
-        when(existingUser.getPassword()).thenReturn("password");
+        User existingUser = new User.Builder().build();
+        existingUser.setMail(mail);
+        existingUser.setPassword(null); // Simulating a user with a null password
+
+        when(userDao.findUser(mail)).thenReturn(Optional.of(existingUser));
+        when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
 
         // Act
-        User result = userService.createNeighbor(email, password, name, surname, neighborhoodId, languageId, identification);
+        User result = userService.createNeighbor(mail, password, name, surname, neighborhoodId, languageId, identification);
 
         // Assert
-        System.out.println(userDao);
-        UserDao u = verify(userDao, never());
-        System.out.println(u == null? "is null" : "not null");
-        assert u != null;
-        u.createUser(any(), any(), any(), any(), any(), any(), any(), any(), any()); // Ensure no user creation
-        verify(existingUser, times(1)).setPassword(eq("encodedPassword")); // Ensure password is set
         assertNotNull(result);
-        assertEquals(existingUser, result); // Ensure the returned user is the same
-*/
+        assertEquals(encodedPassword, existingUser.getPassword());
+        assertEquals(Language.ENGLISH, existingUser.getLanguage());
+        assertEquals(UserRole.UNVERIFIED_NEIGHBOR, existingUser.getRole());
+        assertEquals(name, existingUser.getName());
+        assertEquals(surname, existingUser.getSurname());
+        assertEquals(identification, existingUser.getIdentification());
+        assertFalse(existingUser.isDarkMode());
+
+        verify(userDao, times(1)).findUser(mail);
+        verify(passwordEncoder, times(1)).encode(password);
     }
 }
