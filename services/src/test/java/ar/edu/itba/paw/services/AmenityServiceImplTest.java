@@ -7,23 +7,22 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.models.Entities.User;
+import javassist.NotFoundException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -127,5 +126,93 @@ public class AmenityServiceImplTest {
 
         assertNotNull(result);
         assertEquals(mockAmenity, result);
+    }
+
+
+    @Test
+    public void testUpdateAmenityPartially_ShiftIdsIsNull() {
+        long amenityId = 1L;
+
+        Amenity amenity = new Amenity.Builder().build();
+
+        amenity.setAvailableShifts(Collections.emptyList());
+
+        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+
+        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, "New Name", "New Description", null);
+
+        assertEquals("New Name", updatedAmenity.getName());
+        assertEquals("New Description", updatedAmenity.getDescription());
+        verify(availabilityDao, never()).findAvailability(anyLong(), anyLong());
+        verify(availabilityDao, never()).createAvailability(anyLong(), anyLong());
+    }
+
+    @Test
+    public void testUpdateAmenityPartially_ShiftIdsIsEmpty() {
+        long amenityId = 1L;
+        Shift shift1 = new Shift.Builder().shiftId(1L).build();
+        Shift shift2 = new Shift.Builder().shiftId(2L).build();
+
+        Amenity amenity = new Amenity.Builder().build();
+        amenity.setAvailableShifts(Arrays.asList(shift1, shift2));
+
+        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+
+        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Collections.emptyList());
+
+        verify(availabilityDao).deleteAvailability(amenityId, 1L);
+        verify(availabilityDao).deleteAvailability(amenityId, 2L);
+        verifyNoMoreInteractions(availabilityDao);
+    }
+
+    @Test
+    public void testUpdateAmenityPartially_NoShiftsToRemove() {
+        long amenityId = 1L;
+
+        Amenity amenity = new Amenity.Builder().build();
+        amenity.setAvailableShifts(Collections.emptyList());
+
+        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+
+        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Arrays.asList(1L, 2L));
+
+        verify(availabilityDao).createAvailability(amenityId, 1L);
+        verify(availabilityDao).createAvailability(amenityId, 2L);
+    }
+
+    @Test
+    public void testUpdateAmenityPartially_AddAndRemoveShifts() {
+        long amenityId = 1L;
+        Shift shift1 = new Shift.Builder().shiftId(1L).build();
+        Shift shift2 = new Shift.Builder().shiftId(2L).build();
+        Shift shift3 = new Shift.Builder().shiftId(3L).build();
+
+        Amenity amenity = new Amenity.Builder().build();
+
+        amenity.setAvailableShifts(Arrays.asList(shift1, shift2));
+
+        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+
+        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Arrays.asList(2L, 3L));
+
+        verify(availabilityDao).deleteAvailability(amenityId, 1L);
+        verify(availabilityDao).createAvailability(amenityId, 3L);
+    }
+
+    @Test
+    public void testUpdateAmenityPartially_AllShiftsRemoved() {
+        long amenityId = 1L;
+        Shift shift1 = new Shift.Builder().shiftId(1L).build();
+        Shift shift2 = new Shift.Builder().shiftId(2L).build();
+
+        Amenity amenity = new Amenity.Builder().build();
+        amenity.setAvailableShifts(Arrays.asList(shift1, shift2));
+
+        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+
+        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Collections.emptyList());
+
+        verify(availabilityDao).deleteAvailability(amenityId, 1L);
+        verify(availabilityDao).deleteAvailability(amenityId, 2L);
     }
 }

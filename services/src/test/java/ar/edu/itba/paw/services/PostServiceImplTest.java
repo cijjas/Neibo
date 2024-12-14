@@ -11,14 +11,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
 import static org.junit.Assert.*;
-
-import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceImplTest {
@@ -131,5 +128,60 @@ public class PostServiceImplTest {
 
         // Assert that the post is created successfully
         assertNotNull(createdPost);
+    }
+
+    @Test
+    public void testDeletePostWithTags() {
+        long postId = 1L;
+        long neighborhoodId = 2L;
+
+        // Create mock tags
+        Tag tag1 = new Tag.Builder().build();
+        tag1.setTagId(101L);
+        Tag tag2 = new Tag.Builder().build();
+        tag2.setTagId(102L);
+
+        Set<Tag> tags = new HashSet<>();
+        tags.add(tag1);
+        tags.add(tag2);
+
+        Post post = new Post.Builder().build();
+        post.setTags(tags);
+
+        when(postDao.findPost(postId)).thenReturn(Optional.of(post));
+        when(postDao.deletePost(postId)).thenReturn(true);
+
+        boolean result = postService.deletePost(postId, neighborhoodId);
+
+        // Verify result
+        assertTrue(result);
+
+        // Verify interactions
+        verify(postDao, times(1)).findPost(postId);
+        verify(categorizationDao, times(1)).deleteCategorization(101L, postId);
+        verify(categorizationDao, times(1)).deleteCategorization(102L, postId);
+        verify(postDao, times(1)).deletePost(postId);
+    }
+
+    @Test
+    public void testDeletePostWithoutTags() {
+        long postId = 1L;
+        long neighborhoodId = 2L;
+
+        Post post = new Post.Builder().build();
+        post.setTags(Collections.emptySet()); // No tags
+
+        when(postDao.findPost(postId)).thenReturn(Optional.of(post));
+        when(postDao.deletePost(postId)).thenReturn(true);
+
+        boolean result = postService.deletePost(postId, neighborhoodId);
+
+        // Verify result
+        assertTrue(result);
+
+        // Verify interactions
+        verify(postDao, times(1)).findPost(postId);
+        verify(categorizationDao, never()).deleteCategorization(anyLong(), anyLong());
+        verify(postDao, times(1)).deletePost(postId);
     }
 }

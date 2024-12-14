@@ -10,8 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -95,4 +94,43 @@ public class ChannelServiceImplTest {
         assertEquals(mockChannel, result);
     }
 
+    @Test
+    public void testDeleteChannelWithSingleNeighborhoodMapping() {
+        long channelId = 1L;
+        long neighborhoodId = 2L;
+
+        when(channelDao.findChannel(channelId, neighborhoodId)).thenReturn(Optional.of(new Channel.Builder().build()));
+        when(channelMappingDao.getChannelMappings(channelId, null, 1, 1)).thenReturn(Collections.emptyList());
+
+        boolean result = channelService.deleteChannel(channelId, neighborhoodId);
+
+        // Verify result
+        assertTrue(result);
+
+        // Verify interactions
+        verify(channelDao, times(1)).findChannel(channelId, neighborhoodId);
+        verify(channelMappingDao, times(1)).deleteChannelMapping(channelId, neighborhoodId);
+        verify(channelMappingDao, times(1)).getChannelMappings(channelId, null, 1, 1);
+        verify(channelDao, times(1)).deleteChannel(channelId);
+    }
+
+    @Test
+    public void testDeleteChannelWithMultipleNeighborhoodMappings() {
+        long channelId = 1L;
+        long neighborhoodId = 2L;
+
+        when(channelDao.findChannel(channelId, neighborhoodId)).thenReturn(Optional.of(new Channel.Builder().build()));
+        when(channelMappingDao.getChannelMappings(channelId, null, 1, 1)).thenReturn(Collections.singletonList(new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(channelId).build())));
+
+        boolean result = channelService.deleteChannel(channelId, neighborhoodId);
+
+        // Verify result
+        assertTrue(result);
+
+        // Verify interactions
+        verify(channelDao, times(1)).findChannel(channelId, neighborhoodId);
+        verify(channelMappingDao, times(1)).deleteChannelMapping(channelId, neighborhoodId);
+        verify(channelMappingDao, times(1)).getChannelMappings(channelId, null, 1, 1);
+        verify(channelDao, never()).deleteChannel(channelId); // Channel should not be deleted
+    }
 }

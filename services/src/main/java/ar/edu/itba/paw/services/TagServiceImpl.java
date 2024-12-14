@@ -87,21 +87,21 @@ public class TagServiceImpl implements TagService {
         tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
 
         // Delete Tag-Posts associations
-        int page = 1;
         int batchSize = 100;
-        List<Long> tags = Collections.singletonList(tagId);
-        int totalPosts = postDao.countPosts(null, tags, neighborhoodId, null, null);
+        int totalPosts = postDao.countPosts(null, Collections.singletonList(tagId), neighborhoodId, null, null);
+        int totalPages = PaginationUtils.calculatePages(totalPosts, batchSize);
 
-        while ((page - 1) * batchSize < totalPosts) {
-            List<Post> posts = postDao.getPosts(null, page, batchSize, tags, neighborhoodId, null, null);
-            for (Post post : posts)
+        for (int page = 1; page <= totalPages; page++) {
+            List<Post> posts = postDao.getPosts(null, page, batchSize, Collections.singletonList(tagId), neighborhoodId, null, null);
+            for (Post post : posts) {
                 categorizationDao.deleteCategorization(tagId, post.getPostId());
-            page++;
+            }
         }
 
-        // If the channel was only being used by this neighborhood, it gets deleted
-        if(tagMappingDao.countTagMappings(tagId, null) == 0)
+        // If the tag was only being used by this Neighborhood, it can safely be deleted
+        if (tagMappingDao.getTagMappings(tagId, null, 1, 1).isEmpty()) {
             return tagDao.deleteTag(tagId);
+        }
 
         return true;
     }

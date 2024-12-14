@@ -99,14 +99,19 @@ public class AmenityServiceImpl implements AmenityService {
         LOGGER.info("Updating Amenity {}", amenityId);
 
         Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(NotFoundException::new);
+
         if (name != null && !name.isEmpty())
             amenity.setName(name);
+
         if (description != null && !description.isEmpty())
             amenity.setDescription(description);
-        if (shiftIds != null && !shiftIds.isEmpty()) {
-            for (Long shiftId: shiftIds) {
-                List<Shift> currentShifts = amenity.getAvailableShifts();
 
+        if (shiftIds != null) {
+            List<Shift> currentShifts = amenity.getAvailableShifts();
+            if (shiftIds.isEmpty()) // If the provided shiftIds list is empty, remove all availabilities for the amenity
+                for (Shift shift : currentShifts)
+                    availabilityDao.deleteAvailability(amenityId, shift.getShiftId());
+            else {
                 Set<Long> currentShiftIds = currentShifts.stream()
                         .map(Shift::getShiftId)
                         .collect(Collectors.toSet());
@@ -119,16 +124,15 @@ public class AmenityServiceImpl implements AmenityService {
                 Set<Long> shiftsToAdd = new HashSet<>(newShiftIds);
                 shiftsToAdd.removeAll(currentShiftIds);
 
-                for (Long id: shiftsToRemove) {
+                for (Long id : shiftsToRemove)
                     availabilityDao.deleteAvailability(amenityId, id);
-                }
 
-                for (Long id: shiftsToAdd) {
-                    availabilityDao.findAvailability(amenityId, shiftId)
+                for (Long id : shiftsToAdd)
+                    availabilityDao.findAvailability(amenityId, id)
                             .orElseGet(() -> availabilityDao.createAvailability(amenityId, id));
-                }
             }
         }
+
         return amenity;
     }
 

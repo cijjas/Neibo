@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
+import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
 import org.junit.Assert;
@@ -35,6 +36,8 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder;
     @Mock
     private EmailService emailService;
+    @Mock
+    private ImageService imageService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -196,6 +199,91 @@ public class UserServiceImplTest {
         assertFalse(existingUser.isDarkMode());
 
         verify(userDao, times(1)).findUser(mail);
+        verify(passwordEncoder, times(1)).encode(password);
+    }
+
+    @Test
+    public void testUpdateUserWithAllFields() {
+        long userId = 1L;
+        String mail = "newmail@example.com";
+        String name = "John";
+        String surname = "Doe";
+        String password = "newpassword";
+        Boolean darkMode = true;
+        String phoneNumber = "1234567890";
+        long profilePictureId = 101L;
+        int identification = 12345;
+        long languageId = 1L;
+        long userRoleId = 2L;
+
+        User user = new User.Builder().build();
+        Image profilePicture = new Image.Builder().build();
+        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+        when(imageService.findImage(profilePictureId)).thenReturn(Optional.of(profilePicture));
+        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
+
+        userService.updateUser(userId, mail, name, surname, password, darkMode, phoneNumber, profilePictureId, identification, languageId, userRoleId);
+
+        // Verify updates
+        assertEquals(mail, user.getMail());
+        assertEquals(name, user.getName());
+        assertEquals(surname, user.getSurname());
+        assertEquals("encodedPassword", user.getPassword());
+        assertEquals(darkMode, user.getDarkMode());
+        assertEquals(phoneNumber, user.getPhoneNumber());
+        assertEquals(profilePicture, user.getProfilePicture());
+        assertEquals(identification, user.getIdentification().longValue());
+        assertEquals(Language.fromId(languageId), user.getLanguage());
+        assertEquals(UserRole.fromId(userRoleId), user.getRole());
+
+        // Verify DAO and service interactions
+        verify(userDao, times(1)).findUser(userId);
+        verify(imageService, times(1)).findImage(profilePictureId);
+        verify(passwordEncoder, times(1)).encode(password);
+    }
+
+    @Test
+    public void testUpdateUserWithPartialFields() {
+        long userId = 1L;
+        String mail = "newmail@example.com";
+        Boolean darkMode = false;
+
+        User user = new User.Builder().build();
+        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+
+        userService.updateUser(userId, mail, null, null, null, darkMode, null, null, null, null, null);
+
+        // Verify updates
+        assertEquals(mail, user.getMail());
+        assertEquals(darkMode, user.getDarkMode());
+        assertNull(user.getName());
+        assertNull(user.getSurname());
+        assertNull(user.getPhoneNumber());
+        assertNull(user.getProfilePicture());
+        assertNull(user.getPassword());
+
+        // Verify DAO and service interactions
+        verify(userDao, times(1)).findUser(userId);
+        verify(imageService, never()).findImage(anyLong());
+        verify(passwordEncoder, never()).encode(anyString());
+    }
+
+    @Test
+    public void testUpdateUserWithPasswordEncoding() {
+        long userId = 1L;
+        String password = "newpassword";
+
+        User user = new User.Builder().build();
+        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+        when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
+
+        userService.updateUser(userId, null, null, null, password, null, null, null, null, null, null);
+
+        // Verify password is encoded and set
+        assertEquals("encodedPassword", user.getPassword());
+
+        // Verify DAO and service interactions
+        verify(userDao, times(1)).findUser(userId);
         verify(passwordEncoder, times(1)).encode(password);
     }
 }

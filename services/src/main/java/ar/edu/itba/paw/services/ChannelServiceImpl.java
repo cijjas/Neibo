@@ -75,7 +75,8 @@ public class ChannelServiceImpl implements ChannelService {
         channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
         channelMappingDao.deleteChannelMapping(channelId, neighborhoodId);
 
-        if(!channelMappingDao.findChannelMapping(channelId, neighborhoodId).isPresent())
+        // If this channel was only used in one Neighborhood then it an be safely deleted
+        if(channelMappingDao.getChannelMappings(channelId, null, 1, 1).isEmpty())
             channelDao.deleteChannel(channelId);
 
         return true;
