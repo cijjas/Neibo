@@ -43,31 +43,25 @@ public class AmenityServiceImpl implements AmenityService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    // Function has to create the shifts if they do not already exist and match them with the amenity through the junction table
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId, List<Long> selectedShiftsIds) {
         LOGGER.info("Creating Amenity {}", name);
 
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
-        for (Long shiftId: selectedShiftsIds)
+        for (Long shiftId : selectedShiftsIds) {
             availabilityDao.createAvailability(amenity.getAmenityId(), shiftId);
+        }
 
         emailService.sendBatchNewAmenityMail(neighborhoodId, name, description);
 
-        int page = 1;
-        int size = 500; // Will fetch and send emails to 500 users at a time
-        List<User> users;
-        do {
-            // Fetch users in batches
-            users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
-
-            // Send email with the current batch of users
-            if (!users.isEmpty()) {
+        // todo: This should be refactored into using the sendBatchEmail method, and by consequence the service test >:(
+        int size = 500;
+        int totalPages = PaginationUtils.calculatePages(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId), size);
+        for (int page = 1; page <= totalPages; page++) {
+            List<User> users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
+            if (!users.isEmpty())
                 emailService.sendNewAmenityMail(neighborhoodId, name, description, users);
-            }
-
-            page++;
-        } while (users.size() == size); // Continue fetching next page if the current page is full
+        }
 
         return amenity;
     }

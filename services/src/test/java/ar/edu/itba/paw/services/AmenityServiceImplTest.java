@@ -1,102 +1,131 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.*;
-import org.junit.Assert;
-import org.junit.Before;
+import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.*;
-
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AmenityServiceImplTest {
-    private static final Long ID = 1L;
-    private static final String NAME = "Pileta";
-    private static final String DESCRIPTION = "Pileta de natación";
-    private static final Long NEIGHBORHOOD_ID = 1L;
-    private static final Long SHIFT_ID = 1L;
-    private static final String SHIFT_STRING = "1-1";
-    private Neighborhood mockNeighborhood;
 
-    @Mock
-    private EmailService es;
-    @Mock
-    private UserService us;
     @Mock
     private AmenityDao amenityDao;
     @Mock
-    private ShiftDao shiftDao;
+    private UserDao userDao;
     @Mock
     private AvailabilityDao availabilityDao;
-    @InjectMocks
-    private AmenityServiceImpl as;
 
-    @Before
-    public void setUp() {
-        mockNeighborhood = mock(Neighborhood.class);
+    @Mock
+    private EmailService emailService;
+
+    @InjectMocks
+    private AmenityServiceImpl amenityService;
+
+    @Test
+    public void testCreateAmenity() {
+        // Arrange
+        String name = "Swimming Pool";
+        String description = "A community swimming pool";
+        long neighborhoodId = 1L;
+        List<Long> selectedShiftsIds = Arrays.asList(1L, 2L, 3L);
+        int page = 1;
+        int size = 500;
+
+        Amenity mockAmenity = new Amenity.Builder().amenityId(1L).build();
+        List<User> mockUsers = new ArrayList<>();
+
+        for (int i = 0; i < 750; i++)
+           mockUsers.add(new User.Builder().build());
+
+        when(amenityDao.createAmenity(name, description, neighborhoodId)).thenReturn(mockAmenity);
+        when(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId)).thenReturn(750);
+        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page), eq(size)))
+                .thenReturn(mockUsers);
+        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page + 1), eq(size)))
+                .thenReturn(Collections.emptyList());
+
+        // Act
+        Amenity result = amenityService.createAmenity(name, description, neighborhoodId, selectedShiftsIds);
+
+        // Assert
+        verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);
+
+        for (Long shiftId : selectedShiftsIds) {
+            verify(availabilityDao).createAvailability(mockAmenity.getAmenityId(), shiftId);
+        }
+
+        verify(availabilityDao, times(selectedShiftsIds.size()))
+                .createAvailability(eq(mockAmenity.getAmenityId()), anyLong());
+
+        verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
+        verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
+
+        verify(userDao, times(2)).getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), anyInt(), eq(size));
+
+        assertNotNull(result);
+        assertEquals(mockAmenity, result);
     }
 
     @Test
-    public void testCreate() {
-        // 1. Preconditions
-        when(amenityDao.createAmenity(anyString(), anyString(), anyLong())).thenReturn(new Amenity.Builder()
-                .amenityId(ID)
-                .name(NAME)
-                .description(DESCRIPTION)
-                .neighborhood(mockNeighborhood)
-                .build()
-        );
+    public void testCreateAmenityWithNoSelectedShifts() {
+        // Arrange
+        String name = "Swimming Pool";
+        String description = "A community swimming pool";
+        long neighborhoodId = 1L;
+        List<Long> selectedShiftsIds = Collections.emptyList(); // No shifts selected
+        int page = 1;
+        int size = 500;
 
-        when(shiftDao.createShift(anyLong(), anyLong())).thenReturn(new Shift.Builder()
-                .shiftId(SHIFT_ID)
-                .build()
-        );
+        Amenity mockAmenity = new Amenity.Builder().amenityId(1L).build();
+        List<User> mockUsers = new ArrayList<>();
 
-        when(availabilityDao.createAvailability(anyLong(), anyLong())).thenReturn(new Availability.Builder()
-                .amenityAvailabilityId(ID)
-                .build()
-        );
+        for (int i = 0; i < 750; i++)
+            mockUsers.add(new User.Builder().build());
 
-/*        when(us.getNeighbors(anyLong())).thenReturn(new ArrayList<>()); todo fix me
+        when(amenityDao.createAmenity(name, description, neighborhoodId)).thenReturn(mockAmenity);
+        when(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId)).thenReturn(750);
+        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page), eq(size)))
+                .thenReturn(mockUsers);
+        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page + 1), eq(size)))
+                .thenReturn(Collections.emptyList());
 
- */
+        // Act
+        Amenity result = amenityService.createAmenity(name, description, neighborhoodId, selectedShiftsIds);
 
-/*
-        ArrayList<String> shiftArray = new ArrayList<>(Arrays.asList(SHIFT_STRING));
+        // Assert
+        verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);
 
-        // 2. Exercise
-        Amenity newAmenity = as.createAmenity(NAME, DESCRIPTION, NEIGHBORHOOD_ID, shiftArray);
+        // Since there are no selected shifts, `createAvailability` should not be called
+        verify(availabilityDao, times(0)).createAvailability(anyLong(), anyLong());
 
-        // 3. Postconditions
-        Assert.assertNotNull(newAmenity);
-        Assert.assertEquals(newAmenity.getAmenityId(), ID);
-        Assert.assertEquals(newAmenity.getName(), NAME);
-        Assert.assertEquals(newAmenity.getDescription(), DESCRIPTION);
-*/
+        verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
+
+        verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
+
+        verify(userDao, times(2)).getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), anyInt(), eq(size));
+
+        assertNotNull(result);
+        assertEquals(mockAmenity, result);
     }
-
-    @Test(expected = RuntimeException.class)
-    public void testCreateAlreadyExists() {
-        // 1. Preconditions
-        when(amenityDao.createAmenity(eq(NAME), eq(DESCRIPTION), eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
-
-        // 2. Exercise
-        Amenity newAmenity = as.createAmenity(NAME, DESCRIPTION, NEIGHBORHOOD_ID, null);
-
-        // 3. Postconditions
-    }
-
 }

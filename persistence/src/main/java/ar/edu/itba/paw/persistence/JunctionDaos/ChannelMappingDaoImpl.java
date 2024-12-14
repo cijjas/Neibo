@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ChannelMappingDaoImpl implements ChannelMappingDao {
@@ -34,6 +35,13 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     }
 
     // ----------------------------------------------------------------------------------
+
+    @Override
+    public Optional<ChannelMapping> findChannelMapping(long channelId, long neighborhoodId) {
+        LOGGER.debug("Finding Channel Mapping with Channel id {} in Neighborhood {}", channelId, neighborhoodId);
+
+        return Optional.ofNullable(em.find(ChannelMapping.class, new ChannelMappingKey(channelId, neighborhoodId)));
+    }
 
     @Override
     public List<ChannelMapping> getChannelMappings(Long channelId, Long neighborhoodId, int page, int size) {
@@ -73,43 +81,6 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
             return channelMappingQuery.getResultList();
         }
         return Collections.emptyList();
-    }
-
-    @Override
-    public int channelMappingsCount(Long channelId, Long neighborhoodId) {
-        LOGGER.debug("Counting Channel Mappings by Criteria");
-
-        TypedQuery<ChannelMappingKey> idQuery = null;
-        StringBuilder queryBuilder = new StringBuilder("SELECT cm.id FROM ChannelMapping cm ");
-
-        if (channelId != null && neighborhoodId != null) {
-            queryBuilder.append("WHERE cm.channel.channelId = :channelId AND cm.neighborhood.neighborhoodId = :neighborhoodId ");
-        } else if (channelId != null) {
-            queryBuilder.append("WHERE cm.channel.channelId = :channelId ");
-        } else if (neighborhoodId != null) {
-            queryBuilder.append("WHERE cm.neighborhood.neighborhoodId = :neighborhoodId ");
-        }
-
-        queryBuilder.append("ORDER BY cm.neighborhood.neighborhoodId");
-
-        idQuery = em.createQuery(queryBuilder.toString(), ChannelMappingKey.class);
-
-        if (channelId != null) {
-            idQuery.setParameter("channelId", channelId);
-        }
-        if (neighborhoodId != null) {
-            idQuery.setParameter("neighborhoodId", neighborhoodId);
-        }
-
-        List<ChannelMappingKey> ids = idQuery.getResultList();
-
-        if (!ids.isEmpty()) {
-            TypedQuery<ChannelMapping> channelMappingQuery = em.createQuery(
-                    "SELECT cm FROM ChannelMapping cm WHERE cm.id IN :ids ORDER BY cm.neighborhood.neighborhoodId", ChannelMapping.class);
-            channelMappingQuery.setParameter("ids", ids);
-            return channelMappingQuery.getResultList().size();
-        }
-        return 0;
     }
 
     // ----------------------------------------------------------------------------------

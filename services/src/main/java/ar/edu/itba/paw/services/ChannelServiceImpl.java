@@ -34,11 +34,8 @@ public class ChannelServiceImpl implements ChannelService {
     public Channel createChannel(long neighborhoodId, String name) {
         LOGGER.info("Creating Channel {}", name);
 
-        // find channel by name, if it doesn't exist create it
         Channel channel = channelDao.findChannel(name).orElseGet(() -> channelDao.createChannel(name));
-
-        if(channelMappingDao.channelMappingsCount(channel.getChannelId(), neighborhoodId) == 0)
-            channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId);
+        channelMappingDao.findChannelMapping(channel.getChannelId(), neighborhoodId).orElseGet(() -> channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId));
 
         return channel;
     }
@@ -78,8 +75,7 @@ public class ChannelServiceImpl implements ChannelService {
         channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
         channelMappingDao.deleteChannelMapping(channelId, neighborhoodId);
 
-        // If the channel was only being used by this neighborhood, it gets deleted
-        if(channelMappingDao.channelMappingsCount(channelId, null) == 0)
+        if(!channelMappingDao.findChannelMapping(channelId, neighborhoodId).isPresent())
             channelDao.deleteChannel(channelId);
 
         return true;

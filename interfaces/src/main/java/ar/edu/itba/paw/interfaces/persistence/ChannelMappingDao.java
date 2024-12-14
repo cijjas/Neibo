@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Entities.ChannelMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChannelMappingDao {
 
@@ -14,7 +15,7 @@ public interface ChannelMappingDao {
 
     List<ChannelMapping> getChannelMappings(Long channelId, Long neighborhoodId, int page, int size);
 
-    int channelMappingsCount(Long channelId, Long neighborhoodId);
+    Optional<ChannelMapping> findChannelMapping(long channelId, long neighborhoodId);
 
     // -------------------------------------------- CHANNEL MAPPING DELETE ---------------------------------------------
     boolean deleteChannelMapping(long channelId, long neighborhoodId);

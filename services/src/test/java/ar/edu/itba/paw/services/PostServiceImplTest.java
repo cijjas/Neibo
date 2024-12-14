@@ -1,101 +1,135 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
+import ar.edu.itba.paw.enums.BaseChannel;
+import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.TagService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.*;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+import static org.junit.Assert.*;
+
+import java.util.Optional;
+
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceImplTest {
 
-    private static final long ID = 1;
-    private static final String TITLE = "LOBO RONDANDO";
-    private static final String DESCRIPTION = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    private static final Date DATE = new Timestamp(System.currentTimeMillis());
-    private static final long USER_ID = 1;
-    private static final long CHANNEL_ID = 1;
-    private static final long POST_PICTURE_ID = 0;
-    private static final int LIKES = 500;
-    private User mockUser;
-    private Channel mockChannel;
-    private List mockTagList;
-    private Image mockImage;
-    private Tag mockTag;
     @Mock
     private PostDao postDao;
     @Mock
-    private ChannelDao channelDao;
-    @Mock
-    private UserService userService;
+    private CategorizationDao categorizationDao;
     @Mock
     private EmailService emailService;
-    @Mock
-    private TagService tagService;
-    @Mock
-    private ImageService imageService;
-    @InjectMocks
-    private PostServiceImpl ps;
 
-    @Before
-    public void setUp() {
-        mockUser = mock(User.class);
-        mockChannel = mock(Channel.class);
-        mockTagList = mock(List.class);
-        mockTag = mock(Tag.class);
-        mockImage = mock(Image.class);
+    @InjectMocks
+    private PostServiceImpl postService;
+
+    @Test
+    public void testCreatePostWithEverythingPresent() {
+        // Setup test data
+        String title = "New Post";
+        String description = "Description of the post";
+        long userId = 1L;
+        long channelId = BaseChannel.FEED.getId(); // Assuming a non-ANNOUNCEMENTS channel
+        List<Long> tagIds = Arrays.asList(10L, 20L);
+        long imageId = 123L;
+        long neighborhoodId = 456L;
+
+        // Mock the behavior of postDao and categorizationDao
+        Post mockPost = new Post.Builder().build();
+        mockPost.setPostId(1L);  // Assuming postId is set after creation
+
+        when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
+
+        // Mock categorizationDao behavior for tag handling
+        when(categorizationDao.findCategorization(10L, mockPost.getPostId())).thenReturn(Optional.empty());
+        when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
+
+        // Call the method under test
+        Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
+
+        // Verify the interactions with the mocked dependencies
+        verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
+        verify(categorizationDao, times(1)).findCategorization(10L, mockPost.getPostId());
+        verify(categorizationDao, times(1)).findCategorization(20L, mockPost.getPostId());
+        verify(categorizationDao, times(1)).createCategorization(10L, mockPost.getPostId());
+        verify(categorizationDao, times(1)).createCategorization(20L, mockPost.getPostId());
+        verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);  // Ensure email is not sent
+
+        // Assert that the post is created successfully
+        assertNotNull(createdPost);
     }
 
-//    @Test
-//    public void testCreate() {
-//        // 1. Preconditions
-//        when(postDao.createPost(anyString(), anyString(), anyLong(), anyLong(), anyLong())).thenReturn(new Post.Builder()
-//                .postId(ID)
-//                .title(TITLE)
-//                .description(DESCRIPTION)
-//                .user(mockUser)
-//                .channel(mockChannel)
-//                .postPicture(mockImage)
-//                .build()
-//        );
-//
-//        // 2. Exercise
-//        Post newPost = ps.createPost(TITLE, DESCRIPTION, mockUser.getUserId(), mockChannel.getChannelId(), null, null);
-//
-//        // 3. Postconditions
-//        Assert.assertNotNull(newPost);
-//        Assert.assertEquals(ID, newPost.getPostId().longValue());
-//        Assert.assertEquals(TITLE, newPost.getTitle());
-//        Assert.assertEquals(DESCRIPTION,newPost.getDescription());
-//        Assert.assertEquals(mockUser, newPost.getUser());
-//        Assert.assertEquals(mockChannel, newPost.getChannel());
-//    }
-//
-//    @Test(expected = RuntimeException.class)
-//    public void testCreateAlreadyExists() {
-//        // 1. Preconditions
-//        when(postDao.createPost(eq(TITLE), eq(DESCRIPTION), eq(mockUser.getUserId()), eq(mockChannel.getChannelId()), eq(POST_PICTURE_ID))).thenThrow(RuntimeException.class);
-//
-//        // 2. Exercise
-//        Post newPost = ps.createPost(TITLE, DESCRIPTION, mockUser.getUserId(), mockChannel.getChannelId(), mockTagList.toString(), null);
-//
-//        // 3. Postconditions
-//    }
+    @Test
+    public void testCreatePostWithNoTags() {
+        // Setup test data
+        String title = "New Post";
+        String description = "Description of the post";
+        long userId = 1L;
+        long channelId = 2L;
+        List<Long> tagIds = null; // No tags
+        long imageId = 123L;
+        long neighborhoodId = 456L;
 
+        // Mock the behavior of postDao
+        Post mockPost = new Post.Builder().build();
+        mockPost.setPostId(1L);
+
+        when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
+
+        // Call the method under test
+        Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
+
+        // Verify the interactions with the mocked dependencies
+        verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
+        verify(categorizationDao, times(0)).findCategorization(anyLong(), anyLong());  // No categorization check should happen
+        verify(categorizationDao, times(0)).createCategorization(anyLong(), anyLong());  // No categorization creation
+        verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);  // Ensure email is not sent
+
+        // Assert that the post is created successfully
+        assertNotNull(createdPost);
+    }
+
+    @Test
+    public void testCreatePostWithAnnouncementsChannel() {
+        // Setup test data
+        String title = "New Post";
+        String description = "Description of the post";
+        long userId = 1L;
+        long channelId = BaseChannel.ANNOUNCEMENTS.getId();  // ANNOUNCEMENTS channel ID
+        List<Long> tagIds = Arrays.asList(10L, 20L);
+        long imageId = 123L;
+        long neighborhoodId = 456L;
+
+        // Mock the behavior of postDao and categorizationDao
+        Post mockPost = new Post.Builder().build();
+        mockPost.setPostId(1L);
+
+        when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
+        when(categorizationDao.findCategorization(10L, mockPost.getPostId())).thenReturn(Optional.empty());
+        when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
+
+        // Call the method under test
+        Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
+
+        // Verify the interactions with the mocked dependencies
+        verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
+        verify(categorizationDao, times(1)).findCategorization(10L, mockPost.getPostId());
+        verify(categorizationDao, times(1)).findCategorization(20L, mockPost.getPostId());
+        verify(categorizationDao, times(1)).createCategorization(10L, mockPost.getPostId());
+        verify(categorizationDao, times(1)).createCategorization(20L, mockPost.getPostId());
+        verify(emailService, times(1)).sendBatchAnnouncementMail(mockPost, neighborhoodId);  // Ensure email is sent
+
+        // Assert that the post is created successfully
+        assertNotNull(createdPost);
+    }
 }
-

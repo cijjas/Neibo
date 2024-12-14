@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         if (languageId != null)
             language = Language.fromId(languageId);
 
-        Optional<User> n = findUser(mail);
+        Optional<User> n = userDao.findUser(mail);
         if (!n.isPresent()) {
             User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
 

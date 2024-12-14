@@ -415,6 +415,17 @@ public class EmailServiceImpl implements EmailService {
         sendMessageUsingThymeleafTemplate(user.getMail(), "subject.verification", "verification-template_en.html", vars, user.getLanguage());
     }
 
+    // todo: this function should be refactored into using count instead of the .size() the conditional is wrong
+    // Something like this would be the right implementation
+    /*
+        int size = 500;
+        int totalPages = PaginationUtils.calculatePages(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId), size);
+        for (int page = 1; page <= totalPages; page++) {
+            List<User> users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
+            if (!users.isEmpty())
+                emailService.sendNewAmenityMail(neighborhoodId, name, description, users);
+        }
+    */
     private void sendBatchEmails(long neighborhoodId, Consumer<List<User>> emailSender) {
         List<User> users;
         int page = DEFAULT_PAGE;
