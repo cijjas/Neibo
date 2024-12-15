@@ -62,12 +62,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             }
         }
 
-        String refreshHeader = request.getHeader("X-Refresh-Token");
-        if (refreshHeader != null)
-            if (!handleRefreshToken(refreshHeader, request, response))
-                return;
-
-        LOGGER.debug("Continuing Filter Chain");
         filterChain.doFilter(request, response);
     }
 
@@ -126,6 +120,16 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                          HttpServletResponse response) throws IOException, ServletException {
         try {
             String authenticationToken = authorizationHeader.substring(7);
+
+            AuthenticationTokenDetails tokenDetails = authenticationTokenService.parseToken(authenticationToken);
+
+            if (tokenDetails.getTokenType() == TokenType.REFRESH) {
+                if (ZonedDateTime.now().isAfter(tokenDetails.getExpirationDate()))
+                    throw new IllegalArgumentException("Refresh token has expired");
+                String newAccessToken = authenticationTokenService.issueAccessToken(tokenDetails.getUsername(), tokenDetails.getAuthorities());
+                response.addHeader("X-Access-Token", "Bearer " + newAccessToken);
+            }
+
             Authentication authenticationRequest = new JwtAuthenticationToken(authenticationToken);
             Authentication authenticationResult = authenticationManager.authenticate(authenticationRequest);
 
