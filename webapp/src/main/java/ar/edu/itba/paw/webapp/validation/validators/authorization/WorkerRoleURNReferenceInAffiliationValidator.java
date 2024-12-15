@@ -17,9 +17,15 @@ public class WorkerRoleURNReferenceInAffiliationValidator implements ConstraintV
     }
 
     @Override
-    public boolean isValid(String workerRole, ConstraintValidatorContext context) {
+    public boolean isValid(String workerRole, ConstraintValidatorContext constraintValidatorContext) {
         if (workerRole == null)
             return true;
-        return formAccessControlHelper.canReferenceWorkerRoleInAffiliation(workerRole);
+        if (!formAccessControlHelper.canReferenceWorkerRoleInAffiliation(workerRole)){
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
+                    .addConstraintViolation();
+            return false;
+        }
+        return true;
     }
 }

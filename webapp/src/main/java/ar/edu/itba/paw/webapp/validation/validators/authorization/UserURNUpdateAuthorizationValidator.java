@@ -20,6 +20,12 @@ public class UserURNUpdateAuthorizationValidator implements ConstraintValidator<
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
         if (userURN == null)
             return true;
-        return formAccessControlHelper.canReferenceUserInUpdate(userURN);
+        if (!formAccessControlHelper.canReferenceUserInUpdate(userURN)){
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
+                    .addConstraintViolation();
+            return false;
+        }
+        return true;
     }
 }

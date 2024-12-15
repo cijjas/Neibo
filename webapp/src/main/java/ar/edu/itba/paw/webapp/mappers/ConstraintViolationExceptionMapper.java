@@ -23,6 +23,25 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
     @Override
     public Response toResponse(ConstraintViolationException exception) {
+        // Check if there is a FORBIDDEN violation
+        boolean containsForbidden = exception.getConstraintViolations().stream()
+                .anyMatch(violation -> "FORBIDDEN".equals(violation.getMessage()));
+
+        if (containsForbidden) {
+            // Build a 403 FORBIDDEN response
+            ApiErrorDetails errorDetails = new ApiErrorDetails();
+            errorDetails.setStatus(Response.Status.FORBIDDEN.getStatusCode());
+            errorDetails.setTitle(Response.Status.FORBIDDEN.getReasonPhrase());
+            errorDetails.setMessage("You are not allowed to perform this operation.");
+            errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
+
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity(errorDetails)
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+
+        // Otherwise, handle as a BAD_REQUEST (400)
         Response.Status status = Response.Status.BAD_REQUEST;
 
         ApiErrorDetails errorDetails = new ApiErrorDetails();
@@ -32,27 +51,24 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
         // Extract details of each constraint violation
         Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
-
-        // Create a list to store error details
         List<ErrorDetail> errorDetailsList = new ArrayList<>();
 
         for (ConstraintViolation<?> violation : violations) {
-            // Get the last section of the property path
             String propertyPath = violation.getPropertyPath().toString();
             String lastSection = propertyPath.substring(propertyPath.lastIndexOf('.') + 1);
 
-            // Add each violation to the list with the original field name
             errorDetailsList.add(new ErrorDetail(
                     lastSection,
                     violation.getMessage().substring(0, 1).toUpperCase() + violation.getMessage().substring(1)
             ));
         }
 
-        // Set the list of error details in the ApiErrorDetails object
         errorDetails.setErrors(errorDetailsList);
-
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
 
-        return Response.status(status).entity(errorDetails).type(MediaType.APPLICATION_JSON).build();
+        return Response.status(status)
+                .entity(errorDetails)
+                .type(MediaType.APPLICATION_JSON)
+                .build();
     }
 }

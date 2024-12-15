@@ -20,6 +20,12 @@ public class PostURNReferenceInLikeValidator implements ConstraintValidator<Post
     public boolean isValid(String postURN, ConstraintValidatorContext constraintValidatorContext) {
         if (postURN == null)
             return true;
-        return formAccessControlHelper.canReferencePostInLike(postURN);
+        if (!formAccessControlHelper.canReferencePostInLike(postURN)){
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
+                    .addConstraintViolation();
+            return false;
+        }
+        return true;
     }
 }

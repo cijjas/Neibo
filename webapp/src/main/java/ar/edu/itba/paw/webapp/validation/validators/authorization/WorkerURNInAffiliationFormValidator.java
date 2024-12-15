@@ -20,6 +20,12 @@ public class WorkerURNInAffiliationFormValidator implements ConstraintValidator<
     public boolean isValid(String workerURN, ConstraintValidatorContext constraintValidatorContext) {
         if (workerURN == null)
             return true;
-        return formAccessControlHelper.canReferenceWorkerInAffiliation(workerURN);
+        if (!formAccessControlHelper.canReferenceWorkerInAffiliation(workerURN)){
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
+                    .addConstraintViolation();
+            return false;
+        }
+        return true;
     }
 }

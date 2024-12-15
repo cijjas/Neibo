@@ -20,6 +20,12 @@ public class UserURNReferenceInLikeValidator implements ConstraintValidator<User
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
         if (userURN == null)
             return true;
-        return formAccessControlHelper.canReferenceUserInLike(userURN);
+        if (!formAccessControlHelper.canReferenceUserInLike(userURN)) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
+                    .addConstraintViolation();
+            return false;
+        }
+        return true;
     }
 }
