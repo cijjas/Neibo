@@ -12,9 +12,6 @@ public class TagsValidator implements ConstraintValidator<TagsConstraint, String
     private static final String TAG_PATTERN = "^[A-Za-z0-9_]+$";
     private static final int MAX_TAG_LENGTH = 20;
 
-    @Autowired
-    private MessageSource messageSource;
-
     @Override
     public void initialize(TagsConstraint tagsConstraint) {
     }

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
+import ar.edu.itba.paw.webapp.dto.forms.RequestForm;
 import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.form.TransactionTypeURNConstraint;
@@ -59,56 +60,49 @@ public class RequestController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#userURN, #productId)")
+    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#requestForm.user, #requestForm.product)")
     public Response listRequests(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("requestedBy") @UserURNConstraint final String user,
-            @QueryParam("forProduct") @ProductURNConstraint final String product,
-            @QueryParam("withType") @TransactionTypeURNConstraint final String type,
-            @QueryParam("withStatus") @RequestStatusURNConstraint final String status
+            @Valid @BeanParam final RequestForm requestForm
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", requestForm.getNeighborhoodId());
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(user);
-        Long productId = extractOptionalSecondId(product);
-        Long transactionTypeId = extractOptionalFirstId(type);
-        Long requestStatusId = extractOptionalFirstId(status);
-
-        // Validate userId and transactionType, suboptimal solution
-        if ((transactionTypeId == null && userId != null) || (transactionTypeId != null && userId == null))
-            throw new IllegalArgumentException("Either both user and type have to be specified or none of them");
+        Long userId = extractOptionalSecondId(requestForm.getUser());
+        Long productId = extractOptionalSecondId(requestForm.getProduct());
+        Long transactionTypeId = extractOptionalFirstId(requestForm.getType());
+        Long requestStatusId = extractOptionalFirstId(requestForm.getStatus());
 
         // Content
-        final List<Request> requests = rs.getRequests(userId, productId, transactionTypeId, requestStatusId, page, size, neighborhoodId);
+        final List<Request> requests = rs.getRequests(userId, productId, transactionTypeId, requestStatusId,
+                requestForm.getPage(), requestForm.getSize(), requestForm.getNeighborhoodId());
         String requestsHashCode = String.valueOf(requests.hashCode());
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(requestsHashCode));
-        if (builder != null)
+        if (builder != null) {
             return builder.cacheControl(cacheControl).build();
+        }
 
-        if (requests.isEmpty())
+        if (requests.isEmpty()) {
             return Response.noContent()
                     .tag(requestsHashCode)
                     .build();
+        }
 
         final List<RequestDto> requestDto = requests.stream()
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests",
-                rs.calculateRequestPages(productId, userId, transactionTypeId, requestStatusId, neighborhoodId, size),
-                page,
-                size
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + requestForm.getNeighborhoodId() + "/requests",
+                rs.calculateRequestPages(productId, userId, transactionTypeId, requestStatusId, requestForm.getNeighborhoodId(),
+                        requestForm.getSize()),
+                requestForm.getPage(),
+                requestForm.getSize()
         );
 
-        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {
-                })
+        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {})
                 .links(links)
                 .tag(requestsHashCode)
                 .cacheControl(cacheControl)
