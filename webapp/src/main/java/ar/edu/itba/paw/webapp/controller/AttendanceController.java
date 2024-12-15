@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
+import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
@@ -47,10 +48,12 @@ public class AttendanceController {
     private Request request;
 
     private final AttendanceService as;
+    private final EventService es;
 
     @Autowired
-    public AttendanceController(AttendanceService as) {
+    public AttendanceController(AttendanceService as, EventService es) {
         this.as = as;
+        this.es = es;
     }
 
     @GET
@@ -61,6 +64,9 @@ public class AttendanceController {
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
+
+        // Path Verification
+        es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Content
         final List<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
@@ -130,6 +136,9 @@ public class AttendanceController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
+        // Path Verification
+        es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+
         // Creation & HashCode Generation
         final Attendance attendance = as.createAttendance(extractSecondId(form.getUser()), eventId);
         String attendanceHashCode = String.valueOf(attendance.hashCode());
@@ -155,6 +164,9 @@ public class AttendanceController {
             @PathParam("userId") @GenericIdConstraint final long userId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
+
+        // Path Verification
+        es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Deletion Attempt
         if (as.deleteAttendance(userId, eventId))

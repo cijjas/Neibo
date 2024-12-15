@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.CommentService;
+import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
@@ -47,10 +48,12 @@ public class CommentController {
     private Request request;
 
     private final CommentService cs;
+    private final PostService ps;
 
     @Autowired
-    public CommentController(CommentService cs) {
+    public CommentController(CommentService cs, PostService ps) {
         this.cs = cs;
+        this.ps = ps;
     }
 
     @GET
@@ -61,6 +64,9 @@ public class CommentController {
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
+
+        // Verify path
+        ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Content
         final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
@@ -129,6 +135,9 @@ public class CommentController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
+        // Path Verification
+        ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
+
         // Creation & HashCode Generation
         final Comment comment = cs.createComment(form.getMessage(), extractSecondId(form.getUser()), postId);
         String commentHashCode = String.valueOf(comment.hashCode());
@@ -154,6 +163,9 @@ public class CommentController {
             @PathParam("id") @GenericIdConstraint final long commentId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
+
+        // Path Verification
+        ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Deletion Attempt
         if (cs.deleteComment(commentId))

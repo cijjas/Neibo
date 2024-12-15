@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.InquiryService;
+import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
@@ -50,10 +51,12 @@ public class InquiryController {
     private Request request;
 
     private final InquiryService is;
+    private final ProductService ps;
 
     @Autowired
-    public InquiryController(InquiryService is) {
+    public InquiryController(InquiryService is, ProductService ps) {
         this.is = is;
+        this.ps = ps;
     }
 
     @GET
@@ -64,6 +67,9 @@ public class InquiryController {
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
+
+        // Path Verification
+        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
 
         // Content
         final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
@@ -134,6 +140,9 @@ public class InquiryController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
+        // Path Verification
+        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
+
         // Creation & HashCode Generation
         final Inquiry inquiry = is.createInquiry(extractSecondId(form.getUser()), productId, form.getMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
@@ -160,6 +169,9 @@ public class InquiryController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
+        // Path Verification
+        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
+
         // Modification & HashCode Generation
         final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getReply());
         String inquiryHashCode = String.valueOf(updatedInquiry.hashCode());
@@ -178,6 +190,9 @@ public class InquiryController {
             @PathParam("id") @GenericIdConstraint final long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
+
+        // Path Verification
+        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
 
         // Deletion Attempt
         if (is.deleteInquiry(inquiryId))
