@@ -48,9 +48,9 @@ public class AmenityServiceImpl implements AmenityService {
         LOGGER.info("Creating Amenity {}", name);
 
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
-        for (Long shiftId : selectedShiftsIds) {
-            availabilityDao.createAvailability(amenity.getAmenityId(), shiftId);
-        }
+        if (selectedShiftsIds != null)
+            for (Long shiftId : selectedShiftsIds)
+                availabilityDao.createAvailability(amenity.getAmenityId(), shiftId);
 
         emailService.sendBatchNewAmenityMail(neighborhoodId, name, description);
 

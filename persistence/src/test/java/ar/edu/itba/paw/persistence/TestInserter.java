@@ -172,7 +172,7 @@ public class TestInserter {
         return booking.getBookingId();
     }
 
-    public void createChannelMapping(Number neighborhoodId, Number channelId) {
+    public void createChannelMapping(long neighborhoodId, long channelId) {
         ChannelMapping channelMapping = new ChannelMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Channel.class, channelId));
         em.persist(channelMapping);
         em.flush();

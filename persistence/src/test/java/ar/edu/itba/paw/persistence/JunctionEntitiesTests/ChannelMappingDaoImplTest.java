@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -28,7 +29,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Transactional
 @Rollback
-public class BaseChannelMappingDaoImplTest {
+public class ChannelMappingDaoImplTest {
 
     private final String CHANNEL_NAME_1 = "Channel Name 1";
     private final String CHANNEL_NAME_2 = "Channel Name 2";
@@ -65,6 +66,37 @@ public class BaseChannelMappingDaoImplTest {
         assertEquals(chKey, channelMapping.getChannel().getChannelId().longValue());
         assertEquals(nhKey, channelMapping.getNeighborhood().getNeighborhoodId().longValue());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
+    }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
+    @Test
+    public void find_neighborhoodId_tagId_valid(){
+        // Pre conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+        testInserter.createChannelMapping(nhKey1, chKey1);
+
+        // Exercise
+        Optional<ChannelMapping> optionalChannelMapping= channelMappingDaoImpl.findChannelMapping(chKey1, nhKey1);
+
+        // Validations & Post Conditions
+        assertTrue(optionalChannelMapping.isPresent());
+        assertEquals(nhKey1, optionalChannelMapping.get().getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(chKey1, optionalChannelMapping.get().getChannel().getChannelId().longValue());
+    }
+
+    @Test
+    public void find_neighborhoodId_tagId_invalid_neighborhoodId_tagId(){
+        // Pre conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+
+        // Exercise
+        Optional<ChannelMapping> optionalChannelMapping= channelMappingDaoImpl.findChannelMapping(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalChannelMapping.isPresent());
     }
 
     // -------------------------------------------------- GETS ---------------------------------------------------------
@@ -175,95 +207,6 @@ public class BaseChannelMappingDaoImplTest {
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, channelMappingList.size());
-    }
-
-    // ------------------------------------------------- COUNTS ---------------------------------------------------------
-
-    @Test
-    public void count() {
-        // Pre conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
-        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
-        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
-        testInserter.createChannelMapping(nhKey1, chKey1);
-        testInserter.createChannelMapping(nhKey2, chKey2);
-        testInserter.createChannelMapping(nhKey1, chKey2);
-
-        // Exercise
-        int countChannelMappings = channelMappingDaoImpl.channelMappingsCount(EMPTY_FIELD, EMPTY_FIELD);
-
-        // Validations & Post Conditions
-        assertEquals(THREE_ELEMENTS, countChannelMappings);
-    }
-
-    @Test
-    public void count_channelId() {
-        // Pre conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
-        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
-        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
-        testInserter.createChannelMapping(nhKey1, chKey1);
-        testInserter.createChannelMapping(nhKey2, chKey2);
-        testInserter.createChannelMapping(nhKey1, chKey2);
-
-        // Exercise
-        int countChannelMapping = channelMappingDaoImpl.channelMappingsCount(chKey2, EMPTY_FIELD);
-
-        // Validations & Post Conditions
-        assertEquals(TWO_ELEMENTS, countChannelMapping);
-    }
-
-    @Test
-    public void count_neighborhoodId() {
-        // Pre conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
-        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
-        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
-        testInserter.createChannelMapping(nhKey1, chKey1);
-        testInserter.createChannelMapping(nhKey2, chKey2);
-        testInserter.createChannelMapping(nhKey1, chKey2);
-
-        // Exercise
-        int countChannelMapping = channelMappingDaoImpl.channelMappingsCount(EMPTY_FIELD, nhKey1);
-
-        // Validations & Post Conditions
-        assertEquals(TWO_ELEMENTS, countChannelMapping);
-    }
-
-    @Test
-    public void count_channelId_neighborhoodId() {
-        // Pre conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
-        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
-        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
-        testInserter.createChannelMapping(nhKey1, chKey1);
-        testInserter.createChannelMapping(nhKey2, chKey2);
-        testInserter.createChannelMapping(nhKey1, chKey2);
-
-        // Exercise
-        int countChannelMapping = channelMappingDaoImpl.channelMappingsCount(chKey1, nhKey1);
-
-        // Validations & Post Conditions
-        assertEquals(ONE_ELEMENT, countChannelMapping);
-    }
-
-    @Test
-    public void count_empty() {
-        // Pre conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
-        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
-        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
-
-        // Exercise
-        int countChannelMapping = channelMappingDaoImpl.channelMappingsCount(EMPTY_FIELD, EMPTY_FIELD);
-
-        // Validations & Post Conditions
-        assertEquals(NO_ELEMENTS, countChannelMapping);
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------

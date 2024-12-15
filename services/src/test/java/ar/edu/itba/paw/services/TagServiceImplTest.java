@@ -8,7 +8,6 @@ import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.models.Entities.TagMapping;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,107 +37,84 @@ public class TagServiceImplTest {
     private TagServiceImpl tagService;
 
     @Test
-    public void testCreateTagTagFoundAndTagMappingFound() {
-        // Arrange
+    public void create_tag_tagMapping() {
+        // Pre Conditions
         long neighborhoodId = 1L;
         String tagName = "Park";
         Tag existingTag = new Tag.Builder().tagId(1L).tag(tagName).build();
         TagMapping existingTagMapping = new TagMapping(new Neighborhood.Builder().neighborhoodId(1L).build(), existingTag);
 
-        when(tagDao.findTag(tagName)).thenReturn(Optional.of(existingTag)); // Tag found
-        when(tagMappingDao.findTagMapping(existingTag.getTagId(), neighborhoodId)).thenReturn(Optional.of(existingTagMapping)); // Mapping found
+        when(tagDao.findTag(tagName)).thenReturn(Optional.of(existingTag));
+        when(tagMappingDao.findTagMapping(existingTag.getTagId(), neighborhoodId)).thenReturn(Optional.of(existingTagMapping));
 
-        // Act
+        // Exercise
         Tag result = tagService.createTag(neighborhoodId, tagName);
 
-        // Assert
-        verify(tagDao, times(1)).findTag(tagName); // findTag called once
-        verify(tagMappingDao, times(1)).findTagMapping(existingTag.getTagId(), neighborhoodId); // findTagMapping called once
+        // Validation & Post Conditions
+        verify(tagDao, times(1)).findTag(tagName);
+        verify(tagMappingDao, times(1)).findTagMapping(existingTag.getTagId(), neighborhoodId);
 
         assertNotNull(result);
         assertEquals(existingTag, result);
     }
 
     @Test
-    public void testCreateTagTagNotFoundAndTagMappingFound() {
-        // Arrange
-        long neighborhoodId = 1L;
-        String tagName = "Park";
-        Tag newTag = new Tag.Builder().tagId(2L).tag(tagName).build();
-        TagMapping existingTagMapping = new TagMapping(new Neighborhood.Builder().neighborhoodId(1L).build(), new Tag.Builder().tagId(1L).tag(tagName).build());
-
-        when(tagDao.findTag(tagName)).thenReturn(Optional.empty()); // Tag not found
-        when(tagDao.createTag(tagName)).thenReturn(newTag); // New tag created
-        when(tagMappingDao.findTagMapping(newTag.getTagId(), neighborhoodId)).thenReturn(Optional.of(existingTagMapping)); // Mapping found
-
-        // Act
-        Tag result = tagService.createTag(neighborhoodId, tagName);
-
-        // Assert
-        verify(tagDao, times(1)).findTag(tagName); // findTag called once
-        verify(tagDao, times(1)).createTag(tagName); // createTag called once
-        verify(tagMappingDao, times(1)).findTagMapping(newTag.getTagId(), neighborhoodId); // findTagMapping called once
-
-        assertNotNull(result);
-        assertEquals(newTag, result);
-    }
-
-    @Test
-    public void testCreateTagTagFoundAndTagMappingNotFound() {
-        // Arrange
+    public void create_tag_noTagMapping() {
+        // Pre Conditions
         long neighborhoodId = 1L;
         String tagName = "Park";
         Tag existingTag = new Tag.Builder().tagId(1L).tag(tagName).build();
         TagMapping newTagMapping = new TagMapping(new Neighborhood.Builder().neighborhoodId(1L).build(), existingTag);
 
-        when(tagDao.findTag(tagName)).thenReturn(Optional.of(existingTag)); // Tag found
-        when(tagMappingDao.findTagMapping(existingTag.getTagId(), neighborhoodId)).thenReturn(Optional.empty()); // Mapping not found
-        when(tagMappingDao.createTagMappingDao(existingTag.getTagId(), neighborhoodId)).thenReturn(newTagMapping); // New mapping created
+        when(tagDao.findTag(tagName)).thenReturn(Optional.of(existingTag));
+        when(tagMappingDao.findTagMapping(existingTag.getTagId(), neighborhoodId)).thenReturn(Optional.empty());
+        when(tagMappingDao.createTagMappingDao(existingTag.getTagId(), neighborhoodId)).thenReturn(newTagMapping);
 
-        // Act
+        // Exercise
         Tag result = tagService.createTag(neighborhoodId, tagName);
 
-        // Assert
-        verify(tagDao, times(1)).findTag(tagName); // findTag called once
-        verify(tagMappingDao, times(1)).findTagMapping(existingTag.getTagId(), neighborhoodId); // findTagMapping called once
-        verify(tagMappingDao, times(1)).createTagMappingDao(existingTag.getTagId(), neighborhoodId); // createTagMappingDao called once
+        // Validation & Post Conditions
+        verify(tagDao, times(1)).findTag(tagName);
+        verify(tagMappingDao, times(1)).findTagMapping(existingTag.getTagId(), neighborhoodId);
+        verify(tagMappingDao, times(1)).createTagMappingDao(existingTag.getTagId(), neighborhoodId);
 
         assertNotNull(result);
         assertEquals(existingTag, result);
     }
 
     @Test
-    public void testCreateTagTagNotFoundAndTagMappingNotFound() {
-        // Arrange
+    public void create_noTag_noTagMapping() {
+        // Pre Conditions
         long neighborhoodId = 1L;
         String tagName = "Park";
         Tag newTag = new Tag.Builder().tagId(1L).tag(tagName).build();
         TagMapping newTagMapping = new TagMapping(new Neighborhood.Builder().neighborhoodId(1L).build(), newTag);
 
-        when(tagDao.findTag(tagName)).thenReturn(Optional.empty()); // Tag not found
-        when(tagDao.createTag(tagName)).thenReturn(newTag); // New tag created
-        when(tagMappingDao.findTagMapping(newTag.getTagId(), neighborhoodId)).thenReturn(Optional.empty()); // Mapping not found
-        when(tagMappingDao.createTagMappingDao(newTag.getTagId(), neighborhoodId)).thenReturn(newTagMapping); // New mapping created
+        when(tagDao.findTag(tagName)).thenReturn(Optional.empty());
+        when(tagDao.createTag(tagName)).thenReturn(newTag);
+        when(tagMappingDao.findTagMapping(newTag.getTagId(), neighborhoodId)).thenReturn(Optional.empty());
+        when(tagMappingDao.createTagMappingDao(newTag.getTagId(), neighborhoodId)).thenReturn(newTagMapping);
 
-        // Act
+        // Exercise
         Tag result = tagService.createTag(neighborhoodId, tagName);
 
-        // Assert
-        verify(tagDao, times(1)).findTag(tagName); // findTag called once
-        verify(tagDao, times(1)).createTag(tagName); // createTag called once
-        verify(tagMappingDao, times(1)).findTagMapping(newTag.getTagId(), neighborhoodId); // findTagMapping called once
-        verify(tagMappingDao, times(1)).createTagMappingDao(newTag.getTagId(), neighborhoodId); // createTagMappingDao called once
+        // Validation & Post Conditions
+        verify(tagDao, times(1)).findTag(tagName);
+        verify(tagDao, times(1)).createTag(tagName);
+        verify(tagMappingDao, times(1)).findTagMapping(newTag.getTagId(), neighborhoodId);
+        verify(tagMappingDao, times(1)).createTagMappingDao(newTag.getTagId(), neighborhoodId);
 
         assertNotNull(result);
         assertEquals(newTag, result);
     }
 
     @Test
-    public void testDeleteTagWithMultiplePosts() {
+    public void delete_withPosts() {
+        // Pre Conditions
         long neighborhoodId = 1L;
         long tagId = 101L;
 
-        int totalPosts = 250; // 3 pages with 100 posts per page
+        int totalPosts = 250;
         int batchSize = 100;
 
         List<Post> postsBatch1 = Arrays.asList(new Post.Builder().postId(1L).build(), new Post.Builder().postId(2L).build());
@@ -155,12 +131,12 @@ public class TagServiceImplTest {
         when(tagMappingDao.getTagMappings(tagId, null, 1, 1)).thenReturn(Collections.emptyList());
         when(tagDao.deleteTag(tagId)).thenReturn(true);
 
+        // Exercise
         boolean result = tagService.deleteTag(neighborhoodId, tagId);
 
-        // Verify result
+        // Validation & Post Conditions
         assertTrue(result);
 
-        // Verify interactions
         verify(tagMappingDao, times(1)).deleteTagMapping(tagId, neighborhoodId);
         verify(postDao, times(1)).countPosts(null, Collections.singletonList(tagId), neighborhoodId, null, null);
         verify(postDao, times(3)).getPosts(eq(null), anyInt(), eq(batchSize), eq(Collections.singletonList(tagId)), eq(neighborhoodId), eq(null), eq(null));
@@ -170,7 +146,8 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteTagWithNoPosts() {
+    public void delete_noPosts() {
+        // Pre Conditions
         long neighborhoodId = 1L;
         long tagId = 101L;
 
@@ -178,9 +155,10 @@ public class TagServiceImplTest {
         when(tagMappingDao.getTagMappings(tagId, null, 1, 1)).thenReturn(Collections.emptyList());
         when(tagDao.deleteTag(tagId)).thenReturn(true);
 
+        // Exercise
         boolean result = tagService.deleteTag(neighborhoodId, tagId);
 
-        // Verify result
+        // Validation & Post Conditions
         assertTrue(result);
 
         // Verify interactions
@@ -193,19 +171,20 @@ public class TagServiceImplTest {
     }
 
     @Test
-    public void testDeleteTagStillMappedToOtherNeighborhoods() {
+    public void delete_withNeighborhoods() {
+        // Pre Conditions
         long neighborhoodId = 1L;
         long tagId = 101L;
 
         when(postDao.countPosts(null, Collections.singletonList(tagId), neighborhoodId, null, null)).thenReturn(0);
         when(tagMappingDao.getTagMappings(tagId, null, 1, 1)).thenReturn(Collections.singletonList(new TagMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Tag.Builder().tagId(tagId).build())));
 
+        // Exercise
         boolean result = tagService.deleteTag(neighborhoodId, tagId);
 
-        // Verify result
+        // Validation & Post Conditions
         assertTrue(result);
 
-        // Verify interactions
         verify(tagMappingDao, times(1)).deleteTagMapping(tagId, neighborhoodId);
         verify(postDao, times(1)).countPosts(null, Collections.singletonList(tagId), neighborhoodId, null, null);
         verify(postDao, never()).getPosts(anyLong(), anyInt(), anyInt(), anyList(), anyLong(), anyLong(), anyLong());

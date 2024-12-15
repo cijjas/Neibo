@@ -4,7 +4,8 @@ import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.Tag;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,9 +14,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.*;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
-
-import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceImplTest {
@@ -31,83 +32,77 @@ public class PostServiceImplTest {
     private PostServiceImpl postService;
 
     @Test
-    public void testCreatePostWithEverythingPresent() {
-        // Setup test data
+    public void create_tags() {
+        // Pre Conditions
         String title = "New Post";
         String description = "Description of the post";
         long userId = 1L;
-        long channelId = BaseChannel.FEED.getId(); // Assuming a non-ANNOUNCEMENTS channel
+        long channelId = BaseChannel.FEED.getId();
         List<Long> tagIds = Arrays.asList(10L, 20L);
         long imageId = 123L;
         long neighborhoodId = 456L;
 
-        // Mock the behavior of postDao and categorizationDao
         Post mockPost = new Post.Builder().build();
-        mockPost.setPostId(1L);  // Assuming postId is set after creation
+        mockPost.setPostId(1L);
 
         when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
 
-        // Mock categorizationDao behavior for tag handling
         when(categorizationDao.findCategorization(10L, mockPost.getPostId())).thenReturn(Optional.empty());
         when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
 
-        // Call the method under test
+        // Exercise
         Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
 
-        // Verify the interactions with the mocked dependencies
+        // Validations & Post Conditions
         verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
         verify(categorizationDao, times(1)).findCategorization(10L, mockPost.getPostId());
         verify(categorizationDao, times(1)).findCategorization(20L, mockPost.getPostId());
         verify(categorizationDao, times(1)).createCategorization(10L, mockPost.getPostId());
         verify(categorizationDao, times(1)).createCategorization(20L, mockPost.getPostId());
-        verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);  // Ensure email is not sent
+        verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);
 
-        // Assert that the post is created successfully
         assertNotNull(createdPost);
     }
 
     @Test
-    public void testCreatePostWithNoTags() {
-        // Setup test data
+    public void create_noTags() {
+        // Pre Conditions
         String title = "New Post";
         String description = "Description of the post";
         long userId = 1L;
         long channelId = 2L;
-        List<Long> tagIds = null; // No tags
+        List<Long> tagIds = null;
         long imageId = 123L;
         long neighborhoodId = 456L;
 
-        // Mock the behavior of postDao
         Post mockPost = new Post.Builder().build();
         mockPost.setPostId(1L);
 
         when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
 
-        // Call the method under test
+        // Exercise
         Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
 
-        // Verify the interactions with the mocked dependencies
+        // Validations & Post Conditions
         verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
-        verify(categorizationDao, times(0)).findCategorization(anyLong(), anyLong());  // No categorization check should happen
-        verify(categorizationDao, times(0)).createCategorization(anyLong(), anyLong());  // No categorization creation
-        verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);  // Ensure email is not sent
+        verify(categorizationDao, times(0)).findCategorization(anyLong(), anyLong());
+        verify(categorizationDao, times(0)).createCategorization(anyLong(), anyLong());
+        verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);
 
-        // Assert that the post is created successfully
         assertNotNull(createdPost);
     }
 
     @Test
-    public void testCreatePostWithAnnouncementsChannel() {
-        // Setup test data
+    public void create_inAnnouncements() {
+        // Pre Conditions
         String title = "New Post";
         String description = "Description of the post";
         long userId = 1L;
-        long channelId = BaseChannel.ANNOUNCEMENTS.getId();  // ANNOUNCEMENTS channel ID
+        long channelId = BaseChannel.ANNOUNCEMENTS.getId();
         List<Long> tagIds = Arrays.asList(10L, 20L);
         long imageId = 123L;
         long neighborhoodId = 456L;
 
-        // Mock the behavior of postDao and categorizationDao
         Post mockPost = new Post.Builder().build();
         mockPost.setPostId(1L);
 
@@ -115,10 +110,10 @@ public class PostServiceImplTest {
         when(categorizationDao.findCategorization(10L, mockPost.getPostId())).thenReturn(Optional.empty());
         when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
 
-        // Call the method under test
+        // Exercise
         Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
 
-        // Verify the interactions with the mocked dependencies
+        // Validations & Post Conditions
         verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
         verify(categorizationDao, times(1)).findCategorization(10L, mockPost.getPostId());
         verify(categorizationDao, times(1)).findCategorization(20L, mockPost.getPostId());
@@ -126,16 +121,15 @@ public class PostServiceImplTest {
         verify(categorizationDao, times(1)).createCategorization(20L, mockPost.getPostId());
         verify(emailService, times(1)).sendBatchAnnouncementMail(mockPost, neighborhoodId);  // Ensure email is sent
 
-        // Assert that the post is created successfully
         assertNotNull(createdPost);
     }
 
     @Test
-    public void testDeletePostWithTags() {
+    public void delete_withTags() {
+        // Pre Conditions
         long postId = 1L;
         long neighborhoodId = 2L;
 
-        // Create mock tags
         Tag tag1 = new Tag.Builder().build();
         tag1.setTagId(101L);
         Tag tag2 = new Tag.Builder().build();
@@ -151,12 +145,12 @@ public class PostServiceImplTest {
         when(postDao.findPost(postId)).thenReturn(Optional.of(post));
         when(postDao.deletePost(postId)).thenReturn(true);
 
+        // Exercise
         boolean result = postService.deletePost(postId, neighborhoodId);
 
-        // Verify result
+        // Validations & Post Conditions
         assertTrue(result);
 
-        // Verify interactions
         verify(postDao, times(1)).findPost(postId);
         verify(categorizationDao, times(1)).deleteCategorization(101L, postId);
         verify(categorizationDao, times(1)).deleteCategorization(102L, postId);
@@ -164,22 +158,23 @@ public class PostServiceImplTest {
     }
 
     @Test
-    public void testDeletePostWithoutTags() {
+    public void delete_noTags() {
+        // Pre Conditions
         long postId = 1L;
         long neighborhoodId = 2L;
 
         Post post = new Post.Builder().build();
-        post.setTags(Collections.emptySet()); // No tags
+        post.setTags(Collections.emptySet());
 
         when(postDao.findPost(postId)).thenReturn(Optional.of(post));
         when(postDao.deletePost(postId)).thenReturn(true);
 
+        // Exercise
         boolean result = postService.deletePost(postId, neighborhoodId);
 
-        // Verify result
+        // Validations & Post Conditions
         assertTrue(result);
 
-        // Verify interactions
         verify(postDao, times(1)).findPost(postId);
         verify(categorizationDao, never()).deleteCategorization(anyLong(), anyLong());
         verify(postDao, times(1)).deletePost(postId);

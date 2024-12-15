@@ -40,7 +40,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     public Optional<ChannelMapping> findChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.debug("Finding Channel Mapping with Channel id {} in Neighborhood {}", channelId, neighborhoodId);
 
-        return Optional.ofNullable(em.find(ChannelMapping.class, new ChannelMappingKey(channelId, neighborhoodId)));
+        return Optional.ofNullable(em.find(ChannelMapping.class, new ChannelMappingKey(neighborhoodId, channelId)));
     }
 
     @Override
