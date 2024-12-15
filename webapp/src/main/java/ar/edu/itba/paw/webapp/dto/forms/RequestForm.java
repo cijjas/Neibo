@@ -8,32 +8,40 @@ import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdCons
 import ar.edu.itba.paw.webapp.validation.constraints.specific.UserTransactionPairConstraint;
 
 import javax.validation.constraints.Min;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import java.util.Objects;
 
-// Anotación personalizada para validaciones cruzadas
 @UserTransactionPairConstraint
 public class RequestForm {
 
+    @QueryParam("page")
     @Min(1)
     private int page = 1;
 
+    @QueryParam("size")
     @Min(1)
     private int size = 10;
 
+    @PathParam("neighborhoodId")
     @NeighborhoodIdConstraint
     private long neighborhoodId;
 
+    @QueryParam("requestedBy")
     @UserURNConstraint
-    private String user;
+    private String requestedBy;
 
+    @QueryParam("forProduct")
     @ProductURNConstraint
-    private String product;
+    private String forProduct;
 
+    @QueryParam("withType")
     @TransactionTypeURNConstraint
-    private String type;
+    private String withType;
 
+    @QueryParam("withStatus")
     @RequestStatusURNConstraint
-    private String status;
+    private String withStatus;
 
     public int getPage() {
         return page;
@@ -59,35 +67,48 @@ public class RequestForm {
         this.neighborhoodId = neighborhoodId;
     }
 
-    public String getUser() {
-        return user;
+    public String getRequestedBy() {
+        return requestedBy;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setRequestedBy(String requestedBy) {
+        this.requestedBy = requestedBy;
     }
 
-    public String getProduct() {
-        return product;
+    public String getForProduct() {
+        return forProduct;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setForProduct(String forProduct) {
+        this.forProduct = forProduct;
     }
 
-    public String getType() {
-        return type;
+    public String getWithType() {
+        return withType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setWithType(String withType) {
+        this.withType = withType;
     }
 
-    public String getStatus() {
-        return status;
+    public String getWithStatus() {
+        return withStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setWithStatus(String withStatus) {
+        this.withStatus = withStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestForm{" +
+                "page=" + page +
+                ", size=" + size +
+                ", neighborhoodId=" + neighborhoodId +
+                ", requestedBy='" + requestedBy + '\'' +
+                ", forProduct='" + forProduct + '\'' +
+                ", withType='" + withType + '\'' +
+                ", withStatus='" + withStatus + '\'' +
+                '}';
     }
 }

@@ -60,17 +60,17 @@ public class RequestController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#requestForm.user, #requestForm.product)")
+    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#requestForm.requestedBy, #requestForm.forProduct)")
     public Response listRequests(
             @Valid @BeanParam final RequestForm requestForm
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", requestForm.getNeighborhoodId());
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(requestForm.getUser());
-        Long productId = extractOptionalSecondId(requestForm.getProduct());
-        Long transactionTypeId = extractOptionalFirstId(requestForm.getType());
-        Long requestStatusId = extractOptionalFirstId(requestForm.getStatus());
+        Long userId = extractOptionalSecondId(requestForm.getRequestedBy());
+        Long productId = extractOptionalSecondId(requestForm.getForProduct());
+        Long transactionTypeId = extractOptionalFirstId(requestForm.getWithType());
+        Long requestStatusId = extractOptionalFirstId(requestForm.getWithStatus());
 
         // Content
         final List<Request> requests = rs.getRequests(userId, productId, transactionTypeId, requestStatusId,

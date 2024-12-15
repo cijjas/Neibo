@@ -394,8 +394,11 @@ public class PathAccessControlHelper {
         LOGGER.info("Verifying Requests Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
         if (userURN == null && productURN == null)
-            return authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication);
+            return authHelper.isAdministrator(authentication);
 
         if (userURN != null) {
             return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
