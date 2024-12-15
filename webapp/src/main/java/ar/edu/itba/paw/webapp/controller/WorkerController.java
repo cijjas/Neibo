@@ -52,12 +52,10 @@ public class WorkerController {
     @Context
     private Request request;
 
-    private final ReviewService rs;
     private final WorkerService ws;
 
     @Autowired
-    public WorkerController(ReviewService rs, WorkerService ws) {
-        this.rs = rs;
+    public WorkerController(WorkerService ws) {
         this.ws = ws;
     }
 
@@ -95,7 +93,7 @@ public class WorkerController {
                     .build();
 
         List<WorkerDto> workerDto = workers.stream()
-                .map(w -> WorkerDto.fromWorker(w, rs.findAverageRating(w.getWorkerId()), uriInfo)).collect(Collectors.toList());
+                .map(w -> WorkerDto.fromWorker(w, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = createPaginationLinks(
@@ -132,7 +130,7 @@ public class WorkerController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(WorkerDto.fromWorker(worker, rs.findAverageRating(worker.getWorkerId()), uriInfo))
+        return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(workerHashCode)
                 .build();
@@ -171,7 +169,7 @@ public class WorkerController {
         final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), extractOptionalFirstId(partialUpdate.getBackgroundPicture()), partialUpdate.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
-        return Response.ok(WorkerDto.fromWorker(updatedWorker, rs.findAverageRating(updatedWorker.getWorkerId()), uriInfo))
+        return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))
                 .tag(workerHashCode)
                 .build();
     }

@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 import { Event } from '../../models/index';
-import { EventDto } from '../../dtos/app-dtos';
+import { AttendanceCountDto, EventDto } from '../../dtos/app-dtos';
 import { parseLinkHeader } from './utils';
 import { HateoasLinksService } from '../index.service';
 
@@ -16,7 +16,7 @@ export class EventService {
 
     public getEvent(url: string): Observable<Event> {
         return this.http.get<EventDto>(url).pipe(
-            map((eventDto: EventDto) => mapEvent(eventDto))
+            mergeMap((eventDto: EventDto) => mapEvent(this.http, eventDto))
         );
     }
 
@@ -35,17 +35,21 @@ export class EventService {
         if (queryParams.forDate) params = params.set('forDate', queryParams.forDate);
 
         return this.http.get<EventDto[]>(url, { params, observe: 'response' }).pipe(
-            map((response) => {
+            mergeMap((response) => {
                 const eventsDto: EventDto[] = response.body || [];
                 const pagination = parseLinkHeader(response.headers.get('Link'));
 
-                const events = eventsDto.map(mapEvent);
+                const eventObservables = eventsDto.map((eventDto) =>
+                    mapEvent(this.http, eventDto)
+                );
 
-                return {
-                    events,
-                    totalPages: pagination.totalPages,
-                    currentPage: pagination.currentPage
-                };
+                return forkJoin(eventObservables).pipe(
+                    map((events) => ({
+                        events,
+                        totalPages: pagination.totalPages,
+                        currentPage: pagination.currentPage,
+                    }))
+                );
             })
         );
     }
@@ -66,7 +70,7 @@ export class EventService {
     }
 
     public createEvent(event: Partial<Event>): Observable<Event> {
-        const eventsUrl = this.linkStorage.getLink('neighborhood:events')
+        const eventsUrl = this.linkStorage.getLink('neighborhood:events');
 
         const eventPayload = {
             name: event.name,
@@ -77,7 +81,7 @@ export class EventService {
         };
 
         return this.http.post<EventDto>(eventsUrl, eventPayload).pipe(
-            map((eventDto) => mapEvent(eventDto))
+            mergeMap((eventDto) => mapEvent(this.http, eventDto))
         );
     }
 
@@ -86,17 +90,23 @@ export class EventService {
     }
 }
 
-export function mapEvent(eventDto: EventDto): Event {
-    return {
-        name: eventDto.name,
-        description: eventDto.description,
-        eventDate: eventDto.eventDate,
-        startTime: eventDto.startTime,
-        endTime: eventDto.endTime,
-        duration: calculateDurationInMinutes(eventDto.startTime, eventDto.endTime),
-        attendeesCount: null, // TODO eventDto.attendeesCount
-        self: eventDto._links.self
-    };
+export function mapEvent(http: HttpClient, eventDto: EventDto): Observable<Event> {
+    return forkJoin([
+        http.get<AttendanceCountDto>(eventDto._links.attendanceCount),
+    ]).pipe(
+        map(([attendanceCount]) => {
+            return {
+                name: eventDto.name,
+                description: eventDto.description,
+                eventDate: eventDto.eventDate,
+                startTime: eventDto.startTime,
+                endTime: eventDto.endTime,
+                duration: calculateDurationInMinutes(eventDto.startTime, eventDto.endTime),
+                attendeesCount: attendanceCount.count,
+                self: eventDto._links.self
+            } as Event;
+        })
+    );
 }
 
 function calculateDurationInMinutes(startTime: string, endTime: string): number {

@@ -195,7 +195,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .anyRequest().denyAll();
     }
-/*
 
     // WORKING VERSION
     @Bean
@@ -249,59 +248,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Refresh-Token",
                 "Location",
                 "Link"
-        ));
-        corsConfiguration.setAllowedMethods(Arrays.asList(
-                "GET",
-                "POST",
-                "PUT",
-                "DELETE",
-                "OPTIONS",
-                "PATCH"
-        ));
-        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        return new CorsFilter(urlBasedCorsConfigurationSource);
-    }
-*/
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList(ALL));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.addAllowedHeader(ALL);
-        configuration.setExposedHeaders(Arrays.asList(
-                "Authorization",
-                "Link",
-                "Location",
-                "ETag",
-                "X-Access-Token",
-                "X-Refresh-Token"
-        ));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
-    @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Collections.singletonList(ALL));
-        corsConfiguration.setAllowedHeaders(Arrays.asList(
-                "Origin",
-                "Content-Type",
-                "Accept",
-                "Authorization",
-                "X-Access-Token",
-                "X-Refresh-Token"
-        ));
-        corsConfiguration.setExposedHeaders(Arrays.asList(
-                "Authorization",
-                "Link",
-                "Location",
-                "ETag",
-                "X-Access-Token",
-                "X-Refresh-Token"
         ));
         corsConfiguration.setAllowedMethods(Arrays.asList(
                 "GET",

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
+import ar.edu.itba.paw.webapp.dto.ReviewsAverageDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.WorkerIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -95,6 +96,31 @@ public class ReviewController {
                 .build();
     }
 
+    @GET
+    @Path("/average")
+    public Response averageReviews(
+            @PathParam("workerId") @WorkerIdConstraint final long workerId
+    ) {
+        LOGGER.info("GET request arrived at '/workers/{}/reviews/average'", workerId);
+
+        // Content
+        float average = rs.findAverageRating(workerId);
+        String averageHashCode = String.valueOf(average);
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(averageHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        ReviewsAverageDto dto = ReviewsAverageDto.fromReviewAverage(average, workerId,  uriInfo);
+
+        return Response.ok(new GenericEntity<ReviewsAverageDto>(dto) {
+                })
+                .cacheControl(cacheControl)
+                .tag(averageHashCode)
+                .build();
+    }
     @GET
     @Path("/{id}")
     public Response findReview(

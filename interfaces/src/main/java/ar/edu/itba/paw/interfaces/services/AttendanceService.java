@@ -17,6 +17,8 @@ public interface AttendanceService {
 
     int calculateAttendancePages(long eventId, int size);
 
+    int countAttendance(long neighborhoodId, long eventId);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteAttendance(long userId, long eventId);

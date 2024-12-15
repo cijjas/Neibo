@@ -71,6 +71,24 @@ public class Links {
     private URI hotPostStatus;
     private URI trendingPostStatus;
     private URI nonePostStatus;
+    private URI reviewsAverage;
+    private URI attendanceCount;
+
+    public URI getAttendanceCount() {
+        return attendanceCount;
+    }
+
+    public void setAttendanceCount(URI attendanceCount) {
+        this.attendanceCount = attendanceCount;
+    }
+
+    public URI getReviewsAverage() {
+        return reviewsAverage;
+    }
+
+    public void setReviewsAverage(URI reviewsAverage) {
+        this.reviewsAverage = reviewsAverage;
+    }
 
     public URI getHotPostStatus() {
         return hotPostStatus;

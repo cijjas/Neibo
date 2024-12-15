@@ -69,7 +69,7 @@ public class CommentDaoImpl implements CommentDao {
 
         // ID Query to get the commentIds
         TypedQuery<Long> idQuery = em.createQuery("SELECT c.commentId FROM Comment c " +
-                "WHERE c.post.postId = :postId ORDER BY c.date, c.commentId", Long.class);
+                "WHERE c.post.postId = :postId ORDER BY c.date DESC, c.commentId", Long.class);
         idQuery.setParameter("postId", postId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
@@ -79,7 +79,7 @@ public class CommentDaoImpl implements CommentDao {
         if (!commentIds.isEmpty()) {
             // Data Query to get the comments
             TypedQuery<Comment> commentQuery = em.createQuery(
-                    "SELECT c FROM Comment c WHERE c.commentId IN :commentIds ORDER BY c.date, c.commentId", Comment.class);
+                    "SELECT c FROM Comment c WHERE c.commentId IN :commentIds ORDER BY c.date DESC, c.commentId", Comment.class);
             commentQuery.setParameter("commentIds", commentIds);
             return commentQuery.getResultList();
         }

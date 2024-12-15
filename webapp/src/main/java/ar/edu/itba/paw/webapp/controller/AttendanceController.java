@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
+import ar.edu.itba.paw.webapp.dto.AttendanceCountDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -99,6 +100,33 @@ public class AttendanceController {
                 .cacheControl(cacheControl)
                 .tag(attendanceHashCode)
                 .links(links)
+                .build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response countAttendance(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint final Long eventId
+    ) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/count'", neighborhoodId, eventId);
+
+        // Content
+        int count = as.countAttendance(neighborhoodId, eventId);
+        String countHashCode = String.valueOf(count);
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, eventId, neighborhoodId,  uriInfo);
+
+        return Response.ok(new GenericEntity<AttendanceCountDto>(dto) {
+                })
+                .cacheControl(cacheControl)
+                .tag(countHashCode)
                 .build();
     }
 

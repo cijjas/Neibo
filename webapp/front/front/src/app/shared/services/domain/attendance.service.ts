@@ -50,13 +50,17 @@ export class AttendanceService {
 
 export function mapAttendance(http: HttpClient, attendanceDto: AttendanceDto): Observable<Attendance> {
     return forkJoin([
-        http.get<UserDto>(attendanceDto._links.attendanceUser).pipe(mergeMap(userDto => mapUser(http, userDto))),
-        http.get<EventDto>(attendanceDto._links.event)
+        http.get<UserDto>(attendanceDto._links.attendanceUser).pipe(
+            mergeMap(userDto => mapUser(http, userDto))
+        ),
+        http.get<EventDto>(attendanceDto._links.event).pipe(
+            mergeMap(eventDto => mapEvent(http, eventDto))
+        )
     ]).pipe(
-        map(([user, eventDto]) => {
+        map(([user, event]) => {
             return {
                 user: user,
-                event: mapEvent(eventDto),
+                event: event,
                 self: attendanceDto._links.self
             } as Attendance;
         })

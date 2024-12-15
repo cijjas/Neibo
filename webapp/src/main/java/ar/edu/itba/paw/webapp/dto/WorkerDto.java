@@ -43,18 +43,15 @@ public class WorkerDto {
     @ImageURNConstraint(groups = URN.class)
     private String backgroundPicture;
 
-    private Float averageRating;
-
     private Links _links;
 
-    public static WorkerDto fromWorker(Worker worker, Float averageRating, UriInfo uriInfo) {
+    public static WorkerDto fromWorker(Worker worker, UriInfo uriInfo) {
         final WorkerDto dto = new WorkerDto();
 
         dto.phoneNumber = worker.getPhoneNumber();
         dto.businessName = worker.getBusinessName();
         dto.address = worker.getAddress();
         dto.bio = worker.getBio();
-        dto.averageRating = averageRating;
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -74,6 +71,14 @@ public class WorkerDto {
                     .path(String.valueOf(worker.getBackgroundPictureId()))
                     .build());
         }
+        links.setReviewsAverage(
+                uriInfo.getBaseUriBuilder()
+                        .path("workers")
+                        .path(String.valueOf(worker.getWorkerId()))
+                        .path("reviews")
+                        .path("average")
+                        .build()
+        );
         links.setReviews(
                 uriInfo.getBaseUriBuilder()
                         .path("workers")
@@ -127,14 +132,6 @@ public class WorkerDto {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public Float getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(Float averageRating) {
-        this.averageRating = averageRating;
     }
 
     public Links get_links() {

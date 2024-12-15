@@ -60,6 +60,13 @@ public class AttendanceServiceImpl implements AttendanceService {
         return PaginationUtils.calculatePages(attendanceDao.countAttendance(eventId), size);
     }
 
+    @Override
+    public int countAttendance(long neighborhoodId, long eventId) {
+        LOGGER.info("Counting Attendees for Event {}", eventId);
+
+        return attendanceDao.countAttendance(eventId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

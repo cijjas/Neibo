@@ -58,6 +58,8 @@ export interface Links {
     resourceImage: string;
     reviewUser: string;
     requestUser: string;
+    attendanceCount: string;
+    reviewsAverage: string;
 }
 
 export interface AffiliationDto {
@@ -71,6 +73,11 @@ export interface AmenityDto {
 }
 
 export interface AttendanceDto {
+    _links: Links;
+}
+
+export interface AttendanceCountDto {
+    count: number,
     _links: Links;
 }
 
@@ -214,6 +221,11 @@ export interface ReviewDto {
     _links: Links;
 }
 
+export interface ReviewsAverageDto {
+    average: number;
+    _links: Links;
+}
+
 export interface ShiftDto {
     startTime: string;
     day: string;
@@ -252,7 +264,6 @@ export interface WorkerDto {
     businessName: string;
     address: string;
     bio: string;
-    averageRating: number;
     _links: Links;
 }
 

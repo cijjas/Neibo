@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Worker } from '../../models/index';
-import { WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto } from '../../dtos/app-dtos';
+import { WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { parseLinkHeader } from './utils';
 
@@ -68,14 +68,15 @@ export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Wo
         http.get<UserDto>(workerDto._links.user).pipe(mergeMap(userDto => mapUser(http, userDto))),
         http.get<NeighborhoodDto[]>(workerDto._links.neighborhoods),
         http.get<ProfessionDto[]>(workerDto._links.professions),
+        http.get<ReviewsAverageDto>(workerDto._links.reviewsAverage),
     ]).pipe(
-        map(([user, neighborhoods, professions]) => {
+        map(([user, neighborhoods, professions, reviewAverage]) => {
             return {
                 phoneNumber: workerDto.phoneNumber,
                 businessName: workerDto.businessName,
                 address: workerDto.address,
                 bio: workerDto.bio,
-                averageRating: workerDto.averageRating,
+                averageRating: reviewAverage.average,
                 user: user,
                 backgroundImage: workerDto._links.backgroundImage,
                 neighborhoodAffiliated: neighborhoods.map((n) => n.name),
