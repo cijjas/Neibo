@@ -30,7 +30,6 @@ import { RightColumnComponent } from "./components/right-column/right-column.com
 import { CalendarWidgetComponent } from './components/calendar-widget/calendar-widget.component'
 import { CreatePostComponent } from "./components/create-post/create-post.component";
 import { CalendarBoxComponent } from "./components/calendar-box/calendar-box.component";
-import { CalendarEventComponent } from "./components/calendar-event/calendar-event.component";
 import { CalendarEventsColumnComponent } from "./components/calendar-events-column/calendar-events-column.component";
 
 // MODULES
@@ -41,7 +40,8 @@ import { InformationComponent } from "./modules/information/information.componen
 import { ReservationsComponent } from "./modules/reservations/reservations.component"
 import { NotFoundComponent } from './modules/not-found/not-found.component';
 import { LoginComponent } from './modules/auth/login/login.component';
-import { CalendarComponent } from './modules/calendar/calendar.component'
+import { CalendarComponent } from './modules/calendar/calendar.component';
+import { UserProfileComponent } from "./modules/user-profile/user-profile.component";
 
 // SERVICES
 import { AuthService } from "./shared/services/index.service";
@@ -75,8 +75,8 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
     CalendarWidgetComponent,
     CalendarComponent,
     CalendarBoxComponent,
-    CalendarEventComponent,
-    CalendarEventsColumnComponent
+    CalendarEventsColumnComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

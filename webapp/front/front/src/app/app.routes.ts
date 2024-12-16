@@ -13,12 +13,14 @@ import { NotFoundComponent } from "./modules/not-found/not-found.component";
 import { LoginComponent } from "./modules/auth/login/login.component";
 import { authGuard } from "./shared/guards/auth.guard";
 import { CalendarComponent } from './modules/calendar/calendar.component'
+import { UserProfileComponent } from './modules/user-profile/user-profile.component'
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'posts', component: FeedComponent, canActivate: [authGuard] },
   { path: 'post/:id', component: PostDetailComponent, canActivate: [authGuard] },
+  { path: 'user/:id', component: UserProfileComponent, canActivate: [authGuard] },
   { path: 'create-post', component: CreatePostComponent, canActivate: [authGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },

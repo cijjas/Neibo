@@ -73,6 +73,24 @@ public class Links {
     private URI nonePostStatus;
     private URI reviewsAverage;
     private URI attendanceCount;
+    private URI languageEnglish;
+    private URI languageSpanish;
+
+    public URI getLanguageEnglish() {
+        return languageEnglish;
+    }
+
+    public void setLanguageEnglish(URI languageEnglish) {
+        this.languageEnglish = languageEnglish;
+    }
+
+    public URI getLanguageSpanish() {
+        return languageSpanish;
+    }
+
+    public void setLanguageSpanish(URI languageSpanish) {
+        this.languageSpanish = languageSpanish;
+    }
 
     public URI getAttendanceCount() {
         return attendanceCount;

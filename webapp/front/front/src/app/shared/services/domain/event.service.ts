@@ -1,11 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { map, mergeMap, timeout, toArray } from 'rxjs/operators';
 import { Event } from '../../models/index';
 import { AttendanceCountDto, EventDto } from '../../dtos/app-dtos';
 import { parseLinkHeader } from './utils';
 import { HateoasLinksService } from '../index.service';
+import { from } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -19,6 +21,7 @@ export class EventService {
             mergeMap((eventDto: EventDto) => mapEvent(this.http, eventDto))
         );
     }
+
 
     public getEvents(
         url: string,
@@ -35,6 +38,7 @@ export class EventService {
         if (queryParams.forDate) params = params.set('forDate', queryParams.forDate);
 
         return this.http.get<EventDto[]>(url, { params, observe: 'response' }).pipe(
+            timeout(10000), // Set a 10-second timeout for the HTTP request
             mergeMap((response) => {
                 const eventsDto: EventDto[] = response.body || [];
                 const pagination = parseLinkHeader(response.headers.get('Link'));
@@ -54,17 +58,23 @@ export class EventService {
         );
     }
 
+
     public getEventsForDateRange(
         url: string,
         dates: string[]
     ): Observable<Event[]> {
-        const requests = dates.map((date) => {
-            return this.getEvents(url, { forDate: date }).pipe(
-                map((response) => response.events)
-            );
-        });
-
-        return forkJoin(requests).pipe(
+        return from(dates).pipe(
+            mergeMap(
+                (date) => this.getEvents(url, { forDate: date }).pipe(
+                    map((response) => response.events),
+                    catchError((error) => {
+                        console.error(`Error fetching events for date ${date}:`, error);
+                        return of([]); // Return an empty array on error to prevent breaking the stream
+                    })
+                ),
+                5 // Limit concurrency to 5 requests at a time
+            ),
+            toArray(),
             map((eventsArrays) => eventsArrays.flat())
         );
     }

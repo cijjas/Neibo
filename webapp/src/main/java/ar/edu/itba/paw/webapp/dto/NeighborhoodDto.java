@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.BaseChannel;
+import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
@@ -152,6 +153,18 @@ public class NeighborhoodDto {
             links.setLikes(uriInfo.getBaseUriBuilder()
                     .path("likes")
                     .build());
+            links.setLanguageEnglish(
+                    uriInfo.getBaseUriBuilder()
+                    .path("languages")
+                    .path(String.valueOf(Language.ENGLISH.getId()))
+                    .build()
+            );
+            links.setLanguageSpanish(
+                    uriInfo.getBaseUriBuilder()
+                            .path("languages")
+                            .path(String.valueOf(Language.SPANISH.getId()))
+                            .build()
+            );
         }
         dto.set_links(links);
         return dto;

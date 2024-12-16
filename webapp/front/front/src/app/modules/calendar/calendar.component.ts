@@ -13,14 +13,18 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      const timestamp = params['timestamp'];
-      if (timestamp) {
-        this.selectedDate = new Date(Number(timestamp));
+      const dateParam = params['date'];
+      if (dateParam) {
+        const [y, m, d] = dateParam.split('-').map(Number);
+        // Create the date at noon local time to avoid offsets
+        this.selectedDate = new Date(y, m - 1, d, 12);
       } else {
-        this.selectedDate = new Date();
+        const now = new Date();
+        this.selectedDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12);
       }
       this.updateFormattedDate();
     });
+
   }
 
   updateFormattedDate(): void {
@@ -31,5 +35,4 @@ export class CalendarComponent implements OnInit {
     };
     this.formattedSelectedDate = this.selectedDate.toLocaleDateString('en-US', options);
   }
-
 }

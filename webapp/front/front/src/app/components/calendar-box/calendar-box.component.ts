@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EventService } from '../../shared/services/domain/event.service';
 import { HateoasLinksService } from '../../shared/services/index.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar-box',
@@ -10,45 +11,65 @@ export class CalendarBoxComponent implements OnInit {
   @Input() selectedDate: Date;
   isLoading = true;
   currentDate: string = '';
-  weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   days: Array<any> = [];
   eventTimestamps: number[] = [];
   date = new Date();
   placeholders = Array(5).fill(0);
-  isAdmin = false; // Set this based on your authentication logic
+  isAdmin = false;
+  selectedDay: any = null;
+  weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   constructor(
     private eventService: EventService,
-    private linkStorage: HateoasLinksService
+    private linkStorage: HateoasLinksService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.date = new Date(this.selectedDate);
-    this.renderCalendar();
-    this.loadEventTimestamps();
+    this.route.queryParams.subscribe((params) => {
+      const dateParam = params['date'];
+      if (dateParam) {
+        const [year, month, day] = dateParam.split('-').map(Number);
+        // Create the date in UTC to avoid time zone offsets
+        this.selectedDate = new Date(Date.UTC(year, month - 1, day, 12));
+      } else {
+        // Default to the current date at noon UTC
+        const now = new Date();
+        this.selectedDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12));
+      }
+
+      this.date = new Date(this.selectedDate);
+
+      // Initialize selectedDay based on selectedDate
+      this.selectedDay = {
+        date: this.selectedDate.getUTCDate(),
+        month: this.selectedDate.getUTCMonth(),
+        year: this.selectedDate.getUTCFullYear(),
+      };
+
+      this.renderCalendar();
+      this.loadEventTimestamps();
+    });
   }
+
 
   private loadEventTimestamps(): void {
     const eventUrl = this.linkStorage.getLink('neighborhood:events');
     const datesInMonth = this.getDatesInMonth(this.date.getFullYear(), this.date.getMonth());
 
-    const dateStrings = datesInMonth.map((date) => {
-      return date.toISOString().split('T')[0];
-    });
+    const dateStrings = datesInMonth.map((date) => date.toISOString().split('T')[0]);
 
     this.eventService.getEventsForDateRange(eventUrl, dateStrings).subscribe({
       next: (allEvents) => {
         this.eventTimestamps = allEvents.map((e) => new Date(e.eventDate).getTime());
         this.updateEventDays();
       },
-      error: (error) => {
-        console.error('Error fetching event timestamps:', error);
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
+      error: (error) => console.error('Error fetching event timestamps:', error),
+      complete: () => (this.isLoading = false),
     });
   }
+
   private getDatesInMonth(year: number, month: number): Date[] {
     const date = new Date(year, month, 1);
     const dates = [];
@@ -61,17 +82,14 @@ export class CalendarBoxComponent implements OnInit {
 
   private updateEventDays(): void {
     this.days = this.days.map((day) => {
-      // Create a date at midnight in UTC for the calendar day
       const dayDate = new Date(Date.UTC(day.year, day.month, day.date));
 
-      // Check if there is an event on this exact day
       const isEvent = this.eventTimestamps.some((timestamp) => {
         const eventDate = new Date(timestamp);
-        // Compare only the date parts
         return (
-          dayDate.getUTCFullYear() === eventDate.getUTCFullYear() &&
-          dayDate.getUTCMonth() === eventDate.getUTCMonth() &&
-          dayDate.getUTCDate() === eventDate.getUTCDate()
+          eventDate.getUTCFullYear() === dayDate.getUTCFullYear() &&
+          eventDate.getUTCMonth() === dayDate.getUTCMonth() &&
+          eventDate.getUTCDate() === dayDate.getUTCDate()
         );
       });
 
@@ -80,81 +98,80 @@ export class CalendarBoxComponent implements OnInit {
   }
 
   renderCalendar(): void {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
+    const year = this.date.getUTCFullYear();
+    const month = this.date.getUTCMonth();
 
-    const firstDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1).getDay();
-    const lastDateOfMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
-    const lastDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), lastDateOfMonth).getDay();
-    const lastDateOfLastMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 0).getDate();
+    const firstDayOfMonth = new Date(Date.UTC(year, month, 1)).getUTCDay();
+    const lastDateOfMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    const lastDayOfMonth = new Date(Date.UTC(year, month, lastDateOfMonth)).getUTCDay();
+    const lastDateOfLastMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 
     this.days = [];
 
-    // Previous month's days
+    // Previous month's days in UTC
     for (let i = firstDayOfMonth; i > 0; i--) {
-      let prevMonth = this.date.getMonth() - 1;
-      let year = this.date.getFullYear();
+      let prevMonth = month - 1;
+      let prevYear = year;
       if (prevMonth < 0) {
         prevMonth = 11;
-        year -= 1;
+        prevYear -= 1;
       }
       this.days.push({
         date: lastDateOfLastMonth - i + 1,
         month: prevMonth,
-        year: year,
+        year: prevYear,
         inactive: true,
         today: false,
         event: false,
       });
     }
 
-    // Current month's days
+    // Current month's days in UTC
     for (let i = 1; i <= lastDateOfMonth; i++) {
-      const currentDay = new Date(this.date.getFullYear(), this.date.getMonth(), i);
-      const isToday = currentDay.toDateString() === new Date().toDateString();
+      const currentDay = new Date(Date.UTC(year, month, i));
+      const isToday = currentDay.toUTCString() === new Date(Date.UTC(
+        new Date().getUTCFullYear(),
+        new Date().getUTCMonth(),
+        new Date().getUTCDate()
+      )).toUTCString();
+
       this.days.push({
         date: i,
-        month: this.date.getMonth(),
-        year: this.date.getFullYear(),
+        month: month,
+        year: year,
         inactive: false,
         today: isToday,
         event: false,
       });
     }
 
-    // Next month's days
+    // Next month's days in UTC
     for (let i = lastDayOfMonth; i < 6; i++) {
-      let nextMonth = this.date.getMonth() + 1;
-      let year = this.date.getFullYear();
+      let nextMonth = month + 1;
+      let nextYear = year;
       if (nextMonth > 11) {
         nextMonth = 0;
-        year += 1;
+        nextYear += 1;
       }
       this.days.push({
         date: i - lastDayOfMonth + 1,
         month: nextMonth,
-        year: year,
+        year: nextYear,
         inactive: true,
         today: false,
         event: false,
       });
     }
 
-    this.currentDate = `${months[this.date.getMonth()]} ${this.date.getFullYear()}`;
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December',
+    ];
+    this.currentDate = `${months[month]} ${year}`;
     this.isLoading = false;
   }
+
+
 
   changeMonth(direction: number): void {
     this.date.setMonth(this.date.getMonth() + direction);
@@ -163,7 +180,21 @@ export class CalendarBoxComponent implements OnInit {
   }
 
   navigateToDay(day: any): void {
-    const selectedDate = new Date(day.year, day.month, day.date);
-    window.location.href = `/calendar?timestamp=${selectedDate.getTime()}`;
+    // Update the selected day
+    this.selectedDay = day;
+
+    // Create the selected date at noon local time
+    const selectedDate = new Date(day.year, day.month, day.date, 12);
+
+    // Format the date as yyyy-MM-dd
+    const year = selectedDate.getFullYear();
+    const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
+    const dayDate = ('0' + selectedDate.getDate()).slice(-2);
+
+    // Navigate using a date query param
+    this.router.navigate(['/calendar'], { queryParams: { date: `${year}-${month}-${dayDate}` } });
   }
+
+
+
 }

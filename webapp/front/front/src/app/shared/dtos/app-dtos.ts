@@ -249,6 +249,7 @@ export interface UserDto {
     surname: string;
     darkMode: boolean;
     phoneNumber: string;
+    language: string;
     identification: number;
     creationDate: Date;
     _links: Links;

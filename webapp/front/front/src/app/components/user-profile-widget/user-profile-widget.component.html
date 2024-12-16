@@ -1,26 +1,24 @@
-<a routerLink="/profile">
-  <div class="grey-container" style="width: 200px;">
-    <div class="row">
-      <div class="col-4 f-c-c-c pr-2">
-        <div style="display: flex; justify-content: center; align-items: center;">
-          <img class="big-profile-picture" style="width: 40px; height: 40px;" [src]="profileImageSafeUrl"
-            alt="User profile image" />
-        </div>
+<div class="grey-container" style="width: 200px;" (click)="navigateToProfile()">
+  <div class="row">
+    <div class="col-4 f-c-c-c pr-2">
+      <div style="display: flex; justify-content: center; align-items: center;">
+        <img class="big-profile-picture" style="width: 40px; height: 40px;" [src]="profileImageSafeUrl"
+          alt="User profile image" />
       </div>
-      <div class="col-8 p-0">
-        <div class="column justify-content-center align-items-start">
-          <!-- Name with ellipsis -->
-          <h5 class="text-ellipsis"
-            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; font-size: 16px">
-            {{ currentUser.name }}
-          </h5>
-          <!-- Surname with ellipsis -->
-          <h6 class="text-ellipsis"
-            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 80%; font-size: 14px">
-            {{ currentUser.surname }}
-          </h6>
-        </div>
+    </div>
+    <div class="col-8 p-0">
+      <div class="column justify-content-center align-items-start">
+        <!-- Name with ellipsis -->
+        <h5 class="text-ellipsis"
+          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; font-size: 16px">
+          {{ currentUser?.name }}
+        </h5>
+        <!-- Surname with ellipsis -->
+        <h6 class="text-ellipsis"
+          style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 80%; font-size: 14px">
+          {{ currentUser?.surname }}
+        </h6>
       </div>
     </div>
   </div>
-</a>
+</div>

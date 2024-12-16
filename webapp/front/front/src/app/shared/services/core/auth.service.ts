@@ -129,6 +129,8 @@ export class AuthService {
             'neighborhood:feedChannel',
             'neighborhood:hotPostStatus',
             'neighborhood:images',
+            'neighborhood:languageEnglish',
+            'neighborhood:languageSpanish',
             'neighborhood:likes',
             'neighborhood:nonePostStatus',
             'neighborhood:posts',

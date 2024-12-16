@@ -5,6 +5,7 @@ import { map, mergeMap } from 'rxjs/operators'
 import { User } from '../../models/index'
 import { ImageDto, LanguageDto, UserDto, UserRoleDto } from '../../dtos/app-dtos'
 import { parseLinkHeader } from './utils'
+import { HateoasLinksService, ImageService } from '../index.service'
 // TODO UserForm del user
 
 @Injectable({ providedIn: 'root' })
@@ -13,6 +14,9 @@ export class UserService {
 
     constructor(
         private http: HttpClient,
+        private linkService: HateoasLinksService,
+        private imageService: ImageService
+
     ) { }
 
     public getUser(userUrl: string): Observable<User> {
@@ -56,6 +60,34 @@ export class UserService {
             );
     }
 
+    public toggleDarkMode(user: User): Observable<User> {
+        const updatedDarkMode = !user.darkMode;
+        const updateUrl = user.self;
+
+        return this.http.patch<UserDto>(updateUrl, { darkMode: updatedDarkMode }).pipe(
+            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
+        );
+    }
+
+    public toggleLanguage(user: User): Observable<User> {
+        const newLanguage = user.language === 'SPANISH' ? this.linkService.getLink('neighborhood:languageEnglish') : this.linkService.getLink('neighborhood:languageSpanish');
+        const updateUrl = user.self;
+
+        return this.http.patch<UserDto>(updateUrl, { language: newLanguage }).pipe(
+            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
+        );
+    }
+
+    public uploadProfilePicture(user: User, file: File): Observable<User> {
+        return this.imageService.createImage(file).pipe(
+            mergeMap((imageUrl: string) => {
+                const updateUrl = user.self;
+                return this.http.patch<UserDto>(updateUrl, { profilePicture: imageUrl }).pipe(
+                    mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
+                );
+            })
+        );
+    }
 }
 
 export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {

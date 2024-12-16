@@ -30,6 +30,14 @@ export class UserSessionService {
         localStorage.setItem('currentUser', JSON.stringify(user));
     }
 
+    updateUserProperty(key: keyof User, value: any): void {
+        const currentUser = this.currentUserSubject.value;
+        if (currentUser) {
+            const updatedUser = { ...currentUser, [key]: value };
+            this.setUserInformation(updatedUser);
+        }
+    }
+
     setNeighborhoodInformation(neighborhood: Neighborhood): void {
         this.neighborhoodSubject.next(neighborhood);
         localStorage.setItem('neighborhood', JSON.stringify(neighborhood));
@@ -56,6 +64,17 @@ export class UserSessionService {
         this.currentUserSubject.next(null);
         this.neighborhoodSubject.next(null);
         this.authToken = null;
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('neighborhood');
+        localStorage.removeItem('authToken');
+    }
+
+    logout(): void {
+        this.currentUserSubject.next(null);
+        this.neighborhoodSubject.next(null);
+        this.authToken = null;
+
+        // Clear localStorage
         localStorage.removeItem('currentUser');
         localStorage.removeItem('neighborhood');
         localStorage.removeItem('authToken');
