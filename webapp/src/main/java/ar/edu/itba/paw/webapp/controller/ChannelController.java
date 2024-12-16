@@ -105,7 +105,7 @@ public class ChannelController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
         // Content
-        Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Channel channel = cs.findChannel(neighborhoodId, channelId).orElseThrow(NotFoundException::new);
         String channelHashCode = String.valueOf(channel.hashCode());
 
         // Cache Control
@@ -155,7 +155,7 @@ public class ChannelController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
         // Deletion Attempt
-        if (cs.deleteChannel(channelId, neighborhoodId))
+        if (cs.deleteChannel(neighborhoodId, channelId))
             return Response.noContent()
                     .build();
 

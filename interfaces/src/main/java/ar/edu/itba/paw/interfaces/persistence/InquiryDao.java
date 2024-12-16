@@ -23,5 +23,5 @@ public interface InquiryDao {
 
     // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
 
-    boolean deleteInquiry(final long inquiryId);
+    boolean deleteInquiry(final long neighborhoodId, final long productId, final long inquiryId);
 }

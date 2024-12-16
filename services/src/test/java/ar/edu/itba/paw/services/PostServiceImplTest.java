@@ -51,7 +51,7 @@ public class PostServiceImplTest {
         when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
 
         // Exercise
-        Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
+        Post createdPost = postService.createPost(neighborhoodId, userId, title, description, channelId, tagIds, imageId);
 
         // Validations & Post Conditions
         verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
@@ -81,7 +81,7 @@ public class PostServiceImplTest {
         when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
 
         // Exercise
-        Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
+        Post createdPost = postService.createPost(neighborhoodId, userId, title, description, channelId, tagIds, imageId);
 
         // Validations & Post Conditions
         verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
@@ -111,7 +111,7 @@ public class PostServiceImplTest {
         when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
 
         // Exercise
-        Post createdPost = postService.createPost(title, description, userId, channelId, tagIds, imageId, neighborhoodId);
+        Post createdPost = postService.createPost(neighborhoodId, userId, title, description, channelId, tagIds, imageId);
 
         // Validations & Post Conditions
         verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
@@ -146,7 +146,7 @@ public class PostServiceImplTest {
         when(postDao.deletePost(postId)).thenReturn(true);
 
         // Exercise
-        boolean result = postService.deletePost(postId, neighborhoodId);
+        boolean result = postService.deletePost(postId);
 
         // Validations & Post Conditions
         assertTrue(result);
@@ -170,7 +170,7 @@ public class PostServiceImplTest {
         when(postDao.deletePost(postId)).thenReturn(true);
 
         // Exercise
-        boolean result = postService.deletePost(postId, neighborhoodId);
+        boolean result = postService.deletePost(postId);
 
         // Validations & Post Conditions
         assertTrue(result);

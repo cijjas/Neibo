@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product createProduct(long userId, String name, String description, Double price, boolean used, long departmentId, List<Long> imageIds, long units) {
+    public Product createProduct(long userId, String name, String description, Double price, long units, boolean used, long departmentId, List<Long> imageIds) {
         LOGGER.info("Creating Product {} from User {}", name, userId);
 
         Long[] idArray = {0L, 0L, 0L};
@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Product> findProduct(long productId, long neighborhoodId) {
+    public Optional<Product> findProduct(long neighborhoodId, long productId) {
         LOGGER.info("Finding Product {} from Neighborhood {}", productId, neighborhoodId);
 
         return productDao.findProduct(productId, neighborhoodId);
@@ -65,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size) {
+    public List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size) {
         LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
         return productDao.getProducts(neighborhoodId, departmentId, userId, productStatusId, page, size);
@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateProductPages(long neighborhoodId, int size, Long departmentId, Long userId, Long productStatusId) {
+    public int calculateProductPages(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int size) {
         LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
         return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, departmentId, userId, productStatusId), size);
@@ -82,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, Double price, Boolean used, Long departmentId, List<Long> imageIds, Long stock) {
+    public Product updateProductPartially(long productId, String name, String description, Double price, Long units, Boolean used, Long departmentId, List<Long> imageIds) {
         LOGGER.info("Updating Product {}", productId);
 
         Product product = findProduct(productId).orElseThrow(NotFoundException::new);
@@ -97,8 +97,8 @@ public class ProductServiceImpl implements ProductService {
             product.setUsed(used);
         if (departmentId!= null)
             product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(NotFoundException::new));
-        if (stock != null)
-            product.setRemainingUnits(stock);
+        if (units != null)
+            product.setRemainingUnits(units);
 
         if (imageIds != null && !imageIds.isEmpty()) {
             product.setPrimaryPicture(imageService.findImage(imageIds.get(0)).orElseThrow(NotFoundException::new));
@@ -114,9 +114,9 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteProduct(long productId) {
+    public boolean deleteProduct(long neighborhoodId, long productId) {
         LOGGER.info("Deleting Product {}", productId);
 
-        return productDao.deleteProduct(productId);
+        return productDao.deleteProduct(neighborhoodId, productId);
     }
 }

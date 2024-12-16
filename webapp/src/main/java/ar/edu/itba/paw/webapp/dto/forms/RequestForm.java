@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdCons
 import ar.edu.itba.paw.webapp.validation.constraints.specific.UserTransactionPairConstraint;
 
 import javax.validation.constraints.Min;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import java.util.Objects;
@@ -16,12 +17,14 @@ import java.util.Objects;
 public class RequestForm {
 
     @QueryParam("page")
+    @DefaultValue("1")
     @Min(1)
-    private int page = 1;
+    private int page;
 
     @QueryParam("size")
+    @DefaultValue("10")
     @Min(1)
-    private int size = 10;
+    private int size;
 
     @PathParam("neighborhoodId")
     @NeighborhoodIdConstraint

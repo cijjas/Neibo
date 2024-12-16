@@ -4,10 +4,6 @@ import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
 import ar.edu.itba.paw.webapp.dto.forms.RequestForm;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TransactionTypeURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -73,8 +69,8 @@ public class RequestController {
         Long requestStatusId = extractOptionalFirstId(requestForm.getWithStatus());
 
         // Content
-        final List<Request> requests = rs.getRequests(userId, productId, transactionTypeId, requestStatusId,
-                requestForm.getPage(), requestForm.getSize(), requestForm.getNeighborhoodId());
+        final List<Request> requests = rs.getRequests(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId,
+                requestForm.getPage(), requestForm.getSize());
         String requestsHashCode = String.valueOf(requests.hashCode());
 
         // Cache Control
@@ -96,7 +92,7 @@ public class RequestController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + requestForm.getNeighborhoodId() + "/requests",
-                rs.calculateRequestPages(productId, userId, transactionTypeId, requestStatusId, requestForm.getNeighborhoodId(),
+                rs.calculateRequestPages(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId,
                         requestForm.getSize()),
                 requestForm.getPage(),
                 requestForm.getSize()
@@ -119,7 +115,7 @@ public class RequestController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
         // Content
-        Request productRequest = rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Request productRequest = rs.findRequest(neighborhoodId, requestId).orElseThrow(NotFoundException::new);
         String requestHashCode = String.valueOf(productRequest.hashCode());
 
         // Cache Control
@@ -178,14 +174,14 @@ public class RequestController {
     @DELETE
     @Path("/{id}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteRequest(#requestId)")
-    public Response deleteById(
+    public Response deleteRequest(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long requestId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
         // Deletion Attempt
-        if (rs.deleteRequest(requestId))
+        if (rs.deleteRequest(neighborhoodId, requestId))
             return Response.noContent()
                     .build();
 

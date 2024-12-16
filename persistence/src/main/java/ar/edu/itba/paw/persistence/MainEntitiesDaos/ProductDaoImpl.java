@@ -225,12 +225,16 @@ public class ProductDaoImpl implements ProductDao {
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 
     @Override
-    public boolean deleteProduct(long productId) {
+    public boolean deleteProduct(long neighborhoodId, long productId) {
         LOGGER.debug("Deleting Product with id {}", productId);
 
-        int deletedCount = em.createQuery("DELETE FROM Product WHERE productId = :productId ")
-                .setParameter("productId", productId)
-                .executeUpdate();
+        int deletedCount = em.createNativeQuery(
+            "DELETE FROM products p WHERE p.productId = :productId AND p.sellerId IN (SELECT u.userId FROM users u WHERE u.neighborhoodId = :neighborhoodId)"
+            )
+            .setParameter("productId", productId)
+            .setParameter("neighborhoodId", neighborhoodId)
+            .executeUpdate();
+
         return deletedCount > 0;
     }
 }

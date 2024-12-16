@@ -21,5 +21,5 @@ public interface RequestDao {
 
     // --------------------------------------------- REQUESTS DELETE ---------------------------------------------------
 
-    boolean deleteRequest(long requestId);
+    boolean deleteRequest(long neighborhoodId, long requestId);
 }

@@ -69,10 +69,10 @@ public class InquiryController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
         // Path Verification
-        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
+        ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Content
-        final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
+        final List<Inquiry> inquiries = is.getInquiries(neighborhoodId, productId, size, page);
         String inquiriesHashCode = String.valueOf(inquiries.hashCode());
 
         // Cache Control
@@ -115,7 +115,7 @@ public class InquiryController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Content
-        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Inquiry inquiry = is.findInquiry(neighborhoodId, productId, inquiryId).orElseThrow(NotFoundException::new);
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Cache Control
@@ -141,7 +141,7 @@ public class InquiryController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
         // Path Verification
-        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
+        ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Creation & HashCode Generation
         final Inquiry inquiry = is.createInquiry(extractSecondId(form.getUser()), productId, form.getMessage());
@@ -170,7 +170,7 @@ public class InquiryController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Path Verification
-        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
+        ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Modification & HashCode Generation
         final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getReply());
@@ -184,18 +184,15 @@ public class InquiryController {
     @DELETE
     @Path("/{id}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteInquiry(#inquiryId)")
-    public Response deleteById(
+    public Response deleteInquiry(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("productId") @GenericIdConstraint final Long productId,
             @PathParam("id") @GenericIdConstraint final long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
-        // Path Verification
-        ps.findProduct(productId, neighborhoodId).orElseThrow(NotAcceptableException::new);
-
         // Deletion Attempt
-        if (is.deleteInquiry(inquiryId))
+        if (is.deleteInquiry(neighborhoodId, productId, inquiryId))
             return Response.noContent()
                     .build();
 

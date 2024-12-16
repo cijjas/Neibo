@@ -22,5 +22,5 @@ public interface BookingDao {
 
     int countBookings(Long userId, Long amenityId, long neighborhoodId);
 
-    boolean deleteBooking(long bookingId);
+    boolean deleteBooking(long neighborhoodId, long bookingId);
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.Date;
@@ -170,14 +171,24 @@ public class RequestDaoImpl implements RequestDao {
     // --------------------------------------------- REQUESTS DELETE ---------------------------------------------------
 
     @Override
-    public boolean deleteRequest(long requestId) {
-        LOGGER.debug("Deleting Request {}", requestId);
+    public boolean deleteRequest(long neighborhoodId, long requestId) {
+        LOGGER.debug("Deleting Request with requestId {} and neighborhoodId {}", requestId, neighborhoodId);
 
-        Request request = em.find(Request.class, requestId);
-        if (request != null) {
-            em.remove(request);
-            return true;
-        }
-        return false;
+        String nativeSql = "DELETE FROM products_users_requests r " +
+                "WHERE r.requestid = :requestId " +
+                "AND EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM products p " +
+                "    JOIN users u ON p.sellerid = u.userid " +
+                "    WHERE p.productid = r.productid " +
+                "    AND u.neighborhoodid = :neighborhoodId" +
+                ")";
+
+        int deletedCount = em.createNativeQuery(nativeSql)
+                .setParameter("requestId", requestId)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .executeUpdate();
+
+        return deletedCount > 0;
     }
 }

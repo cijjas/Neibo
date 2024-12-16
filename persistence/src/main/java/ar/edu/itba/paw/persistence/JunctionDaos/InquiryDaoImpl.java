@@ -101,15 +101,26 @@ public class InquiryDaoImpl implements InquiryDao {
     // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
 
     @Override
-    public boolean deleteInquiry(long inquiryId) {
-        LOGGER.debug("Deleting Inquiry with id {}", inquiryId);
+    public boolean deleteInquiry(long neighborhoodId, long productId, long inquiryId) {
+        LOGGER.debug("Deleting Inquiry with inquiryId {}, productId {}, and neighborhoodId {}", inquiryId, productId, neighborhoodId);
 
-        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
-        if (inquiry != null) {
-            em.remove(inquiry);
-            return true;
-        }
-        return false;
+        String nativeSql = "DELETE FROM products_users_inquiries i " +
+                "WHERE i.inquiryid = :inquiryId " +
+                "AND i.productid = :productId " +
+                "AND EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM products p " +
+                "    JOIN users u ON p.sellerid = u.userid " +
+                "    WHERE p.productid = :productId " +
+                "    AND u.neighborhoodid = :neighborhoodId" +
+                ")";
+
+        int deletedCount = em.createNativeQuery(nativeSql)
+                .setParameter("inquiryId", inquiryId)
+                .setParameter("productId", productId)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .executeUpdate();
+
+        return deletedCount > 0;
     }
-
 }

@@ -7,19 +7,19 @@ import java.util.Optional;
 
 public interface CommentService {
 
-    Comment createComment(final String comment, final long userId, final long postId);
+    Comment createComment(final long userId, final long postId, final String comment);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Comment> findComment(long commentId);
 
-    Optional<Comment> findComment(long commentId, long postId, long neighborhoodId);
+    Optional<Comment> findComment(long neighborhoodId, long postId, long commentId);
 
-    List<Comment> getComments(long postId, int page, int size, long neighborhoodId);
+    List<Comment> getComments(long neighborhoodId, long postId, int size, int page);
 
     int calculateCommentPages(long postId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteComment(final long commentId);
+    boolean deleteComment(final long neighborhoodId, final long postId, final long commentId);
 }

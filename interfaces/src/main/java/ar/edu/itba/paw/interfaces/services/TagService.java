@@ -11,11 +11,11 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Tag> findTag(long tagId, long neighborhoodId);
+    Optional<Tag> findTag(long neighborhoodId, long tagId);
 
-    List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
+    List<Tag> getTags(long neighborhoodId, Long postId, int page, int size);
 
-    int calculateTagPages(Long postId, long neighborhoodId, int size);
+    int calculateTagPages(long neighborhoodId, Long postId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

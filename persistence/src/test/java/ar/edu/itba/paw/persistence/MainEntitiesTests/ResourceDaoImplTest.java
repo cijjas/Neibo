@@ -181,14 +181,14 @@ public class ResourceDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_resourceId_valid() {
+    public void delete_neighborhoodId_resourceId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
         long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        boolean deleted = resourceDaoImpl.deleteResource(rKey);
+        boolean deleted = resourceDaoImpl.deleteResource(nhKey, rKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -197,14 +197,44 @@ public class ResourceDaoImplTest {
     }
 
     @Test
-    public void delete_resourceId_invalid_resourceId() {
+    public void delete_neighborhoodId_resourceId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
         long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        boolean deleted = resourceDaoImpl.deleteResource(INVALID_ID);
+        boolean deleted = resourceDaoImpl.deleteResource(INVALID_ID, rKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_resourceId_invalid_resourceId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        boolean deleted = resourceDaoImpl.deleteResource(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_resourceId_invalid_neighborhoodId_resourceId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        boolean deleted = resourceDaoImpl.deleteResource(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

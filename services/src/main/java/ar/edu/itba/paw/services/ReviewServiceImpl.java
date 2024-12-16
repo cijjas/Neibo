@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Review> findReview(long reviewId, long workerId) {
+    public Optional<Review> findReview(long workerId, long reviewId) {
         LOGGER.info("Finding Review {} from Worker {}", reviewId, workerId);
 
         return reviewDao.findReview(reviewId, workerId);
@@ -77,9 +76,9 @@ public class ReviewServiceImpl implements ReviewService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteReview(long reviewId) {
+    public boolean deleteReview(long workerId, long reviewId) {
         LOGGER.info("Deleting Review {}", reviewId);
 
-        return reviewDao.deleteReview(reviewId);
+        return reviewDao.deleteReview(workerId, reviewId);
     }
 }

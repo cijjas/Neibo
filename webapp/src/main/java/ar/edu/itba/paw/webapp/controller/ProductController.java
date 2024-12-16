@@ -74,7 +74,7 @@ public class ProductController {
         Long productStatusId = extractOptionalFirstId(productStatus);
 
         // Content
-        final List<Product> products = ps.getProducts(neighborhoodId, departmentId, userId, productStatusId, page, size);
+        final List<Product> products = ps.getProducts(neighborhoodId, userId, departmentId, productStatusId, page, size);
         String productsHashCode = String.valueOf(products.hashCode());
 
         // Cache Control
@@ -94,7 +94,7 @@ public class ProductController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products",
-                ps.calculateProductPages(neighborhoodId, size, departmentId, userId, productStatusId),
+                ps.calculateProductPages(neighborhoodId, userId, departmentId, productStatusId, size),
                 page,
                 size
         );
@@ -116,7 +116,7 @@ public class ProductController {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Content
-        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Product product = ps.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
         String productHashCode = String.valueOf(product.hashCode());
 
         // Cache Control
@@ -140,7 +140,7 @@ public class ProductController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(extractSecondId(form.getUser()), form.getName(), form.getDescription(), form.getPrice(), form.getUsed(), extractFirstId(form.getDepartment()), extractFirstIds(form.getImages()), form.getRemainingUnits());
+        final Product product = ps.createProduct(extractSecondId(form.getUser()), form.getName(), form.getDescription(), form.getPrice(), form.getRemainingUnits(), form.getUsed(), extractFirstId(form.getDepartment()), extractFirstIds(form.getImages()));
         String productHashCode = String.valueOf(product.hashCode());
 
         // Resource URN
@@ -169,10 +169,9 @@ public class ProductController {
                 partialUpdate.getName(),
                 partialUpdate.getDescription(),
                 partialUpdate.getPrice(),
-                partialUpdate.getUsed(),
+                partialUpdate.getRemainingUnits(), partialUpdate.getUsed(),
                 extractOptionalFirstId(partialUpdate.getDepartment()),
-                extractFirstIds(partialUpdate.getImages()),
-                partialUpdate.getRemainingUnits()
+                extractFirstIds(partialUpdate.getImages())
         );
         String productHashCode = String.valueOf(updatedProduct.hashCode());
 
@@ -184,14 +183,14 @@ public class ProductController {
     @DELETE
     @Path("/{id}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
-    public Response deleteById(
+    public Response deleteProduct(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long productId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Attempt to delete the amenity
-        if (ps.deleteProduct(productId))
+        if (ps.deleteProduct(neighborhoodId, productId))
             return Response.noContent()
                     .build();
 

@@ -46,7 +46,7 @@ public class WorkerServiceImplTest {
         when(imageService.findImage(backgroundPictureId)).thenReturn(Optional.of(backgroundPicture));
 
         // Exercise
-        workerService.updateWorkerPartially(workerId, phoneNumber, address, businessName, backgroundPictureId, bio);
+        workerService.updateWorkerPartially(workerId, businessName, address, phoneNumber, backgroundPictureId, bio);
 
         // Validation & Post Conditions
         assertEquals(phoneNumber, worker.getPhoneNumber());
@@ -69,7 +69,7 @@ public class WorkerServiceImplTest {
         when(workerDao.findWorker(workerId)).thenReturn(Optional.of(worker));
 
         // Exercise
-        workerService.updateWorkerPartially(workerId, phoneNumber, null, null, null, null);
+        workerService.updateWorkerPartially(workerId, null, null, phoneNumber, null, null);
 
         // Validation & Post Conditions
         assertEquals(phoneNumber, worker.getPhoneNumber());
@@ -91,7 +91,7 @@ public class WorkerServiceImplTest {
         when(workerDao.findWorker(workerId)).thenReturn(Optional.of(worker));
 
         // Exercise
-        workerService.updateWorkerPartially(workerId, "", "", null, null, "");
+        workerService.updateWorkerPartially(workerId, null, "", "", null, "");
 
         // Validation & Post Conditions
         assertNull(worker.getPhoneNumber());

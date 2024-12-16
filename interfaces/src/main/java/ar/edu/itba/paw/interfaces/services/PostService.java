@@ -7,19 +7,19 @@ import java.util.Optional;
 
 public interface PostService {
 
-    Post createPost(String title, String description, long userId, long channelId, List<Long> tagIds, Long imageId, long neighborhoodId);
+    Post createPost(long neighborhoodId, long userId, String title, String description, long channelId, List<Long> tagIds, Long imageId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Post> findPost(long postId);
 
-    Optional<Post> findPost(long postId, long neighborhoodId);
+    Optional<Post> findPost(long neighborhoodId, long postId);
 
-    List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
+    List<Post> getPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int page, int size);
 
-    int calculatePostPages(Long channelId, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
+    int calculatePostPages(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deletePost(final long postId, final long neighborhoodId);
+    boolean deletePost(final long postId);
 }

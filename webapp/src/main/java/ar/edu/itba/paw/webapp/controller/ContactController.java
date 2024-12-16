@@ -107,7 +107,7 @@ public class ContactController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
         // Content
-        Contact contact = cs.findContact(contactId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Contact contact = cs.findContact(neighborhoodId, contactId).orElseThrow(NotFoundException::new);
         String contactHashCode = String.valueOf(contact.hashCode());
 
         // Cache Control
@@ -167,14 +167,14 @@ public class ContactController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    public Response deleteById(
+    public Response deleteContact(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id
+            @PathParam("id") @GenericIdConstraint final long contactId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
         // Deletion Attempt
-        if (cs.deleteContact(id))
+        if (cs.deleteContact(neighborhoodId, contactId))
             return Response.noContent()
                     .build();
 

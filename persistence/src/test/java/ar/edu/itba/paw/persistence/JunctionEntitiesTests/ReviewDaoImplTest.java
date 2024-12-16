@@ -410,7 +410,7 @@ public class ReviewDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_reviewId_valid() {
+    public void delete_workerId_reviewId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -421,7 +421,7 @@ public class ReviewDaoImplTest {
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        boolean deleted = ReviewDaoImpl.deleteReview(rKey);
+        boolean deleted = ReviewDaoImpl.deleteReview(uKey, rKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -430,7 +430,7 @@ public class ReviewDaoImplTest {
     }
 
     @Test
-    public void delete_reviewId_invalid_reviewId() {
+    public void delete_workerId_reviewId_invalid_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -441,7 +441,45 @@ public class ReviewDaoImplTest {
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        boolean deleted = ReviewDaoImpl.deleteReview(INVALID_ID);
+        boolean deleted = ReviewDaoImpl.deleteReview(INVALID_ID, rKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_workerId_reviewId_invalid_reviewId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+        long rKey = testInserter.createReview(uKey, uKey2);
+
+        // Exercise
+        boolean deleted = ReviewDaoImpl.deleteReview(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_workerId_reviewId_invalid_workerId_reviewId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+        long rKey = testInserter.createReview(uKey, uKey2);
+
+        // Exercise
+        boolean deleted = ReviewDaoImpl.deleteReview(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

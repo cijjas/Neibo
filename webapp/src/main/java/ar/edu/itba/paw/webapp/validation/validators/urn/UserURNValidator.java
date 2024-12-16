@@ -27,6 +27,6 @@ public class UserURNValidator implements ConstraintValidator<UserURNConstraint, 
         if (!URNValidator.validateURN(userURN, "users"))
             return false;
         TwoId twoId = extractTwoId(userURN);
-        return userService.findUser(twoId.getSecondId(), twoId.getFirstId()).isPresent();
+        return userService.findUser(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

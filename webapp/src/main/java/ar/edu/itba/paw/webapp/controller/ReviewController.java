@@ -130,7 +130,7 @@ public class ReviewController {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 
         // Content
-        Review review = rs.findReview(id, workerId).orElseThrow(NotFoundException::new);
+        Review review = rs.findReview(workerId, id).orElseThrow(NotFoundException::new);
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Cache Control
@@ -170,14 +170,14 @@ public class ReviewController {
     @DELETE
     @Path("/{id}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(
+    public Response deleteReview(
             @PathParam("workerId") @WorkerIdConstraint final long workerId,
             @PathParam("id") @GenericIdConstraint final long reviewId
     ) {
         LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 
         // Deletion Attempt
-        if (rs.deleteReview(reviewId))
+        if (rs.deleteReview(workerId, reviewId))
             return Response.noContent()
                     .build();
 

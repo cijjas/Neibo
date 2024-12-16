@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.PostService;
-import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.Tag;
 import org.slf4j.Logger;
@@ -38,7 +37,7 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, long userId, long channelId, List<Long> tagIds, Long imageId, long neighborhoodId) {
+    public Post createPost(long neighborhoodId, long userId, String title, String description, long channelId, List<Long> tagIds, Long imageId) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
         Post p = postDao.createPost(title, description, userId, channelId, imageId == null ? 0 : imageId);
@@ -65,7 +64,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Post> findPost(final long postId, long neighborhoodId) {
+    public Optional<Post> findPost(long neighborhoodId, final long postId) {
         LOGGER.info("Finding Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return postDao.findPost(postId, neighborhoodId);
@@ -73,7 +72,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
+    public List<Post> getPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int page, int size) {
         LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusId, channelId, tagIds, userId, neighborhoodId);
 
         return postDao.getPosts(channelId, page, size, tagIds, neighborhoodId, postStatusId, userId);
@@ -81,7 +80,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculatePostPages(Long channelId, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
+    public int calculatePostPages(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int size) {
         LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusId, channelId, tagIds, userId, neighborhoodId);
 
         return PaginationUtils.calculatePages(postDao.countPosts(channelId, tagIds, neighborhoodId, postStatusId, userId), size);
@@ -90,7 +89,7 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deletePost(long postId, long neighborhoodId) {
+    public boolean deletePost(long postId) {
         LOGGER.info("Deleting Post {}", postId);
 
         // Delete tag associations

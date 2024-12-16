@@ -23,5 +23,5 @@ public interface ProductDao {
 
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 
-    boolean deleteProduct(final long productId);
+    boolean deleteProduct(final long neighborhoodId, final long productId);
 }

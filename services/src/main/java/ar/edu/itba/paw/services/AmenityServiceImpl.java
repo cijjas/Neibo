@@ -44,7 +44,7 @@ public class AmenityServiceImpl implements AmenityService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Amenity createAmenity(String name, String description, long neighborhoodId, List<Long> selectedShiftsIds) {
+    public Amenity createAmenity(long neighborhoodId, String name, String description, List<Long> selectedShiftsIds) {
         LOGGER.info("Creating Amenity {}", name);
 
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
@@ -70,7 +70,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
+    public Optional<Amenity> findAmenity(long neighborhoodId, long amenityId) {
         LOGGER.info("Finding Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
 
         return amenityDao.findAmenity(amenityId, neighborhoodId);
@@ -139,9 +139,9 @@ public class AmenityServiceImpl implements AmenityService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteAmenity(long amenityId) {
+    public boolean deleteAmenity(long neighborhoodId, long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
 
-        return amenityDao.deleteAmenity(amenityId);
+        return amenityDao.deleteAmenity(neighborhoodId, amenityId);
     }
 }

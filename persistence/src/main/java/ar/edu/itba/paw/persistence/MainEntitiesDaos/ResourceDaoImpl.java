@@ -95,14 +95,18 @@ public class ResourceDaoImpl implements ResourceDao {
 
     // --------------------------------------------- RESOURCE DELETE ----------------------------------------------------
 
-    public boolean deleteResource(long resourceId) {
-        LOGGER.debug("Deleting Resource with resourceId {}", resourceId);
+    @Override
+    public boolean deleteResource(long neighborhoodId, long resourceId) {
+        LOGGER.debug("Deleting Resource with resourceId {} and neighborhoodId {}", resourceId, neighborhoodId);
 
-        Resource resource = em.find(Resource.class, resourceId);
-        if (resource != null) {
-            em.remove(resource);
-            return true;
-        }
-        return false;
+        String hql = "DELETE FROM Resource r WHERE r.resourceId = :resourceId " +
+                "AND r.neighborhood.id = :neighborhoodId";
+
+        int deletedCount = em.createQuery(hql)
+                .setParameter("resourceId", resourceId)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .executeUpdate();
+
+        return deletedCount > 0;
     }
 }

@@ -78,7 +78,7 @@ public class PostController {
         Long userId = extractOptionalSecondId(user);
 
         // Content
-        final List<Post> posts = ps.getPosts(channelId, page, size, tagIds, neighborhoodId, postStatusId, userId);
+        final List<Post> posts = ps.getPosts(neighborhoodId, userId, channelId, tagIds, postStatusId, page, size);
         String postsHashCode = String.valueOf(posts.hashCode());
 
         // Cache Control
@@ -98,7 +98,7 @@ public class PostController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts",
-                ps.calculatePostPages(channelId, size, tagIds, neighborhoodId, postStatusId, userId),
+                ps.calculatePostPages(neighborhoodId, userId, channelId, tagIds, postStatusId, size),
                 page,
                 size
         );
@@ -120,7 +120,7 @@ public class PostController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
         // Content
-        Post post = ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Post post = ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
         String postHashCode = String.valueOf(post.hashCode());
 
         // Cache Control
@@ -144,7 +144,7 @@ public class PostController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(form.getTitle(), form.getBody(), extractSecondId(form.getUser()), extractSecondId(form.getChannel()), extractSecondIds(form.getTags()), extractOptionalFirstId(form.getImage()), neighborhoodId);
+        final Post post = ps.createPost(neighborhoodId, extractSecondId(form.getUser()), form.getTitle(), form.getBody(), extractSecondId(form.getChannel()), extractSecondIds(form.getTags()), extractOptionalFirstId(form.getImage()));
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN
@@ -170,7 +170,7 @@ public class PostController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
         // Attempt to delete the amenity
-        if (ps.deletePost(postId, neighborhoodId))
+        if (ps.deletePost(postId))
             return Response.noContent()
                     .build();
 

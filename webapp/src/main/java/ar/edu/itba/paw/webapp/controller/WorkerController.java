@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
@@ -78,7 +77,7 @@ public class WorkerController {
         Long workerStatusId = extractOptionalFirstId(workerRole);
 
         // Content
-        List<Worker> workers = ws.getWorkers(page, size, professionIds, neighborhoodIds, workerRoleId, workerStatusId);
+        List<Worker> workers = ws.getWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId, page, size);
         String workersHashCode = String.valueOf(workers.hashCode());
 
         // Cache Control
@@ -98,7 +97,7 @@ public class WorkerController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "/workers",
-                ws.calculateWorkerPages(professionIds, neighborhoodIds, size, workerRoleId, workerStatusId),
+                ws.calculateWorkerPages(neighborhoodIds, professionIds, workerRoleId, workerStatusId, size),
                 page,
                 size
         );
@@ -144,7 +143,7 @@ public class WorkerController {
         LOGGER.info("POST request arrived at '/workers'");
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(extractSecondId(form.getUser()), form.getPhoneNumber(), form.getAddress(), extractFirstIds(form.getProfessions()), form.getBusinessName());
+        final Worker worker = ws.createWorker(extractSecondId(form.getUser()), extractFirstIds(form.getProfessions()), form.getBusinessName(), form.getAddress(), form.getPhoneNumber());
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN
@@ -166,7 +165,7 @@ public class WorkerController {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 
         // Modification & HashCode Generation
-        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), extractOptionalFirstId(partialUpdate.getBackgroundPicture()), partialUpdate.getBio());
+        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getBusinessName(), partialUpdate.getAddress(), partialUpdate.getPhoneNumber(), extractOptionalFirstId(partialUpdate.getBackgroundPicture()), partialUpdate.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
         return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))

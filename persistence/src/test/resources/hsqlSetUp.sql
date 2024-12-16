@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS comments
 (
     commentid   INTEGER IDENTITY PRIMARY KEY,
     comment     VARCHAR(512) NOT NULL,
-    commentdate DATE         NOT NULL,
+    commentdate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         userid      INTEGER      NOT NULL REFERENCES users ON DELETE CASCADE,
     postid      INTEGER      NOT NULL REFERENCES posts ON DELETE CASCADE
 );

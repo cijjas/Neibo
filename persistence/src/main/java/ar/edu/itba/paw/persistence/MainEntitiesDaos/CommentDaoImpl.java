@@ -101,14 +101,20 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS DELETE ----------------------------------------------------
 
     @Override
-    public boolean deleteComment(long commentId) {
-        LOGGER.debug("Deleting Comment with id {}", commentId);
+    public boolean deleteComment(long neighborhoodId, long postId, long commentId) {
+        LOGGER.debug("Deleting Comment with commentId {}, postId {}, and neighborhoodId {}", commentId, postId, neighborhoodId);
 
-        Comment comment = em.find(Comment.class, commentId);
-        if (comment != null) {
-            em.remove(comment);
-            return true;
-        }
-        return false;
+        String nativeSql = "DELETE FROM comments c " +
+                "WHERE c.commentId = :commentId " +
+                "AND c.postId = :postId " +
+                "AND c.userId IN (SELECT u.userId FROM users u WHERE u.neighborhoodId = :neighborhoodId)";
+
+        int deletedCount = em.createNativeQuery(nativeSql)
+                .setParameter("commentId", commentId)
+                .setParameter("postId", postId)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .executeUpdate();
+
+        return deletedCount > 0;
     }
 }

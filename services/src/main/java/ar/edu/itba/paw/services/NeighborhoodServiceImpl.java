@@ -45,7 +45,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
+    public List<Neighborhood> getNeighborhoods(Long workerId, int size, int page) {
         LOGGER.info("Getting Neighborhoods");
 
         return neighborhoodDao.getNeighborhoods(page, size, workerId);

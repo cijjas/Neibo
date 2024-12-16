@@ -56,7 +56,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createNeighbor(email, password, name, surname, neighborhoodId, languageId, identification);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
@@ -88,7 +88,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createNeighbor(email, password, name, surname, neighborhoodId, languageId, identification);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
@@ -118,7 +118,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createNeighbor(email, password, name, surname, neighborhoodId, languageId, identification);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
@@ -148,7 +148,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createNeighbor(email, password, name, surname, neighborhoodId, languageId, identification);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
@@ -178,7 +178,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
 
         // Exercise
-        User result = userService.createNeighbor(mail, password, name, surname, neighborhoodId, languageId, identification);
+        User result = userService.createUser(neighborhoodId, mail, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
         assertNotNull(result);
@@ -216,7 +216,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
-        userService.updateUser(userId, mail, name, surname, password, darkMode, phoneNumber, profilePictureId, identification, languageId, userRoleId);
+        userService.updateUser(userId, mail, name, surname, password, identification, languageId, profilePictureId, darkMode, phoneNumber, userRoleId);
 
         // Validation & Post Conditions
         assertEquals(mail, user.getMail());
@@ -246,7 +246,7 @@ public class UserServiceImplTest {
         when(userDao.findUser(userId)).thenReturn(Optional.of(user));
 
         // Exercise
-        userService.updateUser(userId, mail, null, null, null, darkMode, null, null, null, null, null);
+        userService.updateUser(userId, mail, null, null, null, null, null, null, darkMode, null, null);
 
         // Validation & Post Conditions
         assertEquals(mail, user.getMail());

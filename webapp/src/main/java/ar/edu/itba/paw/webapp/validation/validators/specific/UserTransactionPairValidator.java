@@ -14,7 +14,6 @@ public class UserTransactionPairValidator implements ConstraintValidator<UserTra
 
     @Override
     public boolean isValid(RequestForm form, ConstraintValidatorContext context) {
-        System.out.println(form);
         boolean hasUser = form.getRequestedBy() != null && !form.getRequestedBy().isEmpty();
         boolean hasType = form.getWithType() != null && !form.getWithType().isEmpty();
 

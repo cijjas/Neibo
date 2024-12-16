@@ -256,7 +256,7 @@ public class EventDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_eventId_valid() {
+    public void delete_neighborhoodId_eventId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -264,7 +264,7 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        boolean deleted = eventDaoImpl.deleteEvent(eKey);
+        boolean deleted = eventDaoImpl.deleteEvent(nhKey, eKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -273,7 +273,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void delete_eventId_invalid_eventId() {
+    public void delete_neighborhoodId_eventId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -281,7 +281,39 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        boolean deleted = eventDaoImpl.deleteEvent(INVALID_ID);
+        boolean deleted = eventDaoImpl.deleteEvent(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_eventId_invalid_eventId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+
+        // Exercise
+        boolean deleted = eventDaoImpl.deleteEvent(INVALID_ID, eKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_eventId_invalid_neighborhoodId_eventId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+
+        // Exercise
+        boolean deleted = eventDaoImpl.deleteEvent(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

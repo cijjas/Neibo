@@ -110,7 +110,7 @@ public class ChannelServiceImplTest {
         when(channelMappingDao.getChannelMappings(channelId, null, 1, 1)).thenReturn(Collections.emptyList());
 
         // Exercise
-        boolean result = channelService.deleteChannel(channelId, neighborhoodId);
+        boolean result = channelService.deleteChannel(neighborhoodId, channelId);
 
         // Validations & Post Conditions
         assertTrue(result);
@@ -131,7 +131,7 @@ public class ChannelServiceImplTest {
         when(channelMappingDao.getChannelMappings(channelId, null, 1, 1)).thenReturn(Collections.singletonList(new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(channelId).build())));
 
         // Exercise
-        boolean result = channelService.deleteChannel(channelId, neighborhoodId);
+        boolean result = channelService.deleteChannel(neighborhoodId, channelId);
 
         // Validations & Post Conditions
         assertTrue(result);

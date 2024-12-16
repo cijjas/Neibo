@@ -13,11 +13,11 @@ public interface RequestService {
 
     Optional<Request> findRequest(long requestId);
 
-    Optional<Request> findRequest(long requestId, long neighborhoodId);
+    Optional<Request> findRequest(long neighborhoodId, long requestId);
 
-    List<Request> getRequests(Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int page, int size, long neighborhoodId);
+    List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int page, int size);
 
-    int calculateRequestPages(Long productId, Long userId, Long transactionTypeURN, Long requestStatusURN, long neighborhoodId, int size);
+    int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusURN, Long transactionTypeURN, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -25,5 +25,5 @@ public interface RequestService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteRequest(long requestId);
+    boolean deleteRequest(long neighborhoodId, long requestId);
 }

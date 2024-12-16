@@ -67,7 +67,7 @@ public class NeighborhoodController {
         Long workerId = extractOptionalFirstId(worker);
 
         // Content
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerId);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(workerId, size, page);
         String neighborhoodsHashCode = String.valueOf(neighborhoods.hashCode());
 
         // Cache Control

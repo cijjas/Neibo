@@ -229,13 +229,13 @@ public class AmenityDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_amenityId_valid() {
+    public void delete_neighborhoodId_amenityId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        boolean deleted = amenityDaoImpl.deleteAmenity(aKey);
+        boolean deleted = amenityDaoImpl.deleteAmenity(nhKey, aKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -244,13 +244,41 @@ public class AmenityDaoImplTest {
     }
 
     @Test
-    public void delete_amenityId_invalid_amenityId() {
+    public void delete_neighborhoodId_amenityId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        boolean deleted = amenityDaoImpl.deleteAmenity(INVALID_ID);
+        boolean deleted = amenityDaoImpl.deleteAmenity(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_amenityId_invalid_amenityId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        boolean deleted = amenityDaoImpl.deleteAmenity(INVALID_ID, aKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_amenityId_invalid_neighborhoodId_amenityId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        boolean deleted = amenityDaoImpl.deleteAmenity(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

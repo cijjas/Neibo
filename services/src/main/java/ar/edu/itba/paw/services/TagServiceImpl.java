@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
@@ -55,7 +54,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Tag> findTag(long tagId, long neighborhoodId) {
+    public Optional<Tag> findTag(long neighborhoodId, long tagId) {
         LOGGER.info("Finding Tag {} from Neighborhood {}", tagId, neighborhoodId);
 
         return tagDao.findTag(tagId, neighborhoodId);
@@ -63,7 +62,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
+    public List<Tag> getTags(long neighborhoodId, Long postId, int page, int size) {
         LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return tagDao.getTags(postId, neighborhoodId, page, size);
@@ -71,7 +70,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateTagPages(Long postId, long neighborhoodId, int size) {
+    public int calculateTagPages(long neighborhoodId, Long postId, int size) {
         LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);

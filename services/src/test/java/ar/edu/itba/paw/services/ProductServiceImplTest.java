@@ -45,7 +45,7 @@ public class ProductServiceImplTest {
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
-        Product result = productService.createProduct(userId, name, description, price, used, departmentId, imageIds, units);
+        Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
         verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(0L), eq(0L), eq(0L), eq(units));
@@ -68,7 +68,7 @@ public class ProductServiceImplTest {
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
-        Product result = productService.createProduct(userId, name, description, price, used, departmentId, imageIds, units);
+        Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
         verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(0L), eq(0L), eq(units));
@@ -91,7 +91,7 @@ public class ProductServiceImplTest {
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
-        Product result = productService.createProduct(userId, name, description, price, used, departmentId, imageIds, units);
+        Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
         verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(6L), eq(0L), eq(units));
@@ -114,7 +114,7 @@ public class ProductServiceImplTest {
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
-        Product result = productService.createProduct(userId, name, description, price, used, departmentId, imageIds, units);
+        Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
         verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(6L), eq(7L), eq(units));
@@ -130,7 +130,7 @@ public class ProductServiceImplTest {
         when(productDao.findProduct(productId)).thenReturn(Optional.of(product));
 
         // Exercise
-        productService.updateProductPartially(productId, "Product Name", null, null, null, null, Collections.emptyList(), null);
+        productService.updateProductPartially(productId, "Product Name", null, null, null, null, null, Collections.emptyList());
 
         // Validations & Post Conditions
         assertNull(product.getPrimaryPicture());
@@ -153,7 +153,7 @@ public class ProductServiceImplTest {
         when(imageService.findImage(imageId)).thenReturn(Optional.of(primaryImage));
 
         // Exercise
-        productService.updateProductPartially(productId, null, null, null, null, null, Collections.singletonList(imageId), null);
+        productService.updateProductPartially(productId, null, null, null, null, null, null, Collections.singletonList(imageId));
 
         // Validations & Post Conditions
         assertEquals(primaryImage, product.getPrimaryPicture());
@@ -178,7 +178,7 @@ public class ProductServiceImplTest {
         when(imageService.findImage(imageIds.get(1))).thenReturn(Optional.of(secondaryImage));
 
         // Exercise
-        productService.updateProductPartially(productId, null, null, null, null, null, imageIds, null);
+        productService.updateProductPartially(productId, null, null, null, null, null, null, imageIds);
 
         // Validations & Post Conditions
         assertEquals(primaryImage, product.getPrimaryPicture());
@@ -206,7 +206,7 @@ public class ProductServiceImplTest {
         when(imageService.findImage(imageIds.get(2))).thenReturn(Optional.of(tertiaryImage));
 
         // Exercise
-        productService.updateProductPartially(productId, null, null, null, null, null, imageIds, null);
+        productService.updateProductPartially(productId, null, null, null, null, null, null, imageIds);
 
         // Validations & Post Conditions
         assertEquals(primaryImage, product.getPrimaryPicture());

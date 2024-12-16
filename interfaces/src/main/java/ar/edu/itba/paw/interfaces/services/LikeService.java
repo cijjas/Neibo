@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface LikeService {
 
-    Like createLike(long postId, long userId);
+    Like createLike(long userId, long postId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Like> getLikes(Long postId, Long userId, int page, int size);
+    List<Like> getLikes(Long userId, Long postId, int page, int size);
 
-    int calculateLikePages(Long postId, Long userId, int size);
+    int calculateLikePages(Long userId, Long postId, int size);
 
-    int countLikes(Long postId, Long userId);
+    int countLikes(Long userId, Long postId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteLike(Long postId, Long userId);
+    boolean deleteLike(Long userId, Long postId);
 }

@@ -66,10 +66,10 @@ public class CommentController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
         // Verify path
-        ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
+        ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
 
         // Content
-        final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
+        final List<Comment> comments = cs.getComments(neighborhoodId, postId, size, page);
         String commentsHashCode = String.valueOf(comments.hashCode());
 
         // Cache Control
@@ -111,7 +111,7 @@ public class CommentController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
         // Content
-        Comment comment = cs.findComment(commentId, postId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Comment comment = cs.findComment(neighborhoodId, postId, commentId).orElseThrow(NotFoundException::new);
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Cache Control
@@ -136,10 +136,10 @@ public class CommentController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
         // Path Verification
-        ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
+        ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
 
         // Creation & HashCode Generation
-        final Comment comment = cs.createComment(form.getMessage(), extractSecondId(form.getUser()), postId);
+        final Comment comment = cs.createComment(extractSecondId(form.getUser()), postId, form.getMessage());
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Resource URN
@@ -164,11 +164,8 @@ public class CommentController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
-        // Path Verification
-        ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
-
         // Deletion Attempt
-        if (cs.deleteComment(commentId))
+        if (cs.deleteComment(neighborhoodId, postId, commentId))
             return Response.noContent()
                     .build();
 

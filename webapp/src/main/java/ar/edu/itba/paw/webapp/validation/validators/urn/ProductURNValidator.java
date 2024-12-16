@@ -27,6 +27,6 @@ public class ProductURNValidator implements ConstraintValidator<ProductURNConstr
         if (!URNValidator.validateURN(productURN, "product"))
             return false;
         TwoId twoId = extractTwoId(productURN);
-        return productService.findProduct(twoId.getSecondId(), twoId.getFirstId()).isPresent();
+        return productService.findProduct(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

@@ -27,6 +27,6 @@ public interface ReviewDao {
 
     // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------
 
-    boolean deleteReview(long reviewId);
+    boolean deleteReview(long workerId, long reviewId);
 
 }

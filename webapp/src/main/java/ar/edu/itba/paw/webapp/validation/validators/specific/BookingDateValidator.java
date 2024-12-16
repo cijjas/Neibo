@@ -47,8 +47,7 @@ public class BookingDateValidator implements ConstraintValidator<BookingDateCons
 
         // Verify availability existence
         Optional<Availability> availabilityOptional = availabilityService.findAvailability(
-                extractSecondId(bookingDto.getAmenity()),
-                extractFirstId(bookingDto.getShift())
+                extractFirstId(bookingDto.getShift()), extractSecondId(bookingDto.getAmenity())
         );
 
         if (!availabilityOptional.isPresent()) {

@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
@@ -15,14 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
 
 @Service
 @Transactional
@@ -43,7 +36,7 @@ public class EventServiceImpl implements EventService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId) {
+    public Event createEvent(long neighborhoodId, String description, Date date, String startTime, String endTime, String name) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
 
         java.sql.Time sqlStartTime = java.sql.Time.valueOf(startTime);
@@ -63,7 +56,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Event> findEvent(long eventId, long neighborhoodId) {
+    public Optional<Event> findEvent(long neighborhoodId, long eventId) {
         LOGGER.info("Finding Event {} from Neighborhood {}", eventId, neighborhoodId);
 
         return eventDao.findEvent(eventId, neighborhoodId);
@@ -71,7 +64,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Event> getEvents(Date date, long neighborhoodId, int page, int size) {
+    public List<Event> getEvents(long neighborhoodId, Date date, int page, int size) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
         return eventDao.getEvents(date, neighborhoodId, page, size);
@@ -79,7 +72,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateEventPages(Date date, long neighborhoodId, int size) {
+    public int calculateEventPages(long neighborhoodId, Date date, int size) {
         LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
 
         return PaginationUtils.calculatePages(eventDao.countEvents(date, neighborhoodId), size);
@@ -114,9 +107,9 @@ public class EventServiceImpl implements EventService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteEvent(long eventId) {
+    public boolean deleteEvent(long neighborhoodId, long eventId) {
         LOGGER.info("Delete Event {}", eventId);
 
-        return eventDao.deleteEvent(eventId);
+        return eventDao.deleteEvent(neighborhoodId, eventId);
     }
 }

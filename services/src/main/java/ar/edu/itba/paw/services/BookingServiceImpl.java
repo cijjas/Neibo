@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +33,7 @@ public class BookingServiceImpl implements BookingService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Booking createBooking(long user, long amenity, long shift, Date reservationDate) {
+    public Booking createBooking(long shift, long user, long amenity, Date reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenity, reservationDate, user);
 
         Availability availability = availabilityDao.findAvailability(amenity, shift).orElseThrow(NotFoundException::new);
@@ -47,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Booking> findBooking(long bookingId, long neighborhoodId) {
+    public Optional<Booking> findBooking(long neighborhoodId, long bookingId) {
         LOGGER.info("Finding Booking {}", bookingId);
 
         return bookingDao.findBooking(bookingId);
@@ -55,7 +53,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
+    public List<Booking> getBookings(long neighborhoodId, Long userId, Long amenityId, int page, int size) {
         LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
         return bookingDao.getBookings(userId, amenityId, neighborhoodId, page, size);
@@ -63,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size) {
+    public int calculateBookingPages(long neighborhoodId, Long amenityId, Long userId, int size) {
         LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
         return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId, neighborhoodId), size);
@@ -72,9 +70,9 @@ public class BookingServiceImpl implements BookingService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteBooking(long bookingId) {
+    public boolean deleteBooking(long neighborhoodId, long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
 
-        return bookingDao.deleteBooking(bookingId);
+        return bookingDao.deleteBooking(neighborhoodId, bookingId);
     }
 }

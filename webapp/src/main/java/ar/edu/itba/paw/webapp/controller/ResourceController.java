@@ -104,7 +104,7 @@ public class ResourceController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
         // Content
-        Resource resource = rs.findResource(resourceId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Resource resource = rs.findResource(neighborhoodId, resourceId).orElseThrow(NotFoundException::new);
         String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Cache Control
@@ -163,14 +163,14 @@ public class ResourceController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    public Response deleteResourceById(
+    public Response deleteResource(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id
+            @PathParam("id") @GenericIdConstraint final long resourceId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
         // Deletion Attempt
-        if (rs.deleteResource(id))
+        if (rs.deleteResource(neighborhoodId, resourceId))
             return Response.noContent()
                     .build();
 

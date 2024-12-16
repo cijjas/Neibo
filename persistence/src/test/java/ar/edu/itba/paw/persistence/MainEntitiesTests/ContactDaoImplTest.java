@@ -225,13 +225,13 @@ public class ContactDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_contactId_valid() {
+    public void delete_neighborhoodId_contactId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long contactId = testInserter.createContact(nhKey);
+        long cKey = testInserter.createContact(nhKey);
 
         // Exercise
-        boolean deleted = contactDaoImpl.deleteContact(contactId);
+        boolean deleted = contactDaoImpl.deleteContact(nhKey, cKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -240,13 +240,41 @@ public class ContactDaoImplTest {
     }
 
     @Test
-    public void delete_contactId_invalid_contactId() {
+    public void delete_neighborhoodId_contactId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long contactId = testInserter.createContact(nhKey);
+        long cKey = testInserter.createContact(nhKey);
 
         // Exercise
-        boolean deleted = contactDaoImpl.deleteContact(INVALID_ID);
+        boolean deleted = contactDaoImpl.deleteContact(INVALID_ID, cKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_contactId_invalid_contactId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long cKey = testInserter.createContact(nhKey);
+
+        // Exercise
+        boolean deleted = contactDaoImpl.deleteContact(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_contactId_invalid_neighborhoodId_contactId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long cKey = testInserter.createContact(nhKey);
+
+        // Exercise
+        boolean deleted = contactDaoImpl.deleteContact(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

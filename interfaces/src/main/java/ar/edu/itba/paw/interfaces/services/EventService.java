@@ -8,15 +8,15 @@ import java.util.Optional;
 
 public interface EventService {
 
-    Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId);
+    Event createEvent(long neighborhoodId, String description, Date date, String startTime, String endTime, String name);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Event> findEvent(long eventId, long neighborhoodId);
+    Optional<Event> findEvent(long neighborhoodId, long eventId);
 
-    List<Event> getEvents(Date date, long neighborhoodId, int page, int size);
+    List<Event> getEvents(long neighborhoodId, Date date, int page, int size);
 
-    int calculateEventPages(Date date, long neighborhoodId, int size);
+    int calculateEventPages(long neighborhoodId, Date date, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -24,6 +24,6 @@ public interface EventService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteEvent(long eventId);
+    boolean deleteEvent(long neighborhoodId, long eventId);
 
 }

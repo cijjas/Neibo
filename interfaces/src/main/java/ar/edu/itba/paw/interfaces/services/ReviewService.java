@@ -11,7 +11,7 @@ public interface ReviewService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Review> findReview(long reviewId, long workerId);
+    Optional<Review> findReview(long workerId, long reviewId);
 
     Optional<Review> findLatestReview(long workerId, long userId);
 
@@ -23,5 +23,5 @@ public interface ReviewService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteReview(long reviewId);
+    boolean deleteReview(long workerId, long reviewId);
 }

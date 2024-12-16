@@ -356,7 +356,7 @@ public class InquiryDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_inquiryId_valid() {
+    public void delete_neighborhoodId_productId_inquiryId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -367,7 +367,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        boolean deleted = inquiryDaoImpl.deleteInquiry(iqKey);
+        boolean deleted = inquiryDaoImpl.deleteInquiry(nhKey, pKey, iqKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -376,7 +376,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void delete_inquiryId_invalid_inquiryId() {
+    public void delete_neighborhoodId_productId_inquiryId_invalid_neighborhoodId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -387,7 +387,115 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        boolean deleted = inquiryDaoImpl.deleteInquiry(INVALID_ID);
+        boolean deleted = inquiryDaoImpl.deleteInquiry(INVALID_ID, pKey, iqKey);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_inquiryId_invalid_productId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        boolean deleted = inquiryDaoImpl.deleteInquiry(nhKey, INVALID_ID, iqKey);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_inquiryId_invalid_inquiryId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        boolean deleted = inquiryDaoImpl.deleteInquiry(nhKey, pKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_inquiryId_invalid_neighborhoodId_and_productId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        boolean deleted = inquiryDaoImpl.deleteInquiry(INVALID_ID, INVALID_ID, iqKey);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_inquiryId_invalid_neighborhoodId_and_inquiryId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        boolean deleted = inquiryDaoImpl.deleteInquiry(INVALID_ID, pKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_inquiryId_invalid_productId_and_inquiryId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        boolean deleted = inquiryDaoImpl.deleteInquiry(nhKey, INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_inquiryId_all_invalid() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        boolean deleted = inquiryDaoImpl.deleteInquiry(INVALID_ID, INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(deleted);

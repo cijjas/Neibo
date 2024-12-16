@@ -46,7 +46,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Contact> findContact(long contactId, long neighborhoodId) {
+    public Optional<Contact> findContact(long neighborhoodId, long contactId) {
         LOGGER.info("Finding Contact {} from Neighborhood {}", contactId, neighborhoodId);
 
         return contactDao.findContact(contactId, neighborhoodId);
@@ -89,9 +89,9 @@ public class ContactServiceImpl implements ContactService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteContact(long contactId) {
+    public boolean deleteContact(long neighborhoodId, long contactId) {
         LOGGER.info("Deleting Contact {}", contactId);
 
-        return contactDao.deleteContact(contactId);
+        return contactDao.deleteContact(neighborhoodId, contactId);
     }
 }

@@ -131,14 +131,17 @@ public class EventDaoImpl implements EventDao {
     // ---------------------------------------------- EVENT DELETE -----------------------------------------------------
 
     @Override
-    public boolean deleteEvent(long eventId) {
-        LOGGER.debug("Deleting Event with id {}", eventId);
+    public boolean deleteEvent(long neighborhoodId, long eventId) {
+        LOGGER.debug("Deleting Event with eventId {} and neighborhoodId {}", eventId, neighborhoodId);
 
-        Event event = em.find(Event.class, eventId);
-        if (event != null) {
-            em.remove(event);
-            return true;
-        }
-        return false;
+        String hql = "DELETE FROM Event e WHERE e.eventId = :eventId " +
+                "AND e.neighborhood.id = :neighborhoodId";
+
+        int deletedCount = em.createQuery(hql)
+                .setParameter("eventId", eventId)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .executeUpdate();
+
+        return deletedCount > 0;
     }
 }

@@ -27,6 +27,6 @@ public class ChannelURNValidator implements ConstraintValidator<ChannelURNConstr
         if (!URNValidator.validateURN(channelURN, "channel"))
             return false;
         TwoId twoId = extractTwoId(channelURN);
-        return channelService.findChannel(twoId.getSecondId(), twoId.getFirstId()).isPresent();
+        return channelService.findChannel(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

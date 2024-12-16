@@ -74,7 +74,7 @@ public class EventController {
         Date extractedDate = extractOptionalDate(date);
 
         // Content
-        final List<Event> events = es.getEvents(extractedDate, neighborhoodId, page, size);
+        final List<Event> events = es.getEvents(neighborhoodId, extractedDate, page, size);
         String eventsHashCode = String.valueOf(events.hashCode());
 
         // Cache Control
@@ -94,7 +94,7 @@ public class EventController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events",
-                es.calculateEventPages(extractedDate, neighborhoodId, size),
+                es.calculateEventPages(neighborhoodId, extractedDate, size),
                 page,
                 size
         );
@@ -116,7 +116,7 @@ public class EventController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 
         // Content
-        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Event event = es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
         String eventHashCode = String.valueOf(event.hashCode());
 
         // Cache Control
@@ -141,7 +141,7 @@ public class EventController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Event event = es.createEvent(form.getName(), form.getDescription(), extractDate(form.getEventDate()), form.getStartTime(), form.getEndTime(), neighborhoodId);
+        final Event event = es.createEvent(neighborhoodId, form.getDescription(), extractDate(form.getEventDate()), form.getStartTime(), form.getEndTime(), form.getName());
         String eventHashCode = String.valueOf(event.hashCode());
 
         // Resource URN
@@ -176,14 +176,14 @@ public class EventController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    public Response deleteById(
+    public Response deleteEvent(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id
+            @PathParam("id") @GenericIdConstraint final long eventId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 
         // Deletion attempt
-        if (es.deleteEvent(id))
+        if (es.deleteEvent(neighborhoodId, eventId))
             return Response.noContent()
                     .build();
 

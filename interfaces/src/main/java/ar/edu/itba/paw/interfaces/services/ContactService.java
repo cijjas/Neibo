@@ -13,7 +13,7 @@ public interface ContactService {
 
     Optional<Contact> findContact(long contactId);
 
-    Optional<Contact> findContact(long contactId, long neighborhoodId);
+    Optional<Contact> findContact(long neighborhoodId, long contactId);
 
     List<Contact> getContacts(final long neighborhoodId, int page, int size);
 
@@ -25,5 +25,5 @@ public interface ContactService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteContact(long contactId);
+    boolean deleteContact(long neighborhoodId, long contactId);
 }

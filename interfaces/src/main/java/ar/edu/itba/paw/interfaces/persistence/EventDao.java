@@ -25,5 +25,5 @@ public interface EventDao {
 
     // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
 
-    boolean deleteEvent(long eventId);
+    boolean deleteEvent(long neighborhoodId, long eventId);
 }

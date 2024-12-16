@@ -23,5 +23,5 @@ public interface ContactDao {
 
     // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
 
-    boolean deleteContact(long contactId);
+    boolean deleteContact(long neighborhoodId, long contactId);
 }

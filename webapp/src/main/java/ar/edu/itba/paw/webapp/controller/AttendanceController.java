@@ -67,10 +67,10 @@ public class AttendanceController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Path Verification
-        es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
 
         // Content
-        final List<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
+        final List<Attendance> attendance = as.getAttendance(neighborhoodId, eventId, size, page);
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Cache Control
@@ -140,7 +140,7 @@ public class AttendanceController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
         // Content
-        Attendance attendance = as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Attendance attendance = as.findAttendance(neighborhoodId, eventId, userId).orElseThrow(NotFoundException::new);
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Cache Control
@@ -165,7 +165,7 @@ public class AttendanceController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Path Verification
-        es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
 
         // Creation & HashCode Generation
         final Attendance attendance = as.createAttendance(extractSecondId(form.getUser()), eventId);
@@ -186,7 +186,7 @@ public class AttendanceController {
     @DELETE
     @Path("/{userId}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#userId)")
-    public Response deleteById(
+    public Response deleteAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("eventId") @GenericIdConstraint final Long eventId,
             @PathParam("userId") @GenericIdConstraint final long userId
@@ -194,7 +194,7 @@ public class AttendanceController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Path Verification
-        es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
 
         // Deletion Attempt
         if (as.deleteAttendance(userId, eventId))

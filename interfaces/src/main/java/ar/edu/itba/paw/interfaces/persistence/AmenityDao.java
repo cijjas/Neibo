@@ -23,5 +23,5 @@ public interface AmenityDao {
 
     // --------------------------------------------- AMENITIES DELETE --------------------------------------------------
 
-    boolean deleteAmenity(long amenityId);
+    boolean deleteAmenity(long neighborhoodId, long amenityId);
 }

@@ -59,7 +59,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+    public Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId) {
         LOGGER.info("Finding Inquiry {} for Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
 
         return inquiryDao.findInquiry(inquiryId, productId, neighborhoodId);
@@ -68,7 +68,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Inquiry> getInquiries(long productId, int page, int size, long neighborhoodId) {
+    public List<Inquiry> getInquiries(long neighborhoodId, long productId, int size, int page) {
         LOGGER.info("Getting Inquiries for Product {} from Neighborhood {}", productId, neighborhoodId);
 
         return inquiryDao.getInquiries(productId, page, size);
@@ -102,9 +102,9 @@ public class InquiryServiceImpl implements InquiryService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteInquiry(long inquiryId) {
+    public boolean deleteInquiry(long neighborhoodId, long productId, long inquiryId) {
         LOGGER.info("Deleting Inquiry {}", inquiryId);
 
-        return inquiryDao.deleteInquiry(inquiryId);
+        return inquiryDao.deleteInquiry(neighborhoodId, productId, inquiryId);
     }
 }

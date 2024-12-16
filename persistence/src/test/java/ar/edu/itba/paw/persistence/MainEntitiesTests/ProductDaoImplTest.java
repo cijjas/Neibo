@@ -641,7 +641,7 @@ public class ProductDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_productId_valid() {
+    public void delete_neighborhoodId_productId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -650,7 +650,7 @@ public class ProductDaoImplTest {
         long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
-        boolean deleted = productDaoImpl.deleteProduct(pKey1);
+        boolean deleted = productDaoImpl.deleteProduct(nhKey, pKey1);
 
         // Validations & Post Conditions
         em.flush();
@@ -659,7 +659,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void delete_productId_invalid_productId() {
+    public void delete_neighborhoodId_productId_invalid_neighborhoodId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -668,7 +668,41 @@ public class ProductDaoImplTest {
         long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
-        boolean deleted = productDaoImpl.deleteProduct(INVALID_ID);
+        boolean deleted = productDaoImpl.deleteProduct(INVALID_ID, pKey1);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_invalid_productId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+
+        // Exercise
+        boolean deleted = productDaoImpl.deleteProduct(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_productId_invalid_neighborhoodId_productId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+
+        // Exercise
+        boolean deleted = productDaoImpl.deleteProduct(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

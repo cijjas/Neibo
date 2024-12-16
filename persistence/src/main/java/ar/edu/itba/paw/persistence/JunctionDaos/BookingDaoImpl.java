@@ -141,13 +141,23 @@ public class BookingDaoImpl implements BookingDao {
     // ---------------------------------------- USERS_AVAILABILITY DELETE ----------------------------------------------
 
     @Override
-    public boolean deleteBooking(long bookingId) {
+    public boolean deleteBooking(long neighborhoodId, long bookingId) {
         LOGGER.debug("Deleting Booking with bookingId {}", bookingId);
 
-        String hql = "DELETE FROM Booking b WHERE b.bookingId = :bookingId";
-        int deletedCount = em.createQuery(hql)
+        String nativeSql = "DELETE FROM users_availability b " +
+                "WHERE b.bookingid = :bookingId " +
+                "AND b.amenityavailabilityid IN ( " +
+                "    SELECT aa.amenityavailabilityid " +
+                "    FROM amenities_shifts_availability aa " +
+                "    JOIN amenities a ON aa.amenityid = a.amenityid " +
+                "    WHERE a.neighborhoodid = :neighborhoodId" +
+                ")";
+
+        int deletedCount = em.createNativeQuery(nativeSql)
                 .setParameter("bookingId", bookingId)
+                .setParameter("neighborhoodId", neighborhoodId)
                 .executeUpdate();
+
         return deletedCount > 0;
     }
 }

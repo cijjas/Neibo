@@ -38,7 +38,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId) {
+    public Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId) {
         LOGGER.info("Finding Attendance for User {} and Event {}", userId, eventId);
 
         return attendanceDao.findAttendance(userId, eventId, neighborhoodId);
@@ -46,7 +46,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId) {
+    public List<Attendance> getAttendance(long neighborhoodId, long eventId, int size, int page) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
 
         return attendanceDao.getAttendance(eventId, page, size);

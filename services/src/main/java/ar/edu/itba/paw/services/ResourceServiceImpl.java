@@ -42,7 +42,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Resource> findResource(long resourceId, long neighborhoodId) {
+    public Optional<Resource> findResource(long neighborhoodId, long resourceId) {
         LOGGER.info("Finding Resource {} from Neighborhood {}", resourceId, neighborhoodId);
 
         return resourceDao.findResource(resourceId);
@@ -88,10 +88,10 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteResource(final long resourceId) {
+    public boolean deleteResource(final long neighborhoodId, final long resourceId) {
         LOGGER.info("Deleting Resource {}", resourceId);
 
-        return resourceDao.deleteResource(resourceId);
+        return resourceDao.deleteResource(neighborhoodId, resourceId);
     }
 }
 

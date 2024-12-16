@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Comment createComment(String comment, long user, long postId) {
+    public Comment createComment(long user, long postId, String comment) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, user, postId);
 
         return commentDao.createComment(comment, user, postId);
@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findComment(long commentId, long postId, long neighborhoodId) {
+    public Optional<Comment> findComment(long neighborhoodId, long postId, long commentId) {
         LOGGER.info("Finding Comment {} in Post {} from Neighborhood {}", commentId, postId, neighborhoodId);
 
         return commentDao.findComment(commentId, postId, neighborhoodId);
@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getComments(long postId, int page, int size, long neighborhoodId) {
+    public List<Comment> getComments(long neighborhoodId, long postId, int size, int page) {
         LOGGER.info("Getting Comments for Post {} from Neighborhood {}", postId, neighborhoodId);
 
         return commentDao.getComments(postId, page, size);
@@ -70,9 +70,9 @@ public class CommentServiceImpl implements CommentService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteComment(long commentId) {
+    public boolean deleteComment(long neighborhoodId, long postId, long commentId) {
         LOGGER.info("Deleting Comment {}", commentId);
 
-        return commentDao.deleteComment(commentId);
+        return commentDao.deleteComment(neighborhoodId, postId, commentId);
     }
 }

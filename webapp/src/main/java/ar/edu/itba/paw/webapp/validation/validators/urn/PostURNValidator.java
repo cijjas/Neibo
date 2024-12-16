@@ -27,6 +27,6 @@ public class PostURNValidator implements ConstraintValidator<PostURNConstraint, 
         if (!URNValidator.validateURN(postURN, "posts"))
             return false;
         TwoId twoId = extractTwoId(postURN);
-        return postService.findPost(twoId.getSecondId(), twoId.getFirstId()).isPresent();
+        return postService.findPost(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

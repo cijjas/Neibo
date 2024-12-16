@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -105,7 +106,7 @@ public class AmenityController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Content
-        Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new);
+        Amenity amenity = as.findAmenity(neighborhoodId, id).orElseThrow(NotFoundException::new);
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Cache Control
@@ -130,7 +131,7 @@ public class AmenityController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
         // Creation & HashCode Generation
-        Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, extractFirstIds(form.getSelectedShifts()));
+        Amenity amenity = as.createAmenity(neighborhoodId, form.getName(), form.getDescription(), extractFirstIds(form.getSelectedShifts()));
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Resource URN
@@ -166,19 +167,18 @@ public class AmenityController {
     @DELETE
     @Path("/{id}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    public Response deleteById(
+    public Response deleteAmenity(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final Long id
+            @PathParam("id") @GenericIdConstraint final Long amenityId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
 
         // Attempt to delete the amenity
-        if (as.deleteAmenity(id))
+        boolean response = as.deleteAmenity(neighborhoodId, amenityId);
+        if (response)
             return Response.noContent()
                     .build();
 
-        // If deletion fails, return not found status
-        return Response.status(Response.Status.NOT_FOUND)
-                .build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

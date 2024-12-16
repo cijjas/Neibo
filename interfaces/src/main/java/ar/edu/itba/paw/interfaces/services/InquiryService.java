@@ -13,9 +13,9 @@ public interface InquiryService {
 
     Optional<Inquiry> findInquiry(final long inquiryId);
 
-    Optional<Inquiry> findInquiry(final long inquiryId, long productId, long neighborhoodId);
+    Optional<Inquiry> findInquiry(long neighborhoodId, long productId, final long inquiryId);
 
-    List<Inquiry> getInquiries(long productId, int page, int size, long neighborhoodId);
+    List<Inquiry> getInquiries(long neighborhoodId, long productId, int size, int page);
 
     int calculateInquiryPages(long productId, int size);
 
@@ -25,5 +25,5 @@ public interface InquiryService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteInquiry(final long inquiryId);
+    boolean deleteInquiry(final long neighborhoodId, final long productId, final long inquiryId);
 }

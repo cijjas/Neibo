@@ -23,5 +23,5 @@ public interface CommentDao {
 
     // -------------------------------------------- COMMENTS DELETE ----------------------------------------------------
 
-    boolean deleteComment(final long commentId);
+    boolean deleteComment(final long neighborhoodId, final long postId, final long commentId);
 }

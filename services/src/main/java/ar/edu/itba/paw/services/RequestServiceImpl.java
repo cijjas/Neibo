@@ -63,7 +63,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Request> findRequest(long requestId, long neighborhoodId) {
+    public Optional<Request> findRequest(long neighborhoodId, long requestId) {
         LOGGER.info("Finding Request {} from Neighborhood {}", requestId, neighborhoodId);
 
         return requestDao.findRequest(requestId);
@@ -71,7 +71,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Request> getRequests(Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int page, int size, long neighborhoodId) {
+    public List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int page, int size) {
         LOGGER.info("Getting Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
         return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId, page, size);
@@ -79,7 +79,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateRequestPages(Long productId, Long userId, Long transactionTypeId, Long requestStatusId, long neighborhoodId, int size) {
+    public int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int size) {
         LOGGER.info("Calculating Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
         return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId), size);
@@ -105,9 +105,9 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteRequest(long requestId) {
+    public boolean deleteRequest(long neighborhoodId, long requestId) {
         LOGGER.info("Deleting Request {}", requestId);
 
-        return requestDao.deleteRequest(requestId);
+        return requestDao.deleteRequest(neighborhoodId, requestId);
     }
 }

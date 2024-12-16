@@ -121,11 +121,12 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITIES DELETE ---------------------------------------------------
 
     @Override
-    public boolean deleteAmenity(long amenityId) {
+    public boolean deleteAmenity(long neighborhoodId, long amenityId) {
         LOGGER.debug("Deleting Amenity with id {}", amenityId);
 
-        int deletedCount = em.createQuery("DELETE FROM Amenity WHERE amenityId = :amenityId ")
+        int deletedCount = em.createQuery("DELETE FROM Amenity WHERE amenityId = :amenityId AND neighborhood.id = :neighborhoodId")
                 .setParameter("amenityId", amenityId)
+                .setParameter("neighborhoodId", neighborhoodId)
                 .executeUpdate();
         return deletedCount > 0;
     }

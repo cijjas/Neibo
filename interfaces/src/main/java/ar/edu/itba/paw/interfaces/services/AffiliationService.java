@@ -6,19 +6,19 @@ import java.util.List;
 
 public interface AffiliationService {
 
-    Affiliation createAffiliation(long workerId, long neighborhoodId, long workerRoleId);
+    Affiliation createAffiliation(long neighborhoodId, long workerId, long workerRoleId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
+    List<Affiliation> getAffiliations(Long neighborhoodId, Long workerId, int page, int size);
 
-    int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size);
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    Affiliation updateAffiliation(long workerId, long neighborhoodId, Long workerRoleId);
+    int calculateAffiliationPages(Long neighborhoodId, Long workerId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteAffiliation(long workerId, long neighborhoodId);
+    Affiliation updateAffiliation(long neighborhoodId, long workerId, Long workerRoleId);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteAffiliation(long neighborhoodId, long workerId);
 }

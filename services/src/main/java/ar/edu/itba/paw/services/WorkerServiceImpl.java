@@ -2,12 +2,10 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Image;
-import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.Entities.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +35,7 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker createWorker(long userId, String phoneNumber, String address, List<Long> professionIds, String businessName) {
+    public Worker createWorker(long userId, List<Long> professionIds, String businessName, String address, String phoneNumber) {
         LOGGER.info("Creating Worker associated with User {}", userId);
 
         Worker worker = workerDao.createWorker(userId, phoneNumber, address, businessName);
@@ -60,7 +58,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId) {
+    public List<Worker> getWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int page, int size) {
         LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
         return workerDao.getWorkers(page, size, professionIds, neighborhoodIds, workerRoleId, workerStatusId);
@@ -68,7 +66,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateWorkerPages(List<Long> professionIds, List<Long> neighborhoodIds, int size, Long workerRoleId, Long workerStatusId) {
+    public int calculateWorkerPages(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int size) {
         LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
         return PaginationUtils.calculatePages(workerDao.countWorkers(professionIds, neighborhoodIds, workerRoleId, workerStatusId), size);
@@ -77,7 +75,7 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, Long backgroundPictureId, String bio) {
+    public Worker updateWorkerPartially(long workerId, String businessName, String address, String phoneNumber, Long backgroundPictureId, String bio) {
         LOGGER.info("Updating Worker {}", workerId);
 
         Worker worker = workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);

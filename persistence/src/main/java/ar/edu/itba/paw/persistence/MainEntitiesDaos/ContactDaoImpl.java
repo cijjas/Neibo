@@ -114,14 +114,17 @@ public class ContactDaoImpl implements ContactDao {
     // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
 
     @Override
-    public boolean deleteContact(long contactId) {
-        LOGGER.debug("Deleting Contact with id {}", contactId);
+    public boolean deleteContact(long neighborhoodId, long contactId) {
+        LOGGER.debug("Deleting Contact with contactId {} and neighborhoodId {}", contactId, neighborhoodId);
 
-        Contact contact = em.find(Contact.class, contactId);
-        if (contact != null) {
-            em.remove(contact);
-            return true;
-        }
-        return false;
+        String hql = "DELETE FROM Contact c WHERE c.contactId = :contactId " +
+                "AND c.neighborhood.id = :neighborhoodId";
+
+        int deletedCount = em.createQuery(hql)
+                .setParameter("contactId", contactId)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .executeUpdate();
+
+        return deletedCount > 0;
     }
 }

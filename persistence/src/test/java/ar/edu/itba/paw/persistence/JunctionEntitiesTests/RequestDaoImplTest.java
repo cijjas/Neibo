@@ -751,7 +751,7 @@ public class RequestDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_requestId_valid() {
+    public void delete_neighborhoodId_requestId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -761,16 +761,16 @@ public class RequestDaoImplTest {
         long rKey = testInserter.createRequest(pKey, uKey1);
 
         // Exercise
-        boolean deleted = requestDaoImpl.deleteRequest(rKey);
+        boolean deleted = requestDaoImpl.deleteRequest(nhKey, rKey);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
     }
 
     @Test
-    public void delete_requestId_invalid_requestId() {
+    public void delete_neighborhoodId_requestId_invalid_neighborhoodId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -780,12 +780,47 @@ public class RequestDaoImplTest {
         long rKey = testInserter.createRequest(pKey, uKey1);
 
         // Exercise
-        boolean deleted = requestDaoImpl.deleteRequest(INVALID_ID);
+        boolean deleted = requestDaoImpl.deleteRequest(INVALID_ID, rKey);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
+    }
+
+    @Test
+    public void delete_neighborhoodId_requestId_invalid_requestId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
+
+        // Exercise
+        boolean deleted = requestDaoImpl.deleteRequest(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_requestId_invalid_neighborhoodId_requestId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
+
+        // Exercise
+        boolean deleted = requestDaoImpl.deleteRequest(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
     }
 
     // ----------------------------------------------- POPULATION ------------------------------------------------------

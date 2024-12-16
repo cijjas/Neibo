@@ -74,7 +74,7 @@ public class BookingController {
         Long amenityId = extractOptionalSecondId(amenity);
 
         // Content
-        final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
+        final List<Booking> bookings = bs.getBookings(neighborhoodId, userId, amenityId, page, size);
         String bookingsHashCode = String.valueOf(bookings.hashCode());
 
         // Cache Control
@@ -94,7 +94,7 @@ public class BookingController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/bookings",
-                bs.calculateBookingPages(userId, amenityId, neighborhoodId, size),
+                bs.calculateBookingPages(neighborhoodId, amenityId, userId, size),
                 page,
                 size
         );
@@ -115,7 +115,7 @@ public class BookingController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
-        Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Booking booking = bs.findBooking(neighborhoodId, bookingId).orElseThrow(NotFoundException::new);
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Cache Control
@@ -142,7 +142,7 @@ public class BookingController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Booking booking = bs.createBooking(extractSecondId(form.getUser()), extractSecondId(form.getAmenity()), extractFirstId(form.getShift()), extractDate(form.getBookingDate()));
+        final Booking booking = bs.createBooking(extractFirstId(form.getShift()), extractSecondId(form.getUser()), extractSecondId(form.getAmenity()), extractDate(form.getBookingDate()));
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN
@@ -156,14 +156,14 @@ public class BookingController {
     @DELETE
     @Path("/{id}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
-    public Response deleteById(
+    public Response deleteBooking(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
             @PathParam("id") @GenericIdConstraint final long bookingId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
         // Deletion Attempt
-        if (bs.deleteBooking(bookingId))
+        if (bs.deleteBooking(neighborhoodId, bookingId))
             return Response.noContent()
                     .build();
 

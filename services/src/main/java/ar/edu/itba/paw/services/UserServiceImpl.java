@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User createNeighbor(final String mail, final String password, final String name, final String surname,
-                               final long neighborhoodId, Long languageId, final Integer identification) {
+    public User createUser(final long neighborhoodId, final String mail, final String name, final String surname, final String password,
+                           final Integer identification, Long languageId) {
         LOGGER.info("Creating Neighbor with mail {}", mail);
 
         Language language = Language.ENGLISH;
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findUser(long userId, long neighborhoodId) {
+    public Optional<User> findUser(long neighborhoodId, long userId) {
         LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
 
         return userDao.findUser(userId, neighborhoodId);
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsers(Long userRoleId, long neighborhoodId, int page, int size) {
+    public List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size) {
         LOGGER.info("Getting Users with Role {} from Neighborhood {} ", userRoleId, neighborhoodId);
 
         return userDao.getUsers(userRoleId, neighborhoodId, page, size);
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateUserPages(Long userRoleId, long neighborhoodId, int size) {
+    public int calculateUserPages(long neighborhoodId, Long userRoleId, int size) {
         LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", userRoleId, neighborhoodId);
 
         return PaginationUtils.calculatePages(userDao.countUsers(userRoleId, neighborhoodId), size);
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, Long profilePictureId, Integer identification, Long languageId, Long userRoleId) {
+    public User updateUser(long userId, String mail, String name, String surname, String password, Integer identification, Long languageId, Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId) {
         LOGGER.info("Updating User {}", userId);
 
         User user = userDao.findUser(userId).orElseThrow(NotFoundException::new);

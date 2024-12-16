@@ -12,10 +12,8 @@ import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequen
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -73,7 +71,7 @@ public class UserController {
         Long userRoleId = extractOptionalFirstId(userRole);
 
         // Content
-        final List<User> users = us.getUsers(userRoleId, neighborhoodId, page, size);
+        final List<User> users = us.getUsers(neighborhoodId, userRoleId, page, size);
         String usersHashCode = String.valueOf(users.hashCode());
 
         // Cache Control
@@ -90,7 +88,7 @@ public class UserController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users",
-                us.calculateUserPages(userRoleId, neighborhoodId, size),
+                us.calculateUserPages(neighborhoodId, userRoleId, size),
                 page,
                 size
         );
@@ -116,7 +114,7 @@ public class UserController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         // Content
-        User user = us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new);
+        User user = us.findUser(neighborhoodId, id).orElseThrow(NotFoundException::new);
         String userHashCode = String.valueOf(user.hashCode());
 
         // Cache Control
@@ -140,7 +138,7 @@ public class UserController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         // Creation & ETag Generation
-        final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, extractOptionalFirstId(form.getLanguage()), form.getIdentification());
+        final User user = us.createUser(neighborhoodId, form.getMail(), form.getName(), form.getSurname(), form.getPassword(), form.getIdentification(), extractOptionalFirstId(form.getLanguage()));
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN
@@ -163,7 +161,7 @@ public class UserController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(id, partialUpdate.getMail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), extractOptionalFirstId(partialUpdate.getProfilePicture()), partialUpdate.getIdentification(), extractOptionalFirstId(partialUpdate.getLanguage()), extractOptionalFirstId(partialUpdate.getUserRole()));
+        final User updatedUser = us.updateUser(id, partialUpdate.getMail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getIdentification(), extractOptionalFirstId(partialUpdate.getLanguage()), extractOptionalFirstId(partialUpdate.getProfilePicture()), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), extractOptionalFirstId(partialUpdate.getUserRole()));
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

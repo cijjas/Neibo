@@ -44,7 +44,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Channel> findChannel(long channelId, long neighborhoodId) {
+    public Optional<Channel> findChannel(long neighborhoodId, long channelId) {
         LOGGER.info("Finding Channel {} from Neighborhood {}", channelId, neighborhoodId);
 
         return channelDao.findChannel(channelId, neighborhoodId);
@@ -69,7 +69,7 @@ public class ChannelServiceImpl implements ChannelService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteChannel(long channelId, long neighborhoodId) {
+    public boolean deleteChannel(long neighborhoodId, long channelId) {
         LOGGER.info("Deleting Channel {}", channelId);
 
         channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);

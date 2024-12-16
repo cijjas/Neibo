@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface AvailabilityService {
 
-    Optional<Availability> findAvailability(long amenityId, long shiftId);
+    Optional<Availability> findAvailability(long shiftId, long amenityId);
 }

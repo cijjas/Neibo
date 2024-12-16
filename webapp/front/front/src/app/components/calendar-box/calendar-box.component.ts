@@ -58,6 +58,7 @@ export class CalendarBoxComponent implements OnInit {
     }
     return dates;
   }
+
   private updateEventDays(): void {
     this.days = this.days.map((day) => {
       // Create a date at midnight in UTC for the calendar day

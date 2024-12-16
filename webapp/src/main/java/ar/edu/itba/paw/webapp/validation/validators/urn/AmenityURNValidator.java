@@ -28,6 +28,6 @@ public class AmenityURNValidator implements ConstraintValidator<AmenityURNConstr
         if (!URNValidator.validateURN(amenityURN, "amenity"))
             return false;
         TwoId twoId = extractTwoId(amenityURN);
-        return amenityService.findAmenity(twoId.getSecondId(), twoId.getFirstId()).isPresent();
+        return amenityService.findAmenity(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

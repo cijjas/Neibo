@@ -21,6 +21,6 @@ public interface ResourceDao {
 
     // --------------------------------------------- RESOURCE DELETE ----------------------------------------------------
 
-    boolean deleteResource(final long resourceId);
+    boolean deleteResource(final long neighborhoodId, final long resourceId);
 
 }

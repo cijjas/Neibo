@@ -29,7 +29,7 @@ public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, 
             if (!URNValidator.validateURN(urn, "tags"))
                 return false;
             TwoId twoId = extractTwoId(urn);
-            if (!tagService.findTag(twoId.getSecondId(), twoId.getFirstId()).isPresent())
+            if (!tagService.findTag(twoId.getFirstId(), twoId.getSecondId()).isPresent())
                 return false;
         }
         return true;

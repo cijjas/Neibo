@@ -273,7 +273,7 @@ public class BookingDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_bookingId_valid() {
+    public void delete_neighborhoodId_bookingId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -285,7 +285,7 @@ public class BookingDaoImplTest {
         long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
 
         // Exercise
-        boolean deleted = bookingDaoImpl.deleteBooking(bKey);
+        boolean deleted = bookingDaoImpl.deleteBooking(nhKey, bKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -294,7 +294,7 @@ public class BookingDaoImplTest {
     }
 
     @Test
-    public void delete_bookingId_invalid_bookingId() {
+    public void delete_neighborhoodId_bookingId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -306,7 +306,47 @@ public class BookingDaoImplTest {
         long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
 
         // Exercise
-        boolean deleted = bookingDaoImpl.deleteBooking(INVALID_ID);
+        boolean deleted = bookingDaoImpl.deleteBooking(INVALID_ID, bKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_bookingId_invalid_bookingId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
+
+        // Exercise
+        boolean deleted = bookingDaoImpl.deleteBooking(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_bookingId_invalid_neighborhoodId_bookingId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
+
+        // Exercise
+        boolean deleted = bookingDaoImpl.deleteBooking(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

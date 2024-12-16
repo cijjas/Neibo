@@ -61,7 +61,7 @@ public class AmenityServiceImplTest {
                 .thenReturn(Collections.emptyList());
 
         // Exercise
-        Amenity result = amenityService.createAmenity(name, description, neighborhoodId, selectedShiftsIds);
+        Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
 
         // Validations & Post Conditions
         verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);
@@ -106,7 +106,7 @@ public class AmenityServiceImplTest {
                 .thenReturn(Collections.emptyList());
 
         // Exercise
-        Amenity result = amenityService.createAmenity(name, description, neighborhoodId, selectedShiftsIds);
+        Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
 
         // Validation & Post Conditions
         verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);
@@ -143,7 +143,7 @@ public class AmenityServiceImplTest {
                 .thenReturn(Collections.emptyList());
 
         // Exercise
-        Amenity result = amenityService.createAmenity(name, description, neighborhoodId, selectedShiftsIds);
+        Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
 
         // Validation & Post Conditions
         verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);

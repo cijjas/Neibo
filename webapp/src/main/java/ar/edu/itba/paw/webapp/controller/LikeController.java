@@ -71,7 +71,7 @@ public class LikeController {
         Long userId = extractOptionalSecondId(user);
 
         // Content
-        final List<Like> likes = ls.getLikes(postId, userId, page, size);
+        final List<Like> likes = ls.getLikes(userId, postId, page, size);
         String likesHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -99,7 +99,7 @@ public class LikeController {
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "/likes",
-                ls.calculateLikePages(postId, userId, size),
+                ls.calculateLikePages(userId, postId, size),
                 page,
                 size);
 
@@ -120,7 +120,7 @@ public class LikeController {
         LOGGER.info("GET request arrived at '/likes/count'");
 
         // Content
-        int count = ls.countLikes(extractOptionalSecondId(post), extractOptionalSecondId(user));
+        int count = ls.countLikes(extractOptionalSecondId(user), extractOptionalSecondId(post));
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -146,7 +146,7 @@ public class LikeController {
         LOGGER.info("POST request arrived at '/likes'");
 
         // Creation & HashCode Generation
-        final Like like = ls.createLike(extractSecondId(form.getPost()), extractSecondId(form.getUser()));
+        final Like like = ls.createLike(extractSecondId(form.getUser()), extractSecondId(form.getPost()));
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
@@ -179,7 +179,7 @@ public class LikeController {
     ) {
         LOGGER.info("DELETE request arrived at '/likes'");
 
-        if (ls.deleteLike(extractOptionalSecondId(post), extractOptionalSecondId(user)))
+        if (ls.deleteLike(extractOptionalSecondId(user), extractOptionalSecondId(post)))
             return Response.noContent()
                     .build();
 

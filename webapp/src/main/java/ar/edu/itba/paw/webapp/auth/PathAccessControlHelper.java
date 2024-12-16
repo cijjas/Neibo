@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
-import ar.edu.itba.paw.webapp.controller.UserRoleController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
@@ -305,7 +303,7 @@ public class PathAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Booking b = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Booking b = bs.findBooking(neighborhoodId, bookingId).orElseThrow(NotFoundException::new);
         return authHelper.getRequestingUserId(authentication) == b.getUser().getUserId();
     }
 

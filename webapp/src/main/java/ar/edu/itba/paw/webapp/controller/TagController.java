@@ -66,7 +66,7 @@ public class TagController {
         Long postId = extractOptionalSecondId(post);
 
         // Content
-        List<Tag> tags = ts.getTags(postId, neighborhoodId, page, size);
+        List<Tag> tags = ts.getTags(neighborhoodId, postId, page, size);
         String tagsHashCode = String.valueOf(tags.hashCode());
 
         // Cache Control
@@ -86,7 +86,7 @@ public class TagController {
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags",
-                ts.calculateTagPages(postId, neighborhoodId, size),
+                ts.calculateTagPages(neighborhoodId, postId, size),
                 page,
                 size
         );
@@ -108,7 +108,7 @@ public class TagController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
         // Content
-        Tag tag = ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Tag tag = ts.findTag(neighborhoodId, tagId).orElseThrow(NotFoundException::new);
         String tagHashCode = String.valueOf(tag.hashCode());
 
         // Cache Control

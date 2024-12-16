@@ -7,17 +7,17 @@ import java.util.Optional;
 
 public interface WorkerService {
 
-    Worker createWorker(long userId, String phoneNumber, String address, List<Long> professionIds, String businessName);
+    Worker createWorker(long userId, List<Long> professionIds, String businessName, String address, String phoneNumber);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Worker> findWorker(long workerId);
 
-    List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
+    List<Worker> getWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int page, int size);
 
-    int calculateWorkerPages(List<Long> professionIds, List<Long> neighborhoodIds, int size, Long workerRoleId, Long workerStatusId);
+    int calculateWorkerPages(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, Long backgroundPictureId, String bio);
+    Worker updateWorkerPartially(long userId, String businessName, String address, String phoneNumber, Long backgroundPictureId, String bio);
 }

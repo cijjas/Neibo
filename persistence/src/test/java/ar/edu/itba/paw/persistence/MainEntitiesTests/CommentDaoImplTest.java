@@ -342,7 +342,7 @@ public class CommentDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_commentId_valid() {
+    public void delete_neighborhoodId_postId_commentId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -352,7 +352,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        boolean deleted = commentDaoImpl.deleteComment(cKey);
+        boolean deleted = commentDaoImpl.deleteComment(nhKey, pKey, cKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -361,7 +361,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void delete_commentId_invalid_commentId() {
+    public void delete_neighborhoodId_postId_commentId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -371,7 +371,115 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        boolean deleted = commentDaoImpl.deleteComment(INVALID_ID);
+        boolean deleted = commentDaoImpl.deleteComment(INVALID_ID, pKey, cKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_postId_commentId_invalid_postId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(nhKey, INVALID_ID, cKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_postId_commentId_invalid_commentId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(nhKey, pKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_postId_commentId_invalid_neighborhoodId_and_postId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(INVALID_ID, INVALID_ID, cKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_postId_commentId_invalid_neighborhoodId_and_commentId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(INVALID_ID, pKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_postId_commentId_invalid_postId_and_commentId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(nhKey, INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_neighborhoodId_postId_commentId_all_invalid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(INVALID_ID, INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

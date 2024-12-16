@@ -31,7 +31,7 @@ public class User {
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "neighborhoodid", referencedColumnName = "neighborhoodId")
+    @JoinColumn(name = "neighborhoodId", referencedColumnName = "neighborhoodId")
     private Neighborhood neighborhood;
 
     @Column(name = "darkmode")

@@ -8,17 +8,17 @@ import java.util.Optional;
 
 public interface BookingService {
 
-    Booking createBooking(long userId, long amenityId, long shiftId, Date reservationDate);
+    Booking createBooking(long shiftId, long userId, long amenityId, Date reservationDate);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Booking> findBooking(long bookingId, long neighborhoodId);
+    Optional<Booking> findBooking(long neighborhoodId, long bookingId);
 
-    List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size);
+    List<Booking> getBookings(long neighborhoodId, Long userId, Long amenityId, int page, int size);
 
-    int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size);
+    int calculateBookingPages(long neighborhoodId, Long amenityId, Long userId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteBooking(long bookingId);
+    boolean deleteBooking(long neighborhoodId, long bookingId);
 }

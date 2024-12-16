@@ -115,14 +115,16 @@ public class ReviewDaoImpl implements ReviewDao {
     // ---------------------------------------------- REVIEWS DELETE ---------------------------------------------------
 
     @Override
-    public boolean deleteReview(long reviewId) {
-        LOGGER.debug("Deleting Review with reviewId {}", reviewId);
+    public boolean deleteReview(long workerId, long reviewId) {
+        LOGGER.debug("Deleting Review with reviewId {} and workerId {}", reviewId, workerId);
 
-        Review review = em.find(Review.class, reviewId);
-        if (review != null) {
-            em.remove(review);
-            return true;
-        }
-        return false;
+        String hql = "DELETE FROM Review r WHERE r.reviewId = :reviewId AND r.worker.id = :workerId";
+
+        int deletedCount = em.createQuery(hql)
+                .setParameter("reviewId", reviewId)
+                .setParameter("workerId", workerId)
+                .executeUpdate();
+
+        return deletedCount > 0;
     }
 }
