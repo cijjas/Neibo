@@ -36,6 +36,11 @@ public class NeighborhoodDto {
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("users")
                 .build());
+        links.setAmenities(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                .path("amenities")
+                .build());
         links.setWorkers(uriInfo.getBaseUriBuilder()
                 .path("workers")
                 .queryParam("inNeighborhoods", self)

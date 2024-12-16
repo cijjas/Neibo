@@ -75,6 +75,15 @@ public class Links {
     private URI attendanceCount;
     private URI languageEnglish;
     private URI languageSpanish;
+    private URI amenities;
+
+    public URI getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(URI amenities) {
+        this.amenities = amenities;
+    }
 
     public URI getLanguageEnglish() {
         return languageEnglish;

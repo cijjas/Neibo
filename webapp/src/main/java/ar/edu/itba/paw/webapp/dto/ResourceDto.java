@@ -39,7 +39,7 @@ public class ResourceDto {
                 .build());
         if (resource.getImage() != null) {
             links.setResourceImage(uriInfo.getBaseUriBuilder()
-                    .path("image")
+                    .path("images")
                     .path(String.valueOf(resource.getImage().getImageId()))
                     .build());
         }

@@ -48,6 +48,10 @@ import { AuthService } from "./shared/services/index.service";
 import { JwtInterceptor } from "./shared/interceptors/jwt.interceptor";
 import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
 
+//PIPES
+import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,7 +80,7 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
     CalendarComponent,
     CalendarBoxComponent,
     CalendarEventsColumnComponent,
-    UserProfileComponent
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,9 +89,10 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
     RouterModule.forRoot(routes),
     BackgroundCloudsComponent,
     NgOptimizedImage,
-    TimeAgoPipe,
     BackgroundDrawingComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TimeAgoPipe,
+    AddHoursPipe
   ],
   providers: [
     AuthService,

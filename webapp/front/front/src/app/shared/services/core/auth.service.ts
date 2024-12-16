@@ -118,6 +118,7 @@ export class AuthService {
 
     private waitForLinksToLoad(): Observable<boolean> {
         const requiredLinks = [
+            'neighborhood:amenities',
             'neighborhood:announcements',
             'neighborhood:announcementsChannel',
             'neighborhood:channels',

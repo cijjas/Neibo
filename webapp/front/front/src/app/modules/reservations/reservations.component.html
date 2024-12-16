@@ -1,22 +1,118 @@
-<app-navbar></app-navbar>
-
-<div class="container">
-
+<div [class.dark-mode]="darkMode">
+  <app-navbar></app-navbar>
+  <div class="container">
     <div class="row init">
       <div class="column-left">
         <app-left-column></app-left-column>
       </div>
 
       <div class="column-middle">
-        <p>reservations works!</p>
+        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+          <!-- If no amenities -->
+          <div class="no-posts-found" *ngIf="amenities?.length === 0">
+            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            Amenities not found
+          </div>
+
+          <!-- If amenities are available -->
+          <div *ngIf="amenities?.length > 0">
+            <h2>Make Reservation</h2>
+            <div class="divider"></div>
+
+            <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+              <div class="col-md-12">
+                <label for="amenityId" class="mt-3 mb-1">Select Amenity</label>
+                <select id="amenityId" formControlName="amenityId" class="cool-input" required>
+                  <option value="" disabled selected>Select an amenity</option>
+                  <option *ngFor="let entry of amenities" [value]="entry.self">
+                    {{ entry.name }}
+                  </option>
+                </select>
+
+                <p class="error"
+                  *ngIf="reservationForm.get('amenityId')?.invalid && reservationForm.get('amenityId')?.touched">
+                  Please select an amenity.
+                </p>
+              </div>
+
+              <div class="col-md-12">
+                <label for="date" class="mt-3 mb-1">Choose Date</label>
+                <input type="date" id="date" formControlName="date" class="cool-input mb-1" required />
+                <p class="error" *ngIf="reservationForm.get('date')?.invalid && reservationForm.get('date')?.touched">
+                  Please choose a valid date.
+                </p>
+              </div>
+
+              <div class="col-md-12">
+                <div class="d-flex justify-content-end m-t-40">
+                  <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bold" style="height:40px;">
+                    See Times
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Pagination will be added later -->
+        <!-- <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"></app-pagination> -->
+
+        <!-- <app-amenities-schedule></app-amenities-schedule> -->
+
+        <!-- Pagination will be added later -->
+        <!-- <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"></app-pagination> -->
       </div>
 
       <div class="column-right">
-
-        <!--<%@ include file="/WEB-INF/jsp/components/displays/rightColumn.jsp" %>-->
+        <app-calendar-widget></app-calendar-widget>
+        <!-- Right Column Amenities (My Reservations) -->
+        <div class="grey-static-container m-t-40">
+          <div class="column d-flex justify-content-center align-items-center">
+            <h3 class="m-b-20">My Reservations</h3>
+            <div *ngIf="reservationsList?.length === 0" class="f-c-c-c align-items-center" style="text-align: center">
+              <span class="w-100 mb-2">
+                No reservations found
+              </span>
+            </div>
+            <div *ngIf="reservationsList?.length > 0">
+              <div *ngFor="let reservation of reservationsList" class="cool-static-container m-b-20"
+                style="word-wrap: break-word;" aria-hidden="true">
+                <div class="f-c-c-c">
+                  <div class="f-r-sb-c w-100">
+                    <h5>{{ reservation.amenity?.name }}</h5>
+                    <!-- Use reservation.bookingIds for deletion -->
+                    <!-- <a class="pointer" (click)="deleteReservation(reservation.bookingIds)">
+                      <i class="fas fa-trash" style="color: var(--error);"></i>
+                    </a> -->
+                  </div>
+                  <div>
+                    <h6 class="mb-3" style="color:var(--lighttext);">Date
+                      <span class="c-primary">{{ reservation.bookingDate | date:'dd MMM yyyy' }}</span>
+                    </h6>
+                    <h6 class="mb-3" style="color:var(--lighttext);">Start Time
+                      <span class="c-primary">{{ reservation.shift?.startTime | date:'HH:mm a' }}</span>
+                    </h6>
+                    <h6 class="mb-3" style="color:var(--lighttext);">End Time
+                      <span class="c-primary">{{ reservation.shift?.startTime | date:'HH:mm a' }}</span>
+                    </h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
+      <!-- Success Message -->
+      <div *ngIf="showSuccessMessage">
+        Reservation created successfully!
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="showErrorMessage">
+        There was an error creating the reservation.
+      </div>
 
     </div>
   </div>
-<app-wave-footer></app-wave-footer>
+</div>

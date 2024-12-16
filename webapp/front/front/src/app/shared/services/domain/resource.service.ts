@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Resource } from '../../models/index';
-import { ImageDto, ResourceDto } from '../../dtos/app-dtos';
+import { ResourceDto } from '../../dtos/app-dtos';
+import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class ResourceService {
@@ -21,17 +22,27 @@ export class ResourceService {
             page?: number;
             size?: number;
         } = {}
-    ): Observable<Resource[]> {
+    ): Observable<{ resources: Resource[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<ResourceDto[]>(url, { params }).pipe(
-            map((resourcesDto: ResourceDto[]) => resourcesDto.map(mapResource))
+        return this.http.get<ResourceDto[]>(url, { params, observe: 'response' }).pipe(
+            map((response) => {
+                const resourcesDto: ResourceDto[] = response.body || [];
+                const pagination = parseLinkHeader(response.headers.get('Link'));
+
+                const resources = resourcesDto.map(mapResource);
+
+                return {
+                    resources,
+                    totalPages: pagination.totalPages,
+                    currentPage: pagination.currentPage,
+                };
+            })
         );
     }
-
 }
 
 export function mapResource(resourceDto: ResourceDto): Resource {
@@ -39,6 +50,6 @@ export function mapResource(resourceDto: ResourceDto): Resource {
         title: resourceDto.title,
         description: resourceDto.description,
         image: resourceDto._links.resourceImage,
-        self: resourceDto._links.self
-    }
+        self: resourceDto._links.self,
+    };
 }
