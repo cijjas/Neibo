@@ -61,7 +61,7 @@ public class AvailabilityDaoImplTest {
         long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        Availability availability = availabilityDaoImpl.createAvailability(aKey, sKey);
+        Availability availability = availabilityDaoImpl.createAvailability(sKey, aKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -84,7 +84,7 @@ public class AvailabilityDaoImplTest {
         long avKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(aKey, sKey);
+        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(sKey, aKey);
 
         // Validations & Post Conditions
         assertTrue(optionalAvailability.isPresent());
@@ -102,7 +102,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(INVALID_ID, sKey);
+        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(sKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalAvailability.isPresent());
@@ -120,7 +120,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(aKey, INVALID_ID);
+        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(INVALID_ID, aKey);
 
         // Validations & Post Conditions
         assertFalse(optionalAvailability.isPresent());
@@ -156,7 +156,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        boolean deleted = availabilityDaoImpl.deleteAvailability(aKey, sKey);
+        boolean deleted = availabilityDaoImpl.deleteAvailability(sKey, aKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -175,7 +175,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        boolean deleted = availabilityDaoImpl.deleteAvailability(INVALID_ID, sKey);
+        boolean deleted = availabilityDaoImpl.deleteAvailability(sKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
@@ -193,7 +193,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        boolean deleted = availabilityDaoImpl.deleteAvailability(aKey, INVALID_ID);
+        boolean deleted = availabilityDaoImpl.deleteAvailability(INVALID_ID, aKey);
 
         // Validations & Post Conditions
         em.flush();

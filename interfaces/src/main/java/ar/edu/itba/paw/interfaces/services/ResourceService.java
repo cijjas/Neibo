@@ -11,9 +11,9 @@ public interface ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Resource> findResource(final long neighborhoodId, final long resourceId);
+    Optional<Resource> findResource(long neighborhoodId, long resourceId);
 
-    List<Resource> getResources(final long neighborhoodId, int page, int size);
+    List<Resource> getResources(long neighborhoodId, int page, int size);
 
     int calculateResourcePages(long neighborhoodId, int size);
 
@@ -23,5 +23,5 @@ public interface ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteResource(final long neighborhoodId, final long resourceId);
+    boolean deleteResource(long neighborhoodId, long resourceId);
 }

@@ -59,9 +59,9 @@ public class UserRoleController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{userRoleId}")
     public Response findUserRole(
-            @PathParam("id") @GenericIdConstraint final Long userRoleId
+            @PathParam("userRoleId") @GenericIdConstraint Long userRoleId
     ) {
         LOGGER.info("GET request arrived at '/user-roles/{}'", userRoleId);
 

@@ -62,7 +62,7 @@ public class AmenityDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Amenity amenity = amenityDaoImpl.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_2, nhKey);
+        Amenity amenity = amenityDaoImpl.createAmenity(nhKey, AMENITY_DESCRIPTION_2, AMENITY_NAME_1);
 
         // Validations & Post Conditions
         em.flush();
@@ -109,7 +109,7 @@ public class AmenityDaoImplTest {
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(aKey, nhKey);
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(nhKey, aKey);
 
         // Validations & Post Conditions
         assertTrue(optionalAmenity.isPresent());
@@ -123,7 +123,7 @@ public class AmenityDaoImplTest {
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(INVALID_ID, nhKey);
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalAmenity.isPresent());
@@ -136,7 +136,7 @@ public class AmenityDaoImplTest {
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(aKey, INVALID_ID);
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(INVALID_ID, aKey);
 
         // Validations & Post Conditions
         assertFalse(optionalAmenity.isPresent());

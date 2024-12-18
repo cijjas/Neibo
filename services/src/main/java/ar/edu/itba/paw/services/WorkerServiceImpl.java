@@ -61,7 +61,7 @@ public class WorkerServiceImpl implements WorkerService {
     public List<Worker> getWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int page, int size) {
         LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
-        return workerDao.getWorkers(page, size, professionIds, neighborhoodIds, workerRoleId, workerStatusId);
+        return workerDao.getWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId, page, size);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class WorkerServiceImpl implements WorkerService {
     public int calculateWorkerPages(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int size) {
         LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
-        return PaginationUtils.calculatePages(workerDao.countWorkers(professionIds, neighborhoodIds, workerRoleId, workerStatusId), size);
+        return PaginationUtils.calculatePages(workerDao.countWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

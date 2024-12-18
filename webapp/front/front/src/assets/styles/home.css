@@ -3379,3 +3379,103 @@ input[type=time] {
     color: var(--accent);
   }
 }
+
+
+/* Infinite scroll */
+
+.infinite-scroll-container {
+  border: 1px solid var(--border-light);
+  height: 300px;
+  /* Ensure a reasonable fixed height */
+  overflow-y: auto;
+  padding: 5px;
+  background: var(--background);
+}
+
+
+.amenity-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.amenity-item:hover {
+  background-color: var(--secondary);
+}
+
+.amenity-item.selected {
+  background-color: var(--between-primary);
+  color: var(--onprimary);
+  font-weight: bold;
+}
+
+
+/* popup */
+
+.dialog {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  /* Darker background for better focus on the popup */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* Subtle blur effect for modern look */
+  backdrop-filter: blur(5px);
+}
+
+.dialog.show-dialog {
+  display: flex;
+}
+
+.dialog-content {
+  background: var(--background);
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  /* Soft shadow for depth */
+  max-width: 400px;
+  width: 90%;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dialog-content .title span {
+  font-size: 24px;
+  color: var(--text);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.dialog-content p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.dialog-content p strong {
+  color: var(--primary);
+  /* Accent color for important details */
+  font-weight: bold;
+}
+
+.shift-times {
+  margin: 8px 0 15px 0;
+  /* Slightly reduced margin for the shift times */
+  font-size: 16px;
+  color: #555;
+  line-height: 1.4;
+  /* Tighter line spacing for better compactness */
+  text-align: center;
+}
+
+.shift-times strong {
+  color: var(--primary);
+  /* Accent color for the shift times */
+}

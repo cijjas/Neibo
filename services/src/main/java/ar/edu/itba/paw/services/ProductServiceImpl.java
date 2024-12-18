@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     private final DepartmentDao departmentDao;
 
     @Autowired
-    public ProductServiceImpl(final ProductDao productDao, final ImageService imageService, DepartmentDao departmentDao) {
+    public ProductServiceImpl(ProductDao productDao, ImageService imageService, DepartmentDao departmentDao) {
         this.productDao = productDao;
         this.imageService = imageService;
         this.departmentDao = departmentDao;
@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
         for (int i = 0; i < imagesLength && i < idArray.length; i++)
             idArray[i] = imageIds.get(i);
 
-        return productDao.createProduct(userId, name, description, price, used, departmentId, idArray[0], idArray[1], idArray[2], units);
+        return productDao.createProduct(userId, name, description, price, units, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> findProduct(long neighborhoodId, long productId) {
         LOGGER.info("Finding Product {} from Neighborhood {}", productId, neighborhoodId);
 
-        return productDao.findProduct(productId, neighborhoodId);
+        return productDao.findProduct(neighborhoodId, productId);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size) {
         LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
-        return productDao.getProducts(neighborhoodId, departmentId, userId, productStatusId, page, size);
+        return productDao.getProducts(neighborhoodId, userId, departmentId, productStatusId, page, size);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
     public int calculateProductPages(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int size) {
         LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, departmentId, userId, productStatusId), size);
+        return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, userId, departmentId, productStatusId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

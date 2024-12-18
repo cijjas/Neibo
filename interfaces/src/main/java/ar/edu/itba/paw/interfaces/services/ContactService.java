@@ -15,7 +15,7 @@ public interface ContactService {
 
     Optional<Contact> findContact(long neighborhoodId, long contactId);
 
-    List<Contact> getContacts(final long neighborhoodId, int page, int size);
+    List<Contact> getContacts(long neighborhoodId, int page, int size);
 
     int calculateContactPages(long neighborhoodId, int size);
 

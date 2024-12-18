@@ -41,14 +41,14 @@ public class ProductServiceImplTest {
         List<Long> imageIds = null;
         long units = 10L;
 
-        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(0L), eq(0L), eq(0L), eq(units)))
+        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(0L), eq(0L), eq(0L)))
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
         Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
-        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(0L), eq(0L), eq(0L), eq(units));
+        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(0L), eq(0L), eq(0L));
         assertNotNull(result);
     }
 
@@ -64,14 +64,14 @@ public class ProductServiceImplTest {
         List<Long> imageIds = Collections.singletonList(5L);
         long units = 20L;
 
-        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(0L), eq(0L), eq(units)))
+        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(5L), eq(0L), eq(0L)))
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
         Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
-        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(0L), eq(0L), eq(units));
+        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(5L), eq(0L), eq(0L));
         assertNotNull(result);
     }
 
@@ -87,14 +87,14 @@ public class ProductServiceImplTest {
         List<Long> imageIds = Arrays.asList(5L, 6L);
         long units = 30L;
 
-        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(6L), eq(0L), eq(units)))
+        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(5L), eq(6L), eq(0L)))
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
         Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
-        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(6L), eq(0L), eq(units));
+        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(5L), eq(6L), eq(0L));
         assertNotNull(result);
     }
 
@@ -110,14 +110,14 @@ public class ProductServiceImplTest {
         List<Long> imageIds = Arrays.asList(5L, 6L, 7L);
         long units = 40L;
 
-        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(6L), eq(7L), eq(units)))
+        when(productDao.createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(5L), eq(6L), eq(7L)))
                 .thenReturn(new Product.Builder().build());
 
         // Exercise
         Product result = productService.createProduct(userId, name, description, price, units, used, departmentId, imageIds);
 
         // Validations & Post Conditions
-        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(used), eq(departmentId), eq(5L), eq(6L), eq(7L), eq(units));
+        verify(productDao, times(1)).createProduct(eq(userId), eq(name), eq(description), eq(price), eq(units), eq(used), eq(departmentId), eq(5L), eq(6L), eq(7L));
         assertNotNull(result);
     }
 

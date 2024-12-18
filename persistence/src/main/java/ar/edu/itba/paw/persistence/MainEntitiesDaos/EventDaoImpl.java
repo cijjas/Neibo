@@ -26,7 +26,7 @@ public class EventDaoImpl implements EventDao {
     // ---------------------------------------------- EVENT INSERT -----------------------------------------------------
 
     @Override
-    public Event createEvent(final String name, final String description, final Date date, final long startTimeId, final long endTimeId, final long neighborhoodId) {
+    public Event createEvent(long neighborhoodId, String name, String description, Date date, long startTimeId, long endTimeId) {
         LOGGER.debug("Inserting Event {}", name);
 
         Event event = new Event.Builder()
@@ -51,7 +51,7 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public Optional<Event> findEvent(long eventId, long neighborhoodId) {
+    public Optional<Event> findEvent(long neighborhoodId, long eventId) {
         LOGGER.debug("Selecting Event with eventId {}, neighborhoodId {}", eventId, neighborhoodId);
 
         TypedQuery<Event> query = em.createQuery(
@@ -67,7 +67,7 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public List<Event> getEvents(Date date, long neighborhoodId, int page, int size) {
+    public List<Event> getEvents(long neighborhoodId, Date date, int page, int size) {
         LOGGER.debug("Selecting Events from Date {}", date);
 
         // Build the JPQL query for fetching event IDs
@@ -108,7 +108,7 @@ public class EventDaoImpl implements EventDao {
 
 
     @Override
-    public int countEvents(Date date, long neighborhoodId) {
+    public int countEvents(long neighborhoodId, Date date) {
         LOGGER.debug("Counting Events with neighborhoodId {}", neighborhoodId);
 
         StringBuilder jpqlBuilder = new StringBuilder("SELECT DISTINCT COUNT(e.eventId) FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");

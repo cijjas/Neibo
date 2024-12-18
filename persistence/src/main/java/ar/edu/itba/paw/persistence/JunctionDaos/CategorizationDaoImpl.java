@@ -22,7 +22,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
     // ---------------------------------------------- CATEGORIZATION INSERT ------------------------------------------------------
 
     @Override
-    public Categorization createCategorization(final long tagId, final long postId) {
+    public Categorization createCategorization(long postId, long tagId) {
         LOGGER.debug("Inserting Category");
 
         Categorization categorization = new Categorization(em.find(Post.class, postId), em.find(Tag.class, tagId));
@@ -33,7 +33,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
     // ---------------------------------------------- CATEGORIZATION INSERT ------------------------------------------------------
 
     @Override
-    public Optional<Categorization> findCategorization(final long tagId, final long postId) {
+    public Optional<Categorization> findCategorization(long postId, long tagId) {
         LOGGER.debug("Selecting Category for Post {} and Tag {}", postId, tagId);
 
         return em.createQuery("SELECT c FROM Categorization c WHERE c.post.postId = :postId AND c.tag.tagId = :tagId", Categorization.class)
@@ -45,7 +45,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
     // ---------------------------------------------- CATEGORIZATION DELETE ------------------------------------------------------
 
     @Override
-    public boolean deleteCategorization(long tagId, long postId) {
+    public boolean deleteCategorization(long postId, long tagId) {
         LOGGER.debug("Deleting Category for Post {} and Tag {}", postId, tagId);
 
         int deleteCount = em.createQuery("DELETE FROM Categorization c WHERE c.post.postId = :postId AND c.tag.tagId = :tagId")

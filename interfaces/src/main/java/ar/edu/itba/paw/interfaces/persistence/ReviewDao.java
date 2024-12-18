@@ -15,7 +15,7 @@ public interface ReviewDao {
 
     Optional<Review> findReview(long reviewId);
 
-    Optional<Review> findReview(long reviewId, long workerId);
+    Optional<Review> findReview(long workerId, long reviewId);
 
     Optional<Review> findLatestReview(long workerId, long userId);
 

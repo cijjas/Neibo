@@ -1,0 +1,153 @@
+<div [class.dark-mode]="darkMode">
+    <app-navbar></app-navbar>
+    <div class="container">
+        <div class="row init">
+            <div class="column-left">
+                <app-left-column></app-left-column>
+            </div>
+
+            <div class="column-middle">
+                <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+
+                    <!-- If no bookings -->
+                    <div *ngIf="!isLoading && bookings?.length === 0">
+                        <div class="f-c-c-c" style="text-align: center">
+                            <span class="w-75 mb-2">
+                                Unavailable times for <span class="font-weight-bolder c-primary">{{ amenityName
+                                    }}</span>
+                                on {{ date }}.
+                            </span>
+                            <span class="w-75 mb-2">
+                                No shifts available. Please try another day or amenity.
+                            </span>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="d-flex justify-content-center m-t-40">
+                                <button (click)="goBack()" class="cool-button cool-small on-bg w-25 font-weight-bold">Go
+                                    back</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- If bookings are available -->
+                    <div *ngIf="!isLoading && bookings?.length > 0">
+                        <h2>Choose Time</h2>
+                        <p class="c-light-text mt-2">{{ amenityName }}</p>
+                        <p class="c-light-text mt-2">{{ date }}</p>
+                        <div class="divider"></div>
+
+                        <div class="f-c-c-c mt-4">
+                            <div class="shifts-reservation f-c-c-c w-50">
+                                <span class="font-weight-bold font-size-16">
+                                    Available times
+                                </span>
+
+                                <form [formGroup]="shiftsForm" *ngIf="bookings?.length > 0">
+                                    <!-- Add formArrayName here -->
+                                    <div formArrayName="selectedShifts">
+                                        <div *ngFor="let shift of bookings; let i = index" class="cat">
+                                            <label class="w-100">
+                                                <!-- Here i indexes into the FormArray 'selectedShifts' -->
+                                                <input type="checkbox" [formControlName]="i" />
+                                                <span>{{ shift.startTime }} - {{ shift.endTime }}</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+
+                            </div>
+                            <div class="f-c-c-c">
+                                <div class="f-c-c-c" style="gap: 5px">
+                                    Remember that you can select multiple times at once.
+                                    <span class="c-primary font-weight-bolder">
+                                        Please confirm your selection.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-end m-t-40">
+                                    <button (click)="onReserve()" type="submit"
+                                        class="cool-button cool-small on-bg w-25 font-weight-bold"
+                                        [disabled]="isReserveDisabled()" style="height:40px;">
+                                        Reserve
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loading indicator -->
+                    <div *ngIf="isLoading" class="f-c-c-c" style="text-align: center">
+                        <span class="w-100 mb-2">Loading available times...</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="column-right">
+                <app-calendar-widget></app-calendar-widget>
+                <!-- <div class="grey-static-container m-t-40">
+                    <div class="column d-flex justify-content-center align-items-center">
+                        <h3 class="m-b-20">My Reservations</h3>
+                        <div *ngIf="reservationsList?.length === 0" class="f-c-c-c align-items-center"
+                            style="text-align: center">
+                            <span class="w-100 mb-2">
+                                No reservations found
+                            </span>
+                        </div>
+                        <div *ngIf="reservationsList?.length > 0">
+                            <div *ngFor="let reservation of reservationsList" class="cool-static-container m-b-20"
+                                style="word-wrap: break-word;" aria-hidden="true">
+                                <div class="f-c-c-c">
+                                    <div class="f-r-sb-c w-100">
+                                        <h5>{{ reservation.amenity?.name }}</h5>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-3" style="color:var(--lighttext);">Date
+                                            <span class="c-primary">{{ reservation.bookingDate | date:'dd MMM yyyy'
+                                                }}</span>
+                                        </h6>
+                                        <h6 class="mb-3" style="color:var(--lighttext);">Start Time
+                                            <span class="c-primary">{{ reservation.shift?.startTime | date:'HH:mm a'
+                                                }}</span>
+                                        </h6>
+                                        <h6 class="mb-3" style="color:var(--lighttext);">End Time
+                                            <span class="c-primary">{{ reservation.shift?.endTime | date:'HH:mm a'
+                                                }}</span>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+            </div> <!-- end column-right -->
+
+
+        </div> <!-- end row -->
+    </div> <!-- end container -->
+</div>
+
+
+
+<!-- Success Popup -->
+<div class="dialog" id="reservationDialog" [ngClass]="{'show-dialog': showReservationDialog}">
+    <div class="dialog-content">
+        <div class="title mb-2 mt-5 f-c-c-c">
+            <span class="font-weight-bold">Reservation Done!</span>
+        </div>
+        <div>
+            <p>Reservation for <strong>{{ amenityName }}</strong></p>
+            <p>on <strong>{{ date }}</strong></p>
+            <p>for shift(s):</p>
+            <div class="shift-times" [innerHTML]="formattedShiftTimes"></div>
+        </div>
+
+        <button (click)="redirectToReservations()" class="action-button font-weight-bolder">
+            <span>Go to Reservations</span>
+        </button>
+    </div>
+</div>

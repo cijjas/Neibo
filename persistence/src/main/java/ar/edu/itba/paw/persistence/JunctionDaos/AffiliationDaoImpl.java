@@ -27,7 +27,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
     // ----------------------------------------- NEIGHBORHOOD WORKERS INSERT -------------------------------------------
 
     @Override
-    public Affiliation createAffiliation(long workerId, long neighborhoodId, Long workerRoleId) {
+    public Affiliation createAffiliation(long neighborhoodId, long workerId, Long workerRoleId) {
         LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
 
         Worker worker = em.find(Worker.class, workerId);
@@ -47,14 +47,14 @@ public class AffiliationDaoImpl implements AffiliationDao {
     // ----------------------------------------- NEIGHBORHOOD WORKERS SELECT -------------------------------------------
 
     @Override
-    public Optional<Affiliation> findAffiliation(long workerId, long neighborhoodId) {
+    public Optional<Affiliation> findAffiliation(long neighborhoodId, long workerId) {
         LOGGER.debug("Finding Affiliation with worker id {} in Neighborhood {}", workerId, neighborhoodId);
 
         return Optional.ofNullable(em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId)));
     }
 
     @Override
-    public List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
+    public List<Affiliation> getAffiliations(Long neighborhoodId, Long workerId, int page, int size) {
         LOGGER.debug("Selecting Worker Affiliations By Criteria");
 
         TypedQuery<AffiliationKey> idQuery = null;
@@ -94,7 +94,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
     }
 
     @Override
-    public int countAffiliations(Long workerId, Long neighborhoodId) {
+    public int countAffiliations(Long neighborhoodId, Long workerId) {
         LOGGER.debug("Counting Worker Affiliations By Criteria");
 
         Long count = null;
@@ -126,7 +126,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
     // ----------------------------------------- NEIGHBORHOOD WORKERS DELETE -------------------------------------------
 
     @Override
-    public boolean deleteAffiliation(long workerId, long neighborhoodId) {
+    public boolean deleteAffiliation(long neighborhoodId, long workerId) {
         LOGGER.debug("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
         String hql = "DELETE FROM Affiliation a WHERE a.id = :affiliationId";

@@ -9,19 +9,19 @@ public interface ChannelDao {
 
     // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
 
-    Channel createChannel(final String name);
+    Channel createChannel(String name);
 
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
-    Optional<Channel> findChannel(long channelId, long NeighborhoodId);
+    Optional<Channel> findChannel(long neighborhoodId, long channelId);
 
     Optional<Channel> findChannel(String name);
 
-    List<Channel> getChannels(final long neighborhoodId, int page, int size);
+    List<Channel> getChannels(long neighborhoodId, int page, int size);
 
-    int countChannels(final long neighborhoodId);
+    int countChannels(long neighborhoodId);
 
     // -------------------------------------------- CHANNELS DELETE ----------------------------------------------------
 
-    boolean deleteChannel(final long channelId);
+    boolean deleteChannel(long channelId);
 }

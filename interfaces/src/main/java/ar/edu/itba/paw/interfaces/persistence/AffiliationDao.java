@@ -9,17 +9,17 @@ public interface AffiliationDao {
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ----------------------------------------
 
-    Affiliation createAffiliation(long workerId, long neighborhoodId, Long workerRoleId);
+    Affiliation createAffiliation(long neighborhoodId, long workerId, Long workerRoleId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
 
-    Optional<Affiliation> findAffiliation(long workerId, long neighborhoodId);
+    Optional<Affiliation> findAffiliation(long neighborhoodId, long workerId);
 
-    List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
+    List<Affiliation> getAffiliations(Long neighborhoodId, Long workerId, int page, int size);
 
-    int countAffiliations(Long workerId, Long neighborhoodId);
+    int countAffiliations(Long neighborhoodId, Long workerId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS DELETE ----------------------------------------
 
-    boolean deleteAffiliation(long workerId, long neighborhoodId);
+    boolean deleteAffiliation(long neighborhoodId, long workerId);
 }

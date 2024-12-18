@@ -44,14 +44,14 @@ public class ContactDaoImpl implements ContactDao {
     // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Contact> findContact(final long contactId) {
+    public Optional<Contact> findContact(long contactId) {
         LOGGER.debug("Selecting Contact with id {}", contactId);
 
         return Optional.ofNullable(em.find(Contact.class, contactId));
     }
 
     @Override
-    public Optional<Contact> findContact(long contactId, long neighborhoodId) {
+    public Optional<Contact> findContact(long neighborhoodId, long contactId) {
         LOGGER.debug("Selecting Contact with contactId {}, neighborhoodId {}", contactId, neighborhoodId);
 
         TypedQuery<Contact> query = em.createQuery(

@@ -13,13 +13,13 @@ public interface ContactDao {
 
     // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
 
-    Optional<Contact> findContact(final long contactId);
+    Optional<Contact> findContact(long contactId);
 
-    Optional<Contact> findContact(final long contactId, long neighborhoodId);
+    Optional<Contact> findContact(long neighborhoodId, long contactId);
 
-    List<Contact> getContacts(final long neighborhoodId, final int page, final int size);
+    List<Contact> getContacts(long neighborhoodId, int page, int size);
 
-    int countContacts(final long neighborhoodId);
+    int countContacts(long neighborhoodId);
 
     // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
 

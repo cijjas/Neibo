@@ -9,15 +9,15 @@ public interface LikeDao {
 
     // -------------------------------------------------- LIKES INSERT -------------------------------------------------
 
-    Like createLike(long postId, long userId);
+    Like createLike(long userId, long postId);
 
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
-    List<Like> getLikes(Long postId, Long userId, int page, int size);
+    List<Like> getLikes(Long userId, Long postId, int page, int size);
 
-    int countLikes(Long postId, Long userId);
+    int countLikes(Long userId, Long postId);
 
     // -------------------------------------------------- LIKES DELETE -------------------------------------------------
 
-    boolean deleteLike(long postId, long userId);
+    boolean deleteLike(long userId, long postId);
 }

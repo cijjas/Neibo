@@ -47,9 +47,9 @@ public class ImageController {
     }
 
     @GET
-    @Path("/{id}")
-    public Response findById(
-            @PathParam("id") @GenericIdConstraint long imageId
+    @Path("/{imageId}")
+    public Response findImage(
+            @PathParam("imageId") @GenericIdConstraint long imageId
     ) {
         LOGGER.info("GET request arrived at '/images/{}'", imageId);
 
@@ -97,10 +97,10 @@ public class ImageController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{imageId}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(
-            @PathParam("id") @GenericIdConstraint final long imageId
+    public Response deleteImage(
+            @PathParam("imageId") @GenericIdConstraint long imageId
     ) {
         LOGGER.info("DELETE request arrived at '/images/{}'", imageId);
 

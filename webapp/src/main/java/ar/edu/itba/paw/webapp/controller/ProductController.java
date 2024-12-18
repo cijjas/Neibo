@@ -59,12 +59,12 @@ public class ProductController {
 
     @GET
     public Response listProducts(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inDepartment") @DepartmentURNConstraint final String department,
-            @QueryParam("forUser") @UserURNConstraint final String user,
-            @QueryParam("withStatus") @ProductStatusURNConstraint final String productStatus
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam("forUser") @UserURNConstraint String user,
+            @QueryParam("inDepartment") @DepartmentURNConstraint String department,
+            @QueryParam("withStatus") @ProductStatusURNConstraint String productStatus,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
@@ -108,10 +108,10 @@ public class ProductController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{productId}")
     public Response findProduct(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long productId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint long productId
     ) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
@@ -134,13 +134,13 @@ public class ProductController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createProduct(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @Valid final ProductDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @Valid ProductDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(extractSecondId(form.getUser()), form.getName(), form.getDescription(), form.getPrice(), form.getRemainingUnits(), form.getUsed(), extractFirstId(form.getDepartment()), extractFirstIds(form.getImages()));
+        final Product product = ps.createProduct(extractSecondId(createForm.getUser()), createForm.getName(), createForm.getDescription(), createForm.getPrice(), createForm.getRemainingUnits(), createForm.getUsed(), extractFirstId(createForm.getDepartment()), extractFirstIds(createForm.getImages()));
         String productHashCode = String.valueOf(product.hashCode());
 
         // Resource URN
@@ -152,26 +152,26 @@ public class ProductController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{productId}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#id)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#productId)")
     @Validated(UpdateValidationSequence.class)
-    public Response updateProductPartially(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id,
-            @Valid final ProductDto partialUpdate
+    public Response updateProduct(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint long productId,
+            @Valid ProductDto updateForm
     ) {
-        LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
+        LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Modification & HashCode Generation
         final Product updatedProduct = ps.updateProductPartially(
-                id,
-                partialUpdate.getName(),
-                partialUpdate.getDescription(),
-                partialUpdate.getPrice(),
-                partialUpdate.getRemainingUnits(), partialUpdate.getUsed(),
-                extractOptionalFirstId(partialUpdate.getDepartment()),
-                extractFirstIds(partialUpdate.getImages())
+                productId,
+                updateForm.getName(),
+                updateForm.getDescription(),
+                updateForm.getPrice(),
+                updateForm.getRemainingUnits(), updateForm.getUsed(),
+                extractOptionalFirstId(updateForm.getDepartment()),
+                extractFirstIds(updateForm.getImages())
         );
         String productHashCode = String.valueOf(updatedProduct.hashCode());
 
@@ -181,11 +181,11 @@ public class ProductController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{productId}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
     public Response deleteProduct(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long productId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint long productId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 

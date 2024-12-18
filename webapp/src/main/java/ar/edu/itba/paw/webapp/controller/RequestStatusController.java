@@ -65,14 +65,14 @@ public class RequestStatusController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{requestStatusId}")
     public Response findRequestStatus(
-            @PathParam("id") @GenericIdConstraint final Long id
+            @PathParam("requestStatusId") @GenericIdConstraint Long requestStatusId
     ) {
-        LOGGER.info("GET request arrived at '/request-status/{}'", id);
+        LOGGER.info("GET request arrived at '/request-status/{}'", requestStatusId);
 
         // Content
-        RequestStatus requestStatus = RequestStatus.fromId(id);
+        RequestStatus requestStatus = RequestStatus.fromId(requestStatusId);
         String requestStatusHashCode = String.valueOf(requestStatus.hashCode());
 
         // Cache Control

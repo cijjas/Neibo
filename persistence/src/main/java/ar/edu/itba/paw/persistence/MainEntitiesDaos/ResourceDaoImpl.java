@@ -44,7 +44,7 @@ public class ResourceDaoImpl implements ResourceDao {
     // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
     @Override
-    public Optional<Resource> findResource(final long resourceId) {
+    public Optional<Resource> findResource(long resourceId) {
         LOGGER.debug("Selecting Resource with resourceId {}", resourceId);
 
         return Optional.ofNullable(em.find(Resource.class, resourceId));

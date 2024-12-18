@@ -29,7 +29,7 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITIES INSERT ---------------------------------------------------
 
     @Override
-    public Amenity createAmenity(String name, String description, long neighborhoodId) {
+    public Amenity createAmenity(long neighborhoodId, String description, String name) {
         LOGGER.debug("Inserting Amenity");
 
         Amenity amenity = new Amenity.Builder()
@@ -51,7 +51,7 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
-    public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
+    public Optional<Amenity> findAmenity(long neighborhoodId, long amenityId) {
         LOGGER.debug("Selecting Amenity with amenityId {} and neighborhoodId {}", amenityId, neighborhoodId);
 
         TypedQuery<Amenity> query = em.createQuery(

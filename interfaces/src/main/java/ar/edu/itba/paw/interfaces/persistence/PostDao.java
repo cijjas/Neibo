@@ -9,19 +9,19 @@ public interface PostDao {
 
     // ------------------------------------------------ POSTS INSERT ---------------------------------------------------
 
-    Post createPost(final String title, final String description, final long neighborId, final long channelId, final long imageId);
+    Post createPost(long userId, String title, String description, long channelId, long imageId);
 
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     Optional<Post> findPost(long postId);
 
-    Optional<Post> findPost(long postId, long neighborhoodId);
+    Optional<Post> findPost(long neighborhoodId, long postId);
 
-    List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
+    List<Post> getPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int page, int size);
 
-    int countPosts(Long channelId, List<Long> tags, long neighborhoodId, Long postStatusId, Long userId);
+    int countPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tags, Long postStatusId);
 
     // ------------------------------------------------ POSTS DELETE ---------------------------------------------------
 
-    boolean deletePost(final long postId);
+    boolean deletePost(long neighborhoodId, long postId);
 }

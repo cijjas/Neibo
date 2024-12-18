@@ -8,13 +8,13 @@ public interface AvailabilityDao {
 
     // -------------------------------------------- AVAILABILITY INSERT ------------------------------------------------
 
-    Availability createAvailability(long amenityId, long shiftId);
+    Availability createAvailability(long shiftId, long amenityId);
 
     // -------------------------------------------- AVAILABILITY SELECT ------------------------------------------------
 
-    Optional<Availability> findAvailability(long amenityId, long shiftId);
+    Optional<Availability> findAvailability(long shiftId, long amenityId);
 
     // -------------------------------------------- AVAILABILITY DELETE ------------------------------------------------
 
-    boolean deleteAvailability(long amenityId, long shiftId);
+    boolean deleteAvailability(long shiftId, long amenityId);
 }

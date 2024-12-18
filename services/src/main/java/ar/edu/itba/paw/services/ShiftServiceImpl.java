@@ -21,7 +21,7 @@ public class ShiftServiceImpl implements ShiftService {
     private final ShiftDao shiftDao;
 
     @Autowired
-    public ShiftServiceImpl(final ShiftDao shiftDao) {
+    public ShiftServiceImpl(ShiftDao shiftDao) {
         this.shiftDao = shiftDao;
     }
 

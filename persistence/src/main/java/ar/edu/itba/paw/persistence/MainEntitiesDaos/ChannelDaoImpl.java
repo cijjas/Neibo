@@ -23,7 +23,7 @@ public class ChannelDaoImpl implements ChannelDao {
     // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
 
     @Override
-    public Channel createChannel(final String channelName) {
+    public Channel createChannel(String channelName) {
         LOGGER.debug("Inserting Channel {}", channelName);
         final Channel channel = new Channel.Builder()
                 .channel(channelName)
@@ -33,7 +33,7 @@ public class ChannelDaoImpl implements ChannelDao {
     }
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
-    public Optional<Channel> findChannel(long channelId, long neighborhoodId) {
+    public Optional<Channel> findChannel(long neighborhoodId, long channelId) {
         LOGGER.debug("Selecting Channel with channelId {} in Neighborhood {}", channelId, neighborhoodId);
 
         TypedQuery<Channel> query = em.createQuery(
@@ -59,7 +59,7 @@ public class ChannelDaoImpl implements ChannelDao {
     }
 
     @Override
-    public List<Channel> getChannels(final long neighborhoodId, final int page, final int size) {
+    public List<Channel> getChannels(long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting paginated Channels from Neighborhood {}", neighborhoodId);
 
         // Retrieve paginated channel IDs
@@ -84,7 +84,7 @@ public class ChannelDaoImpl implements ChannelDao {
     }
 
     @Override
-    public int countChannels(final long neighborhoodId) {
+    public int countChannels(long neighborhoodId) {
         LOGGER.debug("Counting Channels from Neighborhood {}", neighborhoodId);
 
         TypedQuery<Long> query = em.createQuery(

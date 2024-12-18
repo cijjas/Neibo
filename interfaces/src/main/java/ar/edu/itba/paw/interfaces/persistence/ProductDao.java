@@ -9,19 +9,19 @@ public interface ProductDao {
 
     // --------------------------------------------- PRODUCTS INSERT ---------------------------------------------------
 
-    Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long units);
+    Product createProduct(long userId, String name, String description, double price, Long units, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId);
 
     // --------------------------------------------- PRODUCTS SELECT ---------------------------------------------------
 
-    Optional<Product> findProduct(final long productId);
+    Optional<Product> findProduct(long productId);
 
-    Optional<Product> findProduct(final long productId, long neighborhoodId);
+    Optional<Product> findProduct(long neighborhoodId, long productId);
 
-    List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size);
+    List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size);
 
-    int countProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId);
+    int countProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId);
 
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 
-    boolean deleteProduct(final long neighborhoodId, final long productId);
+    boolean deleteProduct(long neighborhoodId, long productId);
 }

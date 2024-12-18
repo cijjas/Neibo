@@ -133,12 +133,9 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                EMPTY_FIELD,
-                EMPTY_FIELD);
+                Collections.emptyList(), Collections.emptyList(), EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
+        );
 
         // Validations
         assertEquals(FOUR_ELEMENTS, workerList.size());
@@ -153,12 +150,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                Collections.emptyList(),
-                EMPTY_FIELD,
-                EMPTY_FIELD
+                Collections.emptyList(), professionList, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -174,12 +167,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                neighborhoodList,
-                EMPTY_FIELD,
-                EMPTY_FIELD
+                neighborhoodList, Collections.emptyList(), EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -193,12 +182,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                (long) WorkerRole.VERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                Collections.emptyList(), Collections.emptyList(), (long) WorkerRole.VERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -212,12 +197,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                Collections.emptyList(), Collections.emptyList(), (long) WorkerRole.UNVERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -231,12 +212,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                (long) WorkerRole.REJECTED.getId(),
-                EMPTY_FIELD
+                Collections.emptyList(), Collections.emptyList(), (long) WorkerRole.REJECTED.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -254,12 +231,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                neighborhoodList,
-                EMPTY_FIELD,
-                EMPTY_FIELD
+                neighborhoodList, professionList, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -275,12 +248,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                Collections.emptyList(),
-                (long) WorkerRole.VERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                Collections.emptyList(), professionList, (long) WorkerRole.VERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -296,12 +265,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                Collections.emptyList(),
-                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                Collections.emptyList(), professionList, (long) WorkerRole.UNVERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -317,12 +282,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                Collections.emptyList(),
-                (long) WorkerRole.REJECTED.getId(),
-                EMPTY_FIELD
+                Collections.emptyList(), professionList, (long) WorkerRole.REJECTED.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -338,12 +299,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                neighborhoodList,
-                (long) WorkerRole.VERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                neighborhoodList, Collections.emptyList(), (long) WorkerRole.VERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -359,12 +316,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                neighborhoodList,
-                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                neighborhoodList, Collections.emptyList(), (long) WorkerRole.UNVERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -380,12 +333,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                neighborhoodList,
-                (long) WorkerRole.REJECTED.getId(),
-                EMPTY_FIELD
+                neighborhoodList, Collections.emptyList(), (long) WorkerRole.REJECTED.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -403,12 +352,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                neighborhoodList,
-                (long) WorkerRole.VERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                neighborhoodList, professionList, (long) WorkerRole.VERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -426,12 +371,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                neighborhoodList,
-                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
-                EMPTY_FIELD
+                neighborhoodList, professionList, (long) WorkerRole.UNVERIFIED_WORKER.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -449,12 +390,8 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                professionList,
-                neighborhoodList,
-                (long) WorkerRole.REJECTED.getId(),
-                EMPTY_FIELD
+                neighborhoodList, professionList, (long) WorkerRole.REJECTED.getId(), EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
         );
 
         // Validations
@@ -467,12 +404,9 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                BASE_PAGE,
-                BASE_PAGE_SIZE,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                EMPTY_FIELD,
-                EMPTY_FIELD);
+                Collections.emptyList(), Collections.emptyList(), EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE,
+                BASE_PAGE_SIZE
+        );
 
         // Validations
         assertTrue(workerList.isEmpty());
@@ -497,12 +431,9 @@ public class WorkerDaoImplTest {
 
         // Exercise
         List<Worker> workerList = workerDaoImpl.getWorkers(
-                TEST_PAGE,
-                TEST_PAGE_SIZE,
-                Collections.emptyList(),
-                Collections.emptyList(),
-                EMPTY_FIELD,
-                EMPTY_FIELD);
+                Collections.emptyList(), Collections.emptyList(), EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE,
+                TEST_PAGE_SIZE
+        );
 
         // Validations
         assertEquals(ONE_ELEMENT, workerList.size());
@@ -517,8 +448,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                Collections.emptyList(),
+                Collections.emptyList(), Collections.emptyList(),
                 EMPTY_FIELD,
                 EMPTY_FIELD);
 
@@ -535,8 +465,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                Collections.emptyList(),
+                Collections.emptyList(), professionList,
                 EMPTY_FIELD,
                 EMPTY_FIELD
         );
@@ -554,8 +483,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                neighborhoodList,
+                neighborhoodList, Collections.emptyList(),
                 EMPTY_FIELD,
                 EMPTY_FIELD
         );
@@ -571,8 +499,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                Collections.emptyList(),
+                Collections.emptyList(), Collections.emptyList(),
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -588,8 +515,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                Collections.emptyList(),
+                Collections.emptyList(), Collections.emptyList(),
                 (long) WorkerRole.UNVERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -605,8 +531,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                Collections.emptyList(),
+                Collections.emptyList(), Collections.emptyList(),
                 (long) WorkerRole.REJECTED.getId(),
                 EMPTY_FIELD
         );
@@ -626,8 +551,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                neighborhoodList,
+                neighborhoodList, professionList,
                 EMPTY_FIELD,
                 EMPTY_FIELD
         );
@@ -645,8 +569,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                Collections.emptyList(),
+                Collections.emptyList(), professionList,
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -664,8 +587,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                Collections.emptyList(),
+                Collections.emptyList(), professionList,
                 (long) WorkerRole.UNVERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -683,8 +605,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                Collections.emptyList(),
+                Collections.emptyList(), professionList,
                 (long) WorkerRole.REJECTED.getId(),
                 EMPTY_FIELD
         );
@@ -702,8 +623,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                neighborhoodList,
+                neighborhoodList, Collections.emptyList(),
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -721,8 +641,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                neighborhoodList,
+                neighborhoodList, Collections.emptyList(),
                 (long) WorkerRole.UNVERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -740,8 +659,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                neighborhoodList,
+                neighborhoodList, Collections.emptyList(),
                 (long) WorkerRole.REJECTED.getId(),
                 EMPTY_FIELD
         );
@@ -761,8 +679,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                neighborhoodList,
+                neighborhoodList, professionList,
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -782,8 +699,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                neighborhoodList,
+                neighborhoodList, professionList,
                 (long) WorkerRole.UNVERIFIED_WORKER.getId(),
                 EMPTY_FIELD
         );
@@ -803,8 +719,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                professionList,
-                neighborhoodList,
+                neighborhoodList, professionList,
                 (long) WorkerRole.REJECTED.getId(),
                 EMPTY_FIELD
         );
@@ -819,8 +734,7 @@ public class WorkerDaoImplTest {
 
         // Exercise
         int countWorker = workerDaoImpl.countWorkers(
-                Collections.emptyList(),
-                Collections.emptyList(),
+                Collections.emptyList(), Collections.emptyList(),
                 EMPTY_FIELD,
                 EMPTY_FIELD);
 

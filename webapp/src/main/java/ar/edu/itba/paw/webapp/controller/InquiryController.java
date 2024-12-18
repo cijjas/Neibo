@@ -61,10 +61,10 @@ public class InquiryController {
 
     @GET
     public Response listInquiries(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint final Long productId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint Long productId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
@@ -106,11 +106,11 @@ public class InquiryController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{inquiryId}")
     public Response findInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint final Long productId,
-            @PathParam("id") @GenericIdConstraint final long inquiryId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint Long productId,
+            @PathParam("inquiryId") @GenericIdConstraint long inquiryId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
@@ -134,9 +134,9 @@ public class InquiryController {
     @PreAuthorize("@pathAccessControlHelper.canCreateInquiry(#productId)")
     @Validated(CreateValidationSequence.class)
     public Response createInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint final Long productId,
-            @Valid InquiryDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint Long productId,
+            @Valid InquiryDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
@@ -144,7 +144,7 @@ public class InquiryController {
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Creation & HashCode Generation
-        final Inquiry inquiry = is.createInquiry(extractSecondId(form.getUser()), productId, form.getMessage());
+        final Inquiry inquiry = is.createInquiry(extractSecondId(createForm.getUser()), productId, createForm.getMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Resource URN
@@ -157,15 +157,15 @@ public class InquiryController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{inquiryId}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canAnswerInquiry(#inquiryId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint final Long productId,
-            @PathParam("id") @GenericIdConstraint final long inquiryId,
-            @Valid InquiryDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint Long productId,
+            @PathParam("inquiryId") @GenericIdConstraint long inquiryId,
+            @Valid InquiryDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
@@ -173,7 +173,7 @@ public class InquiryController {
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Modification & HashCode Generation
-        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getReply());
+        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, updateForm.getReply());
         String inquiryHashCode = String.valueOf(updatedInquiry.hashCode());
 
         return Response.ok(InquiryDto.fromInquiry(updatedInquiry, uriInfo))
@@ -182,12 +182,12 @@ public class InquiryController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{inquiryId}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteInquiry(#inquiryId)")
     public Response deleteInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint final Long productId,
-            @PathParam("id") @GenericIdConstraint final long inquiryId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("productId") @GenericIdConstraint Long productId,
+            @PathParam("inquiryId") @GenericIdConstraint long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 

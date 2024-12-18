@@ -123,7 +123,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(iqKey, pKey, nhKey);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(nhKey, pKey, iqKey);
 
         // Validations & Post Conditions
         assertTrue(optionalInquiry.isPresent());
@@ -142,7 +142,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID, pKey, nhKey);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(nhKey, pKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalInquiry.isPresent());
@@ -160,7 +160,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(iqKey, INVALID_ID, nhKey);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(nhKey, INVALID_ID, iqKey);
 
         // Validations & Post Conditions
         assertFalse(optionalInquiry.isPresent());
@@ -178,7 +178,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(iqKey, pKey, INVALID_ID);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID, pKey, iqKey);
 
         // Validations & Post Conditions
         assertFalse(optionalInquiry.isPresent());
@@ -196,7 +196,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID, INVALID_ID, nhKey);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(nhKey, INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalInquiry.isPresent());
@@ -232,7 +232,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(iqKey, INVALID_ID, INVALID_ID);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID, INVALID_ID, iqKey);
 
         // Validations & Post Conditions
         assertFalse(optionalInquiry.isPresent());
@@ -250,7 +250,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(iqKey, INVALID_ID, INVALID_ID);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID, INVALID_ID, iqKey);
 
         // Validations & Post Conditions
         assertFalse(optionalInquiry.isPresent());

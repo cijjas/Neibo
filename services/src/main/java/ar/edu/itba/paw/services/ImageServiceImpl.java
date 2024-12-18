@@ -20,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
     private final ImageDao imageDao;
 
     @Autowired
-    public ImageServiceImpl(final ImageDao imageDao) {
+    public ImageServiceImpl(ImageDao imageDao) {
         this.imageDao = imageDao;
     }
 

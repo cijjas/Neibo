@@ -49,7 +49,7 @@ public class InquiryDaoImpl implements InquiryDao {
     }
 
     @Override
-    public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+    public Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId) {
         LOGGER.debug("Selecting Inquiry with inquiryId {}, productId {} and neighborhoodId {}", inquiryId, productId, neighborhoodId);
 
         TypedQuery<Inquiry> query = em.createQuery(

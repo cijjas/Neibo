@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService) {
+    public UserServiceImpl(UserDao userDao, ImageService imageService, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.emailService = emailService;
         this.imageService = imageService;
         this.userDao = userDao;
@@ -40,8 +40,8 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User createUser(final long neighborhoodId, final String mail, final String name, final String surname, final String password,
-                           final Integer identification, Long languageId) {
+    public User createUser(long neighborhoodId, String mail, String name, String surname, String password,
+                           Integer identification, Long languageId) {
         LOGGER.info("Creating Neighbor with mail {}", mail);
 
         Language language = Language.ENGLISH;
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> n = userDao.findUser(mail);
         if (!n.isPresent()) {
-            User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
+            User createdUser = userDao.createUser(neighborhoodId, mail, name, surname, passwordEncoder.encode(password), identification, language, false, UserRole.UNVERIFIED_NEIGHBOR);
 
             // If user created is a neighbor (not worker), send admin email notifying new neighbor
             if (neighborhoodId != 0) {
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUser(long neighborhoodId, long userId) {
         LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
 
-        return userDao.findUser(userId, neighborhoodId);
+        return userDao.findUser(neighborhoodId, userId);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size) {
         LOGGER.info("Getting Users with Role {} from Neighborhood {} ", userRoleId, neighborhoodId);
 
-        return userDao.getUsers(userRoleId, neighborhoodId, page, size);
+        return userDao.getUsers(neighborhoodId, userRoleId, page, size);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class UserServiceImpl implements UserService {
     public int calculateUserPages(long neighborhoodId, Long userRoleId, int size) {
         LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", userRoleId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(userDao.countUsers(userRoleId, neighborhoodId), size);
+        return PaginationUtils.calculatePages(userDao.countUsers(neighborhoodId, userRoleId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

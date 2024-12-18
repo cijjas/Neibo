@@ -61,12 +61,12 @@ public class WorkerController {
     @GET
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     public Response listWorkers(
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withProfessions") @ProfessionsURNConstraint final List<String> professions,
-            @QueryParam("inNeighborhoods") @NeighborhoodsURNConstraint final List<String> neighborhoods,
-            @QueryParam("withRole") @WorkerRoleURNConstraint final String workerRole,
-            @QueryParam("withStatus") @WorkerStatusURNConstraint final String workerStatus
+            @QueryParam("inNeighborhoods") @NeighborhoodsURNConstraint List<String> neighborhoods,
+            @QueryParam("withProfessions") @ProfessionsURNConstraint List<String> professions,
+            @QueryParam("withRole") @WorkerRoleURNConstraint String workerRole,
+            @QueryParam("withStatus") @WorkerStatusURNConstraint String workerStatus,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
@@ -112,10 +112,10 @@ public class WorkerController {
 
 
     @GET
-    @Path("/{id}")
+    @Path("/{workerId}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     public Response findWorker(
-            @PathParam("id") @GenericIdConstraint final long workerId
+            @PathParam("workerId") @GenericIdConstraint long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
@@ -138,12 +138,12 @@ public class WorkerController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createWorker(
-            @Valid WorkerDto form
+            @Valid WorkerDto createForm
     ) {
         LOGGER.info("POST request arrived at '/workers'");
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(extractSecondId(form.getUser()), extractFirstIds(form.getProfessions()), form.getBusinessName(), form.getAddress(), form.getPhoneNumber());
+        final Worker worker = ws.createWorker(extractSecondId(createForm.getUser()), extractFirstIds(createForm.getProfessions()), createForm.getBusinessName(), createForm.getAddress(), createForm.getPhoneNumber());
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN
@@ -155,17 +155,17 @@ public class WorkerController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{workerId}")
     @PreAuthorize("@pathAccessControlHelper.canUpdateWorker(#workerId)")
     @Validated(UpdateValidationSequence.class)
-    public Response updateWorkerPartially(
-            @PathParam("id") @GenericIdConstraint final long workerId,
-            @Valid WorkerDto partialUpdate
+    public Response updateWorker(
+            @PathParam("workerId") @GenericIdConstraint long workerId,
+            @Valid WorkerDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 
         // Modification & HashCode Generation
-        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getBusinessName(), partialUpdate.getAddress(), partialUpdate.getPhoneNumber(), extractOptionalFirstId(partialUpdate.getBackgroundPicture()), partialUpdate.getBio());
+        final Worker updatedWorker = ws.updateWorkerPartially(workerId, updateForm.getBusinessName(), updateForm.getAddress(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getBackgroundPicture()), updateForm.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
         return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))

@@ -21,5 +21,5 @@ public interface PostService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deletePost(final long postId);
+    boolean deletePost(long neighborhoodId, long postId);
 }

@@ -21,7 +21,7 @@ public class ContactServiceImpl implements ContactService {
     private final ContactDao contactDao;
 
     @Autowired
-    public ContactServiceImpl(final ContactDao contactDao) {
+    public ContactServiceImpl(ContactDao contactDao) {
         this.contactDao = contactDao;
     }
 
@@ -49,7 +49,7 @@ public class ContactServiceImpl implements ContactService {
     public Optional<Contact> findContact(long neighborhoodId, long contactId) {
         LOGGER.info("Finding Contact {} from Neighborhood {}", contactId, neighborhoodId);
 
-        return contactDao.findContact(contactId, neighborhoodId);
+        return contactDao.findContact(neighborhoodId, contactId);
     }
 
     @Override

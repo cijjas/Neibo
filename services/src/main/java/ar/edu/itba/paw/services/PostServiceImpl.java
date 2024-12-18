@@ -28,7 +28,7 @@ public class PostServiceImpl implements PostService {
     private final EmailService emailService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, CategorizationDao categorizationDao, EmailService emailService) {
+    public PostServiceImpl(PostDao postDao, CategorizationDao categorizationDao, EmailService emailService) {
         this.categorizationDao = categorizationDao;
         this.postDao = postDao;
         this.emailService = emailService;
@@ -40,10 +40,10 @@ public class PostServiceImpl implements PostService {
     public Post createPost(long neighborhoodId, long userId, String title, String description, long channelId, List<Long> tagIds, Long imageId) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
-        Post p = postDao.createPost(title, description, userId, channelId, imageId == null ? 0 : imageId);
+        Post p = postDao.createPost(userId, title, description, channelId, imageId == null ? 0 : imageId);
         if (tagIds != null && !tagIds.isEmpty())
             for (long tag: tagIds)
-                categorizationDao.findCategorization(tag, p.getPostId()).orElseGet(() -> categorizationDao.createCategorization(tag, p.getPostId()));
+                categorizationDao.findCategorization(p.getPostId(), tag).orElseGet(() -> categorizationDao.createCategorization(p.getPostId(), tag));
 
         if(channelId == BaseChannel.ANNOUNCEMENTS.getId())
             emailService.sendBatchAnnouncementMail(p, neighborhoodId);
@@ -56,7 +56,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Post> findPost(final long postId) {
+    public Optional<Post> findPost(long postId) {
         LOGGER.info("Finding Post {}", postId);
 
         return postDao.findPost(postId);
@@ -64,10 +64,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Post> findPost(long neighborhoodId, final long postId) {
+    public Optional<Post> findPost(long neighborhoodId, long postId) {
         LOGGER.info("Finding Post {} from Neighborhood {}", postId, neighborhoodId);
 
-        return postDao.findPost(postId, neighborhoodId);
+        return postDao.findPost(neighborhoodId, postId);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class PostServiceImpl implements PostService {
     public List<Post> getPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int page, int size) {
         LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusId, channelId, tagIds, userId, neighborhoodId);
 
-        return postDao.getPosts(channelId, page, size, tagIds, neighborhoodId, postStatusId, userId);
+        return postDao.getPosts(neighborhoodId, userId, channelId, tagIds, postStatusId, page, size);
     }
 
     @Override
@@ -83,21 +83,21 @@ public class PostServiceImpl implements PostService {
     public int calculatePostPages(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int size) {
         LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusId, channelId, tagIds, userId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(postDao.countPosts(channelId, tagIds, neighborhoodId, postStatusId, userId), size);
+        return PaginationUtils.calculatePages(postDao.countPosts(neighborhoodId, userId, channelId, tagIds, postStatusId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deletePost(long postId) {
+    public boolean deletePost(long neighborhoodId, long postId) {
         LOGGER.info("Deleting Post {}", postId);
 
         // Delete tag associations
-        Set<Tag> tags = postDao.findPost(postId).orElseThrow(NotFoundException::new).getTags();
+        Set<Tag> tags = postDao.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new).getTags();
         if (tags != null)
             for (Tag tag: tags)
-                categorizationDao.deleteCategorization(tag.getTagId(), postId);
+                categorizationDao.deleteCategorization(postId, tag.getTagId());
 
-        return postDao.deletePost(postId);
+        return postDao.deletePost(neighborhoodId, postId);
     }
 }

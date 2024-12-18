@@ -20,7 +20,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public NeighborhoodServiceImpl(final NeighborhoodDao neighborhoodDao) {
+    public NeighborhoodServiceImpl(NeighborhoodDao neighborhoodDao) {
         this.neighborhoodDao = neighborhoodDao;
     }
 
@@ -48,7 +48,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public List<Neighborhood> getNeighborhoods(Long workerId, int size, int page) {
         LOGGER.info("Getting Neighborhoods");
 
-        return neighborhoodDao.getNeighborhoods(page, size, workerId);
+        return neighborhoodDao.getNeighborhoods(workerId, page, size);
     }
 
     @Override

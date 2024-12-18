@@ -28,7 +28,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Attendance createAttendance(long user, long event) {
+    public Attendance createAttendance(long event, long user) {
         LOGGER.info("Adding User {} as Attendee for Event {}", user, event);
 
         return attendanceDao.createAttendee(user, event);
@@ -41,7 +41,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     public Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId) {
         LOGGER.info("Finding Attendance for User {} and Event {}", userId, eventId);
 
-        return attendanceDao.findAttendance(userId, eventId, neighborhoodId);
+        return attendanceDao.findAttendance(neighborhoodId, userId, eventId);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteAttendance(long userId, long eventId) {
-        LOGGER.info("Removing User {} as Attendee for Event {}", userId, eventId);
+    public boolean deleteAttendance(long neighborhoodId, long eventId, long userId) {
+        LOGGER.info("Removing User {} as Attendee for Event {} in Neighborhood {}", userId, eventId, neighborhoodId);
 
-        return attendanceDao.deleteAttendee(userId, eventId);
+        return attendanceDao.deleteAttendee(neighborhoodId, eventId, userId);
     }
 }

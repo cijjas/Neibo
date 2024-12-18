@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface RequestService {
 
-    Request createRequest(final long userId, final long productId, final String message, final int quantity);
+    Request createRequest(long userId, long productId, String message, int quantity);
 
     // -----------------------------------------------------------------------------------------------------------------
 

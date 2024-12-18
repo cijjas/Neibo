@@ -38,14 +38,11 @@ import java.util.stream.Collectors;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class DepartmentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
-
+    private final DepartmentService ds;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final DepartmentService ds;
 
     @Autowired
     public DepartmentController(DepartmentService ds) {
@@ -82,9 +79,9 @@ public class DepartmentController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{departmentId}")
     public Response findDepartment(
-            @PathParam("id") @GenericIdConstraint final Long departmentId
+            @PathParam("departmentId") @GenericIdConstraint Long departmentId
     ) {
         LOGGER.info("GET request arrived at '/departments/{}'", departmentId);
 
@@ -108,12 +105,12 @@ public class DepartmentController {
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createDepartment(
-            @Valid DepartmentDto form
+            @Valid DepartmentDto createForm
     ) {
         LOGGER.info("POST request arrived at '/departments'");
 
         // Content
-        final Department department = ds.createDepartment(form.getName());
+        final Department department = ds.createDepartment(createForm.getName());
         String departmentHashCode = String.valueOf(department.hashCode());
 
         // Resource URN
@@ -129,15 +126,15 @@ public class DepartmentController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{departmentId}")
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    public Response deleteDepartmentById(
-            @PathParam("id") @GenericIdConstraint final long id
+    public Response deleteDepartment(
+            @PathParam("departmentId") @GenericIdConstraint long departmentId
     ) {
-        LOGGER.info("DELETE request arrived at '/departments/{}'", id);
+        LOGGER.info("DELETE request arrived at '/departments/{}'", departmentId);
 
         // Deletion Attempt
-        if (ds.deleteDepartment(id))
+        if (ds.deleteDepartment(departmentId))
             return Response.noContent()
                     .build();
 

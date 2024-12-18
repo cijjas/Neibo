@@ -61,13 +61,13 @@ public class PostController {
 
     @GET
     public Response listPosts(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inChannel") @ChannelURNConstraint final String channel,
-            @QueryParam("withTags") @TagsURNConstraint final List<String> tags,
-            @QueryParam("withStatus") @PostStatusURNConstraint final String postStatus,
-            @QueryParam("postedBy") @UserURNConstraint final String user
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam("postedBy") @UserURNConstraint String user,
+            @QueryParam("inChannel") @ChannelURNConstraint String channel,
+            @QueryParam("withTags") @TagsURNConstraint List<String> tags,
+            @QueryParam("withStatus") @PostStatusURNConstraint String postStatus,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
@@ -112,10 +112,10 @@ public class PostController {
     }
 
     @GET
-    @Path("/{id}")
-    public Response findPostById(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long postId
+    @Path("/{postId}")
+    public Response findPost(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint long postId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
@@ -138,13 +138,13 @@ public class PostController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createPost(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @Valid PostDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @Valid PostDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(neighborhoodId, extractSecondId(form.getUser()), form.getTitle(), form.getBody(), extractSecondId(form.getChannel()), extractSecondIds(form.getTags()), extractOptionalFirstId(form.getImage()));
+        final Post post = ps.createPost(neighborhoodId, extractSecondId(createForm.getUser()), createForm.getTitle(), createForm.getBody(), extractSecondId(createForm.getChannel()), extractSecondIds(createForm.getTags()), extractOptionalFirstId(createForm.getImage()));
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN
@@ -161,16 +161,16 @@ public class PostController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{postId}")
     @PreAuthorize("@pathAccessControlHelper.canDeletePost(#postId)")
-    public Response deleteById(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long postId
+    public Response deletePost(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint long postId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
         // Attempt to delete the amenity
-        if (ps.deletePost(postId))
+        if (ps.deletePost(neighborhoodId, postId))
             return Response.noContent()
                     .build();
 

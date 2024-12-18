@@ -9,13 +9,13 @@ public interface AmenityDao {
 
     // --------------------------------------------- AMENITIES INSERT --------------------------------------------------
 
-    Amenity createAmenity(String name, String description, long neighborhoodId);
+    Amenity createAmenity(long neighborhoodId, String description, String name);
 
     // --------------------------------------------- AMENITIES SELECT --------------------------------------------------
 
     Optional<Amenity> findAmenity(long amenityId);
 
-    Optional<Amenity> findAmenity(long amenityId, long neighborhoodId);
+    Optional<Amenity> findAmenity(long neighborhoodId, long amenityId);
 
     List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 

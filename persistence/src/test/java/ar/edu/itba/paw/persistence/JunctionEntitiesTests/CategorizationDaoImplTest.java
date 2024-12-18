@@ -58,7 +58,7 @@ public class CategorizationDaoImplTest {
         long tKey = testInserter.createTag();
 
         // Exercise
-        Categorization categorization = categorizationDaoImpl.createCategorization(tKey, pKey);
+        Categorization categorization = categorizationDaoImpl.createCategorization(pKey, tKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -82,7 +82,7 @@ public class CategorizationDaoImplTest {
         testInserter.createCategorization(tKey1, pKey);
 
         // Exercise
-        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(tKey1, pKey);
+        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(pKey, tKey1);
 
         // Validations & Post Conditions
         assertTrue(optionalCategorization.isPresent());
@@ -102,7 +102,7 @@ public class CategorizationDaoImplTest {
         testInserter.createCategorization(tKey1, pKey);
 
         // Exercise
-        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(INVALID_ID, pKey);
+        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(pKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalCategorization.isPresent());
@@ -120,7 +120,7 @@ public class CategorizationDaoImplTest {
         testInserter.createCategorization(tKey1, pKey);
 
         // Exercise
-        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(tKey1, INVALID_ID);
+        Optional<Categorization> optionalCategorization = categorizationDaoImpl.findCategorization(INVALID_ID, tKey1);
 
         // Validations & Post Conditions
         assertFalse(optionalCategorization.isPresent());
@@ -158,7 +158,7 @@ public class CategorizationDaoImplTest {
         testInserter.createCategorization(tKey1, pKey);
 
         // Exercise
-        boolean deleted = categorizationDaoImpl.deleteCategorization(tKey1, pKey);
+        boolean deleted = categorizationDaoImpl.deleteCategorization(pKey, tKey1);
 
         // Validations & Post Conditions
         em.flush();
@@ -178,7 +178,7 @@ public class CategorizationDaoImplTest {
         testInserter.createCategorization(tKey1, pKey);
 
         // Exercise
-        boolean deleted = categorizationDaoImpl.deleteCategorization(INVALID_ID, pKey);
+        boolean deleted = categorizationDaoImpl.deleteCategorization(pKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
@@ -197,7 +197,7 @@ public class CategorizationDaoImplTest {
         testInserter.createCategorization(tKey1, pKey);
 
         // Exercise
-        boolean deleted = categorizationDaoImpl.deleteCategorization(tKey1, INVALID_ID);
+        boolean deleted = categorizationDaoImpl.deleteCategorization(INVALID_ID, tKey1);
 
         // Validations & Post Conditions
         em.flush();

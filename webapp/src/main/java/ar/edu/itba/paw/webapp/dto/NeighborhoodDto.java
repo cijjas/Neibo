@@ -170,6 +170,14 @@ public class NeighborhoodDto {
                             .path(String.valueOf(Language.SPANISH.getId()))
                             .build()
             );
+            links.setShifts(uriInfo.getBaseUriBuilder()
+                    .path("shifts")
+                    .build());
+            links.setBookings(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("bookings")
+                    .build());
         }
         dto.set_links(links);
         return dto;

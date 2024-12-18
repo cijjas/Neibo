@@ -129,7 +129,7 @@ public class ReviewDaoImplTest {
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> optionalReview = ReviewDaoImpl.findReview(rKey, uKey);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(uKey, rKey);
 
         // Validations & Post Conditions
         assertTrue(optionalReview.isPresent());
@@ -148,7 +148,7 @@ public class ReviewDaoImplTest {
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> optionalReview = ReviewDaoImpl.findReview(INVALID_ID, uKey);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(uKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalReview.isPresent());
@@ -166,7 +166,7 @@ public class ReviewDaoImplTest {
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> optionalReview = ReviewDaoImpl.findReview(rKey, INVALID_ID);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(INVALID_ID, rKey);
 
         // Validations & Post Conditions
         assertFalse(optionalReview.isPresent());

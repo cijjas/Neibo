@@ -27,7 +27,7 @@ public class ProductDaoImpl implements ProductDao {
     // ------------------------------------------------ PRODUCT INSERT -------------------------------------------------
 
     @Override
-    public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long units) {
+    public Product createProduct(long userId, String name, String description, double price, Long units, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
         LOGGER.debug("Inserting Product {}", name);
 
         Department d = em.find(ar.edu.itba.paw.models.Entities.Department.class, departmentId);
@@ -59,7 +59,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Optional<Product> findProduct(long productId, long neighborhoodId) {
+    public Optional<Product> findProduct(long neighborhoodId, long productId) {
         LOGGER.debug("Selecting Product with productId {}, neighborhoodId {}", productId, neighborhoodId);
 
         TypedQuery<Product> query = em.createQuery(
@@ -75,7 +75,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size) {
+    public List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size) {
         LOGGER.debug("Selecting Products from neighborhood {}, in department {}", neighborhoodId, departmentId);
 
         StringBuilder nativeQuery = new StringBuilder("SELECT p.* FROM products p " +
@@ -152,7 +152,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int countProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId) {
+    public int countProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId) {
         LOGGER.debug("Selecting Products Count from neighborhood {}, in department {}", neighborhoodId, departmentId);
 
         StringBuilder nativeQuery = new StringBuilder("SELECT COUNT(DISTINCT p.productid) FROM products p " +

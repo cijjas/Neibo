@@ -71,9 +71,9 @@ public class LanguageController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{languageId}")
     public Response findLanguage(
-            @PathParam("id") @GenericIdConstraint final long languageId
+            @PathParam("languageId") @GenericIdConstraint long languageId
     ) {
         LOGGER.info("GET request arrived at '/languages/{}'", languageId);
 

@@ -56,9 +56,9 @@ public class ChannelController {
 
     @GET
     public Response listChannels(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
@@ -97,10 +97,10 @@ public class ChannelController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{channelId}")
     public Response findChannel(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint long channelId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("channelId") @GenericIdConstraint long channelId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
@@ -124,13 +124,13 @@ public class ChannelController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createChannel(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @Valid ChannelDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @Valid ChannelDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
         // Content
-        final Channel channel = cs.createChannel(neighborhoodId, form.getName());
+        final Channel channel = cs.createChannel(neighborhoodId, createForm.getName());
         String channelHashCode = String.valueOf(channel.hashCode());
 
         // Resource URN
@@ -146,11 +146,11 @@ public class ChannelController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{channelId}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
-    public Response deleteById(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long channelId
+    public Response deleteChannel(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("channelId") @GenericIdConstraint long channelId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 

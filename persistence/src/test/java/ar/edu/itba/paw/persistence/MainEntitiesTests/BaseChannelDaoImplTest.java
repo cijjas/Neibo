@@ -77,7 +77,7 @@ public class BaseChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(chKey, nhKey);
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(nhKey, chKey);
 
         // Validations & Post Conditions
         assertTrue(optionalChannel.isPresent());
@@ -92,7 +92,7 @@ public class BaseChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(INVALID_ID, nhKey);
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalChannel.isPresent());
@@ -106,7 +106,7 @@ public class BaseChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(chKey, INVALID_ID);
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(INVALID_ID, chKey);
 
         // Validations & Post Conditions
         assertFalse(optionalChannel.isPresent());

@@ -25,7 +25,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
     // ----------------------------------------------------------------------------------
 
     @Override
-    public TagMapping createTagMappingDao(long tagId, long neighborhoodId) {
+    public TagMapping createTagMappingDao(long neighborhoodId, long tagId) {
         LOGGER.debug("Inserting Tag Mapping for Tag {} for Neighborhood {}", tagId, neighborhoodId);
 
         TagMapping tagMapping = new TagMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Tag.class, tagId));
@@ -36,14 +36,14 @@ public class TagMappingDaoImpl implements TagMappingDao {
     // ----------------------------------------------------------------------------------
 
     @Override
-    public Optional<TagMapping> findTagMapping(long tagId, long neighborhoodId) {
+    public Optional<TagMapping> findTagMapping(long neighborhoodId, long tagId) {
         LOGGER.debug("Selecting Tag Mapping with Tag {} and Neighborhood {}", tagId, neighborhoodId);
 
         return Optional.ofNullable(em.find(TagMapping.class, new TagMappingKey(neighborhoodId, tagId)));
     }
 
     @Override
-    public List<TagMapping> getTagMappings(Long tagId, Long neighborhoodId, int page, int size) {
+    public List<TagMapping> getTagMappings(Long neighborhoodId, Long tagId, int page, int size) {
         LOGGER.debug("Selecting Tag Mappings by Criteria");
 
         TypedQuery<TagMappingKey> idQuery = null;
@@ -83,7 +83,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
     }
 
     @Override
-    public int countTagMappings(Long tagId, Long neighborhoodId) {
+    public int countTagMappings(Long neighborhoodId, Long tagId) {
         LOGGER.debug("Counting Tag Mappings by Criteria");
 
         TypedQuery<TagMappingKey> idQuery = null;
@@ -122,7 +122,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
     // ----------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteTagMapping(long tagId, long neighborhoodId) {
+    public boolean deleteTagMapping(long neighborhoodId, long tagId) {
         LOGGER.debug("Deleting Tag Mapping with tagId {} and neighborhoodId {}", tagId, neighborhoodId);
 
         TagMapping tagMapping = em.find(TagMapping.class, new TagMappingKey(neighborhoodId, tagId));

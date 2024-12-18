@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Shift } from '../../models/index';
 import { ShiftDto } from '../../dtos/app-dtos';
-import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class ShiftService {
@@ -21,30 +20,15 @@ export class ShiftService {
         queryParams: {
             forAmenity?: string;
             forDate?: string;
-            page?: number;
-            size?: number;
         } = {}
-    ): Observable<{ shifts: Shift[]; totalPages: number; currentPage: number }> {
+    ): Observable<Shift[]> {
         let params = new HttpParams();
 
         if (queryParams.forAmenity) params = params.set('forAmenity', queryParams.forAmenity);
         if (queryParams.forDate) params = params.set('forDate', queryParams.forDate);
-        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
-        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
-        return this.http.get<ShiftDto[]>(url, { params, observe: 'response' }).pipe(
-            map((response) => {
-                const shiftsDto: ShiftDto[] = response.body || [];
-                const pagination = parseLinkHeader(response.headers.get('Link'));
-
-                const shifts = shiftsDto.map(mapShift);
-
-                return {
-                    shifts,
-                    totalPages: pagination.totalPages,
-                    currentPage: pagination.currentPage,
-                };
-            })
+        return this.http.get<ShiftDto[]>(url, { params }).pipe(
+            map((shiftsDto) => shiftsDto.map(mapShift))
         );
     }
 }
@@ -52,7 +36,18 @@ export class ShiftService {
 export function mapShift(shiftDto: ShiftDto): Shift {
     return {
         startTime: shiftDto.startTime,
+        endTime: addOneHour(shiftDto.startTime),
         day: shiftDto.day,
+        taken: shiftDto.isBooked,
         self: shiftDto._links.self,
     };
+}
+
+function addOneHour(time: string): string {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, seconds);
+    date.setHours(date.getHours() + 1);
+
+    return date.toTimeString().split(' ')[0];
 }

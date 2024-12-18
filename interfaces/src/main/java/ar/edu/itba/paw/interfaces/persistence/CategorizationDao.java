@@ -8,13 +8,13 @@ public interface CategorizationDao {
 
     // -------------------------------------------- POSTS TAGS INSERT --------------------------------------------------
 
-    Categorization createCategorization(long tagId, long postId);
+    Categorization createCategorization(long postId, long tagId);
 
     // -------------------------------------------- POSTS TAGS SELECT --------------------------------------------------
 
-    Optional<Categorization> findCategorization(long tagId, long postId);
+    Optional<Categorization> findCategorization(long postId, long tagId);
 
     // -------------------------------------------- POSTS TAGS DELETE --------------------------------------------------
 
-    boolean deleteCategorization(long tagId, long postId);
+    boolean deleteCategorization(long postId, long tagId);
 }

@@ -49,7 +49,7 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     @Override
-    public List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId) {
+    public List<Worker> getWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int page, int size) {
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT DISTINCT w.*, wi.* FROM users w ");
 
@@ -100,7 +100,7 @@ public class WorkerDaoImpl implements WorkerDao {
         return nativeQuery.getResultList();
     }
 
-    public int countWorkers(List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId) {
+    public int countWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId) {
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT COUNT(DISTINCT w.userid) FROM users w ");
 

@@ -40,15 +40,12 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
-
-    @Context
-    private UriInfo uriInfo;
-
-    @Context
-    private Request request;
-
     private final CommentService cs;
     private final PostService ps;
+    @Context
+    private UriInfo uriInfo;
+    @Context
+    private Request request;
 
     @Autowired
     public CommentController(CommentService cs, PostService ps) {
@@ -58,10 +55,10 @@ public class CommentController {
 
     @GET
     public Response listComments(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint final Long postId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint Long postId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
@@ -102,11 +99,11 @@ public class CommentController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{commentId}")
     public Response findComment(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint final Long postId,
-            @PathParam("id") @GenericIdConstraint long commentId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint Long postId,
+            @PathParam("commentId") @GenericIdConstraint long commentId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
@@ -129,9 +126,9 @@ public class CommentController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createComment(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint final Long postId,
-            @Valid final CommentDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint Long postId,
+            @Valid CommentDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
@@ -139,7 +136,7 @@ public class CommentController {
         ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
 
         // Creation & HashCode Generation
-        final Comment comment = cs.createComment(extractSecondId(form.getUser()), postId, form.getMessage());
+        final Comment comment = cs.createComment(extractSecondId(createForm.getUser()), postId, createForm.getMessage());
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Resource URN
@@ -155,12 +152,12 @@ public class CommentController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{commentId}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteComment(#commentId)")
-    public Response deleteById(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint final Long postId,
-            @PathParam("id") @GenericIdConstraint final long commentId
+    public Response deleteComment(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("postId") @GenericIdConstraint Long postId,
+            @PathParam("commentId") @GenericIdConstraint long commentId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 

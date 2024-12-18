@@ -31,7 +31,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public Affiliation createAffiliation(long neighborhoodId, long workerId, long workerRoleId) {
         LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} with Role {}", workerId, neighborhoodId, workerRoleId);
 
-        return affiliationDao.createAffiliation(workerId, neighborhoodId, workerRoleId);
+        return affiliationDao.createAffiliation(neighborhoodId, workerId, workerRoleId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<Affiliation> getAffiliations(Long neighborhoodId, Long workerId, int page, int size) {
         LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
-        return affiliationDao.getAffiliations(workerId, neighborhoodId, page, size);
+        return affiliationDao.getAffiliations(neighborhoodId, workerId, page, size);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public int calculateAffiliationPages(Long neighborhoodId, Long workerId, int size) {
         LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(affiliationDao.countAffiliations(workerId, neighborhoodId), size);
+        return PaginationUtils.calculatePages(affiliationDao.countAffiliations(neighborhoodId, workerId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public Affiliation updateAffiliation(long neighborhoodId, long workerId, Long workerRoleId) {
         LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerId, neighborhoodId, workerRoleId);
 
-        Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Affiliation affiliation = affiliationDao.findAffiliation(neighborhoodId, workerId).orElseThrow(NotFoundException::new);
         if (workerRoleId != null)
             affiliation.setRole(WorkerRole.fromId(workerRoleId));
 
@@ -71,7 +71,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public boolean deleteAffiliation(long neighborhoodId, long workerId) {
         LOGGER.info("Deleting Affiliation between Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
-        return affiliationDao.deleteAffiliation(workerId, neighborhoodId);
+        return affiliationDao.deleteAffiliation(neighborhoodId, workerId);
     }
 }
 

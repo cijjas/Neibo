@@ -44,8 +44,8 @@ public class TagServiceImpl implements TagService {
         // Find tag by name, if it doesn't exist create it
         Tag tag = tagDao.findTag(name).orElseGet(() -> tagDao.createTag(name));
 
-        if(!tagMappingDao.findTagMapping(tag.getTagId(), neighborhoodId).isPresent())
-            tagMappingDao.createTagMappingDao(tag.getTagId(), neighborhoodId);
+        if(!tagMappingDao.findTagMapping(neighborhoodId, tag.getTagId()).isPresent())
+            tagMappingDao.createTagMappingDao(neighborhoodId, tag.getTagId());
 
         return tag;
     }
@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService {
     public Optional<Tag> findTag(long neighborhoodId, long tagId) {
         LOGGER.info("Finding Tag {} from Neighborhood {}", tagId, neighborhoodId);
 
-        return tagDao.findTag(tagId, neighborhoodId);
+        return tagDao.findTag(neighborhoodId, tagId);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class TagServiceImpl implements TagService {
     public List<Tag> getTags(long neighborhoodId, Long postId, int page, int size) {
         LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
 
-        return tagDao.getTags(postId, neighborhoodId, page, size);
+        return tagDao.getTags(neighborhoodId, postId, page, size);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class TagServiceImpl implements TagService {
     public int calculateTagPages(long neighborhoodId, Long postId, int size) {
         LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
+        return PaginationUtils.calculatePages(tagDao.countTags(neighborhoodId, postId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -83,22 +83,22 @@ public class TagServiceImpl implements TagService {
         LOGGER.info("Deleting Tag {}", tagId);
 
         // Delete Tag-Neighborhood association
-        tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
+        tagMappingDao.deleteTagMapping(neighborhoodId, tagId);
 
         // Delete Tag-Posts associations
         int batchSize = 100;
-        int totalPosts = postDao.countPosts(null, Collections.singletonList(tagId), neighborhoodId, null, null);
+        int totalPosts = postDao.countPosts(neighborhoodId, null, null, Collections.singletonList(tagId), null);
         int totalPages = PaginationUtils.calculatePages(totalPosts, batchSize);
 
         for (int page = 1; page <= totalPages; page++) {
-            List<Post> posts = postDao.getPosts(null, page, batchSize, Collections.singletonList(tagId), neighborhoodId, null, null);
+            List<Post> posts = postDao.getPosts(neighborhoodId, null, null, Collections.singletonList(tagId), null, page, batchSize);
             for (Post post : posts) {
-                categorizationDao.deleteCategorization(tagId, post.getPostId());
+                categorizationDao.deleteCategorization(post.getPostId(), tagId);
             }
         }
 
         // If the tag was only being used by this Neighborhood, it can safely be deleted
-        if (tagMappingDao.getTagMappings(tagId, null, 1, 1).isEmpty()) {
+        if (tagMappingDao.getTagMappings(null, tagId, 1, 1).isEmpty()) {
             return tagDao.deleteTag(tagId);
         }
 

@@ -9,14 +9,14 @@ public interface ChannelMappingDao {
 
     // -------------------------------------------- CHANNEL MAPPING INSERT ---------------------------------------------
 
-    ChannelMapping createChannelMapping(final long channelId, final long neighborhoodId);
+    ChannelMapping createChannelMapping(long neighborhoodId, long channelId);
 
     // -------------------------------------------- CHANNEL MAPPING SELECT ---------------------------------------------
 
-    List<ChannelMapping> getChannelMappings(Long channelId, Long neighborhoodId, int page, int size);
+    List<ChannelMapping> getChannelMappings(Long neighborhoodId, Long channelId, int page, int size);
 
-    Optional<ChannelMapping> findChannelMapping(long channelId, long neighborhoodId);
+    Optional<ChannelMapping> findChannelMapping(long neighborhoodId, long channelId);
 
     // -------------------------------------------- CHANNEL MAPPING DELETE ---------------------------------------------
-    boolean deleteChannelMapping(long channelId, long neighborhoodId);
+    boolean deleteChannelMapping(long neighborhoodId, long channelId);
 }

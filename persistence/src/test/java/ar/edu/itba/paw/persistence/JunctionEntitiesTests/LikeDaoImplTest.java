@@ -62,7 +62,7 @@ public class LikeDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Like like = likeDaoImpl.createLike(pKey, uKey);
+        Like like = likeDaoImpl.createLike(uKey, pKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -92,7 +92,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, likeList.size());
@@ -104,7 +104,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(pKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, likeList.size());
@@ -116,7 +116,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(uKey1, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, likeList.size());
@@ -134,7 +134,7 @@ public class LikeDaoImplTest {
         long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(uKey1, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(likeList.isEmpty());
@@ -174,7 +174,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, uKey1);
+        int countLikes = likeDaoImpl.countLikes(uKey1, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countLikes);
@@ -186,7 +186,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(pKey1, EMPTY_FIELD);
+        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, pKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countLikes);
@@ -198,7 +198,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1);
+        int countLikes = likeDaoImpl.countLikes(uKey1, pKey1);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countLikes);
@@ -216,7 +216,7 @@ public class LikeDaoImplTest {
         long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1);
+        int countLikes = likeDaoImpl.countLikes(uKey1, pKey1);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countLikes);
@@ -235,7 +235,7 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDaoImpl.deleteLike(pKey, uKey);
+        boolean deleted = likeDaoImpl.deleteLike(uKey, pKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -254,7 +254,7 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDaoImpl.deleteLike(INVALID_ID, uKey);
+        boolean deleted = likeDaoImpl.deleteLike(uKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
@@ -272,7 +272,7 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDaoImpl.deleteLike(pKey, INVALID_ID);
+        boolean deleted = likeDaoImpl.deleteLike(INVALID_ID, pKey);
 
         // Validations & Post Conditions
         em.flush();

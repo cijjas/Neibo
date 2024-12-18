@@ -59,7 +59,7 @@ public class CommentDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Comment comment = commentDaoImpl.createComment(COMMENT_MESSAGE, uKey, pKey);
+        Comment comment = commentDaoImpl.createComment(uKey, pKey, COMMENT_MESSAGE);
 
         // Validations & Post Conditions
         em.flush();
@@ -83,7 +83,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, pKey, nhKey);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(nhKey, pKey, cKey);
 
         // Validations & Post Conditions
         assertTrue(optionalComment.isPresent());
@@ -101,7 +101,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, pKey, nhKey);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(nhKey, pKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalComment.isPresent());
@@ -118,7 +118,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, INVALID_ID, nhKey);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(nhKey, INVALID_ID, cKey);
 
         // Validations & Post Conditions
         assertFalse(optionalComment.isPresent());
@@ -135,7 +135,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, pKey, INVALID_ID);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, pKey, cKey);
 
         // Validations & Post Conditions
         assertFalse(optionalComment.isPresent());
@@ -152,7 +152,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, INVALID_ID, nhKey);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(nhKey, INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalComment.isPresent());
@@ -186,7 +186,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, INVALID_ID, INVALID_ID);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, INVALID_ID, cKey);
 
         // Validations & Post Conditions
         assertFalse(optionalComment.isPresent());

@@ -57,9 +57,9 @@ public class NeighborhoodController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#workerId)")
     public Response listNeighborhoods(
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withWorker") @WorkerURNConstraint final String worker
+            @QueryParam("withWorker") @WorkerURNConstraint String worker,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
@@ -101,9 +101,9 @@ public class NeighborhoodController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{neighborhoodId}")
     public Response findNeighborhood(
-            @PathParam("id") @NeighborhoodIdConstraint final long neighborhoodId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", neighborhoodId);
 
@@ -127,12 +127,12 @@ public class NeighborhoodController {
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Validated(CreateValidationSequence.class)
     public Response createNeighborhood(
-            @Valid NeighborhoodDto form
+            @Valid NeighborhoodDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
         // Creation & HashCode Generation
-        final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
+        final Neighborhood neighborhood = ns.createNeighborhood(createForm.getName());
         String neighborhoodHashCode = String.valueOf(neighborhood.hashCode());
 
         // Resource URN
@@ -148,10 +148,10 @@ public class NeighborhoodController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{neighborhoodId}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(
-            @PathParam("id") @NeighborhoodIdConstraint final long neighborhoodId
+    public Response deleteNeighborhood(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}'", neighborhoodId);
 

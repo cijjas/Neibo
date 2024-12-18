@@ -41,7 +41,7 @@ public class ChannelServiceImplTest {
         ChannelMapping mockMapping = new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(1L).build());
 
         when(channelDao.findChannel(channelName)).thenReturn(Optional.of(mockChannel));
-        when(channelMappingDao.findChannelMapping(mockChannel.getChannelId(), neighborhoodId)).thenReturn(Optional.of(mockMapping));
+        when(channelMappingDao.findChannelMapping(neighborhoodId, mockChannel.getChannelId())).thenReturn(Optional.of(mockMapping));
 
         // Exercise
         Channel result = channelService.createChannel(neighborhoodId, channelName);
@@ -49,7 +49,7 @@ public class ChannelServiceImplTest {
         // Validation & Post Conditions
         verify(channelDao, times(1)).findChannel(channelName);
         verify(channelDao, never()).createChannel(anyString());
-        verify(channelMappingDao, times(1)).findChannelMapping(mockChannel.getChannelId(), neighborhoodId);
+        verify(channelMappingDao, times(1)).findChannelMapping(neighborhoodId, mockChannel.getChannelId());
         verify(channelMappingDao, never()).createChannelMapping(anyLong(), anyLong());
         assertEquals(mockChannel, result);
     }
@@ -63,7 +63,7 @@ public class ChannelServiceImplTest {
 
         when(channelDao.findChannel(channelName)).thenReturn(Optional.empty());
         when(channelDao.createChannel(channelName)).thenReturn(mockChannel);
-        when(channelMappingDao.createChannelMapping(mockChannel.getChannelId(), neighborhoodId))
+        when(channelMappingDao.createChannelMapping(neighborhoodId, mockChannel.getChannelId()))
                 .thenReturn(new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(1L).build()));
 
         // Exercise
@@ -72,8 +72,8 @@ public class ChannelServiceImplTest {
         // Assert
         verify(channelDao, times(1)).findChannel(channelName);
         verify(channelDao, times(1)).createChannel(channelName);
-        verify(channelMappingDao, times(1)).findChannelMapping(mockChannel.getChannelId(), neighborhoodId);
-        verify(channelMappingDao, times(1)).createChannelMapping(mockChannel.getChannelId(), neighborhoodId);
+        verify(channelMappingDao, times(1)).findChannelMapping(neighborhoodId, mockChannel.getChannelId());
+        verify(channelMappingDao, times(1)).createChannelMapping(neighborhoodId, mockChannel.getChannelId());
         assertEquals(mockChannel, result);
     }
 
@@ -85,8 +85,8 @@ public class ChannelServiceImplTest {
         Channel mockChannel = new Channel.Builder().channelId(1L).channel(channelName).build();
 
         when(channelDao.findChannel(channelName)).thenReturn(Optional.of(mockChannel));
-        when(channelMappingDao.findChannelMapping(mockChannel.getChannelId(), neighborhoodId)).thenReturn(Optional.empty());
-        when(channelMappingDao.createChannelMapping(mockChannel.getChannelId(), neighborhoodId))
+        when(channelMappingDao.findChannelMapping(neighborhoodId, mockChannel.getChannelId())).thenReturn(Optional.empty());
+        when(channelMappingDao.createChannelMapping(neighborhoodId, mockChannel.getChannelId()))
                 .thenReturn(new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(1L).build()));
 
         // Exercise
@@ -95,8 +95,8 @@ public class ChannelServiceImplTest {
         // Validations & Post Conditions
         verify(channelDao, times(1)).findChannel(channelName);
         verify(channelDao, never()).createChannel(anyString());
-        verify(channelMappingDao, times(1)).findChannelMapping(mockChannel.getChannelId(), neighborhoodId);
-        verify(channelMappingDao, times(1)).createChannelMapping(mockChannel.getChannelId(), neighborhoodId);
+        verify(channelMappingDao, times(1)).findChannelMapping(neighborhoodId, mockChannel.getChannelId());
+        verify(channelMappingDao, times(1)).createChannelMapping(neighborhoodId, mockChannel.getChannelId());
         assertEquals(mockChannel, result);
     }
 
@@ -106,8 +106,8 @@ public class ChannelServiceImplTest {
         long channelId = 1L;
         long neighborhoodId = 2L;
 
-        when(channelDao.findChannel(channelId, neighborhoodId)).thenReturn(Optional.of(new Channel.Builder().build()));
-        when(channelMappingDao.getChannelMappings(channelId, null, 1, 1)).thenReturn(Collections.emptyList());
+        when(channelDao.findChannel(neighborhoodId, channelId)).thenReturn(Optional.of(new Channel.Builder().build()));
+        when(channelMappingDao.getChannelMappings(null, channelId, 1, 1)).thenReturn(Collections.emptyList());
 
         // Exercise
         boolean result = channelService.deleteChannel(neighborhoodId, channelId);
@@ -115,9 +115,9 @@ public class ChannelServiceImplTest {
         // Validations & Post Conditions
         assertTrue(result);
 
-        verify(channelDao, times(1)).findChannel(channelId, neighborhoodId);
-        verify(channelMappingDao, times(1)).deleteChannelMapping(channelId, neighborhoodId);
-        verify(channelMappingDao, times(1)).getChannelMappings(channelId, null, 1, 1);
+        verify(channelDao, times(1)).findChannel(neighborhoodId, channelId);
+        verify(channelMappingDao, times(1)).deleteChannelMapping(neighborhoodId, channelId);
+        verify(channelMappingDao, times(1)).getChannelMappings(null, channelId, 1, 1);
         verify(channelDao, times(1)).deleteChannel(channelId);
     }
 
@@ -127,8 +127,8 @@ public class ChannelServiceImplTest {
         long channelId = 1L;
         long neighborhoodId = 2L;
 
-        when(channelDao.findChannel(channelId, neighborhoodId)).thenReturn(Optional.of(new Channel.Builder().build()));
-        when(channelMappingDao.getChannelMappings(channelId, null, 1, 1)).thenReturn(Collections.singletonList(new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(channelId).build())));
+        when(channelDao.findChannel(neighborhoodId, channelId)).thenReturn(Optional.of(new Channel.Builder().build()));
+        when(channelMappingDao.getChannelMappings(null, channelId, 1, 1)).thenReturn(Collections.singletonList(new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(channelId).build())));
 
         // Exercise
         boolean result = channelService.deleteChannel(neighborhoodId, channelId);
@@ -136,9 +136,9 @@ public class ChannelServiceImplTest {
         // Validations & Post Conditions
         assertTrue(result);
 
-        verify(channelDao, times(1)).findChannel(channelId, neighborhoodId);
-        verify(channelMappingDao, times(1)).deleteChannelMapping(channelId, neighborhoodId);
-        verify(channelMappingDao, times(1)).getChannelMappings(channelId, null, 1, 1);
+        verify(channelDao, times(1)).findChannel(neighborhoodId, channelId);
+        verify(channelMappingDao, times(1)).deleteChannelMapping(neighborhoodId, channelId);
+        verify(channelMappingDao, times(1)).getChannelMappings(null, channelId, 1, 1);
         verify(channelDao, never()).deleteChannel(channelId); // Channel should not be deleted
     }
 }

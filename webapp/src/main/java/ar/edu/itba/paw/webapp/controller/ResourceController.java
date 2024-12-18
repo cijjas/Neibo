@@ -55,9 +55,9 @@ public class ResourceController {
 
     @GET
     public Response listResources(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
@@ -96,10 +96,10 @@ public class ResourceController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{resourceId}")
     public Response findResource(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long resourceId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("resourceId") @GenericIdConstraint long resourceId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
@@ -123,13 +123,13 @@ public class ResourceController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createResource(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @Valid ResourceDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @Valid ResourceDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), extractOptionalFirstId(form.getImage()));
+        final Resource resource = rs.createResource(neighborhoodId, createForm.getTitle(), createForm.getDescription(), extractOptionalFirstId(createForm.getImage()));
         String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Resource URN
@@ -141,18 +141,18 @@ public class ResourceController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{resourceId}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
-    public Response updateResourcePartially(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id,
-            @Valid ResourceDto partialUpdate
+    public Response updateResource(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("resourceId") @GenericIdConstraint long resourceId,
+            @Valid ResourceDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
         // Modification & HashCode Generation
-        final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), extractOptionalFirstId(partialUpdate.getImage()));
+        final Resource updatedResource = rs.updateResource(resourceId, updateForm.getTitle(), updateForm.getDescription(), extractOptionalFirstId(updateForm.getImage()));
         String resourceHashCode = String.valueOf(updatedResource.hashCode());
 
         return Response.ok(ResourceDto.fromResource(updatedResource, uriInfo))
@@ -161,11 +161,11 @@ public class ResourceController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{resourceId}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteResource(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long resourceId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("resourceId") @GenericIdConstraint long resourceId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 

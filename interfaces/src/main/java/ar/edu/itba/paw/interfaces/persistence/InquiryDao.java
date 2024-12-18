@@ -9,13 +9,13 @@ public interface InquiryDao {
 
     // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
 
-    Inquiry createInquiry(final long userId, final long productId, final String message);
+    Inquiry createInquiry(long userId, long productId, String message);
 
     // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
 
-    Optional<Inquiry> findInquiry(final long inquiryId);
+    Optional<Inquiry> findInquiry(long inquiryId);
 
-    Optional<Inquiry> findInquiry(final long inquiryId, long productId, long neighborhoodId);
+    Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId);
 
     List<Inquiry> getInquiries(long productId, int page, int size);
 
@@ -23,5 +23,5 @@ public interface InquiryDao {
 
     // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
 
-    boolean deleteInquiry(final long neighborhoodId, final long productId, final long inquiryId);
+    boolean deleteInquiry(long neighborhoodId, long productId, long inquiryId);
 }

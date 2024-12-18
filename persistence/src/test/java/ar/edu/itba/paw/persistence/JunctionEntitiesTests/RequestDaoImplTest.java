@@ -129,7 +129,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(NINETEEN_ELEMENTS, requestList.size());
@@ -141,7 +141,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, pKey1, EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, pKey1, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, requestList.size());
@@ -153,7 +153,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, requestList.size());
@@ -165,7 +165,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(NINE_ELEMENTS, requestList.size());
@@ -177,7 +177,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, requestList.size());
@@ -189,7 +189,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey1, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey1, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THIRTEEN_ELEMENTS, requestList.size());
@@ -201,7 +201,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey1, EMPTY_FIELD, (long) TransactionType.SALE.getId(), EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey1, EMPTY_FIELD, (long) TransactionType.SALE.getId(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWELVE_ELEMENTS, requestList.size());
@@ -213,7 +213,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, requestList.size());
@@ -225,7 +225,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, requestList.size());
@@ -237,7 +237,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, pKey1, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, pKey1, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, requestList.size());
@@ -249,7 +249,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, requestList.size());
@@ -261,7 +261,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(SEVEN_ELEMENTS, requestList.size());
@@ -273,7 +273,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, requestList.size());
@@ -285,7 +285,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, requestList.size());
@@ -297,7 +297,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, requestList.size());
@@ -309,7 +309,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, requestList.size());
@@ -321,7 +321,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, requestList.size());
@@ -333,7 +333,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, requestList.size());
@@ -345,7 +345,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, requestList.size());
@@ -357,7 +357,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, requestList.size());
@@ -369,7 +369,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, requestList.size());
@@ -381,7 +381,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, requestList.size());
@@ -393,7 +393,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, requestList.size());
@@ -405,7 +405,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, requestList.size());
@@ -416,7 +416,7 @@ public class RequestDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(requestList.isEmpty());
@@ -441,7 +441,7 @@ public class RequestDaoImplTest {
         testInserter.createRequest(pKey1, uKey2, RequestStatus.ACCEPTED);
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, requestList.size());
@@ -455,7 +455,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(NINETEEN_ELEMENTS, countRequest);
@@ -467,7 +467,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, pKey1, EMPTY_FIELD, EMPTY_FIELD, nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, pKey1, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, countRequest);
@@ -479,7 +479,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId());
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, countRequest);
@@ -491,7 +491,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId());
 
         // Validations & Post Conditions
         assertEquals(NINE_ELEMENTS, countRequest);
@@ -503,7 +503,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId());
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, countRequest);
@@ -515,7 +515,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey1, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD, nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey1, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(THIRTEEN_ELEMENTS, countRequest);
@@ -527,7 +527,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey1, EMPTY_FIELD, (long) TransactionType.SALE.getId(), EMPTY_FIELD, nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey1, EMPTY_FIELD, (long) TransactionType.SALE.getId(), EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWELVE_ELEMENTS, countRequest);
@@ -539,7 +539,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.REQUESTED.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countRequest);
@@ -551,7 +551,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, pKey2, EMPTY_FIELD, (long) RequestStatus.DECLINED.getId());
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, countRequest);
@@ -563,7 +563,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, pKey1, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, pKey1, EMPTY_FIELD, (long) RequestStatus.ACCEPTED.getId());
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countRequest);
@@ -575,7 +575,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD, nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, countRequest);
@@ -587,7 +587,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), EMPTY_FIELD, nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(SEVEN_ELEMENTS, countRequest);
@@ -599,7 +599,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId());
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countRequest);
@@ -611,7 +611,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countRequest);
@@ -623,7 +623,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countRequest);
@@ -635,7 +635,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId());
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, countRequest);
@@ -647,7 +647,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId());
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countRequest);
@@ -659,7 +659,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, EMPTY_FIELD, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId());
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countRequest);
@@ -671,7 +671,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.REQUESTED.getId());
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countRequest);
@@ -683,7 +683,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.REQUESTED.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countRequest);
@@ -695,7 +695,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.DECLINED.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countRequest);
@@ -707,7 +707,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.DECLINED.getId());
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, countRequest);
@@ -719,7 +719,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey1, (long) TransactionType.PURCHASE.getId(), (long) RequestStatus.ACCEPTED.getId());
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countRequest);
@@ -731,7 +731,7 @@ public class RequestDaoImplTest {
         populateRequests();
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId(), nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, uKey2, pKey2, (long) TransactionType.SALE.getId(), (long) RequestStatus.ACCEPTED.getId());
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countRequest);
@@ -742,7 +742,7 @@ public class RequestDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int countRequest = requestDaoImpl.countRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, nhKey);
+        int countRequest = requestDaoImpl.countRequests(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countRequest);

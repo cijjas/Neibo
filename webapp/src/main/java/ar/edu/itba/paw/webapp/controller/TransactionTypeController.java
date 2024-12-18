@@ -67,14 +67,14 @@ public class TransactionTypeController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{transactionTypeId}")
     public Response findTransactionType(
-            @PathParam("id") @GenericIdConstraint final Long id
+            @PathParam("transactionTypeId") @GenericIdConstraint Long transactionTypeId
     ) {
-        LOGGER.info("GET request arrived at '/transaction-type/{}'", id);
+        LOGGER.info("GET request arrived at '/transaction-type/{}'", transactionTypeId);
 
         // Content
-        TransactionType transactionType = TransactionType.fromId(id);
+        TransactionType transactionType = TransactionType.fromId(transactionTypeId);
         String transactionTypeHashCode = String.valueOf(transactionType.hashCode());
 
         // Cache Control

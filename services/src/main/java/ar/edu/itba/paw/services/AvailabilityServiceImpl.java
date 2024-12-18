@@ -19,7 +19,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private final AvailabilityDao availabilityDao;
 
     @Autowired
-    public AvailabilityServiceImpl(final AvailabilityDao availabilityDao) {
+    public AvailabilityServiceImpl(AvailabilityDao availabilityDao) {
         this.availabilityDao = availabilityDao;
     }
 
@@ -30,6 +30,6 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public Optional<Availability> findAvailability(long shiftId, long amenityId) {
         LOGGER.info("Finding Availability from Amenity {} on Shift {}", amenityId, shiftId);
 
-        return availabilityDao.findAvailability(amenityId, shiftId);
+        return availabilityDao.findAvailability(shiftId, amenityId);
     }
 }

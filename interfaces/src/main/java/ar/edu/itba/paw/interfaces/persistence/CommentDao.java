@@ -9,13 +9,13 @@ public interface CommentDao {
 
     // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
 
-    Comment createComment(final String comment, final long neighborId, final long postId);
+    Comment createComment(long userId, long postId, String comment);
 
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     Optional<Comment> findComment(long commentId);
 
-    Optional<Comment> findComment(long commentId, long postId, long neighborhoodId);
+    Optional<Comment> findComment(long neighborhoodId, long postId, long commentId);
 
     List<Comment> getComments(long postId, int page, int size);
 
@@ -23,5 +23,5 @@ public interface CommentDao {
 
     // -------------------------------------------- COMMENTS DELETE ----------------------------------------------------
 
-    boolean deleteComment(final long neighborhoodId, final long postId, final long commentId);
+    boolean deleteComment(long neighborhoodId, long postId, long commentId);
 }

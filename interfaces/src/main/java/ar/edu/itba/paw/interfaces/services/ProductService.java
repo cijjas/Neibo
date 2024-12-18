@@ -11,9 +11,9 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Product> findProduct(final long productId);
+    Optional<Product> findProduct(long productId);
 
-    Optional<Product> findProduct(long neighborhoodId, final long productId);
+    Optional<Product> findProduct(long neighborhoodId, long productId);
 
     List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size);
 
@@ -25,5 +25,5 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteProduct(final long neighborhoodId, final long productId);
+    boolean deleteProduct(long neighborhoodId, long productId);
 }

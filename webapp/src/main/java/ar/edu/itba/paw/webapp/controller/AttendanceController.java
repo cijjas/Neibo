@@ -49,6 +49,7 @@ public class AttendanceController {
     private Request request;
 
     private final AttendanceService as;
+
     private final EventService es;
 
     @Autowired
@@ -59,10 +60,10 @@ public class AttendanceController {
 
     @GET
     public Response listAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint final Long eventId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint Long eventId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
@@ -106,8 +107,8 @@ public class AttendanceController {
     @GET
     @Path("/count")
     public Response countAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint final Long eventId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint Long eventId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/count'", neighborhoodId, eventId);
 
@@ -133,9 +134,9 @@ public class AttendanceController {
     @GET
     @Path("/{userId}")
     public Response findAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint final Long eventId,
-            @PathParam("userId") @GenericIdConstraint final Long userId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint Long eventId,
+            @PathParam("userId") @GenericIdConstraint Long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
@@ -158,9 +159,9 @@ public class AttendanceController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint final Long eventId,
-            @Valid final AttendanceDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint Long eventId,
+            @Valid AttendanceDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
@@ -168,7 +169,7 @@ public class AttendanceController {
         es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
 
         // Creation & HashCode Generation
-        final Attendance attendance = as.createAttendance(extractSecondId(form.getUser()), eventId);
+        final Attendance attendance = as.createAttendance(eventId, extractSecondId(createForm.getUser()));
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Resource URN
@@ -187,17 +188,14 @@ public class AttendanceController {
     @Path("/{userId}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#userId)")
     public Response deleteAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint final Long eventId,
-            @PathParam("userId") @GenericIdConstraint final long userId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("eventId") @GenericIdConstraint Long eventId,
+            @PathParam("userId") @GenericIdConstraint long userId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
-
-        // Path Verification
-        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
         // Deletion Attempt
-        if (as.deleteAttendance(userId, eventId))
+        if (as.deleteAttendance(neighborhoodId, eventId, userId))
             return Response.noContent()
                     .build();
 

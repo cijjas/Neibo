@@ -31,7 +31,7 @@ public class RequestServiceImpl implements RequestService {
     private final EmailService emailService;
 
     @Autowired
-    public RequestServiceImpl(final RequestDao requestDao, final UserDao userDao, final ProductDao productDao, final EmailService emailService) {
+    public RequestServiceImpl(RequestDao requestDao, UserDao userDao, ProductDao productDao, EmailService emailService) {
         this.requestDao = requestDao;
         this.userDao = userDao;
         this.productDao = productDao;
@@ -74,7 +74,7 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int page, int size) {
         LOGGER.info("Getting Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
-        return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId, page, size);
+        return requestDao.getRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId, page, size);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class RequestServiceImpl implements RequestService {
     public int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int size) {
         LOGGER.info("Calculating Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId), size);
+        return PaginationUtils.calculatePages(requestDao.countRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

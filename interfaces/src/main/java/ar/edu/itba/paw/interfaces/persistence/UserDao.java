@@ -11,20 +11,19 @@ public interface UserDao {
 
     // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 
-    User createUser(final String mail, final String password, final String name, final String surname,
-                    final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification);
+    User createUser(long neighborhoodId, String mail, String name, String surname, String password, int identification, Language language, boolean darkMode, UserRole role);
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
-    Optional<User> findUser(final long userId);
+    Optional<User> findUser(long userId);
 
-    Optional<User> findUser(final long userId, long neighborhoodId);
+    Optional<User> findUser(long neighborhoodId, long userId);
 
-    Optional<User> findUser(final String mail);
+    Optional<User> findUser(String mail);
 
-    List<User> getUsers(Long userRoleId, long neighborhoodId, int page, int size);
+    List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size);
+
+    int countUsers(long neighborhoodId, Long userRoleId);
 
     List<User> getEventUsers(long eventId);
-
-    int countUsers(Long userRoleId, long neighborhoodId);
 }

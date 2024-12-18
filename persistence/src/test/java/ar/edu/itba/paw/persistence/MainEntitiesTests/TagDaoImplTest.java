@@ -125,7 +125,7 @@ public class TagDaoImplTest {
         testInserter.createTagMapping(nhKey, tKey);
 
         // Exercise
-        Optional<Tag> optionalTag = tagDaoImpl.findTag(tKey, nhKey);
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(nhKey, tKey);
 
         // Validations & Post Conditions
         assertTrue(optionalTag.isPresent());
@@ -145,7 +145,7 @@ public class TagDaoImplTest {
         testInserter.createTagMapping(nhKey, tKey);
 
         // Exercise
-        Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_ID, nhKey);
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalTag.isPresent());
@@ -164,7 +164,7 @@ public class TagDaoImplTest {
         testInserter.createTagMapping(nhKey, tKey);
 
         // Exercise
-        Optional<Tag> optionalTag = tagDaoImpl.findTag(tKey, INVALID_ID);
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_ID, tKey);
 
         // Validations & Post Conditions
         assertFalse(optionalTag.isPresent());
@@ -197,7 +197,7 @@ public class TagDaoImplTest {
         populateTags();
 
         // Exercise
-        List<Tag> tags = tagDaoImpl.getTags(EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Tag> tags = tagDaoImpl.getTags(nhKey, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, tags.size());
@@ -209,7 +209,7 @@ public class TagDaoImplTest {
         populateTags();
 
         // Exercise
-        List<Tag> tags = tagDaoImpl.getTags(pKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Tag> tags = tagDaoImpl.getTags(nhKey, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, tags.size());
@@ -220,7 +220,7 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Tag> tags = tagDaoImpl.getTags(EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Tag> tags = tagDaoImpl.getTags(nhKey, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(tags.isEmpty());
@@ -249,7 +249,7 @@ public class TagDaoImplTest {
         testInserter.createTagMapping(nhKey, tKey3);
 
         // Exercise
-        List<Tag> tags = tagDaoImpl.getTags(EMPTY_FIELD, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Tag> tags = tagDaoImpl.getTags(nhKey, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, tags.size());
@@ -263,7 +263,7 @@ public class TagDaoImplTest {
         populateTags();
 
         // Exercise
-        int countTags = tagDaoImpl.countTags(EMPTY_FIELD, nhKey);
+        int countTags = tagDaoImpl.countTags(nhKey, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, countTags);
@@ -275,7 +275,7 @@ public class TagDaoImplTest {
         populateTags();
 
         // Exercise
-        int countTags = tagDaoImpl.countTags(pKey1, nhKey);
+        int countTags = tagDaoImpl.countTags(nhKey, pKey1);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countTags);
@@ -286,7 +286,7 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int countTags = tagDaoImpl.countTags(EMPTY_FIELD, nhKey);
+        int countTags = tagDaoImpl.countTags(nhKey, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countTags);

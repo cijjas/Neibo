@@ -2,15 +2,19 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Booking } from '../../models/index';
+import { Booking, Shift } from '../../models/index';
 import { BookingDto, AmenityDto, ShiftDto } from '../../dtos/app-dtos';
 import { mapShift } from './shift.service';
 import { mapAmenity } from './amenity.service';
 import { parseLinkHeader } from './utils';
+import { HateoasLinksService } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private linkService: HateoasLinksService,
+    ) { }
 
     public getBooking(url: string): Observable<Booking> {
         return this.http.get<BookingDto>(url).pipe(
@@ -52,6 +56,22 @@ export class BookingService {
                 );
             })
         );
+    }
+
+    public createBooking(amenity: string, bookingDate: string, shifts: string[], user: string): Observable<any[]> {
+        console.log(amenity);
+        console.log(bookingDate);
+        console.log(shifts);
+
+        // Create an array of HTTP post calls, one for each shift
+        return forkJoin(shifts.map(shift =>
+            this.http.post(this.linkService.getLink('neighborhood:bookings'), {
+                amenity,
+                bookingDate,
+                shift,
+                user
+            })
+        ))
     }
 }
 

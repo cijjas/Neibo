@@ -27,7 +27,7 @@ public class InquiryServiceImpl implements InquiryService {
     private final ProductDao productDao;
 
     @Autowired
-    public InquiryServiceImpl(final InquiryDao inquiryDao, final ProductDao productDao, final EmailService emailService) {
+    public InquiryServiceImpl(InquiryDao inquiryDao, ProductDao productDao, EmailService emailService) {
         this.inquiryDao = inquiryDao;
         this.productDao = productDao;
         this.emailService = emailService;
@@ -62,7 +62,7 @@ public class InquiryServiceImpl implements InquiryService {
     public Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId) {
         LOGGER.info("Finding Inquiry {} for Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
 
-        return inquiryDao.findInquiry(inquiryId, productId, neighborhoodId);
+        return inquiryDao.findInquiry(neighborhoodId, productId, inquiryId);
     }
 
 

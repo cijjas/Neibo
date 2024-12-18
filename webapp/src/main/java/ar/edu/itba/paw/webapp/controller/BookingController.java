@@ -61,11 +61,11 @@ public class BookingController {
 
     @GET
     public Response listBookings(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("bookedBy") @UserURNConstraint final String user,
-            @QueryParam("forAmenity") @AmenityURNConstraint final String amenity
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam("bookedBy") @UserURNConstraint String user,
+            @QueryParam("forAmenity") @AmenityURNConstraint String amenity,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
@@ -108,10 +108,10 @@ public class BookingController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{bookingId}")
     public Response findBooking(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long bookingId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("bookingId") @GenericIdConstraint long bookingId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
@@ -136,13 +136,13 @@ public class BookingController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createBooking(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @Valid BookingDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @Valid BookingDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Booking booking = bs.createBooking(extractFirstId(form.getShift()), extractSecondId(form.getUser()), extractSecondId(form.getAmenity()), extractDate(form.getBookingDate()));
+        final Booking booking = bs.createBooking(extractFirstId(createForm.getShift()), extractSecondId(createForm.getUser()), extractSecondId(createForm.getAmenity()), extractDate(createForm.getBookingDate()));
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN
@@ -154,11 +154,11 @@ public class BookingController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{bookingId}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteBooking(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long bookingId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("bookingId") @GenericIdConstraint long bookingId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 

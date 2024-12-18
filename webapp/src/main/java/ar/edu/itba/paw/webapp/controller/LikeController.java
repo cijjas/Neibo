@@ -59,10 +59,10 @@ public class LikeController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canListLikes(#post, #user)")
     public Response listLikes(
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("onPost") @PostURNConstraint final String post,
-            @QueryParam("likedBy") @UserURNConstraint final String user
+            @QueryParam("likedBy") @UserURNConstraint String user,
+            @QueryParam("onPost") @PostURNConstraint String post,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/likes'");
 
@@ -114,8 +114,8 @@ public class LikeController {
     @GET
     @Path("/count")
     public Response countLikes(
-            @QueryParam("onPost") @PostURNConstraint final String post,
-            @QueryParam("likedBy") @UserURNConstraint final String user
+            @QueryParam("likedBy") @UserURNConstraint String user,
+            @QueryParam("onPost") @PostURNConstraint String post
     ) {
         LOGGER.info("GET request arrived at '/likes/count'");
 
@@ -141,12 +141,12 @@ public class LikeController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createLike(
-            @Valid LikeDto form
+            @Valid LikeDto createForm
     ) {
         LOGGER.info("POST request arrived at '/likes'");
 
         // Creation & HashCode Generation
-        final Like like = ls.createLike(extractSecondId(form.getUser()), extractSecondId(form.getPost()));
+        final Like like = ls.createLike(extractSecondId(createForm.getUser()), extractSecondId(createForm.getPost()));
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
@@ -173,9 +173,9 @@ public class LikeController {
 
     @DELETE
     @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
-    public Response deleteById(
-            @QueryParam("onPost") @NotNull @PostURNConstraint final String post,
-            @QueryParam("likedBy") @NotNull @UserURNConstraint final String user
+    public Response deleteLike(
+            @QueryParam("likedBy") @NotNull @UserURNConstraint String user,
+            @QueryParam("onPost") @NotNull @PostURNConstraint String post
     ) {
         LOGGER.info("DELETE request arrived at '/likes'");
 

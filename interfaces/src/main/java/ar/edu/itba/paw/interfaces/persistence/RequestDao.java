@@ -9,15 +9,15 @@ public interface RequestDao {
 
     // --------------------------------------------- REQUESTS INSERT ---------------------------------------------------
 
-    Request createRequest(final long userId, final long productId, final String message, final int quantity);
+    Request createRequest(long userId, long productId, String message, int quantity);
 
     // --------------------------------------------- REQUESTS SELECT ---------------------------------------------------
 
     Optional<Request> findRequest(long requestId);
 
-    List<Request> getRequests(Long userId, Long productId, Long typeId, Long statusId, long neighborhoodId, int page, int size);
+    List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long typeId, Long statusId, int page, int size);
 
-    int countRequests(Long userId, Long productId, Long typeId, Long statusId, long neighborhoodId);
+    int countRequests(long neighborhoodId, Long userId, Long productId, Long typeId, Long statusId);
 
     // --------------------------------------------- REQUESTS DELETE ---------------------------------------------------
 

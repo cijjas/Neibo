@@ -59,14 +59,14 @@ public class WorkerRoleController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{workerRoleId}")
     public Response findWorkerRole(
-            @PathParam("id") @GenericIdConstraint final Long id
+            @PathParam("workerRoleId") @GenericIdConstraint Long workerRoleId
     ) {
-        LOGGER.info("GET request arrived at '/worker-roles/{}'", id);
+        LOGGER.info("GET request arrived at '/worker-roles/{}'", workerRoleId);
 
         // Content
-        WorkerRole workerRole = WorkerRole.fromId(id);
+        WorkerRole workerRole = WorkerRole.fromId(workerRoleId);
         String workerRoleHashCode = String.valueOf(workerRole.hashCode());
 
         // Cache Control
@@ -76,7 +76,7 @@ public class WorkerRoleController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo))
+        return Response.ok(WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(workerRoleId), uriInfo))
                 .cacheControl(cacheControl)
                 .tag(workerRoleHashCode)
                 .build();

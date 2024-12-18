@@ -57,7 +57,7 @@ public class ProfessionController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInProfessions(#worker)")
     public Response listProfessions(
-            @QueryParam("forWorker") @WorkerURNConstraint final String worker
+            @QueryParam("forWorker") @WorkerURNConstraint String worker
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
@@ -87,14 +87,14 @@ public class ProfessionController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{professionId}")
     public Response findProfession(
-            @PathParam("id") @GenericIdConstraint final long id
+            @PathParam("professionId") @GenericIdConstraint long professionId
     ) {
-        LOGGER.info("GET request arrived at '/professions/{}'", id);
+        LOGGER.info("GET request arrived at '/professions/{}'", professionId);
 
         // Content
-        Profession profession = ps.findProfession(id).orElseThrow(NotFoundException::new);
+        Profession profession = ps.findProfession(professionId).orElseThrow(NotFoundException::new);
         String professionHashCode = String.valueOf(profession.hashCode());
 
         // Cache Control
@@ -113,12 +113,12 @@ public class ProfessionController {
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createProfession(
-            @Valid ProfessionDto form
+            @Valid ProfessionDto createForm
     ) {
         LOGGER.info("POST request arrived at '/professions'");
 
         // Content
-        final Profession profession = ps.createProfession(form.getName());
+        final Profession profession = ps.createProfession(createForm.getName());
         String professionHashCode = String.valueOf(profession.hashCode());
 
         // Resource URN
@@ -134,15 +134,15 @@ public class ProfessionController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{professionId}")
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
-    public Response deleteProfessionById(
-            @PathParam("id") @GenericIdConstraint final long id
+    public Response deleteProfession(
+            @PathParam("professionId") @GenericIdConstraint long professionId
     ) {
-        LOGGER.info("DELETE request arrived at '/professions/{}'", id);
+        LOGGER.info("DELETE request arrived at '/professions/{}'", professionId);
 
         // Deletion Attempt
-        if (ps.deleteProfession(id))
+        if (ps.deleteProfession(professionId))
             return Response.noContent()
                     .build();
 

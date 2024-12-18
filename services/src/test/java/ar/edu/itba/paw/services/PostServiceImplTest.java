@@ -45,20 +45,20 @@ public class PostServiceImplTest {
         Post mockPost = new Post.Builder().build();
         mockPost.setPostId(1L);
 
-        when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
+        when(postDao.createPost(userId, title, description, channelId, imageId)).thenReturn(mockPost);
 
-        when(categorizationDao.findCategorization(10L, mockPost.getPostId())).thenReturn(Optional.empty());
-        when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
+        when(categorizationDao.findCategorization(mockPost.getPostId(), 10L)).thenReturn(Optional.empty());
+        when(categorizationDao.findCategorization(mockPost.getPostId(), 20L)).thenReturn(Optional.empty());
 
         // Exercise
         Post createdPost = postService.createPost(neighborhoodId, userId, title, description, channelId, tagIds, imageId);
 
         // Validations & Post Conditions
-        verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
-        verify(categorizationDao, times(1)).findCategorization(10L, mockPost.getPostId());
-        verify(categorizationDao, times(1)).findCategorization(20L, mockPost.getPostId());
-        verify(categorizationDao, times(1)).createCategorization(10L, mockPost.getPostId());
-        verify(categorizationDao, times(1)).createCategorization(20L, mockPost.getPostId());
+        verify(postDao, times(1)).createPost(userId, title, description, channelId, imageId);
+        verify(categorizationDao, times(1)).findCategorization(mockPost.getPostId(), 10L);
+        verify(categorizationDao, times(1)).findCategorization(mockPost.getPostId(), 20L);
+        verify(categorizationDao, times(1)).createCategorization(mockPost.getPostId(), 10L);
+        verify(categorizationDao, times(1)).createCategorization(mockPost.getPostId(), 20L);
         verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);
 
         assertNotNull(createdPost);
@@ -78,13 +78,13 @@ public class PostServiceImplTest {
         Post mockPost = new Post.Builder().build();
         mockPost.setPostId(1L);
 
-        when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
+        when(postDao.createPost(userId, title, description, channelId, imageId)).thenReturn(mockPost);
 
         // Exercise
         Post createdPost = postService.createPost(neighborhoodId, userId, title, description, channelId, tagIds, imageId);
 
         // Validations & Post Conditions
-        verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
+        verify(postDao, times(1)).createPost(userId, title, description, channelId, imageId);
         verify(categorizationDao, times(0)).findCategorization(anyLong(), anyLong());
         verify(categorizationDao, times(0)).createCategorization(anyLong(), anyLong());
         verify(emailService, times(0)).sendBatchAnnouncementMail(mockPost, neighborhoodId);
@@ -106,19 +106,19 @@ public class PostServiceImplTest {
         Post mockPost = new Post.Builder().build();
         mockPost.setPostId(1L);
 
-        when(postDao.createPost(title, description, userId, channelId, imageId)).thenReturn(mockPost);
-        when(categorizationDao.findCategorization(10L, mockPost.getPostId())).thenReturn(Optional.empty());
-        when(categorizationDao.findCategorization(20L, mockPost.getPostId())).thenReturn(Optional.empty());
+        when(postDao.createPost(userId, title, description, channelId, imageId)).thenReturn(mockPost);
+        when(categorizationDao.findCategorization(mockPost.getPostId(), 10L)).thenReturn(Optional.empty());
+        when(categorizationDao.findCategorization(mockPost.getPostId(), 20L)).thenReturn(Optional.empty());
 
         // Exercise
         Post createdPost = postService.createPost(neighborhoodId, userId, title, description, channelId, tagIds, imageId);
 
         // Validations & Post Conditions
-        verify(postDao, times(1)).createPost(title, description, userId, channelId, imageId);
-        verify(categorizationDao, times(1)).findCategorization(10L, mockPost.getPostId());
-        verify(categorizationDao, times(1)).findCategorization(20L, mockPost.getPostId());
-        verify(categorizationDao, times(1)).createCategorization(10L, mockPost.getPostId());
-        verify(categorizationDao, times(1)).createCategorization(20L, mockPost.getPostId());
+        verify(postDao, times(1)).createPost(userId, title, description, channelId, imageId);
+        verify(categorizationDao, times(1)).findCategorization(mockPost.getPostId(), 10L);
+        verify(categorizationDao, times(1)).findCategorization(mockPost.getPostId(), 20L);
+        verify(categorizationDao, times(1)).createCategorization(mockPost.getPostId(), 10L);
+        verify(categorizationDao, times(1)).createCategorization(mockPost.getPostId(), 20L);
         verify(emailService, times(1)).sendBatchAnnouncementMail(mockPost, neighborhoodId);  // Ensure email is sent
 
         assertNotNull(createdPost);
@@ -142,19 +142,19 @@ public class PostServiceImplTest {
         Post post = new Post.Builder().build();
         post.setTags(tags);
 
-        when(postDao.findPost(postId)).thenReturn(Optional.of(post));
-        when(postDao.deletePost(postId)).thenReturn(true);
+        when(postDao.findPost(neighborhoodId, postId)).thenReturn(Optional.of(post));
+        when(postDao.deletePost(neighborhoodId, postId)).thenReturn(true);
 
         // Exercise
-        boolean result = postService.deletePost(postId);
+        boolean result = postService.deletePost(neighborhoodId, postId);
 
         // Validations & Post Conditions
         assertTrue(result);
 
-        verify(postDao, times(1)).findPost(postId);
-        verify(categorizationDao, times(1)).deleteCategorization(101L, postId);
-        verify(categorizationDao, times(1)).deleteCategorization(102L, postId);
-        verify(postDao, times(1)).deletePost(postId);
+        verify(postDao, times(1)).findPost(neighborhoodId, postId);
+        verify(categorizationDao, times(1)).deleteCategorization(postId, 101L);
+        verify(categorizationDao, times(1)).deleteCategorization(postId, 102L);
+        verify(postDao, times(1)).deletePost(neighborhoodId, postId);
     }
 
     @Test
@@ -166,17 +166,17 @@ public class PostServiceImplTest {
         Post post = new Post.Builder().build();
         post.setTags(Collections.emptySet());
 
-        when(postDao.findPost(postId)).thenReturn(Optional.of(post));
-        when(postDao.deletePost(postId)).thenReturn(true);
+        when(postDao.findPost(neighborhoodId, postId)).thenReturn(Optional.of(post));
+        when(postDao.deletePost(neighborhoodId, postId)).thenReturn(true);
 
         // Exercise
-        boolean result = postService.deletePost(postId);
+        boolean result = postService.deletePost(neighborhoodId, postId);
 
         // Validations & Post Conditions
         assertTrue(result);
 
-        verify(postDao, times(1)).findPost(postId);
+        verify(postDao, times(1)).findPost(neighborhoodId, postId);
         verify(categorizationDao, never()).deleteCategorization(anyLong(), anyLong());
-        verify(postDao, times(1)).deletePost(postId);
+        verify(postDao, times(1)).deletePost(neighborhoodId, postId);
     }
 }

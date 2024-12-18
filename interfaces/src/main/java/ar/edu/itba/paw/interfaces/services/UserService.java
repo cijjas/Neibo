@@ -7,14 +7,13 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User createUser(final long neighborhoodId, final String mail, final String name, final String surname, final String password,
-                    final Integer identification, final Long languageId);
+    User createUser(long neighborhoodId, String mail, String name, String surname, String password, Integer identification, Long languageId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<User> findUser(long neighborhoodId, final long userId);
+    Optional<User> findUser(long neighborhoodId, long userId);
 
-    Optional<User> findUser(final String mail);
+    Optional<User> findUser(String mail);
 
     List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size);
 

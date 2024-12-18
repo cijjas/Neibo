@@ -66,14 +66,14 @@ public class WorkerStatusController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{workerStatusId}")
     public Response findWorkerStatus(
-            @PathParam("id") @GenericIdConstraint final Long id
+            @PathParam("workerStatusId") @GenericIdConstraint Long workerStatusId
     ) {
-        LOGGER.info("GET request arrived at '/worker-statuses/{}'", id);
+        LOGGER.info("GET request arrived at '/worker-statuses/{}'", workerStatusId);
 
         // Content
-        WorkerStatus workerStatus = WorkerStatus.fromId(id);
+        WorkerStatus workerStatus = WorkerStatus.fromId(workerStatusId);
         String workerStatusHashCode = String.valueOf(workerStatus.hashCode());
 
         // Cache Control

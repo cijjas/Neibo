@@ -53,30 +53,30 @@ public class AmenityServiceImplTest {
         for (int i = 0; i < 750; i++)
             mockUsers.add(new User.Builder().build());
 
-        when(amenityDao.createAmenity(name, description, neighborhoodId)).thenReturn(mockAmenity);
-        when(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId)).thenReturn(750);
-        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page), eq(size)))
+        when(amenityDao.createAmenity(neighborhoodId, description, name)).thenReturn(mockAmenity);
+        when(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId())).thenReturn(750);
+        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page), eq(size)))
                 .thenReturn(mockUsers);
-        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page + 1), eq(size)))
+        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page + 1), eq(size)))
                 .thenReturn(Collections.emptyList());
 
         // Exercise
         Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
 
         // Validations & Post Conditions
-        verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);
+        verify(amenityDao, times(1)).createAmenity(neighborhoodId, description, name);
 
         for (Long shiftId : selectedShiftsIds) {
-            verify(availabilityDao).createAvailability(mockAmenity.getAmenityId(), shiftId);
+            verify(availabilityDao).createAvailability(shiftId, mockAmenity.getAmenityId());
         }
 
         verify(availabilityDao, times(selectedShiftsIds.size()))
-                .createAvailability(eq(mockAmenity.getAmenityId()), anyLong());
+                .createAvailability(anyLong(), eq(mockAmenity.getAmenityId()));
 
         verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
         verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
 
-        verify(userDao, times(2)).getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), anyInt(), eq(size));
+        verify(userDao, times(2)).getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), anyInt(), eq(size));
 
         assertNotNull(result);
         assertEquals(mockAmenity, result);
@@ -98,22 +98,22 @@ public class AmenityServiceImplTest {
         for (int i = 0; i < 750; i++)
             mockUsers.add(new User.Builder().build());
 
-        when(amenityDao.createAmenity(name, description, neighborhoodId)).thenReturn(mockAmenity);
-        when(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId)).thenReturn(750);
-        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page), eq(size)))
+        when(amenityDao.createAmenity(neighborhoodId, description, name)).thenReturn(mockAmenity);
+        when(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId())).thenReturn(750);
+        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page), eq(size)))
                 .thenReturn(mockUsers);
-        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page + 1), eq(size)))
+        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page + 1), eq(size)))
                 .thenReturn(Collections.emptyList());
 
         // Exercise
         Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
 
         // Validation & Post Conditions
-        verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);
+        verify(amenityDao, times(1)).createAmenity(neighborhoodId, description, name);
         verify(availabilityDao, times(0)).createAvailability(anyLong(), anyLong());
         verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
         verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
-        verify(userDao, times(2)).getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), anyInt(), eq(size));
+        verify(userDao, times(2)).getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), anyInt(), eq(size));
 
         assertNotNull(result);
         assertEquals(mockAmenity, result);
@@ -135,22 +135,22 @@ public class AmenityServiceImplTest {
         for (int i = 0; i < 750; i++)
             mockUsers.add(new User.Builder().build());
 
-        when(amenityDao.createAmenity(name, description, neighborhoodId)).thenReturn(mockAmenity);
-        when(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId)).thenReturn(750);
-        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page), eq(size)))
+        when(amenityDao.createAmenity(neighborhoodId, description, name)).thenReturn(mockAmenity);
+        when(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId())).thenReturn(750);
+        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page), eq(size)))
                 .thenReturn(mockUsers);
-        when(userDao.getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), eq(page + 1), eq(size)))
+        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page + 1), eq(size)))
                 .thenReturn(Collections.emptyList());
 
         // Exercise
         Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
 
         // Validation & Post Conditions
-        verify(amenityDao, times(1)).createAmenity(name, description, neighborhoodId);
+        verify(amenityDao, times(1)).createAmenity(neighborhoodId, description, name);
         verify(availabilityDao, times(0)).createAvailability(anyLong(), anyLong()); // Ensure no availability is created
         verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
         verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
-        verify(userDao, times(2)).getUsers(eq((long) UserRole.NEIGHBOR.getId()), eq(neighborhoodId), anyInt(), eq(size));
+        verify(userDao, times(2)).getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), anyInt(), eq(size));
 
         assertNotNull(result);
         assertEquals(mockAmenity, result);
@@ -188,8 +188,8 @@ public class AmenityServiceImplTest {
         Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Arrays.asList(1L, 2L));
 
         // Validation & Post Conditions
-        verify(availabilityDao).createAvailability(amenityId, 1L);
-        verify(availabilityDao).createAvailability(amenityId, 2L);
+        verify(availabilityDao).createAvailability(1L, amenityId);
+        verify(availabilityDao).createAvailability(2L, amenityId);
     }
 
     @Test
@@ -210,8 +210,8 @@ public class AmenityServiceImplTest {
         Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Arrays.asList(2L, 3L));
 
         // Validation & Post Conditions
-        verify(availabilityDao).deleteAvailability(amenityId, 1L);
-        verify(availabilityDao).createAvailability(amenityId, 3L);
+        verify(availabilityDao).deleteAvailability(1L, amenityId);
+        verify(availabilityDao).createAvailability(3L, amenityId);
     }
 
     @Test
@@ -230,8 +230,8 @@ public class AmenityServiceImplTest {
         Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Collections.emptyList());
 
         // Validation & Post Conditions
-        verify(availabilityDao).deleteAvailability(amenityId, 1L);
-        verify(availabilityDao).deleteAvailability(amenityId, 2L);
+        verify(availabilityDao).deleteAvailability(1L, amenityId);
+        verify(availabilityDao).deleteAvailability(2L, amenityId);
         verifyNoMoreInteractions(availabilityDao);
     }
 }

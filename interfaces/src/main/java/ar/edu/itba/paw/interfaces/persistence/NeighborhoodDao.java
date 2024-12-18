@@ -9,7 +9,7 @@ public interface NeighborhoodDao {
 
     // ----------------------------------------- NEIGHBORHOODS INSERT --------------------------------------------------
 
-    Neighborhood createNeighborhood(final String name);
+    Neighborhood createNeighborhood(String name);
 
     // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
@@ -17,7 +17,7 @@ public interface NeighborhoodDao {
 
     Optional<Neighborhood> findNeighborhood(String name);
 
-    List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
+    List<Neighborhood> getNeighborhoods(Long workerId, int page, int size);
 
     List<Long> getNeighborhoodIds();
 

@@ -87,4 +87,6 @@ export class PaginatorComponent implements OnChanges {
     this.pageSize = newSize;
     this.pageSizeChange.emit(this.pageSize);
   }
+
+
 }

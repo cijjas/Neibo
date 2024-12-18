@@ -73,10 +73,10 @@ public class AffiliationController {
 
     @GET
     public Response listAffiliations(
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inNeighborhood") @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam("forWorker") @WorkerURNConstraint String worker
+            @QueryParam("forWorker") @WorkerURNConstraint String worker,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
@@ -128,12 +128,12 @@ public class AffiliationController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createAffiliation(
-            @Valid AffiliationDto form
+            @Valid AffiliationDto createForm
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
 
         // Creation & HashCode Generation
-        Affiliation affiliation = nws.createAffiliation(extractFirstId(form.getNeighborhood()), extractFirstId(form.getWorker()), extractFirstId(form.getWorkerRole()));
+        Affiliation affiliation = nws.createAffiliation(extractFirstId(createForm.getNeighborhood()), extractFirstId(createForm.getWorker()), extractFirstId(createForm.getWorkerRole()));
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URN
@@ -160,12 +160,12 @@ public class AffiliationController {
     public Response updateAffiliation(
             @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
             @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker,
-            @Valid AffiliationDto form
+            @Valid AffiliationDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(extractFirstId(neighborhood), extractFirstId(worker), extractFirstId(form.getWorkerRole()));
+        final Affiliation updatedAffiliation = nws.updateAffiliation(extractFirstId(neighborhood), extractFirstId(worker), extractFirstId(updateForm.getWorkerRole()));
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
@@ -175,7 +175,7 @@ public class AffiliationController {
 
     @DELETE
     @PreAuthorize("@pathAccessControlHelper.canDeleteAffiliation(#worker)")
-    public Response removeWorkerFromNeighborhood(
+    public Response deleteAffiliation(
             @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
             @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker
     ) {

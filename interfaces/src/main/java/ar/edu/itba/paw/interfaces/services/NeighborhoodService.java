@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface NeighborhoodService {
 
-    Neighborhood createNeighborhood(final String name);
+    Neighborhood createNeighborhood(String name);
 
     // -----------------------------------------------------------------------------------------------------------------
 

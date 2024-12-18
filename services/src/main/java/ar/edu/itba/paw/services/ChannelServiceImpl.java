@@ -23,7 +23,7 @@ public class ChannelServiceImpl implements ChannelService {
     private final ChannelMappingDao channelMappingDao;
 
     @Autowired
-    public ChannelServiceImpl(final ChannelDao channelDao, final ChannelMappingDao channelMappingDao) {
+    public ChannelServiceImpl(ChannelDao channelDao, ChannelMappingDao channelMappingDao) {
         this.channelDao = channelDao;
         this.channelMappingDao = channelMappingDao;
     }
@@ -35,7 +35,7 @@ public class ChannelServiceImpl implements ChannelService {
         LOGGER.info("Creating Channel {}", name);
 
         Channel channel = channelDao.findChannel(name).orElseGet(() -> channelDao.createChannel(name));
-        channelMappingDao.findChannelMapping(channel.getChannelId(), neighborhoodId).orElseGet(() -> channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId));
+        channelMappingDao.findChannelMapping(neighborhoodId, channel.getChannelId()).orElseGet(() -> channelMappingDao.createChannelMapping(neighborhoodId, channel.getChannelId()));
 
         return channel;
     }
@@ -47,7 +47,7 @@ public class ChannelServiceImpl implements ChannelService {
     public Optional<Channel> findChannel(long neighborhoodId, long channelId) {
         LOGGER.info("Finding Channel {} from Neighborhood {}", channelId, neighborhoodId);
 
-        return channelDao.findChannel(channelId, neighborhoodId);
+        return channelDao.findChannel(neighborhoodId, channelId);
     }
 
     @Override
@@ -72,11 +72,11 @@ public class ChannelServiceImpl implements ChannelService {
     public boolean deleteChannel(long neighborhoodId, long channelId) {
         LOGGER.info("Deleting Channel {}", channelId);
 
-        channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
-        channelMappingDao.deleteChannelMapping(channelId, neighborhoodId);
+        channelDao.findChannel(neighborhoodId, channelId).orElseThrow(NotFoundException::new);
+        channelMappingDao.deleteChannelMapping(neighborhoodId, channelId);
 
         // If this channel was only used in one Neighborhood then it an be safely deleted
-        if(channelMappingDao.getChannelMappings(channelId, null, 1, 1).isEmpty())
+        if(channelMappingDao.getChannelMappings(null, channelId, 1, 1).isEmpty())
             channelDao.deleteChannel(channelId);
 
         return true;

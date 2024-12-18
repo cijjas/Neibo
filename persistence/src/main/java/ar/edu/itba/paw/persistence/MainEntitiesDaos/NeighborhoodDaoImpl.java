@@ -54,7 +54,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
+    public List<Neighborhood> getNeighborhoods(Long workerId, int page, int size) {
         LOGGER.debug("Selecting Neighborhoods");
 
         // Build the first query to fetch neighborhood IDs with ordering

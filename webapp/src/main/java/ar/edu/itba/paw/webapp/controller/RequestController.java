@@ -58,7 +58,7 @@ public class RequestController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#requestForm.requestedBy, #requestForm.forProduct)")
     public Response listRequests(
-            @Valid @BeanParam final RequestForm requestForm
+            @Valid @BeanParam RequestForm requestForm
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", requestForm.getNeighborhoodId());
 
@@ -106,11 +106,11 @@ public class RequestController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{requestId}")
     @PreAuthorize("@pathAccessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") final long requestId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("requestId") long requestId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
@@ -133,13 +133,13 @@ public class RequestController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @Valid RequestDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @Valid RequestDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Request request = rs.createRequest(extractSecondId(form.getUser()), extractSecondId(form.getProduct()), form.getMessage(), form.getUnitsRequested());
+        final Request request = rs.createRequest(extractSecondId(createForm.getUser()), extractSecondId(createForm.getProduct()), createForm.getMessage(), createForm.getUnitsRequested());
         String requestHashCode = String.valueOf(request.hashCode());
 
         // Resource URN
@@ -151,19 +151,19 @@ public class RequestController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{requestId}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateRequest(#requestId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long requestId,
-            @Valid RequestDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("requestId") @GenericIdConstraint long requestId,
+            @Valid RequestDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
         // Modification & HashCode Generation
-        final Request updatedRequest = rs.updateRequest(requestId, extractOptionalFirstId(form.getRequestStatus()));
+        final Request updatedRequest = rs.updateRequest(requestId, extractOptionalFirstId(updateForm.getRequestStatus()));
         String requestHashCode = String.valueOf(updatedRequest.hashCode());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))
@@ -172,11 +172,11 @@ public class RequestController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{requestId}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long requestId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("requestId") @GenericIdConstraint long requestId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 

@@ -60,7 +60,7 @@ public class AffiliationDaoImplTest {
         testInserter.createWorker(uKey);
 
         // Exercise
-        Affiliation affiliation = affiliationDaoImpl.createAffiliation(uKey, nhKey, AFFILIATION_WORKER_ROLE_ID);
+        Affiliation affiliation = affiliationDaoImpl.createAffiliation(nhKey, uKey, AFFILIATION_WORKER_ROLE_ID);
 
         // Validations & Post Conditions
         em.flush();
@@ -82,7 +82,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(uKey, nhKey);
+        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(nhKey, uKey);
 
         // Validations & Post Conditions
         assertTrue(optionalAffiliation.isPresent());
@@ -99,7 +99,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(INVALID_ID, nhKey);
+        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalAffiliation.isPresent());
@@ -114,7 +114,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(uKey, INVALID_ID);
+        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(INVALID_ID, uKey);
 
         // Validations & Post Conditions
         assertFalse(optionalAffiliation.isPresent());
@@ -164,7 +164,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey);
 
         // Exercise
-        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(uKey, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(EMPTY_FIELD, uKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, affiliationList.size());
@@ -183,7 +183,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey2);
 
         // Exercise
-        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(nhKey, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, affiliationList.size());
@@ -203,7 +203,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey);
 
         // Exercise
-        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(uKey, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(nhKey, uKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, affiliationList.size());
@@ -270,7 +270,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey);
 
         // Exercise
-        int countAffiliations = affiliationDaoImpl.countAffiliations(uKey, EMPTY_FIELD);
+        int countAffiliations = affiliationDaoImpl.countAffiliations(EMPTY_FIELD, uKey);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countAffiliations);
@@ -289,7 +289,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey2);
 
         // Exercise
-        int countAffiliations = affiliationDaoImpl.countAffiliations(EMPTY_FIELD, nhKey);
+        int countAffiliations = affiliationDaoImpl.countAffiliations(nhKey, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countAffiliations);
@@ -309,7 +309,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey);
 
         // Exercise
-        int countAffiliations = affiliationDaoImpl.countAffiliations(uKey, nhKey);
+        int countAffiliations = affiliationDaoImpl.countAffiliations(nhKey, uKey);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countAffiliations);
@@ -337,7 +337,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        boolean deleted = affiliationDaoImpl.deleteAffiliation(uKey, nhKey);
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(nhKey, uKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -354,7 +354,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        boolean deleted = affiliationDaoImpl.deleteAffiliation(INVALID_ID, nhKey);
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
@@ -370,7 +370,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        boolean deleted = affiliationDaoImpl.deleteAffiliation(nhKey, INVALID_ID);
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(INVALID_ID, nhKey);
 
         // Validations & Post Conditions
         em.flush();

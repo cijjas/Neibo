@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface AttendanceService {
 
-    Attendance createAttendance(long userId, long eventId);
+    Attendance createAttendance(long eventId, long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -21,5 +21,5 @@ public interface AttendanceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteAttendance(long userId, long eventId);
+    boolean deleteAttendance(long neighborhoodId, long eventId, long userId);
 }

@@ -149,7 +149,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, EMPTY_FIELD);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, neighborhoodList.size());
@@ -169,7 +169,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, uKey1);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(uKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, neighborhoodList.size());
@@ -186,7 +186,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createWorker(uKey2);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, uKey1);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(uKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(neighborhoodList.isEmpty());
@@ -202,7 +202,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createNeighborhood(NEIGHBORHOOD_NAME_3);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(TEST_PAGE, TEST_PAGE_SIZE, EMPTY_FIELD);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, neighborhoodList.size());

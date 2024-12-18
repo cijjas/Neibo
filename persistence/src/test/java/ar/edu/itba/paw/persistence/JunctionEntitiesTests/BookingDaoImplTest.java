@@ -129,7 +129,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(nhKey, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, bookingList.size());
@@ -141,7 +141,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        List<Booking> bookingList = bookingDaoImpl.getBookings(uKey1, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(nhKey, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, bookingList.size());
@@ -153,7 +153,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, aKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(nhKey, EMPTY_FIELD, aKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, bookingList.size());
@@ -165,7 +165,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        List<Booking> bookingList = bookingDaoImpl.getBookings(uKey1, aKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(nhKey, uKey1, aKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, bookingList.size());
@@ -176,7 +176,7 @@ public class BookingDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(nhKey, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(bookingList.isEmpty());
@@ -203,7 +203,7 @@ public class BookingDaoImplTest {
         testInserter.createBooking(uKey1, avKey1, DATE_3);
 
         // Exercise
-        List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, EMPTY_FIELD, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(nhKey, EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, bookingList.size());
@@ -217,7 +217,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        int countBookings = bookingDaoImpl.countBookings(EMPTY_FIELD, EMPTY_FIELD, nhKey);
+        int countBookings = bookingDaoImpl.countBookings(nhKey, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countBookings);
@@ -229,7 +229,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        int countBookings = bookingDaoImpl.countBookings(uKey1, EMPTY_FIELD, nhKey);
+        int countBookings = bookingDaoImpl.countBookings(nhKey, uKey1, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countBookings);
@@ -241,7 +241,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        int countBookings = bookingDaoImpl.countBookings(EMPTY_FIELD, aKey1, nhKey);
+        int countBookings = bookingDaoImpl.countBookings(nhKey, EMPTY_FIELD, aKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countBookings);
@@ -253,7 +253,7 @@ public class BookingDaoImplTest {
         populateBookings();
 
         // Exercise
-        int countBookings = bookingDaoImpl.countBookings(uKey1, aKey1, nhKey);
+        int countBookings = bookingDaoImpl.countBookings(nhKey, uKey1, aKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countBookings);
@@ -264,7 +264,7 @@ public class BookingDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int countBookings = bookingDaoImpl.countBookings(EMPTY_FIELD, EMPTY_FIELD, nhKey);
+        int countBookings = bookingDaoImpl.countBookings(nhKey, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countBookings);

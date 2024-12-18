@@ -51,7 +51,7 @@ public class EventServiceImplTest {
         when(timeDao.findTime(sqlEndTime)).thenReturn(Optional.of(endTimeEntity));
 
         Event mockEvent = new Event.Builder().build();
-        when(eventDao.createEvent(name, description, date, 1L, 2L, neighborhoodId)).thenReturn(mockEvent);
+        when(eventDao.createEvent(neighborhoodId, name, description, date, 1L, 2L)).thenReturn(mockEvent);
 
         // Exercise
         Event createdEvent = eventService.createEvent(neighborhoodId, description, date, startTime, endTime, name);
@@ -61,7 +61,7 @@ public class EventServiceImplTest {
         verify(timeDao, times(1)).findTime(sqlEndTime);
         verify(timeDao, times(0)).createTime(sqlStartTime);
         verify(timeDao, times(0)).createTime(sqlEndTime);
-        verify(eventDao, times(1)).createEvent(name, description, date, 1L, 2L, neighborhoodId);
+        verify(eventDao, times(1)).createEvent(neighborhoodId, name, description, date, 1L, 2L);
         verify(emailService, times(1)).sendBatchEventMail(mockEvent, "event.custom.message2", neighborhoodId);
 
         assertNotNull(createdEvent);

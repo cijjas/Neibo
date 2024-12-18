@@ -35,7 +35,7 @@ public class TagDaoImpl implements TagDao {
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     @Override
-    public Optional<Tag> findTag(long tagId, long neighborhoodId) {
+    public Optional<Tag> findTag(long neighborhoodId, long tagId) {
         LOGGER.debug("Selecting Tag {} in Neighborhood {}", tagId, neighborhoodId);
 
         TypedQuery<Tag> query = em.createQuery(
@@ -60,7 +60,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
+    public List<Tag> getTags(long neighborhoodId, Long postId, int page, int size) {
         LOGGER.debug("Selecting Tags By Criteria");
 
         TypedQuery<Long> query = null;
@@ -89,7 +89,7 @@ public class TagDaoImpl implements TagDao {
 
 
     @Override
-    public int countTags(Long postId, long neighborhoodId) {
+    public int countTags(long neighborhoodId, Long postId) {
         LOGGER.debug("Counting Tags By Criteria");
 
         TypedQuery<Long> query = null;

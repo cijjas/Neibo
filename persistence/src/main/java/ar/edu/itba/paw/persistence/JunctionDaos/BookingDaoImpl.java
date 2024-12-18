@@ -55,7 +55,7 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
+    public List<Booking> getBookings(long neighborhoodId, Long userId, Long amenityId, int page, int size) {
         LOGGER.debug("Selecting Bookings from userId {}, amenityId {}, and neighborhoodId {}", userId, amenityId, neighborhoodId);
 
         StringBuilder query = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
@@ -96,7 +96,7 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public int countBookings(Long userId, Long amenityId, long neighborhoodId) {
+    public int countBookings(long neighborhoodId, Long userId, Long amenityId) {
         LOGGER.debug("Counting Bookings for userId {}, amenityId {}, and neighborhoodId {}", userId, amenityId, neighborhoodId);
 
         StringBuilder countQuery = new StringBuilder("WITH CountCTE AS (SELECT COUNT(*) FROM ");

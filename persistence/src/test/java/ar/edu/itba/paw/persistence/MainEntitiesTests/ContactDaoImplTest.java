@@ -105,7 +105,7 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
         // Exercise
-        Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, nhKey);
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(nhKey, cKey);
 
         // Validations & Post Conditions
         assertTrue(optionalContact.isPresent());
@@ -119,7 +119,7 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
         // Exercise
-        Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, nhKey);
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalContact.isPresent());
@@ -132,7 +132,7 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
         // Exercise
-        Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, INVALID_ID);
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, cKey);
 
         // Validations & Post Conditions
         assertFalse(optionalContact.isPresent());

@@ -25,7 +25,7 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
 
     @Override
-    public Comment createComment(String commentText, long userId, long postId) {
+    public Comment createComment(long userId, long postId, String commentText) {
         LOGGER.debug("Inserting Comment {}", commentText);
 
         Comment comment = new Comment.Builder()
@@ -47,7 +47,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public Optional<Comment> findComment(long commentId, long postId, long neighborhoodId) {
+    public Optional<Comment> findComment(long neighborhoodId, long postId, long commentId) {
         LOGGER.debug("Selecting Comment with commentId {} and postId {}", commentId, postId);
 
         TypedQuery<Comment> query = em.createQuery(

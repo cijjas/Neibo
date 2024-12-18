@@ -58,9 +58,9 @@ public class AmenityController {
 
     @GET
     public Response listAmenities(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
@@ -98,15 +98,15 @@ public class AmenityController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{amenityId}")
     public Response findAmenity(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final Long id
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("amenityId") @GenericIdConstraint Long amenityId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
 
         // Content
-        Amenity amenity = as.findAmenity(neighborhoodId, id).orElseThrow(NotFoundException::new);
+        Amenity amenity = as.findAmenity(neighborhoodId, amenityId).orElseThrow(NotFoundException::new);
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Cache Control
@@ -125,13 +125,13 @@ public class AmenityController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createAmenity(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @Valid AmenityDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @Valid AmenityDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
         // Creation & HashCode Generation
-        Amenity amenity = as.createAmenity(neighborhoodId, form.getName(), form.getDescription(), extractFirstIds(form.getSelectedShifts()));
+        Amenity amenity = as.createAmenity(neighborhoodId, createForm.getName(), createForm.getDescription(), extractFirstIds(createForm.getSelectedShifts()));
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Resource URN
@@ -143,19 +143,19 @@ public class AmenityController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{amenityId}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
-    public Response updateAmenityPartially(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final Long id,
-            @Valid AmenityDto form
+    public Response updateAmenity(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("amenityId") @GenericIdConstraint Long amenityId,
+            @Valid AmenityDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
 
         // Modification & HashCode Generation
-        final Amenity updatedAmenity = as.updateAmenityPartially(id, form.getName(), form.getDescription(), extractFirstIds(form.getSelectedShifts()));
+        final Amenity updatedAmenity = as.updateAmenityPartially(amenityId, updateForm.getName(), updateForm.getDescription(), extractFirstIds(updateForm.getSelectedShifts()));
         String updatedAmenityHashCode = String.valueOf(updatedAmenity.hashCode());
 
         // Return the updated resource along with the EntityLevelETag
@@ -165,11 +165,11 @@ public class AmenityController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{amenityId}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteAmenity(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final Long amenityId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("amenityId") @GenericIdConstraint Long amenityId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
 

@@ -8,17 +8,17 @@ import java.util.Optional;
 public interface TagMappingDao {
 
     // ---------------------------------------------- TAG MAPPING INSERT ------------------------------------------------------
-    TagMapping createTagMappingDao(long tagId, long neighborhoodId);
+    TagMapping createTagMappingDao(long neighborhoodId, long tagId);
 
     // ---------------------------------------------- TAG MAPPING SELECT ------------------------------------------------------
 
-    Optional<TagMapping> findTagMapping(long tagId, long neighborhoodId);
+    Optional<TagMapping> findTagMapping(long neighborhoodId, long tagId);
 
-    List<TagMapping> getTagMappings(Long tagId, Long neighborhoodId, int page, int size);
+    List<TagMapping> getTagMappings(Long neighborhoodId, Long tagId, int page, int size);
 
-    int countTagMappings(Long tagId, Long neighborhoodId);
+    int countTagMappings(Long neighborhoodId, Long tagId);
 
     // ---------------------------------------------- TAG MAPPING DELETE ------------------------------------------------------
 
-    boolean deleteTagMapping(long tagId, long neighborhoodId);
+    boolean deleteTagMapping(long neighborhoodId, long tagId);
 }

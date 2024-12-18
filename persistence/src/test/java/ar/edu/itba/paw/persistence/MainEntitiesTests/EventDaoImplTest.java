@@ -62,7 +62,7 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Event event = eventDaoImpl.createEvent(EVENT_NAME, EVENT_DESCRIPTION, TestConstants.DATE_1, tKey1, tKey2, nhKey);
+        Event event = eventDaoImpl.createEvent(nhKey, EVENT_NAME, EVENT_DESCRIPTION, TestConstants.DATE_1, tKey1, tKey2);
 
         // Validations & Post Conditions
         em.flush();
@@ -118,7 +118,7 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> optionalEvent = eventDaoImpl.findEvent(eKey, nhKey);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(nhKey, eKey);
 
         // Validations & Post Conditions
         assertTrue(optionalEvent.isPresent());
@@ -134,7 +134,7 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> optionalEvent = eventDaoImpl.findEvent(INVALID_ID, nhKey);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalEvent.isPresent());
@@ -149,7 +149,7 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> optionalEvent = eventDaoImpl.findEvent(eKey, INVALID_ID);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(INVALID_ID, eKey);
 
         // Validations & Post Conditions
         assertFalse(optionalEvent.isPresent());
@@ -183,7 +183,7 @@ public class EventDaoImplTest {
         long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
 
         // Exercise
-        List<Event> eventList = eventDaoImpl.getEvents(DATE_1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Event> eventList = eventDaoImpl.getEvents(nhKey, DATE_1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, eventList.size());
@@ -197,7 +197,7 @@ public class EventDaoImplTest {
         long tKey2 = testInserter.createTime(EVENT_END_TIME);
 
         // Exercise
-        List<Event> eventList = eventDaoImpl.getEvents(NO_DATE, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Event> eventList = eventDaoImpl.getEvents(nhKey, NO_DATE, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(eventList.isEmpty());
@@ -216,7 +216,7 @@ public class EventDaoImplTest {
         long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
 
         // Exercise
-        List<Event> eventList = eventDaoImpl.getEvents(DATE_1, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Event> eventList = eventDaoImpl.getEvents(nhKey, DATE_1, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, eventList.size());
@@ -235,7 +235,7 @@ public class EventDaoImplTest {
         long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, TestConstants.DATE_1);
 
         // Exercise
-        int countEvent = eventDaoImpl.countEvents(DATE_1, nhKey);
+        int countEvent = eventDaoImpl.countEvents(nhKey, DATE_1);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countEvent);
@@ -247,7 +247,7 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        int countEvents = eventDaoImpl.countEvents(NO_DATE, nhKey);
+        int countEvents = eventDaoImpl.countEvents(nhKey, NO_DATE);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countEvents);

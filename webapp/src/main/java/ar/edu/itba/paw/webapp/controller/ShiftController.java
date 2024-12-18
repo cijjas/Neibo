@@ -50,8 +50,8 @@ public class ShiftController {
 
     @GET
     public Response getShifts(
-            @QueryParam("forAmenity") @AmenityURNConstraint final String amenity,
-            @QueryParam("forDate") @DateConstraint final String date
+            @QueryParam("forAmenity") @AmenityURNConstraint String amenity,
+            @QueryParam("forDate") @DateConstraint String date
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
@@ -83,14 +83,14 @@ public class ShiftController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{shiftId}")
     public Response findShift(
-            @PathParam("id") @GenericIdConstraint final long id
+            @PathParam("shiftId") @GenericIdConstraint long shiftId
     ) {
-        LOGGER.info("GET request arrived at '/shifts/{}'", id);
+        LOGGER.info("GET request arrived at '/shifts/{}'", shiftId);
 
         // Content
-        Shift shift = ss.findShift(id).orElseThrow(NotFoundException::new);
+        Shift shift = ss.findShift(shiftId).orElseThrow(NotFoundException::new);
         String shiftHashCode = String.valueOf(shift.hashCode());
 
         // Cache Control

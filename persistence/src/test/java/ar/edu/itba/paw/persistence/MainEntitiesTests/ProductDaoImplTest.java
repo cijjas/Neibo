@@ -77,7 +77,7 @@ public class ProductDaoImplTest {
         long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
 
         // Exercise
-        Product product = productDaoImpl.createProduct(uKey, PRODUCT_NAME_1, PRODUCT_DESCRIPTION, PRODUCT_PRICE, PRODUCT_USED, dKey1, iKey1, iKey2, iKey3, PRODUCT_UNITS);
+        Product product = productDaoImpl.createProduct(uKey, PRODUCT_NAME_1, PRODUCT_DESCRIPTION, PRODUCT_PRICE, PRODUCT_UNITS, PRODUCT_USED, dKey1, iKey1, iKey2, iKey3);
 
         // Validations & Post Conditions
         em.flush();
@@ -139,7 +139,7 @@ public class ProductDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
 
         // Exercise
-        Optional<Product> optionalProduct = productDaoImpl.findProduct(pKey, nhKey);
+        Optional<Product> optionalProduct = productDaoImpl.findProduct(nhKey, pKey);
 
         // Validations & Post Conditions
         assertTrue(optionalProduct.isPresent());
@@ -156,7 +156,7 @@ public class ProductDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
 
         // Exercise
-        Optional<Product> optionalProduct = productDaoImpl.findProduct(INVALID_ID, nhKey);
+        Optional<Product> optionalProduct = productDaoImpl.findProduct(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalProduct.isPresent());
@@ -172,7 +172,7 @@ public class ProductDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
 
         // Exercise
-        Optional<Product> optionalProduct = productDaoImpl.findProduct(pKey, INVALID_ID);
+        Optional<Product> optionalProduct = productDaoImpl.findProduct(INVALID_ID, pKey);
 
         // Validations & Post Conditions
         assertFalse(optionalProduct.isPresent());
@@ -214,7 +214,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, dKey1, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, dKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, productList.size());
@@ -226,7 +226,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, uKey1, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, productList.size());
@@ -276,8 +276,7 @@ public class ProductDaoImplTest {
         // Exercise
         List<Product> productList = productDaoImpl.getProducts(
                 nhKey,
-                dKey1,
-                uKey1,
+                uKey1, dKey1,
                 EMPTY_FIELD,
                 BASE_PAGE,
                 BASE_PAGE_SIZE
@@ -293,7 +292,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, dKey1, EMPTY_FIELD, (long) ProductStatus.BOUGHT.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, dKey1, (long) ProductStatus.BOUGHT.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, productList.size());
@@ -305,7 +304,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, dKey1, EMPTY_FIELD, (long) ProductStatus.SOLD.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, dKey1, (long) ProductStatus.SOLD.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, productList.size());
@@ -317,7 +316,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, dKey1, EMPTY_FIELD, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, dKey1, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, productList.size());
@@ -329,7 +328,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, uKey1, (long) ProductStatus.BOUGHT.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, uKey1, EMPTY_FIELD, (long) ProductStatus.BOUGHT.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, productList.size());
@@ -341,7 +340,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, uKey1, (long) ProductStatus.SOLD.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, uKey1, EMPTY_FIELD, (long) ProductStatus.SOLD.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, productList.size());
@@ -353,7 +352,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, EMPTY_FIELD, uKey1, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, uKey1, EMPTY_FIELD, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, productList.size());
@@ -365,7 +364,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, dKey2, uKey1, (long) ProductStatus.BOUGHT.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, uKey1, dKey2, (long) ProductStatus.BOUGHT.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, productList.size());
@@ -377,7 +376,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, dKey1, uKey1, (long) ProductStatus.SOLD.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, uKey1, dKey1, (long) ProductStatus.SOLD.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, productList.size());
@@ -389,7 +388,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        List<Product> productList = productDaoImpl.getProducts(nhKey, dKey1, uKey1, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<Product> productList = productDaoImpl.getProducts(nhKey, uKey1, dKey1, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, productList.size());
@@ -448,7 +447,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, dKey1, EMPTY_FIELD, EMPTY_FIELD);
+        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, dKey1, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(FOUR_ELEMENTS, countProducts);
@@ -460,7 +459,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, uKey1, EMPTY_FIELD);
+        int countProducts = productDaoImpl.countProducts(nhKey, uKey1, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(SIX_ELEMENTS, countProducts);
@@ -510,8 +509,7 @@ public class ProductDaoImplTest {
         // Exercise
         int countProducts = productDaoImpl.countProducts(
                 nhKey,
-                dKey1,
-                uKey1,
+                uKey1, dKey1,
                 EMPTY_FIELD
         );
 
@@ -525,7 +523,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, dKey1, EMPTY_FIELD, (long) ProductStatus.BOUGHT.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, dKey1, (long) ProductStatus.BOUGHT.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countProducts);
@@ -537,7 +535,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, dKey1, EMPTY_FIELD, (long) ProductStatus.SOLD.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, dKey1, (long) ProductStatus.SOLD.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countProducts);
@@ -549,7 +547,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, dKey1, EMPTY_FIELD, (long) ProductStatus.SELLING.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, dKey1, (long) ProductStatus.SELLING.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countProducts);
@@ -561,7 +559,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, uKey1, (long) ProductStatus.BOUGHT.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, uKey1, EMPTY_FIELD, (long) ProductStatus.BOUGHT.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countProducts);
@@ -573,7 +571,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, uKey1, (long) ProductStatus.SOLD.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, uKey1, EMPTY_FIELD, (long) ProductStatus.SOLD.getId());
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countProducts);
@@ -585,7 +583,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, EMPTY_FIELD, uKey1, (long) ProductStatus.SELLING.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, uKey1, EMPTY_FIELD, (long) ProductStatus.SELLING.getId());
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countProducts);
@@ -597,7 +595,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, dKey2, uKey1, (long) ProductStatus.BOUGHT.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, uKey1, dKey2, (long) ProductStatus.BOUGHT.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countProducts);
@@ -609,7 +607,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, dKey1, uKey1, (long) ProductStatus.SOLD.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, uKey1, dKey1, (long) ProductStatus.SOLD.getId());
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countProducts);
@@ -621,7 +619,7 @@ public class ProductDaoImplTest {
         populateProducts();
 
         // Exercise
-        int countProducts = productDaoImpl.countProducts(nhKey, dKey1, uKey1, (long) ProductStatus.SELLING.getId());
+        int countProducts = productDaoImpl.countProducts(nhKey, uKey1, dKey1, (long) ProductStatus.SELLING.getId());
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countProducts);

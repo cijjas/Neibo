@@ -55,10 +55,10 @@ public class TagController {
 
     @GET
     public Response listTags(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @QueryParam("onPost") @PostURNConstraint final String post,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam("onPost") @PostURNConstraint String post,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
 
@@ -100,10 +100,10 @@ public class TagController {
     }
 
     @GET
-    @Path("/{id}")
-    public Response findTags(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long tagId
+    @Path("/{tagId}")
+    public Response findTag(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("tagId") @GenericIdConstraint long tagId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
@@ -126,13 +126,13 @@ public class TagController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createTag(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @Valid TagDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @Valid TagDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
         // Creation & HashCode Generation
-        final Tag tag = ts.createTag(neighborhoodId, form.getName());
+        final Tag tag = ts.createTag(neighborhoodId, createForm.getName());
         String tagHashCode = String.valueOf(tag.hashCode());
 
         // Resource URN
@@ -148,11 +148,11 @@ public class TagController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{tagId}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
-    public Response deleteById(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long tagId
+    public Response deleteTag(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("tagId") @GenericIdConstraint long tagId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 

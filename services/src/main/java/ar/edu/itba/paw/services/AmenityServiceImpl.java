@@ -33,8 +33,7 @@ public class AmenityServiceImpl implements AmenityService {
     private final UserDao userDao;
 
     @Autowired
-    public AmenityServiceImpl(final AmenityDao amenityDao, final AvailabilityDao availabilityDao,
-                              final EmailService emailService, UserDao userDao) {
+    public AmenityServiceImpl(AmenityDao amenityDao, AvailabilityDao availabilityDao, EmailService emailService, UserDao userDao) {
         this.availabilityDao = availabilityDao;
         this.amenityDao = amenityDao;
         this.emailService = emailService;
@@ -47,18 +46,18 @@ public class AmenityServiceImpl implements AmenityService {
     public Amenity createAmenity(long neighborhoodId, String name, String description, List<Long> selectedShiftsIds) {
         LOGGER.info("Creating Amenity {}", name);
 
-        Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
+        Amenity amenity = amenityDao.createAmenity(neighborhoodId, description, name);
         if (selectedShiftsIds != null)
             for (Long shiftId : selectedShiftsIds)
-                availabilityDao.createAvailability(amenity.getAmenityId(), shiftId);
+                availabilityDao.createAvailability(shiftId, amenity.getAmenityId());
 
         emailService.sendBatchNewAmenityMail(neighborhoodId, name, description);
 
         // todo: This should be refactored into using the sendBatchEmail method, and by consequence the service test >:(
         int size = 500;
-        int totalPages = PaginationUtils.calculatePages(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId), size);
+        int totalPages = PaginationUtils.calculatePages(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId()), size);
         for (int page = 1; page <= totalPages; page++) {
-            List<User> users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
+            List<User> users = userDao.getUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId(), page, size);
             if (!users.isEmpty())
                 emailService.sendNewAmenityMail(neighborhoodId, name, description, users);
         }
@@ -73,7 +72,7 @@ public class AmenityServiceImpl implements AmenityService {
     public Optional<Amenity> findAmenity(long neighborhoodId, long amenityId) {
         LOGGER.info("Finding Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
 
-        return amenityDao.findAmenity(amenityId, neighborhoodId);
+        return amenityDao.findAmenity(neighborhoodId, amenityId);
     }
 
     @Override
@@ -110,7 +109,7 @@ public class AmenityServiceImpl implements AmenityService {
             List<Shift> currentShifts = amenity.getAvailableShifts();
             if (shiftIds.isEmpty()) // If the provided shiftIds list is empty, remove all availabilities for the amenity
                 for (Shift shift : currentShifts)
-                    availabilityDao.deleteAvailability(amenityId, shift.getShiftId());
+                    availabilityDao.deleteAvailability(shift.getShiftId(), amenityId);
             else {
                 Set<Long> currentShiftIds = currentShifts.stream()
                         .map(Shift::getShiftId)
@@ -125,11 +124,11 @@ public class AmenityServiceImpl implements AmenityService {
                 shiftsToAdd.removeAll(currentShiftIds);
 
                 for (Long id : shiftsToRemove)
-                    availabilityDao.deleteAvailability(amenityId, id);
+                    availabilityDao.deleteAvailability(id, amenityId);
 
                 for (Long id : shiftsToAdd)
-                    availabilityDao.findAvailability(amenityId, id)
-                            .orElseGet(() -> availabilityDao.createAvailability(amenityId, id));
+                    availabilityDao.findAvailability(id, amenityId)
+                            .orElseGet(() -> availabilityDao.createAvailability(id, amenityId));
             }
         }
 

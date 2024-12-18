@@ -64,7 +64,7 @@ public class TagMappingDaoImplTest {
         long tKey = testInserter.createTag();
 
         // Exercise
-        TagMapping tagMapping = tagMappingDaoImpl.createTagMappingDao(tKey, nhKey);
+        TagMapping tagMapping = tagMappingDaoImpl.createTagMappingDao(nhKey, tKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -84,7 +84,7 @@ public class TagMappingDaoImplTest {
         testInserter.createTagMapping(nhKey1, tKey1);
 
 	    // Exercise
-	    Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(tKey1, nhKey1);
+	    Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(nhKey1, tKey1);
 
 	    // Validations & Post Conditions
 	    assertTrue(optionalTagMapping.isPresent());
@@ -100,7 +100,7 @@ public class TagMappingDaoImplTest {
         testInserter.createTagMapping(nhKey1, tKey1);
 
         // Exercise
-        Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(INVALID_ID, nhKey1);
+        Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(nhKey1, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalTagMapping.isPresent());
@@ -114,7 +114,7 @@ public class TagMappingDaoImplTest {
         testInserter.createTagMapping(nhKey1, tKey1);
 
         // Exercise
-        Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(tKey1, INVALID_ID);
+        Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(INVALID_ID, tKey1);
 
         // Validations & Post Conditions
         assertFalse(optionalTagMapping.isPresent());
@@ -154,7 +154,7 @@ public class TagMappingDaoImplTest {
         populateTagMappings();
 
         // Exercise
-        List<TagMapping> tagMappingsList = tagMappingDaoImpl.getTagMappings(tKey2, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<TagMapping> tagMappingsList = tagMappingDaoImpl.getTagMappings(EMPTY_FIELD, tKey2, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, tagMappingsList.size());
@@ -166,7 +166,7 @@ public class TagMappingDaoImplTest {
         populateTagMappings();
 
         // Exercise
-        List<TagMapping> tagMappingsList = tagMappingDaoImpl.getTagMappings(EMPTY_FIELD, nhKey2, BASE_PAGE, BASE_PAGE_SIZE);
+        List<TagMapping> tagMappingsList = tagMappingDaoImpl.getTagMappings(nhKey2, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, tagMappingsList.size());
@@ -178,7 +178,7 @@ public class TagMappingDaoImplTest {
         populateTagMappings();
 
         // Exercise
-        List<TagMapping> tagMappingsList = tagMappingDaoImpl.getTagMappings(tKey1, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<TagMapping> tagMappingsList = tagMappingDaoImpl.getTagMappings(nhKey1, tKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, tagMappingsList.size());
@@ -241,7 +241,7 @@ public class TagMappingDaoImplTest {
         populateTagMappings();
 
         // Exercise
-        int countLikes = tagMappingDaoImpl.countTagMappings(tKey2, EMPTY_FIELD);
+        int countLikes = tagMappingDaoImpl.countTagMappings(EMPTY_FIELD, tKey2);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countLikes);
@@ -253,7 +253,7 @@ public class TagMappingDaoImplTest {
         populateTagMappings();
 
         // Exercise
-        int countLikes = tagMappingDaoImpl.countTagMappings(EMPTY_FIELD, nhKey2);
+        int countLikes = tagMappingDaoImpl.countTagMappings(nhKey2, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countLikes);
@@ -265,7 +265,7 @@ public class TagMappingDaoImplTest {
         populateTagMappings();
 
         // Exercise
-        int countLikes = tagMappingDaoImpl.countTagMappings(tKey1, nhKey1);
+        int countLikes = tagMappingDaoImpl.countTagMappings(nhKey1, tKey1);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countLikes);
@@ -300,7 +300,7 @@ public class TagMappingDaoImplTest {
         testInserter.createTagMapping(nhKey1, tKey1);
 
         // Exercise
-        boolean deleted = tagMappingDaoImpl.deleteTagMapping(tKey1, nhKey1);
+        boolean deleted = tagMappingDaoImpl.deleteTagMapping(nhKey1, tKey1);
 
         // Validations & Post Conditions
         em.flush();
@@ -319,7 +319,7 @@ public class TagMappingDaoImplTest {
         testInserter.createTagMapping(nhKey1, tKey1);
 
         // Exercise
-        boolean deleted = tagMappingDaoImpl.deleteTagMapping(INVALID_ID, nhKey1);
+        boolean deleted = tagMappingDaoImpl.deleteTagMapping(nhKey1, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
@@ -337,7 +337,7 @@ public class TagMappingDaoImplTest {
         testInserter.createTagMapping(nhKey1, tKey1);
 
         // Exercise
-        boolean deleted = tagMappingDaoImpl.deleteTagMapping(tKey1, INVALID_ID);
+        boolean deleted = tagMappingDaoImpl.deleteTagMapping(INVALID_ID, tKey1);
 
         // Validations & Post Conditions
         em.flush();

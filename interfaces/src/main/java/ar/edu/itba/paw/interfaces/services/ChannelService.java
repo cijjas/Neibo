@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ChannelService {
 
-    Channel createChannel(long neighborhoodId, final String name);
+    Channel createChannel(long neighborhoodId, String name);
 
     // -----------------------------------------------------------------------------------------------------------------
 

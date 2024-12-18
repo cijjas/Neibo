@@ -25,7 +25,7 @@ public class BookingServiceImpl implements BookingService {
     private final AvailabilityDao availabilityDao;
 
     @Autowired
-    public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao) {
+    public BookingServiceImpl(BookingDao bookingDao, AvailabilityDao availabilityDao) {
         this.availabilityDao = availabilityDao;
         this.bookingDao = bookingDao;
     }
@@ -36,7 +36,7 @@ public class BookingServiceImpl implements BookingService {
     public Booking createBooking(long shift, long user, long amenity, Date reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenity, reservationDate, user);
 
-        Availability availability = availabilityDao.findAvailability(amenity, shift).orElseThrow(NotFoundException::new);
+        Availability availability = availabilityDao.findAvailability(shift, amenity).orElseThrow(NotFoundException::new);
 
         return bookingDao.createBooking(user, availability.getAmenityAvailabilityId(), reservationDate);
     }
@@ -56,7 +56,7 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getBookings(long neighborhoodId, Long userId, Long amenityId, int page, int size) {
         LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
-        return bookingDao.getBookings(userId, amenityId, neighborhoodId, page, size);
+        return bookingDao.getBookings(neighborhoodId, userId, amenityId, page, size);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
     public int calculateBookingPages(long neighborhoodId, Long amenityId, Long userId, int size) {
         LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId, neighborhoodId), size);
+        return PaginationUtils.calculatePages(bookingDao.countBookings(neighborhoodId, userId, amenityId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -40,7 +40,7 @@ public class ReviewServiceImpl implements ReviewService {
     public Optional<Review> findReview(long workerId, long reviewId) {
         LOGGER.info("Finding Review {} from Worker {}", reviewId, workerId);
 
-        return reviewDao.findReview(reviewId, workerId);
+        return reviewDao.findReview(workerId, reviewId);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentDao commentDao;
 
     @Autowired
-    public CommentServiceImpl(final CommentDao commentDao) {
+    public CommentServiceImpl(CommentDao commentDao) {
         this.commentDao = commentDao;
     }
 
@@ -30,7 +30,7 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(long user, long postId, String comment) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, user, postId);
 
-        return commentDao.createComment(comment, user, postId);
+        return commentDao.createComment(user, postId, comment);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     public Optional<Comment> findComment(long neighborhoodId, long postId, long commentId) {
         LOGGER.info("Finding Comment {} in Post {} from Neighborhood {}", commentId, postId, neighborhoodId);
 
-        return commentDao.findComment(commentId, postId, neighborhoodId);
+        return commentDao.findComment(neighborhoodId, postId, commentId);
     }
 
     @Override

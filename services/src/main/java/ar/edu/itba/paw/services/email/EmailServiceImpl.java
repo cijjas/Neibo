@@ -101,7 +101,7 @@ public class EmailServiceImpl implements EmailService {
 
         Map<String, Object> variables = new HashMap<>();
         // There is only one admin per neighborhood, maybe using size 1 could be better?
-        List<User> admins = userDao.getUsers((long) UserRole.ADMINISTRATOR.getId(), neighborhoodId, 1, 10);
+        List<User> admins = userDao.getUsers(neighborhoodId, (long) UserRole.ADMINISTRATOR.getId(), 1, 10);
         // This logic is scuffed
         Neighborhood neighborhood = neighborhoodDao.findNeighborhood(neighborhoodId).orElse(null);
         assert neighborhood != null;
@@ -179,8 +179,8 @@ public class EmailServiceImpl implements EmailService {
 
                 do {
                     // Fetch events for the specified day with pagination
-                    dayEvents = eventDao.getEvents(date, neighborhoodId, page, size);
-                    allEvents.addAll(eventDao.getEvents(date, neighborhoodId, page, size));
+                    dayEvents = eventDao.getEvents(neighborhoodId, date, page, size);
+                    allEvents.addAll(eventDao.getEvents(neighborhoodId, date, page, size));
                     page++;
                 } while (dayEvents.size() == size); // Continue fetching next page if the current page is full
             }
@@ -260,7 +260,7 @@ public class EmailServiceImpl implements EmailService {
 
             do {
                 // Fetch events for the next day with pagination
-                events = eventDao.getEvents(nextDay, neighborhoodId, page, size);
+                events = eventDao.getEvents(neighborhoodId, nextDay, page, size);
                 allEvents.addAll(events);
                 page++;
             } while (events.size() == size); // Continue fetching next page if the current page is full
@@ -432,7 +432,7 @@ public class EmailServiceImpl implements EmailService {
         int size = DEFAULT_SIZE;
         do {
             // Fetch users in batches
-            users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
+            users = userDao.getUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId(), page, size);
 
             // Send email with the current batch of users
             if (!users.isEmpty()) {

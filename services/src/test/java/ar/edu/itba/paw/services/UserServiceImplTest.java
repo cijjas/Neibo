@@ -48,8 +48,8 @@ public class UserServiceImplTest {
         Language expectedLanguage = Language.fromId(languageId);
         User mockUser = mock(User.class);
 
-        when(userDao.createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId), eq(expectedLanguage),
-                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification)))
+        when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(expectedLanguage),
+                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR)))
                 .thenReturn(mockUser);
 
         when(userDao.findUser(email)).thenReturn(Optional.empty());
@@ -59,8 +59,8 @@ public class UserServiceImplTest {
         User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
-        verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
-                eq(expectedLanguage), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification));
+        verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
+                eq(identification), eq(expectedLanguage), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR));
         verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR));
         assertNotNull(result);
         assertEquals(mockUser, result);
@@ -80,8 +80,8 @@ public class UserServiceImplTest {
         Language defaultLanguage = Language.ENGLISH;
         User mockUser = mock(User.class);
 
-        when(userDao.createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId), eq(defaultLanguage),
-                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification)))
+        when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(defaultLanguage),
+                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR)))
                 .thenReturn(mockUser);
 
         when(userDao.findUser(email)).thenReturn(Optional.empty());
@@ -91,8 +91,8 @@ public class UserServiceImplTest {
         User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
-        verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
-                eq(defaultLanguage), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification));
+        verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
+                eq(identification), eq(defaultLanguage), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR));
         verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR));
         assertNotNull(result);
         assertEquals(mockUser, result);
@@ -112,8 +112,8 @@ public class UserServiceImplTest {
         User mockUser = mock(User.class);
 
         when(userDao.findUser(email)).thenReturn(Optional.empty());
-        when(userDao.createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId), eq(Language.ENGLISH),
-                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification)))
+        when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(Language.ENGLISH),
+                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR)))
                 .thenReturn(mockUser);
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
@@ -121,8 +121,8 @@ public class UserServiceImplTest {
         User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
-        verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
-                eq(Language.ENGLISH), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification));
+        verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
+                eq(identification), eq(Language.ENGLISH), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR));
         verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR)); // sendNewUserMail is called
         assertNotNull(result);
         assertEquals(mockUser, result);
@@ -142,8 +142,8 @@ public class UserServiceImplTest {
         User mockUser = mock(User.class);
 
         when(userDao.findUser(email)).thenReturn(Optional.empty());
-        when(userDao.createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId), eq(Language.ENGLISH),
-                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification)))
+        when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(Language.ENGLISH),
+                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR)))
                 .thenReturn(mockUser);
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
@@ -151,8 +151,8 @@ public class UserServiceImplTest {
         User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
 
         // Validation & Post Conditions
-        verify(userDao, times(1)).createUser(eq(email), anyString(), eq(name), eq(surname), eq(neighborhoodId),
-                eq(Language.ENGLISH), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR), eq(identification));
+        verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
+                eq(identification), eq(Language.ENGLISH), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR));
         verify(emailService, times(0)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR)); // sendNewUserMail not called
         assertNotNull(result);
         assertEquals(mockUser, result);

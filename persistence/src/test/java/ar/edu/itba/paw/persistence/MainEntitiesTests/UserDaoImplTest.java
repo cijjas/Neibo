@@ -70,7 +70,7 @@ public class UserDaoImplTest {
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
 
         // Exercise
-        User user = userDaoImpl.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER);
+        User user = userDaoImpl.createUser(nhKey1, USER_MAIL_1, USER_NAME, USER_SURNAME, USER_PASSWORD, USER_IDENTIFICATION_NUMBER, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE);
 
         // Validations & Post Conditions
         em.flush();
@@ -122,7 +122,7 @@ public class UserDaoImplTest {
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
-        Optional<User> optionalUser = userDaoImpl.findUser(uKey1, nhKey1);
+        Optional<User> optionalUser = userDaoImpl.findUser(nhKey1, uKey1);
 
         // Validations
         assertTrue(optionalUser.isPresent());
@@ -136,7 +136,7 @@ public class UserDaoImplTest {
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
-        Optional<User> optionalUser = userDaoImpl.findUser(INVALID_ID, nhKey1);
+        Optional<User> optionalUser = userDaoImpl.findUser(nhKey1, INVALID_ID);
 
         // Validations
         assertFalse(optionalUser.isPresent());
@@ -149,7 +149,7 @@ public class UserDaoImplTest {
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
-        Optional<User> optionalUser = userDaoImpl.findUser(uKey1, INVALID_ID);
+        Optional<User> optionalUser = userDaoImpl.findUser(INVALID_ID, uKey1);
 
         // Validations
         assertFalse(optionalUser.isPresent());
@@ -237,7 +237,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers(EMPTY_FIELD, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> userList = userDaoImpl.getUsers(nhKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(SIX_ELEMENTS, userList.size());
@@ -249,7 +249,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers((long) UserRole.NEIGHBOR.getId(), nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> userList = userDaoImpl.getUsers(nhKey1, (long) UserRole.NEIGHBOR.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(THREE_ELEMENTS, userList.size());
@@ -261,7 +261,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers((long) UserRole.UNVERIFIED_NEIGHBOR.getId(), nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> userList = userDaoImpl.getUsers(nhKey1, (long) UserRole.UNVERIFIED_NEIGHBOR.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(TWO_ELEMENTS, userList.size());
@@ -273,7 +273,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers((long) UserRole.ADMINISTRATOR.getId(), nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> userList = userDaoImpl.getUsers(nhKey1, (long) UserRole.ADMINISTRATOR.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(ONE_ELEMENT, userList.size());
@@ -284,7 +284,7 @@ public class UserDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers(EMPTY_FIELD, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> userList = userDaoImpl.getUsers(nhKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(NO_ELEMENTS, userList.size());
@@ -301,7 +301,7 @@ public class UserDaoImplTest {
         uKey4 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, DATE_1);
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers(EMPTY_FIELD, nhKey1, TEST_PAGE, TEST_PAGE_SIZE);
+        List<User> userList = userDaoImpl.getUsers(nhKey1, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations
         assertEquals(ONE_ELEMENT, userList.size());
@@ -315,7 +315,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        int countUser = userDaoImpl.countUsers(EMPTY_FIELD, nhKey1);
+        int countUser = userDaoImpl.countUsers(nhKey1, EMPTY_FIELD);
 
         // Validations
         assertEquals(SIX_ELEMENTS, countUser);
@@ -327,7 +327,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        int countUser = userDaoImpl.countUsers((long) UserRole.NEIGHBOR.getId(), nhKey1);
+        int countUser = userDaoImpl.countUsers(nhKey1, (long) UserRole.NEIGHBOR.getId());
 
         // Validations
         assertEquals(THREE_ELEMENTS, countUser);
@@ -339,7 +339,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        int countUser = userDaoImpl.countUsers((long) UserRole.UNVERIFIED_NEIGHBOR.getId(), nhKey1);
+        int countUser = userDaoImpl.countUsers(nhKey1, (long) UserRole.UNVERIFIED_NEIGHBOR.getId());
 
         // Validations
         assertEquals(TWO_ELEMENTS, countUser);
@@ -351,7 +351,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        int countUser = userDaoImpl.countUsers((long) UserRole.ADMINISTRATOR.getId(), nhKey1);
+        int countUser = userDaoImpl.countUsers(nhKey1, (long) UserRole.ADMINISTRATOR.getId());
 
         // Validations
         assertEquals(ONE_ELEMENT, countUser);
@@ -362,7 +362,7 @@ public class UserDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int countUser = userDaoImpl.countUsers(EMPTY_FIELD, nhKey1);
+        int countUser = userDaoImpl.countUsers(nhKey1, EMPTY_FIELD);
 
         // Validations
         assertEquals(NO_ELEMENTS, countUser);

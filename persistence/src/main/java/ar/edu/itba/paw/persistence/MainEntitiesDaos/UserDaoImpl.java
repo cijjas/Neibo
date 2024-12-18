@@ -25,8 +25,8 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 
     @Override
-    public User createUser(final String mail, final String password, final String name, final String surname,
-                           final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) {
+    public User createUser(long neighborhoodId, String mail, String name, String surname, String password,
+                           int identification, Language language, boolean darkMode, UserRole role) {
         LOGGER.debug("Inserting User {}", mail);
 
         User user = new User.Builder()
@@ -47,14 +47,14 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
-    public Optional<User> findUser(final long userId) {
+    public Optional<User> findUser(long userId) {
         LOGGER.debug("Selecting User with Id {}", userId);
 
         return Optional.ofNullable(em.find(User.class, userId));
     }
 
     @Override
-    public Optional<User> findUser(final long userId, long neighborhoodId) {
+    public Optional<User> findUser(long neighborhoodId, long userId) {
         LOGGER.debug("Selecting User with userId {}, neighborhoodId {}", userId, neighborhoodId);
 
         TypedQuery<User> query = em.createQuery(
@@ -70,7 +70,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUser(final String mail) {
+    public Optional<User> findUser(String mail) {
         LOGGER.debug("Selecting User with mail {}", mail);
         TypedQuery<User> query = em.createQuery("FROM User WHERE mail = :mail", User.class);
         query.setParameter("mail", mail);
@@ -79,7 +79,7 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public List<User> getUsers(Long userRoleId, long neighborhoodId, int page, int size) {
+    public List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size) {
         LOGGER.debug("Selecting Users with Role {} and from Neighborhood {}", userRoleId, neighborhoodId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -135,7 +135,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int countUsers(Long userRoleId, long neighborhoodId) {
+    public int countUsers(long neighborhoodId, Long userRoleId) {
         LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", userRoleId, neighborhoodId);
 
         StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");

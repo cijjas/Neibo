@@ -19,7 +19,7 @@ public class LikeServiceImpl implements LikeService {
     private final LikeDao likeDao;
 
     @Autowired
-    public LikeServiceImpl(final LikeDao likeDao) {
+    public LikeServiceImpl(LikeDao likeDao) {
         this.likeDao = likeDao;
     }
 
@@ -29,7 +29,7 @@ public class LikeServiceImpl implements LikeService {
     public Like createLike(long userId, long postId) {
         LOGGER.info("Creating Like for Post {} by User {}", postId, userId);
 
-        return likeDao.createLike(postId, userId);
+        return likeDao.createLike(userId, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ public class LikeServiceImpl implements LikeService {
     public List<Like> getLikes(Long userId, Long postId, int page, int size) {
         LOGGER.info("Getting Likes for Post {} by User {}", postId, userId);
 
-        return likeDao.getLikes(postId, userId, page, size);
+        return likeDao.getLikes(userId, postId, page, size);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class LikeServiceImpl implements LikeService {
     public int calculateLikePages(Long userId, Long postId, int size) {
         LOGGER.info("Calculating Like Pages for Post {} by User {}", userId, postId);
 
-        return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId), size);
+        return PaginationUtils.calculatePages(likeDao.countLikes(userId, postId), size);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class LikeServiceImpl implements LikeService {
     public int countLikes(Long userId, Long postId) {
         LOGGER.info("Counting Likes for Post {} by User {}", userId, postId);
 
-        return likeDao.countLikes(postId, userId);
+        return likeDao.countLikes(userId, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -64,6 +64,6 @@ public class LikeServiceImpl implements LikeService {
     public boolean deleteLike(Long userId, Long postId) {
         LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
 
-        return likeDao.deleteLike(postId, userId);
+        return likeDao.deleteLike(userId, postId);
     }
 }

@@ -56,9 +56,9 @@ public class ReviewController {
 
     @GET
     public Response listReviews(
-            @PathParam("workerId") @WorkerIdConstraint final long workerId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("workerId") @WorkerIdConstraint long workerId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
 
@@ -99,7 +99,7 @@ public class ReviewController {
     @GET
     @Path("/average")
     public Response averageReviews(
-            @PathParam("workerId") @WorkerIdConstraint final long workerId
+            @PathParam("workerId") @WorkerIdConstraint long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/average'", workerId);
 
@@ -122,15 +122,15 @@ public class ReviewController {
                 .build();
     }
     @GET
-    @Path("/{id}")
+    @Path("/{reviewId}")
     public Response findReview(
-            @PathParam("workerId") @WorkerIdConstraint final long workerId,
-            @PathParam("id") @GenericIdConstraint final long id
+            @PathParam("workerId") @WorkerIdConstraint long workerId,
+            @PathParam("reviewId") @GenericIdConstraint long reviewId
     ) {
-        LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
+        LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 
         // Content
-        Review review = rs.findReview(workerId, id).orElseThrow(NotFoundException::new);
+        Review review = rs.findReview(workerId, reviewId).orElseThrow(NotFoundException::new);
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Cache Control
@@ -148,15 +148,15 @@ public class ReviewController {
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
-    @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #form.user)")
+    @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #createForm.user)")
     public Response createReview(
-            @PathParam("workerId") @WorkerIdConstraint final long workerId,
-            @Valid ReviewDto form
+            @PathParam("workerId") @WorkerIdConstraint long workerId,
+            @Valid ReviewDto createForm
     ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
         // Creation & HashCode Generation
-        final Review review = rs.createReview(workerId, extractSecondId(form.getUser()), form.getRating(), form.getMessage());
+        final Review review = rs.createReview(workerId, extractSecondId(createForm.getUser()), createForm.getRating(), createForm.getMessage());
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Resource URN
@@ -168,11 +168,11 @@ public class ReviewController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{reviewId}")
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     public Response deleteReview(
-            @PathParam("workerId") @WorkerIdConstraint final long workerId,
-            @PathParam("id") @GenericIdConstraint final long reviewId
+            @PathParam("workerId") @WorkerIdConstraint long workerId,
+            @PathParam("reviewId") @GenericIdConstraint long reviewId
     ) {
         LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 

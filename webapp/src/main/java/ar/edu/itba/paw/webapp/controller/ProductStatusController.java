@@ -66,14 +66,14 @@ public class ProductStatusController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{productStatusId}")
     public Response findProductStatus(
-            @PathParam("id") @GenericIdConstraint final Long id
+            @PathParam("productStatusId") @GenericIdConstraint Long productStatusId
     ) {
-        LOGGER.info("GET request arrived at '/product-statuses/{}'", id);
+        LOGGER.info("GET request arrived at '/product-statuses/{}'", productStatusId);
 
         // Content
-        ProductStatus productStatus = ProductStatus.fromId(id);
+        ProductStatus productStatus = ProductStatus.fromId(productStatusId);
         String productStatusHashCode = String.valueOf(productStatus.hashCode());
 
         // Cache Control

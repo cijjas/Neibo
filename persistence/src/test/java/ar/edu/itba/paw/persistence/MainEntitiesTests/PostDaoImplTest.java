@@ -87,7 +87,7 @@ public class PostDaoImplTest {
         long iKey = testInserter.createImage();
 
         // Exercise
-        Post post = postDaoImpl.createPost(POST_TITLE_1, POST_DESCRIPTION_1, uKey, chKey, iKey);
+        Post post = postDaoImpl.createPost(uKey, POST_TITLE_1, POST_DESCRIPTION_1, chKey, iKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -145,7 +145,7 @@ public class PostDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Optional<Post> optionalPost = postDaoImpl.findPost(pKey, nhKey);
+        Optional<Post> optionalPost = postDaoImpl.findPost(nhKey, pKey);
 
         // Validations
         assertTrue(optionalPost.isPresent());
@@ -162,7 +162,7 @@ public class PostDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Optional<Post> optionalPost = postDaoImpl.findPost(INVALID_ID, nhKey);
+        Optional<Post> optionalPost = postDaoImpl.findPost(nhKey, INVALID_ID);
 
         // Validations
         assertFalse(optionalPost.isPresent());
@@ -178,7 +178,7 @@ public class PostDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Optional<Post> optionalPost = postDaoImpl.findPost(pKey, INVALID_ID);
+        Optional<Post> optionalPost = postDaoImpl.findPost(INVALID_ID, pKey);
 
         // Validations
         assertFalse(optionalPost.isPresent());
@@ -208,7 +208,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+        List<Post> postList = postDaoImpl.getPosts(nhKey1, EMPTY_FIELD, EMPTY_FIELD, Collections.emptyList(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(FOUR_ELEMENTS, postList.size());
@@ -220,7 +220,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+        List<Post> postList = postDaoImpl.getPosts(nhKey1, EMPTY_FIELD, chKey1, Collections.emptyList(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(THREE_ELEMENTS, postList.size());
@@ -234,7 +234,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey2);
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+        List<Post> postList = postDaoImpl.getPosts(nhKey2, EMPTY_FIELD, EMPTY_FIELD, TAG_LIST, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(TWO_ELEMENTS, postList.size());
@@ -246,7 +246,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+        List<Post> postList = postDaoImpl.getPosts(nhKey1, uKey1, EMPTY_FIELD, Collections.emptyList(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(THREE_ELEMENTS, postList.size());
@@ -260,7 +260,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey2);
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(chKey2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+        List<Post> postList = postDaoImpl.getPosts(nhKey2, EMPTY_FIELD, chKey2, TAG_LIST, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(TWO_ELEMENTS, postList.size());
@@ -272,7 +272,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+        List<Post> postList = postDaoImpl.getPosts(nhKey1, uKey1, chKey1, Collections.emptyList(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(TWO_ELEMENTS, postList.size());
@@ -286,7 +286,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey1);
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+        List<Post> postList = postDaoImpl.getPosts(nhKey1, uKey1, EMPTY_FIELD, TAG_LIST, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(ONE_ELEMENT, postList.size());
@@ -300,7 +300,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey1);
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+        List<Post> postList = postDaoImpl.getPosts(nhKey1, uKey1, chKey1, TAG_LIST, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(ONE_ELEMENT, postList.size());
@@ -311,7 +311,7 @@ public class PostDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+        List<Post> postList = postDaoImpl.getPosts(nhKey1, EMPTY_FIELD, EMPTY_FIELD, Collections.emptyList(), EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertTrue(postList.isEmpty());
@@ -327,7 +327,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey2);
 
         // Exercise
-        List<Post> postList = postDaoImpl.getPosts(chKey2, TEST_PAGE, TEST_PAGE_SIZE, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+        List<Post> postList = postDaoImpl.getPosts(nhKey2, EMPTY_FIELD, chKey2, TAG_LIST, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations
         assertEquals(ONE_ELEMENT, postList.size());
@@ -342,7 +342,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+        int countPosts = postDaoImpl.countPosts(nhKey1, EMPTY_FIELD, EMPTY_FIELD, Collections.emptyList(), EMPTY_FIELD);
 
         // Validations
         assertEquals(FOUR_ELEMENTS, countPosts);
@@ -354,7 +354,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(chKey1, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+        int countPosts = postDaoImpl.countPosts(nhKey1, EMPTY_FIELD, chKey1, Collections.emptyList(), EMPTY_FIELD);
 
         // Validations
         assertEquals(THREE_ELEMENTS, countPosts);
@@ -368,7 +368,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey2);
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+        int countPosts = postDaoImpl.countPosts(nhKey2, EMPTY_FIELD, EMPTY_FIELD, TAG_LIST, EMPTY_FIELD);
 
         // Validations
         assertEquals(TWO_ELEMENTS, countPosts);
@@ -380,7 +380,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+        int countPosts = postDaoImpl.countPosts(nhKey1, uKey1, EMPTY_FIELD, Collections.emptyList(), EMPTY_FIELD);
 
         // Validations
         assertEquals(THREE_ELEMENTS, countPosts);
@@ -394,7 +394,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey2);
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(chKey2, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+        int countPosts = postDaoImpl.countPosts(nhKey2, EMPTY_FIELD, chKey2, TAG_LIST, EMPTY_FIELD);
 
         // Validations
         assertEquals(TWO_ELEMENTS, countPosts);
@@ -406,7 +406,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(chKey1, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+        int countPosts = postDaoImpl.countPosts(nhKey1, uKey1, chKey1, Collections.emptyList(), EMPTY_FIELD);
 
         // Validations
         assertEquals(TWO_ELEMENTS, countPosts);
@@ -420,7 +420,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey1);
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+        int countPosts = postDaoImpl.countPosts(nhKey1, uKey1, EMPTY_FIELD, TAG_LIST, EMPTY_FIELD);
 
         // Validations
         assertEquals(ONE_ELEMENT, countPosts);
@@ -434,7 +434,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(tKey1);
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(chKey1, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+        int countPosts = postDaoImpl.countPosts(nhKey1, uKey1, chKey1, TAG_LIST, EMPTY_FIELD);
 
         // Validations
         assertEquals(ONE_ELEMENT, countPosts);
@@ -445,7 +445,7 @@ public class PostDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+        int countPosts = postDaoImpl.countPosts(nhKey1, EMPTY_FIELD, EMPTY_FIELD, Collections.emptyList(), EMPTY_FIELD);
 
         // Validations
         assertEquals(NO_ELEMENTS, countPosts);
@@ -463,7 +463,7 @@ public class PostDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        boolean deleted = postDaoImpl.deletePost(pKey);
+        boolean deleted = postDaoImpl.deletePost(nhKey, pKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -481,13 +481,46 @@ public class PostDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        boolean deleted = postDaoImpl.deletePost(INVALID_ID);
+        boolean deleted = postDaoImpl.deletePost(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
     }
 
+    @Test
+    public void delete_postId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        boolean deleted = postDaoImpl.deletePost(INVALID_ID, pKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_postId_invalid_neighborhoodId_postId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        boolean deleted = postDaoImpl.deletePost(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
     // ----------------------------------------------- POPULATION ------------------------------------------------------
 
     private void populatePosts() {

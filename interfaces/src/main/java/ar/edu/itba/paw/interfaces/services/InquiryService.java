@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface InquiryService {
 
-    Inquiry createInquiry(long userId, final long productId, final String message);
+    Inquiry createInquiry(long userId, long productId, String message);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Inquiry> findInquiry(final long inquiryId);
+    Optional<Inquiry> findInquiry(long inquiryId);
 
-    Optional<Inquiry> findInquiry(long neighborhoodId, long productId, final long inquiryId);
+    Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId);
 
     List<Inquiry> getInquiries(long neighborhoodId, long productId, int size, int page);
 
@@ -21,9 +21,9 @@ public interface InquiryService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Inquiry replyInquiry(final long inquiryId, final String reply);
+    Inquiry replyInquiry(long inquiryId, String reply);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteInquiry(final long neighborhoodId, final long productId, final long inquiryId);
+    boolean deleteInquiry(long neighborhoodId, long productId, long inquiryId);
 }

@@ -58,7 +58,7 @@ public class ChannelMappingDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        ChannelMapping channelMapping = channelMappingDaoImpl.createChannelMapping(chKey, nhKey);
+        ChannelMapping channelMapping = channelMappingDaoImpl.createChannelMapping(nhKey, chKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -78,7 +78,7 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey1, chKey1);
 
         // Exercise
-        Optional<ChannelMapping> optionalChannelMapping= channelMappingDaoImpl.findChannelMapping(chKey1, nhKey1);
+        Optional<ChannelMapping> optionalChannelMapping= channelMappingDaoImpl.findChannelMapping(nhKey1, chKey1);
 
         // Validations & Post Conditions
         assertTrue(optionalChannelMapping.isPresent());
@@ -131,7 +131,7 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey1, chKey2);
 
         // Exercise
-        List<ChannelMapping> channelMappingList = channelMappingDaoImpl.getChannelMappings(chKey2, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<ChannelMapping> channelMappingList = channelMappingDaoImpl.getChannelMappings(EMPTY_FIELD, chKey2, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, channelMappingList.size());
@@ -150,7 +150,7 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey1, chKey2);
 
         // Exercise
-        List<ChannelMapping> channelMappingList = channelMappingDaoImpl.getChannelMappings(EMPTY_FIELD, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<ChannelMapping> channelMappingList = channelMappingDaoImpl.getChannelMappings(nhKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, channelMappingList.size());
@@ -168,7 +168,7 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey1, chKey2);
 
         // Exercise
-        List<ChannelMapping> channelMappingList = channelMappingDaoImpl.getChannelMappings(chKey1, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<ChannelMapping> channelMappingList = channelMappingDaoImpl.getChannelMappings(nhKey1, chKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, channelMappingList.size());
@@ -219,7 +219,7 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(chKey, nhKey);
+        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(nhKey, chKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -235,7 +235,7 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(INVALID_ID, nhKey);
+        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(nhKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
@@ -250,7 +250,7 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(chKey, INVALID_ID);
+        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(INVALID_ID, chKey);
 
         // Validations & Post Conditions
         em.flush();

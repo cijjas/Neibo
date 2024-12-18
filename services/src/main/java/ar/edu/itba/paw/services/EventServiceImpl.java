@@ -27,7 +27,7 @@ public class EventServiceImpl implements EventService {
     private final EmailService emailService;
 
     @Autowired
-    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService) {
+    public EventServiceImpl(EventDao eventDao, TimeDao timeDao, EmailService emailService) {
         this.eventDao = eventDao;
         this.timeDao = timeDao;
         this.emailService = emailService;
@@ -44,7 +44,7 @@ public class EventServiceImpl implements EventService {
         Time startTimeEntity = timeDao.findTime(sqlStartTime).orElseGet(() -> timeDao.createTime(sqlStartTime));
         Time endTimeEntity = timeDao.findTime(sqlEndTime).orElseGet(() -> timeDao.createTime(sqlEndTime));
 
-        Event createdEvent = eventDao.createEvent(name, description, date, startTimeEntity.getTimeId(), endTimeEntity.getTimeId(), neighborhoodId);
+        Event createdEvent = eventDao.createEvent(neighborhoodId, name, description, date, startTimeEntity.getTimeId(), endTimeEntity.getTimeId());
 
         emailService.sendBatchEventMail(createdEvent, "event.custom.message2", neighborhoodId);
 
@@ -59,7 +59,7 @@ public class EventServiceImpl implements EventService {
     public Optional<Event> findEvent(long neighborhoodId, long eventId) {
         LOGGER.info("Finding Event {} from Neighborhood {}", eventId, neighborhoodId);
 
-        return eventDao.findEvent(eventId, neighborhoodId);
+        return eventDao.findEvent(neighborhoodId, eventId);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EventServiceImpl implements EventService {
     public List<Event> getEvents(long neighborhoodId, Date date, int page, int size) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
-        return eventDao.getEvents(date, neighborhoodId, page, size);
+        return eventDao.getEvents(neighborhoodId, date, page, size);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class EventServiceImpl implements EventService {
     public int calculateEventPages(long neighborhoodId, Date date, int size) {
         LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
 
-        return PaginationUtils.calculatePages(eventDao.countEvents(date, neighborhoodId), size);
+        return PaginationUtils.calculatePages(eventDao.countEvents(neighborhoodId, date), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

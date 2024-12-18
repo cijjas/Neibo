@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 // MISC
 import { AppComponent } from "./app.component";
 import { routes } from "./app.routes"
-import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 // COMPONENTS
 import { NavbarComponent } from "./components/navbar/navbar.component";
@@ -42,6 +42,7 @@ import { NotFoundComponent } from './modules/not-found/not-found.component';
 import { LoginComponent } from './modules/auth/login/login.component';
 import { CalendarComponent } from './modules/calendar/calendar.component';
 import { UserProfileComponent } from "./modules/user-profile/user-profile.component";
+import { ChooseTimeComponent } from "./modules/choose-time/choose-time.component";
 
 // SERVICES
 import { AuthService } from "./shared/services/index.service";
@@ -50,6 +51,7 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
 
 //PIPES
 import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
+import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
 
 
 @NgModule({
@@ -81,6 +83,7 @@ import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
     CalendarBoxComponent,
     CalendarEventsColumnComponent,
     UserProfileComponent,
+    ChooseTimeComponent
   ],
   imports: [
     BrowserModule,
@@ -92,7 +95,8 @@ import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
     BackgroundDrawingComponent,
     ReactiveFormsModule,
     TimeAgoPipe,
-    AddHoursPipe
+    AddHoursPipe,
+    InfiniteScrollModule
   ],
   providers: [
     AuthService,

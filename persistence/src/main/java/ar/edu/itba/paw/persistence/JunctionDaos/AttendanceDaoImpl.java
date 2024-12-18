@@ -41,7 +41,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
 
     @Override
-    public Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId) {
+    public Optional<Attendance> findAttendance(long neighborhoodId, long userId, long eventId) {
         LOGGER.debug("Selecting Attendance with id {} and neighborhoodId {}", userId, neighborhoodId);
 
         TypedQuery<Attendance> query = em.createQuery(
@@ -112,15 +112,25 @@ public class AttendanceDaoImpl implements AttendanceDao {
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 
     @Override
-    public boolean deleteAttendee(long userId, long eventId) {
-        LOGGER.debug("Deleting Attendance with userId {} and eventId {}", userId, eventId);
+    public boolean deleteAttendee(long neighborhoodId, long eventId, long userId) {
+        LOGGER.debug("Deleting Attendance with userId {}, eventId {}, and neighborhoodId {}", userId, eventId, neighborhoodId);
 
-        Attendance attendance = em.find(Attendance.class, new AttendanceKey(userId, eventId));
-        if (attendance != null) {
-            em.remove(attendance);
-            return true;
-        } else {
-            return false;
-        }
+        String sql = "DELETE FROM events_users " +
+                "WHERE eventid = :eventId " +
+                "  AND userid = :userId " +
+                "  AND eventid IN ( " +
+                "      SELECT e.eventid " +
+                "      FROM events e " +
+                "      WHERE e.eventid = :eventId " +
+                "        AND e.neighborhoodid = :neighborhoodId " +
+                "  )";
+
+        int rowsAffected = em.createNativeQuery(sql)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .setParameter("userId", userId)
+                .setParameter("eventId", eventId)
+                .executeUpdate();
+
+        return rowsAffected > 0;
     }
 }

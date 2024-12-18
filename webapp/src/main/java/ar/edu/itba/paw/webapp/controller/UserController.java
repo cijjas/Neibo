@@ -60,10 +60,10 @@ public class UserController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhoodId)")
     public Response listUsers(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withRole") @UserRoleURNConstraint final String userRole
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam("withRole") @UserRoleURNConstraint String userRole,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
@@ -104,17 +104,17 @@ public class UserController {
     }
 
     @GET
-    @Path("/{id}")
-    @PreAuthorize("@pathAccessControlHelper.canFindUser(#neighborhoodId, #id)")
+    @Path("/{userId}")
+    @PreAuthorize("@pathAccessControlHelper.canFindUser(#neighborhoodId, #userId)")
     public Response findUser(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("userId") @GenericIdConstraint long userId
 
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
 
         // Content
-        User user = us.findUser(neighborhoodId, id).orElseThrow(NotFoundException::new);
+        User user = us.findUser(neighborhoodId, userId).orElseThrow(NotFoundException::new);
         String userHashCode = String.valueOf(user.hashCode());
 
         // Cache Control
@@ -132,13 +132,13 @@ public class UserController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createUser(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @Valid UserDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @Valid UserDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         // Creation & ETag Generation
-        final User user = us.createUser(neighborhoodId, form.getMail(), form.getName(), form.getSurname(), form.getPassword(), form.getIdentification(), extractOptionalFirstId(form.getLanguage()));
+        final User user = us.createUser(neighborhoodId, createForm.getMail(), createForm.getName(), createForm.getSurname(), createForm.getPassword(), createForm.getIdentification(), extractOptionalFirstId(createForm.getLanguage()));
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN
@@ -150,18 +150,18 @@ public class UserController {
     }
 
     @PATCH
-    @Path("/{id}")
-    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#id, #neighborhoodId)")
+    @Path("/{userId}")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId, #neighborhoodId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUserPartially(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id,
-            @Valid UserDto partialUpdate
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam("userId") @GenericIdConstraint long userId,
+            @Valid UserDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(id, partialUpdate.getMail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getIdentification(), extractOptionalFirstId(partialUpdate.getLanguage()), extractOptionalFirstId(partialUpdate.getProfilePicture()), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), extractOptionalFirstId(partialUpdate.getUserRole()));
+        final User updatedUser = us.updateUser(userId, updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

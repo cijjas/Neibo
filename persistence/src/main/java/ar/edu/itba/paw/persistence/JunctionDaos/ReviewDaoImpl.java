@@ -49,7 +49,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public Optional<Review> findReview(long reviewId, long workerId) {
+    public Optional<Review> findReview(long workerId, long reviewId) {
         LOGGER.debug("Selecting Review with reviewId {}, workerId {}", reviewId, workerId);
 
         TypedQuery<Review> query = em.createQuery(

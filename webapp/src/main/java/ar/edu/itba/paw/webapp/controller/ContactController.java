@@ -58,9 +58,9 @@ public class ContactController {
 
     @GET
     public Response listContacts(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam("page") @DefaultValue("1") int page,
+            @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
@@ -99,10 +99,10 @@ public class ContactController {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{contactId}")
     public Response findContact(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint long contactId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("contactId") @GenericIdConstraint long contactId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
@@ -126,13 +126,13 @@ public class ContactController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createContact(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @Valid final ContactDto form
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @Valid ContactDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Contact contact = cs.createContact(neighborhoodId, form.getName(), form.getAddress(), form.getPhone());
+        final Contact contact = cs.createContact(neighborhoodId, createForm.getName(), createForm.getAddress(), createForm.getPhone());
         String contactHashCode = String.valueOf(contact.hashCode());
 
         // Resource URN
@@ -144,19 +144,19 @@ public class ContactController {
     }
 
     @PATCH
-    @Path("/{id}")
+    @Path("/{contactId}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Validated(UpdateValidationSequence.class)
-    public Response updateContactPartially(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long id,
-            @Valid ContactDto form
+    public Response updateContact(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("contactId") @GenericIdConstraint long contactId,
+            @Valid ContactDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
         // Modification & HashCode Generation
-        final Contact updatedContact = cs.updateContact(id, form.getName(), form.getAddress(), form.getPhone());
+        final Contact updatedContact = cs.updateContact(contactId, updateForm.getName(), updateForm.getAddress(), updateForm.getPhone());
         String updatedContactHashCode = String.valueOf(updatedContact.hashCode());
 
         return Response.ok(ContactDto.fromContact(updatedContact, uriInfo))
@@ -165,11 +165,11 @@ public class ContactController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("/{contactId}")
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteContact(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint final Long neighborhoodId,
-            @PathParam("id") @GenericIdConstraint final long contactId
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam("contactId") @GenericIdConstraint long contactId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 

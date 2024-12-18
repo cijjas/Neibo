@@ -24,7 +24,7 @@ public class ResourceServiceImpl implements ResourceService {
     private final ImageService imageService;
 
     @Autowired
-    public ResourceServiceImpl(final ResourceDao resourceDao, ImageService imageService) {
+    public ResourceServiceImpl(ResourceDao resourceDao, ImageService imageService) {
         this.resourceDao = resourceDao;
         this.imageService = imageService;
     }
@@ -50,7 +50,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Resource> getResources(final long neighborhoodId, int page, int size) {
+    public List<Resource> getResources(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Resources from Neighborhood {}", neighborhoodId);
 
         return resourceDao.getResources(neighborhoodId, page, size);
@@ -88,7 +88,7 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteResource(final long neighborhoodId, final long resourceId) {
+    public boolean deleteResource(long neighborhoodId, long resourceId) {
         LOGGER.info("Deleting Resource {}", resourceId);
 
         return resourceDao.deleteResource(neighborhoodId, resourceId);
