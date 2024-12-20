@@ -76,34 +76,7 @@ public class AmenityDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_amenityId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long aKey = testInserter.createAmenity(nhKey);
-
-        // Exercise
-        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(aKey);
-
-        // Validations & Post Conditions
-        assertTrue(optionalAmenity.isPresent());
-        assertEquals(aKey, optionalAmenity.get().getAmenityId().longValue());
-    }
-
-    @Test
-    public void find_amenityId_invalid_amenityId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long aKey = testInserter.createAmenity(nhKey);
-
-        // Exercise
-        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalAmenity.isPresent());
-    }
-
-    @Test
-    public void find_amenityId_neighborhoodId_valid() {
+    public void find_neighborhoodId_amenityId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -117,7 +90,7 @@ public class AmenityDaoImplTest {
     }
 
     @Test
-    public void find_amenityId_neighborhoodId_invalid_amenityId() {
+    public void find_neighborhoodId_amenityId_invalid_amenityId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -130,7 +103,7 @@ public class AmenityDaoImplTest {
     }
 
     @Test
-    public void find_amenityId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_amenityId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -142,7 +115,7 @@ public class AmenityDaoImplTest {
         assertFalse(optionalAmenity.isPresent());
     }
 
-    public void find_amenityId_neighborhoodId_invalid_amenityId_neighborhoodId() {
+    public void find_neighborhoodId_amenityId_invalid_amenityId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);

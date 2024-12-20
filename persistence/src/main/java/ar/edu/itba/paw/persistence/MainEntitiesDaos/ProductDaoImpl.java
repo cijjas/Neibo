@@ -52,13 +52,6 @@ public class ProductDaoImpl implements ProductDao {
     // ------------------------------------------------ PRODUCT SELECT -------------------------------------------------
 
     @Override
-    public Optional<Product> findProduct(long productId) {
-        LOGGER.debug("Selecting Product with id {}", productId);
-
-        return Optional.ofNullable(em.find(Product.class, productId));
-    }
-
-    @Override
     public Optional<Product> findProduct(long neighborhoodId, long productId) {
         LOGGER.debug("Selecting Product with productId {}, neighborhoodId {}", productId, neighborhoodId);
 
@@ -72,6 +65,13 @@ public class ProductDaoImpl implements ProductDao {
 
         List<Product> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
+    public Optional<Product> findProduct(long productId) {
+        LOGGER.debug("Selecting Product with id {}", productId);
+
+        return Optional.ofNullable(em.find(Product.class, productId));
     }
 
     @Override

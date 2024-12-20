@@ -44,13 +44,6 @@ public class EventDaoImpl implements EventDao {
     // ---------------------------------------------- EVENT SELECT -----------------------------------------------------
 
     @Override
-    public Optional<Event> findEvent(long eventId) {
-        LOGGER.debug("Selecting Event with id {}", eventId);
-
-        return Optional.ofNullable(em.find(Event.class, eventId));
-    }
-
-    @Override
     public Optional<Event> findEvent(long neighborhoodId, long eventId) {
         LOGGER.debug("Selecting Event with eventId {}, neighborhoodId {}", eventId, neighborhoodId);
 

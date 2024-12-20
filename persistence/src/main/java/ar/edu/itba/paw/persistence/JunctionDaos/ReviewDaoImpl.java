@@ -42,13 +42,6 @@ public class ReviewDaoImpl implements ReviewDao {
     // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Review> findReview(long reviewId) {
-        LOGGER.debug("Selecting Review with reviewId {}", reviewId);
-
-        return Optional.ofNullable(em.find(Review.class, reviewId));
-    }
-
-    @Override
     public Optional<Review> findReview(long workerId, long reviewId) {
         LOGGER.debug("Selecting Review with reviewId {}, workerId {}", reviewId, workerId);
 

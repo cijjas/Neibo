@@ -66,13 +66,6 @@ public class PostDaoImpl implements PostDao {
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Post> findPost(long postId) {
-        LOGGER.debug("Selecting Post with id {}", postId);
-
-        return Optional.ofNullable(em.find(Post.class, postId));
-    }
-
-    @Override
     public Optional<Post> findPost(long neighborhoodId, long postId) {
         LOGGER.debug("Selecting Post with postId {}, neighborhoodId {}", postId, neighborhoodId);
 
@@ -86,6 +79,13 @@ public class PostDaoImpl implements PostDao {
 
         List<Post> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
+    public Optional<Post> findPost(long postId) {
+        LOGGER.debug("Selecting Post with id {}", postId);
+
+        return Optional.ofNullable(em.find(Post.class, postId));
     }
 
     @Override

@@ -14,8 +14,6 @@ public interface EventDao {
 
     // ---------------------------------------------- EVENTS SELECT ----------------------------------------------------
 
-    Optional<Event> findEvent(long eventId);
-
     Optional<Event> findEvent(long neighborhoodId, long eventId);
 
     List<Event> getEvents(long neighborhoodId, Date date, int page, int size);

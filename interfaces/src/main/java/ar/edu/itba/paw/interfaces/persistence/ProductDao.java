@@ -13,9 +13,9 @@ public interface ProductDao {
 
     // --------------------------------------------- PRODUCTS SELECT ---------------------------------------------------
 
-    Optional<Product> findProduct(long productId);
-
     Optional<Product> findProduct(long neighborhoodId, long productId);
+
+    Optional<Product> findProduct(long productId);
 
     List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size);
 

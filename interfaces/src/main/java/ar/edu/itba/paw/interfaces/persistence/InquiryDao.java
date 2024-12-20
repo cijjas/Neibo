@@ -13,9 +13,9 @@ public interface InquiryDao {
 
     // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
 
-    Optional<Inquiry> findInquiry(long inquiryId);
-
     Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId);
+
+    Optional<Inquiry> findInquiry(long inquiryId);
 
     List<Inquiry> getInquiries(long neighborhoodId, long productId, int page, int size);
 

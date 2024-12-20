@@ -44,13 +44,6 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITIES SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Amenity> findAmenity(long amenityId) {
-        LOGGER.debug("Selecting Amenity with id {}", amenityId);
-
-        return Optional.ofNullable(em.find(Amenity.class, amenityId));
-    }
-
-    @Override
     public Optional<Amenity> findAmenity(long neighborhoodId, long amenityId) {
         LOGGER.debug("Selecting Amenity with amenityId {} and neighborhoodId {}", amenityId, neighborhoodId);
 
@@ -65,7 +58,6 @@ public class AmenityDaoImpl implements AmenityDao {
         List<Amenity> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
-
 
     @Override
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {

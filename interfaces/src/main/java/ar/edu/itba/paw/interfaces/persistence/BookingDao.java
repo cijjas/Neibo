@@ -14,7 +14,7 @@ public interface BookingDao {
 
     // ------------------------------------------------- BOOKINGS SELECT -----------------------------------------------
 
-    Optional<Booking> findBooking(long bookingId);
+    Optional<Booking> findBooking(long neighborhoodId, long bookingId);
 
     List<Booking> getBookings(long neighborhoodId, Long userId, Long amenityId, int page, int size);
 

@@ -13,9 +13,9 @@ public interface ChannelMappingDao {
 
     // -------------------------------------------- CHANNEL MAPPING SELECT ---------------------------------------------
 
-    List<ChannelMapping> getChannelMappings(Long neighborhoodId, Long channelId, int page, int size);
-
     Optional<ChannelMapping> findChannelMapping(long neighborhoodId, long channelId);
+
+    List<ChannelMapping> getChannelMappings(Long neighborhoodId, Long channelId, int page, int size);
 
     // -------------------------------------------- CHANNEL MAPPING DELETE ---------------------------------------------
     boolean deleteChannelMapping(long neighborhoodId, long channelId);

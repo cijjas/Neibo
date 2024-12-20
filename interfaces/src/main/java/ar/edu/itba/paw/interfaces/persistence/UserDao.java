@@ -15,9 +15,9 @@ public interface UserDao {
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
-    Optional<User> findUser(long userId);
-
     Optional<User> findUser(long neighborhoodId, long userId);
+
+    Optional<User> findUser(long userId);
 
     Optional<User> findUser(String mail);
 

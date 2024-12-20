@@ -47,13 +47,6 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
-    public Optional<User> findUser(long userId) {
-        LOGGER.debug("Selecting User with Id {}", userId);
-
-        return Optional.ofNullable(em.find(User.class, userId));
-    }
-
-    @Override
     public Optional<User> findUser(long neighborhoodId, long userId) {
         LOGGER.debug("Selecting User with userId {}, neighborhoodId {}", userId, neighborhoodId);
 
@@ -70,13 +63,19 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public Optional<User> findUser(long userId) {
+        LOGGER.debug("Selecting User with Id {}", userId);
+
+        return Optional.ofNullable(em.find(User.class, userId));
+    }
+
+    @Override
     public Optional<User> findUser(String mail) {
         LOGGER.debug("Selecting User with mail {}", mail);
         TypedQuery<User> query = em.createQuery("FROM User WHERE mail = :mail", User.class);
         query.setParameter("mail", mail);
         return query.getResultList().stream().findFirst();
     }
-
 
     @Override
     public List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size) {

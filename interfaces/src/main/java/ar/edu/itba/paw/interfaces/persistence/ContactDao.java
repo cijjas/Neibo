@@ -13,8 +13,6 @@ public interface ContactDao {
 
     // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
 
-    Optional<Contact> findContact(long contactId);
-
     Optional<Contact> findContact(long neighborhoodId, long contactId);
 
     List<Contact> getContacts(long neighborhoodId, int page, int size);

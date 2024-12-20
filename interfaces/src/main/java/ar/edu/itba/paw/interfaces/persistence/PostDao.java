@@ -13,9 +13,9 @@ public interface PostDao {
 
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
-    Optional<Post> findPost(long postId);
-
     Optional<Post> findPost(long neighborhoodId, long postId);
+
+    Optional<Post> findPost(long postId);
 
     List<Post> getPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int page, int size);
 

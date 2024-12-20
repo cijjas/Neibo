@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -48,10 +49,19 @@ public class BookingDaoImpl implements BookingDao {
     // --------------------------------------------- BOOKINGS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Booking> findBooking(long bookingId) {
-        LOGGER.debug("Selecting Booking with id {}", bookingId);
+    public Optional<Booking> findBooking(long neighborhoodId, long bookingId) {
+        LOGGER.debug("Selecting Booking with bookingId {} and neighborhoodId {}", bookingId, neighborhoodId);
 
-        return Optional.ofNullable(em.find(Booking.class, bookingId));
+        TypedQuery<Booking> query = em.createQuery(
+                "SELECT b FROM Booking b WHERE b.bookingId = :bookingId AND b.user.neighborhood.neighborhoodId = :neighborhoodId",
+                Booking.class
+        );
+
+        query.setParameter("bookingId", bookingId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Booking> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     @Override

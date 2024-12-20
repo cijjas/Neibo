@@ -84,7 +84,7 @@ public class BookingDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_bookingId_valid() {
+    public void find_neighborhoodId_bookingId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -96,7 +96,7 @@ public class BookingDaoImplTest {
         long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
 
         // Exercise
-        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(bKey);
+        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(nhKey, bKey);
 
         // Validations & Post Conditions
         assertTrue(optionalBooking.isPresent());
@@ -104,7 +104,7 @@ public class BookingDaoImplTest {
     }
 
     @Test
-    public void find_bookingId_invalid_bookingId() {
+    public void find_neighborhoodId_bookingId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -113,14 +113,52 @@ public class BookingDaoImplTest {
         long tKey = testInserter.createTime();
         long sKey = testInserter.createShift(dKey, tKey);
         long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
 
         // Exercise
-        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(INVALID_ID);
+        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(INVALID_ID, bKey);
 
         // Validations & Post Conditions
         assertFalse(optionalBooking.isPresent());
     }
 
+    @Test
+    public void find_neighborhoodId_bookingId_invalid_bookingId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
+
+        // Exercise
+        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalBooking.isPresent());
+    }
+
+    @Test
+    public void find_neighborhoodId_bookingId_invalid_neighborhoodId_bookingId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, DATE_1);
+
+        // Exercise
+        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalBooking.isPresent());
+    }
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test

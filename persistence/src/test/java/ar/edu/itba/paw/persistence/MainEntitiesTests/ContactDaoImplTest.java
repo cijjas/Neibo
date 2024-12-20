@@ -73,32 +73,6 @@ public class ContactDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_contactId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long cKey = testInserter.createContact(nhKey);
-
-        // Exercise
-        Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey);
-
-        // Validations & Post Conditions
-        assertTrue(optionalContact.isPresent());
-        assertEquals(cKey, optionalContact.get().getContactId().longValue());
-    }
-
-    @Test
-    public void find_contactId_invalid_contactId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-
-        // Exercise
-        Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalContact.isPresent());
-    }
-
-    @Test
     public void find_contactId_neighborhoodId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

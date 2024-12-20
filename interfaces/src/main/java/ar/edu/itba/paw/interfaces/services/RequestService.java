@@ -11,7 +11,7 @@ public interface RequestService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Request> findRequest(long requestId);
+    Optional<Request> findRequest(long requestId); // Used for Access Control
 
     Optional<Request> findRequest(long neighborhoodId, long requestId);
 

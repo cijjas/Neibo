@@ -11,7 +11,7 @@ public interface InquiryService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Inquiry> findInquiry(long inquiryId);
+    Optional<Inquiry> findInquiry(long inquiryId); // Used for Access Control
 
     Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId);
 

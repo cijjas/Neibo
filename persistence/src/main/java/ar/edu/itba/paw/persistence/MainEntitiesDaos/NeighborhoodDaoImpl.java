@@ -38,10 +38,10 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
     @Override
-    public Optional<Neighborhood> findNeighborhood(long id) {
-        LOGGER.debug("Selecting Neighborhood with id {}", id);
+    public Optional<Neighborhood> findNeighborhood(long neighborhoodId) {
+        LOGGER.debug("Selecting Neighborhood with id {}", neighborhoodId);
 
-        return Optional.ofNullable(em.find(Neighborhood.class, id));
+        return Optional.ofNullable(em.find(Neighborhood.class, neighborhoodId));
     }
 
     @Override

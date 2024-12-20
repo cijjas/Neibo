@@ -79,37 +79,6 @@ public class EventDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_eventId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long tKey1 = testInserter.createTime(EVENT_START_TIME);
-        long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
-
-        // Exercise
-        Optional<Event> optionalEvent = eventDaoImpl.findEvent(eKey);
-
-        // Validations & Post Conditions
-        assertTrue(optionalEvent.isPresent());
-        assertEquals(eKey, optionalEvent.get().getEventId().longValue());
-    }
-
-    @Test
-    public void find_eventId_invalid_eventId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long tKey1 = testInserter.createTime(EVENT_START_TIME);
-        long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
-
-        // Exercise
-        Optional<Event> optionalEvent = eventDaoImpl.findEvent(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalEvent.isPresent());
-    }
-
-    @Test
     public void find_eventId_neighborhoodId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

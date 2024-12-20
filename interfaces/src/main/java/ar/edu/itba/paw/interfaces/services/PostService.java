@@ -11,7 +11,7 @@ public interface PostService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Post> findPost(long postId);
+    Optional<Post> findPost(long postId); // Used for Access Control
 
     Optional<Post> findPost(long neighborhoodId, long postId);
 

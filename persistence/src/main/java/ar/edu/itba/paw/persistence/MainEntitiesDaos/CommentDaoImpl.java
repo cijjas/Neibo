@@ -40,13 +40,6 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Comment> findComment(long commentId) {
-        LOGGER.debug("Selecting Comment with id {}", commentId);
-
-        return Optional.ofNullable(em.find(Comment.class, commentId));
-    }
-
-    @Override
     public Optional<Comment> findComment(long neighborhoodId, long postId, long commentId) {
         LOGGER.debug("Selecting Comment with commentId {} and postId {}", commentId, postId);
 
@@ -61,6 +54,13 @@ public class CommentDaoImpl implements CommentDao {
 
         List<Comment> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
+    public Optional<Comment> findComment(long commentId) {
+        LOGGER.debug("Selecting Comment with id {}", commentId);
+
+        return Optional.ofNullable(em.find(Comment.class, commentId));
     }
 
     @Override

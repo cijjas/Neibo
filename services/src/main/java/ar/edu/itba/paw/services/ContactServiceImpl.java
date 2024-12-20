@@ -38,14 +38,6 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Contact> findContact(long contactId) {
-        LOGGER.info("Finding Contact {}", contactId);
-
-        return contactDao.findContact(contactId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Contact> findContact(long neighborhoodId, long contactId) {
         LOGGER.info("Finding Contact {} from Neighborhood {}", contactId, neighborhoodId);
 

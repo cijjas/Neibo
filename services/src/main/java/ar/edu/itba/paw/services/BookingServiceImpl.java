@@ -48,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
     public Optional<Booking> findBooking(long neighborhoodId, long bookingId) {
         LOGGER.info("Finding Booking {}", bookingId);
 
-        return bookingDao.findBooking(bookingId);
+        return bookingDao.findBooking(neighborhoodId, bookingId);
     }
 
     @Override

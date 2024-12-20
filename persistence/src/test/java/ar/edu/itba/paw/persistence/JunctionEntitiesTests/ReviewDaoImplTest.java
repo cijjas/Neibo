@@ -81,43 +81,6 @@ public class ReviewDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_reviewId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(TestConstants.USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long pKey = testInserter.createProfession();
-        testInserter.createWorker(uKey);
-        testInserter.createSpecialization(uKey, pKey);
-        long rKey = testInserter.createReview(uKey, uKey2);
-
-        // Exercise
-        Optional<Review> optionalReview = ReviewDaoImpl.findReview(rKey);
-
-        // Validations & Post Conditions
-        assertTrue(optionalReview.isPresent());
-        assertEquals(rKey, optionalReview.get().getReviewId().longValue());
-    }
-
-    @Test
-    public void find_reviewId_invalid_reviewId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long pKey = testInserter.createProfession();
-        testInserter.createWorker(uKey);
-        testInserter.createSpecialization(uKey, pKey);
-        long rKey = testInserter.createReview(uKey, uKey2);
-
-        // Exercise
-        Optional<Review> optionalReview = ReviewDaoImpl.findReview(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalReview.isPresent());
-    }
-
-    @Test
     public void find_reviewId_workerId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
