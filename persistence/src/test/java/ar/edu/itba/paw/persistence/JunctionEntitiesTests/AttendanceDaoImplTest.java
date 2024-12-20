@@ -74,7 +74,7 @@ public class AttendanceDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_userId_eventId_neighborhoodId_valid() {
+    public void find_neighborhoodId_eventId_userId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -84,7 +84,7 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey1, eKey1);
 
         // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(nhKey, uKey1, eKey1);
+        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(nhKey, eKey1, uKey1);
 
         // Validations & Post Conditions
         assertTrue(optionalAttendance.isPresent());
@@ -93,7 +93,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void find_userId_eventId_neighborhoodId_invalid_userId() {
+    public void find_neighborhoodId_eventId_userId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -103,14 +103,14 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey1, eKey1);
 
         // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(nhKey, INVALID_ID, eKey1);
+        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, eKey1, uKey1);
 
         // Validations & Post Conditions
         assertFalse(optionalAttendance.isPresent());
     }
 
     @Test
-    public void find_userId_eventId_neighborhoodId_invalid_eventId() {
+    public void find_neighborhoodId_eventId_userId_invalid_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -120,14 +120,14 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey1, eKey1);
 
         // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(nhKey, uKey1, INVALID_ID);
+        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(nhKey, eKey1, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalAttendance.isPresent());
     }
 
     @Test
-    public void find_userId_eventId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_eventId_userId_invalid_eventId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -137,14 +137,15 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey1, eKey1);
 
         // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, uKey1, eKey1);
+        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(nhKey, INVALID_ID, uKey1);
 
         // Validations & Post Conditions
         assertFalse(optionalAttendance.isPresent());
     }
 
+
     @Test
-    public void find_userId_eventId_neighborhoodId_invalid_userId_eventId() {
+    public void find_neighborhoodId_eventId_userId_invalid_eventId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -161,7 +162,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void find_userId_eventId_neighborhoodId_invalid_userId_neighborhoodId() {
+    public void find_neighborhoodId_eventId_userId_invalid_neighborhoodId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -171,14 +172,14 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey1, eKey1);
 
         // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, INVALID_ID, eKey1);
+        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, eKey1, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalAttendance.isPresent());
     }
 
     @Test
-    public void find_userId_eventId_neighborhoodId_invalid_eventId_neighborhoodId() {
+    public void find_neighborhoodId_eventId_userId_invalid_neighborhoodId_eventId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -188,14 +189,14 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey1, eKey1);
 
         // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, uKey1, INVALID_ID);
+        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, INVALID_ID, uKey1);
 
         // Validations & Post Conditions
         assertFalse(optionalAttendance.isPresent());
     }
 
     @Test
-    public void find_userId_eventId_neighborhoodId_invalid_userId_eventId_neighborhoodId() {
+    public void find_neighborhoodId_eventId_userId_invalid_neighborhoodId_eventId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -314,7 +315,7 @@ public class AttendanceDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_userId_eventId_valid() {
+    public void delete_neighborhoodId_eventId_userId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -333,7 +334,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void delete_userId_eventId_invalid_neighborhoodId() {
+    public void delete_neighborhoodId_eventId_userId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -351,7 +352,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void delete_userId_eventId_invalid_userId() {
+    public void delete_neighborhood_eventId_userId_invalid_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -369,7 +370,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void delete_userId_eventId_invalid_eventId() {
+    public void delete_neighborhoodId_eventId_userId_invalid_eventId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -387,7 +388,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void delete_userId_eventId_invalid_userId_eventId() {
+    public void delete_neighborhoodId_eventId_userId_invalid_eventId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -405,7 +406,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void delete_userId_eventId_invalid_neighborhoodId_userId() {
+    public void delete_neighborhoodId_eventId_userId_invalid_neighborhoodId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -423,7 +424,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void delete_userId_eventId_invalid_neighborhoodId_eventId() {
+    public void delete_neighborhoodId_eventId_userId_invalid_neighborhoodId_eventId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -441,7 +442,7 @@ public class AttendanceDaoImplTest {
     }
 
     @Test
-    public void delete_userId_eventId_invalid_neighborhoodId_userId_eventId() {
+    public void delete_neighborhoodId_eventId_userId_invalid_neighborhoodId_eventId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);

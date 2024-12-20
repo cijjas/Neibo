@@ -36,7 +36,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public Worker createWorker(long userId, List<Long> professionIds, String businessName, String address, String phoneNumber) {
-        LOGGER.info("Creating Worker associated with User {}", userId);
+        LOGGER.info("Creating Worker associated with User {}, business name {}, address {}, phone number {} and Professions {}", userId, businessName, address, phoneNumber, professionIds);
 
         Worker worker = workerDao.createWorker(userId, phoneNumber, address, businessName);
         for (long id: professionIds) {

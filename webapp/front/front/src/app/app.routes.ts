@@ -16,6 +16,7 @@ import { LoginComponent } from "./modules/auth/login/login.component";
 import { CalendarComponent } from './modules/calendar/calendar.component'
 import { UserProfileComponent } from './modules/user-profile/user-profile.component'
 import { ChooseTimeComponent } from './modules/choose-time/choose-time.component'
+import { ProductEditComponent } from './modules/product-edit/product-edit.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
   { path: 'marketplace/products/:id', component: ProductDetailComponent, canActivate: [authGuard] },
+  { path: 'marketplace/products/:id/edit', component: ProductEditComponent, canActivate: [authGuard] },
   { path: 'marketplace/create-listing', component: ProductSellComponent, canActivate: [authGuard] },
   { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },
   { path: 'choose-time', component: ChooseTimeComponent, canActivate: [authGuard] },

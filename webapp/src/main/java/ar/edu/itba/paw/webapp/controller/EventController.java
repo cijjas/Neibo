@@ -141,7 +141,7 @@ public class EventController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Event event = es.createEvent(neighborhoodId, createForm.getDescription(), extractDate(createForm.getEventDate()), createForm.getStartTime(), createForm.getEndTime(), createForm.getName());
+        final Event event = es.createEvent(neighborhoodId, createForm.getName(), createForm.getDescription(), extractDate(createForm.getEventDate()), createForm.getStartTime(), createForm.getEndTime());
         String eventHashCode = String.valueOf(event.hashCode());
 
         // Resource URN

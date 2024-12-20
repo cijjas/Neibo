@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User createUser(long neighborhoodId, String mail, String name, String surname, String password,
                            int identification, Language language, boolean darkMode, UserRole role) {
-        LOGGER.debug("Inserting User {}", mail);
+        LOGGER.debug("Inserting User {} with Neighborhood Id {}", mail, neighborhoodId);
 
         User user = new User.Builder()
                 .name(name).mail(mail)
@@ -48,7 +48,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUser(long neighborhoodId, long userId) {
-        LOGGER.debug("Selecting User with userId {}, neighborhoodId {}", userId, neighborhoodId);
+        LOGGER.debug("Selecting User with Neighborhood Id {} and User Id {}", neighborhoodId, userId);
 
         TypedQuery<User> query = em.createQuery(
                 "SELECT u FROM User u WHERE u.userId = :userId AND u.neighborhood.id = :neighborhoodId",
@@ -64,7 +64,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUser(long userId) {
-        LOGGER.debug("Selecting User with Id {}", userId);
+        LOGGER.debug("Selecting User with User Id {}", userId);
 
         return Optional.ofNullable(em.find(User.class, userId));
     }
@@ -79,7 +79,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size) {
-        LOGGER.debug("Selecting Users with Role {} and from Neighborhood {}", userRoleId, neighborhoodId);
+        LOGGER.debug("Selecting Users with Neighborhood Id {} and User Role Id {}", neighborhoodId, userRoleId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
@@ -123,7 +123,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getEventUsers(long eventId) {
-        LOGGER.debug("Selecting Users that will attend Event {}", eventId);
+        LOGGER.debug("Selecting Users that will attend Event with Event Id {}", eventId);
 
         String hql = "SELECT u FROM User u " +
                 "JOIN u.eventsSubscribed e " +
@@ -135,7 +135,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int countUsers(long neighborhoodId, Long userRoleId) {
-        LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", userRoleId, neighborhoodId);
+        LOGGER.debug("Counting Users with Neighborhood Id {} and User Role Id {}", neighborhoodId, userRoleId);
 
         StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");
         if (userRoleId != null)

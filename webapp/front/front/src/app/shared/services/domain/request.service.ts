@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Request } from '../../models/index';
-import { RequestDto, UserDto, RequestStatusDto } from '../../dtos/app-dtos';
+import { RequestDto, UserDto, RequestStatusDto, ProductDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { parseLinkHeader } from './utils';
-import { HateoasLinksService } from '../index.service';
+import { HateoasLinksService, mapProduct } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class RequestService {
@@ -80,9 +80,10 @@ export class RequestService {
 export function mapRequest(http: HttpClient, requestDto: RequestDto): Observable<Request> {
     return forkJoin([
         http.get<UserDto>(requestDto._links.requestUser).pipe(mergeMap(userDto => mapUser(http, userDto))),
-        http.get<RequestStatusDto>(requestDto._links.requestStatus)
+        http.get<ProductDto>(requestDto._links.product).pipe(mergeMap(productDto => mapProduct(http, productDto))),
+        http.get<RequestStatusDto>(requestDto._links.requestStatus),
     ]).pipe(
-        map(([requestingUser, requestStatusDto]) => {
+        map(([requestingUser, product, requestStatusDto]) => {
             return {
                 message: requestDto.message,
                 unitsRequested: requestDto.unitsRequested,
@@ -90,6 +91,7 @@ export function mapRequest(http: HttpClient, requestDto: RequestDto): Observable
                 fulfilledAt: requestDto.purchaseDate,
                 requestStatus: requestStatusDto.status,
                 requestingUser: requestingUser,
+                product: product,
                 self: requestDto._links.self
             } as Request;
         })

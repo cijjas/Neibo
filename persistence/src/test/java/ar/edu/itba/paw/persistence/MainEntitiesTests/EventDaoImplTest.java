@@ -79,7 +79,7 @@ public class EventDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_eventId_neighborhoodId_valid() {
+    public void find_neighborhoodId_eventId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -95,7 +95,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void find_eventId_neighborhoodId_invalid_eventId() {
+    public void find_neighborhoodId_eventId_invalid_eventId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -110,7 +110,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void find_eventId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_eventId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -125,7 +125,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void find_eventId_neighborhoodId_invalid_eventId_neighborhoodId() {
+    public void find_neighborhoodId_eventId_invalid_eventId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);

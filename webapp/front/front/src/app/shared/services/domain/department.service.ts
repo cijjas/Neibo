@@ -31,6 +31,16 @@ export class DepartmentService {
 export function mapDepartment(departmentDto: DepartmentDto): Department {
     return {
         name: departmentDto.name,
+        displayName: formatDepartmentName(departmentDto.name), // Add formatted name
         self: departmentDto._links.self
     };
+}
+
+
+
+export function formatDepartmentName(name: string): string {
+    return name
+        .split('_')                         // Split by underscore
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())  // Capitalize each word
+        .join(' ');                         // Join words with spaces
 }

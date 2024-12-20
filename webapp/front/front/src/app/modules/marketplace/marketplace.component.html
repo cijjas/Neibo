@@ -11,8 +11,9 @@
       <div id="center-grid" class="column-center pl-3">
         <div style="position: relative">
           <!-- Upper Marketplace Buttons Component -->
-          <app-upper-marketplace-buttons [channel]="channel" [departmentList]="departmentList"
-            [departmentName]="departmentName"></app-upper-marketplace-buttons>
+          <app-upper-marketplace-buttons [channel]="channel">
+          </app-upper-marketplace-buttons>
+
 
           <!-- If no products found -->
           <div *ngIf="productList && productList.length === 0" class="cool-static-container w-100">

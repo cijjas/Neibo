@@ -27,7 +27,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
     @Override
     public ChannelMapping createChannelMapping(long neighborhoodId, long channelId) {
-        LOGGER.debug("Inserting Channel Mapping for Channel {} for Neighborhood {}", channelId, neighborhoodId);
+        LOGGER.debug("Inserting Channel Mapping with Neighborhood  Id {} and Channel Id {}", neighborhoodId, channelId);
 
         ChannelMapping channelMapping = new ChannelMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Channel.class, channelId));
         em.persist(channelMapping);
@@ -38,14 +38,14 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
     @Override
     public Optional<ChannelMapping> findChannelMapping(long neighborhoodId, long channelId) {
-        LOGGER.debug("Finding Channel Mapping with Channel id {} in Neighborhood {}", channelId, neighborhoodId);
+        LOGGER.debug("Finding Channel Mapping with Neighborhood Id {} and Channel Id {}", channelId, neighborhoodId);
 
         return Optional.ofNullable(em.find(ChannelMapping.class, new ChannelMappingKey(neighborhoodId, channelId)));
     }
 
     @Override
     public List<ChannelMapping> getChannelMappings(Long neighborhoodId, Long channelId, int page, int size) {
-        LOGGER.debug("Selecting Channel Mappings by Criteria");
+        LOGGER.debug("Selecting Channel Mappings with Neighborhood Id {} and Channel Id {}", neighborhoodId, channelId);
 
         TypedQuery<ChannelMappingKey> idQuery = null;
         StringBuilder queryBuilder = new StringBuilder("SELECT cm.id FROM ChannelMapping cm ");
@@ -87,7 +87,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
     @Override
     public boolean deleteChannelMapping(long neighborhoodId, long channelId) {
-        LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);
+        LOGGER.debug("Deleting Channel Mapping with Neighborhood Id {} and Channel Id {}", neighborhoodId, channelId);
 
         ChannelMapping channelMapping = em.find(ChannelMapping.class, new ChannelMappingKey(neighborhoodId, channelId));
         if (channelMapping != null) {

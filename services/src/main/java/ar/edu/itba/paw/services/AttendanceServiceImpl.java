@@ -39,15 +39,15 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId) {
-        LOGGER.info("Finding Attendance for User {} and Event {}", userId, eventId);
+        LOGGER.info("Finding Attendance for User {} and Event {} in Neighborhood {}", userId, eventId, neighborhoodId);
 
-        return attendanceDao.findAttendance(neighborhoodId, userId, eventId);
+        return attendanceDao.findAttendance(neighborhoodId, eventId, userId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Attendance> getAttendance(long neighborhoodId, long eventId, int size, int page) {
-        LOGGER.info("Getting Attendance for Event {}", eventId);
+        LOGGER.info("Getting Attendance for Event {} in Neighborhood {}", eventId, neighborhoodId);
 
         return attendanceDao.getAttendance(neighborhoodId, eventId, page, size);
     }
@@ -55,14 +55,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional(readOnly = true)
     public int calculateAttendancePages(long neighborhoodId, long eventId, int size) {
-        LOGGER.info("Calculating Attendance Pages for Event {}", eventId);
+        LOGGER.info("Calculating Attendance Pages for Event {} in Neighborhood {}", eventId, neighborhoodId);
 
         return PaginationUtils.calculatePages(attendanceDao.countAttendance(neighborhoodId, eventId), size);
     }
 
     @Override
     public int countAttendance(long neighborhoodId, long eventId) {
-        LOGGER.info("Counting Attendees for Event {}", eventId);
+        LOGGER.info("Counting Attendees for Event {} in Neighborhood {}", eventId, neighborhoodId);
 
         return attendanceDao.countAttendance(neighborhoodId, eventId);
     }

@@ -35,14 +35,14 @@ public class ProfessionDaoImpl implements ProfessionDao {
 
     @Override
     public Optional<Profession> findProfession(long professionId) {
-        LOGGER.debug("Selecting Profession {}", professionId);
+        LOGGER.debug("Selecting Profession with Profession Id {}", professionId);
 
         return Optional.ofNullable(em.find(Profession.class, professionId));
     }
 
     @Override
     public List<Profession> getProfessions(Long workerId) {
-        LOGGER.debug("Selecting Professions for workerId {}", workerId);
+        LOGGER.debug("Selecting Professions with Worker Id {}", workerId);
 
         StringBuilder queryString = new StringBuilder("SELECT p FROM Profession p");
 
@@ -63,7 +63,7 @@ public class ProfessionDaoImpl implements ProfessionDao {
 
     @Override
     public boolean deleteProfession(long professionId) {
-        LOGGER.debug("Deleting Profession with id {}", professionId);
+        LOGGER.debug("Deleting Profession with Profession Id {}", professionId);
 
         Profession profession = em.find(Profession.class, professionId);
         if (profession != null) {

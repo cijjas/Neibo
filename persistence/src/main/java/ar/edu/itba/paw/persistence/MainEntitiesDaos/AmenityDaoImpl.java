@@ -30,7 +30,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public Amenity createAmenity(long neighborhoodId, String description, String name) {
-        LOGGER.debug("Inserting Amenity");
+        LOGGER.debug("Inserting Amenity with Neighborhood Id {}", neighborhoodId);
 
         Amenity amenity = new Amenity.Builder()
                 .name(name)
@@ -45,7 +45,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public Optional<Amenity> findAmenity(long neighborhoodId, long amenityId) {
-        LOGGER.debug("Selecting Amenity with amenityId {} and neighborhoodId {}", amenityId, neighborhoodId);
+        LOGGER.debug("Selecting Amenity with Neighborhood Id {} and Amenity Id {}", neighborhoodId, amenityId);
 
         TypedQuery<Amenity> query = em.createQuery(
                 "SELECT a FROM Amenity a WHERE a.amenityId = :amenityId AND a.neighborhood.neighborhoodId = :neighborhoodId",
@@ -61,7 +61,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
-        LOGGER.debug("Selecting Amenity with neighborhoodId {}", neighborhoodId);
+        LOGGER.debug("Selecting Amenity with Neighborhood Id {}", neighborhoodId);
 
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -98,7 +98,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public int countAmenities(long neighborhoodId) {
-        LOGGER.debug("Counting Amenity with neighborhoodId {}", neighborhoodId);
+        LOGGER.debug("Counting Amenity with Neighborhood Id {}", neighborhoodId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
@@ -114,7 +114,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public boolean deleteAmenity(long neighborhoodId, long amenityId) {
-        LOGGER.debug("Deleting Amenity with id {}", amenityId);
+        LOGGER.debug("Deleting Amenity with Neighborhood Id {} and Amenity Id {}", neighborhoodId, amenityId);
 
         int deletedCount = em.createQuery("DELETE FROM Amenity WHERE amenityId = :amenityId AND neighborhood.id = :neighborhoodId")
                 .setParameter("amenityId", amenityId)

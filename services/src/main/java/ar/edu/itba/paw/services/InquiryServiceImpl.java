@@ -37,7 +37,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
-        LOGGER.info("Creating Inquiry for Product {} from User {}", productId, userId);
+        LOGGER.info("Creating Inquiry with message {} for Product {} from User {}", message, productId, userId);
 
         // Send email to seller
         Product product = productDao.findProduct(productId).orElseThrow(NotFoundException::new);
@@ -77,7 +77,7 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     @Transactional(readOnly = true)
     public int calculateInquiryPages(long neighborhoodId, long productId, int size) {
-        LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
+        LOGGER.info("Calculating Inquiry Pages for Product {} in Neighborhood {}", productId, neighborhoodId);
 
         return PaginationUtils.calculatePages(inquiryDao.countInquiries(neighborhoodId, productId), size);
     }
@@ -86,7 +86,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Inquiry replyInquiry(long neighborhoodId, long productId, long inquiryId, String reply) {
-        LOGGER.info("Creating a reply for Inquiry {}", inquiryId);
+        LOGGER.info("Creating the reply {} for Inquiry {} made on Product {} from Neighborhood {}", reply, inquiryId, productId, neighborhoodId);
 
         // Send email to inquirer
         Inquiry inquiry = inquiryDao.findInquiry(neighborhoodId, productId, inquiryId).orElseThrow(NotFoundException::new);
@@ -103,7 +103,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public boolean deleteInquiry(long neighborhoodId, long productId, long inquiryId) {
-        LOGGER.info("Deleting Inquiry {}", inquiryId);
+        LOGGER.info("Deleting Inquiry {} made on Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
 
         return inquiryDao.deleteInquiry(neighborhoodId, productId, inquiryId);
     }

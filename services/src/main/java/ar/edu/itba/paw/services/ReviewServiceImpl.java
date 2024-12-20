@@ -28,7 +28,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review createReview(long workerId, long userId, float rating, String review) {
-        LOGGER.info("Creating a Review for Worker {} made by User {}", workerId, userId);
+        LOGGER.info("Creating the Review {} with {} rating for Worker {} made by User {}", review, rating, workerId, userId);
 
         return reviewDao.createReview(workerId, userId, rating, review);
     }
@@ -54,6 +54,8 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public Float findAverageRating(long workerId) {
+        LOGGER.info("Finding Average Rating for Worker {}", workerId);
+
         return reviewDao.findAverageRating(workerId);
     }
 
@@ -77,7 +79,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public boolean deleteReview(long workerId, long reviewId) {
-        LOGGER.info("Deleting Review {}", reviewId);
+        LOGGER.info("Deleting Review {} made to Worker {}", reviewId, workerId);
 
         return reviewDao.deleteReview(workerId, reviewId);
     }

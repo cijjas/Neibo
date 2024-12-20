@@ -32,7 +32,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public Channel createChannel(long neighborhoodId, String name) {
-        LOGGER.info("Creating Channel {}", name);
+        LOGGER.info("Creating Channel {} in Neighborhood {}", name, neighborhoodId);
 
         Channel channel = channelDao.findChannel(name).orElseGet(() -> channelDao.createChannel(name));
         channelMappingDao.findChannelMapping(neighborhoodId, channel.getChannelId()).orElseGet(() -> channelMappingDao.createChannelMapping(neighborhoodId, channel.getChannelId()));
@@ -70,7 +70,7 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     public boolean deleteChannel(long neighborhoodId, long channelId) {
-        LOGGER.info("Deleting Channel {}", channelId);
+        LOGGER.info("Deleting Channel {} in Neighborhood {}", channelId, neighborhoodId);
 
         channelDao.findChannel(neighborhoodId, channelId).orElseThrow(NotFoundException::new);
         channelMappingDao.deleteChannelMapping(neighborhoodId, channelId);

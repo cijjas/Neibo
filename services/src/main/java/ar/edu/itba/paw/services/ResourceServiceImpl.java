@@ -33,7 +33,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, Long imageId) {
-        LOGGER.info("Creating Resource {} for Neighborhood {}", title, neighborhoodId);
+        LOGGER.info("Creating Resource {} described as {} for Neighborhood {}", title, description, neighborhoodId);
 
         return resourceDao.createResource(neighborhoodId, title, description, imageId == null ? 0 : imageId);
     }
@@ -68,7 +68,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public Resource updateResource(long neighborhoodId, long resourceId, String title, String description, Long imageId) {
-        LOGGER.info("Updating Resource {}", resourceId);
+        LOGGER.info("Updating Resource {} from Neighborhood {}", resourceId, neighborhoodId);
 
         Resource resource = resourceDao.findResource(neighborhoodId, resourceId).orElseThrow(NotFoundException::new);
 
@@ -89,7 +89,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public boolean deleteResource(long neighborhoodId, long resourceId) {
-        LOGGER.info("Deleting Resource {}", resourceId);
+        LOGGER.info("Deleting Resource {} from Neighborhood {}", resourceId, neighborhoodId);
 
         return resourceDao.deleteResource(neighborhoodId, resourceId);
     }

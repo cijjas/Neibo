@@ -73,7 +73,7 @@ public class ContactDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_contactId_neighborhoodId_valid() {
+    public void find_neighborhoodId_contactId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);
@@ -87,7 +87,7 @@ public class ContactDaoImplTest {
     }
 
     @Test
-    public void find_contactId_neighborhoodId_invalid_contactId() {
+    public void find_neighborhoodId_contactId_invalid_contactId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);
@@ -100,7 +100,7 @@ public class ContactDaoImplTest {
     }
 
     @Test
-    public void find_contactId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_contactId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);
@@ -113,7 +113,7 @@ public class ContactDaoImplTest {
     }
 
     @Test
-    public void find_contactId_neighborhoodId_invalid_contactId_neighborhoodId() {
+    public void find_neighborhoodId_contactId_invalid_neighborhoodId_contactId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);

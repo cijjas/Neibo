@@ -47,7 +47,7 @@ public class ImageDaoImpl implements ImageDao {
 
     @Override
     public Optional<Image> findImage(long imageId) {
-        LOGGER.debug("Selecting Image with id {}", imageId);
+        LOGGER.debug("Selecting Image with Image Id {}", imageId);
 
         return Optional.ofNullable(em.find(Image.class, imageId));
     }
@@ -56,7 +56,7 @@ public class ImageDaoImpl implements ImageDao {
 
     @Override
     public boolean deleteImage(long imageId) {
-        LOGGER.debug("Deleting Image with imageId {}", imageId);
+        LOGGER.debug("Deleting Image with Image Id {}", imageId);
         Image image = em.find(Image.class, imageId);
         if (image != null) {
             em.remove(image);

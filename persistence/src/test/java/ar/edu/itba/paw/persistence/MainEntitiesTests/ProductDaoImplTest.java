@@ -130,7 +130,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void find_productId_neighborhoodId_valid() {
+    public void find_neighborhoodId_productId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -147,7 +147,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void find_productId_neighborhoodId_invalid_productId() {
+    public void find_neighborhoodId_productId_invalid_productId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -163,7 +163,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void find_productId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_productId_invalid_neighborhoodId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -179,7 +179,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void find_productId_neighborhoodId_invalid_productId_neighborhoodId() {
+    public void find_neighborhoodId_productId_invalid_productId_neighborhoodId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();

@@ -38,7 +38,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(long neighborhoodId, long userId, String title, String description, long channelId, List<Long> tagIds, Long imageId) {
-        LOGGER.info("Creating Post with Title {} by User {}", title, userId);
+        LOGGER.info("Creating Post {} described as {} in Channel {} with Tags {} by User {} in Neighborhood {}", title, description, channelId, tagIds, userId, neighborhoodId);
 
         Post p = postDao.createPost(userId, title, description, channelId, imageId == null ? 0 : imageId);
         if (tagIds != null && !tagIds.isEmpty())
@@ -90,7 +90,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public boolean deletePost(long neighborhoodId, long postId) {
-        LOGGER.info("Deleting Post {}", postId);
+        LOGGER.info("Deleting Post {} from Neighborhood {}", postId, neighborhoodId);
 
         // Delete tag associations
         Set<Tag> tags = postDao.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new).getTags();

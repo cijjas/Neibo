@@ -136,7 +136,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void find_postId_neighborhoodId_valid() {
+    public void find_neighborhoodId_postId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -153,7 +153,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void find_postId_neighborhoodId_invalid_postId() {
+    public void find_neighborhoodId_postId_invalid_postId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -169,7 +169,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void find_postId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_postId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -185,7 +185,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void find_postId_neighborhoodId_invalid_postId_neighborhoodId() {
+    public void find_neighborhoodId_postId_invalid_neighborhoodId_postId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -267,7 +267,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void get_channelId_userId() {
+    public void get_userId_channelId() {
         // Pre Conditions
         populatePosts();
 
@@ -293,7 +293,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void get_channelId_userId_tagList() {
+    public void get_userId_channelId_tagList() {
         // Pre Conditions
         populatePosts();
         List<Long> TAG_LIST = new ArrayList<>();
@@ -401,7 +401,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void count_channelId_userId() {
+    public void count_userId_channelId() {
         // Pre Conditions
         populatePosts();
 
@@ -427,7 +427,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void count_channelId_userId_tagList() {
+    public void count_userId_channelId_tagList() {
         // Pre Conditions
         populatePosts();
         List<Long> TAG_LIST = new ArrayList<>();
@@ -454,7 +454,7 @@ public class PostDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_postId_valid() {
+    public void delete_neighborhoodId_postId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -472,7 +472,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void delete_postId_invalid_postId() {
+    public void delete_neighborhoodId_postId_invalid_postId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -489,7 +489,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void delete_postId_invalid_neighborhoodId() {
+    public void delete_neighborhoodId_postId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -506,7 +506,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void delete_postId_invalid_neighborhoodId_postId() {
+    public void delete_postId_invalid_postId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);

@@ -27,7 +27,7 @@ public class ShiftDaoImpl implements ShiftDao {
 
     @Override
     public Shift createShift(long dayId, long startTimeId) {
-        LOGGER.debug("Inserting Shift");
+        LOGGER.debug("Inserting Shift with Day Id {} and Start Time Id {}", dayId, startTimeId);
 
         Shift shift = new Shift.Builder()
                 .day(em.find(Day.class, dayId))
@@ -41,15 +41,14 @@ public class ShiftDaoImpl implements ShiftDao {
 
     @Override
     public Optional<Shift> findShift(long shiftId) {
-        LOGGER.debug("Selecting Shift with shiftId {}", shiftId);
+        LOGGER.debug("Selecting Shift with Shift Id {}", shiftId);
 
         return Optional.ofNullable(em.find(Shift.class, shiftId));
     }
 
     @Override
     public List<Shift> getShifts(Long amenityId, Date date) {
-        LOGGER.debug("Selecting Weekly Available Shifts for Amenity {} on Date {}",
-                amenityId != null ? amenityId : "ALL", date != null ? date : "ALL DATES");
+        LOGGER.debug("Selecting Shifts with Amenity Id {} on Date {}", amenityId, date);
 
         // If both amenityId and date are null, return all shifts ordered by day and start time.
         if (amenityId == null && date == null) {

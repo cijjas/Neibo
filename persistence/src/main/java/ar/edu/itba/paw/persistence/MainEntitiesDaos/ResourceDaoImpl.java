@@ -45,7 +45,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     @Override
     public Optional<Resource> findResource(long neighborhoodId, long resourceId) {
-        LOGGER.debug("Selecting Resource with resourceId {} and neighborhoodId {}", resourceId, neighborhoodId);
+        LOGGER.debug("Selecting Resource with Neighborhood Id {} and Resource Id {}", neighborhoodId, resourceId);
 
         TypedQuery<Resource> query = em.createQuery(
                 "SELECT r FROM Resource r WHERE r.resourceId = :resourceId AND r.neighborhood.neighborhoodId = :neighborhoodId",
@@ -60,7 +60,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     @Override
     public List<Resource> getResources(long neighborhoodId, int page, int size) {
-        LOGGER.debug("Selecting paginated Resources from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Selecting Resources with Neighborhood Id {}", neighborhoodId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
@@ -89,7 +89,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     @Override
     public int countResources(long neighborhoodId) {
-        LOGGER.debug("Counting Resources from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Counting Resources with Neighborhood Id {}", neighborhoodId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
@@ -105,7 +105,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     @Override
     public boolean deleteResource(long neighborhoodId, long resourceId) {
-        LOGGER.debug("Deleting Resource with resourceId {} and neighborhoodId {}", resourceId, neighborhoodId);
+        LOGGER.debug("Deleting Resource with Neighborhood Id {} and Resource Id {}", neighborhoodId, resourceId);
 
         String hql = "DELETE FROM Resource r WHERE r.resourceId = :resourceId " +
                 "AND r.neighborhood.id = :neighborhoodId";

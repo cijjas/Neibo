@@ -42,7 +42,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request createRequest(long userId, long productId, String message, int quantity) {
-        LOGGER.info("Creating a Request for Product {} by User {}", productId, userId);
+        LOGGER.info("Creating Request {} for {} units for Product {} by User {}", message, quantity, productId, userId);
 
         Product product = productDao.findProduct(productId).orElseThrow(NotFoundException::new);
         User seller = userDao.findUser(product.getSeller().getUserId()).orElseThrow(NotFoundException::new);
@@ -89,7 +89,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request updateRequest(long neighborhoodId, long requestId, Long requestStatusId) {
-        LOGGER.info("Updating Request {} as {}", requestId, requestStatusId);
+        LOGGER.info("Updating Request {} from Neighborhood {} to {}", requestId, neighborhoodId, requestStatusId);
 
         Request request = requestDao.findRequest(neighborhoodId, requestId).orElseThrow(NotFoundException::new);
 
@@ -106,7 +106,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public boolean deleteRequest(long neighborhoodId, long requestId) {
-        LOGGER.info("Deleting Request {}", requestId);
+        LOGGER.info("Deleting Request {} from Neighborhood {}", requestId, neighborhoodId);
 
         return requestDao.deleteRequest(neighborhoodId, requestId);
     }

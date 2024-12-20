@@ -73,7 +73,7 @@ public class CommentDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_commentId_postId_neighborhoodId_valid() {
+    public void find_neighborhoodId_postId_commentId_invalid_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -91,7 +91,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void find_commentId_postId_neighborhoodId_invalid_commentId() {
+    public void find_neighborhoodId_postId_commentId_invalid_commentId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -108,7 +108,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void find_commentId_postId_neighborhoodId_invalid_postId() {
+    public void find_neighborhoodId_postId_commentId_invalid_postId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -125,7 +125,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void find_commentId_postId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_postId_commentId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -142,7 +142,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void find_commentId_postId_neighborhoodId_invalid_commentId_postId() {
+    public void find_neighborhoodId_postId_comment_invalid_commentId_postId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -159,7 +159,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void find_commentId_postId_neighborhoodId_invalid_commentId_neighborhoodId() {
+    public void find_neighborhoodId_postId_comment_invalid_commentId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -176,7 +176,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void find_commentId_postId_neighborhoodId_invalid_postId_neighborhoodId() {
+    public void find_neighborhoodId_postId_comment_invalid_postId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -193,7 +193,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void find_commentId_postId_neighborhoodId_invalid_commentId_postId_neighborhoodId() {
+    public void find_neighborhoodId_postId_commentId_invalid_commentId_postId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);

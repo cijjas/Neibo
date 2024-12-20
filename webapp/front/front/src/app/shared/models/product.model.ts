@@ -1,4 +1,4 @@
-import { Inquiry, User } from "./index";
+import { Department, Inquiry, User } from "./index";
 
 export interface Product {
   name: string;
@@ -12,6 +12,6 @@ export interface Product {
   secondImage: string;
   thirdImage: string;
   seller: User;
-  department: string;
+  department: Department;
   self: string;
 }

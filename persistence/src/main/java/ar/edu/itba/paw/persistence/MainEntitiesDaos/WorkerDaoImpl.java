@@ -25,12 +25,12 @@ public class WorkerDaoImpl implements WorkerDao {
     // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
 
     @Override
-    public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
-        LOGGER.debug("Inserting Worker");
+    public Worker createWorker(long userId, String phoneNumber, String address, String businessName) {
+        LOGGER.debug("Inserting Worker with User Id {}", userId);
 
         Worker worker = new Worker.Builder()
-                .workerId(workerId)
-                .user(em.find(User.class, workerId))
+                .workerId(userId)
+                .user(em.find(User.class, userId))
                 .phoneNumber(phoneNumber)
                 .address(address)
                 .businessName(businessName)
@@ -43,13 +43,15 @@ public class WorkerDaoImpl implements WorkerDao {
 
     @Override
     public Optional<Worker> findWorker(long workerId) {
-        LOGGER.debug("Selecting Worker with workerId {}", workerId);
+        LOGGER.debug("Selecting Worker with Worker Id {}", workerId);
 
         return Optional.ofNullable(em.find(Worker.class, workerId));
     }
 
     @Override
     public List<Worker> getWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int page, int size) {
+        LOGGER.debug("Selecting Workers affiliated to the Neighborhoods with Neighborhood Ids {}, with Profession Ids {}, Worker Role Id {}, and Worker Status Id {}", neighborhoodIds, professionIds, workerRoleId, workerStatusId);
+
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT DISTINCT w.*, wi.* FROM users w ");
 
@@ -101,6 +103,8 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     public int countWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId) {
+        LOGGER.debug("Counting Workers affiliated to the Neighborhoods with Neighborhood Ids {}, with Profession Ids {}, Worker Role Id {}, and Worker Status Id {}", neighborhoodIds, professionIds, workerRoleId, workerStatusId);
+
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT COUNT(DISTINCT w.userid) FROM users w ");
 

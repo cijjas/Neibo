@@ -36,8 +36,8 @@ public class EventServiceImpl implements EventService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Event createEvent(long neighborhoodId, String description, Date date, String startTime, String endTime, String name) {
-        LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
+    public Event createEvent(long neighborhoodId, String name, String description, Date date, String startTime, String endTime) {
+        LOGGER.info("Creating Event {} described as {} for date {} with start time {} and endTime {} for Neighborhood {}", name, description, date, startTime, endTime, neighborhoodId);
 
         java.sql.Time sqlStartTime = java.sql.Time.valueOf(startTime);
         java.sql.Time sqlEndTime = java.sql.Time.valueOf(endTime);
@@ -65,7 +65,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional(readOnly = true)
     public List<Event> getEvents(long neighborhoodId, Date date, int page, int size) {
-        LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
+        LOGGER.info("Getting Events for Neighborhood {} on date {}", neighborhoodId, date);
 
         return eventDao.getEvents(neighborhoodId, date, page, size);
     }
@@ -73,7 +73,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional(readOnly = true)
     public int calculateEventPages(long neighborhoodId, Date date, int size) {
-        LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
+        LOGGER.info("Calculating Event Pages for Neighborhood {} on date {}", neighborhoodId, date);
 
         return PaginationUtils.calculatePages(eventDao.countEvents(neighborhoodId, date), size);
     }
@@ -82,7 +82,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEvent(long neighborhoodId, long eventId, String name, String description, Date date, String startTime, String endTime) {
-        LOGGER.info("Updating Event {}", eventId);
+        LOGGER.info("Updating Event {} in Neighborhood {}", eventId, neighborhoodId);
 
         Event event = eventDao.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
 
@@ -108,7 +108,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public boolean deleteEvent(long neighborhoodId, long eventId) {
-        LOGGER.info("Delete Event {}", eventId);
+        LOGGER.info("Deleting Event {} from Neighborhood {}", eventId, neighborhoodId);
 
         return eventDao.deleteEvent(neighborhoodId, eventId);
     }

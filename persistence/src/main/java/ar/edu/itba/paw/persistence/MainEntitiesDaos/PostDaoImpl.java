@@ -50,7 +50,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Post createPost(long userId, String title, String description, long channelId, long imageId) {
-        LOGGER.debug("Inserting Post {}", title);
+        LOGGER.debug("Inserting Post {} with User Id {}", title, userId);
 
         Post post = new Post.Builder()
                 .title(title)
@@ -67,7 +67,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Optional<Post> findPost(long neighborhoodId, long postId) {
-        LOGGER.debug("Selecting Post with postId {}, neighborhoodId {}", postId, neighborhoodId);
+        LOGGER.debug("Selecting Post with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
         TypedQuery<Post> query = em.createQuery(
                 "SELECT p FROM Post p WHERE p.postId = :postId AND p.user.neighborhood.neighborhoodId = :neighborhoodId",
@@ -83,14 +83,14 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Optional<Post> findPost(long postId) {
-        LOGGER.debug("Selecting Post with id {}", postId);
+        LOGGER.debug("Selecting Post with Post Id {}", postId);
 
         return Optional.ofNullable(em.find(Post.class, postId));
     }
 
     @Override
     public List<Post> getPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int page, int size) {
-        LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channelId, userId, tagIds, postStatusId);
+        LOGGER.debug("Selecting Post with Neighborhood Id {}, User Id {}, Channel Id {}, Tag Ids {} and Post Status Id {}", neighborhoodId, userId, channelId, tagIds, postStatusId);
 
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
@@ -106,7 +106,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public int countPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId) {
-        LOGGER.debug("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channelId, userId, tagIds, postStatusId);
+        LOGGER.debug("Counting Post with Neighborhood Id {}, User Id {}, Channel Id {}, Tag Ids {} and Post Status Id {}", neighborhoodId, userId, channelId, tagIds, postStatusId);
 
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
@@ -127,7 +127,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public boolean deletePost(long neighborhoodId, long postId) {
-        LOGGER.debug("Deleting Post with id {} in Neighborhood {}", postId, neighborhoodId);
+        LOGGER.debug("Deleting Post with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
         // Execute native query
         int rowsAffected = em.createNativeQuery(

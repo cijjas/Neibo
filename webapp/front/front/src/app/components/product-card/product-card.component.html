@@ -13,8 +13,8 @@
     <div class="f-c-c-s g-0 w-100 h-100">
         <div class="header w-100">
             <div class="tags-corner f-c-s-s g-05">
-                <div class="department-tag" (click)="goToDepartment()">
-                    {{ product.department }}
+                <div class="department-tag" (click)="goToDepartment(product.department)">
+                    {{ product?.department.displayName }}
                 </div>
 
                 <div class="used-tag" [ngClass]="product.used ? 'used' : 'new'">

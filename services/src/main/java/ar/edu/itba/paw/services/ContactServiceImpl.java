@@ -29,7 +29,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
-        LOGGER.info("Creating Contact {} for Neighborhood {}", contactName, neighborhoodId);
+        LOGGER.info("Creating Contact {} with address {} and phone {} for Neighborhood {}", contactName, contactAddress, contactPhone, neighborhoodId);
 
         return contactDao.createContact(neighborhoodId, contactName, contactAddress, contactPhone);
     }
@@ -64,7 +64,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Contact updateContact(long neighborhoodId, long contactId, String contactName, String contactAddress, String contactPhone) {
-        LOGGER.info("Updating Contact {}", contactId);
+        LOGGER.info("Updating Contact {} from Neighborhood {}", contactId, neighborhoodId);
 
         Contact contact = findContact(neighborhoodId, contactId).orElseThrow(NotFoundException::new);
 
@@ -82,7 +82,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public boolean deleteContact(long neighborhoodId, long contactId) {
-        LOGGER.info("Deleting Contact {}", contactId);
+        LOGGER.info("Deleting Contact {} from Neighborhood {}", contactId, neighborhoodId);
 
         return contactDao.deleteContact(neighborhoodId, contactId);
     }

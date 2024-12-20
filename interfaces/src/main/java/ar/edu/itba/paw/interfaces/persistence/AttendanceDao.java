@@ -13,7 +13,7 @@ public interface AttendanceDao {
 
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
 
-    Optional<Attendance> findAttendance(long neighborhoodId, long userId, long eventId);
+    Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId);
 
     List<Attendance> getAttendance(long neighborhoodId, long eventId, int page, int size);
 

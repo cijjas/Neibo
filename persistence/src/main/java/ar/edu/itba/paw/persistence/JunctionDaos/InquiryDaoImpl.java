@@ -27,7 +27,7 @@ public class InquiryDaoImpl implements InquiryDao {
 
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
-        LOGGER.debug("Inserting Inquiry for product with id {}", productId);
+        LOGGER.debug("Inserting Inquiry with User Id {} and Product Id {}", userId, productId);
 
         Inquiry inquiry = new Inquiry.Builder()
                 .product(em.find(Product.class, productId))
@@ -43,14 +43,14 @@ public class InquiryDaoImpl implements InquiryDao {
 
     @Override
     public Optional<Inquiry> findInquiry(long inquiryId) {
-        LOGGER.debug("Selecting Inquiry with id {}", inquiryId);
+        LOGGER.debug("Selecting Inquiry with Inquiry Id {}", inquiryId);
 
         return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
     }
 
     @Override
     public Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId) {
-        LOGGER.debug("Selecting Inquiry with inquiryId {}, productId {} and neighborhoodId {}", inquiryId, productId, neighborhoodId);
+        LOGGER.debug("Selecting Inquiry with Neighborhood Id {}, Product Id {} and Inquiry Id {}", neighborhoodId, productId, inquiryId);
 
         TypedQuery<Inquiry> query = em.createQuery(
                 "SELECT i FROM Inquiry i WHERE i.id = :inquiryId AND i.product.id = :productId AND i.product.seller.neighborhood.id = :neighborhoodId",
@@ -67,7 +67,7 @@ public class InquiryDaoImpl implements InquiryDao {
 
     @Override
     public List<Inquiry> getInquiries(long neighborhoodId, long productId, int page, int size) {
-        LOGGER.debug("Selecting Inquiries from Product with id {} in Neighborhood {}", productId, neighborhoodId);
+        LOGGER.debug("Selecting Inquiries with Neighborhood Id {}, Product Id {}", neighborhoodId, productId);
 
         TypedQuery<Long> idQuery = em.createQuery(
                 "SELECT i.inquiryId FROM Inquiry i " +
@@ -95,7 +95,7 @@ public class InquiryDaoImpl implements InquiryDao {
 
     @Override
     public int countInquiries(long neighborhoodId, long productId) {
-        LOGGER.debug("Selecting Inquiries Count from Product {} in Neighborhood {}", productId, neighborhoodId);
+        LOGGER.debug("Counting Inquiries with Neighborhood Id {}, Product Id {}", neighborhoodId, productId);
 
         Long count = (Long) em.createQuery(
                         "SELECT COUNT(i) FROM Inquiry i " +
@@ -112,7 +112,7 @@ public class InquiryDaoImpl implements InquiryDao {
 
     @Override
     public boolean deleteInquiry(long neighborhoodId, long productId, long inquiryId) {
-        LOGGER.debug("Deleting Inquiry with inquiryId {}, productId {}, and neighborhoodId {}", inquiryId, productId, neighborhoodId);
+        LOGGER.debug("Deleting Inquiry with Neighborhood Id {}, Product Id {} and Inquiry Id {}", neighborhoodId, productId, inquiryId);
 
         String nativeSql = "DELETE FROM products_users_inquiries i " +
                 "WHERE i.inquiryid = :inquiryId " +

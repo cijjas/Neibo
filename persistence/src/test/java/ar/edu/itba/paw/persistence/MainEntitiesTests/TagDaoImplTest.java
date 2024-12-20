@@ -113,7 +113,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void find_tagId_neighborhoodId_valid() {
+    public void find_neighborhoodId_tagId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -133,7 +133,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void find_tagId_neighborhoodId_invalid_tagId() {
+    public void find_neighborhoodId_tagId_invalid_tagId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -152,7 +152,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void find_tagId_neighborhoodId_valid_neighborhoodId() {
+    public void find_neighborhoodId_tagId_valid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -171,7 +171,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void find_tagId_neighborhoodId_valid_tagId_neighborhoodId() {
+    public void find_neighborhoodId_tagId_valid_tagId_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);

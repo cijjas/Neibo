@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(long neighborhoodId, String mail, String name, String surname, String password,
                            Integer identification, Long languageId) {
-        LOGGER.info("Creating Neighbor with mail {}", mail);
+        LOGGER.info("Creating Neighbor with mail {}, name {}, surname {}, identification {}, Language {} in Neighborhood {}", mail, name, surname, identification, languageId, neighborhoodId);
 
         Language language = Language.ENGLISH;
         if (languageId != null)
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(long neighborhoodId, long userId, String mail, String name, String surname, String password, Integer identification, Long languageId, Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId) {
-        LOGGER.info("Updating User {}", userId);
+        LOGGER.info("Updating User {} from Neighborhood {}", userId, neighborhoodId);
 
         User user = userDao.findUser(neighborhoodId, userId).orElseThrow(NotFoundException::new);
 

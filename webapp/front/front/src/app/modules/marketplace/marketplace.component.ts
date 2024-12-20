@@ -11,8 +11,7 @@ export class MarketplaceComponent implements OnInit {
   darkMode: boolean = false;
   productList: Product[] = [];
   channel: string = 'Marketplace';
-  departmentList: Department[] = [];
-  departmentName: string = 'NONE';
+  selectedDepartment: string | null = null;
 
   // Pagination properties
   page: number = 1;
@@ -33,22 +32,18 @@ export class MarketplaceComponent implements OnInit {
     // Read query params for page and size
     this.route.queryParams.subscribe((params) => {
       this.page = params['page'] ? +params['page'] : 1;
-      this.size = params['size'] ? +params['size'] : 30;
+      this.size = params['size'] ? +params['size'] : 20;
+      this.selectedDepartment = params['inDepartment'] || null;
       this.loadProducts();
     });
 
-    this.departmentService.getDepartments().subscribe({
-      next: (departments) => {
-        this.departmentList = departments;
-      },
-      error: (err) => console.error(err)
-    });
+
   }
 
   private loadProducts(): void {
     const productsUrl: string = this.linkService.getLink('neighborhood:products');
 
-    this.productService.getProducts(productsUrl, { page: this.page, size: this.size }).subscribe({
+    this.productService.getProducts(productsUrl, { page: this.page, size: this.size, inDepartment: this.selectedDepartment }).subscribe({
       next: (data) => {
         this.productList = data.products;
         this.totalPages = data.totalPages;

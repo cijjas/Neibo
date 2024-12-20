@@ -74,7 +74,7 @@ public class AvailabilityDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_amenityId_shiftId_valid() {
+    public void find_shiftId_amenityId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -92,7 +92,7 @@ public class AvailabilityDaoImplTest {
     }
 
     @Test
-    public void find_amenityId_shiftId_invalid_amenityId() {
+    public void find_shiftId_amenityId_invalid_amenityId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -110,7 +110,7 @@ public class AvailabilityDaoImplTest {
 
 
     @Test
-    public void find_amenityId_shiftId_invalid_shiftId() {
+    public void find_shiftId_amenityId_invalid_shiftId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -127,7 +127,7 @@ public class AvailabilityDaoImplTest {
     }
 
     @Test
-    public void find_amenityId_shiftId_invalid_amenityId_shiftId() {
+    public void find_shiftId_amenityId_invalid_shiftId_amenityId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -146,7 +146,7 @@ public class AvailabilityDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_amenityId_shiftId_valid() {
+    public void delete_shiftId_amenityId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -165,7 +165,7 @@ public class AvailabilityDaoImplTest {
     }
 
     @Test
-    public void delete_amenityId_shiftId_invalid_amenityId() {
+    public void delete_shiftId_amenityId_invalid_amenityId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -183,7 +183,7 @@ public class AvailabilityDaoImplTest {
     }
 
     @Test
-    public void delete_amenityId_shiftId_invalid_shiftId() {
+    public void delete_shiftId_amenityId_invalid_shiftId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -201,7 +201,7 @@ public class AvailabilityDaoImplTest {
     }
 
     @Test
-    public void delete_amenityId_shiftId_invalid_amenityId_shiftId() {
+    public void delete_shiftId_amenityId_invalid_shiftId_amenityId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);

@@ -47,13 +47,13 @@ export class LeftColumnComponent implements OnInit {
       this.channelClass = 'Announcements';
     } else if (currentUrl.includes('/posts') && this.route.snapshot.queryParams['SPAInChannel'] === this.complaintsChannelUrl) {
       this.channelClass = 'Complaints';
-    } else if (currentUrl === '/marketplace') {
+    } else if (currentUrl.startsWith('/marketplace')) {
       this.channelClass = 'Marketplace';
-    } else if (currentUrl === '/services') {
+    } else if (currentUrl.startsWith('/services')) {
       this.channelClass = 'Services';
-    } else if (currentUrl === '/reservations') {
+    } else if (currentUrl.startsWith('/reservations')) {
       this.channelClass = 'Reservations';
-    } else if (currentUrl === '/information') {
+    } else if (currentUrl.startsWith('/information')) {
       this.channelClass = 'Information';
     } else {
       this.channelClass = '';

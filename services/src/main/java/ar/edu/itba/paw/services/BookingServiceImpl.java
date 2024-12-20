@@ -34,7 +34,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking createBooking(long shift, long user, long amenity, Date reservationDate) {
-        LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenity, reservationDate, user);
+        LOGGER.info("Creating a Booking for Shift {} in Amenity {} on Date {} for User {}", shift, amenity, reservationDate, user);
 
         Availability availability = availabilityDao.findAvailability(shift, amenity).orElseThrow(NotFoundException::new);
 
@@ -46,7 +46,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Booking> findBooking(long neighborhoodId, long bookingId) {
-        LOGGER.info("Finding Booking {}", bookingId);
+        LOGGER.info("Finding Booking {} in Neighborhood {}", bookingId, neighborhoodId);
 
         return bookingDao.findBooking(neighborhoodId, bookingId);
     }
@@ -71,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean deleteBooking(long neighborhoodId, long bookingId) {
-        LOGGER.info("Deleting Booking {}", bookingId);
+        LOGGER.info("Deleting Booking {} in Neighborhood {}", bookingId, neighborhoodId);
 
         return bookingDao.deleteBooking(neighborhoodId, bookingId);
     }

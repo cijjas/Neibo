@@ -71,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public boolean deleteComment(long neighborhoodId, long postId, long commentId) {
-        LOGGER.info("Deleting Comment {}", commentId);
+        LOGGER.info("Deleting Comment {} from Post {} in Neighborhood {}", commentId, postId, neighborhoodId);
 
         return commentDao.deleteComment(neighborhoodId, postId, commentId);
     }

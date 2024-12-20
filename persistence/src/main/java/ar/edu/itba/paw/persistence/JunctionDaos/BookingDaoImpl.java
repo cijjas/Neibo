@@ -35,7 +35,7 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public Booking createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
-        LOGGER.debug("Inserting Booking");
+        LOGGER.debug("Inserting Booking with User Id {} and Availability Id {}", userId, amenityAvailabilityId);
 
         Booking booking = new Booking.Builder()
                 .user(em.find(User.class, userId))
@@ -50,7 +50,7 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public Optional<Booking> findBooking(long neighborhoodId, long bookingId) {
-        LOGGER.debug("Selecting Booking with bookingId {} and neighborhoodId {}", bookingId, neighborhoodId);
+        LOGGER.debug("Selecting Booking with Neighborhood Id {} and Booking Id {}", neighborhoodId, bookingId);
 
         TypedQuery<Booking> query = em.createQuery(
                 "SELECT b FROM Booking b WHERE b.bookingId = :bookingId AND b.user.neighborhood.neighborhoodId = :neighborhoodId",
@@ -66,7 +66,7 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public List<Booking> getBookings(long neighborhoodId, Long userId, Long amenityId, int page, int size) {
-        LOGGER.debug("Selecting Bookings from userId {}, amenityId {}, and neighborhoodId {}", userId, amenityId, neighborhoodId);
+        LOGGER.debug("Selecting Bookings with Neighborhood Id {}, User Id {}, and Amenity Id {}", neighborhoodId, userId, amenityId);
 
         StringBuilder query = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
         query.append(" WHERE 1 = 1");
@@ -107,7 +107,7 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public int countBookings(long neighborhoodId, Long userId, Long amenityId) {
-        LOGGER.debug("Counting Bookings for userId {}, amenityId {}, and neighborhoodId {}", userId, amenityId, neighborhoodId);
+        LOGGER.debug("Counting Bookings with Neighborhood Id {}, User Id {}, and Amenity Id {}", neighborhoodId, userId, amenityId);
 
         StringBuilder countQuery = new StringBuilder("WITH CountCTE AS (SELECT COUNT(*) FROM ");
         countQuery.append(" users_availability uav ");
@@ -152,7 +152,7 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public boolean deleteBooking(long neighborhoodId, long bookingId) {
-        LOGGER.debug("Deleting Booking with bookingId {}", bookingId);
+        LOGGER.debug("Deleting Booking with Neighborhood Id {} and Booking Id {}", neighborhoodId, bookingId);
 
         String nativeSql = "DELETE FROM users_availability b " +
                 "WHERE b.bookingid = :bookingId " +

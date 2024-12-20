@@ -35,7 +35,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     @Override
     public Optional<Department> findDepartment(long departmentId) {
-        LOGGER.debug("Selecting Department with id {}", departmentId);
+        LOGGER.debug("Selecting Department with Department Id {}", departmentId);
 
         return Optional.ofNullable(em.find(Department.class, departmentId));
     }
@@ -54,7 +54,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
 
     @Override
     public boolean deleteDepartment(long departmentId) {
-        LOGGER.debug("Deleting Department with id {}", departmentId);
+        LOGGER.debug("Deleting Department with Department Id {}", departmentId);
 
         Department department = em.find(Department.class, departmentId);
         if (department != null) {

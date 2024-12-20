@@ -38,11 +38,11 @@ public class TagServiceImpl implements TagService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Tag createTag(long neighborhoodId, String name) {
-        LOGGER.info("Creating Tag {} in Neighborhood {}", name, neighborhoodId);
+    public Tag createTag(long neighborhoodId, String tagName) {
+        LOGGER.info("Creating Tag {} in Neighborhood {}", tagName, neighborhoodId);
 
         // Find tag by name, if it doesn't exist create it
-        Tag tag = tagDao.findTag(name).orElseGet(() -> tagDao.createTag(name));
+        Tag tag = tagDao.findTag(tagName).orElseGet(() -> tagDao.createTag(tagName));
 
         if(!tagMappingDao.findTagMapping(neighborhoodId, tag.getTagId()).isPresent())
             tagMappingDao.createTagMappingDao(neighborhoodId, tag.getTagId());
@@ -80,7 +80,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public boolean deleteTag(long neighborhoodId, long tagId) {
-        LOGGER.info("Deleting Tag {}", tagId);
+        LOGGER.info("Deleting Tag {} from Neighborhood {}", tagId, neighborhoodId);
 
         // Delete Tag-Neighborhood association
         tagMappingDao.deleteTagMapping(neighborhoodId, tagId);

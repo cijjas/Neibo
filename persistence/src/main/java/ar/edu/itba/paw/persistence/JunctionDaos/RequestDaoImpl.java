@@ -29,7 +29,7 @@ public class RequestDaoImpl implements RequestDao {
 
     @Override
     public Request createRequest(long userId, long productId, String message, int quantity) {
-        LOGGER.debug("Inserting Request for product with id {}", productId);
+        LOGGER.debug("Inserting Request with User Id {} and Product Id {}", userId, productId);
 
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
@@ -47,14 +47,14 @@ public class RequestDaoImpl implements RequestDao {
 
     @Override
     public Optional<Request> findRequest(long requestId) {
-        LOGGER.debug("Selecting Request {}", requestId);
+        LOGGER.debug("Selecting Request with Request Id {}", requestId);
 
         return Optional.ofNullable(em.find(Request.class, requestId));
     }
 
     @Override
     public Optional<Request> findRequest(long neighborhoodId, long requestId) {
-        LOGGER.debug("Selecting Request {} from Neighborhood {}", requestId, neighborhoodId);
+        LOGGER.debug("Selecting Request with Neighborhood Id {} and Neighborhood Id {}", neighborhoodId, requestId);
 
         // Query to find the Request with the given neighborhoodId and requestId
         String query = "SELECT r FROM Request r " +
@@ -82,7 +82,7 @@ public class RequestDaoImpl implements RequestDao {
 
     @Override
     public List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long typeId, Long statusId, int page, int size) {
-        LOGGER.debug("Selecting Requests By Criteria");
+        LOGGER.debug("Selecting Requests with Neighborhood Id {}, User Id {}, Product Id {}, Transaction Type Id {} and Status Id {}", neighborhoodId, userId, productId, typeId, statusId);
 
         StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE r.user.neighborhood.neighborhoodId = :neighborhoodId ");
 
@@ -141,7 +141,7 @@ public class RequestDaoImpl implements RequestDao {
 
     @Override
     public int countRequests(long neighborhoodId, Long userId, Long productId, Long typeId, Long statusId) {
-        LOGGER.debug("Selecting Requests Count by Criteria");
+        LOGGER.debug("Counting Requests with Neighborhood Id {}, User Id {}, Product Id {}, Transaction Type Id {} and Status Id {}", neighborhoodId, userId, productId, typeId, statusId);
 
         StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE r.user.neighborhood.neighborhoodId = :neighborhoodId ");
 
@@ -199,7 +199,7 @@ public class RequestDaoImpl implements RequestDao {
 
     @Override
     public boolean deleteRequest(long neighborhoodId, long requestId) {
-        LOGGER.debug("Deleting Request with requestId {} and neighborhoodId {}", requestId, neighborhoodId);
+        LOGGER.debug("Deleting Request with Neighborhood Id {} and Neighborhood Id {}", neighborhoodId, requestId);
 
         String nativeSql = "DELETE FROM products_users_requests r " +
                 "WHERE r.requestid = :requestId " +

@@ -49,6 +49,7 @@ import { ProductDetailComponent } from "./modules/product-detail/product-detail.
 import { CreatePostComponent } from "./modules/create-post/create-post.component";
 import { PostDetailComponent } from "./modules/post-detail/post-detail.component";
 import { ProductSellComponent } from "./modules/product-sell/product-sell.component";
+import { ProductEditComponent } from "./modules/product-edit/product-edit.component";
 
 // SERVICES
 import { AuthService, ToastService } from "./shared/services/index.service";
@@ -95,7 +96,8 @@ import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
     ProductCardComponent,
     ProductDetailComponent,
     SuccessToastComponent,
-    ProductSellComponent
+    ProductSellComponent,
+    ProductEditComponent
   ],
   imports: [
     BrowserModule,

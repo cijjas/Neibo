@@ -54,7 +54,7 @@ public class EventServiceImplTest {
         when(eventDao.createEvent(neighborhoodId, name, description, date, 1L, 2L)).thenReturn(mockEvent);
 
         // Exercise
-        Event createdEvent = eventService.createEvent(neighborhoodId, description, date, startTime, endTime, name);
+        Event createdEvent = eventService.createEvent(neighborhoodId, name, description, date, startTime, endTime);
 
         // Validations & Post Conditions
         verify(timeDao, times(1)).findTime(sqlStartTime);

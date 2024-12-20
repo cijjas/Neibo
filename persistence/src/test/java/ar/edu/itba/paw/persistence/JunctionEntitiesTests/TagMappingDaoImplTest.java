@@ -77,7 +77,7 @@ public class TagMappingDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
 	@Test
-	public void find_tagId_neighborhoodId_valid() {
+	public void find_neighborhoodId_tagId_valid() {
 	    // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         tKey1 = testInserter.createTag(TAG_NAME_1);
@@ -93,7 +93,7 @@ public class TagMappingDaoImplTest {
 	}
 
     @Test
-    public void find_tagId_neighborhoodId_invalid_tagId() {
+    public void find_neighborhoodId_tagId_invalid_tagId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         tKey1 = testInserter.createTag(TAG_NAME_1);
@@ -107,7 +107,7 @@ public class TagMappingDaoImplTest {
     }
 
     @Test
-    public void find_tagId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_tagId_invalid_neighborhoodId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         tKey1 = testInserter.createTag(TAG_NAME_1);
@@ -121,7 +121,7 @@ public class TagMappingDaoImplTest {
     }
 
     @Test
-    public void find_tagId_neighborhoodId_invalid_tagId_neighborhoodId() {
+    public void find_neighborhoodId_tagId_invalid_tagId_neighborhoodId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         tKey1 = testInserter.createTag(TAG_NAME_1);
@@ -173,7 +173,7 @@ public class TagMappingDaoImplTest {
     }
 
     @Test
-    public void get_tagId_neighborhoodId() {
+    public void get_neighborhoodId_tagId() {
         // Pre Conditions
         populateTagMappings();
 
@@ -260,7 +260,7 @@ public class TagMappingDaoImplTest {
     }
 
     @Test
-    public void count_tagId_neighborhoodId() {
+    public void count_neighborhoodId_tagId() {
         // Pre Conditions
         populateTagMappings();
 
@@ -290,7 +290,7 @@ public class TagMappingDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_tagId_neighborhoodId_valid() {
+    public void delete_neighborhoodId_tagId_valid() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
@@ -309,7 +309,7 @@ public class TagMappingDaoImplTest {
     }
 
     @Test
-    public void delete_tagId_neighborhoodId_invalid_tagId() {
+    public void delete_neighborhoodId_tagId_invalid_tagId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
@@ -327,7 +327,7 @@ public class TagMappingDaoImplTest {
     }
 
     @Test
-    public void delete_tagId_neighborhoodId_invalid_neighborhoodId() {
+    public void delete_neighborhoodId_tagId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
@@ -345,7 +345,7 @@ public class TagMappingDaoImplTest {
     }
 
     @Test
-    public void delete_tagId_neighborhoodId_invalid_tagId_neighborhoodId() {
+    public void delete_neighborhoodId_tagId_invalid_neighborhoodId_tagId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);

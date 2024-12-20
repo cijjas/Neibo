@@ -81,7 +81,7 @@ public class ReviewDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_reviewId_workerId_valid() {
+    public void find_workerId_reviewId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -100,7 +100,7 @@ public class ReviewDaoImplTest {
     }
 
     @Test
-    public void find_reviewId_workerId_invalid_reviewId() {
+    public void find_workerId_reviewId_invalid_reviewId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -118,7 +118,7 @@ public class ReviewDaoImplTest {
     }
 
     @Test
-    public void find_reviewId_workerId_invalid_workerId() {
+    public void find_workerId_reviewId_invalid_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -136,7 +136,7 @@ public class ReviewDaoImplTest {
     }
 
     @Test
-    public void find_reviewId_workerId_invalid_reviewId_workerId() {
+    public void find_workerId_reviewId_invalid_workerId_reviewId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);

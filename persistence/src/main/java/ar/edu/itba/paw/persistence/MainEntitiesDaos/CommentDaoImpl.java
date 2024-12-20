@@ -26,7 +26,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public Comment createComment(long userId, long postId, String commentText) {
-        LOGGER.debug("Inserting Comment {}", commentText);
+        LOGGER.debug("Inserting Comment with User Id {} and Post Id {}", userId, postId);
 
         Comment comment = new Comment.Builder()
                 .comment(commentText)
@@ -41,7 +41,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public Optional<Comment> findComment(long neighborhoodId, long postId, long commentId) {
-        LOGGER.debug("Selecting Comment with commentId {} and postId {}", commentId, postId);
+        LOGGER.debug("Selecting Comment with Neighborhood Id {}, Post Id {} and Comment Id {}", neighborhoodId, postId, commentId);
 
         TypedQuery<Comment> query = em.createQuery(
                 "SELECT c FROM Comment c WHERE c.commentId = :commentId AND c.post.postId = :postId AND c.post.user.neighborhood.id = :neighborhoodId",
@@ -58,14 +58,14 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public Optional<Comment> findComment(long commentId) {
-        LOGGER.debug("Selecting Comment with id {}", commentId);
+        LOGGER.debug("Selecting Comment with Comment Id {}", commentId);
 
         return Optional.ofNullable(em.find(Comment.class, commentId));
     }
 
     @Override
     public List<Comment> getComments(long neighborhoodId, long postId, int page, int size) {
-        LOGGER.debug("Selecting Comments from Post {} in Neighborhood {}", postId, neighborhoodId);
+        LOGGER.debug("Selecting Comments with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
         TypedQuery<Long> idQuery = em.createQuery(
                 "SELECT c.commentId FROM Comment c " +
@@ -97,7 +97,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public int countComments(long neighborhoodId, long postId) {
-        LOGGER.debug("Counting Comments from Post {} in Neighborhood {}", postId, neighborhoodId);
+        LOGGER.debug("Counting Comments with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
         Long count = (Long) em.createQuery(
                         "SELECT COUNT(c) FROM Comment c " +
@@ -115,7 +115,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public boolean deleteComment(long neighborhoodId, long postId, long commentId) {
-        LOGGER.debug("Deleting Comment with commentId {}, postId {}, and neighborhoodId {}", commentId, postId, neighborhoodId);
+        LOGGER.debug("Deleting Comment with Neighborhood Id {}, Post Id {} and Comment Id {}", neighborhoodId, postId, commentId);
 
         String nativeSql = "DELETE FROM comments c " +
                 "WHERE c.commentId = :commentId " +

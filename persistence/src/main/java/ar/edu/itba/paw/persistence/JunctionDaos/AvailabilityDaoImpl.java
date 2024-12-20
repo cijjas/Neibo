@@ -25,7 +25,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     @Override
     public Availability createAvailability(long shiftId, long amenityId) {
-        LOGGER.debug("Inserting Availability");
+        LOGGER.debug("Inserting Availability that relates Shift Id {} and Amenity Id {}", shiftId, amenityId);
 
         Availability availability = new Availability.Builder()
                 .amenity(em.find(Amenity.class, amenityId))
@@ -39,7 +39,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     @Override
     public Optional<Availability> findAvailability(long shiftId, long amenityId) {
-        LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
+        LOGGER.debug("Selecting Availability with Shift Id {} and Amenity Id {}", shiftId, amenityId);
 
         TypedQuery<Availability> query = em.createQuery("SELECT a FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Availability.class);
         query.setParameter("shiftId", shiftId);
@@ -52,7 +52,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     @Override
     public boolean deleteAvailability(long shiftId, long amenityId) {
-        LOGGER.debug("Deleting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
+        LOGGER.debug("Deleting Availability with Shift Id {} and Amenity Id {}", shiftId, amenityId);
 
         int deletedCount = em.createQuery("DELETE FROM Availability a WHERE a.amenity.amenityId = :amenityId AND a.shift.shiftId = :shiftId")
                 .setParameter("amenityId", amenityId)

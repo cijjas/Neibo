@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Transactional
 @Rollback
-public class BaseChannelDaoImplTest {
+public class ChannelDaoImplTest {
 
     private final String CHANNEL_NAME_1 = "Channel Name 1";
     private final String CHANNEL_NAME_2 = "Channel Name 2";
@@ -70,7 +70,7 @@ public class BaseChannelDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_channelId_neighborhoodId_valid() {
+    public void find_neighborhoodId_channelId_valid() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
@@ -85,7 +85,7 @@ public class BaseChannelDaoImplTest {
     }
 
     @Test
-    public void find_channelId_neighborhoodId_invalid_channelId() {
+    public void find_neighborhoodId_channelId_invalid_channelId() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
@@ -99,7 +99,7 @@ public class BaseChannelDaoImplTest {
     }
 
     @Test
-    public void find_channelId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_channelId_invalid_neighborhoodId() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
@@ -113,7 +113,7 @@ public class BaseChannelDaoImplTest {
     }
 
     @Test
-    public void find_channelId_neighborhoodId_invalid_channelId_neighborhoodId() {
+    public void find_neighborhoodId_channelId_invalid_channelId_neighborhoodId() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();

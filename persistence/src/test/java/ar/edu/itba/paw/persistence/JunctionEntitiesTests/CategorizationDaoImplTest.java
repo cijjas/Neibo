@@ -71,7 +71,7 @@ public class CategorizationDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_tagId_postId_valid() {
+    public void find_postId_tagId_valid() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();
@@ -91,7 +91,7 @@ public class CategorizationDaoImplTest {
     }
 
     @Test
-    public void find_tagId_postId_invalid_tagId() {
+    public void find_postId_tagId_invalid_tagId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();
@@ -109,7 +109,7 @@ public class CategorizationDaoImplTest {
     }
 
     @Test
-    public void find_tagId_postId_invalid_postId() {
+    public void find_postId_tagId_invalid_postId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();
@@ -127,7 +127,7 @@ public class CategorizationDaoImplTest {
     }
 
     @Test
-    public void find_tagId_postId_invalid_tagId_postId() {
+    public void find_postId_tagId_invalid_postId_tagId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();
@@ -147,7 +147,7 @@ public class CategorizationDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_tagId_postId_valid() {
+    public void delete_postId_tagId_valid() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();
@@ -167,7 +167,7 @@ public class CategorizationDaoImplTest {
     }
 
     @Test
-    public void delete_tagId_postId_invalid_tagId() {
+    public void delete_postId_tagId_invalid_tagId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();
@@ -186,7 +186,7 @@ public class CategorizationDaoImplTest {
     }
 
     @Test
-    public void delete_tagId_postId_invalid_postId() {
+    public void delete_postId_tagId_invalid_postId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();
@@ -205,7 +205,7 @@ public class CategorizationDaoImplTest {
     }
 
     @Test
-    public void delete_tagId_postId_invalid_tagId_postId() {
+    public void delete_postId_tagId_invalid_tagId_postId() {
         // Pre Conditions
         long nhKey1 = testInserter.createNeighborhood();
         long chKey = testInserter.createChannel();

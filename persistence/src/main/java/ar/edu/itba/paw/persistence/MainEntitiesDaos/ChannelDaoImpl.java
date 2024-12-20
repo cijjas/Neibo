@@ -34,7 +34,7 @@ public class ChannelDaoImpl implements ChannelDao {
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
     public Optional<Channel> findChannel(long neighborhoodId, long channelId) {
-        LOGGER.debug("Selecting Channel with channelId {} in Neighborhood {}", channelId, neighborhoodId);
+        LOGGER.debug("Selecting Channel with Neighborhood Id {} and Channel Id {}", neighborhoodId, channelId);
 
         TypedQuery<Channel> query = em.createQuery(
                 "SELECT c FROM Channel c JOIN c.neighborhoods n WHERE c.channelId = :channelId AND n.neighborhoodId = :neighborhoodId",
@@ -60,7 +60,7 @@ public class ChannelDaoImpl implements ChannelDao {
 
     @Override
     public List<Channel> getChannels(long neighborhoodId, int page, int size) {
-        LOGGER.debug("Selecting paginated Channels from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Selecting Channels with Neighborhood Id {}", neighborhoodId);
 
         // Retrieve paginated channel IDs
         TypedQuery<Long> idQuery = em.createQuery(
@@ -85,7 +85,7 @@ public class ChannelDaoImpl implements ChannelDao {
 
     @Override
     public int countChannels(long neighborhoodId) {
-        LOGGER.debug("Counting Channels from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Counting Channels with Neighborhood Id {}", neighborhoodId);
 
         TypedQuery<Long> query = em.createQuery(
                 "SELECT COUNT(c) FROM Channel c JOIN c.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId", Long.class);
@@ -98,7 +98,7 @@ public class ChannelDaoImpl implements ChannelDao {
 
     @Override
     public boolean deleteChannel(long channelId) {
-        LOGGER.info("Deleting Channel {}", channelId);
+        LOGGER.info("Deleting Channel with Channel Id {}", channelId);
 
         Channel channel = em.find(Channel.class, channelId);
         if (channel == null) {
@@ -108,5 +108,4 @@ public class ChannelDaoImpl implements ChannelDao {
         em.remove(channel);
         return true;
     }
-
 }

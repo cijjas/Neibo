@@ -3,7 +3,6 @@ package ar.edu.itba.paw.persistence.JunctionDaos;
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 import org.slf4j.Logger;
@@ -32,7 +31,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     @Override
     public Attendance createAttendee(long userId, long eventId) {
-        LOGGER.debug("Inserting Attendance with userId {} and eventId {}", userId, eventId);
+        LOGGER.debug("Inserting Attendance with User Id {} and Event Id {}", userId, eventId);
 
         Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
         em.persist(attendance);
@@ -41,8 +40,8 @@ public class AttendanceDaoImpl implements AttendanceDao {
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
 
     @Override
-    public Optional<Attendance> findAttendance(long neighborhoodId, long userId, long eventId) {
-        LOGGER.debug("Selecting Attendance with id {} and neighborhoodId {}", userId, neighborhoodId);
+    public Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId) {
+        LOGGER.debug("Selecting Attendance with Neighborhood Id {}, Event Id {} and User Id {}", neighborhoodId, eventId, userId);
 
         TypedQuery<Attendance> query = em.createQuery(
                 "SELECT a FROM Attendance a WHERE a.id = :attendanceId " + " AND a.event.neighborhood.neighborhoodId = :neighborhoodId",
@@ -58,7 +57,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     @Override
     public List<Attendance> getAttendance(long neighborhoodId, long eventId, int page, int size) {
-        LOGGER.info("Getting Attendance for Event {} in Neighborhood {}", eventId, neighborhoodId);
+        LOGGER.info("Getting Attendance with Event Id {} and NeighborhoodId {}", eventId, neighborhoodId);
 
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -107,7 +106,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     @Override
     public int countAttendance(long neighborhoodId, long eventId) {
-        LOGGER.info("Counting Attendance for Event {} in Neighborhood {}", eventId, neighborhoodId);
+        LOGGER.info("Counting Attendance with Event Id {} and Neighborhood Id {}", eventId, neighborhoodId);
 
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -131,7 +130,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     @Override
     public boolean deleteAttendee(long neighborhoodId, long eventId, long userId) {
-        LOGGER.debug("Deleting Attendance with userId {}, eventId {}, and neighborhoodId {}", userId, eventId, neighborhoodId);
+        LOGGER.debug("Deleting Attendance with Neighborhood Id {}, Event Id {}, and User Id {}", neighborhoodId, eventId, userId);
 
         String sql = "DELETE FROM events_users " +
                 "WHERE eventid = :eventId " +

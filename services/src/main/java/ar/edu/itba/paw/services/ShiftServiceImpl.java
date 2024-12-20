@@ -38,7 +38,7 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     @Transactional(readOnly = true)
     public List<Shift> getShifts(Long amenityId, Date date) {
-        LOGGER.info("Getting Shifts");
+        LOGGER.info("Getting Shifts for amenity {} on date {}", amenityId, date);
 
         return shiftDao.getShifts(amenityId, date);
     }

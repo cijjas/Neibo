@@ -44,7 +44,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public Amenity createAmenity(long neighborhoodId, String name, String description, List<Long> selectedShiftsIds) {
-        LOGGER.info("Creating Amenity {}", name);
+        LOGGER.info("Creating Amenity {} described as {} with the following Shifts {} in Neighborhood {}", name, description, selectedShiftsIds, neighborhoodId);
 
         Amenity amenity = amenityDao.createAmenity(neighborhoodId, description, name);
         if (selectedShiftsIds != null)
@@ -95,7 +95,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public Amenity updateAmenity(long neighborhoodId, long amenityId, String name, String description, List<Long> shiftIds) {
-        LOGGER.info("Updating Amenity {}", amenityId);
+        LOGGER.info("Updating Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
 
         Amenity amenity = amenityDao.findAmenity(neighborhoodId, amenityId).orElseThrow(NotFoundException::new);
 
@@ -139,7 +139,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public boolean deleteAmenity(long neighborhoodId, long amenityId) {
-        LOGGER.info("Deleting Amenity {}", amenityId);
+        LOGGER.info("Deleting Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
 
         return amenityDao.deleteAmenity(neighborhoodId, amenityId);
     }

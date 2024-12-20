@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface EventService {
 
-    Event createEvent(long neighborhoodId, String description, Date date, String startTime, String endTime, String name);
+    Event createEvent(long neighborhoodId, String name, String description, Date date, String startTime, String endTime);
 
     // -----------------------------------------------------------------------------------------------------------------
 

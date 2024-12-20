@@ -87,10 +87,39 @@ public class ChannelMappingDaoImplTest {
     }
 
     @Test
+    public void find_neighborhoodId_tagId_invalid_neighborhoodId(){
+        // Pre conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+        testInserter.createChannelMapping(nhKey1, chKey1);
+
+        // Exercise
+        Optional<ChannelMapping> optionalChannelMapping= channelMappingDaoImpl.findChannelMapping(INVALID_ID, chKey1);
+
+        // Validations & Post Conditions
+        assertFalse(optionalChannelMapping.isPresent());
+    }
+
+    @Test
+    public void find_neighborhoodId_tagId_invalid_tagId(){
+        // Pre conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+        testInserter.createChannelMapping(nhKey1, chKey1);
+
+        // Exercise
+        Optional<ChannelMapping> optionalChannelMapping= channelMappingDaoImpl.findChannelMapping(nhKey1, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalChannelMapping.isPresent());
+    }
+
+    @Test
     public void find_neighborhoodId_tagId_invalid_neighborhoodId_tagId(){
         // Pre conditions
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+        testInserter.createChannelMapping(nhKey1, chKey1);
 
         // Exercise
         Optional<ChannelMapping> optionalChannelMapping= channelMappingDaoImpl.findChannelMapping(INVALID_ID, INVALID_ID);
@@ -157,7 +186,7 @@ public class ChannelMappingDaoImplTest {
     }
 
     @Test
-    public void get_channelId_neighborhoodId() {
+    public void get_neighborhoodId_channelId() {
         // Pre conditions
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
@@ -212,7 +241,7 @@ public class ChannelMappingDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_channelId_neighborhoodId_valid() {
+    public void delete_neighborhoodId_channelId_valid() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
@@ -228,7 +257,7 @@ public class ChannelMappingDaoImplTest {
     }
 
     @Test
-    public void delete_channelId_neighborhoodId_invalid_channelId() {
+    public void delete_neighborhoodId_channelId_invalid_channelId() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
@@ -243,7 +272,7 @@ public class ChannelMappingDaoImplTest {
     }
 
     @Test
-    public void delete_channelId_neighborhoodId_invalid_neighborhoodId() {
+    public void delete_neighborhoodId_channelId_invalid_neighborhoodId() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
@@ -258,7 +287,7 @@ public class ChannelMappingDaoImplTest {
     }
 
     @Test
-    public void delete_channelId_neighborhoodId_invalid_channelId_neighborhoodId() {
+    public void delete_neighborhoodId_channelId_invalid_neighborhoodId_channelId() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();

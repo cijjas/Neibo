@@ -74,7 +74,7 @@ public class AffiliationDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_workerId_neighborhoodId_valid() {
+    public void find_neighborhoodId_workerId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -91,7 +91,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void find_workerId_neighborhoodId_invalid_workerId() {
+    public void find_neighborhoodId_workerId_invalid_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -106,7 +106,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void find_workerId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_workerId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -121,7 +121,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void find_workerId_neighborhoodId_invalid_workerId_neighborhoodId() {
+    public void find_neighborhoodId_workerId_invalid_neighborhoodId_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -190,7 +190,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void get_workerId_neighborhoodId() {
+    public void get_neighborhoodId_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
@@ -296,7 +296,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void count_workerId_neighborhoodId() {
+    public void count_neighborhoodId_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
@@ -329,7 +329,7 @@ public class AffiliationDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void delete_userId_neighborhoodId_valid() {
+    public void delete_neighborhoodId_userId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -346,7 +346,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void delete_userId_neighborhoodId_invalid_userId() {
+    public void delete_neighborhoodId_userId_invalid_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -362,7 +362,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void delete_userId_neighborhoodId_invalid_neighborhoodId() {
+    public void delete_neighborhoodId_userId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -378,7 +378,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void delete_userId_neighborhoodId_invalid_userId_neighborhoodId() {
+    public void delete_neighborhoodId_userId_invalid_neighborhoodId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);

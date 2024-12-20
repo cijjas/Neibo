@@ -39,7 +39,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
     @Override
     public Optional<Neighborhood> findNeighborhood(long neighborhoodId) {
-        LOGGER.debug("Selecting Neighborhood with id {}", neighborhoodId);
+        LOGGER.debug("Selecting Neighborhood with Neighborhood Id{}", neighborhoodId);
 
         return Optional.ofNullable(em.find(Neighborhood.class, neighborhoodId));
     }
@@ -55,7 +55,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
     @Override
     public List<Neighborhood> getNeighborhoods(Long workerId, int page, int size) {
-        LOGGER.debug("Selecting Neighborhoods");
+        LOGGER.debug("Selecting Neighborhoods with Worker Id {}", workerId);
 
         // Build the first query to fetch neighborhood IDs with ordering
         StringBuilder idQueryStringBuilder = new StringBuilder();
@@ -108,7 +108,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
     @Override
     public int countNeighborhoods(Long workerId) {
-        LOGGER.debug("Counting Neighborhoods");
+        LOGGER.debug("Counting Neighborhoods with Worker Id {}", workerId);
 
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT COUNT(DISTINCT n.neighborhoodid) FROM neighborhoods n ");
@@ -131,7 +131,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
     @Override
     public boolean deleteNeighborhood(long neighborhoodId) {
-        LOGGER.debug("Deleting Neighborhood with neighborhoodId {}", neighborhoodId);
+        LOGGER.debug("Deleting Neighborhood with Neighborhood Id {}", neighborhoodId);
         Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
         if (neighborhood != null) {
             em.remove(neighborhood);

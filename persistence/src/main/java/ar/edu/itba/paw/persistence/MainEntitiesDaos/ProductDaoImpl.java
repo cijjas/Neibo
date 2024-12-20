@@ -28,9 +28,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product createProduct(long userId, String name, String description, double price, Long units, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
-        LOGGER.debug("Inserting Product {}", name);
-
-        Department d = em.find(ar.edu.itba.paw.models.Entities.Department.class, departmentId);
+        LOGGER.debug("Inserting Product {} with User Id {}", name, used);
 
         Product product = new Product.Builder()
                 .name(name)
@@ -45,6 +43,7 @@ public class ProductDaoImpl implements ProductDao {
                 .creationDate(new Date(System.currentTimeMillis()))
                 .remainingUnits(units)
                 .build();
+
         em.persist(product);
         return product;
     }
@@ -53,7 +52,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Optional<Product> findProduct(long neighborhoodId, long productId) {
-        LOGGER.debug("Selecting Product with productId {}, neighborhoodId {}", productId, neighborhoodId);
+        LOGGER.debug("Selecting Product with Neighborhood Id {} and Product Id {}", neighborhoodId, productId);
 
         TypedQuery<Product> query = em.createQuery(
                 "SELECT p FROM Product p WHERE p.productId = :productId AND p.seller.neighborhood.neighborhoodId = :neighborhoodId",
@@ -69,14 +68,14 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Optional<Product> findProduct(long productId) {
-        LOGGER.debug("Selecting Product with id {}", productId);
+        LOGGER.debug("Selecting Product with Product Id {}", productId);
 
         return Optional.ofNullable(em.find(Product.class, productId));
     }
 
     @Override
     public List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size) {
-        LOGGER.debug("Selecting Products from neighborhood {}, in department {}", neighborhoodId, departmentId);
+        LOGGER.debug("Selecting Products with Neighborhood Id {}, User Id {}, Department Id {} and Product Status Id {}", neighborhoodId, userId, departmentId, productStatusId);
 
         StringBuilder nativeQuery = new StringBuilder("SELECT p.* FROM products p " +
                 "JOIN users u ON p.sellerid = u.userid " +
@@ -153,7 +152,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public int countProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId) {
-        LOGGER.debug("Selecting Products Count from neighborhood {}, in department {}", neighborhoodId, departmentId);
+        LOGGER.debug("Counting Products with Neighborhood Id {}, User Id {}, Department Id {} and Product Status Id {}", neighborhoodId, userId, departmentId, productStatusId);
 
         StringBuilder nativeQuery = new StringBuilder("SELECT COUNT(DISTINCT p.productid) FROM products p " +
                 "JOIN users u ON p.sellerid = u.userid " +
@@ -226,7 +225,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public boolean deleteProduct(long neighborhoodId, long productId) {
-        LOGGER.debug("Deleting Product with id {}", productId);
+        LOGGER.debug("Deleting Product with Neighborhood Id {} and Product Id {}", neighborhoodId, productId);
 
         int deletedCount = em.createNativeQuery(
             "DELETE FROM products p WHERE p.productId = :productId AND p.sellerId IN (SELECT u.userId FROM users u WHERE u.neighborhoodId = :neighborhoodId)"

@@ -112,7 +112,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_valid() {
+    public void find_neighborhoodId_productId_inquiryId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -131,7 +131,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_invalid_inquiryId() {
+    public void find_neighborhoodId_productId_inquiryId_invalid_inquiryId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -149,7 +149,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_invalid_productId() {
+    public void find_neighborhoodId_productId_inquiryId_invalid_productId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -167,7 +167,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_productId_inquiryId_invalid_neighborhoodId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -185,7 +185,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_invalid_inquiryId_productId() {
+    public void find_neighborhoodId_productId_inquiryId_invalid_productId_inquiryId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -203,7 +203,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_invalid_inquiryId_neighborhoodId() {
+    public void find_neighborhoodId_productId_inquiryId_invalid_neighborhoodId_inquiryId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -221,7 +221,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_invalid_productId_neighborhoodId() {
+    public void find_neighborhoodId_productId_inquiryId_invalid_neighborhoodId_productId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -239,7 +239,7 @@ public class InquiryDaoImplTest {
     }
 
     @Test
-    public void find_inquiryId_productId_neighborhoodId_invalid_inquiryId_productId_neighborhoodId() {
+    public void find_neighborhoodId_productId_inquiryId_invalid_neighborhoodId_productId_inquiryId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -250,7 +250,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID, INVALID_ID, iqKey);
+        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID, INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalInquiry.isPresent());

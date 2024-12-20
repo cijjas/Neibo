@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(long userId, String name, String description, Double price, long units, boolean used, long departmentId, List<Long> imageIds) {
-        LOGGER.info("Creating Product {} from User {}", name, userId);
+        LOGGER.info("Creating Product {} described as {} with {} units categorized in Department {} and {} used condition from User {}", name, description, units, departmentId, used, userId);
 
         Long[] idArray = {0L, 0L, 0L};
         int imagesLength = imageIds == null ? 0 : imageIds.size();
@@ -83,29 +83,33 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(long neighborhoodId, long productId, String name, String description, Double price, Long units, Boolean used, Long departmentId, List<Long> imageIds) {
-        LOGGER.info("Updating Product {}", productId);
+        LOGGER.info("Updating Product {} from Neighborhood {}", productId, neighborhoodId);
 
         Product product = findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
 
         if (name != null)
             product.setName(name);
-        if (description != null )
+        if (description != null)
             product.setDescription(description);
         if (price != null)
             product.setPrice(price);
         if (used != null)
             product.setUsed(used);
-        if (departmentId!= null)
+        if (departmentId != null)
             product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(NotFoundException::new));
         if (units != null)
             product.setRemainingUnits(units);
 
-        if (imageIds != null && !imageIds.isEmpty()) {
-            product.setPrimaryPicture(imageService.findImage(imageIds.get(0)).orElseThrow(NotFoundException::new));
-            if (imageIds.size() > 1)
-                product.setSecondaryPicture(imageService.findImage(imageIds.get(1)).orElseThrow(NotFoundException::new));
-            if (imageIds.size() > 2)
-                product.setTertiaryPicture(imageService.findImage(imageIds.get(2)).orElseThrow(NotFoundException::new));
+        if (imageIds != null) {
+            if (imageIds.isEmpty()) {
+                product.setPrimaryPicture(null);
+                product.setSecondaryPicture(null);
+                product.setTertiaryPicture(null);
+            } else {
+                product.setPrimaryPicture(imageService.findImage(imageIds.get(0)).orElseThrow(NotFoundException::new));
+                product.setSecondaryPicture(imageIds.size() > 1 ? imageService.findImage(imageIds.get(1)).orElseThrow(NotFoundException::new) : null);
+                product.setTertiaryPicture(imageIds.size() > 2 ? imageService.findImage(imageIds.get(2)).orElseThrow(NotFoundException::new) : null);
+            }
         }
 
         return product;
@@ -115,7 +119,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean deleteProduct(long neighborhoodId, long productId) {
-        LOGGER.info("Deleting Product {}", productId);
+        LOGGER.info("Deleting Product {} from Neighborhood {}", productId, neighborhoodId);
 
         return productDao.deleteProduct(neighborhoodId, productId);
     }

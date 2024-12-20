@@ -116,7 +116,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void find_userId_neighborhoodId_valid() {
+    public void find_neighborhoodId_userId_valid() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
@@ -130,7 +130,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void find_userId_neighborhoodId_invalid_userId() {
+    public void find_neighborhoodId_userId_invalid_userId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
@@ -143,7 +143,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void find_userId_neighborhoodId_invalid_neighborhoodId() {
+    public void find_neighborhoodId_userId_invalid_neighborhoodId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
@@ -156,7 +156,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void find_userId_neighborhoodId_invalid_userId_neighborhoodId() {
+    public void find_neighborhoodId_userId_invalid_userId_neighborhoodId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);

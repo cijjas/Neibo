@@ -76,15 +76,6 @@ export class ProductDetailComponent implements OnInit {
       });
     });
 
-    // Fetch department list
-    this.departmentService.getDepartments().subscribe({
-      next: (departments) => {
-        this.departmentList = departments;
-        console.log(this.departmentList);
-      },
-      error: (err) => console.error(err),
-    });
-
     // Get current user
     this.userService.getUser(this.linkService.getLink('user:self')).subscribe((user) => {
       this.loggedUser = user;
@@ -128,6 +119,7 @@ export class ProductDetailComponent implements OnInit {
     this.questionForReply = question;
     this.replyDialogVisible = true;
   }
+
   closeReplyDialog() {
     this.replyDialogVisible = false;
     this.questionForReply = null;
@@ -234,8 +226,10 @@ export class ProductDetailComponent implements OnInit {
 
 
 
-  goToDepartment() {
-    // Handle navigation to department
+  goToDepartment(department: Department): void {
+    this.router.navigate(['/marketplace'], {
+      queryParams: { inDepartment: department.self }
+    });
   }
 
   onSelectSmallImage(image: string, index: number): void {

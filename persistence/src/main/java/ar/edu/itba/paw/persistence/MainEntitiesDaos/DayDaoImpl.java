@@ -34,7 +34,7 @@ public class DayDaoImpl implements DayDao {
 
     @Override
     public Optional<Day> findDay(long dayId) {
-        LOGGER.debug("Selecting Day with id {}", dayId);
+        LOGGER.debug("Selecting Day with Day Id {}", dayId);
 
         return Optional.ofNullable(em.find(Day.class, dayId));
     }

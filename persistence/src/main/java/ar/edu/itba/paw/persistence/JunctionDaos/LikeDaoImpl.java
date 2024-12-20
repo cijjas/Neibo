@@ -27,7 +27,7 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public Like createLike(long userId, long postId) {
-        LOGGER.debug("Inserting Like");
+        LOGGER.debug("Inserting Like with User Id {} and Post Id {}", userId, postId);
 
         Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new Date(System.currentTimeMillis()));
         em.persist(like);
@@ -38,7 +38,7 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public List<Like> getLikes(Long userId, Long postId, int page, int size) {
-        LOGGER.debug("Selecting Likes by Criteria");
+        LOGGER.debug("Selecting Likes with User Id {} and Post Id {}", userId, postId);
 
         // Create a TypedQuery for LikeKey based on the provided criteria
         TypedQuery<LikeKey> query;
@@ -82,7 +82,7 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public int countLikes(Long userId, Long postId) {
-        LOGGER.debug("Selecting Likes Count by Criteria");
+        LOGGER.debug("Counting Likes with User Id {} and Post Id {}", userId, postId);
 
         TypedQuery<Long> query = null;
         if(userId != null && postId != null) {
@@ -106,7 +106,7 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public boolean deleteLike(long userId, long postId) {
-        LOGGER.debug("Deleting Like from Post {} and userId {}", postId, userId);
+        LOGGER.debug("Deleting Like with User Id {} and Post Id {}", userId, postId);
 
         String hql = "DELETE FROM Like l WHERE l.id = :likeId";
         int deletedCount = em.createQuery(hql)

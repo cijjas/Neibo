@@ -1,13 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, throwError } from 'rxjs';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Product } from '../../models/index';
 import { ProductDto, UserDto, DepartmentDto, InquiryDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { parseLinkHeader } from './utils';
 import { mapInquiry } from './inquiry.service';
-import { HateoasLinksService } from '../index.service';
+import { formatDepartmentName, HateoasLinksService, mapDepartment } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -44,6 +44,14 @@ export class ProductService {
             .get<ProductDto[]>(url, { params, observe: 'response' })
             .pipe(
                 mergeMap((response) => {
+                    if (response.status === 204 || !response.body) {
+                        return of({
+                            products: [],
+                            totalPages: 0,
+                            currentPage: 0,
+                        });
+                    }
+
                     const productsDto = response.body || [];
                     const linkHeader = response.headers.get('Link');
                     const paginationInfo = parseLinkHeader(linkHeader);
@@ -100,6 +108,15 @@ export class ProductService {
             })
         );
     }
+
+    public updateProduct(productUrl: string, productData: any): Observable<void> {
+        return this.http.patch<void>(productUrl, productData).pipe(
+            catchError(error => {
+                console.error('Error updating product:', error);
+                return throwError(() => new Error('Failed to update product.'));
+            })
+        );
+    }
 }
 
 export function mapProduct(http: HttpClient, productDto: ProductDto): Observable<Product> {
@@ -120,7 +137,7 @@ export function mapProduct(http: HttpClient, productDto: ProductDto): Observable
                 secondImage: productDto._links.secondProductImage,
                 thirdImage: productDto._links.thirdProductImage,
                 seller: seller,
-                department: department.name,
+                department: mapDepartment(department),
                 self: productDto._links.self
             } as Product;
         })

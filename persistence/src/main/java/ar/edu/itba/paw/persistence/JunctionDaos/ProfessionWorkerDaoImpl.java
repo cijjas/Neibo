@@ -24,7 +24,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
 
     @Override
     public Specialization createSpecialization(long workerId, long professionId) {
-        LOGGER.debug("Inserting Worker Profession");
+        LOGGER.debug("Inserting Specialization with Worker Id {} and Profession Id {}", workerId, professionId);
 
         Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(Profession.class, professionId));
         em.persist(specialization);
@@ -35,7 +35,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
 
     @Override
     public Optional<Specialization> findSpecialization(long workerId, long professionId) {
-        LOGGER.debug("Selecting Worker Profession for Worker {} and Profession {}", workerId, professionId);
+        LOGGER.debug("Selecting Specialization with Worker Id {} and Profession Id {}", workerId, professionId);
 
         return Optional.ofNullable(em.find(Specialization.class, new SpecializationKey(workerId, professionId)));
     }

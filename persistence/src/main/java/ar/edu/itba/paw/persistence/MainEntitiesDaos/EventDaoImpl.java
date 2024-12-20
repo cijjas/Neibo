@@ -27,7 +27,7 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public Event createEvent(long neighborhoodId, String name, String description, Date date, long startTimeId, long endTimeId) {
-        LOGGER.debug("Inserting Event {}", name);
+        LOGGER.debug("Inserting Event {} with Neighborhood Id {}", name, neighborhoodId);
 
         Event event = new Event.Builder()
                 .name(name)
@@ -45,7 +45,7 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public Optional<Event> findEvent(long neighborhoodId, long eventId) {
-        LOGGER.debug("Selecting Event with eventId {}, neighborhoodId {}", eventId, neighborhoodId);
+        LOGGER.debug("Selecting Event with Neighborhood Id {} and Event Id {}", neighborhoodId, eventId);
 
         TypedQuery<Event> query = em.createQuery(
                 "SELECT e FROM Event e WHERE e.eventId = :eventId AND e.neighborhood.id = :neighborhoodId",
@@ -61,7 +61,7 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public List<Event> getEvents(long neighborhoodId, Date date, int page, int size) {
-        LOGGER.debug("Selecting Events from Date {}", date);
+        LOGGER.debug("Selecting Events with Neighborhood Id {} on date {}", neighborhoodId, date);
 
         // Build the JPQL query for fetching event IDs
         StringBuilder jpqlBuilder = new StringBuilder("SELECT e.eventId FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
@@ -102,7 +102,7 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public int countEvents(long neighborhoodId, Date date) {
-        LOGGER.debug("Counting Events with neighborhoodId {}", neighborhoodId);
+        LOGGER.debug("Counting Events with Neighborhood Id {} on date {}", neighborhoodId, date);
 
         StringBuilder jpqlBuilder = new StringBuilder("SELECT DISTINCT COUNT(e.eventId) FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
 
@@ -125,7 +125,7 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public boolean deleteEvent(long neighborhoodId, long eventId) {
-        LOGGER.debug("Deleting Event with eventId {} and neighborhoodId {}", eventId, neighborhoodId);
+        LOGGER.debug("Deleting Event with Neighborhood Id {} and Event Id {}", neighborhoodId, eventId);
 
         String hql = "DELETE FROM Event e WHERE e.eventId = :eventId " +
                 "AND e.neighborhood.id = :neighborhoodId";

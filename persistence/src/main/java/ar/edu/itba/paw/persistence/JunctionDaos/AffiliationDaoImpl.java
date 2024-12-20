@@ -28,7 +28,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
     @Override
     public Affiliation createAffiliation(long neighborhoodId, long workerId, Long workerRoleId) {
-        LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
+        LOGGER.debug("Inserting Affiliation between Worker Id {} and Neighborhood Id {}", workerId, neighborhoodId);
 
         Worker worker = em.find(Worker.class, workerId);
         Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
@@ -48,14 +48,14 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
     @Override
     public Optional<Affiliation> findAffiliation(long neighborhoodId, long workerId) {
-        LOGGER.debug("Finding Affiliation with worker id {} in Neighborhood {}", workerId, neighborhoodId);
+        LOGGER.debug("Finding Affiliation with Worker Id {} in Neighborhood Id {}", workerId, neighborhoodId);
 
         return Optional.ofNullable(em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId)));
     }
 
     @Override
     public List<Affiliation> getAffiliations(Long neighborhoodId, Long workerId, int page, int size) {
-        LOGGER.debug("Selecting Worker Affiliations By Criteria");
+        LOGGER.debug("Selecting Worker Affiliations with Worker Id {} and with Neighborhood Id {}", workerId, neighborhoodId);
 
         TypedQuery<AffiliationKey> idQuery = null;
         StringBuilder queryBuilder = new StringBuilder("SELECT a.id FROM Affiliation a ");
@@ -95,7 +95,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
     @Override
     public int countAffiliations(Long neighborhoodId, Long workerId) {
-        LOGGER.debug("Counting Worker Affiliations By Criteria");
+        LOGGER.debug("Counting Worker Affiliations with Worker Id {} and with Neighborhood Id {}", workerId, neighborhoodId);
 
         Long count = null;
         if (workerId != null && neighborhoodId != null) {
@@ -127,7 +127,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
     @Override
     public boolean deleteAffiliation(long neighborhoodId, long workerId) {
-        LOGGER.debug("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        LOGGER.debug("Deleting Affiliation with Worker Id {} and Neighborhood Id {}", workerId, neighborhoodId);
 
         String hql = "DELETE FROM Affiliation a WHERE a.id = :affiliationId";
         int deletedCount = em.createQuery(hql)

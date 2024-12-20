@@ -2,7 +2,7 @@
     <div class="upper-feed-buttons-box w-100">
         <div class="f-r-c-c g-05">
             <div class="f-r-s-c filters-marketplace g-05">
-                <a [routerLink]="['/marketplace/products/all']" class="cool-feed-button rounded marketplace-button"
+                <a [routerLink]="['/marketplace']" class="cool-feed-button rounded marketplace-button"
                     [ngClass]="{'active': channel === 'Marketplace'}">
                     <span class="font-size-12">
                         <i class="fas fa-shopping-cart"></i>
@@ -37,15 +37,16 @@
                     </div>
                     <ul class="dropdown-options">
                         <li>
-                            <a [routerLink]="['/marketplace/products/all']">All</a>
+                            <a [routerLink]="['/marketplace']" [queryParams]="{}">All</a>
                         </li>
                         <li *ngFor="let department of departmentList" [hidden]="department.name === 'NONE'">
-                            <a [routerLink]="['/marketplace/products', department.name]">{{ department.name }}</a>
+                            <a [routerLink]="['/marketplace']" [queryParams]="{ inDepartment: department.self }">
+                                {{ department.displayName }}
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
-
         </div>
 
         <a [routerLink]="['/marketplace/create-listing']"

@@ -29,7 +29,7 @@ public class ContactDaoImpl implements ContactDao {
 
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
-        LOGGER.debug("Inserting Contact {}", contactName);
+        LOGGER.debug("Inserting Contact {} with Neighborhood Id {}", contactName, neighborhoodId);
 
         Contact contact = new Contact.Builder()
                 .contactAddress(contactAddress)
@@ -45,7 +45,7 @@ public class ContactDaoImpl implements ContactDao {
 
     @Override
     public Optional<Contact> findContact(long neighborhoodId, long contactId) {
-        LOGGER.debug("Selecting Contact with contactId {}, neighborhoodId {}", contactId, neighborhoodId);
+        LOGGER.debug("Selecting Contact with Neighborhood Id {} and Neighborhood Id {}", neighborhoodId, contactId);
 
         TypedQuery<Contact> query = em.createQuery(
                 "SELECT c FROM Contact c WHERE c.id = :contactId AND c.neighborhood.id = :neighborhoodId",
@@ -61,7 +61,7 @@ public class ContactDaoImpl implements ContactDao {
 
     @Override
     public List<Contact> getContacts(long neighborhoodId, int page, int size) {
-        LOGGER.debug("Selecting paginated Contacts from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Selecting Contacts with Neighborhood Id {}", neighborhoodId);
 
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -93,7 +93,7 @@ public class ContactDaoImpl implements ContactDao {
 
     @Override
     public int countContacts(long neighborhoodId) {
-        LOGGER.debug("Counting Contacts from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Counting Contacts with Neighborhood Id {}", neighborhoodId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
@@ -108,7 +108,7 @@ public class ContactDaoImpl implements ContactDao {
 
     @Override
     public boolean deleteContact(long neighborhoodId, long contactId) {
-        LOGGER.debug("Deleting Contact with contactId {} and neighborhoodId {}", contactId, neighborhoodId);
+        LOGGER.debug("Deleting Contact with Neighborhood Id {} and Neighborhood Id {}", neighborhoodId, contactId);
 
         String hql = "DELETE FROM Contact c WHERE c.contactId = :contactId " +
                 "AND c.neighborhood.id = :neighborhoodId";

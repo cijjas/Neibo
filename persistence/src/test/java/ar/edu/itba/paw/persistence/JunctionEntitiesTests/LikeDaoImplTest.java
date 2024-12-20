@@ -87,7 +87,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void get_neighborhoodId_userId() {
+    public void get_userId() {
         // Pre Conditions
         populateLikes();
 
@@ -99,7 +99,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void get_neighborhoodId_postId() {
+    public void get_postId() {
         // Pre Conditions
         populateLikes();
 
@@ -111,7 +111,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void get_neighborhoodId_userId_postId() {
+    public void get_userId_postId() {
         // Pre Conditions
         populateLikes();
 
@@ -169,7 +169,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void count_neighborhoodId_userId() {
+    public void count_userId() {
         // Pre Conditions
         populateLikes();
 
@@ -181,7 +181,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void count_neighborhoodId_postId() {
+    public void count_postId() {
         // Pre Conditions
         populateLikes();
 
@@ -193,7 +193,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void count_neighborhoodId_userId_postId() {
+    public void count_userId_postId() {
         // Pre Conditions
         populateLikes();
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../shared/models';
+import { Department, Product } from '../../shared/models';
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,8 +21,11 @@ export class ProductCardComponent {
     this.router.navigate(['/marketplace/products', this.product.self]);
   }
 
-  goToDepartment(): void {
-    // Navigate to department listings
+
+  goToDepartment(department: Department): void {
+    this.router.navigate(['/marketplace'], {
+      queryParams: { inDepartment: department.self }
+    });
   }
 
 }

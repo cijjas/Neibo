@@ -36,7 +36,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Optional<Tag> findTag(long neighborhoodId, long tagId) {
-        LOGGER.debug("Selecting Tag {} in Neighborhood {}", tagId, neighborhoodId);
+        LOGGER.debug("Selecting Tag with Neighborhood Id {} and Tag Id {}", neighborhoodId, tagId);
 
         TypedQuery<Tag> query = em.createQuery(
                 "SELECT t FROM Tag t JOIN t.neighborhoods n WHERE t.tagId = :tagId AND n.neighborhoodId = :neighborhoodId",
@@ -61,7 +61,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public List<Tag> getTags(long neighborhoodId, Long postId, int page, int size) {
-        LOGGER.debug("Selecting Tags By Criteria");
+        LOGGER.debug("Selecting Tags with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
         TypedQuery<Long> query = null;
         if (postId != null) {
@@ -90,7 +90,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public int countTags(long neighborhoodId, Long postId) {
-        LOGGER.debug("Counting Tags By Criteria");
+        LOGGER.debug("Counting Tags with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
         TypedQuery<Long> query = null;
         if (postId != null) {
@@ -118,7 +118,7 @@ public class TagDaoImpl implements TagDao {
     // ---------------------------------------------- TAGS DELETE ------------------------------------------------------
     @Override
     public boolean deleteTag(long tagId) {
-        LOGGER.debug("Deleting Tag with tagId {}", tagId);
+        LOGGER.debug("Deleting Tag with Tag Id {}", tagId);
         Tag tag = em.find(Tag.class, tagId);
         if (tag != null) {
             em.remove(tag);
