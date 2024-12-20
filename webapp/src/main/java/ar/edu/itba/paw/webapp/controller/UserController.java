@@ -153,7 +153,7 @@ public class UserController {
     @Path("/{userId}")
     @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId, #neighborhoodId)")
     @Validated(UpdateValidationSequence.class)
-    public Response updateUserPartially(
+    public Response updateUser(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam("userId") @GenericIdConstraint long userId,
             @Valid UserDto updateForm
@@ -161,7 +161,7 @@ public class UserController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(userId, updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
+        final User updatedUser = us.updateUser(neighborhoodId, userId, updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

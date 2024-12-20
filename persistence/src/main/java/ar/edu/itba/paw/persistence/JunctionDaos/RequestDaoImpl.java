@@ -53,6 +53,34 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
+    public Optional<Request> findRequest(long neighborhoodId, long requestId) {
+        LOGGER.debug("Selecting Request {} from Neighborhood {}", requestId, neighborhoodId);
+
+        // Query to find the Request with the given neighborhoodId and requestId
+        String query = "SELECT r FROM Request r " +
+                "JOIN r.user u " +
+                "JOIN u.neighborhood n " +
+                "WHERE r.requestId = :requestId " +
+                "AND n.neighborhoodId = :neighborhoodId";
+
+        try {
+            TypedQuery<Request> typedQuery = em.createQuery(
+                    "SELECT r FROM Request r JOIN r.user u JOIN u.neighborhood n WHERE r.requestId = :requestId AND n.neighborhoodId = :neighborhoodId",
+                    Request.class
+            );
+            typedQuery.setParameter("requestId", requestId);
+            typedQuery.setParameter("neighborhoodId", neighborhoodId);
+
+            // Return the result, wrapped in an Optional
+            Request result = typedQuery.getSingleResult();
+            return Optional.of(result);
+        } catch (Exception e) {
+            LOGGER.error("Error finding Request with id {} in Neighborhood {}", requestId, neighborhoodId, e);
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long typeId, Long statusId, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
 

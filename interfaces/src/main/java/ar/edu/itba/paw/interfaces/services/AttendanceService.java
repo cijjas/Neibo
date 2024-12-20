@@ -15,7 +15,7 @@ public interface AttendanceService {
 
     List<Attendance> getAttendance(long neighborhoodId, long eventId, int size, int page);
 
-    int calculateAttendancePages(long eventId, int size);
+    int calculateAttendancePages(long neighborhoodId, long eventId, int size);
 
     int countAttendance(long neighborhoodId, long eventId);
 

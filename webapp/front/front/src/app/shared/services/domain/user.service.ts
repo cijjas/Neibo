@@ -78,6 +78,12 @@ export class UserService {
         );
     }
 
+    public updatePhoneNumber(userUrl: string, phoneNumber: string): Observable<User> {
+        return this.http.patch<UserDto>(userUrl, { phoneNumber: phoneNumber }).pipe(
+            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
+        );
+    }
+
     public uploadProfilePicture(user: User, file: File): Observable<User> {
         return this.imageService.createImage(file).pipe(
             mergeMap((imageUrl: string) => {
@@ -93,7 +99,7 @@ export class UserService {
 export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
     return forkJoin([
         http.get<LanguageDto>(userDto._links.language),
-        http.get<UserRoleDto>(userDto._links.posts)
+        http.get<UserRoleDto>(userDto._links.userRole)
     ]).pipe(
         map(([language, userRole]) => {
             return {

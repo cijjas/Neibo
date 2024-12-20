@@ -121,6 +121,74 @@ public class RequestDaoImplTest {
         assertFalse(purchase.isPresent());
     }
 
+    @Test
+    public void find_neighborhoodId_requestId_valid() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(TestConstants.USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
+
+        // Exercise
+        Optional<Request> optionalRequest = requestDaoImpl.findRequest(nhKey, rKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalRequest.isPresent());
+        assertEquals(rKey, optionalRequest.get().getRequestId().longValue());
+    }
+
+    @Test
+    public void find_neighborhoodId_requestId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
+
+        // Exercise
+        Optional<Request> purchase = requestDaoImpl.findRequest(INVALID_ID, rKey);
+
+        // Validations & Post Conditions
+        assertFalse(purchase.isPresent());
+    }
+
+    @Test
+    public void find_neighborhoodId_requestId_invalid_requestId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
+
+        // Exercise
+        Optional<Request> purchase = requestDaoImpl.findRequest(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(purchase.isPresent());
+    }
+    @Test
+    public void find_neighborhoodId_requestId_invalid_neighborhoodId_requestId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
+
+        // Exercise
+        Optional<Request> purchase = requestDaoImpl.findRequest(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(purchase.isPresent());
+    }
+
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test

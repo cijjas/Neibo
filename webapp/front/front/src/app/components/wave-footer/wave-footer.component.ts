@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-wave-footer',
@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['../../app.component.css']
 })
 export class WaveFooterComponent {
+
+  @Input() isMarketplace = false;
+
 
 }

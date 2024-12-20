@@ -65,7 +65,6 @@ export class CommentService {
 
         return this.http.post<Comment>(url, body);
     }
-
 }
 
 export function mapComment(http: HttpClient, commentDto: CommentDto): Observable<Comment> {

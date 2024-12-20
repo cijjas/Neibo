@@ -156,7 +156,7 @@ public class ContactController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
         // Modification & HashCode Generation
-        final Contact updatedContact = cs.updateContact(contactId, updateForm.getName(), updateForm.getAddress(), updateForm.getPhone());
+        final Contact updatedContact = cs.updateContact(neighborhoodId, contactId, updateForm.getName(), updateForm.getAddress(), updateForm.getPhone());
         String updatedContactHashCode = String.valueOf(updatedContact.hashCode());
 
         return Response.ok(ContactDto.fromContact(updatedContact, uriInfo))

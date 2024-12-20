@@ -57,57 +57,75 @@ public class AttendanceDaoImpl implements AttendanceDao {
     }
 
     @Override
-    public List<Attendance> getAttendance(long eventId, int page, int size) {
-        LOGGER.info("Getting Attendance for Event {}", eventId);
+    public List<Attendance> getAttendance(long neighborhoodId, long eventId, int page, int size) {
+        LOGGER.info("Getting Attendance for Event {} in Neighborhood {}", eventId, neighborhoodId);
 
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        // We retrieve a list of attendance ids which are Longs, from the Attendance Entity
+
+        // First Query: Retrieve attendance IDs
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<Attendance> idRoot = idQuery.from(Attendance.class);
-        idQuery.select(idRoot.get("id"));
-        // We join through the eventId
+
+        // Join through the event and add filters for eventId and neighborhoodId
         Join<Attendance, Event> eventJoin = idRoot.join("event");
-        idQuery.where(cb.equal(eventJoin.get("eventId"), eventId));
-        // Order by EventId and the UserId
-        idQuery.orderBy(cb.asc(idRoot.get("event").get("eventId")), cb.asc(idRoot.get("user").get("userId")));
-        // Create the query
+        idQuery.select(idRoot.get("id"))
+                .where(cb.and(
+                        cb.equal(eventJoin.get("eventId"), eventId),
+                        cb.equal(eventJoin.get("neighborhood").get("neighborhoodId"), neighborhoodId)
+                ))
+                .orderBy(
+                        cb.asc(eventJoin.get("eventId")),
+                        cb.asc(idRoot.get("user").get("userId"))
+                );
+
+        // Implement pagination
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
-        // We implement pagination in the query
         idTypedQuery.setFirstResult((page - 1) * size);
         idTypedQuery.setMaxResults(size);
-        // Results
+
+        // Retrieve attendance IDs
         List<Long> attendanceIds = idTypedQuery.getResultList();
-        // Check if amenityIds is empty, better performance
-        if (attendanceIds.isEmpty())
+        if (attendanceIds.isEmpty()) {
             return Collections.emptyList();
-        // Second Query is also focused on Amenities
+        }
+
+        // Second Query: Retrieve Attendance data
         CriteriaQuery<Attendance> dataQuery = cb.createQuery(Attendance.class);
         Root<Attendance> dataRoot = dataQuery.from(Attendance.class);
-        // Add predicate that enforces existence within the IDs recovered in the first query
-        dataQuery.where(dataRoot.get("id").in(attendanceIds));
-        // Order By EventId and then by UserId
-        dataQuery.orderBy(cb.asc(dataRoot.get("event").get("eventId")), cb.asc(dataRoot.get("user").get("userId")));
-        // Create!
+
+        // Add filter to ensure IDs exist in the retrieved list
+        dataQuery.where(dataRoot.get("id").in(attendanceIds))
+                .orderBy(
+                        cb.asc(dataRoot.get("event").get("eventId")),
+                        cb.asc(dataRoot.get("user").get("userId"))
+                );
+
         TypedQuery<Attendance> dataTypedQuery = em.createQuery(dataQuery);
-        // Return Results
         return dataTypedQuery.getResultList();
     }
 
     @Override
-    public int countAttendance(long eventId) {
-        LOGGER.info("Counting Attendance for Event {}", eventId);
+    public int countAttendance(long neighborhoodId, long eventId) {
+        LOGGER.info("Counting Attendance for Event {} in Neighborhood {}", eventId, neighborhoodId);
 
+        // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Attendance> root = criteriaQuery.from(Attendance.class);
-        Join<Attendance, Neighborhood> eventJoin = root.join("event"); // Use the association
-        criteriaQuery.select(cb.count(root));
-        criteriaQuery.where(cb.equal(eventJoin.get("eventId"), eventId)); // Filter by eventId
+
+        // Join through the event and add filters for eventId and neighborhoodId
+        Join<Attendance, Event> eventJoin = root.join("event");
+        criteriaQuery.select(cb.count(root))
+                .where(cb.and(
+                        cb.equal(eventJoin.get("eventId"), eventId),
+                        cb.equal(eventJoin.get("neighborhood").get("neighborhoodId"), neighborhoodId)
+                ));
+
+        // Execute the query and return count
         TypedQuery<Long> query = em.createQuery(criteriaQuery);
         return query.getSingleResult().intValue();
     }
-
 
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 

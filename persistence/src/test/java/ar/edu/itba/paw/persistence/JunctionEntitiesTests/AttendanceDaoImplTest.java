@@ -228,7 +228,7 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey2, eKey1);
 
         // Exercise
-        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(eKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, attendanceList.size());
@@ -243,7 +243,7 @@ public class AttendanceDaoImplTest {
         long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(eKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(attendanceList.isEmpty());
@@ -267,7 +267,7 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey3, eKey1);
 
         // Exercise
-        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(eKey1, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, attendanceList.size());
@@ -290,7 +290,7 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey2, eKey1);
 
         // Exercise
-        int countAttendance = attendanceDaoImpl.countAttendance(eKey1);
+        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, eKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countAttendance);
@@ -305,7 +305,7 @@ public class AttendanceDaoImplTest {
         long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        int countAttendance = attendanceDaoImpl.countAttendance(eKey1);
+        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, eKey1);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countAttendance);

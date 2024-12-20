@@ -45,7 +45,7 @@ public class ResourceServiceImpl implements ResourceService {
     public Optional<Resource> findResource(long neighborhoodId, long resourceId) {
         LOGGER.info("Finding Resource {} from Neighborhood {}", resourceId, neighborhoodId);
 
-        return resourceDao.findResource(resourceId);
+        return resourceDao.findResource(neighborhoodId, resourceId);
     }
 
     @Override
@@ -67,10 +67,10 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Resource updateResource(long resourceId, String title, String description, Long imageId) {
+    public Resource updateResource(long neighborhoodId, long resourceId, String title, String description, Long imageId) {
         LOGGER.info("Updating Resource {}", resourceId);
 
-        Resource resource = resourceDao.findResource(resourceId).orElseThrow(NotFoundException::new);
+        Resource resource = resourceDao.findResource(neighborhoodId, resourceId).orElseThrow(NotFoundException::new);
 
         if (title != null && !title.isEmpty())
             resource.setTitle(title);

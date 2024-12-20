@@ -1,0 +1,47 @@
+<div class="grey-static-container m-t-40">
+    <div class="column d-flex justify-content-center align-items-center">
+        <h3 class="m-b-20">My Reservations</h3>
+
+        <!-- Loading Indicator -->
+        <div *ngIf="isLoading" class="f-c-c-c align-items-center">
+            <span class="w-100 mb-2">Loading reservations...</span>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="showErrorMessage" class="f-c-c-c align-items-center" style="color: var(--error);">
+            <span class="w-100 mb-2">Error loading reservations. Please try again later.</span>
+        </div>
+
+        <!-- No Reservations Found -->
+        <div *ngIf="reservationsList?.length === 0 && !isLoading" class="f-c-c-c align-items-center"
+            style="text-align: center">
+            <span class="w-100 mb-2">No reservations found</span>
+        </div>
+
+        <!-- Reservations List -->
+        <div *ngIf="reservationsList?.length > 0">
+            <div *ngFor="let reservation of reservationsList" class="cool-static-container m-b-20"
+                style="word-wrap: break-word;" aria-hidden="true">
+                <div class="f-c-c-c">
+                    <div class="f-r-sb-c w-100 align-items-center d-flex" style="align-items: center;">
+                        <h5 class="m-0">{{ reservation.amenity?.name }}</h5>
+                        <a id="delete-reservation" class="pointer" (click)="deleteReservation(reservation.self)">
+                            <i class="fas fa-trash" style="color: var(--error);"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <h6 class="mb-3" style="color:var(--lighttext);">Date
+                            <span class="c-primary">{{ reservation.bookingDate }}</span>
+                        </h6>
+                        <h6 class="mb-3" style="color:var(--lighttext);">Start Time
+                            <span class="c-primary">{{ reservation.shift?.startTime }}</span>
+                        </h6>
+                        <h6 class="mb-3" style="color:var(--lighttext);">End Time
+                            <span class="c-primary">{{ reservation.shift?.endTime }}</span>
+                        </h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

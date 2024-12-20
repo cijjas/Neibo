@@ -1,17 +1,18 @@
 import { Routes } from '@angular/router'
+import { authGuard } from "./shared/guards/auth.guard";
 import { AppComponent } from './app.component'
-import { PostDetailComponent } from './components/post-detail/post-detail.component'
+import { PostDetailComponent } from './modules/post-detail/post-detail.component'
 import { FeedComponent } from './modules/feed/feed.component'
 import { ServicesComponent } from './modules/services/services.component'
 import { MarketplaceComponent } from './modules/marketplace/marketplace.component'
 import { ReservationsComponent } from './modules/reservations/reservations.component'
 import { InformationComponent } from './modules/information/information.component'
-import { CreatePostComponent } from './components/create-post/create-post.component'
-
+import { CreatePostComponent } from './modules/create-post/create-post.component';
+import { ProductDetailComponent } from './modules/product-detail/product-detail.component';
+import { ProductSellComponent } from './modules/product-sell/product-sell.component';
 
 import { NotFoundComponent } from "./modules/not-found/not-found.component";
 import { LoginComponent } from "./modules/auth/login/login.component";
-import { authGuard } from "./shared/guards/auth.guard";
 import { CalendarComponent } from './modules/calendar/calendar.component'
 import { UserProfileComponent } from './modules/user-profile/user-profile.component'
 import { ChooseTimeComponent } from './modules/choose-time/choose-time.component'
@@ -25,6 +26,8 @@ export const routes: Routes = [
   { path: 'create-post', component: CreatePostComponent, canActivate: [authGuard] },
   { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
   { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
+  { path: 'marketplace/products/:id', component: ProductDetailComponent, canActivate: [authGuard] },
+  { path: 'marketplace/create-listing', component: ProductSellComponent, canActivate: [authGuard] },
   { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },
   { path: 'choose-time', component: ChooseTimeComponent, canActivate: [authGuard] },
   { path: 'information', component: InformationComponent, canActivate: [authGuard] },

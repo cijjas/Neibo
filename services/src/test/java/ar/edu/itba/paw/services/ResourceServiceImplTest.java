@@ -31,22 +31,23 @@ public class ResourceServiceImplTest {
     @Test
     public void update_noImage() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long resourceId = 1L;
         String newTitle = "Updated Title";
         String newDescription = "Updated Description";
 
         Resource resource = new Resource.Builder().build();
-        when(resourceDao.findResource(resourceId)).thenReturn(Optional.of(resource));
+        when(resourceDao.findResource(neighborhoodId, resourceId)).thenReturn(Optional.of(resource));
 
         // Exercise
-        resourceService.updateResource(resourceId, newTitle, newDescription, null);
+        resourceService.updateResource(neighborhoodId, resourceId, newTitle, newDescription, null);
 
         // Validations & Post Conditions
         assertEquals(newTitle, resource.getTitle());
         assertEquals(newDescription, resource.getDescription());
         assertNull(resource.getImage());
 
-        verify(resourceDao, times(1)).findResource(resourceId);
+        verify(resourceDao, times(1)).findResource(neighborhoodId, resourceId);
         verify(imageService, never()).findImage(anyLong());
     }
 
@@ -54,24 +55,25 @@ public class ResourceServiceImplTest {
     public void update_withImage() {
         // Pre Conditions
         long resourceId = 1L;
+        long neighborhoodId = 1L;
         String newTitle = "Updated Title";
         String newDescription = "Updated Description";
         long imageId = 100L;
 
         Resource resource = new Resource.Builder().build();
         Image image = new Image.Builder().build();
-        when(resourceDao.findResource(resourceId)).thenReturn(Optional.of(resource));
+        when(resourceDao.findResource(neighborhoodId, resourceId)).thenReturn(Optional.of(resource));
         when(imageService.findImage(imageId)).thenReturn(Optional.of(image));
 
         // Exercise
-        resourceService.updateResource(resourceId, newTitle, newDescription, imageId);
+        resourceService.updateResource(neighborhoodId, resourceId, newTitle, newDescription, imageId);
 
         // Validations & Post Conditions
         assertEquals(newTitle, resource.getTitle());
         assertEquals(newDescription, resource.getDescription());
         assertEquals(image, resource.getImage());
 
-        verify(resourceDao, times(1)).findResource(resourceId);
+        verify(resourceDao, times(1)).findResource(neighborhoodId, resourceId);
         verify(imageService, times(1)).findImage(imageId);
     }
 }

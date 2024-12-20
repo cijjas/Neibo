@@ -1,15 +1,20 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Product } from '../../models/index';
-import { ProductDto, UserDto, DepartmentDto } from '../../dtos/app-dtos';
+import { ProductDto, UserDto, DepartmentDto, InquiryDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { parseLinkHeader } from './utils';
+import { mapInquiry } from './inquiry.service';
+import { HateoasLinksService } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private linkService: HateoasLinksService,
+    ) { }
 
     public getProduct(url: string): Observable<Product> {
         return this.http.get<ProductDto>(url).pipe(
@@ -56,6 +61,45 @@ export class ProductService {
             );
     }
 
+    public createProduct(
+        productData: {
+            name: string;
+            description: string;
+            price: string;
+            used: string;
+            department: string;
+            remainingUnits: string;
+            images: string[];
+            user: string;
+        }
+    ): Observable<string> {
+        const { images, ...productDetails } = productData;
+
+        if (images.length > 3) {
+            throw new Error('A product can have up to 3 images.');
+        }
+
+        const payload = {
+            ...productDetails,
+            images,
+        };
+
+        return this.http.post(this.linkService.getLink('neighborhood:products'), payload, {
+            observe: 'response'
+        }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (!locationHeader) {
+                    throw new Error('Location header not found in response.');
+                }
+                return locationHeader;
+            }),
+            catchError(error => {
+                console.error('Error creating product:', error);
+                return throwError(() => new Error('Failed to create product.'));
+            })
+        );
+    }
 }
 
 export function mapProduct(http: HttpClient, productDto: ProductDto): Observable<Product> {
@@ -70,6 +114,7 @@ export function mapProduct(http: HttpClient, productDto: ProductDto): Observable
                 price: productDto.price,
                 used: productDto.used,
                 stock: productDto.remainingUnits,
+                inquiries: productDto._links.inquiries,
                 createdAt: productDto.creationDate,
                 firstImage: productDto._links.firstProductImage,
                 secondImage: productDto._links.secondProductImage,

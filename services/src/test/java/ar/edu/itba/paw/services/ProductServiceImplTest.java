@@ -124,68 +124,71 @@ public class ProductServiceImplTest {
     @Test
     public void update_noImage() {
         // Pre Conditions
+        long neighborhooId = 1L;
         long productId = 1L;
 
         Product product = new Product.Builder().build();
-        when(productDao.findProduct(productId)).thenReturn(Optional.of(product));
+        when(productDao.findProduct(neighborhooId, productId)).thenReturn(Optional.of(product));
 
         // Exercise
-        productService.updateProductPartially(productId, "Product Name", null, null, null, null, null, Collections.emptyList());
+        productService.updateProduct(neighborhooId, productId, "Product Name", null, null, null, null, null, Collections.emptyList());
 
         // Validations & Post Conditions
         assertNull(product.getPrimaryPicture());
         assertNull(product.getSecondaryPicture());
         assertNull(product.getTertiaryPicture());
 
-        verify(productDao, times(1)).findProduct(productId);
+        verify(productDao, times(1)).findProduct(neighborhooId, productId);
         verify(imageService, never()).findImage(anyLong());
     }
 
     @Test
     public void update_oneImage() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long productId = 1L;
         long imageId = 100L;
 
         Product product = new Product.Builder().build();
         Image primaryImage = new Image.Builder().build();
-        when(productDao.findProduct(productId)).thenReturn(Optional.of(product));
+        when(productDao.findProduct(neighborhoodId, productId)).thenReturn(Optional.of(product));
         when(imageService.findImage(imageId)).thenReturn(Optional.of(primaryImage));
 
         // Exercise
-        productService.updateProductPartially(productId, null, null, null, null, null, null, Collections.singletonList(imageId));
+        productService.updateProduct(neighborhoodId, productId, null, null, null, null, null, null, Collections.singletonList(imageId));
 
         // Validations & Post Conditions
         assertEquals(primaryImage, product.getPrimaryPicture());
         assertNull(product.getSecondaryPicture());
         assertNull(product.getTertiaryPicture());
 
-        verify(productDao, times(1)).findProduct(productId);
+        verify(productDao, times(1)).findProduct(neighborhoodId, productId);
         verify(imageService, times(1)).findImage(imageId);
     }
 
     @Test
     public void update_twoImages() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long productId = 1L;
         List<Long> imageIds = Arrays.asList(100L, 200L);
 
         Product product = new Product.Builder().build();
         Image primaryImage = new Image.Builder().build();
         Image secondaryImage = new Image.Builder().build();
-        when(productDao.findProduct(productId)).thenReturn(Optional.of(product));
+        when(productDao.findProduct(neighborhoodId, productId)).thenReturn(Optional.of(product));
         when(imageService.findImage(imageIds.get(0))).thenReturn(Optional.of(primaryImage));
         when(imageService.findImage(imageIds.get(1))).thenReturn(Optional.of(secondaryImage));
 
         // Exercise
-        productService.updateProductPartially(productId, null, null, null, null, null, null, imageIds);
+        productService.updateProduct(neighborhoodId, productId, null, null, null, null, null, null, imageIds);
 
         // Validations & Post Conditions
         assertEquals(primaryImage, product.getPrimaryPicture());
         assertEquals(secondaryImage, product.getSecondaryPicture());
         assertNull(product.getTertiaryPicture());
 
-        verify(productDao, times(1)).findProduct(productId);
+        verify(productDao, times(1)).findProduct(neighborhoodId, productId);
         verify(imageService, times(1)).findImage(imageIds.get(0));
         verify(imageService, times(1)).findImage(imageIds.get(1));
     }
@@ -193,6 +196,7 @@ public class ProductServiceImplTest {
     @Test
     public void update_threeImages() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long productId = 1L;
         List<Long> imageIds = Arrays.asList(100L, 200L, 300L);
 
@@ -200,20 +204,20 @@ public class ProductServiceImplTest {
         Image primaryImage = new Image.Builder().build();
         Image secondaryImage = new Image.Builder().build();
         Image tertiaryImage = new Image.Builder().build();
-        when(productDao.findProduct(productId)).thenReturn(Optional.of(product));
+        when(productDao.findProduct(neighborhoodId, productId)).thenReturn(Optional.of(product));
         when(imageService.findImage(imageIds.get(0))).thenReturn(Optional.of(primaryImage));
         when(imageService.findImage(imageIds.get(1))).thenReturn(Optional.of(secondaryImage));
         when(imageService.findImage(imageIds.get(2))).thenReturn(Optional.of(tertiaryImage));
 
         // Exercise
-        productService.updateProductPartially(productId, null, null, null, null, null, null, imageIds);
+        productService.updateProduct(neighborhoodId, productId, null, null, null, null, null, null, imageIds);
 
         // Validations & Post Conditions
         assertEquals(primaryImage, product.getPrimaryPicture());
         assertEquals(secondaryImage, product.getSecondaryPicture());
         assertEquals(tertiaryImage, product.getTertiaryPicture());
 
-        verify(productDao, times(1)).findProduct(productId);
+        verify(productDao, times(1)).findProduct(neighborhoodId, productId);
         verify(imageService, times(1)).findImage(imageIds.get(0));
         verify(imageService, times(1)).findImage(imageIds.get(1));
         verify(imageService, times(1)).findImage(imageIds.get(2));

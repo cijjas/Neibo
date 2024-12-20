@@ -94,10 +94,10 @@ public class AmenityServiceImpl implements AmenityService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Amenity updateAmenityPartially(long amenityId, String name, String description, List<Long> shiftIds) {
+    public Amenity updateAmenity(long neighborhoodId, long amenityId, String name, String description, List<Long> shiftIds) {
         LOGGER.info("Updating Amenity {}", amenityId);
 
-        Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(NotFoundException::new);
+        Amenity amenity = amenityDao.findAmenity(neighborhoodId, amenityId).orElseThrow(NotFoundException::new);
 
         if (name != null && !name.isEmpty())
             amenity.setName(name);

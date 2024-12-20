@@ -20,7 +20,7 @@ public interface EventService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime);
+    Event updateEvent(long neighborhoodId, long eventId, String name, String description, Date date, String startTime, String endTime);
 
     // -----------------------------------------------------------------------------------------------------------------
 

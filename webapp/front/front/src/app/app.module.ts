@@ -18,7 +18,6 @@ import { BlogpostComponent } from "./components/blogpost/blogpost.component";
 import { LeftColumnComponent } from "./components/left-column/left-column.component";
 import { UpperFeedButtonsComponent } from "./components/upper-feed-buttons/upper-feed-buttons.component";
 import { WaveFooterComponent } from "./components/wave-footer/wave-footer.component";
-import { PostDetailComponent } from "./components/post-detail/post-detail.component"
 import { BackgroundCloudsComponent } from "./components/background-clouds/background-clouds.component";
 import { LandingPageNavbarComponent } from './components/landing-page-navbar/landing-page-navbar.component';
 import { BackgroundDrawingComponent } from "./components/background-drawing/background-drawing.component";
@@ -28,9 +27,12 @@ import { PostCardComponent } from "./components/post-card/post-card.component";
 import { PaginatorComponent } from "./components/paginator/paginator.component";
 import { RightColumnComponent } from "./components/right-column/right-column.component";
 import { CalendarWidgetComponent } from './components/calendar-widget/calendar-widget.component'
-import { CreatePostComponent } from "./components/create-post/create-post.component";
 import { CalendarBoxComponent } from "./components/calendar-box/calendar-box.component";
 import { CalendarEventsColumnComponent } from "./components/calendar-events-column/calendar-events-column.component";
+import { ReservationsListComponent } from './components/reservations-list/reservations-list.component'
+import { UpperMarketplaceButtonsComponent } from "./components/upper-marketplace-buttons/upper-marketplace-buttons.component";
+import { ProductCardComponent } from "./components/product-card/product-card.component";
+import { SuccessToastComponent } from "./components/success-toast/success-toast.component"
 
 // MODULES
 import { FeedComponent } from "./modules/feed/feed.component"
@@ -43,9 +45,13 @@ import { LoginComponent } from './modules/auth/login/login.component';
 import { CalendarComponent } from './modules/calendar/calendar.component';
 import { UserProfileComponent } from "./modules/user-profile/user-profile.component";
 import { ChooseTimeComponent } from "./modules/choose-time/choose-time.component";
+import { ProductDetailComponent } from "./modules/product-detail/product-detail.component";
+import { CreatePostComponent } from "./modules/create-post/create-post.component";
+import { PostDetailComponent } from "./modules/post-detail/post-detail.component";
+import { ProductSellComponent } from "./modules/product-sell/product-sell.component";
 
 // SERVICES
-import { AuthService } from "./shared/services/index.service";
+import { AuthService, ToastService } from "./shared/services/index.service";
 import { JwtInterceptor } from "./shared/interceptors/jwt.interceptor";
 import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
 
@@ -83,7 +89,13 @@ import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
     CalendarBoxComponent,
     CalendarEventsColumnComponent,
     UserProfileComponent,
-    ChooseTimeComponent
+    ChooseTimeComponent,
+    ReservationsListComponent,
+    UpperMarketplaceButtonsComponent,
+    ProductCardComponent,
+    ProductDetailComponent,
+    SuccessToastComponent,
+    ProductSellComponent
   ],
   imports: [
     BrowserModule,
@@ -99,6 +111,7 @@ import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
     InfiniteScrollModule
   ],
   providers: [
+    ToastService,
     AuthService,
     {
       provide: HTTP_INTERCEPTORS,

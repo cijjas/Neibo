@@ -21,7 +21,7 @@ public interface RequestService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Request updateRequest(long requestId, Long requestStatusId);
+    Request updateRequest(long neighborhoodId, long requestId, Long requestStatusId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

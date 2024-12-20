@@ -85,7 +85,7 @@ public class CommentController {
 
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts" + postId + "/comments",
-                cs.calculateCommentPages(postId, size),
+                cs.calculateCommentPages(neighborhoodId, postId, size),
                 page,
                 size
         );

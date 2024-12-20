@@ -19,6 +19,7 @@ export * from './domain/shift.service';
 export * from './domain/tag.service';
 export * from './domain/user.service';
 export * from './domain/worker.service';
+export * from './domain/department.service';
 export * from './index.service';
 
 // Core
@@ -28,3 +29,4 @@ export * from './core/api.service';
 export * from './core/link.service';
 export * from './core/image.service';
 export * from './core/pagination.service'
+export * from './core/toast.service';

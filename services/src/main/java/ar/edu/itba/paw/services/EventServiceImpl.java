@@ -81,10 +81,10 @@ public class EventServiceImpl implements EventService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime) {
+    public Event updateEvent(long neighborhoodId, long eventId, String name, String description, Date date, String startTime, String endTime) {
         LOGGER.info("Updating Event {}", eventId);
 
-        Event event = eventDao.findEvent(eventId).orElseThrow(NotFoundException::new);
+        Event event = eventDao.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
 
         if (name != null && !name.isEmpty())
             event.setName(name);

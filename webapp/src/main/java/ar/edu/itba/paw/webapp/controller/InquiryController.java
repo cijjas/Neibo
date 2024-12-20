@@ -92,7 +92,7 @@ public class InquiryController {
         // Pagination Link
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "/inquiries",
-                is.calculateInquiryPages(productId, size),
+                is.calculateInquiryPages(neighborhoodId, productId, size),
                 page,
                 size
         );
@@ -173,7 +173,7 @@ public class InquiryController {
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Modification & HashCode Generation
-        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, updateForm.getReply());
+        final Inquiry updatedInquiry = is.replyInquiry(neighborhoodId, productId, inquiryId, updateForm.getReply());
         String inquiryHashCode = String.valueOf(updatedInquiry.hashCode());
 
         return Response.ok(InquiryDto.fromInquiry(updatedInquiry, uriInfo))

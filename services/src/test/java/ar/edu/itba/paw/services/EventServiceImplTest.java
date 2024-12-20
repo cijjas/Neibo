@@ -70,6 +70,7 @@ public class EventServiceImplTest {
     @Test
     public void update_noStartTime_noEndTime() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long eventId = 1L;
         String name = "Updated Event";
         String description = "Updated Description";
@@ -83,14 +84,14 @@ public class EventServiceImplTest {
         Time endTimeEntity = new Time.Builder().timeInterval(java.sql.Time.valueOf(endTime)).timeId(2L).build();
 
         Event event = new Event.Builder().build();
-        when(eventDao.findEvent(eventId)).thenReturn(Optional.of(event));
+        when(eventDao.findEvent(neighborhoodId, eventId)).thenReturn(Optional.of(event));
         when(timeDao.findTime(sqlStartTime)).thenReturn(Optional.empty());
         when(timeDao.createTime(sqlStartTime)).thenReturn(startTimeEntity);
         when(timeDao.findTime(sqlEndTime)).thenReturn(Optional.empty());
         when(timeDao.createTime(sqlEndTime)).thenReturn(endTimeEntity);
 
         // Exercise
-        eventService.updateEventPartially(eventId, name, description, date, startTime, endTime);
+        eventService.updateEvent(neighborhoodId, eventId, name, description, date, startTime, endTime);
 
         // Validations & Post Conditions
         assertEquals(name, event.getName());
@@ -99,7 +100,7 @@ public class EventServiceImplTest {
         assertEquals(startTimeEntity, event.getStartTime());
         assertEquals(endTimeEntity, event.getEndTime());
 
-        verify(eventDao, times(1)).findEvent(eventId);
+        verify(eventDao, times(1)).findEvent(neighborhoodId, eventId);
         verify(timeDao, times(1)).findTime(sqlStartTime);
         verify(timeDao, times(1)).createTime(sqlStartTime);
         verify(timeDao, times(1)).findTime(sqlEndTime);
@@ -109,24 +110,25 @@ public class EventServiceImplTest {
     @Test
     public void update_noStartTime_endTime() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long eventId = 1L;
         String startTime = "10:00:00";
         java.sql.Time sqlStartTime = java.sql.Time.valueOf(startTime);
         Time startTimeEntity = new Time.Builder().timeInterval(java.sql.Time.valueOf(startTime)).timeId(1L).build();
 
         Event event = new Event.Builder().build();
-        when(eventDao.findEvent(eventId)).thenReturn(Optional.of(event));
+        when(eventDao.findEvent(neighborhoodId, eventId)).thenReturn(Optional.of(event));
         when(timeDao.findTime(sqlStartTime)).thenReturn(Optional.empty());
         when(timeDao.createTime(sqlStartTime)).thenReturn(startTimeEntity);
 
         // Exercise
-        eventService.updateEventPartially(eventId, null, null, null, startTime, null);
+        eventService.updateEvent(neighborhoodId, eventId, null, null, null, startTime, null);
 
         // Validations & Post Conditions
         assertEquals(startTimeEntity, event.getStartTime());
         assertNull(event.getEndTime());
 
-        verify(eventDao, times(1)).findEvent(eventId);
+        verify(eventDao, times(1)).findEvent(neighborhoodId, eventId);
         verify(timeDao, times(1)).findTime(sqlStartTime);
         verify(timeDao, times(1)).createTime(sqlStartTime);
         verify(timeDao, times(1)).findTime(any());
@@ -136,23 +138,24 @@ public class EventServiceImplTest {
     @Test
     public void update_startTime_noEndTime() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long eventId = 1L;
         String endTime = "12:00:00";
         java.sql.Time sqlEndTime = java.sql.Time.valueOf(endTime);
         Time endTimeEntity = new Time.Builder().timeInterval(java.sql.Time.valueOf(endTime)).timeId(2L).build();
 
         Event event = new Event.Builder().build();
-        when(eventDao.findEvent(eventId)).thenReturn(Optional.of(event));
+        when(eventDao.findEvent(neighborhoodId, eventId)).thenReturn(Optional.of(event));
         when(timeDao.findTime(sqlEndTime)).thenReturn(Optional.of(endTimeEntity));
 
         // Exercise
-        eventService.updateEventPartially(eventId, null, null, null, null, endTime);
+        eventService.updateEvent(neighborhoodId, eventId, null, null, null, null, endTime);
 
         // Validations & Post Conditions
         assertNull(event.getStartTime());
         assertEquals(endTimeEntity, event.getEndTime());
 
-        verify(eventDao, times(1)).findEvent(eventId);
+        verify(eventDao, times(1)).findEvent(neighborhoodId, eventId);
         verify(timeDao, times(1)).findTime(sqlEndTime);
         verify(timeDao, never()).createTime(any());
     }

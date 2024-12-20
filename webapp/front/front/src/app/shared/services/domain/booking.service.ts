@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Booking, Shift } from '../../models/index';
 import { BookingDto, AmenityDto, ShiftDto } from '../../dtos/app-dtos';
 import { mapShift } from './shift.service';
@@ -58,20 +58,35 @@ export class BookingService {
         );
     }
 
-    public createBooking(amenity: string, bookingDate: string, shifts: string[], user: string): Observable<any[]> {
-        console.log(amenity);
-        console.log(bookingDate);
-        console.log(shifts);
+    public createBooking(amenity: string, bookingDate: string, shifts: string[], user: string): Observable<(string | null)[]> {
+        return forkJoin(
+            shifts.map(shift =>
+                this.http.post(this.linkService.getLink('neighborhood:bookings'), {
+                    amenity,
+                    bookingDate,
+                    shift,
+                    user
+                }, { observe: 'response' }).pipe(
+                    map(response => {
+                        const locationHeader = response.headers.get('Location');
+                        if (locationHeader) {
+                            return locationHeader;
+                        } else {
+                            console.error('Location header not found for shift:', shift);
+                            return null;
+                        }
+                    }),
+                    catchError(error => {
+                        console.error('Error creating booking for shift:', shift, error);
+                        return of(null);
+                    })
+                )
+            )
+        );
+    }
 
-        // Create an array of HTTP post calls, one for each shift
-        return forkJoin(shifts.map(shift =>
-            this.http.post(this.linkService.getLink('neighborhood:bookings'), {
-                amenity,
-                bookingDate,
-                shift,
-                user
-            })
-        ))
+    public deleteBooking(url: string): Observable<void> {
+        return this.http.delete<void>(url);
     }
 }
 

@@ -163,7 +163,7 @@ public class RequestController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
         // Modification & HashCode Generation
-        final Request updatedRequest = rs.updateRequest(requestId, extractOptionalFirstId(updateForm.getRequestStatus()));
+        final Request updatedRequest = rs.updateRequest(neighborhoodId, requestId, extractOptionalFirstId(updateForm.getRequestStatus()));
         String requestHashCode = String.valueOf(updatedRequest.hashCode());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))

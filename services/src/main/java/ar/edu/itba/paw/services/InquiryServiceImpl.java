@@ -71,25 +71,25 @@ public class InquiryServiceImpl implements InquiryService {
     public List<Inquiry> getInquiries(long neighborhoodId, long productId, int size, int page) {
         LOGGER.info("Getting Inquiries for Product {} from Neighborhood {}", productId, neighborhoodId);
 
-        return inquiryDao.getInquiries(productId, page, size);
+        return inquiryDao.getInquiries(neighborhoodId, productId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateInquiryPages(long productId, int size) {
+    public int calculateInquiryPages(long neighborhoodId, long productId, int size) {
         LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
 
-        return PaginationUtils.calculatePages(inquiryDao.countInquiries(productId), size);
+        return PaginationUtils.calculatePages(inquiryDao.countInquiries(neighborhoodId, productId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Inquiry replyInquiry(long inquiryId, String reply) {
+    public Inquiry replyInquiry(long neighborhoodId, long productId, long inquiryId, String reply) {
         LOGGER.info("Creating a reply for Inquiry {}", inquiryId);
 
         // Send email to inquirer
-        Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(NotFoundException::new);
+        Inquiry inquiry = inquiryDao.findInquiry(neighborhoodId, productId, inquiryId).orElseThrow(NotFoundException::new);
         inquiry.setReply(reply);
 
         Product product = inquiry.getProduct();

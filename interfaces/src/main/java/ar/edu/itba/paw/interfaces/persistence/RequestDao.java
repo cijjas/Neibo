@@ -15,6 +15,8 @@ public interface RequestDao {
 
     Optional<Request> findRequest(long requestId);
 
+    Optional<Request> findRequest(long neighborhoodId, long requestId);
+
     List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long typeId, Long statusId, int page, int size);
 
     int countRequests(long neighborhoodId, Long userId, Long productId, Long typeId, Long statusId);

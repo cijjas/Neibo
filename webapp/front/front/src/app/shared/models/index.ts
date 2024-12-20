@@ -18,3 +18,5 @@ export * from './shift.model';
 export * from './tag.model';
 export * from './user.model';
 export * from './worker.model';
+export * from './department.model';
+export * from './postStatus.model';

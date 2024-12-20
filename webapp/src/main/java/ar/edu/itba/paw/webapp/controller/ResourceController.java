@@ -152,7 +152,7 @@ public class ResourceController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
         // Modification & HashCode Generation
-        final Resource updatedResource = rs.updateResource(resourceId, updateForm.getTitle(), updateForm.getDescription(), extractOptionalFirstId(updateForm.getImage()));
+        final Resource updatedResource = rs.updateResource(neighborhoodId, resourceId, updateForm.getTitle(), updateForm.getDescription(), extractOptionalFirstId(updateForm.getImage()));
         String resourceHashCode = String.valueOf(updatedResource.hashCode());
 
         return Response.ok(ResourceDto.fromResource(updatedResource, uriInfo))

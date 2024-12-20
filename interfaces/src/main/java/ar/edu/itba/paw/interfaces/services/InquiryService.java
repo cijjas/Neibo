@@ -17,11 +17,11 @@ public interface InquiryService {
 
     List<Inquiry> getInquiries(long neighborhoodId, long productId, int size, int page);
 
-    int calculateInquiryPages(long productId, int size);
+    int calculateInquiryPages(long neighborhoodId, long productId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Inquiry replyInquiry(long inquiryId, String reply);
+    Inquiry replyInquiry(long neighborhoodId, long productId, long inquiryId, String reply);
 
     // -----------------------------------------------------------------------------------------------------------------
 

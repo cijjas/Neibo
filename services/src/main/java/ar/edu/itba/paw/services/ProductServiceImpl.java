@@ -82,10 +82,10 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, Double price, Long units, Boolean used, Long departmentId, List<Long> imageIds) {
+    public Product updateProduct(long neighborhoodId, long productId, String name, String description, Double price, Long units, Boolean used, Long departmentId, List<Long> imageIds) {
         LOGGER.info("Updating Product {}", productId);
 
-        Product product = findProduct(productId).orElseThrow(NotFoundException::new);
+        Product product = findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
 
         if (name != null)
             product.setName(name);

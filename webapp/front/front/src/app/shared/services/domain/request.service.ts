@@ -6,10 +6,14 @@ import { Request } from '../../models/index';
 import { RequestDto, UserDto, RequestStatusDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { parseLinkHeader } from './utils';
+import { HateoasLinksService } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class RequestService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private linkService: HateoasLinksService,
+    ) { }
 
     public getRequest(url: string): Observable<Request> {
         return this.http.get<RequestDto>(url).pipe(
@@ -56,6 +60,19 @@ export class RequestService {
                 );
             }),
             mergeMap(result => result) // Flatten the nested observable
+        );
+    }
+
+    public createRequest(message: string, unitsRequested: number, product: string, user: string): Observable<string> {
+        const url: string = this.linkService.getLink('neighborhood:requests')
+        return this.http.post(url, { message, unitsRequested, product, user }, { observe: 'response' }).pipe(
+            map((response) => {
+                const location = response.headers.get('Location');
+                if (!location) {
+                    throw new Error('Location header not found in response');
+                }
+                return location;
+            })
         );
     }
 }

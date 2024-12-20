@@ -76,6 +76,24 @@ public class Links {
     private URI languageEnglish;
     private URI languageSpanish;
     private URI amenities;
+    private URI postStatuses;
+    private URI departments;
+
+    public URI getPostStatuses() {
+        return postStatuses;
+    }
+
+    public void setPostStatuses(URI postStatuses) {
+        this.postStatuses = postStatuses;
+    }
+
+    public URI getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(URI departments) {
+        this.departments = departments;
+    }
 
     public URI getAmenities() {
         return amenities;

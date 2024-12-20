@@ -197,6 +197,7 @@ public class UserServiceImplTest {
     @Test
     public void update_image() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long userId = 1L;
         String mail = "newmail@example.com";
         String name = "John";
@@ -211,12 +212,12 @@ public class UserServiceImplTest {
 
         User user = new User.Builder().build();
         Image profilePicture = new Image.Builder().build();
-        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+        when(userDao.findUser(neighborhoodId, userId)).thenReturn(Optional.of(user));
         when(imageService.findImage(profilePictureId)).thenReturn(Optional.of(profilePicture));
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
-        userService.updateUser(userId, mail, name, surname, password, identification, languageId, profilePictureId, darkMode, phoneNumber, userRoleId);
+        userService.updateUser(neighborhoodId, userId, mail, name, surname, password, identification, languageId, profilePictureId, darkMode, phoneNumber, userRoleId);
 
         // Validation & Post Conditions
         assertEquals(mail, user.getMail());
@@ -230,7 +231,7 @@ public class UserServiceImplTest {
         assertEquals(Language.fromId(languageId), user.getLanguage());
         assertEquals(UserRole.fromId(userRoleId), user.getRole());
 
-        verify(userDao, times(1)).findUser(userId);
+        verify(userDao, times(1)).findUser(neighborhoodId, userId);
         verify(imageService, times(1)).findImage(profilePictureId);
         verify(passwordEncoder, times(1)).encode(password);
     }
@@ -238,15 +239,16 @@ public class UserServiceImplTest {
     @Test
     public void update_noImage() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long userId = 1L;
         String mail = "newmail@example.com";
         Boolean darkMode = false;
 
         User user = new User.Builder().build();
-        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+        when(userDao.findUser(neighborhoodId, userId)).thenReturn(Optional.of(user));
 
         // Exercise
-        userService.updateUser(userId, mail, null, null, null, null, null, null, darkMode, null, null);
+        userService.updateUser(neighborhoodId, userId, mail, null, null, null, null, null, null, darkMode, null, null);
 
         // Validation & Post Conditions
         assertEquals(mail, user.getMail());
@@ -257,7 +259,7 @@ public class UserServiceImplTest {
         assertNull(user.getProfilePicture());
         assertNull(user.getPassword());
 
-        verify(userDao, times(1)).findUser(userId);
+        verify(userDao, times(1)).findUser(neighborhoodId, userId);
         verify(imageService, never()).findImage(anyLong());
         verify(passwordEncoder, never()).encode(anyString());
     }
@@ -265,20 +267,21 @@ public class UserServiceImplTest {
     @Test
     public void update_password() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long userId = 1L;
         String password = "newpassword";
 
         User user = new User.Builder().build();
-        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+        when(userDao.findUser(neighborhoodId, userId)).thenReturn(Optional.of(user));
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
-        userService.updateUser(userId, null, null, null, password, null, null, null, null, null, null);
+        userService.updateUser(neighborhoodId, userId, null, null, null, password, null, null, null, null, null, null);
 
         // Validation & Post Conditions
         assertEquals("encodedPassword", user.getPassword());
 
-        verify(userDao, times(1)).findUser(userId);
+        verify(userDao, times(1)).findUser(neighborhoodId, userId);
         verify(passwordEncoder, times(1)).encode(password);
     }
 }

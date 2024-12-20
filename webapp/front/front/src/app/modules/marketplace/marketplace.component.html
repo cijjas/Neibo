@@ -1,21 +1,43 @@
-<app-navbar></app-navbar>
-<div class="container">
+<div [class.dark-mode]="darkMode">
+  <app-navbar></app-navbar>
 
+  <div class="container">
     <div class="row init">
+
       <div class="column-left">
         <app-left-column></app-left-column>
       </div>
 
-      <div class="column-middle">
-        <p>marketplace works!</p>
+      <div id="center-grid" class="column-center pl-3">
+        <div style="position: relative">
+          <!-- Upper Marketplace Buttons Component -->
+          <app-upper-marketplace-buttons [channel]="channel" [departmentList]="departmentList"
+            [departmentName]="departmentName"></app-upper-marketplace-buttons>
+
+          <!-- If no products found -->
+          <div *ngIf="productList && productList.length === 0" class="cool-static-container w-100">
+            <div class="no-posts-found">
+              <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+              Products not found
+            </div>
+          </div>
+
+          <!-- If products exist -->
+          <div *ngIf="productList && productList.length > 0" class="row m-0 product-grid-row">
+            <app-product-card *ngFor="let product of productList" [product]="product"></app-product-card>
+          </div>
+
+          <!-- Paginator -->
+          <app-paginator [totalPages]="totalPages" [currentPage]="page" [isMarketplace]="true"
+            (pageChange)="onPageChange($event)">
+          </app-paginator>
+
+        </div>
       </div>
-
-      <div class="column-right">
-
-        <!--<%@ include file="/WEB-INF/jsp/components/displays/rightColumn.jsp" %>-->
-      </div>
-
-
     </div>
+
+    <!-- Footer component if you have it -->
   </div>
-<app-wave-footer></app-wave-footer>
+  <app-wave-footer [isMarketplace]="true"></app-wave-footer>
+
+</div>

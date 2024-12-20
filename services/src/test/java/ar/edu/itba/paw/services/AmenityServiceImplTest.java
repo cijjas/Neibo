@@ -159,13 +159,15 @@ public class AmenityServiceImplTest {
     @Test
     public void update_emptySelectedShifts_emptyAvailableShifts() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long amenityId = 1L;
         Amenity amenity = new Amenity.Builder().build();
         amenity.setAvailableShifts(Collections.emptyList());
-        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+
+        when(amenityDao.findAmenity(neighborhoodId, amenityId)).thenReturn(Optional.of(amenity));
 
         // Exercise
-        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, "New Name", "New Description", null);
+        Amenity updatedAmenity = amenityService.updateAmenity(neighborhoodId, amenityId, "New Name", "New Description", null);
 
         // Validation & Post Conditions
         assertEquals("New Name", updatedAmenity.getName());
@@ -177,15 +179,16 @@ public class AmenityServiceImplTest {
     @Test
     public void update_selectedShifts_emptyAvailableShifts() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long amenityId = 1L;
 
         Amenity amenity = new Amenity.Builder().build();
         amenity.setAvailableShifts(Collections.emptyList());
 
-        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+        when(amenityDao.findAmenity(neighborhoodId, amenityId)).thenReturn(Optional.of(amenity));
 
         // Exercise
-        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Arrays.asList(1L, 2L));
+        Amenity updatedAmenity = amenityService.updateAmenity(neighborhoodId, amenityId, null, null, Arrays.asList(1L, 2L));
 
         // Validation & Post Conditions
         verify(availabilityDao).createAvailability(1L, amenityId);
@@ -195,6 +198,7 @@ public class AmenityServiceImplTest {
     @Test
     public void update_selectedShifts_availableShifts() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long amenityId = 1L;
         Shift shift1 = new Shift.Builder().shiftId(1L).build();
         Shift shift2 = new Shift.Builder().shiftId(2L).build();
@@ -204,10 +208,10 @@ public class AmenityServiceImplTest {
 
         amenity.setAvailableShifts(Arrays.asList(shift1, shift2));
 
-        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+        when(amenityDao.findAmenity(neighborhoodId, amenityId)).thenReturn(Optional.of(amenity));
 
         // Exercise
-        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Arrays.asList(2L, 3L));
+        Amenity updatedAmenity = amenityService.updateAmenity(neighborhoodId, amenityId, null, null, Arrays.asList(2L, 3L));
 
         // Validation & Post Conditions
         verify(availabilityDao).deleteAvailability(1L, amenityId);
@@ -217,6 +221,7 @@ public class AmenityServiceImplTest {
     @Test
     public void update_emptySelectedShifts_availableShifts() {
         // Pre Conditions
+        long neighborhoodId = 1L;
         long amenityId = 1L;
         Shift shift1 = new Shift.Builder().shiftId(1L).build();
         Shift shift2 = new Shift.Builder().shiftId(2L).build();
@@ -224,10 +229,10 @@ public class AmenityServiceImplTest {
         Amenity amenity = new Amenity.Builder().build();
         amenity.setAvailableShifts(Arrays.asList(shift1, shift2));
 
-        when(amenityDao.findAmenity(amenityId)).thenReturn(Optional.of(amenity));
+        when(amenityDao.findAmenity(neighborhoodId, amenityId)).thenReturn(Optional.of(amenity));
 
         // Exercise
-        Amenity updatedAmenity = amenityService.updateAmenityPartially(amenityId, null, null, Collections.emptyList());
+        Amenity updatedAmenity = amenityService.updateAmenity(neighborhoodId, amenityId, null, null, Collections.emptyList());
 
         // Validation & Post Conditions
         verify(availabilityDao).deleteAvailability(1L, amenityId);

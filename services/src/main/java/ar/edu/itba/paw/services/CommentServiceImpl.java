@@ -56,15 +56,15 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getComments(long neighborhoodId, long postId, int size, int page) {
         LOGGER.info("Getting Comments for Post {} from Neighborhood {}", postId, neighborhoodId);
 
-        return commentDao.getComments(postId, page, size);
+        return commentDao.getComments(neighborhoodId, postId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateCommentPages(long postId, int size) {
+    public int calculateCommentPages(long neighborhoodId, long postId, int size) {
         LOGGER.info("Calculating Comment for Post {}", postId);
 
-        return PaginationUtils.calculatePages(commentDao.countComments(postId), size);
+        return PaginationUtils.calculatePages(commentDao.countComments(neighborhoodId, postId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

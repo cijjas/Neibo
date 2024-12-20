@@ -164,7 +164,8 @@ public class ProductController {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Modification & HashCode Generation
-        final Product updatedProduct = ps.updateProductPartially(
+        final Product updatedProduct = ps.updateProduct(
+                neighborhoodId,
                 productId,
                 updateForm.getName(),
                 updateForm.getDescription(),

@@ -260,7 +260,7 @@ public class CommentDaoImplTest {
         testInserter.createComment(uKey, pKey1);
 
         // Exercise
-        List<Comment> commentList = commentDaoImpl.getComments(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> commentList = commentDaoImpl.getComments(nhKey, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, commentList.size());
@@ -276,7 +276,7 @@ public class CommentDaoImplTest {
         long pKey1 = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        List<Comment> commentList = commentDaoImpl.getComments(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> commentList = commentDaoImpl.getComments(nhKey, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(commentList.isEmpty());
@@ -298,7 +298,7 @@ public class CommentDaoImplTest {
         testInserter.createComment(uKey, pKey1);
 
         // Exercise
-        List<Comment> commentList = commentDaoImpl.getComments(pKey1, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Comment> commentList = commentDaoImpl.getComments(nhKey, pKey1, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, commentList.size());
@@ -317,7 +317,7 @@ public class CommentDaoImplTest {
         testInserter.createComment(uKey, pKey);
 
         // Exercise
-        int countComments = commentDaoImpl.countComments(pKey);
+        int countComments = commentDaoImpl.countComments(nhKey, pKey);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countComments);
@@ -333,7 +333,7 @@ public class CommentDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        int countComments = commentDaoImpl.countComments(pKey);
+        int countComments = commentDaoImpl.countComments(nhKey, pKey);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countComments);

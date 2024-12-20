@@ -64,22 +64,30 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public List<Comment> getComments(long postId, int page, int size) {
-        LOGGER.debug("Selecting Comments from Post {}", postId);
+    public List<Comment> getComments(long neighborhoodId, long postId, int page, int size) {
+        LOGGER.debug("Selecting Comments from Post {} in Neighborhood {}", postId, neighborhoodId);
 
-        // ID Query to get the commentIds
-        TypedQuery<Long> idQuery = em.createQuery("SELECT c.commentId FROM Comment c " +
-                "WHERE c.post.postId = :postId ORDER BY c.date DESC, c.commentId", Long.class);
+        TypedQuery<Long> idQuery = em.createQuery(
+                "SELECT c.commentId FROM Comment c " +
+                        "WHERE c.post.postId = :postId " +
+                        "AND c.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                        "ORDER BY c.date DESC, c.commentId",
+                Long.class
+        );
         idQuery.setParameter("postId", postId);
+        idQuery.setParameter("neighborhoodId", neighborhoodId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
 
         List<Long> commentIds = idQuery.getResultList();
 
         if (!commentIds.isEmpty()) {
-            // Data Query to get the comments
             TypedQuery<Comment> commentQuery = em.createQuery(
-                    "SELECT c FROM Comment c WHERE c.commentId IN :commentIds ORDER BY c.date DESC, c.commentId", Comment.class);
+                    "SELECT c FROM Comment c " +
+                            "WHERE c.commentId IN :commentIds " +
+                            "ORDER BY c.date DESC, c.commentId",
+                    Comment.class
+            );
             commentQuery.setParameter("commentIds", commentIds);
             return commentQuery.getResultList();
         }
@@ -88,13 +96,18 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public int countComments(long id) {
-        LOGGER.debug("Selecting Comments Count from Post {}", id);
+    public int countComments(long neighborhoodId, long postId) {
+        LOGGER.debug("Counting Comments from Post {} in Neighborhood {}", postId, neighborhoodId);
 
-        Long count = (Long) em.createQuery("SELECT COUNT(c) FROM Comment c " +
-                        "WHERE c.post.postId = :postId")
-                .setParameter("postId", id)
+        Long count = (Long) em.createQuery(
+                        "SELECT COUNT(c) FROM Comment c " +
+                                "WHERE c.post.postId = :postId " +
+                                "AND c.user.neighborhood.neighborhoodId = :neighborhoodId"
+                )
+                .setParameter("postId", postId)
+                .setParameter("neighborhoodId", neighborhoodId)
                 .getSingleResult();
+
         return count != null ? count.intValue() : 0;
     }
 

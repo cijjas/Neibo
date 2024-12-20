@@ -21,7 +21,7 @@ public interface ContactService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone);
+    Contact updateContact(long neighborhoodId, long contactId, String contactName, String contactAddress, String contactPhone);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -66,12 +66,16 @@ public class InquiryDaoImpl implements InquiryDao {
     }
 
     @Override
-    public List<Inquiry> getInquiries(long productId, int page, int size) {
-        LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
+    public List<Inquiry> getInquiries(long neighborhoodId, long productId, int page, int size) {
+        LOGGER.debug("Selecting Inquiries from Product with id {} in Neighborhood {}", productId, neighborhoodId);
 
-        TypedQuery<Long> idQuery = em.createQuery("SELECT i.inquiryId FROM Inquiry i " +
-                "WHERE i.product.productId = :productId ORDER BY i.inquiryDate, i.inquiryId DESC", Long.class);
+        TypedQuery<Long> idQuery = em.createQuery(
+                "SELECT i.inquiryId FROM Inquiry i " +
+                        "WHERE i.product.productId = :productId " +
+                        "AND i.product.seller.neighborhood.neighborhoodId = :neighborhoodId " +
+                        "ORDER BY i.inquiryDate, i.inquiryId DESC", Long.class);
         idQuery.setParameter("productId", productId);
+        idQuery.setParameter("neighborhoodId", neighborhoodId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
 
@@ -79,7 +83,9 @@ public class InquiryDaoImpl implements InquiryDao {
 
         if (!inquiryIds.isEmpty()) {
             TypedQuery<Inquiry> inquiryQuery = em.createQuery(
-                    "SELECT i FROM Inquiry i WHERE i.inquiryId IN :inquiryIds ORDER BY i.inquiryDate, i.inquiryId DESC ", Inquiry.class);
+                    "SELECT i FROM Inquiry i " +
+                            "WHERE i.inquiryId IN :inquiryIds " +
+                            "ORDER BY i.inquiryDate, i.inquiryId DESC", Inquiry.class);
             inquiryQuery.setParameter("inquiryIds", inquiryIds);
             return inquiryQuery.getResultList();
         }
@@ -88,13 +94,17 @@ public class InquiryDaoImpl implements InquiryDao {
     }
 
     @Override
-    public int countInquiries(long productId) {
-        LOGGER.debug("Selecting Inquiries Count from Product {}", productId);
+    public int countInquiries(long neighborhoodId, long productId) {
+        LOGGER.debug("Selecting Inquiries Count from Product {} in Neighborhood {}", productId, neighborhoodId);
 
-        Long count = (Long) em.createQuery("SELECT COUNT(i) FROM Inquiry i " +
-                        "WHERE i.product.productId = :productId")
+        Long count = (Long) em.createQuery(
+                        "SELECT COUNT(i) FROM Inquiry i " +
+                                "WHERE i.product.productId = :productId " +
+                                "AND i.product.seller.neighborhood.neighborhoodId = :neighborhoodId")
                 .setParameter("productId", productId)
+                .setParameter("neighborhoodId", neighborhoodId)
                 .getSingleResult();
+
         return count != null ? count.intValue() : 0;
     }
 

@@ -21,7 +21,7 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Product updateProductPartially(long productId, String name, String description, Double price, Long units, Boolean used, Long departmentId, List<Long> imageIds);
+    Product updateProduct(long neighborhoodId, long productId, String name, String description, Double price, Long units, Boolean used, Long departmentId, List<Long> imageIds);
 
     // -----------------------------------------------------------------------------------------------------------------
 

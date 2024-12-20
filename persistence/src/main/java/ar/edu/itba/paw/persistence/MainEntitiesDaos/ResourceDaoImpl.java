@@ -44,10 +44,18 @@ public class ResourceDaoImpl implements ResourceDao {
     // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
     @Override
-    public Optional<Resource> findResource(long resourceId) {
-        LOGGER.debug("Selecting Resource with resourceId {}", resourceId);
+    public Optional<Resource> findResource(long neighborhoodId, long resourceId) {
+        LOGGER.debug("Selecting Resource with resourceId {} and neighborhoodId {}", resourceId, neighborhoodId);
 
-        return Optional.ofNullable(em.find(Resource.class, resourceId));
+        TypedQuery<Resource> query = em.createQuery(
+                "SELECT r FROM Resource r WHERE r.resourceId = :resourceId AND r.neighborhood.neighborhoodId = :neighborhoodId",
+                Resource.class
+        );
+        query.setParameter("resourceId", resourceId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Resource> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     @Override

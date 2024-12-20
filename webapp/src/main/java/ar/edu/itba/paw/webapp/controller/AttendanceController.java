@@ -91,7 +91,7 @@ public class AttendanceController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events/" + eventId + "/attendance",
-                as.calculateAttendancePages(neighborhoodId, size),
+                as.calculateAttendancePages(neighborhoodId, eventId, size),
                 page,
                 size
         );
@@ -111,6 +111,9 @@ public class AttendanceController {
             @PathParam("eventId") @GenericIdConstraint Long eventId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/count'", neighborhoodId, eventId);
+
+        // Path Verification
+        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
 
         // Content
         int count = as.countAttendance(neighborhoodId, eventId);

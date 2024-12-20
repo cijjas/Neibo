@@ -75,7 +75,7 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker updateWorkerPartially(long workerId, String businessName, String address, String phoneNumber, Long backgroundPictureId, String bio) {
+    public Worker updateWorker(long workerId, String businessName, String address, String phoneNumber, Long backgroundPictureId, String bio) {
         LOGGER.info("Updating Worker {}", workerId);
 
         Worker worker = workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);

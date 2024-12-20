@@ -1,10 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Inquiry } from '../../models/index';
-import { InquiryDto, UserDto } from '../../dtos/app-dtos';
-import { mapUser } from './user.service';
+import { InquiryDto } from '../../dtos/app-dtos';
 import { parseLinkHeader } from './utils';
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +12,7 @@ export class InquiryService {
 
     public getInquiry(url: string): Observable<Inquiry> {
         return this.http.get<InquiryDto>(url).pipe(
-            mergeMap((inquiryDto: InquiryDto) => mapInquiry(this.http, inquiryDto))
+            map(mapInquiry)
         );
     }
 
@@ -30,39 +29,45 @@ export class InquiryService {
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http.get<InquiryDto[]>(url, { params, observe: 'response' }).pipe(
-            mergeMap((response) => {
+            map((response) => {
                 const inquiriesDto: InquiryDto[] = response.body || [];
                 const pagination = parseLinkHeader(response.headers.get('Link'));
 
-                const inquiryObservables = inquiriesDto.map(inquiryDto => mapInquiry(this.http, inquiryDto));
-                return forkJoin(inquiryObservables).pipe(
-                    map((inquiries) => {
-                        return {
-                            inquiries,
-                            totalPages: pagination.totalPages,
-                            currentPage: pagination.currentPage
-                        };
-                    })
-                );
+                const inquiries = inquiriesDto.map(mapInquiry);
+
+                return {
+                    inquiries,
+                    totalPages: pagination.totalPages,
+                    currentPage: pagination.currentPage
+                };
+            })
+        );
+    }
+
+    public createInquiry(url: string, message: string, user: string): Observable<string | null> {
+        return this.http.post<InquiryDto>(url, { message, user }, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating inquiry:', error);
+                return of(null);
             })
         );
     }
 }
 
-export function mapInquiry(http: HttpClient, inquiryDto: InquiryDto): Observable<Inquiry> {
-    return forkJoin([
-        http.get<UserDto>(inquiryDto._links.inquiryUser).pipe(mergeMap(userDto => mapUser(http, userDto))),
-        http.get<UserDto>(inquiryDto._links.replyUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
-    ]).pipe(
-        map(([inquirer, replier]) => {
-            return {
-                inquiryMessage: inquiryDto.message,
-                responseMessage: inquiryDto.reply,
-                inquiryDate: inquiryDto.inquiryDate,
-                inquiryUser: inquirer,
-                responseUser: replier,
-                self: inquiryDto._links.self
-            } as Inquiry;
-        })
-    );
+export function mapInquiry(inquiryDto: InquiryDto): Inquiry {
+    return {
+        inquiryMessage: inquiryDto.message,
+        responseMessage: inquiryDto.reply,
+        inquiryDate: inquiryDto.inquiryDate,
+        self: inquiryDto._links.self
+    } as Inquiry;
 }

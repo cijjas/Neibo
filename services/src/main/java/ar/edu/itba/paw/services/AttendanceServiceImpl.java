@@ -49,22 +49,22 @@ public class AttendanceServiceImpl implements AttendanceService {
     public List<Attendance> getAttendance(long neighborhoodId, long eventId, int size, int page) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
 
-        return attendanceDao.getAttendance(eventId, page, size);
+        return attendanceDao.getAttendance(neighborhoodId, eventId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateAttendancePages(long eventId, int size) {
+    public int calculateAttendancePages(long neighborhoodId, long eventId, int size) {
         LOGGER.info("Calculating Attendance Pages for Event {}", eventId);
 
-        return PaginationUtils.calculatePages(attendanceDao.countAttendance(eventId), size);
+        return PaginationUtils.calculatePages(attendanceDao.countAttendance(neighborhoodId, eventId), size);
     }
 
     @Override
     public int countAttendance(long neighborhoodId, long eventId) {
         LOGGER.info("Counting Attendees for Event {}", eventId);
 
-        return attendanceDao.countAttendance(eventId);
+        return attendanceDao.countAttendance(neighborhoodId, eventId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

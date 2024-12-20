@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -155,7 +154,7 @@ public class AmenityController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
 
         // Modification & HashCode Generation
-        final Amenity updatedAmenity = as.updateAmenityPartially(amenityId, updateForm.getName(), updateForm.getDescription(), extractFirstIds(updateForm.getSelectedShifts()));
+        final Amenity updatedAmenity = as.updateAmenity(neighborhoodId, amenityId, updateForm.getName(), updateForm.getDescription(), extractFirstIds(updateForm.getSelectedShifts()));
         String updatedAmenityHashCode = String.valueOf(updatedAmenity.hashCode());
 
         // Return the updated resource along with the EntityLevelETag

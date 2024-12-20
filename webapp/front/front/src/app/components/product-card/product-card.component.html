@@ -1,0 +1,54 @@
+<div class="product-card">
+    <!-- "information corner" replaced by a hover or click behavior -->
+    <!-- In Angular, we can add a click event and show/hide info -->
+    <div class="inside" (click)="onProductClick()">
+        <div class="icon">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
+        <div class="contents" style="color: var(--always-background)">
+            {{ product.description }}
+        </div>
+    </div>
+
+    <div class="f-c-c-s g-0 w-100 h-100">
+        <div class="header w-100">
+            <div class="tags-corner f-c-s-s g-05">
+                <div class="department-tag" (click)="goToDepartment()">
+                    {{ product.department }}
+                </div>
+
+                <div class="used-tag" [ngClass]="product.used ? 'used' : 'new'">
+                    {{ product.used ? 'Used' : 'New' }}
+                </div>
+            </div>
+
+            <div class="img-product placeholder-glow" (click)="onProductClick()">
+                <!-- Replace with actual image fetching logic if needed -->
+                <!-- class="placeholder" -->
+                <img [src]="product.firstImage || 'placeholder-image.jpg'" alt="product image" />
+            </div>
+        </div>
+
+        <div class="footer w-100" (click)="onProductClick()">
+            <div class="p-2 h-50">
+                <span class="product-title">{{ product.name }}</span>
+            </div>
+
+            <div class="container p-0 h-50">
+                <div class="f-c-c-c w-100 h-100 g-0">
+                    <div class="row w-100">
+                        <div class="col-12 font-weight-bold">
+                            <div class="f-r-s-c g-0">
+                                <span class="price font-size-20 ">
+                                    {{ product.price | currency:'ARS': 'symbol':'1.0-2' }}
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

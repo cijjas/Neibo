@@ -102,50 +102,16 @@
           </app-paginator>
         </div>
 
-        <div *ngIf="showSuccessMessage">
-          Reservation created successfully!
-        </div>
 
-        <div *ngIf="showErrorMessage">
-          There was an error creating the reservation.
-        </div>
       </div>
 
       <div class="column-right">
         <app-calendar-widget></app-calendar-widget>
-        <div class="grey-static-container m-t-40">
-          <div class="column d-flex justify-content-center align-items-center">
-            <h3 class="m-b-20">My Reservations</h3>
-            <div *ngIf="reservationsList?.length === 0" class="f-c-c-c align-items-center" style="text-align: center">
-              <span class="w-100 mb-2">
-                No reservations found
-              </span>
-            </div>
-            <div *ngIf="reservationsList?.length > 0">
-              <div *ngFor="let reservation of reservationsList" class="cool-static-container m-b-20"
-                style="word-wrap: break-word;" aria-hidden="true">
-                <div class="f-c-c-c">
-                  <div class="f-r-sb-c w-100">
-                    <h5>{{ reservation.amenity?.name }}</h5>
-                  </div>
-                  <div>
-                    <h6 class="mb-3" style="color:var(--lighttext);">Date
-                      <span class="c-primary">{{ reservation.bookingDate | date:'dd MMM yyyy' }}</span>
-                    </h6>
-                    <h6 class="mb-3" style="color:var(--lighttext);">Start Time
-                      <span class="c-primary">{{ reservation.shift?.startTime | date:'HH:mm a' }}</span>
-                    </h6>
-                    <h6 class="mb-3" style="color:var(--lighttext);">End Time
-                      <!-- If end time is always 1 hour after start time, you can derive it dynamically in your code -->
-                      <span class="c-primary">{{ reservation.shift?.endTime | date:'HH:mm a' }}</span>
-                    </h6>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> <!-- end column-right -->
+        <app-reservations-list></app-reservations-list>
+      </div>
+
+
+      <!-- end column-right -->
 
     </div> <!-- end row -->
   </div> <!-- end container -->

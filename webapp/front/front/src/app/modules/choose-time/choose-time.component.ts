@@ -3,7 +3,7 @@ import { FormArray, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AmenityService, BookingService, HateoasLinksService, ShiftService, UserService, UserSessionService } from '../../shared/services/index.service';
-import { Amenity, Shift } from '../../shared/models';
+import { Amenity, Booking, Shift } from '../../shared/models';
 import { Subscription } from 'rxjs';
 
 
@@ -109,26 +109,21 @@ export class ChooseTimeComponent implements OnInit {
       }
     });
 
+    let userUrl: string = this.linkService.getLink('user:self');
 
-    let userUrl: string;
-    this.userSessionService.getCurrentUser().subscribe(
-      (user) => {
-        userUrl = user.self;
+    this.bookingService.createBooking(this.amenityUrl, this.date, selectedShifts, userUrl).subscribe({
+      next: () => {
+        this.formattedShiftTimes = selectedShiftTimes.join('<br>');
+        this.showReservationDialog = true;
+      },
+      error: (err) => {
+        console.error(err);
+        this.router.navigate(['/not-found']); // Navigate to the error page
 
-        this.bookingService.createBooking(this.amenityUrl, this.date, selectedShifts, userUrl).subscribe({
-          next: () => {
-            this.formattedShiftTimes = selectedShiftTimes.join('<br>');
-            this.showReservationDialog = true;
-          },
-          error: (err) => {
-            console.error(err);
-            this.router.navigate(['/not-found']); // Navigate to the error page
-
-          }
-        });
       }
-    );
+    });
   }
+
 
 
 
@@ -149,5 +144,6 @@ export class ChooseTimeComponent implements OnInit {
     const formArray = this.shiftsForm.get('selectedShifts') as FormArray;
     return !formArray.controls.some(control => control.value === true);
   }
+
 
 }

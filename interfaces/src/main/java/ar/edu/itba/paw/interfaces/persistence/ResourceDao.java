@@ -13,7 +13,7 @@ public interface ResourceDao {
 
     // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
-    Optional<Resource> findResource(long resourceId);
+    Optional<Resource> findResource(long neighborhoodId, long resourceId);
 
     List<Resource> getResources(long neighborhoodId, int page, int size);
 

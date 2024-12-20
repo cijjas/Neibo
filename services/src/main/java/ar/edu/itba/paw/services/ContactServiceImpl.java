@@ -71,10 +71,10 @@ public class ContactServiceImpl implements ContactService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
+    public Contact updateContact(long neighborhoodId, long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
 
-        Contact contact = findContact(contactId).orElseThrow(NotFoundException::new);
+        Contact contact = findContact(neighborhoodId, contactId).orElseThrow(NotFoundException::new);
 
         if (contactName != null && !contactName.isEmpty())
             contact.setContactName(contactName);

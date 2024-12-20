@@ -21,6 +21,6 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    User updateUser(long userId, String mail, String name, String surname, String password, Integer identification, Long languageId,
+    User updateUser(long neighborhoodId, long userId, String mail, String name, String surname, String password, Integer identification, Long languageId,
                     Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId);
 }

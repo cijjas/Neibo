@@ -111,10 +111,10 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User updateUser(long userId, String mail, String name, String surname, String password, Integer identification, Long languageId, Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId) {
+    public User updateUser(long neighborhoodId, long userId, String mail, String name, String surname, String password, Integer identification, Long languageId, Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId) {
         LOGGER.info("Updating User {}", userId);
 
-        User user = userDao.findUser(userId).orElseThrow(NotFoundException::new);
+        User user = userDao.findUser(neighborhoodId, userId).orElseThrow(NotFoundException::new);
 
         if (mail != null && !mail.isEmpty())
             user.setMail(mail);

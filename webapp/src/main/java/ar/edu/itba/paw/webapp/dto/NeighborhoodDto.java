@@ -178,6 +178,23 @@ public class NeighborhoodDto {
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("bookings")
                     .build());
+            links.setProducts(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("products")
+                    .build());
+            links.setRequests(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("requests")
+                    .build());
+            links.setDepartments(uriInfo.getBaseUriBuilder()
+                    .path("departments")
+                    .build());
+            links.setPostStatuses(uriInfo.getBaseUriBuilder()
+                    .path("post-statuses")
+                    .build());
+
         }
         dto.set_links(links);
         return dto;

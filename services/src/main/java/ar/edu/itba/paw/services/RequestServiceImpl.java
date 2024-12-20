@@ -66,7 +66,7 @@ public class RequestServiceImpl implements RequestService {
     public Optional<Request> findRequest(long neighborhoodId, long requestId) {
         LOGGER.info("Finding Request {} from Neighborhood {}", requestId, neighborhoodId);
 
-        return requestDao.findRequest(requestId);
+        return requestDao.findRequest(neighborhoodId, requestId);
     }
 
     @Override
@@ -88,10 +88,10 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Request updateRequest(long requestId, Long requestStatusId) {
+    public Request updateRequest(long neighborhoodId, long requestId, Long requestStatusId) {
         LOGGER.info("Updating Request {} as {}", requestId, requestStatusId);
 
-        Request request = requestDao.findRequest(requestId).orElseThrow(NotFoundException::new);
+        Request request = requestDao.findRequest(neighborhoodId, requestId).orElseThrow(NotFoundException::new);
 
         if (requestStatusId != null){
             request.setStatus(RequestStatus.fromId(requestStatusId));

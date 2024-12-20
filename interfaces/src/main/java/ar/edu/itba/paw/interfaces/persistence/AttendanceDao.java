@@ -15,9 +15,9 @@ public interface AttendanceDao {
 
     Optional<Attendance> findAttendance(long neighborhoodId, long userId, long eventId);
 
-    List<Attendance> getAttendance(long eventId, int page, int size);
+    List<Attendance> getAttendance(long neighborhoodId, long eventId, int page, int size);
 
-    int countAttendance(long eventId);
+    int countAttendance(long neighborhoodId, long eventId);
 
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 

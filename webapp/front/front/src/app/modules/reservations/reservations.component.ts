@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AmenityService, HateoasLinksService } from '../../shared/services/index.service';
+import { AmenityService, BookingService, HateoasLinksService } from '../../shared/services/index.service';
 import { Booking, Amenity, Shift } from '../../shared/models';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -68,6 +68,7 @@ export class ReservationsComponent implements OnInit {
     private fb: FormBuilder,
     private amenityService: AmenityService,
     private linkService: HateoasLinksService,
+    private bookingService: BookingService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -79,7 +80,6 @@ export class ReservationsComponent implements OnInit {
     });
 
     this.loadAmenities(this.currentPage);
-    this.loadReservations();
   }
 
   loadAmenities(page: number): void {
@@ -105,9 +105,7 @@ export class ReservationsComponent implements OnInit {
     });
   }
 
-  loadReservations(): void {
-    // Load reservations logic here
-  }
+
 
   onSubmit(): void {
     if (this.reservationForm.valid) {
@@ -141,8 +139,22 @@ export class ReservationsComponent implements OnInit {
     }
   }
 
-  deleteReservation(bookingId: string): void {
-    // Implement reservation deletion logic
+
+  deleteReservation(bookingUrl: string): void {
+    this.isLoading = true;
+
+    this.bookingService.deleteBooking(bookingUrl).subscribe({
+      next: () => {
+        this.reservationsList = this.reservationsList.filter(reservation => reservation.self !== bookingUrl);
+        this.isLoading = false;
+        this.showSuccessMessage = true;
+      },
+      error: (err) => {
+        console.error(err);
+        this.showErrorMessage = true;
+        this.isLoading = false;
+      }
+    });
   }
 
   // Checks if a given day/time slot is available for this amenity

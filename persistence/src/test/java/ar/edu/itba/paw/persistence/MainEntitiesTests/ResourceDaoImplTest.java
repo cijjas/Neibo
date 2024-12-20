@@ -76,14 +76,14 @@ public class ResourceDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_resourceId_valid() {
+    public void find_neighborhoodId_resourceId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
         long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        Optional<Resource> optionalResource = resourceDaoImpl.findResource(rKey);
+        Optional<Resource> optionalResource = resourceDaoImpl.findResource(nhKey, rKey);
 
         // Validations & Post Conditions
         assertTrue(optionalResource.isPresent());
@@ -91,14 +91,41 @@ public class ResourceDaoImplTest {
     }
 
     @Test
-    public void find_resourceId_invalid_resourceId() {
+    public void find_neighborhoodId_resourceId_invalid_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
         long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        Optional<Resource> optionalResource = resourceDaoImpl.findResource(INVALID_ID);
+        Optional<Resource> optionalResource = resourceDaoImpl.findResource(INVALID_ID, rKey);
+
+        // Validations & Post Conditions
+        assertFalse(optionalResource.isPresent());
+    }
+
+    @Test
+    public void find_neighborhoodId_resourceId_invalid_resourceId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        Optional<Resource> optionalResource = resourceDaoImpl.findResource(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalResource.isPresent());
+    }
+    @Test
+    public void find_neighborhoodId_resourceId_invalid_neighborhoodId_resourceId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        Optional<Resource> optionalResource = resourceDaoImpl.findResource(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalResource.isPresent());

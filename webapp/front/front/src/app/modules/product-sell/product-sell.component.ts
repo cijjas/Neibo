@@ -1,0 +1,166 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { combineLatest, map, switchMap } from 'rxjs';
+import { Department } from '../../shared/models';
+import { Router } from '@angular/router';
+
+import {
+  ImageService,
+  UserSessionService,
+  DepartmentService,
+  ProductService,
+  HateoasLinksService,
+} from '../../shared/services/index.service';
+
+
+@Component({
+  selector: 'app-product-sell',
+  templateUrl: './product-sell.component.html',
+})
+export class ProductSellComponent implements OnInit {
+  darkMode = false; // This can be toggled based on user settings
+  channel: string = 'Sell';
+  departmentList: Department[] = [];
+  departmentName: string = 'NONE';
+
+  quantities: number[] = Array.from({ length: 100 }, (_, i) => i + 1);
+
+  listingForm = this.fb.group({
+    title: ['', Validators.required],
+    price: ['', [Validators.required, Validators.pattern(/^\$?\d+(,\d{3})*(\.\d{2})?$/)]],
+    description: ['', Validators.required],
+    departmentId: ['', Validators.required],
+    used: [false, Validators.required],
+    quantity: [1, Validators.required]
+  });
+
+  formErrors: string | null = null;
+
+  images: { file: File; preview: string }[] = [];
+  // toast
+  toastVisible: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' = 'success';
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private productService: ProductService,
+    private userSessionService: UserSessionService,
+    private imageService: ImageService,
+    private linkService: HateoasLinksService,
+    private departmentService: DepartmentService,
+  ) { }
+
+  ngOnInit(): void {
+    this.departmentService.getDepartments().subscribe({
+      next: (departments: Department[]) => {
+        this.departmentList = departments;
+      },
+      error: (err: any) => console.error(err)
+    });
+  }
+
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
+
+    for (let i = 0; i < input.files.length; i++) {
+      if (this.images.length >= 3) break; // limit to 3 images
+      const file = input.files[i];
+      if (!file.type.startsWith('image/')) continue;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.images.push({ file, preview: e.target.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  triggerImageInput(el: HTMLInputElement): void {
+    el.click();
+  }
+
+  removeImage(index: number): void {
+    this.images.splice(index, 1);
+  }
+
+  formatCurrency(blur?: boolean): void {
+    let val = this.listingForm.get('price')?.value || '';
+    if (!val) return;
+
+    // Remove all non-digit and non-dot characters
+    val = val.replace(/[^\d.]/g, '');
+
+    // Parse value
+    let floatVal = parseFloat(val);
+    if (isNaN(floatVal)) {
+      floatVal = 0.00;
+    }
+
+    // Format as currency
+    let formatted = '$' + floatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    this.listingForm.patchValue({ price: formatted }, { emitEvent: false });
+  }
+
+  onSubmit(): void {
+    if (this.listingForm.invalid) {
+      this.formErrors = 'Please fill in all required fields correctly.';
+      return;
+    }
+
+    // Extract and clean form data
+    const rawValue = this.listingForm.value;
+
+    // Extract user self-link
+    const userSelf = this.linkService.getLink('user:self');
+
+    // Prepare product data
+    const productData: any = {
+      name: rawValue.title,
+      description: rawValue.description,
+      price: rawValue.price.replace('$', ''), // Remove the $ sign before sending
+      used: rawValue.used,
+      department: rawValue.departmentId,
+      remainingUnits: rawValue.quantity,
+      user: userSelf
+    };
+
+    // Upload images and create product
+    const imageUploadObservables = this.images.map(img =>
+      this.imageService.createImage(img.file)
+    );
+
+    combineLatest(imageUploadObservables)
+      .pipe(
+        map(imageUrls => {
+          productData.images = imageUrls.filter(url => url !== null);
+          if (productData.images.length === 0) {
+            throw new Error('At least one image must be uploaded.');
+          }
+          return productData;
+        }),
+        switchMap(data => this.productService.createProduct(data))
+      )
+      .subscribe({
+        next: productUrl => {
+          this.router.navigate(['/marketplace/products', productUrl]);
+          this.showToast('Request sent successfully', 'success');
+        },
+        error: err => {
+          this.formErrors = 'There was a problem creating the listing.';
+          console.error(err);
+        }
+      });
+  }
+
+
+  showToast(message: string, type: 'success' | 'error'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.toastVisible = true;
+    setTimeout(() => {
+      this.toastVisible = false;
+    }, 3000); // Hide the toast after 3 seconds
+  }
+}

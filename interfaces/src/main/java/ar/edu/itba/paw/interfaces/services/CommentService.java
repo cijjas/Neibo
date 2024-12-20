@@ -17,7 +17,7 @@ public interface CommentService {
 
     List<Comment> getComments(long neighborhoodId, long postId, int size, int page);
 
-    int calculateCommentPages(long postId, int size);
+    int calculateCommentPages(long neighborhoodId, long postId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

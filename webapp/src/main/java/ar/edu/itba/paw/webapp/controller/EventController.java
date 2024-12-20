@@ -165,7 +165,7 @@ public class EventController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 
         // Modification & HashCode Generation
-        final Event updatedEvent = es.updateEventPartially(eventId, updateForm.getName(), updateForm.getDescription(), extractDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
+        final Event updatedEvent = es.updateEvent(neighborhoodId, eventId, updateForm.getName(), updateForm.getDescription(), extractDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
         String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
         return Response.ok(EventDto.fromEvent(updatedEvent, uriInfo))

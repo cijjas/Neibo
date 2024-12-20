@@ -19,7 +19,7 @@ public interface AmenityService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Amenity updateAmenityPartially(long amenityId, String name, String description, List<Long> shiftIds);
+    Amenity updateAmenity(long neighborhoodId, long amenityId, String name, String description, List<Long> shiftIds);
 
     // -----------------------------------------------------------------------------------------------------------------
 
