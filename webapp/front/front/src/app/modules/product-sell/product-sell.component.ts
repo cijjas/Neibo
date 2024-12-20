@@ -10,6 +10,7 @@ import {
   DepartmentService,
   ProductService,
   HateoasLinksService,
+  ToastService,
 } from '../../shared/services/index.service';
 
 
@@ -49,6 +50,7 @@ export class ProductSellComponent implements OnInit {
     private imageService: ImageService,
     private linkService: HateoasLinksService,
     private departmentService: DepartmentService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -145,7 +147,7 @@ export class ProductSellComponent implements OnInit {
       .subscribe({
         next: productUrl => {
           this.router.navigate(['/marketplace/products', productUrl]);
-          this.showToast('Request sent successfully', 'success');
+          this.toastService.showToast('Listing created successfully', 'success');
         },
         error: err => {
           this.formErrors = 'There was a problem creating the listing.';
@@ -155,12 +157,4 @@ export class ProductSellComponent implements OnInit {
   }
 
 
-  showToast(message: string, type: 'success' | 'error'): void {
-    this.toastMessage = message;
-    this.toastType = type;
-    this.toastVisible = true;
-    setTimeout(() => {
-      this.toastVisible = false;
-    }, 3000); // Hide the toast after 3 seconds
-  }
 }

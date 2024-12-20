@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DepartmentService, HateoasLinksService, InquiryService, ProductService, RequestService, UserService, UserSessionService } from '../../shared/services/index.service'; // Example
+import { DepartmentService, HateoasLinksService, InquiryService, ProductService, RequestService, ToastService, UserService, UserSessionService } from '../../shared/services/index.service'; // Example
 import { Department, Inquiry, Product, User } from '../../shared/models';
 import { NgForm } from '@angular/forms';
 
@@ -57,6 +57,7 @@ export class ProductDetailComponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private linkService: HateoasLinksService,
+    private toastService: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -178,13 +179,12 @@ export class ProductDetailComponent implements OnInit {
 
     this.requestService.createRequest(message, amount, this.product.self, this.linkService.getLink('user:self')).subscribe({
       next: () => {
-        this.showToast('Request sent successfully', 'success');
+        this.toastService.showToast('Request sent successfully', 'success');
         this.requestDialogVisible = false;
         requestForm.resetForm();
       },
       error: (err) => {
-        console.error('Error sending request:', err);
-        this.showToast('Error sending request', 'error');
+        this.toastService.showToast('Oops, an error ocurred try again later.', 'error');
         this.requestError = true;
       },
     });
@@ -200,20 +200,20 @@ export class ProductDetailComponent implements OnInit {
       next: () => {
         this.requestService.createRequest(message, amount, this.product.self, this.loggedUser.self).subscribe({
           next: () => {
-            this.showToast('Request sent successfully', 'success');
+            this.toastService.showToast('Request sent successfully', 'success');
             this.requestDialogVisible = false;
             phoneRequestForm.resetForm();
           },
           error: (err) => {
             console.error('Error sending request:', err);
-            this.showToast('Error sending request', 'error');
+            this.toastService.showToast('Oops, an error ocurred try again later.', 'error');
             this.requestError = true;
           },
         });
       },
       error: (err) => {
         console.error('Error sending request:', err);
-        this.showToast('Error sending request', 'error');
+        this.toastService.showToast('Oops, an error ocurred try again later.', 'error');
         this.requestError = true;
       },
     });
@@ -258,12 +258,5 @@ export class ProductDetailComponent implements OnInit {
   }
 
 
-  showToast(message: string, type: 'success' | 'error'): void {
-    this.toastMessage = message;
-    this.toastType = type;
-    this.toastVisible = true;
-    setTimeout(() => {
-      this.toastVisible = false;
-    }, 3000); // Hide the toast after 3 seconds
-  }
+
 }

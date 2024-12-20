@@ -1,28 +1,22 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type ToastType = 'success' | 'error';
-
 @Injectable({
     providedIn: 'root',
 })
 export class ToastService {
-    private messageSource = new BehaviorSubject<string>('');
-    private typeSource = new BehaviorSubject<ToastType>('success');
-    private visibleSource = new BehaviorSubject<boolean>(false);
+    private toastSubject = new BehaviorSubject<{ message: string; type: 'success' | 'error'; visible: boolean }>({
+        message: '',
+        type: 'success',
+        visible: false,
+    });
 
-    message$ = this.messageSource.asObservable();
-    type$ = this.typeSource.asObservable();
-    visible$ = this.visibleSource.asObservable();
+    toast$ = this.toastSubject.asObservable();
 
-    showToast(message: string, type: ToastType = 'success'): void {
-        this.messageSource.next(message);
-        this.typeSource.next(type);
-        this.visibleSource.next(true);
-        console.log('showToast called with:', message, type);
-
+    showToast(message: string, type: 'success' | 'error' = 'success'): void {
+        this.toastSubject.next({ message, type, visible: true });
         setTimeout(() => {
-            this.visibleSource.next(false);
-        }, 3000);
+            this.toastSubject.next({ message: '', type, visible: false });
+        }, 5000); // Hide the toast after 3 seconds
     }
 }
