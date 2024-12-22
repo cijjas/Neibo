@@ -7,10 +7,13 @@ import { CommentDto, UserDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { formatDistanceToNow } from 'date-fns';
 import { parseLinkHeader } from './utils';
+import { HateoasLinksService } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient
+    ) { }
 
     public getComment(url: string): Observable<Comment> {
         return this.http.get<CommentDto>(url).pipe(

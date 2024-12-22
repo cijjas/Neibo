@@ -36,7 +36,7 @@ import { SuccessToastComponent } from "./components/success-toast/success-toast.
 
 // MODULES
 import { FeedComponent } from "./modules/feed/feed.component"
-import { MarketplaceComponent } from "./modules/marketplace/marketplace.component"
+import { MarketplaceComponent } from "./modules/marketplace/marketplace/marketplace.component"
 import { ServicesComponent } from "./modules/services/services.component"
 import { InformationComponent } from "./modules/information/information.component"
 import { ReservationsComponent } from "./modules/reservations/reservations.component"
@@ -45,12 +45,13 @@ import { LoginComponent } from './modules/auth/login/login.component';
 import { CalendarComponent } from './modules/calendar/calendar.component';
 import { UserProfileComponent } from "./modules/user-profile/user-profile.component";
 import { ChooseTimeComponent } from "./modules/choose-time/choose-time.component";
-import { ProductDetailComponent } from "./modules/product-detail/product-detail.component";
+import { ProductDetailComponent } from "./modules/marketplace/product-detail/product-detail.component";
 import { CreatePostComponent } from "./modules/create-post/create-post.component";
 import { PostDetailComponent } from "./modules/post-detail/post-detail.component";
-import { ProductSellComponent } from "./modules/product-sell/product-sell.component";
-import { ProductEditComponent } from "./modules/product-edit/product-edit.component";
-
+import { ProductSellComponent } from "./modules/marketplace/product-sell/product-sell.component";
+import { ProductEditComponent } from "./modules/marketplace/product-edit/product-edit.component";
+import { BuyerHubComponent } from "./modules/marketplace/buyer-hub/buyer-hub.component";
+import { SellerHubComponent } from "./modules/marketplace/seller-hub/seller-hub.component";
 // SERVICES
 import { AuthService, ToastService } from "./shared/services/index.service";
 import { JwtInterceptor } from "./shared/interceptors/jwt.interceptor";
@@ -59,6 +60,7 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
 //PIPES
 import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
 import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
+import { ListingRequestsComponent } from "./modules/marketplace/listing-requests/listing-requests.component";
 
 
 @NgModule({
@@ -97,7 +99,10 @@ import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
     ProductDetailComponent,
     SuccessToastComponent,
     ProductSellComponent,
-    ProductEditComponent
+    ProductEditComponent,
+    BuyerHubComponent,
+    SellerHubComponent,
+    ListingRequestsComponent,
   ],
   imports: [
     BrowserModule,

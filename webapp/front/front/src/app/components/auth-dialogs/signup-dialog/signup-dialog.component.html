@@ -7,28 +7,19 @@
     <div class="title mb-2 mt-5 f-c-c-c" style="gap:5px" i18n>
       {{
       selectedOption === 'neighbor'
-        ? 'Welcome to neibo'
-        : 'Boost your Business with neibo'
+      ? 'Welcome to neibo'
+      : 'Boost your Business with neibo'
       }}
-      <span class=" font-weight-normal" >Sign up to get started</span>
+      <span class=" font-weight-normal">Sign up to get started</span>
     </div>
 
     <div class="f-r-c-c g-0 w-100">
-      <div
-        class="cool-button active"
-        [class.active]="selectedOption === 'neighbor'"
-        (click)="selectOption('neighbor')"
-        style="border-bottom-right-radius: 0; border-top-right-radius: 0;"
-      >
+      <div class="cool-button active" [class.active]="selectedOption === 'neighbor'" (click)="selectOption('neighbor')"
+        style="border-bottom-right-radius: 0; border-top-right-radius: 0;">
         Neighbor
       </div>
-      <div
-
-        class="cool-button "
-        [class.active]="selectedOption === 'service'"
-        (click)="selectOption('service')"
-        style="border-bottom-left-radius: 0; border-top-left-radius: 0;"
-      >
+      <div class="cool-button " [class.active]="selectedOption === 'service'" (click)="selectOption('service')"
+        style="border-bottom-left-radius: 0; border-top-left-radius: 0;">
         Service
       </div>
     </div>
@@ -38,109 +29,99 @@
     <div *ngIf="selectedOption === 'neighbor'">
       <form [formGroup]="signupForm" (ngSubmit)="trySignup()" id="signupForm">
 
-      <div class="f-c-c-c pl-3 pr-3">
-        <div class="form-input align-items-start " style="gap:5px; width: 200px">
-          <span class="font-weight-normal c-light-text ml-2">Neighborhood</span>
-          <select  class="cool-select">
-            <!-- <select formControlName="neighborhoodUrn" class="cool-select">
+        <div class="f-c-c-c ps-3 pe-3">
+          <div class="form-input align-items-start " style="gap:5px; width: 200px">
+            <span class="font-weight-normal c-light-text mls-2">Neighborhood</span>
+            <select class="cool-select">
+              <!-- <select formControlName="neighborhoodUrn" class="cool-select">
               <option *ngFor="let neib of neighborhoodsList" [value]="neib._links.self">
                 {{ neib.name }}
               </option>
             </select> -->
-          </select>
-          <small class="form-error"> *Entered email is not valid</small> <!--TODO-->
-        </div>
-        <div class="row w-100">
-          <div class="col-6 pr-2">
-            <div class="form-input">
-              <label >
-                <input  placeholder="First name" i18n-placeholder class="input" formControlName="name"/>
-              </label>
-<!--TODO              <form:errors path="name" cssClass="landing-error" element="p"/>-->
-            </div>
+            </select>
+            <small class="form-error"> *Entered email is not valid</small> <!--TODO-->
           </div>
+          <div class="row w-100">
+            <div class="col-6 pe-2">
+              <div class="form-input">
+                <label>
+                  <input placeholder="First name" i18n-placeholder class="input" formControlName="name" />
+                </label>
+                <!--TODO              <form:errors path="name" cssClass="landing-error" element="p"/>-->
+              </div>
+            </div>
 
-          <div class="col-6 pl-2">
-            <div class="form-input ">
-              <label >
-                <input  placeholder="Surname" i18n-placeholder class="input" formControlName="surname"/>
-              </label>
-<!-- TODO
+            <div class="col-6 ps-2">
+              <div class="form-input ">
+                <label>
+                  <input placeholder="Surname" i18n-placeholder class="input" formControlName="surname" />
+                </label>
+                <!-- TODO
               <form:errors path="surname" cssClass="landing-error" element="p"/>
 -->
+              </div>
             </div>
           </div>
+          <div class="row w-100">
+            <div class="col-6 pe-2">
+
+              <div class="form-input">
+                <label>
+                  <input placeholder="Email" class="input" formControlName="mail" />
+                </label>
+                <!--<form:errors path="mail" cssClass="landing-error" element="p"/> TODO-->
+              </div>
+            </div>
+            <div class="col-6 ps-2">
+
+              <div class="form-input">
+                <label>
+                  <input type="password" autocomplete="true" placeholder="Password" class="input"
+                    formControlName="password" />
+                </label>
+                <!--TODO <form:errors path="password" cssClass="landing-error" element="p"/>-->
+              </div>
+            </div>
+          </div>
+          <div class="row w-100">
+            <div class="col-6 pe-2">
+              <div class="form-input ">
+                <label>
+                  <input type="number" pattern="[0-9]*" inputmode="numeric" min="1" max="99999999"
+                    placeholder="Identification" formControlName="identification" class="input" />
+                </label>
+                <!--TODO <form:errors path="identification" cssClass="landing-error" element="p"/>-->
+              </div>
+            </div>
+            <div class="col-6 ps-2">
+              <div class="form-input ">
+                <label>
+                  <select class="cool-select" formControlName="language">
+                    <option value="English">English</option>
+                    <option value="Spanish">Spanish</option>
+                  </select>
+                </label>
+                <!--TODO <form:errors path="language" cssClass="landing-error" element="p"/>-->
+              </div>
+            </div>
+          </div>
+
+
+
+          <button type="submit" [disabled]="signupForm.invalid" class="action-button font-weight-bolder mt-3">
+            Sign up
+          </button>
+
         </div>
-        <div class="row w-100">
-          <div class="col-6 pr-2">
 
-            <div class="form-input">
-              <label >
-                <input  placeholder="Email" class="input" formControlName="mail"/>
-              </label>
-              <!--<form:errors path="mail" cssClass="landing-error" element="p"/> TODO-->
-            </div>
-          </div>
-          <div class="col-6 pl-2">
-
-            <div class="form-input">
-              <label >
-                <input type="password"  autocomplete="true" placeholder="Password"
-                            class="input" formControlName="password"/>
-              </label>
-              <!--TODO <form:errors path="password" cssClass="landing-error" element="p"/>-->
-            </div>
-          </div>
-        </div>
-        <div class="row w-100">
-          <div class="col-6 pr-2">
-            <div class="form-input ">
-              <label>
-                <input
-                  type="number"
-                  pattern="[0-9]*"
-                  inputmode="numeric"
-                  min="1" max="99999999"
-                  placeholder="Identification"
-                  formControlName="identification"
-                  class="input"
-                />
-              </label>
-             <!--TODO <form:errors path="identification" cssClass="landing-error" element="p"/>-->
-            </div>
-          </div>
-          <div class="col-6 pl-2">
-            <div class="form-input ">
-              <label >
-                <select class="cool-select" formControlName="language">
-                  <option value="English">English</option>
-                  <option value="Spanish">Spanish</option>
-                </select>
-              </label>
-              <!--TODO <form:errors path="language" cssClass="landing-error" element="p"/>-->
-            </div>
-          </div>
-        </div>
-
-
-
-        <button
-          type="submit"
-          [disabled]="signupForm.invalid"
-          class="action-button font-weight-bolder mt-3">
-          Sign up
-        </button>
-
-      </div>
-
-    </form>
+      </form>
     </div>
 
     <div *ngIf="selectedOption === 'service'">
       <!--
     <form:form method="post" action="${pageContext.request.contextPath}/signup-worker" modelAttribute="workerSignupForm" id="workerSignupForm">
       <form:errors cssClass="error" element="p"/>
-      <div class="f-c-c-c pl-3 pr-3">
+      <div class="f-c-c-c ps-3 pe-3">
         <div class="form-input " style="max-width: 320px">
           <form:label path="businessName">
             <c:set var="businessName"><spring:message code="Business.name"/></c:set>
@@ -229,7 +210,7 @@
         </div>
 
         <div class="row w-100">
-          <div class="col-6 pr-2">
+          <div class="col-6 pe-2">
             <div class="form-input">
               <form:label path="w_name">
                 <c:set var="w_firstName"><spring:message code="First.name"/></c:set>
@@ -239,7 +220,7 @@
             </div>
           </div>
 
-          <div class="col-6 pl-2">
+          <div class="col-6 ps-2">
             <div class="form-input ">
               <form:label path="w_surname">
                 <c:set var="w_surname"><spring:message code="Surname"/></c:set>
@@ -250,7 +231,7 @@
           </div>
         </div>
         <div class="row w-100">
-          <div class="col-6 pr-2">
+          <div class="col-6 pe-2">
             <div class="form-input">
               <form:label path="w_mail">
                 <c:set var="w_email"><spring:message code="Email"/></c:set>
@@ -260,7 +241,7 @@
             </div>
           </div>
 
-          <div class="col-6 pl-2">
+          <div class="col-6 ps-2">
             <div class="form-input">
               <form:label path="w_password">
                 <c:set var="w_password"><spring:message code="Password"/></c:set>
@@ -272,7 +253,7 @@
           </div>
         </div>
         <div class="row w-100">
-          <div class="col-6 pr-2">
+          <div class="col-6 pe-2">
             <div class="form-input">
               <form:label path="address">
                 <c:set var="address"><spring:message code="Address"/></c:set>
@@ -282,7 +263,7 @@
             </div>
           </div>
 
-          <div class="col-6 pl-2">
+          <div class="col-6 ps-2">
             <div class="form-input">
               <form:label path="w_identification">
                 <c:set var="w_identification"><spring:message code="Identification"/></c:set>
@@ -302,7 +283,7 @@
           </div>
         </div>
         <div class="row w-100">
-          <div class="col-6 pr-2">
+          <div class="col-6 pe-2">
             <div class="form-input">
               <form:label path="w_language">
                 <form:select path="w_language" class="cool-select">
@@ -314,7 +295,7 @@
             </div>
           </div>
 
-          <div class="col-6 pl-2">
+          <div class="col-6 ps-2">
 
             <div class="form-input">
               <form:label path="phoneNumber">

@@ -78,6 +78,78 @@ public class Links {
     private URI amenities;
     private URI postStatuses;
     private URI departments;
+    private URI acceptedRequestStatus;
+    private URI declinedRequestStatus;
+    private URI requestedRequestStatus;
+    private URI purchaseTransactionType;
+    private URI saleTransactionType;
+    private URI boughtProductStatus;
+    private URI soldProductStatus;
+    private URI sellingProductStatus;
+
+    public URI getAcceptedRequestStatus() {
+        return acceptedRequestStatus;
+    }
+
+    public void setAcceptedRequestStatus(URI acceptedRequestStatus) {
+        this.acceptedRequestStatus = acceptedRequestStatus;
+    }
+
+    public URI getDeclinedRequestStatus() {
+        return declinedRequestStatus;
+    }
+
+    public void setDeclinedRequestStatus(URI declinedRequestStatus) {
+        this.declinedRequestStatus = declinedRequestStatus;
+    }
+
+    public URI getRequestedRequestStatus() {
+        return requestedRequestStatus;
+    }
+
+    public void setRequestedRequestStatus(URI requestedRequestStatus) {
+        this.requestedRequestStatus = requestedRequestStatus;
+    }
+
+    public URI getPurchaseTransactionType() {
+        return purchaseTransactionType;
+    }
+
+    public void setPurchaseTransactionType(URI purchaseTransactionType) {
+        this.purchaseTransactionType = purchaseTransactionType;
+    }
+
+    public URI getSaleTransactionType() {
+        return saleTransactionType;
+    }
+
+    public void setSaleTransactionType(URI saleTransactionType) {
+        this.saleTransactionType = saleTransactionType;
+    }
+
+    public URI getBoughtProductStatus() {
+        return boughtProductStatus;
+    }
+
+    public void setBoughtProductStatus(URI boughtProductStatus) {
+        this.boughtProductStatus = boughtProductStatus;
+    }
+
+    public URI getSoldProductStatus() {
+        return soldProductStatus;
+    }
+
+    public void setSoldProductStatus(URI soldProductStatus) {
+        this.soldProductStatus = soldProductStatus;
+    }
+
+    public URI getSellingProductStatus() {
+        return sellingProductStatus;
+    }
+
+    public void setSellingProductStatus(URI sellingProductStatus) {
+        this.sellingProductStatus = sellingProductStatus;
+    }
 
     public URI getPostStatuses() {
         return postStatuses;

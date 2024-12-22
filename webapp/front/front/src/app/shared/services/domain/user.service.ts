@@ -10,8 +10,6 @@ import { HateoasLinksService, ImageService } from '../index.service'
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private headers: HttpHeaders
-
     constructor(
         private http: HttpClient,
         private linkService: HateoasLinksService,

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Inquiry } from '../../models/index';
 import { InquiryDto } from '../../dtos/app-dtos';
@@ -58,6 +58,15 @@ export class InquiryService {
             catchError(error => {
                 console.error('Error creating inquiry:', error);
                 return of(null);
+            })
+        );
+    }
+
+    public updateInquiry(inquiryUrl: string, inquiryData: any): Observable<void> {
+        return this.http.patch<void>(inquiryUrl, inquiryData).pipe(
+            catchError(error => {
+                console.error('Error updating inquiry:', error);
+                return throwError(() => new Error('Failed to update inquiry.'));
             })
         );
     }

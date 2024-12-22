@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.BaseChannel;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -194,7 +192,56 @@ public class NeighborhoodDto {
             links.setPostStatuses(uriInfo.getBaseUriBuilder()
                     .path("post-statuses")
                     .build());
-
+            // Requests
+            links.setAcceptedRequestStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("request-statuses")
+                            .path(String.valueOf(RequestStatus.ACCEPTED.getId()))
+                            .build()
+            );
+            links.setDeclinedRequestStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("request-statuses")
+                            .path(String.valueOf(RequestStatus.DECLINED.getId()))
+                            .build()
+            );
+            links.setRequestedRequestStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("request-statuses")
+                            .path(String.valueOf(RequestStatus.REQUESTED.getId()))
+                            .build()
+            );
+            links.setPurchaseTransactionType(
+                    uriInfo.getBaseUriBuilder()
+                            .path("transaction-types")
+                            .path(String.valueOf(TransactionType.PURCHASE.getId()))
+                            .build()
+            );
+            links.setSaleTransactionType(
+                    uriInfo.getBaseUriBuilder()
+                            .path("transaction-types")
+                            .path(String.valueOf(TransactionType.SALE.getId()))
+                            .build()
+            );
+            // Products
+            links.setBoughtProductStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("product-statuses")
+                            .path(String.valueOf(ProductStatus.BOUGHT.getId()))
+                            .build()
+            );
+            links.setSellingProductStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("product-statuses")
+                            .path(String.valueOf(ProductStatus.SELLING.getId()))
+                            .build()
+            );
+            links.setSoldProductStatus(
+                    uriInfo.getBaseUriBuilder()
+                            .path("product-statuses")
+                            .path(String.valueOf(ProductStatus.SOLD.getId()))
+                            .build()
+            );
         }
         dto.set_links(links);
         return dto;

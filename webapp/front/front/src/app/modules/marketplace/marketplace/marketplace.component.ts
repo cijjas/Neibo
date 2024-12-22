@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService, DepartmentService, HateoasLinksService } from '../../shared/services/index.service';
-import { Product, Department } from '../../shared/models';
+import { ProductService, DepartmentService, HateoasLinksService } from '../../../shared/services/index.service';
+import { Product, Department } from '../../../shared/models';
 
 @Component({
   selector: 'app-marketplace',
@@ -43,7 +43,7 @@ export class MarketplaceComponent implements OnInit {
   private loadProducts(): void {
     const productsUrl: string = this.linkService.getLink('neighborhood:products');
 
-    this.productService.getProducts(productsUrl, { page: this.page, size: this.size, inDepartment: this.selectedDepartment }).subscribe({
+    this.productService.getProducts({ page: this.page, size: this.size, inDepartment: this.selectedDepartment }).subscribe({
       next: (data) => {
         this.productList = data.products;
         this.totalPages = data.totalPages;

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DepartmentService, HateoasLinksService, InquiryService, ProductService, RequestService, ToastService, UserService, UserSessionService } from '../../shared/services/index.service'; // Example
-import { Department, Inquiry, Product, User } from '../../shared/models';
+import { DepartmentService, HateoasLinksService, InquiryService, ProductService, RequestService, ToastService, UserService, UserSessionService } from '../../../shared/services/index.service'; // Example
+import { Department, Inquiry, Product, User } from '../../../shared/models';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -37,9 +37,8 @@ export class ProductDetailComponent implements OnInit {
   replyDialogVisible: boolean = false;
   questionForReply: any;
 
-  replayMessage: string = '';
+  replyMessage: string = '';
   questionMessage: string = '';
-
 
   // toast
   toastVisible: boolean = false;
@@ -115,19 +114,19 @@ export class ProductDetailComponent implements OnInit {
     this.requestDialogVisible = false;
   }
 
-  showReplyDialog(question: any) {
+  showReplyDialog(question: Inquiry): void {
     this.questionForReply = question;
     this.replyDialogVisible = true;
   }
 
-  closeReplyDialog() {
+  closeReplyDialog(): void {
     this.replyDialogVisible = false;
     this.questionForReply = null;
+    this.replyMessage = '';
   }
 
-  onHoverSmallImage(image: string): void {
-    this.currentBigImage = image;
-  }
+
+
 
   // Create inquiry
   submitQuestionForm() {
@@ -219,12 +218,25 @@ export class ProductDetailComponent implements OnInit {
   }
 
 
-  submitReplyForm() {
+  submitReplyForm(): void {
+    if (!this.questionForReply || !this.replyMessage.trim()) {
+      return;
+    }
 
-    // Handle reply form submit
+    this.inquiryService
+      .updateInquiry(this.questionForReply.self, { reply: this.replyMessage })
+      .subscribe({
+        next: (response) => {
+          this.questionForReply.responseMessage = this.replyMessage;
+          this.closeReplyDialog();
+          this.toastService.showToast('Reply sent successfully', 'success');
+        },
+        error: (err) => {
+          console.error('Error replying to inquiry:', err);
+          this.toastService.showToast('Failed to send reply. Try again later.', 'error');
+        },
+      });
   }
-
-
 
   goToDepartment(department: Department): void {
     this.router.navigate(['/marketplace'], {
@@ -236,6 +248,12 @@ export class ProductDetailComponent implements OnInit {
     this.currentBigImage = image;
     this.selectedImageIndex = index;
   }
+
+  onHoverSmallImage(image: string, index: number): void {
+    this.currentBigImage = image;
+    this.selectedImageIndex = index;
+  }
+
 
   onPageChange(page: number): void {
     this.page = page;

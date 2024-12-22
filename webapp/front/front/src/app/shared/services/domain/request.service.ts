@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Request } from '../../models/index';
 import { RequestDto, UserDto, RequestStatusDto, ProductDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
@@ -22,27 +22,28 @@ export class RequestService {
     }
 
     public getRequests(
-        url: string,
         queryParams: {
             page?: number;
             size?: number;
-            requestBy?: string;
+            requestedBy?: string;
             forProduct?: string;
             withType?: string;
             withStatus?: string;
         } = {}
     ): Observable<{ requests: Request[]; totalPages: number; currentPage: number }> {
+        const url: string = this.linkService.getLink('neighborhood:requests')
+
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
-        if (queryParams.requestBy) params = params.set('requestBy', queryParams.requestBy);
+        if (queryParams.requestedBy) params = params.set('requestedBy', queryParams.requestedBy);
         if (queryParams.forProduct) params = params.set('forProduct', queryParams.forProduct);
         if (queryParams.withType) params = params.set('withType', queryParams.withType);
         if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
 
-        if ((queryParams.requestBy && !queryParams.withType) || (!queryParams.requestBy && queryParams.withType)) {
-            throw new Error('Both `requestBy` and `withType` must be provided together, or neither of them.');
+        if ((queryParams.requestedBy && !queryParams.withType) || (!queryParams.requestedBy && queryParams.withType)) {
+            throw new Error('Both `requestedBy` and `withType` must be provided together, or neither of them.');
         }
 
         return this.http.get<RequestDto[]>(url, { params, observe: 'response' }).pipe(
@@ -72,6 +73,15 @@ export class RequestService {
                     throw new Error('Location header not found in response');
                 }
                 return location;
+            })
+        );
+    }
+
+    public updateRequest(requestUrl: string, requestData: any): Observable<void> {
+        return this.http.patch<void>(requestUrl, requestData).pipe(
+            catchError(error => {
+                console.error('Error updating request:', error);
+                return throwError(() => new Error('Failed to update request.'));
             })
         );
     }

@@ -23,7 +23,6 @@ export class ProductService {
     }
 
     public getProducts(
-        url: string,
         queryParams: {
             page?: number;
             size?: number;
@@ -32,6 +31,8 @@ export class ProductService {
             withStatus?: string;
         } = {}
     ): Observable<{ products: Product[]; totalPages: number; currentPage: number }> {
+        let url: string = this.linkService.getLink('neighborhood:products')
+
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
