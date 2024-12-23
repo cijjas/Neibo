@@ -105,7 +105,7 @@ export class ChooseTimeComponent implements OnInit {
         // Format time to remove seconds (hh:mm)
         const formattedStartTime = this.bookings[i].startTime.slice(0, 5);
         const formattedEndTime = this.bookings[i].endTime.slice(0, 5);
-        selectedShiftTimes.push(`<strong>${formattedStartTime} - ${formattedEndTime}</strong>`);
+        selectedShiftTimes.push(`<p>${formattedStartTime} - ${formattedEndTime}</p>`);
       }
     });
 

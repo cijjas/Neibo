@@ -206,78 +206,74 @@
     <!-- REQUEST DIALOG -->
     <div id="request-dialog" class="dialog" [ngClass]="{'show-dialog': requestDialogVisible}">
         <!-- If loggedUser has no phoneNumber -->
-        <ng-container *ngIf=" !loggedUser?.phoneNumber; else hasPhoneNumber">
+        <ng-container *ngIf=" true; else hasPhoneNumber">
             <div class="dialog-content marketplace">
                 <div class="dialog-header">
-                    loggedUser?.phoneNumber
-
-                    <div class="dialog-svg">
-                        <svg width="282" height="148" viewBox="0 0 282 148" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <g filter="url(#filter0_d_0_1)">
-                                <path
-                                    d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z"
-                                    fill="#7D7AE3"></path>
-                            </g>
-                            <g filter="url(#filter1_d_0_1)">
-                                <path
-                                    d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z"
-                                    fill="#7D7AE3"></path>
-                            </g>
-                            <defs>
-                                <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038"
-                                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-                                    <feColorMatrix in="SourceAlpha" type="matrix"
-                                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
-                                    </feColorMatrix>
-                                    <feOffset dy="2"></feOffset>
-                                    <feGaussianBlur stdDeviation="3"></feGaussianBlur>
-                                    <feComposite in2="hardAlpha" operator="out"></feComposite>
-                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
-                                    </feColorMatrix>
-                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
-                                    </feBlend>
-                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
-                                        result="shape"></feBlend>
-                                </filter>
-                                <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736"
-                                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-                                    <feColorMatrix in="SourceAlpha" type="matrix"
-                                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
-                                    </feColorMatrix>
-                                    <feOffset dy="2"></feOffset>
-                                    <feGaussianBlur stdDeviation="3"></feGaussianBlur>
-                                    <feComposite in2="hardAlpha" operator="out"></feComposite>
-                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
-                                    </feColorMatrix>
-                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
-                                    </feBlend>
-                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
-                                        result="shape"></feBlend>
-                                </filter>
-                            </defs>
-                        </svg>
-
-                    </div>
-
-                    <div class="boxy-first p-2" id="boxy-first">
-                        <div style="position: relative; color:var(--always-background)" class="f-c-s-s g-05">
-                            <h3 class="font-size-20 font-weight-bold">Request</h3>
-                            <p style="text-align: start;color:var(--always-background); font-size: 14px;"
-                                class="font-weight-normal mt-0">
+                    <div class="dialog-svg-wrapper">
+                        <div class="dialog-svg">
+                            <svg width="282" height="148" viewBox="0 0 282 148" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g filter="url(#filter0_d_0_1)">
+                                    <path
+                                        d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <g filter="url(#filter1_d_0_1)">
+                                    <path
+                                        d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <defs>
+                                    <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                    <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                </defs>
+                            </svg>
+                        </div>
+                        <!-- Overlay Text -->
+                        <div class="reply-dialog-text">
+                            <h3 class="font-size-18 font-weight-bold">Request</h3>
+                            <p class="font-weight-normal font-size-14">
                                 Send a message to the seller with your offer and contact information.
                             </p>
                         </div>
                     </div>
-
-
-                    <a class="close-button marketplace" (click)="closeRequestDialog()">
-                        <i class="fas fa-close"></i>
-                    </a>
                 </div>
-
+                <!-- Close Button -->
+                <a class="close-button marketplace" (click)="closeRequestDialog()">
+                    <i class="fas fa-close"></i>
+                </a>
                 <form #phoneRequestForm="ngForm" class="f-c-c-c w-100"
                     (ngSubmit)="submitPhoneRequestForm(phoneRequestForm)">
                     <div class="form-group w-75">
@@ -327,8 +323,117 @@
             </div>
         </ng-container>
         <ng-template #hasPhoneNumber>
-            <div class="dialog-content marketplace">
+            <div class="dialog-content marketplace g-0">
                 <div class="dialog-header">
+                    <div class="dialog-svg-wrapper">
+                        <div class="dialog-svg">
+                            <svg width="282" height="148" viewBox="0 0 282 148" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g filter="url(#filter0_d_0_1)">
+                                    <path
+                                        d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <g filter="url(#filter1_d_0_1)">
+                                    <path
+                                        d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <defs>
+                                    <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                    <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                </defs>
+                            </svg>
+                        </div>
+                        <!-- Overlay Text -->
+                        <div class="reply-dialog-text">
+                            <h3 class="font-size-18 font-weight-bold">Request</h3>
+                            <p class="font-weight-normal font-size-14">
+                                Send a message to the seller with your offer and contact information.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Close Button -->
+                <a class="close-button marketplace" (click)="closeRequestDialog()">
+                    <i class="fas fa-close"></i>
+                </a>
+
+                <!-- Action Form -->
+                <form #requestForm="ngForm" class="f-c-c-c w-100" (ngSubmit)="submitRequestForm(requestForm)">
+                    <div class="form-group w-75">
+                        <!-- Message Field -->
+                        <textarea name="message" ngModel class="cool-input marketplace-input textarea-min-max" rows="5"
+                            placeholder="Message" required minlength="10" #requestMessageField="ngModel"></textarea>
+                        <div *ngIf="requestMessageField.invalid && requestMessageField.touched" class="error-message">
+                            <span *ngIf="requestMessageField.errors?.['required']" class="c-red">Message is
+                                required.</span>
+                            <span *ngIf="requestMessageField.errors?.['minlength']" class="c-red">Message must be at
+                                least 10 characters.</span>
+                        </div>
+
+                        <!-- Amount Field -->
+                        <select name="amount" ngModel="1" class="cool-input marketplace-input background" required
+                            #requestAmountField="ngModel">
+                            <option *ngFor="let qty of getAmountOptions()" [value]="qty">{{ qty }}</option>
+                        </select>
+                        <div *ngIf="requestAmountField.invalid && requestAmountField.touched" class="error-message">
+                            <span class="c-red">Amount is required.</span>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
+                        [disabled]="requestForm.invalid">
+                        Send
+                    </button>
+                </form>
+            </div>
+        </ng-template>
+
+
+    </div>
+
+
+
+    <!-- Reply Dialog -->
+    <div id="reply-dialog" class="dialog" [ngClass]="{ 'show-dialog': replyDialogVisible }">
+        <div class="dialog-content marketplace g-0">
+            <div class="dialog-header">
+                <div class="dialog-svg-wrapper">
                     <div class="dialog-svg">
                         <svg width="282" height="148" viewBox="0 0 282 148" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
@@ -377,129 +482,21 @@
                                 </filter>
                             </defs>
                         </svg>
-
                     </div>
-                    <div class="boxy p-2" id="boxy">
-                        <div style="position: relative; color:var(--always-background)" class="f-c-s-s g-05">
-                            <h3 class="font-size-20 font-weight-bold">Request</h3>
-                            <p style="text-align: start;color:var(--always-background); font-size: 14px;"
-                                class="font-weight-normal mt-0">
-                                Send a message to the seller with your offer and contact information.
-                            </p>
-                        </div>
-                    </div>
-                    <a class="close-button marketplace" (click)="closeRequestDialog()">
-                        <i class="fas fa-close"></i>
-                    </a>
-                </div>
-
-                <form #requestForm="ngForm" class="f-c-c-c w-100" (ngSubmit)="submitRequestForm(requestForm)">
-                    <div class="form-group w-75">
-                        <textarea name="message" ngModel class="cool-input marketplace-input textarea-min-max" rows="5"
-                            placeholder="Message" required minlength="10" #requestMessageField="ngModel"></textarea>
-                        <div *ngIf="requestMessageField.invalid && requestMessageField.touched" class="error-message">
-                            <span *ngIf="requestMessageField.errors?.['required']" class="c-red">Message is
-                                required.</span>
-                            <span *ngIf="requestMessageField.errors?.['minlength']" class="c-red">Message must be at
-                                least 10 characters.</span>
-                        </div>
-
-                        <select name="amount" ngModel="1" class="cool-input marketplace-input background" required
-                            #requestAmountField="ngModel">
-                            <option *ngFor="let qty of getAmountOptions()" [value]="qty">{{ qty }}</option>
-                        </select>
-                        <div *ngIf="requestAmountField.invalid && requestAmountField.touched" class="error-message">
-                            <span class="c-red">Amount is required.</span>
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                        class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
-                        [disabled]="requestForm.invalid">
-                        Send
-                    </button>
-                </form>
-
-
-
-
-            </div>
-        </ng-template>
-
-
-    </div>
-
-
-
-    <!-- Reply Dialog -->
-    <div id="reply-dialog" class="dialog" [ngClass]="{ 'show-dialog': replyDialogVisible }">
-        <div class="dialog-content marketplace">
-            <div class="dialog-header">
-                <div class="dialog-svg">
-                    <svg width="282" height="148" viewBox="0 0 282 148" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g filter="url(#filter0_d_0_1)">
-                            <path
-                                d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z"
-                                fill="#7D7AE3"></path>
-                        </g>
-                        <g filter="url(#filter1_d_0_1)">
-                            <path
-                                d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z"
-                                fill="#7D7AE3"></path>
-                        </g>
-                        <defs>
-                            <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038"
-                                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-                                <feColorMatrix in="SourceAlpha" type="matrix"
-                                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
-                                </feColorMatrix>
-                                <feOffset dy="2"></feOffset>
-                                <feGaussianBlur stdDeviation="3"></feGaussianBlur>
-                                <feComposite in2="hardAlpha" operator="out"></feComposite>
-                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
-                                </feColorMatrix>
-                                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
-                                </feBlend>
-                                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape">
-                                </feBlend>
-                            </filter>
-                            <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736"
-                                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-                                <feColorMatrix in="SourceAlpha" type="matrix"
-                                    values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
-                                </feColorMatrix>
-                                <feOffset dy="2"></feOffset>
-                                <feGaussianBlur stdDeviation="3"></feGaussianBlur>
-                                <feComposite in2="hardAlpha" operator="out"></feComposite>
-                                <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
-                                </feColorMatrix>
-                                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
-                                </feBlend>
-                                <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape">
-                                </feBlend>
-                            </filter>
-                        </defs>
-                    </svg>
-                </div>
-                <div class="boxy-first p-2" style="top: 30%;" id="boxy-first">
-                    <div style="position: relative; color:var(--always-background)" class="f-c-s-s g-0">
-
-                        <h3 class="font-size-18 font-weight-bold mb-0">Reply to Inquiry</h3>
-
-                        <p class="font-size-14 c-light-text "
-                            style="text-align: justify; color: var(--always-background);">
-                            <i>{{ questionForReply?.inquiryMessage }}</i>
+                    <!-- Overlay Text -->
+                    <div class=" reply-dialog-text">
+                        <h3 class="font-size-18 font-weight-bold">Reply to Inquiry</h3>
+                        <p class="font-weight-normal font-size-14">
+                            {{ questionForReply?.inquiryMessage }}
                         </p>
                     </div>
                 </div>
-
-                <a class="close-button marketplace" (click)="closeReplyDialog()">
-                    <i class="fas fa-close"></i>
-                </a>
             </div>
-
+            <!-- Close Button -->
+            <a class="close-button marketplace" (click)="closeReplyDialog()">
+                <i class="fas fa-close"></i>
+            </a>
+            <!-- Action Buttons -->
             <form class="f-c-c-c w-100" (ngSubmit)="submitReplyForm()">
                 <div class="form-group w-75">
                     <textarea name="replyMessage" [(ngModel)]="replyMessage"
@@ -517,6 +514,7 @@
             </form>
         </div>
     </div>
+
 
 </div>
 

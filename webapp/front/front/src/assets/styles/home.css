@@ -2647,77 +2647,6 @@ input[type=time] {
 
 
 
-.boxy-first {
-  position: absolute;
-  top: 20%;
-  left: 43%;
-  height: 100px;
-  width: 215px;
-  transform: translate(-50%, -50%);
-}
-
-.boxy {
-  position: absolute;
-  top: 25%;
-  left: 43%;
-  height: 100px;
-  width: 215px;
-  transform: translate(-50%, -50%);
-}
-
-.boxy-poxy {
-  position: absolute;
-  top: 42%;
-  left: 50%;
-  height: 100px;
-  width: 215px;
-  transform: translate(-50%, -50%) rotate(11deg);
-}
-
-.dialog-content {
-  position: relative;
-  /* Add position relative to create a positioning context */
-  min-width: 400px;
-  min-height: 500px;
-  padding: 20px;
-  background: var(--background);
-  border-radius: var(--border-radius);
-  border: 2px solid var(--primary);
-  box-shadow: -4px 4px var(--primary);
-
-  &.marketplace {
-    border: 2px solid var(--lila);
-    box-shadow: -4px 4px var(--lila);
-
-  }
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 1.5rem;
-}
-
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 24px;
-  cursor: pointer;
-  color: var(--text);
-
-  &:hover {
-    color: var(--primary);
-  }
-
-  &.marketplace {
-    &:hover {
-      color: var(--lila);
-    }
-  }
-}
-
 
 /*MULTI*/
 .neighborhoods-select,
@@ -3442,104 +3371,13 @@ input[type=time] {
   font-weight: bold;
 }
 
+/* SHIFTS  */
 
-/* popup */
-
-
-.dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  /* Center horizontally */
-  align-items: center;
-  /* Center vertically */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.dialog {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  /* Darker background for better focus on the popup */
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  /* Subtle blur effect for modern look */
-  backdrop-filter: blur(5px);
-}
-
-.show-dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  /* Center horizontally */
-  align-items: center;
-  /* Center vertically */
-  opacity: 1;
-  visibility: visible;
-}
-
-
-.dialog.show-dialog {
-  display: flex;
-}
-
-.dialog-content {
-  background: var(--background);
-  padding: 30px 40px;
-  border-radius: 12px;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  /* Soft shadow for depth */
-  max-width: 400px;
-  width: 90%;
-  color: #333;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.dialog-content .title span {
-  font-size: 24px;
-  color: var(--text);
-  margin-bottom: 10px;
-  display: block;
-}
-
-.dialog-content p {
-  margin: 10px 0;
-  font-size: 16px;
-  color: #555;
-}
-
-.dialog-content p strong {
-  color: var(--primary);
-  /* Accent color for important details */
-  font-weight: bold;
-}
 
 .shift-times {
   margin: 8px 0 15px 0;
   /* Slightly reduced margin for the shift times */
   font-size: 16px;
-  color: #555;
   line-height: 1.4;
   /* Tighter line spacing for better compactness */
   text-align: center;
@@ -3605,25 +3443,197 @@ input[type=time] {
 
 
 
-/* .-------------- */
 
-.bubble-row {
+
+/* -----------------------POPUP ---------------- */
+.dialog-svg-wrapper {
+  position: relative;
+  width: 370px;
+  /* Matches SVG width */
+  height: 170px;
+  /* Matches SVG height */
+}
+
+.dialog-svg-wrapper.pending {
+
+  height: 208px;
+}
+
+
+.dialog-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dialog-text,
+.reply-dialog-text,
+.inclined-dialog-text {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  /* Default alignment for content unless overridden */
+  color: var(--always-background);
+  background-color: transparent;
+  z-index: 1;
+  max-width: 90%;
+}
+
+.inclined-dialog-text {
+  transform: translate(-50%, -50%) rotate(11deg);
+  top: 62%;
+  left: 50%;
+}
+
+.reply-dialog-text {
+  top: 33%;
+  left: 42%;
+  width: 213px;
+  height: 100px;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 10px;
+  background-color: var(--box-background);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  /* Hide overflowing content */
+  box-sizing: border-box;
+  /* Include padding in width/height */
+}
+
+.dialog-text h3,
+.reply-dialog-text h3,
+.inclined-dialog-text h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+  /* Align to the start */
+  width: 100%;
+  /* Ensure full width for consistency */
+}
+
+.dialog-text p,
+.inclined-dialog-text p {
+  margin: 0.5rem 0 0;
+  font-size: 14px;
+  line-height: 1.2;
+  /* Adjust line height for readability */
+  text-align: start;
+  overflow: visible;
+  /* No truncation for inclined-dialog-text */
+}
+
+.reply-dialog-text p {
+  margin: 0.5rem 0 0;
+  font-size: 14px;
+  line-height: 1.2;
+  /* Adjust line height for readability */
+  text-align: start;
+  overflow: hidden;
+  /* Hide overflowing content */
+  text-overflow: ellipsis;
+  /* Show ellipsis for overflow */
+  display: -webkit-box;
+  /* Use flexbox-like behavior for truncating */
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  /* Limit to 4 lines (adjust as needed) */
+  -webkit-box-orient: vertical;
+  /* Define box orientation */
+}
+
+
+
+
+.dialog {
+  /* Fullscreen overlay with no transform */
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
   align-items: center;
-  /* Vertically center items */
-  gap: 1rem;
-  /* Space between the SVG and the text */
+  z-index: 1000;
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.4s;
 }
 
-.bubble-svg {
-  flex-shrink: 0;
-  /* Prevent it from shrinking */
-  width: 150px;
-  /* Or any fixed/relative sizing you prefer */
-  height: auto;
+.show-dialog {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.bubble-text {
-  flex: 1;
-  /* Let text take remaining space */
+.show-dialog .dialog-content {
+  transform: scale(1);
+}
+
+.dialog-content {
+  position: relative;
+  min-width: 400px;
+  min-height: 500px;
+  padding: 20px;
+  background: var(--background);
+  border-radius: var(--border-radius);
+  border: 2px solid var(--primary);
+  box-shadow: -4px 4px var(--primary);
+  transform: scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &.marketplace {
+    border: 2px solid var(--lila);
+    box-shadow: -4px 4px var(--lila);
+
+  }
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text);
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  &.marketplace {
+    &:hover {
+      color: var(--lila);
+    }
+  }
+}
+
+.details p {
+  max-width: 200px;
+  margin: 0.5rem 0;
+  font-size: 14px;
+}
+
+.details strong {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--primary);
 }

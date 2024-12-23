@@ -18,7 +18,7 @@ textarea,
 button,
 span {
   font: 14px/1 'IBM Plex Sans', sans-serif;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 body {

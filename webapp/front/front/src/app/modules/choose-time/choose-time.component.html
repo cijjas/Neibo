@@ -102,19 +102,32 @@
 
 
 <!-- Success Popup -->
+<!-- Success Popup -->
 <div class="dialog" id="reservationDialog" [ngClass]="{'show-dialog': showReservationDialog}">
-    <div class="dialog-content">
-        <div class="title mb-2 mt-5 f-c-c-c">
-            <span class="font-weight-bold">Reservation Done!</span>
+    <div class="dialog-content success-dialog">
+        <div class="title mb-3 mt-4 f-c-c-c">
+            <div class="success-icon" style="font-size: 50px;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <span class="font-weight-bold">Reservation Confirmed!</span>
         </div>
-        <div>
-            <p>Reservation for <strong>{{ amenityName }}</strong></p>
-            <p>on <strong>{{ date }}</strong></p>
-            <p>for shift(s):</p>
+        <div class="details text-center">
+            <div class="divider mb-4"></div>
+
+            <p>
+                <strong>{{ amenityName }}</strong> has been successfully reserved for you!
+            </p>
+            <div class="divider mb-4 mt-4"></div>
+            <p>
+                <strong>Date:</strong> {{ date }}
+            </p>
+            <p>
+                <strong>Shift(s):</strong>
+            </p>
             <div class="shift-times" [innerHTML]="formattedShiftTimes"></div>
         </div>
 
-        <button (click)="redirectToReservations()" class="action-button font-weight-bolder">
+        <button (click)="redirectToReservations()" class="action-button success-button font-weight-bolder">
             <span>Go to Reservations</span>
         </button>
     </div>

@@ -160,4 +160,8 @@ export class ListingRequestsComponent implements OnInit {
     const decimals = (fullPrice % 1).toFixed(2).replace('0.', '');
     return decimals;
   }
+
+  closeRequestDialog() {
+    this.markAsSoldDialogVisible = false;
+  }
 }
