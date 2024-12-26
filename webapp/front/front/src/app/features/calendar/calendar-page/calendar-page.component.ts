@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-calendar-page',
   templateUrl: './calendar-page.component.html',
 })
 export class CalendarPageComponent implements OnInit {

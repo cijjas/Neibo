@@ -5,7 +5,7 @@ import { WorkerService, ReviewService, User, Worker } from '@shared/index';
 import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
 
 @Component({
-  selector: 'app-service-profile-page',
+  selector: 'app-service-providers-detail-page',
   templateUrl: './service-providers-detail-page.component.html',
 })
 export class ServiceProvidersDetailPageComponent implements OnInit {

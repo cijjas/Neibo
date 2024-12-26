@@ -5,7 +5,7 @@ import { ProductService, RequestService, Department, Product, Request } from '@s
 import { HateoasLinksService } from '@core/index';
 
 @Component({
-  selector: 'app-seller-hub',
+  selector: 'app-marketplace-dashboard-seller-page',
   templateUrl: './marketplace-dashboard-seller-page.component.html',
 })
 export class MarketplaceDashboardSellerPageComponent implements OnInit {

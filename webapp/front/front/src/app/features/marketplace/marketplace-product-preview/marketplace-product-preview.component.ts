@@ -3,7 +3,7 @@ import { Department, Product } from '@shared/index';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-product-card',
+  selector: 'app-marketplace-product-preview',
   templateUrl: './marketplace-product-preview.component.html'
 })
 export class MarketplaceProductPreviewComponent {

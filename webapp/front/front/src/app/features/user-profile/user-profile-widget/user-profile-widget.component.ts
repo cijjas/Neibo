@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'user-profile-widget',
+  selector: 'app-user-profile-widget',
   templateUrl: './user-profile-widget.component.html',
 })
 export class UserProfileWidgetComponent implements OnInit, OnDestroy {

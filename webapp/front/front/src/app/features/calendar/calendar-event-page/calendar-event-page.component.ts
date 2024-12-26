@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AttendanceService, EventService, Attendance, Event } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 @Component({
-  selector: 'app-event-page',
+  selector: 'app-calendar-event-page',
   templateUrl: './calendar-event-page.component.html',
 })
 export class CalendarEventPageComponent implements OnInit {

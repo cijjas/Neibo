@@ -6,7 +6,7 @@ import { Review, Post, Worker } from '@shared/index';
 import { ReviewService, PostService } from '@shared/index';
 
 @Component({
-  selector: 'app-tabbed-box',
+  selector: 'app-service-providers-reviews-and-posts',
   templateUrl: './service-providers-reviews-and-posts.component.html',
 })
 export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestroy {

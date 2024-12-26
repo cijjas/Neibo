@@ -3,10 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'not-found',
-  templateUrl: './not-found.component.html',
+  selector: 'app-not-found-page',
+  templateUrl: './not-found-page.component.html',
 })
-export class NotFoundComponent implements OnInit {
+export class NotFoundPageComponent implements OnInit {
   errorCode: string = '404'; // Default code for unmatched routes
   errorMessage: string = 'The page you are looking for cannot be found.';
 

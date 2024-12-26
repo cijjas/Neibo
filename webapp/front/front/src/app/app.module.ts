@@ -37,7 +37,7 @@ import {
   , MarketplaceControlBarComponent
   , MarketplaceProductPreviewComponent
   , ServiceProvidersControlBarComponent
-  , ServiceProvidersPreviewComponent
+  , ServiceProvidersContentComponent
   , ServiceProvidersReviewsAndPostsComponent
   , ServiceProvidersDetailPageComponent
   , ServiceProvidersReviewDialogComponent
@@ -48,10 +48,10 @@ import {
   , ServiceProvidersPageComponent
   , InformationPageComponent
   , AmenitiesReservationsPageComponent
-  , NotFoundComponent
+  , NotFoundPageComponent
   , LoginPageComponent
   , CalendarPageComponent
-  , UserProfileComponent
+  , UserProfilePageComponent
   , AmenitiesChooseTimePageComponent
   , MarketplaceProductDetailPageComponent
   , FeedCreatePostPageComponent
@@ -62,7 +62,7 @@ import {
   , MarketplaceDashboardSellerPageComponent
   , CalendarEventPageComponent
   , MarketplaceProductRequestsPageComponent
-  , ServiceProvidersWidgetComponent
+  , ServiceProvidersPreviewComponent
 } from '@features/index';
 
 import {
@@ -93,7 +93,7 @@ import { AddHoursPipe, TimeAgoPipe } from '@shared/index';
     InformationPageComponent,
     AmenitiesReservationsPageComponent,
     LandingPageNavbarComponent,
-    NotFoundComponent,
+    NotFoundPageComponent,
     LoginPageComponent,
     LoginDialogComponent,
     SignupDialogComponent,
@@ -105,7 +105,7 @@ import { AddHoursPipe, TimeAgoPipe } from '@shared/index';
     CalendarPageComponent,
     CalendarBoxComponent,
     CalendarEventsColumnComponent,
-    UserProfileComponent,
+    UserProfilePageComponent,
     AmenitiesChooseTimePageComponent,
     AmenitiesReservationsListComponent,
     MarketplaceControlBarComponent,
@@ -117,15 +117,15 @@ import { AddHoursPipe, TimeAgoPipe } from '@shared/index';
     MarketplaceDashboardBuyerPageComponent,
     MarketplaceDashboardSellerPageComponent,
     MarketplaceProductRequestsPageComponent,
-    ServiceProvidersWidgetComponent,
-    ServiceProvidersControlBarComponent,
     ServiceProvidersPreviewComponent,
+    ServiceProvidersControlBarComponent,
+    ServiceProvidersContentComponent,
     ServiceProvidersReviewsAndPostsComponent,
     ServiceProvidersDetailPageComponent,
     ServiceProvidersEditDialogComponent,
     ServiceProvidersReviewDialogComponent,
+    ServiceProvidersContentComponent,
     ServiceProvidersPreviewComponent,
-    ServiceProvidersWidgetComponent,
     ServiceProvidersPostPreviewComponent,
     CalendarEventPageComponent,
     BackgroundCloudsComponent,

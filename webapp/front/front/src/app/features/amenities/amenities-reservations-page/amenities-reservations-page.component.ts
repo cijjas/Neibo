@@ -5,7 +5,7 @@ import { Booking, Amenity, Shift, AmenityService, BookingService } from '@shared
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-    selector: 'app-reservations',
+    selector: 'app-amenities-reservations-page',
     templateUrl: './amenities-reservations-page.component.html',
 })
 export class AmenitiesReservationsPageComponent implements OnInit {

@@ -13,10 +13,10 @@ import {
   , MarketplaceProductSellPageComponent
   , ServiceProvidersDetailPageComponent
   , CalendarEventPageComponent
-  , NotFoundComponent
+  , NotFoundPageComponent
   , LoginPageComponent
   , CalendarPageComponent
-  , UserProfileComponent
+  , UserProfilePageComponent
   , AmenitiesChooseTimePageComponent
   , MarketplaceProductEditPageComponent
   , MarketplaceDashboardBuyerPageComponent
@@ -57,7 +57,7 @@ export const routes: Routes = [
   // feed
   { path: 'posts', component: FeedPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
   { path: 'posts/:id', component: FeedPostDetailPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'posts/create', component: FeedCreatePostPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'posts/new', component: FeedCreatePostPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
 
   // Information
   { path: 'information', component: InformationPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
@@ -66,7 +66,7 @@ export const routes: Routes = [
   { path: 'marketplace', component: MarketplacePageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
   { path: 'marketplace/buyer-hub/:mode', component: MarketplaceDashboardBuyerPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
   { path: 'marketplace/seller-hub/:mode', component: MarketplaceDashboardSellerPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'marketplace/products/create', component: MarketplaceProductSellPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'marketplace/products/new', component: MarketplaceProductSellPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
   { path: 'marketplace/products/:id', component: MarketplaceProductDetailPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
   { path: 'marketplace/products/:id/edit', component: MarketplaceProductEditPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
   { path: 'marketplace/products/:id/requests', component: MarketplaceProductRequestsPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
@@ -81,9 +81,9 @@ export const routes: Routes = [
   // { path: 'services/all-neighborhoods/', component: ServiceProvidersPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
 
   // User Profile
-  { path: 'user/:id', component: UserProfileComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'user/:id', component: UserProfilePageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
 
   // 404 and Wildcard
-  { path: 'not-found', component: NotFoundComponent },
+  { path: 'not-found', component: NotFoundPageComponent },
   { path: '**', redirectTo: '/not-found', pathMatch: 'full' },
 ];

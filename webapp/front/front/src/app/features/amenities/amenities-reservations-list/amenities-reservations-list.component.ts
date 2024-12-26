@@ -3,7 +3,7 @@ import { BookingService, Booking } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
-  selector: 'app-reservations-list',
+  selector: 'app-amenities-reservations-list',
   templateUrl: './amenities-reservations-list.component.html',
 })
 export class AmenitiesReservationsListComponent implements OnInit {

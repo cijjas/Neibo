@@ -4,7 +4,7 @@ import { Contact, Resource, ContactService, ResourceService } from '@shared/inde
 import { HateoasLinksService } from '@core/index';
 
 @Component({
-  selector: 'app-information',
+  selector: 'app-information-page',
   templateUrl: './information-page.component.html',
 })
 export class InformationPageComponent implements OnInit {

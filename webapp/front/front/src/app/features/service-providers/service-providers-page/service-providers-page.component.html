@@ -16,14 +16,14 @@
         <!-- Middle column -->
         <div class="column-middle">
           <!-- Replaces <%@include file="/WEB-INF/jsp/serviceProvider/components/upperServiceButtons.jsp"%> -->
-          <app-upper-service-buttons></app-upper-service-buttons>
+          <app-service-providers-control-bar></app-service-providers-control-bar>
 
           <!-- If workersList is empty, show "not found" -->
           <ng-container *ngIf="workersList && workersList.length > 0; else noWorkersFound">
             <!-- The main service widgets -->
             <div class="f-c-c-c ">
               <div *ngFor="let worker of workersList">
-                <app-service-profile-widget [worker]="worker"></app-service-profile-widget>
+                <app-service-providers-preview [worker]="worker"></app-service-providers-preview>
               </div>
             </div>
 

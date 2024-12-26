@@ -7,7 +7,7 @@ import { LikeService, TagService, Post, Tag } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-blog-post',
+  selector: 'app-feed-post-preview',
   templateUrl: './feed-post-preview.component.html',
 })
 export class FeedPostPreviewComponent implements OnInit, OnDestroy {

@@ -16,7 +16,7 @@ import {
 } from '@shared/index';
 
 @Component({
-  selector: 'app-product-sell',
+  selector: 'app-marketplace-product-sell-page',
   templateUrl: './marketplace-product-sell-page.component.html',
 })
 export class MarketplaceProductSellPageComponent implements OnInit {

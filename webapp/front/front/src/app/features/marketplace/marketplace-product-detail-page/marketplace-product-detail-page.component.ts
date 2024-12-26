@@ -8,7 +8,7 @@ import { ToastService, HateoasLinksService, UserSessionService } from '@core/ind
 
 
 @Component({
-  selector: 'app-product-detail',
+  selector: 'app-marketplace-product-detail-page',
   templateUrl: './marketplace-product-detail-page.component.html',
 })
 export class MarketplaceProductDetailPageComponent implements OnInit {

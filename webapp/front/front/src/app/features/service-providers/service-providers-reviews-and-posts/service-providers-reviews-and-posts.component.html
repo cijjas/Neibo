@@ -61,7 +61,7 @@
 
             <ng-container *ngIf="posts && posts.length > 0; else noPostsFound">
                 <div *ngFor="let post of posts">
-                    <app-blog-post-services [post]="post"></app-blog-post-services>
+                    <app-service-providers-post-preview [post]="post"></app-service-providers-post-preview>
                 </div>
             </ng-container>
 

@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { HateoasLinksService, AuthService } from '@core/index';
 
 @Component({
-  selector: 'login-dialog',
+  selector: 'app-login-dialog',
   templateUrl: './login-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

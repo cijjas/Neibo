@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Post } from '@shared/index';
 
 @Component({
-  selector: 'app-blog-post-services',
+  selector: 'app-service-providers-post-preview',
   templateUrl: './service-providers-post-preview.component.html',
 })
 export class ServiceProvidersPostPreviewComponent implements OnInit, OnDestroy {

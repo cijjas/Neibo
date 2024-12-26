@@ -11,7 +11,7 @@ import { HateoasLinksService, UserSessionService, ImageService } from '@core/ind
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-post-card',
+  selector: 'app-feed-post-content',
   templateUrl: './feed-post-content.component.html',
 })
 export class FeedPostContentComponent implements OnInit, OnDestroy {

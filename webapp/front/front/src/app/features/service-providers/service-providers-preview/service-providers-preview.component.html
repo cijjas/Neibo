@@ -1,61 +1,32 @@
-<!-- service-providers-preview.component.html -->
-<div class="container">
-    <div class="service-card">
-        <div class="card-header">
-            <!-- Background image -->
-            <img class="back-image" [src]="backgroundImageUrl" alt="profile_picture_img" />
-        </div>
-        <div class="card-body" [attr.data-profile-image]="profileImageUrl"
-            style="--background-image: url({{ profileImageUrl }})">
-            <div class="inner f-c-c-c">
-                <!-- businessName -->
-                <div style="font-size: 18px; margin-bottom: 10px;" class="c-text">
-                    {{ worker?.businessName }}
-                </div>
+<div class="service-widget">
+    <a [routerLink]="['/services', 'profile', worker?.self]">
+        <div class="card-text">
+            <!-- Avatar image -->
+            <div class="img-avatar placeholder-glow">
+                <img [id]="'worker-profile-image-' + worker?.user?.self" [src]="profileImageUrl"
+                    class="big-profile-picture" [alt]="'worker_picture_img_' + worker?.user?.self" />
+            </div>
 
+            <!-- Background / portada image -->
+            <div class="portada placeholder-glow">
+                <img [id]="'worker-background-image-' + worker?.user?.self" [src]="backgroundImageUrl"
+                    class="background-cover" [alt]="'worker_background_img_' + worker?.user?.self" />
+            </div>
+
+            <div class="title-total">
                 <!-- Professions -->
-                <div class="f-r-c-c c-light-text c-primary" style="font-size: 13px"
-                    *ngIf="worker?.professions?.length > 0">
-                    <a class="profession-option" *ngFor="let profession of worker?.professions"
-                        (click)="setProfession(profession)">
-                        {{ profession.displayName }}
-                    </a>
+                <div *ngFor="let profession of worker?.professions" class="title">
+                    {{ profession.displayName }}
                 </div>
 
-                <!-- phone & address -->
-                <span class="c-light-text"> {{ worker?.phoneNumber }} </span>
-                <span class="c-light-text"> {{ worker?.address }} </span>
+                <!-- Worker name -->
+                <h2>{{ worker?.user?.name }}</h2>
 
-                <!-- bio -->
-                <p class="c-light-text mr-3 ml-3" style="text-align: center">
+                <!-- Worker bio -->
+                <div class="desc">
                     {{ worker?.bio }}
-                </p>
-
-                <!-- Show "Edit" if loggedUser is the same user -->
-                <button *ngIf="loggedUser?.userId === worker?.user?.self" id="editProfileButton"
-                    class="cool-button cool-small on-bg font-weight-bold" style="width: 100px"
-                    (click)="openEditProfile.emit()">
-                    Edit
-                    <i class="fa-solid fa-user-pen ml-1"></i>
-                </button>
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="inner">
-                <div class="c-primary">
-                    <!-- rating with 2 decimals or '--' -->
-                    {{ (averageRating && averageRating > 0) ? (averageRating | number:'1.2-2') : '--' }}
                 </div>
-                <div class="c-light-text">Rating</div>
-            </div>
-            <div class="inner">
-                <div class="c-primary">{{ reviewsCount || 0 }}</div>
-                <div class="c-light-text">Reviews</div>
-            </div>
-            <div class="inner">
-                <div class="c-primary">{{ postCount || 0 }}</div>
-                <div class="c-light-text">Posts</div>
             </div>
         </div>
-    </div>
+    </a>
 </div>

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Worker, WorkerService } from '@shared/index';
 
 @Component({
-  selector: 'app-services',
+  selector: 'app-service-providers-page',
   templateUrl: './service-providers-page.component.html',
 })
 export class ServiceProvidersPageComponent implements OnInit {

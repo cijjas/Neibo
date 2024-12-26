@@ -6,7 +6,7 @@ import { User } from '@shared/index';
 import { switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-upper-feed-buttons',
+  selector: 'app-feed-control-bar',
   templateUrl: './feed-control-bar.component.html',
 })
 export class FeedControlBarComponent implements OnInit {
@@ -103,7 +103,7 @@ export class FeedControlBarComponent implements OnInit {
   }
 
   publishInChannel(): void {
-    this.router.navigate(['posts/create'], {
+    this.router.navigate(['posts/new'], {
       queryParams: { SPAInChannel: this.channel }
     });
   }

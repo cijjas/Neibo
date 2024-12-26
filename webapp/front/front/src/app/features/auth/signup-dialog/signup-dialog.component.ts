@@ -6,7 +6,7 @@ import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http'
 import { tap, map } from "rxjs/operators";
 
 @Component({
-  selector: 'signup-dialog',
+  selector: 'app-signup-dialog',
   templateUrl: './signup-dialog.component.html'
 })
 export class SignupDialogComponent implements OnInit {

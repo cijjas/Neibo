@@ -14,7 +14,7 @@
         </div>
 
         <div class="column-middle">
-          <app-upper-feed-buttons></app-upper-feed-buttons>
+          <app-feed-control-bar></app-feed-control-bar>
 
           <div id="placeholder-posts-container">
             <!--<c:forEach begin="1" end="10" var="index">
@@ -26,7 +26,7 @@
               <!-- Include the page selector -->
 
               <div *ngFor="let post of postList">
-                <app-blog-post [post]="post"></app-blog-post>
+                <app-feed-post-preview [post]="post"></app-feed-post-preview>
               </div>
 
               <app-paginator [totalPages]="totalPages" [currentPage]="currentPage" [pageSize]="pageSize"

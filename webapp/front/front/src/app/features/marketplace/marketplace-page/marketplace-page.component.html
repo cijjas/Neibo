@@ -11,8 +11,8 @@
       <div id="center-grid" class="column-center ps-3">
         <div style="position: relative">
           <!-- Upper Marketplace Buttons Component -->
-          <app-upper-marketplace-buttons [channel]="channel">
-          </app-upper-marketplace-buttons>
+          <app-marketplace-control-bar [channel]="channel">
+          </app-marketplace-control-bar>
 
 
           <!-- If no products found -->
@@ -25,7 +25,8 @@
 
           <!-- If products exist -->
           <div *ngIf="productList && productList.length > 0" class="row m-0 product-grid-row">
-            <app-product-card *ngFor="let product of productList" [product]="product"></app-product-card>
+            <app-marketplace-product-preview *ngFor="let product of productList"
+              [product]="product"></app-marketplace-product-preview>
           </div>
 
           <!-- Paginator -->

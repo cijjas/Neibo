@@ -6,10 +6,10 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'user-profile',
-  templateUrl: './user-profile.component.html',
+  selector: 'user-user-profile-page',
+  templateUrl: './user-profile-page.component.html',
 })
-export class UserProfileComponent implements OnInit, OnDestroy {
+export class UserProfilePageComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;
   profileImageSafeUrl: SafeUrl | null = null;
   darkMode: boolean = false;

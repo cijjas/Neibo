@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-edit-dialog',
+  selector: 'app-service-providers-edit-dialog',
   templateUrl: './service-providers-edit-dialog.component.html',
 })
 export class ServiceProvidersEditDialogComponent {

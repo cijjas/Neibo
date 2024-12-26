@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 
 
 @Component({
-    selector: 'app-choose-time',
+    selector: 'app-amenities-choose-time-page',
     templateUrl: './amenities-choose-time-page.component.html',
 })
 export class AmenitiesChooseTimePageComponent implements OnInit {

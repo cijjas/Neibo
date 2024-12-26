@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-product-edit',
+  selector: 'app-marketplace-product-edit-page',
   templateUrl: './marketplace-product-edit-page.component.html',
 })
 export class MarketplaceProductEditPageComponent implements OnInit {

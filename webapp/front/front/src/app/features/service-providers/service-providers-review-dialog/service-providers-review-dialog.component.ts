@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-review-dialog',
+  selector: 'app-service-providers-review-dialog',
   templateUrl: './service-providers-review-dialog.component.html',
 })
 export class ServiceProvidersReviewDialogComponent implements OnDestroy {

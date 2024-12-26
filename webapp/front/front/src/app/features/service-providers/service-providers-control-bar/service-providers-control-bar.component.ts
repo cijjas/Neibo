@@ -3,7 +3,7 @@ import { ProfessionService, Profession } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-upper-service-buttons',
+  selector: 'app-service-providers-control-bar',
   templateUrl: './service-providers-control-bar.component.html',
 })
 export class ServiceProvidersControlBarComponent implements OnInit {

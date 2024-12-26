@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Department, DepartmentService } from '@shared/index';
 
 @Component({
-  selector: 'app-upper-marketplace-buttons',
+  selector: 'app-marketplace-control-bar',
   templateUrl: './marketplace-control-bar.component.html',
 })
 export class MarketplaceControlBarComponent implements OnInit {

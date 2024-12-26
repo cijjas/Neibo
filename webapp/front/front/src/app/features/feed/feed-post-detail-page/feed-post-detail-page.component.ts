@@ -6,7 +6,7 @@ import { Comment, Post, PostService, CommentService, LikeService } from "@shared
 import { UserSessionService } from '@core/index';
 
 @Component({
-  selector: 'app-post',
+  selector: 'app-feed-post-detail-page',
   templateUrl: './feed-post-detail-page.component.html',
 })
 export class FeedPostDetailPageComponent implements OnInit {
