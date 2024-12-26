@@ -9,7 +9,7 @@ public class AttendanceCountDto {
 
     private Links _links;
 
-    public static AttendanceCountDto fromAttendanceCount(int attendeesCount, long eventId, long neighborhoodId, UriInfo uriInfo) {
+    public static AttendanceCountDto fromAttendanceCount(int attendeesCount, long neighborhoodId, UriInfo uriInfo) {
         final AttendanceCountDto dto = new AttendanceCountDto();
 
         dto.count = attendeesCount;

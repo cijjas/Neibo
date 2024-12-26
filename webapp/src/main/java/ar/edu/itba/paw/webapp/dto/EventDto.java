@@ -64,14 +64,14 @@ public class EventDto {
                 .path("neighborhoods")
                 .path(String.valueOf(event.getEventId()))
                 .path("attendance")
-                        .queryParam("forEvent")
-                        .path(String.valueOf(links.getSelf()))
+                        .queryParam("forEvent",String.valueOf(links.getSelf()))
                 .build());
         links.setAttendanceCount(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(event.getNeighborhood().getNeighborhoodId()))
                 .path("attendance")
                 .path("count")
+                .queryParam("forEvent",String.valueOf(links.getSelf()))
                 .build());
         dto.set_links(links);
         return dto;

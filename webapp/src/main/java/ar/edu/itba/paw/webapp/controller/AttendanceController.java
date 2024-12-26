@@ -130,9 +130,6 @@ public class AttendanceController {
         Long eventId = extractOptionalSecondId(event);
         Long userId = extractOptionalSecondId(user);
 
-        // Path Verification
-        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
-
         // Content
         int count = as.countAttendance(neighborhoodId, eventId, userId);
         String countHashCode = String.valueOf(count);
@@ -143,7 +140,7 @@ public class AttendanceController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, eventId, neighborhoodId,  uriInfo);
+        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, neighborhoodId,  uriInfo);
 
         return Response.ok(new GenericEntity<AttendanceCountDto>(dto) {
                 })
