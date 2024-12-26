@@ -2,11 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Worker } from '../../models/index';
-import { WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto } from '../../dtos/app-dtos';
-import { mapUser } from './user.service';
-import { parseLinkHeader } from './utils';
-import { HateoasLinksService, mapProfession } from '../index.service';
+import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class WorkerService {

@@ -2,11 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Product } from '../../models/index';
-import { ProductDto, UserDto, DepartmentDto } from '../../dtos/app-dtos';
-import { mapUser } from './user.service';
-import { parseLinkHeader } from './utils';
-import { HateoasLinksService, mapDepartment } from '../index.service';
+import { mapDepartment, parseLinkHeader, mapUser, ProductDto, UserDto, DepartmentDto, Product } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {

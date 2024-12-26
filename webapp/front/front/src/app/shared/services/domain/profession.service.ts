@@ -2,10 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Profession } from '../../models/index';
-import { ProfessionDto } from '../../dtos/app-dtos';
-import { HateoasLinksService } from '../index.service';
-import { formatName } from './utils';
+import { ProfessionDto, Profession, formatName } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class ProfessionService {

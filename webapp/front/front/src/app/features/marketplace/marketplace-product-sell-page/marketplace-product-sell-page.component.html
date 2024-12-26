@@ -1,0 +1,170 @@
+<div [class.dark-mode]="darkMode">
+    <app-navbar></app-navbar>
+    <div class="container">
+
+        <div class="row init">
+            <div class="column-left">
+                <app-left-column></app-left-column>
+            </div>
+
+            <div id="center-grid" class="column-center ps-3">
+                <app-marketplace-control-bar [channel]="channel"></app-marketplace-control-bar>
+
+                <div class="cool-static-container w-100">
+                    <div class="f-c-c-c">
+                        <div class="f-r-c-c">
+                            <span class="font-size-24">Create Listing</span>
+                        </div>
+                        <div class="divider w-75 mb-3"></div>
+                    </div>
+
+                    <!-- Angular Reactive Form -->
+                    <form [formGroup]="listingForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+
+
+                        <div class="f-r-c-c w-100">
+                            <div class="f-c-c-c w-75">
+                                <div class="w-100 f-r-c-c">
+                                    <!-- TITLE -->
+                                    <div class="w-75">
+                                        <input formControlName="title" type="text"
+                                            class="cool-input marketplace-input font-weight-bold" placeholder="Title" />
+                                        <div class="error pt-1"
+                                            *ngIf="listingForm.get('title').touched && listingForm.get('title').invalid">
+                                            Title is required.
+                                        </div>
+                                    </div>
+
+                                    <!-- PRICE -->
+                                    <div class="w-25">
+                                        <input formControlName="price" type="text"
+                                            class="cool-input marketplace-input font-weight-bold font-size-14"
+                                            placeholder="$1,000.00" (blur)="formatCurrency()" />
+                                        <div class="error pt-1"
+                                            *ngIf="listingForm.get('price').touched && listingForm.get('price').invalid">
+                                            Price is required and must be a valid amount.
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- Image Upload -->
+                                <div class="w-100 lila-upload-box">
+                                    <div class="upload__box w-100">
+                                        <div class="upload__btn-box">
+                                            <input #imageInput type="file" multiple accept="image/*" [hidden]="true"
+                                                (change)="onFileChange($event)" />
+                                        </div>
+                                        <div class="upload__img-wrap">
+                                            <a id="dummy-upload" class="dummy-upload"
+                                                (click)="triggerImageInput(imageInput)" *ngIf="images.length < 3">
+                                                <div class="f-c-c-c w-100 h-100">
+                                                    <span>
+                                                        <i class="fa-regular fa-images"></i>
+                                                        <i class="fa fa-plus"></i>
+                                                    </span>
+                                                    <h3 id="add-photo-text" class="font-weight-bold">
+                                                        Add photo ({{ images.length }}/3)
+                                                    </h3>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="f-c-c-c w-100 c-light-text font-weight-normal special-hover mb-3"
+                                            *ngIf="images.length < 3">
+                                            Select images for your listing (up to 3).
+                                        </div>
+                                        <!-- Preview of uploaded images -->
+                                        <div class="upload__img-wrap">
+                                            <div class="upload__img-box" *ngFor="let img of images; let i = index">
+                                                <div class="img-bg"
+                                                    [ngStyle]="{'background-image': 'url(' + img.preview + ')'}">
+                                                    <div class="upload__img-close" (click)="removeImage(i)"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- DESCRIPTION -->
+                                <textarea formControlName="description"
+                                    class="cool-input marketplace-input textarea-min-max" rows="5"
+                                    placeholder="Description"></textarea>
+                                <div class="error pt-1"
+                                    *ngIf="listingForm.get('description').touched && listingForm.get('description').invalid">
+                                    Description is required.
+                                </div>
+
+                                <!-- DEPARTMENT -->
+                                <select formControlName="departmentId"
+                                    class="cool-input marketplace-input font-weight-bold font-size-12" id="department">
+                                    <option value="" disabled selected>-- Select Department --</option>
+                                    <option *ngFor="let dept of departmentList" [value]="dept.self">
+                                        {{ dept.displayName }}
+                                    </option>
+                                </select>
+
+                                <div class="error pt-1"
+                                    *ngIf="listingForm.get('departmentId').touched && listingForm.get('departmentId').invalid">
+                                    Department is required.
+                                </div>
+
+                                <!-- CONDITION -->
+                                <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
+                                    This item is:
+                                    <div class="w-25">
+                                        <select formControlName="used"
+                                            class="cool-input marketplace-input font-weight-bold font-size-14"
+                                            id="condition">
+                                            <option [value]="false">New</option>
+                                            <option [value]="true">Used</option>
+                                        </select>
+                                        <div class="error pt-1"
+                                            *ngIf="listingForm.get('used').touched && listingForm.get('used').invalid">
+                                            Condition is required.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- QUANTITY -->
+                                <div class="f-c-c-c w-100 g-0">
+                                    <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
+                                        Quantity
+                                        <div>
+                                            <select formControlName="quantity"
+                                                class="cool-input marketplace-input quantity-input font-weight-bold font-size-14">
+                                                <option *ngFor="let qty of quantities" [value]="qty">{{ qty }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="error pt-1"
+                                        *ngIf="listingForm.get('quantity').touched && listingForm.get('quantity').invalid">
+                                        Quantity is required.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="f-r-c-c w-100 mt-4">
+                            <div *ngIf="formErrors" class="error">
+                                {{ formErrors }}
+                            </div>
+                        </div>
+                        <div class="f-r-c-c mt-4">
+                            <button
+                                class="cool-button marketplace-button cool-button p-3 font-size-14 font-weight-bolder"
+                                style="width: 200px" type="submit">
+                                Create Listing
+                            </button>
+                        </div>
+                        <!-- Display validation errors -->
+
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<app-wave-footer [isMarketplace]="true"></app-wave-footer>

@@ -2,9 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Tag } from '../../models/index';
-import { TagDto } from '../../dtos/app-dtos';
-import { HateoasLinksService } from '../index.service';
+import { Tag, TagDto } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class TagService {

@@ -6,7 +6,18 @@
     "types": [
       "jasmine",
       "@angular/localize"
-    ]
+    ],
+    "paths": {
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "@features/*": [
+        "app/features/*"
+      ]
+    }
   },
   "include": [
     "src/**/*.spec.ts",

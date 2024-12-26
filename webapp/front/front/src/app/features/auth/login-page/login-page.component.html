@@ -1,0 +1,163 @@
+<!--
+<c:if test="${error == true}">
+  <c:set var="errorMessage">
+    <spring:message code="Login.error.message.1"/>
+    <spring:message code="Login.error.message.2"/>
+  </c:set>
+
+  <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp">
+    <jsp:param name="errorMessage" value="${errorMessage}"/>
+    <jsp:param name="openLoginAgain" value="${true}"/>
+  </jsp:include>
+</c:if>
+
+<c:if test="${signupError == true}">
+  <c:set var="errorMessage">
+    <spring:message code="Signup.error.message.1"/>
+    <spring:message code="Signup.error.message.2"/>
+  </c:set>
+
+  <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp">
+    <jsp:param name="errorMessage" value="${errorMessage}"/>
+    <jsp:param name="openLoginAgain" value="${true}"/>
+  </jsp:include>
+</c:if>-->
+
+<!--
+<c:if test="${successfullySignup == true}">
+  <c:set var="successMessage">
+    <spring:message code="Successfully.signup"/>
+  </c:set>
+
+  <jsp:include page="/WEB-INF/jsp/components/widgets/successDialog.jsp">
+    <jsp:param name="successMessage" value="${successMessage}"/>
+  </jsp:include>
+  <script>
+    setTimeout(function () {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '${pageContext.request.contextPath}/redirect-to-channel';
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'channelId';
+      input.value = 'login';
+
+      form.appendChild(input);
+
+      document.body.appendChild(form);
+      form.submit();
+    }, 2500);
+  </script>
+</c:if>
+-->
+
+<div class="content-container ">
+  <div class="container f-c-c-c" style="z-index: 2">
+    <landing-page-navbar></landing-page-navbar>
+    <div class="landing-neibo ">
+      neibo
+    </div>
+    <p class="landing-description" style="mix-blend-mode: screen" i18n>A platform for gated communities that allows you
+      to share news, book courts, and stay connected with your neighbors at all times.</p>
+
+    <a class="action-button font-weight-bolder" (click)="openLoginDialog()" i18n>
+      Login
+    </a>
+    <span style="color:var(--lighttext); font-size: 14px; mix-blend-mode: screen">
+      <span i18n>Not a member?</span>
+      <a (click)="openSignupDialog()" class="a-link" i18n>
+        Signup now
+      </a>
+    </span>
+
+    <app-login-dialog [(showLoginDialog)]="showLoginDialog" [(showSignupDialog)]="showSignupDialog"></app-login-dialog>
+
+    <app-signup-dialog [(showSignupDialog)]="showSignupDialog"></app-signup-dialog>
+
+    <!--
+    <%&#45;&#45; Login dialog&#45;&#45;%>
+    <%@ include file="/WEB-INF/jsp/components/widgets/landingPage/loginDialog.jsp" %>
+
+    <%&#45;&#45; Signup dialog&#45;&#45;%>
+    <%@ include file="/WEB-INF/jsp/components/widgets/landingPage/signupDialog.jsp" %>
+
+    <%&#45;&#45; WorkerForm signup dialog&#45;&#45;%>
+    <%@ include file="/WEB-INF/jsp/components/widgets/landingPage/workerSignupDialog.jsp" %>
+
+    <%&#45;&#45;Signup dialog&#45;&#45;%>
+    -->
+
+    <!--<c:if test="${openSignupDialog == true}">
+      <script>
+        document.getElementById("signupDialog").style.display = "flex";
+      </script>
+    </c:if>
+
+    <c:if test="${openWorkerSignupDialog == true}">
+      <script>
+        document.getElementById("workerSignupDialog").style.display = "flex";
+      </script>
+    </c:if>-->
+  </div>
+
+
+</div>
+
+<app-background-drawing></app-background-drawing>
+
+
+<!--
+
+<script>
+  function submitSignupForm() {
+    document.forms["signupForm"].submit();
+  }
+
+  function openLoginDialog() {
+    document.getElementById("loginDialog").style.display = "flex";
+  }
+
+  function closeLoginDialog() {
+    document.getElementById("loginDialog").style.display = "none";
+  }
+
+  function openSignupDialog() {
+    document.getElementById("signupDialog").style.display = "flex";
+  }
+
+  function closeSignupDialog() {
+    document.getElementById("signupDialog").style.display = "none";
+
+    clearFormErrors();
+  }
+
+  function openWorkerSignupDialog() {
+    document.getElementById("workerSignupDialog").style.display = "flex";
+  }
+
+  function closeWorkerSignupDialog() {
+    document.getElementById("workerSignupDialog").style.display = "none";
+    clearFormErrors();
+
+
+  }
+
+  function takeToLogin() {
+    window.location.href = "${pageContext.request.contextPath}/login";
+  }
+
+  function clearFormErrors() {
+    const formElements = document.querySelectorAll("#signupForm input");
+    formElements.forEach(function (element) {
+      element.value = "";
+    });
+
+    // Clear error messages
+    const errorElements = document.querySelectorAll(".landing-error");
+    errorElements.forEach(function (element) {
+      element.textContent = ""; // Clear the error message text
+    });
+  }
+</script>
+-->

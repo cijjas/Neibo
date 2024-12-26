@@ -1,0 +1,521 @@
+<div [class.dark-mode]="darkMode">
+
+
+    <app-navbar></app-navbar>
+
+    <div class="container">
+        <div class="row init">
+            <div class="column-left">
+                <!-- Left column widgets: Replace this comment with Angular components or *ngIf sections -->
+                <app-left-column></app-left-column>
+            </div>
+
+            <div id="center-grid" class="column-center ps-3">
+                <!-- Replace with a component or code block for upperMarketplaceButtons -->
+                <!-- <app-marketplace-control-bar></app-marketplace-control-bar> -->
+                <app-marketplace-control-bar [channel]="channel"></app-marketplace-control-bar>
+
+
+                <div class="cool-static-container w-100 p-0">
+                    <div class="container">
+                        <div class="d-flex">
+                            <!-- LEFT SIDE -->
+                            <div class="col-8 pt-3 pb-3 pe-0">
+                                <div class="d-flex w-100 h-100">
+                                    <!-- Small Images -->
+                                    <div class="col-3 product-small-img d-flex flex-column align-items-start">
+                                        <ng-container *ngFor="let image of productImages; let i = index">
+                                            <img [id]="'product-image-' + i + '-' + product?.self" [src]="image"
+                                                [alt]="'product_image_' + product?.self"
+                                                [class.active]="i === selectedImageIndex" class="mb-2 small-thumbnail"
+                                                (click)="onSelectSmallImage(image, i)"
+                                                (mouseover)="onHoverSmallImage(image, i)" style="cursor: pointer;" />
+                                        </ng-container>
+                                    </div>
+
+
+                                    <!-- Big Image -->
+                                    <div
+                                        class="col-9 p-0 d-flex align-items-center justify-content-center big-image-container">
+                                        <img id="imgBox" [src]="currentBigImage" class="product-image"
+                                            [alt]="'product_image_' + product?.self" />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- RIGHT SIDE -->
+                            <div class="col-4 pt-3 pb-3">
+                                <div class="f-c-s-s w-100 g-05 p-3 pt-4" style="
+                    border: 1px solid var(--lightertext);
+                    border-radius: var(--border-radius);
+                    box-shadow: -2px 4px 0 0 var(--lila)">
+
+                                    <!-- Condition for product.used -->
+                                    <span class="font-weight-normal font-size-16 f-r-sb-c w-100">
+                                        <span>{{ product?.used ? 'Used' : 'New' }}</span>
+
+                                        <div class="department-tag" (click)="goToDepartment(product?.department)">
+                                            {{ product?.department.displayName }}
+                                        </div>
+                                    </span>
+
+
+                                    <h1 class="font-size-20 font-weight-bold mt-2" style="line-height: 1.2;">
+                                        {{ product?.name }}
+                                    </h1>
+                                    <div class="f-r-c-c g-0">
+                                        <span class="price font-size-30 font-weight-normal">
+                                            {{ product?.price ? (product.price | currency:
+                                            'ARS':'symbol':'1.0-2').split(',')[0] : '' }}
+                                        </span>
+                                        <div class="f-c-s-c ps-1" style="height: 26px">
+                                            <span class="cents c-light-text font-size-20 font-weight-normal">
+                                                {{
+                                                product?.price
+                                                ? ',' + ((product.price | currency:
+                                                'ARS':'symbol':'1.0-2').split(',')[1] || '00')
+                                                : ''
+                                                }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="f-c-s-s w-100 mt-3 g-05">
+                                        <span *ngIf="product?.stock === 0" class="c-red">Sold out</span>
+                                        <span *ngIf="product?.stock > 0" class="c-accent">In stock</span>
+                                        <span *ngIf="product?.stock > 0">{{ product?.stock }} {{ product?.stock === 1 ?
+                                            'Unit' : 'Units' }}</span>
+                                    </div>
+
+
+                                    <!-- If loggedUser different from product.seller -->
+                                    <ng-container *ngIf="loggedUser?.self !== product?.seller?.self; else editListing">
+                                        <button id="request-button" (click)="openRequestDialog()"
+                                            class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                                            Request
+                                        </button>
+                                    </ng-container>
+                                    <ng-template #editListing>
+                                        <!-- If same user, show edit link -->
+                                        <a [routerLink]="['/marketplace/products' ,product?.self,  'edit']"
+                                            class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                                            <i class="fa-solid fa-pen-to-square"></i> Edit listing
+                                        </a>
+                                    </ng-template>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="row pt-2 ps-2 pe-2" style="background-color: var(--on-onbackground);">
+                            <div class="col-12 pt-3 pb-3 h-100">
+                                <div class="f-c-s-s">
+                                    <span class="c-text font-size-16 g-05">Description</span>
+                                    <p class="c-light-text font-weight-normal">
+                                        {{ product?.description }}
+                                    </p>
+                                </div>
+
+                                <div class="divider w-100 mt-3 mb-3"></div>
+
+                                <div class="f-c-s-s">
+                                    <!-- Ask the seller if loggedUser != product.seller -->
+                                    <ng-container *ngIf="loggedUser?.self !== product?.seller?.self">
+                                        <span class="c-text font-size-16 g-05">Ask the seller</span>
+                                        <!-- Implement Angular form or template-driven form here -->
+                                        <form #questionForm="ngForm" class="f-r-sb-c w-100">
+                                            <input name="questionMessage" [(ngModel)]="questionMessage" type="text"
+                                                class="cool-input marketplace-input background"
+                                                placeholder="Ask a question" />
+                                            <a (click)="submitQuestionForm()" id="ask-button"
+                                                class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
+                                                Ask
+                                            </a>
+                                        </form>
+
+                                    </ng-container>
+
+                                    <!-- Show questions if any -->
+                                    <ng-container *ngIf="questions?.length > 0; else noQuestions">
+                                        <div>Recently asked questions</div>
+                                        <div *ngFor="let question of questions" class="f-c-s-s w-100 g-05">
+                                            <div class="f-r-sb-c space-between w-100 ">
+                                                <span class="font-weight-normal c-text font-size-14">
+                                                    {{ question.inquiryMessage }}
+                                                </span>
+                                                <!-- If loggedUser is the seller and no reply yet -->
+                                                <ng-container
+                                                    *ngIf="loggedUser?.self == product?.seller?.self && !question.responseMessage">
+                                                    <a class="btn p-0 f-r-c-c g-0" id=" reply-button-{{question.self}}"
+                                                        (click)="showReplyDialog(question)">
+                                                        <i class="fa-solid fa-reply c-light-text lila-hover"></i>
+
+                                                        <span
+                                                            class="font-weight-normal c-text font-size-14 ms-2">Reply</span>
+                                                    </a>
+                                                </ng-container>
+                                            </div>
+                                            <!-- If replied -->
+                                            <div *ngIf="question.responseMessage" class="f-r-s-s w-100 g-05">
+                                                <i class="fa-solid fa-l c-light-text ps-2"></i>
+                                                <span class="font-weight-normal c-light-text font-size-16">
+                                                    {{ question.responseMessage }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+
+                                    <!-- Paginator -->
+
+
+
+                                    <ng-template #noQuestions>
+                                        <div class="f-c-s-s w-100">
+                                            <div class="f-r-s-c w-100 g-05">
+                                                <span class="c-text font-size-14 font-weight-bold">No one asked</span>
+                                                <ng-container *ngIf="loggedUser?.self !== product?.seller?.self">
+                                                    <span class="c-light-text font-weight-normal font-size-12">
+                                                        Ask first
+                                                    </span>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </div>
+
+                                <div class="f-c-c-c w-100" style="text-align: center;">
+                                    <app-paginator [totalPages]="totalPages" [currentPage]="page" [isMarketplace]="true"
+                                        (pageChange)="onPageChange($event)"></app-paginator>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- center-grid -->
+        </div> <!-- row init -->
+    </div> <!-- container -->
+
+
+
+
+
+    <!-- REQUEST DIALOG -->
+    <div id="request-dialog" class="dialog" [ngClass]="{'show-dialog': requestDialogVisible}">
+        <!-- If loggedUser has no phoneNumber -->
+        <ng-container *ngIf=" true; else hasPhoneNumber">
+            <div class="dialog-content marketplace">
+                <div class="dialog-header">
+                    <div class="dialog-svg-wrapper">
+                        <div class="dialog-svg">
+                            <svg width="282" height="148" viewBox="0 0 282 148" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g filter="url(#filter0_d_0_1)">
+                                    <path
+                                        d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <g filter="url(#filter1_d_0_1)">
+                                    <path
+                                        d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <defs>
+                                    <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                    <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                </defs>
+                            </svg>
+                        </div>
+                        <!-- Overlay Text -->
+                        <div class="reply-dialog-text">
+                            <h3 class="font-size-18 font-weight-bold">Request</h3>
+                            <p class="font-weight-normal font-size-14">
+                                Send a message to the seller with your offer and contact information.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Close Button -->
+                <a class="close-button marketplace" (click)="closeRequestDialog()">
+                    <i class="fas fa-close"></i>
+                </a>
+                <form #phoneRequestForm="ngForm" class="f-c-c-c w-100"
+                    (ngSubmit)="submitPhoneRequestForm(phoneRequestForm)">
+                    <div class="form-group w-75">
+                        <input name="phoneNumber" ngModel type="text" class="cool-input marketplace-input background"
+                            placeholder="Phone Number (e.g., +54 9 11 1234 5678)" required pattern="^\+?[0-9\s]+$"
+                            #phoneNumberField="ngModel" />
+                        <div *ngIf="phoneNumberField.invalid && phoneNumberField.touched" class="error-message">
+                            <span *ngIf="phoneNumberField.errors?.['required']" class="c-red">Phone number is
+                                required.</span>
+                            <span *ngIf="phoneNumberField.errors?.['pattern']" class="c-red">Enter a valid phone
+                                number.</span>
+                        </div>
+
+                        <textarea name="message" ngModel class="cool-input marketplace-input textarea-min-max" rows="5"
+                            placeholder="Message" required minlength="10"
+                            #phoneRequestMessageField="ngModel"></textarea>
+                        <div *ngIf="phoneRequestMessageField.invalid && phoneRequestMessageField.touched"
+                            class="error-message">
+                            <span *ngIf="phoneRequestMessageField.errors?.['required']" class="c-red">Message is
+                                required.</span>
+                            <span *ngIf="phoneRequestMessageField.errors?.['minlength']" class="c-red">Message must be
+                                at least 10 characters.</span>
+                        </div>
+
+                        <select name="amount" ngModel="1" class="cool-input marketplace-input background" required
+                            #requestAmountField="ngModel">
+                            <option *ngFor="let qty of getAmountOptions()" [value]="qty">{{ qty }}</option>
+                        </select>
+                        <div *ngIf="requestAmountField.invalid && requestAmountField.touched" class="error-message">
+                            <span class="c-red">Amount is required.</span>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
+                        [disabled]="phoneRequestForm.invalid">
+                        Send
+                    </button>
+                </form>
+
+
+
+
+
+
+
+            </div>
+        </ng-container>
+        <ng-template #hasPhoneNumber>
+            <div class="dialog-content marketplace g-0">
+                <div class="dialog-header">
+                    <div class="dialog-svg-wrapper">
+                        <div class="dialog-svg">
+                            <svg width="282" height="148" viewBox="0 0 282 148" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g filter="url(#filter0_d_0_1)">
+                                    <path
+                                        d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <g filter="url(#filter1_d_0_1)">
+                                    <path
+                                        d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z"
+                                        fill="#7D7AE3"></path>
+                                </g>
+                                <defs>
+                                    <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                    <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736"
+                                        filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                        <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                        <feColorMatrix in="SourceAlpha" type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                        </feColorMatrix>
+                                        <feOffset dy="2"></feOffset>
+                                        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                        <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                        <feColorMatrix type="matrix"
+                                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                        </feColorMatrix>
+                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                        </feBlend>
+                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                            result="shape"></feBlend>
+                                    </filter>
+                                </defs>
+                            </svg>
+                        </div>
+                        <!-- Overlay Text -->
+                        <div class="reply-dialog-text">
+                            <h3 class="font-size-18 font-weight-bold">Request</h3>
+                            <p class="font-weight-normal font-size-14">
+                                Send a message to the seller with your offer and contact information.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Close Button -->
+                <a class="close-button marketplace" (click)="closeRequestDialog()">
+                    <i class="fas fa-close"></i>
+                </a>
+
+                <!-- Action Form -->
+                <form #requestForm="ngForm" class="f-c-c-c w-100" (ngSubmit)="submitRequestForm(requestForm)">
+                    <div class="form-group w-75">
+                        <!-- Message Field -->
+                        <textarea name="message" ngModel class="cool-input marketplace-input textarea-min-max" rows="5"
+                            placeholder="Message" required minlength="10" #requestMessageField="ngModel"></textarea>
+                        <div *ngIf="requestMessageField.invalid && requestMessageField.touched" class="error-message">
+                            <span *ngIf="requestMessageField.errors?.['required']" class="c-red">Message is
+                                required.</span>
+                            <span *ngIf="requestMessageField.errors?.['minlength']" class="c-red">Message must be at
+                                least 10 characters.</span>
+                        </div>
+
+                        <!-- Amount Field -->
+                        <select name="amount" ngModel="1" class="cool-input marketplace-input background" required
+                            #requestAmountField="ngModel">
+                            <option *ngFor="let qty of getAmountOptions()" [value]="qty">{{ qty }}</option>
+                        </select>
+                        <div *ngIf="requestAmountField.invalid && requestAmountField.touched" class="error-message">
+                            <span class="c-red">Amount is required.</span>
+                        </div>
+                    </div>
+
+                    <button type="submit"
+                        class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
+                        [disabled]="requestForm.invalid">
+                        Send
+                    </button>
+                </form>
+            </div>
+        </ng-template>
+
+
+    </div>
+
+
+
+    <!-- Reply Dialog -->
+    <div id="reply-dialog" class="dialog" [ngClass]="{ 'show-dialog': replyDialogVisible }">
+        <div class="dialog-content marketplace g-0">
+            <div class="dialog-header">
+                <div class="dialog-svg-wrapper">
+                    <div class="dialog-svg">
+                        <svg width="282" height="148" viewBox="0 0 282 148" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g filter="url(#filter0_d_0_1)">
+                                <path
+                                    d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z"
+                                    fill="#7D7AE3"></path>
+                            </g>
+                            <g filter="url(#filter1_d_0_1)">
+                                <path
+                                    d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z"
+                                    fill="#7D7AE3"></path>
+                            </g>
+                            <defs>
+                                <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038"
+                                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                    <feColorMatrix in="SourceAlpha" type="matrix"
+                                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                    </feColorMatrix>
+                                    <feOffset dy="2"></feOffset>
+                                    <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                    <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                    </feColorMatrix>
+                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                    </feBlend>
+                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                        result="shape"></feBlend>
+                                </filter>
+                                <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736"
+                                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                    <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                                    <feColorMatrix in="SourceAlpha" type="matrix"
+                                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha">
+                                    </feColorMatrix>
+                                    <feOffset dy="2"></feOffset>
+                                    <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                                    <feComposite in2="hardAlpha" operator="out"></feComposite>
+                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0">
+                                    </feColorMatrix>
+                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1">
+                                    </feBlend>
+                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1"
+                                        result="shape"></feBlend>
+                                </filter>
+                            </defs>
+                        </svg>
+                    </div>
+                    <!-- Overlay Text -->
+                    <div class=" reply-dialog-text">
+                        <h3 class="font-size-18 font-weight-bold">Reply to Inquiry</h3>
+                        <p class="font-weight-normal font-size-14">
+                            {{ questionForReply?.inquiryMessage }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- Close Button -->
+            <a class="close-button marketplace" (click)="closeReplyDialog()">
+                <i class="fas fa-close"></i>
+            </a>
+            <!-- Action Buttons -->
+            <form class="f-c-c-c w-100" (ngSubmit)="submitReplyForm()">
+                <div class="form-group w-75">
+                    <textarea name="replyMessage" [(ngModel)]="replyMessage"
+                        class="cool-input marketplace-input textarea-min-max" rows="5" placeholder="Your reply..."
+                        required minlength="5"></textarea>
+                    <div *ngIf="replyMessage.length < 5 && replyMessage" class="error-message c-red">
+                        <span>Reply must be at least 5 characters.</span>
+                    </div>
+                </div>
+                <button type="submit"
+                    class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
+                    [disabled]="!replyMessage || replyMessage.length < 5">
+                    Send Reply
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+<app-wave-footer [isMarketplace]="true"></app-wave-footer>

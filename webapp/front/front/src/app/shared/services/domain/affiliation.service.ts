@@ -2,10 +2,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Affiliation } from '../../models/index';
-import { WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto } from '../../dtos/app-dtos';
-import { mapWorker } from './worker.service';
-import { parseLinkHeader } from './utils';
+import { Affiliation, mapWorker, parseLinkHeader, WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class AffiliationService {
