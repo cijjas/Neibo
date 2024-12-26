@@ -22,6 +22,7 @@ public class UserURNValidator implements ConstraintValidator<UserURNConstraint, 
 
     @Override
     public boolean isValid(String userURN, ConstraintValidatorContext context) {
+        System.out.println("validating");
         if (userURN == null)
             return true;
         if (!URNValidator.validateURN(userURN, "users"))

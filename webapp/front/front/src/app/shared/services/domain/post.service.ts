@@ -35,6 +35,9 @@ export class PostService {
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
 
+        // For debugging purposes
+        // this.linkService.logLinks()
+
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -103,7 +106,6 @@ export class PostService {
     }
 }
 
-// Cuando se crea un Post la API retorna
 export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
     return forkJoin([
         http.get<ChannelDto>(postDto._links.channel),

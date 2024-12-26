@@ -87,43 +87,43 @@
 }
 
 .c-light-text {
-  color: var(--lighttext);
+  color: var(--lighttext) !important;
 }
 
 .c-primary {
-  color: var(--primary);
+  color: var(--primary) !important;
 }
 
 .c-text {
-  color: var(--text);
+  color: var(--text) !important;
 }
 
 .c-lila {
-  color: var(--lila);
+  color: var(--lila) !important;
 }
 
 .c-old-primary {
-  color: var(--old-primary);
+  color: var(--old-primary) !important;
 }
 
 .c-accent {
-  color: var(--accent);
+  color: var(--accent) !important;
 }
 
 .c-background {
-  color: var(--background);
+  color: var(--background) !important;
 }
 
 .c-on-background {
-  color: var(--onbackground);
+  color: var(--onbackground) !important;
 }
 
 .c-on-on-background {
-  color: var(--on-onbackground);
+  color: var(--on-onbackground) !important;
 }
 
 .c-red {
-  color: var(--error);
+  color: var(--error) !important;
 }
 
 /*-------------------------------NAVBAR-----------------------------*/

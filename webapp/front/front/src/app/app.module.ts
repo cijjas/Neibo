@@ -33,11 +33,19 @@ import { ReservationsListComponent } from './components/reservations-list/reserv
 import { UpperMarketplaceButtonsComponent } from "./components/upper-marketplace-buttons/upper-marketplace-buttons.component";
 import { ProductCardComponent } from "./components/product-card/product-card.component";
 import { SuccessToastComponent } from "./components/success-toast/success-toast.component"
+import { UpperServiceButtonsComponent } from "./components/upper-service-buttons/upper-service-buttons.component";
+import { ServiceProfileCardComponent } from "./components/service-profile-card/service-profile-card.component";
+import { TabbedBoxComponent } from "./components/tabbed-box/tabbed-box.component";
+import { ServiceProfilePageComponent } from "./modules/services/service-profile-page/service-profile-page.component";
+import { ReviewDialogComponent } from "./components/review-dialog/review-dialog.component";
+import { EditDialogComponent } from "./components/edit-dialog/edit-dialog.component";
+import { BlogPostServicesComponent } from "./components/blog-post-services/blog-post-services.component"
+
 
 // MODULES
 import { FeedComponent } from "./modules/feed/feed.component"
 import { MarketplaceComponent } from "./modules/marketplace/marketplace/marketplace.component"
-import { ServicesComponent } from "./modules/services/services.component"
+import { ServicesComponent } from "./modules/services/services/services.component"
 import { InformationComponent } from "./modules/information/information.component"
 import { ReservationsComponent } from "./modules/reservations/reservations.component"
 import { NotFoundComponent } from './modules/not-found/not-found.component';
@@ -52,6 +60,8 @@ import { ProductSellComponent } from "./modules/marketplace/product-sell/product
 import { ProductEditComponent } from "./modules/marketplace/product-edit/product-edit.component";
 import { BuyerHubComponent } from "./modules/marketplace/buyer-hub/buyer-hub.component";
 import { SellerHubComponent } from "./modules/marketplace/seller-hub/seller-hub.component";
+
+
 // SERVICES
 import { AuthService, ToastService } from "./shared/services/index.service";
 import { JwtInterceptor } from "./shared/interceptors/jwt.interceptor";
@@ -61,6 +71,7 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
 import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
 import { TimeAgoPipe } from "./pipes/time-ago/time-ago.pipe";
 import { ListingRequestsComponent } from "./modules/marketplace/listing-requests/listing-requests.component";
+import { ServiceProfileWidgetComponent } from "./components/service-profile-widget/service-profile-widget.component";
 
 
 @NgModule({
@@ -103,6 +114,17 @@ import { ListingRequestsComponent } from "./modules/marketplace/listing-requests
     BuyerHubComponent,
     SellerHubComponent,
     ListingRequestsComponent,
+    ServiceProfileWidgetComponent,
+    UpperServiceButtonsComponent,
+    ServiceProfileCardComponent,
+    TabbedBoxComponent,
+    ServiceProfilePageComponent,
+    EditDialogComponent,
+    ReviewDialogComponent,
+    ServiceProfileCardComponent,
+    ServiceProfileWidgetComponent,
+    BlogPostServicesComponent,
+
   ],
   imports: [
     BrowserModule,

@@ -153,6 +153,17 @@ public class ReviewController {
             @PathParam("workerId") @WorkerIdConstraint long workerId,
             @Valid ReviewDto createForm
     ) {
+        /*
+        Authentication is being executed before validations
+        when the validation is using path params the validation goes first :D
+        when the validation is using NOT object query params the validation validation goes second D:, but doesnt really matter apparently a forbidden catches the issue
+        before it could cause a null pointer exception
+        however when the authentication is accessing an internal attribute of the object it goes after and is not caught by the forbidden so it produces a Null Pointer
+        only solution i can think of is to transition the authentication into a cross attribute authentication in the form, not possible because the form cant access the workerId
+        maybe the proxy can be interchanged to the authentication goes after the validation
+        the authentication can be changed to let go the null but i really dont like that option
+        programatically transitioning the call to within th controller or within the service is another option i dont like
+         */
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
         // Creation & HashCode Generation

@@ -1,0 +1,42 @@
+<div id="blogpost-container" class="worker-blogpost" *ngIf="post">
+    <div class="container">
+        <div class="f-c-c-c pt-3 pb-3">
+            <!-- Post Header -->
+            <div class="post-header w-100">
+                <div class="blogpost-author-and-date">
+                    <div class="f-r-s-c placeholder-glow" style="gap: 3px">
+                        <!-- Profile Picture -->
+                        <img [attr.id]="'worker-image-' + post.self" [src]="post.author?.image"
+                            class="small-profile-picture " alt="profile_picture_img" />
+
+                        <!-- Author Name / Email -->
+                        <span class="post-author">
+                            {{ post.author?.name }}
+                        </span>
+                    </div>
+
+                    <!-- "posted ..." and Date -->
+                    <div style="font-size: 12px; color: var(--lighttext);">
+                        <span class="post-date" i18n>Posted </span>
+                        <span class="post-date">{{ humanReadableDate}}</span>
+                    </div>
+                </div>
+
+                <!-- Post Title -->
+                <h1 class="post-title">{{ post.title }}</h1>
+            </div>
+
+            <!-- Post Description / Body -->
+            <div class="w-100">
+                <p class="worker-post-description">
+                    {{ post.body }}
+                </p>
+            </div>
+
+            <!-- Post Image (if present) -->
+            <div style="display: flex; justify-content: center; align-items: center;" *ngIf="post.image">
+                <img class="blogpost-image" [src]="post.image" [alt]="'post_' + post.self + '_img'" />
+            </div>
+        </div>
+    </div>
+</div>

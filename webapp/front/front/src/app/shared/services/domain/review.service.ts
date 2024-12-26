@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Review } from '../../models/index';
 import { ReviewDto, UserDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
@@ -50,6 +50,21 @@ export class ReviewService {
             );
     }
 
+    public createReview(reviewUrl: string, reviewDto: ReviewDto): Observable<string> {
+        return this.http.post(reviewUrl, reviewDto, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (!locationHeader) {
+                    throw new Error('Location header not found in response.');
+                }
+                return locationHeader;
+            }),
+            catchError(error => {
+                console.error('Error creating review:', error);
+                return throwError(() => new Error('Failed to create review.'));
+            })
+        );
+    }
 }
 
 export function mapReview(http: HttpClient, reviewDto: ReviewDto): Observable<Review> {

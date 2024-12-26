@@ -1,4 +1,4 @@
-import { User } from "./index";
+import { Profession, User } from "./index";
 
 export interface Worker {
   phoneNumber: string;
@@ -7,8 +7,10 @@ export interface Worker {
   bio: string;
   averageRating: number;
   user: User;
+  reviews: string;
+  posts: string;
   backgroundImage: string;
   neighborhoodAffiliated: string[];
-  professions: string[];
+  professions: Profession[];
   self: string;
 }

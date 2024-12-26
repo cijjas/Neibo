@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin, throwError } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Like } from '../../models/index';
 import { LikeDto, PostDto } from '../../dtos/app-dtos';
 import { mapPost } from './post.service';
@@ -56,11 +56,24 @@ export class LikeService {
         );
     }
 
-    public createLike(likeDto: LikeDto): Observable<LikeDto> {
+    public createLike(likeDto: LikeDto): Observable<string> {
         const likesUrl = this.linksService.getLink('neighborhood:likes');
 
-        return this.http.post<LikeDto>(likesUrl, likeDto);
+        return this.http.post(likesUrl, likeDto, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (!locationHeader) {
+                    throw new Error('Location header not found in response.');
+                }
+                return locationHeader;
+            }),
+            catchError(error => {
+                console.error('Error creating like:', error);
+                return throwError(() => new Error('Failed to create like.'));
+            })
+        );
     }
+
 
     public deleteLike(onPost: string, likedBy: string): Observable<void> {
         const likesUrl = this.linksService.getLink('neighborhood:likes'); // Base URL for the likes resource

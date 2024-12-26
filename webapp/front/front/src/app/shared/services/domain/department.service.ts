@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Department } from '../../models/index';
 import { DepartmentDto } from '../../dtos/app-dtos';
 import { HateoasLinksService } from '../index.service';
+import { formatName } from './utils';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentService {
@@ -31,16 +32,7 @@ export class DepartmentService {
 export function mapDepartment(departmentDto: DepartmentDto): Department {
     return {
         name: departmentDto.name,
-        displayName: formatDepartmentName(departmentDto.name), // Add formatted name
+        displayName: formatName(departmentDto.name), // Add formatted name
         self: departmentDto._links.self
     };
-}
-
-
-
-export function formatDepartmentName(name: string): string {
-    return name
-        .split('_')                         // Split by underscore
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())  // Capitalize each word
-        .join(' ');                         // Join words with spaces
 }

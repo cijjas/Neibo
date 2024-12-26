@@ -10,7 +10,7 @@ import { HateoasLinksService } from '../index.service';
     providedIn: 'root',
 })
 export class ImageService {
-    private fallbackImage = 'assets/images/roundedPlaceholder.png';
+    private fallbackImage = 'assets/images/default-profile.png';
 
     constructor(
         private http: HttpClient,

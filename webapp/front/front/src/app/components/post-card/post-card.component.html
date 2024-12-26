@@ -82,7 +82,7 @@
             <div *ngFor="let comment of comments" class="cool-comment w-100 p-2">
                 <div class="comment-header f-r-sb-c mb-2">
                     <div class="f-r-s-c">
-                        <img [src]="comment.user.image || 'assets/images/roundedPlaceholder.png'"
+                        <img [src]="comment.user.image || 'assets/images/default-profile.png'"
                             class="small-profile-picture" alt="profile_picture_img" />
                         <div class="bold">{{ comment.user.name }} {{ comment.user.surname }}</div>
                     </div>

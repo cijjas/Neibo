@@ -66,7 +66,7 @@ public class PathAccessControlHelper {
         if (uriParts.length >= 3 && uriParts[1].equals("neighborhoods")) {
             try {
                 long neighborhoodId = Long.parseLong(uriParts[2]);
-                return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
+                return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == 0;
             } catch (NumberFormatException e) {
                 return false;
             }
@@ -196,6 +196,9 @@ public class PathAccessControlHelper {
         if (userURN != null && postURN == null)
             return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
 
+        if (extractFirstId(postURN) == 0)
+            return true;
+
         if (userURN == null)
             return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN);
 
@@ -208,6 +211,7 @@ public class PathAccessControlHelper {
     // Administrators can delete the Likes of the Neighbors they monitor
     public boolean canDeleteLike(String userURN) {
         LOGGER.info("Verifying Accessibility for the User's entities");
+        System.out.println("authenticating");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))

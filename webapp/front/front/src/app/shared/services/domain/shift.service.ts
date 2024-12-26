@@ -22,6 +22,7 @@ export class ShiftService {
             forDate?: string;
         } = {}
     ): Observable<Shift[]> {
+        // use link service
         let params = new HttpParams();
 
         if (queryParams.forAmenity) params = params.set('forAmenity', queryParams.forAmenity);

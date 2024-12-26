@@ -20,6 +20,7 @@ export * from './domain/tag.service';
 export * from './domain/user.service';
 export * from './domain/worker.service';
 export * from './domain/department.service';
+export * from './domain/profession.service';
 export * from './index.service';
 
 // Core

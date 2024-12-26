@@ -215,10 +215,10 @@ export interface ResourceDto {
 }
 
 export interface ReviewDto {
-    rating: number;
-    message: string;
-    creationDate: Date;
-    _links: Links;
+    rating?: number;
+    message?: string;
+    creationDate?: Date;
+    _links?: Links;
 }
 
 export interface ReviewsAverageDto {

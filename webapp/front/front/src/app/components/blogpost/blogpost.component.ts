@@ -7,7 +7,7 @@ import { ImageService, LikeService, HateoasLinksService, TagService, UserSession
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'blogpost',
+  selector: 'app-blog-post',
   templateUrl: './blogpost.component.html',
 })
 export class BlogpostComponent implements OnInit, OnDestroy {

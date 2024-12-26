@@ -1,0 +1,79 @@
+<div class="w-100 tabbed-box">
+    <!-- Tabs -->
+    <input id="tab1" type="radio" name="tabs" [checked]="selectedTab === 'reviews'" (change)="onTabChange('reviews')" />
+    <label for="tab1">Reviews</label>
+
+    <input id="tab2" type="radio" name="tabs" [checked]="selectedTab === 'posts'" (change)="onTabChange('posts')" />
+    <label for="tab2">Posts</label>
+
+    <!-- Reviews Tab Content -->
+    <section id="content1" *ngIf="selectedTab === 'reviews'">
+        <div class="f-c-c-c g-0">
+            <!-- Only show the "Create Review" button if user is not a WORKER -->
+            <button class="cool-button cool-small on-bg font-weight-bold mb-4" style="width: 200px"
+                *ngIf="loggedUser?.role !== 'WORKER'" (click)="openReviewDialog.emit()">
+                Create Review
+                <i class="fa-solid fa-star ml-1"></i>
+            </button>
+
+            <ng-container *ngIf="reviews && reviews.length > 0; else noReviewsFound">
+                <div class="review-box f-c-s-s w-100" *ngFor="let review of reviews; index as i">
+                    <div class="f-r-sb-c w-100">
+                        <span class="font-size-16 font-weight-bold">
+                            {{ review.user?.name || 'Loading...' }}
+                        </span>
+                        <div>
+                            <span class="post-date">
+                                {{ review.createdAt | date }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="f-r-c-c">
+                        <div [innerHTML]="renderStars(review.rating)"></div>
+                    </div>
+                    <p class="font-size-12">
+                        {{ review.message }}
+                    </p>
+                </div>
+            </ng-container>
+
+            <ng-template #noReviewsFound>
+                <div class="no-posts-found">
+                    <i class="circle-icon fa-solid fa-magnifying-glass mb-3" style="color:var(--text)"></i>
+                    Reviews not found
+                </div>
+            </ng-template>
+
+            <app-paginator [totalPages]="reviewTotalPages" [currentPage]="reviewCurrentPage" [pageSize]="reviewPageSize"
+                (pageChange)="onReviewPageChange($event)"></app-paginator>
+        </div>
+    </section>
+
+    <!-- Posts Tab Content -->
+    <section id="content2" *ngIf="selectedTab === 'posts'">
+        <div class="f-c-c-c w-100" style="gap:10px">
+            <!-- If loggedUser is the same as the worker's user, show "Post" button -->
+            <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px"
+                *ngIf="loggedUser?.userId === worker?.user?.self" [routerLink]="['/publish']"
+                [queryParams]="{ onChannelId: 4 }">
+                Post
+            </a>
+
+            <ng-container *ngIf="posts && posts.length > 0; else noPostsFound">
+                <div *ngFor="let post of posts">
+                    <app-blog-post-services [post]="post"></app-blog-post-services>
+                </div>
+            </ng-container>
+
+            <ng-template #noPostsFound>
+                <div class="no-posts-found w-100">
+                    <i class="circle-icon fa-solid fa-magnifying-glass mb-3" style="color:var(--text)"></i>
+                    Posts not found
+                </div>
+            </ng-template>
+
+            <app-paginator [totalPages]="postTotalPages" [currentPage]="postCurrentPage" [pageSize]="postPageSize"
+                (pageChange)="onPostPageChange($event)"></app-paginator>
+        </div>
+    </section>
+</div>

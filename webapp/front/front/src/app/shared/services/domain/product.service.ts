@@ -3,11 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Product } from '../../models/index';
-import { ProductDto, UserDto, DepartmentDto, InquiryDto } from '../../dtos/app-dtos';
+import { ProductDto, UserDto, DepartmentDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
 import { parseLinkHeader } from './utils';
-import { mapInquiry } from './inquiry.service';
-import { formatDepartmentName, HateoasLinksService, mapDepartment } from '../index.service';
+import { HateoasLinksService, mapDepartment } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {

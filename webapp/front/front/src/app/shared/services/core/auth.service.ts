@@ -138,6 +138,7 @@ export class AuthService {
             'neighborhood:nonePostStatus',
             'neighborhood:posts',
             'neighborhood:postStatuses',
+            'neighborhood:professions',
             'neighborhood:requests',
             'neighborhood:requestedRequestStatus',
             'neighborhood:acceptedRequestStatus',

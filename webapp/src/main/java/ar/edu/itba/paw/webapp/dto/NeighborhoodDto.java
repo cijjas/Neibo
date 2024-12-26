@@ -242,6 +242,11 @@ public class NeighborhoodDto {
                             .path(String.valueOf(ProductStatus.SOLD.getId()))
                             .build()
             );
+            links.setProfessions(
+                    uriInfo.getBaseUriBuilder()
+                            .path("professions")
+                            .build()
+            );
         }
         dto.set_links(links);
         return dto;

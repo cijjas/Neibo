@@ -20,3 +20,4 @@ export * from './user.model';
 export * from './worker.model';
 export * from './department.model';
 export * from './postStatus.model';
+export * from './profession.model';

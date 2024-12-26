@@ -1,16 +1,16 @@
 async function getImageInto(imageElementId, imageSrcId, contextPath) {
     let image = document.getElementById(imageElementId);
     if (imageSrcId === 0) {
-        image.src = contextPath + "/resources/images/roundedPlaceholder.png";
+        image.src = contextPath + "/resources/images/default-profile.png";
         image.classList.remove('placeholder');
         return;
     }
-    else if(imageSrcId === -1){
+    else if (imageSrcId === -1) {
         image.src = contextPath + "/resources/images/workersBackground.png";
         image.classList.remove('placeholder');
         return;
     }
-    else if(imageSrcId === -2){
+    else if (imageSrcId === -2) {
         image.src = contextPath + "/resources/images/no-images.jpg";
         image.classList.remove('placeholder');
         return;

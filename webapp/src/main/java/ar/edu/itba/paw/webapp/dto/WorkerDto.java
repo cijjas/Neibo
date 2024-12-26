@@ -89,13 +89,26 @@ public class WorkerDto {
         links.setProfessions(
                 uriInfo.getBaseUriBuilder()
                         .path("professions")
-                        .queryParam("workerId", self)
+                        .queryParam("forWorker", self)
                         .build()
         );
         links.setWorkerNeighborhoods(
                 uriInfo.getBaseUriBuilder()
                         .path("neighborhoods")
                         .queryParam("withWorker", self)
+                        .build()
+        );
+        links.setPosts(
+                uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("posts")
+                        .queryParam("postedBy",
+                                uriInfo.getBaseUriBuilder()
+                                        .path("neighborhoods")
+                                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
+                                        .path("users")
+                                        .path(String.valueOf(worker.getUser().getUserId())))
                         .build()
         );
         dto.set_links(links);

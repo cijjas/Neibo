@@ -17,8 +17,7 @@
                                     </label>
                                     <input id="file" type="file" accept="image/*"
                                         (change)="onProfilePictureSelected($event)" style="display:none;">
-                                    <img id="output"
-                                        [src]="profileImageSafeUrl || 'assets/images/roundedPlaceholder.png'"
+                                    <img id="output" [src]="profileImageSafeUrl || 'assets/images/default-profile.png'"
                                         alt="profile_picture_img" />
                                 </div>
                             </div>

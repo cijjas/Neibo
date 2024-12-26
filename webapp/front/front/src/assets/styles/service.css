@@ -1,5 +1,5 @@
-
 .service-card {
+
   overflow: hidden;
   width: 100%;
   display: flex;
@@ -38,7 +38,8 @@
       background-size: cover;
       object-fit: cover;
       background-color: var(--onbackground);
-      background-image: var(--background-image); /*This is ok no worries*/
+      background-image: var(--background-image);
+      /*This is ok no worries*/
       width: 130px;
       height: 130px;
       border: 10px solid var(--onbackground);
@@ -95,18 +96,20 @@
   position: relative;
   transform: translateY(0);
   cursor: pointer;
-  &::before{
+
+  &::before {
     content: "";
     position: absolute;
     width: 100%;
     height: 110%;
     bottom: -5px;
     left: 0;
-    -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
-    -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
-    transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+    -webkit-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
+    -o-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
+    transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
     pointer-events: none;
   }
+
   & svg {
     width: 85px;
     height: 85px;
@@ -199,6 +202,7 @@
 
 /*--------------------------tabbed box ---------------*/
 .tabbed-box {
+
   & section {
     background-color: var(--onbackground);
     display: none;
@@ -246,7 +250,7 @@
   }
 
 
-  & input:checked + label {
+  & input:checked+label {
     color: var(--primary);
     z-index: 2;
     border-left: 1px solid var(--primary);
@@ -255,10 +259,10 @@
     border-bottom: 2px solid transparent;
   }
 
-  & #tab1:checked ~ #content1,
-  & #tab2:checked ~ #content2,
-  & #tab3:checked ~ #content3,
-  & #tab4:checked ~ #content4 {
+  & #tab1:checked~#content1,
+  & #tab2:checked~#content2,
+  & #tab3:checked~#content3,
+  & #tab4:checked~#content4 {
     display: flex;
   }
 

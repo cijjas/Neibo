@@ -34,3 +34,10 @@ export function parseLinkHeader(header: string | null): { totalPages: number; cu
 
     return { totalPages, currentPage };
 }
+
+export function formatName(name: string): string {
+    return name
+        .split('_')                         // Split by underscore
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())  // Capitalize each word
+        .join(' ');                         // Join words with spaces
+}

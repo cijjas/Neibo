@@ -71,8 +71,8 @@ public class WorkerController {
         LOGGER.info("GET request arrived at '/workers'");
 
         // ID Extraction
-        List<Long> professionIds = extractSecondIds(professions);
-        List<Long> neighborhoodIds = extractSecondIds(neighborhoods);
+        List<Long> professionIds = extractFirstIds(professions);
+        List<Long> neighborhoodIds = extractFirstIds(neighborhoods);
         Long workerRoleId = extractOptionalFirstId(workerRole);
         Long workerStatusId = extractOptionalFirstId(workerRole);
 
