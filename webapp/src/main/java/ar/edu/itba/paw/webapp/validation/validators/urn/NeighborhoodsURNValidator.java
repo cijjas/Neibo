@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
-import ar.edu.itba.paw.webapp.validation.constraints.form.NeighborhoodsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodsURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;

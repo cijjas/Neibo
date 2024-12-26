@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;

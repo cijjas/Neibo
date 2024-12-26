@@ -19,8 +19,6 @@ public class AttendanceCountDto {
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhoodId))
-                .path("events")
-                .path(String.valueOf(eventId))
                 .path("attendance")
                 .path("count");
 

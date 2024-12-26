@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserRoleURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

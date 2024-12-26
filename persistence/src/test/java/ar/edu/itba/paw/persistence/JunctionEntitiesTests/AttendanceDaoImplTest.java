@@ -229,27 +229,95 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey2, eKey1);
 
         // Exercise
-        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(THREE_ELEMENTS, attendanceList.size());
+    }
+
+    @Test
+    public void get_eventId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
+
+        // Exercise
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey2, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, attendanceList.size());
+    }
+
+    @Test
+    public void get_userId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
+
+        // Exercise
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, EMPTY_FIELD, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, attendanceList.size());
     }
 
     @Test
-    public void get_empty() {
+    public void get_eventId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long tKey1 = testInserter.createTime();
         long tKey2 = testInserter.createTime();
         long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
 
         // Exercise
-        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertTrue(attendanceList.isEmpty());
+        assertEquals(ONE_ELEMENT, attendanceList.size());
     }
 
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
+
+        // Exercise
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey2, uKey2, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, attendanceList.size());
+    }
 
     // ---------------------------------------------- PAGINATION -------------------------------------------------------
 
@@ -268,7 +336,7 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey3, eKey1);
 
         // Exercise
-        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(nhKey, eKey1, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, attendanceList.size());
@@ -291,22 +359,91 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey2, eKey1);
 
         // Exercise
-        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, eKey1);
+        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(THREE_ELEMENTS, countAttendance);
+    }
+
+    @Test
+    public void count_eventId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
+
+        // Exercise
+        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, eKey2, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countAttendance);
+    }
+
+    @Test
+    public void count_userId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
+
+        // Exercise
+        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, EMPTY_FIELD, uKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countAttendance);
     }
 
     @Test
-    public void count_empty() {
+    public void count_eventId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long tKey1 = testInserter.createTime();
         long tKey2 = testInserter.createTime();
         long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
 
         // Exercise
-        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, eKey1);
+        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, eKey1, uKey1);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countAttendance);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey1, eKey2);
+        testInserter.createAttendance(uKey2, eKey1);
+
+        // Exercise
+        int countAttendance = attendanceDaoImpl.countAttendance(nhKey, eKey2, uKey2);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countAttendance);

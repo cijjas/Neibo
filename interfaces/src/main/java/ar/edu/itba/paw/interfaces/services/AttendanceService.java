@@ -13,11 +13,11 @@ public interface AttendanceService {
 
     Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId);
 
-    List<Attendance> getAttendance(long neighborhoodId, long eventId, int size, int page);
+    List<Attendance> getAttendance(long neighborhoodId, Long eventId, Long userId, int size, int page);
 
-    int calculateAttendancePages(long neighborhoodId, long eventId, int size);
+    int calculateAttendancePages(long neighborhoodId, Long eventId, Long userId, int size);
 
-    int countAttendance(long neighborhoodId, long eventId);
+    int countAttendance(long neighborhoodId, Long eventId, Long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -46,25 +46,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Attendance> getAttendance(long neighborhoodId, long eventId, int size, int page) {
-        LOGGER.info("Getting Attendance for Event {} in Neighborhood {}", eventId, neighborhoodId);
+    public List<Attendance> getAttendance(long neighborhoodId, Long eventId, Long userId, int size, int page) {
+        LOGGER.info("Getting Attendance for Event {} and User {} in Neighborhood {}", eventId, userId, neighborhoodId);
 
-        return attendanceDao.getAttendance(neighborhoodId, eventId, page, size);
+        return attendanceDao.getAttendance(neighborhoodId, eventId, userId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateAttendancePages(long neighborhoodId, long eventId, int size) {
-        LOGGER.info("Calculating Attendance Pages for Event {} in Neighborhood {}", eventId, neighborhoodId);
+    public int calculateAttendancePages(long neighborhoodId, Long eventId, Long userId, int size) {
+        LOGGER.info("Calculating Attendance Pages for Event {} and User {} in Neighborhood {}", eventId, userId,neighborhoodId);
 
-        return PaginationUtils.calculatePages(attendanceDao.countAttendance(neighborhoodId, eventId), size);
+        return PaginationUtils.calculatePages(attendanceDao.countAttendance(neighborhoodId, eventId, userId), size);
     }
 
     @Override
-    public int countAttendance(long neighborhoodId, long eventId) {
-        LOGGER.info("Counting Attendees for Event {} in Neighborhood {}", eventId, neighborhoodId);
+    public int countAttendance(long neighborhoodId, Long eventId, Long userId) {
+        LOGGER.info("Counting Attendees for Event {} and User {} in Neighborhood {}", eventId, userId, neighborhoodId);
 
-        return attendanceDao.countAttendance(neighborhoodId, eventId);
+        return attendanceDao.countAttendance(neighborhoodId, eventId, userId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

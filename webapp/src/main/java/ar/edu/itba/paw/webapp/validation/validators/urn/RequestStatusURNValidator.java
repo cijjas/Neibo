@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
-import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.RequestStatusURNConstraint;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

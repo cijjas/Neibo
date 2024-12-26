@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.dto.TagDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.PostURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;

@@ -153,6 +153,11 @@ public class NeighborhoodDto {
             links.setImages(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .build());
+            links.setAttendance(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("attendance")
+                    .build());
             links.setLikes(uriInfo.getBaseUriBuilder()
                     .path("likes")
                     .build());

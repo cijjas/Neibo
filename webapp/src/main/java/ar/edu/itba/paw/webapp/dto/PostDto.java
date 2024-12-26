@@ -2,10 +2,10 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;

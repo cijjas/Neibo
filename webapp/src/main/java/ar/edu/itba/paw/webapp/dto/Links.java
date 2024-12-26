@@ -86,6 +86,7 @@ public class Links {
     private URI boughtProductStatus;
     private URI soldProductStatus;
     private URI sellingProductStatus;
+    private URI attendance;
 
     public URI getAcceptedRequestStatus() {
         return acceptedRequestStatus;
@@ -749,5 +750,13 @@ public class Links {
 
     public void setReviewUser(URI reviewUser) {
         this.reviewUser = reviewUser;
+    }
+
+    public URI getAttendance() {
+        return attendance;
+    }
+
+    public void setAttendance(URI attendance) {
+        this.attendance = attendance;
     }
 }

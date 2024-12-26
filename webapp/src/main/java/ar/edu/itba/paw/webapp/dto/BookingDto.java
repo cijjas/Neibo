@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ShiftURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.BookingDateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;

@@ -186,7 +186,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/neighborhoods/*/resources", "/neighborhoods/*/resources/*",
                         "/neighborhoods/*/contacts", "/neighborhoods/*/contacts/*",
                         "/neighborhoods/*/events", "/neighborhoods/*/events/*",
-                        "/neighborhoods/*/events/*/attendance", "/neighborhoods/*/events/*/attendance/*"
+                        "/neighborhoods/*/attendance", "/neighborhoods/*/attendance/*"
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
