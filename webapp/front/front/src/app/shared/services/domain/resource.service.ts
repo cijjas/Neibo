@@ -2,9 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Resource } from '../../models/index';
-import { ResourceDto } from '../../dtos/app-dtos';
-import { parseLinkHeader } from './utils';
+import { Resource, ResourceDto, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class ResourceService {

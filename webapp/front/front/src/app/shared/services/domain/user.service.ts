@@ -2,11 +2,8 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { map, mergeMap } from 'rxjs/operators'
-import { User } from '../../models/index'
-import { ImageDto, LanguageDto, UserDto, UserRoleDto } from '../../dtos/app-dtos'
-import { parseLinkHeader } from './utils'
-import { HateoasLinksService, ImageService } from '../index.service'
-// TODO UserForm del user
+import { LanguageDto, UserDto, UserRoleDto, User, parseLinkHeader } from '@shared/index'
+import { HateoasLinksService, ImageService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {

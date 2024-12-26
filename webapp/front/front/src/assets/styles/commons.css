@@ -279,6 +279,7 @@ select {
   cursor: pointer;
   box-sizing: border-box;
   -webkit-appearance: none;
+  appearance: none;
   -moz-appearance: none;
   transition: none;
   background: url("../images/chevron-down-solid.svg") no-repeat;

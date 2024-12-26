@@ -2,10 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, timeout, toArray } from 'rxjs/operators';
-import { Event } from '../../models/index';
-import { AttendanceCountDto, EventDto } from '../../dtos/app-dtos';
-import { parseLinkHeader } from './utils';
-import { HateoasLinksService } from '../index.service';
+import { AttendanceCountDto, EventDto, Event, parseLinkHeader } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 import { from } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

@@ -2,9 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Contact } from '../../models/index';
-import { ContactDto } from '../../dtos/app-dtos';
-import { parseLinkHeader } from './utils';
+import { Contact, ContactDto, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {

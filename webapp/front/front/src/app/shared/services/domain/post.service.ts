@@ -2,11 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Post } from '../../models/index';
-import { ChannelDto, ImageDto, PostDto, UserDto, LikeCountDto } from '../../dtos/app-dtos';
-import { mapUser } from './user.service';
-import { parseLinkHeader } from './utils';
-import { HateoasLinksService } from '../index.service';
+import { ChannelDto, PostDto, UserDto, LikeCountDto, Post, mapUser, parseLinkHeader } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 
 @Injectable({ providedIn: 'root' })

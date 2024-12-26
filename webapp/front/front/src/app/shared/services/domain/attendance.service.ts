@@ -2,11 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Attendance } from '../../models/index';
-import { EventDto, UserDto, AttendanceDto } from '../../dtos/app-dtos';
-import { mapUser } from './user.service';
-import { mapEvent } from './event.service';
-import { parseLinkHeader } from './utils';
+// todoaca
+import { Attendance, EventDto, UserDto, AttendanceDto, mapUser, mapEvent, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class AttendanceService {

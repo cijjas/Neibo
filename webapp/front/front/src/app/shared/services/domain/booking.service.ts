@@ -2,12 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Booking, Shift } from '../../models/index';
-import { BookingDto, AmenityDto, ShiftDto } from '../../dtos/app-dtos';
-import { mapShift } from './shift.service';
-import { mapAmenity } from './amenity.service';
-import { parseLinkHeader } from './utils';
-import { HateoasLinksService } from '../index.service';
+import { Booking, mapShift, BookingDto, AmenityDto, ShiftDto, mapAmenity, parseLinkHeader } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {

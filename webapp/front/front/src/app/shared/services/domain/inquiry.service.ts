@@ -1,10 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Inquiry } from '../../models/index';
-import { InquiryDto } from '../../dtos/app-dtos';
-import { parseLinkHeader } from './utils';
+import { catchError, map } from 'rxjs/operators';
+import { Inquiry, InquiryDto, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class InquiryService {

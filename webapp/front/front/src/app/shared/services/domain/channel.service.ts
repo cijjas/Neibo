@@ -2,9 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Channel } from '../../models/index';
-import { ChannelDto } from '../../dtos/app-dtos';
-import { parseLinkHeader } from './utils';
+import { Channel, ChannelDto, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class ChannelService {

@@ -2,10 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Review } from '../../models/index';
-import { ReviewDto, UserDto } from '../../dtos/app-dtos';
-import { mapUser } from './user.service';
-import { parseLinkHeader } from './utils';
+import { Review, ReviewDto, UserDto, mapUser, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewService {

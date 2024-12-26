@@ -1,10 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-import { Neighborhood } from '../../models/index';
-import { NeighborhoodDto } from '../../dtos/app-dtos';
-import { parseLinkHeader } from './utils';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Neighborhood, NeighborhoodDto, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class NeighborhoodService {

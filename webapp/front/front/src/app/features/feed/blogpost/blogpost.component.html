@@ -1,0 +1,74 @@
+<div id="blogpost-container" class="blogpost">
+  <div class="container">
+    <div class=" row ">
+      <div class="col-md-1 grey-bg col-md-pull-1">
+
+        <!-- Like buton -->
+        <div class="f-c-c-c mt-3" style="gap: 1px">
+          <span id="like-button-{{post.self}}" class="like-button" [class.liked]="hasLiked" (click)="toggleLike()"
+            [attr.data-post-self]="post.self">
+            <i class="fa-solid fa-thumbs-up"></i>
+          </span>
+          <span class="like-count c-light-text" id="like-count-{{post.self}}" [attr.data-like-count]="post.likeCount">
+            {{post.likeCount}}
+          </span>
+        </div>
+
+
+
+      </div>
+      <div class="col-md-11 pt-3 pb-3 pe-3 col-md-push-11">
+        <a [routerLink]="['/posts', post.self]" [queryParams]="{ SPAInChannel: this.SPAInChannel}"
+          style="text-decoration: none;">
+          <div class="post-header">
+            <div class="blogpost-author-and-date">
+              <div class="f-r-s-c placeholder-glow" style="gap: 3px">
+                <img id="postUserProfilePictureId-{{post.self}}" [src]="authorImageSafeUrl "
+                  class="small-profile-picture" alt="profile_picture_img" />
+
+
+                <span class="post-author pt-1 pb-1 ps-1">{{post.author.email}}</span>
+
+              </div>
+
+              <div style="font-size: 12px;color: var(--lighttext);">
+                <span class="post-date" i18n>Posted </span>
+                <span class="post-date">{{ humanReadableDate }}</span>
+
+              </div>
+
+            </div>
+            <h1 class="post-title">{{post.title}}</h1>
+          </div>
+          <p class="post-description mb-2">{{post.body}}</p>
+
+
+          <div *ngIf="postImageSafeUrl && !isPostImageFallback">
+            <div style="display: flex; justify-content: center; align-items: center;">
+              <img [src]="postImageSafeUrl" class="blogpost-image" alt="Post Image" />
+            </div>
+          </div>
+
+
+        </a>
+        <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
+
+
+          <ng-container *ngFor="let tag of tags">
+            <a class="post-tag static m-l-3 m-r-3" (click)="filterByTag(tag.self)">
+              {{ tag.name }}
+            </a>
+          </ng-container>
+
+
+          <!--<c:forEach var="postTag" items="${requestScope.postTags}">
+            <a href="${pageContext.request.contextPath}${contextPath}?tag=${postTag.name}"
+               class="post-tag static m-l-3 m-r-3" data-post-tag="${postTag.name}">
+              <c:out value="${postTag.name}"/>
+            </a>
+          </c:forEach>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -5,10 +5,21 @@
     "outDir": "./out-tsc/app",
     "types": [
       "@angular/localize"
-    ]
+    ],
+    "paths": {
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ],
+      "@features/*": [
+        "app/features/*"
+      ]
+    }
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
   ],
   "include": [
     "src/**/*.d.ts"

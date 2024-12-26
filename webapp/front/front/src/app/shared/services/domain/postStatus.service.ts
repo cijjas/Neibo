@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PostStatus } from '../../models/index';
 import { PostStatusDto } from '../../dtos/app-dtos';
-import { HateoasLinksService } from '../index.service';
+import { HateoasLinksService } from '../../../core/services/link.service';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentService {

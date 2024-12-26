@@ -2,12 +2,8 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
-import { Comment } from '../../models/index';
-import { CommentDto, UserDto } from '../../dtos/app-dtos';
-import { mapUser } from './user.service';
+import { Comment, CommentDto, UserDto, mapUser, parseLinkHeader } from '@shared/index';
 import { formatDistanceToNow } from 'date-fns';
-import { parseLinkHeader } from './utils';
-import { HateoasLinksService } from '../index.service';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {

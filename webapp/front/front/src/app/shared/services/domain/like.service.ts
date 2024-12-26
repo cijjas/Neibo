@@ -2,11 +2,8 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Like } from '../../models/index';
-import { LikeDto, PostDto } from '../../dtos/app-dtos';
-import { mapPost } from './post.service';
-import { parseLinkHeader } from './utils';
-import { HateoasLinksService } from '../index.service';
+import { Like, LikeDto, PostDto, mapPost, parseLinkHeader } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class LikeService {
