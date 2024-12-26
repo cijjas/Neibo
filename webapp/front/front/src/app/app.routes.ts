@@ -1,6 +1,6 @@
+import { Roles } from './shared/models'
+
 import { Routes } from '@angular/router'
-import { authGuard } from "./shared/guards/auth.guard";
-import { AppComponent } from './app.component'
 import { PostDetailComponent } from './modules/post-detail/post-detail.component'
 import { FeedComponent } from './modules/feed/feed.component'
 import { ServicesComponent } from './modules/services/services/services.component'
@@ -11,6 +11,7 @@ import { CreatePostComponent } from './modules/create-post/create-post.component
 import { ProductDetailComponent } from './modules/marketplace/product-detail/product-detail.component';
 import { ProductSellComponent } from './modules/marketplace/product-sell/product-sell.component';
 import { ServiceProfilePageComponent } from './modules/services/service-profile-page/service-profile-page.component';
+import { EventPageComponent } from './modules/event-page/event-page.component';
 
 import { NotFoundComponent } from "./modules/not-found/not-found.component";
 import { LoginComponent } from "./modules/auth/login/login.component";
@@ -21,7 +22,8 @@ import { ProductEditComponent } from './modules/marketplace/product-edit/product
 import { BuyerHubComponent } from './modules/marketplace/buyer-hub/buyer-hub.component';
 import { SellerHubComponent } from './modules/marketplace/seller-hub/seller-hub.component';
 import { ListingRequestsComponent } from './modules/marketplace/listing-requests/listing-requests.component';
-
+import { RoleGuard } from './shared/guards/role.guard';
+import { AdminComponent } from './modules/admin/admin.component'
 
 export const routes: Routes = [
   // Authentication
@@ -29,38 +31,36 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
 
   // Posts and User Profile
-  { path: 'posts', component: FeedComponent, canActivate: [authGuard] },
-  { path: 'post/:id', component: PostDetailComponent, canActivate: [authGuard] },
-  { path: 'create-post', component: CreatePostComponent, canActivate: [authGuard] },
-  { path: 'user/:id', component: UserProfileComponent, canActivate: [authGuard] },
+  { path: 'posts', component: FeedComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'post/:id', component: PostDetailComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'create-post', component: CreatePostComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'user/:id', component: UserProfileComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
 
   // Information
-  { path: 'information', component: InformationComponent, canActivate: [authGuard] },
-  { path: 'calendar', component: CalendarComponent, canActivate: [authGuard] },
-  { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },
-  { path: 'choose-time', component: ChooseTimeComponent, canActivate: [authGuard] },
+  { path: 'information', component: InformationComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+
+  { path: 'reservations', component: ReservationsComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'choose-time', component: ChooseTimeComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+
+  // Calendar
+  { path: 'calendar', component: CalendarComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'calendar/events/:id', component: EventPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
 
   // Marketplace
-  { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
-  {
-    path: 'marketplace/buyer-hub/:mode',
-    component: BuyerHubComponent,
-    canActivate: [authGuard],
-  },
-  {
-    path: 'marketplace/seller-hub/:mode',
-    component: SellerHubComponent,
-    canActivate: [authGuard],
-  },
-  { path: 'marketplace/create-listing', component: ProductSellComponent, canActivate: [authGuard] },
-  { path: 'marketplace/products/:id', component: ProductDetailComponent, canActivate: [authGuard] },
-  { path: 'marketplace/products/:id/edit', component: ProductEditComponent, canActivate: [authGuard] },
-  { path: 'marketplace/products/:id/requests', component: ListingRequestsComponent, canActivate: [authGuard] },
-
+  { path: 'marketplace', component: MarketplaceComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'marketplace/buyer-hub/:mode', component: BuyerHubComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'marketplace/seller-hub/:mode', component: SellerHubComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'marketplace/create-listing', component: ProductSellComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'marketplace/products/:id', component: ProductDetailComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'marketplace/products/:id/edit', component: ProductEditComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'marketplace/products/:id/requests', component: ListingRequestsComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
 
   // Services
-  { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
-  { path: 'services/profile/:id', component: ServiceProfilePageComponent, canActivate: [authGuard] },
+  { path: 'services', component: ServicesComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  { path: 'services/profile/:id', component: ServiceProfilePageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+
+  // ADMIN
+  { path: 'admin', component: AdminComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
 
   // 404 and Wildcard
   { path: 'not-found', component: NotFoundComponent },

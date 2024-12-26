@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Attendance } from '../../models/index';
 import { EventDto, UserDto, AttendanceDto } from '../../dtos/app-dtos';
 import { mapUser } from './user.service';
@@ -45,6 +45,35 @@ export class AttendanceService {
                 );
             })
         );
+    }
+
+    public createAttendance(
+        attendanceUrl: string,
+        userUrl: string
+    ): Observable<string | null> {
+        const body = {
+            user: userUrl,
+        };
+
+        return this.http.post(attendanceUrl, body, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found:');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating attendance for User', userUrl, error);
+                return of(null);
+            })
+        )
+    }
+
+    public deleteAttendance(attendanceUrl: string): Observable<void> {
+        return this.http.delete<void>(attendanceUrl);
     }
 }
 

@@ -60,6 +60,7 @@ import { ProductSellComponent } from "./modules/marketplace/product-sell/product
 import { ProductEditComponent } from "./modules/marketplace/product-edit/product-edit.component";
 import { BuyerHubComponent } from "./modules/marketplace/buyer-hub/buyer-hub.component";
 import { SellerHubComponent } from "./modules/marketplace/seller-hub/seller-hub.component";
+import { EventPageComponent } from "./modules/event-page/event-page.component";
 
 
 // SERVICES
@@ -124,6 +125,7 @@ import { ServiceProfileWidgetComponent } from "./components/service-profile-widg
     ServiceProfileCardComponent,
     ServiceProfileWidgetComponent,
     BlogPostServicesComponent,
+    EventPageComponent,
 
   ],
   imports: [

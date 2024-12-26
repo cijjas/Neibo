@@ -21,7 +21,7 @@
 
             <div class="row w-100">
                 <div class="col-{{ isAdmin ? '10' : '12' }}" style="overflow: hidden; text-overflow: ellipsis;">
-                    <a [routerLink]="['/events', event.self]">
+                    <a [routerLink]="['/calendar/events', event.self]">
                         <div>{{ event.name }}</div>
                     </a>
                 </div>
@@ -35,11 +35,12 @@
                 </div>
             </div>
 
-            <a [routerLink]="['/events', event.self]">
+            <a [routerLink]="['/calendar/events', event.self]" class="f-c-c-s">
                 <p style="font-size: 12px; font-weight: normal">
                     {{ event.startTime }} - {{ event.endTime }}
                 </p>
                 <p style="font-size: 12px; font-weight: normal">{{ event.duration }} Minutes</p>
+                <p style="font-size: 12px; font-weight: normal">{{ event.attendeesCount }} People will Attend</p>
                 <div class="divider"></div>
                 <div class="postcard-description m-t-40" style="overflow: clip">
                     {{ event.description }}

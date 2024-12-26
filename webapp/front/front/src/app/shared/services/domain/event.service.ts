@@ -112,6 +112,7 @@ export function mapEvent(http: HttpClient, eventDto: EventDto): Observable<Event
                 startTime: eventDto.startTime,
                 endTime: eventDto.endTime,
                 duration: calculateDurationInMinutes(eventDto.startTime, eventDto.endTime),
+                attendees: eventDto._links.attendanceUsers,
                 attendeesCount: attendanceCount.count,
                 self: eventDto._links.self
             } as Event;

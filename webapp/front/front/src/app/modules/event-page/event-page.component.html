@@ -1,0 +1,98 @@
+<div class="body" [class.dark-mode]="darkMode">
+    <div style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 0">
+
+        <!-- Navigation Bar -->
+        <app-navbar></app-navbar>
+
+        <div class="container">
+            <div class="row init">
+
+                <!-- Left Column -->
+                <div class="column-left">
+                    <app-left-column></app-left-column>
+                </div>
+
+                <!-- Middle Column (Event Card) -->
+                <div class="column-middle">
+                    <!-- The Event Card -->
+                    <div class="card-container">
+
+                        <!-- Event Details Section -->
+                        <div class="post-section">
+                            <div class="post-info">
+                                <div class="f-c-s-s g-05">
+                                    <span class="font-size-24 mb-2 c-text">{{ event?.name }}</span>
+                                    <p style="font-size: 12px; font-weight: normal">{{ event?.description }}</p>
+                                    <div class="divider"></div>
+
+                                    <div class="f-c-s-s g-05">
+                                        <span class="font-size-16 font-weight-normal">
+                                            {{ formattedDate }}:
+                                        </span>
+                                        <span class="font-size-16 font-weight-bolder c-text">
+                                            From {{ event?.startTime }} to {{ event?.endTime }}
+                                        </span>
+                                    </div>
+
+                                    <div class="divider"></div>
+                                    <div class="postcard-description">
+                                        Duration: {{ event?.duration }} Minutes
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Attendance Button -->
+                            <div class="d-flex flex-column justify-content-center align-items-end">
+                                <button *ngIf="!willAttend" (click)="attendEvent()" class="accept-button outlined"
+                                    style="margin-top: 5px; font-size: 12px; font-weight: bold;">
+                                    Attend
+                                </button>
+                                <button *ngIf="willAttend" (click)="unattendEvent()" class="ignore-button outlined"
+                                    style="margin-top: 5px; font-size: 12px;">
+                                    Unattend
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Attendees Section -->
+                        <div class="post-section">
+                            <div class="post-info">
+                                <h3 class="c-primary" style="text-align: center;">
+                                    Attendees ({{ event?.attendeesCount }})
+                                </h3>
+                                <div class="divider"></div>
+
+                                <!-- No Attendees -->
+                                <div *ngIf="attendees.length === 0" class="postcard-description">
+                                    No Attendees
+                                </div>
+
+                                <!-- Attendees List -->
+                                <div *ngIf="attendees.length > 0" class="f-c-c-c w-100 g-05 p-3">
+                                    <div *ngFor="let attendee of attendees"
+                                        class="font-size-14 font-weight-normal c-text">
+                                        {{ attendee.user.name }} {{ attendee.user.surname }}
+                                    </div>
+                                </div>
+
+                                <!-- Attendees Pagination -->
+                                <app-paginator [totalPages]="attendanceTotalPages" [currentPage]="attendanceCurrentPage"
+                                    [pageSize]="attendancePageSize"
+                                    (pageChange)="onAttendancePageChange($event)"></app-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column (Calendar, etc.) -->
+                <div class="column-right">
+                    <app-calendar-widget></app-calendar-widget>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <app-wave-footer></app-wave-footer>
+
+    </div>
+</div>

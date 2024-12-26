@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.webapp.dto.EventDto;
+import ar.edu.itba.paw.webapp.security.UserAuth;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -55,10 +58,12 @@ public class EventController {
     private Request request;
 
     private final EventService es;
+    private final AttendanceService as;
 
     @Autowired
-    public EventController(EventService es) {
+    public EventController(EventService es, AttendanceService as) {
         this.es = es;
+        this.as = as;
     }
 
     @GET
@@ -89,7 +94,7 @@ public class EventController {
                     .build();
 
         final List<EventDto> eventsDto = events.stream()
-                .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
+                .map(e -> EventDto.fromEvent(e, null, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = createPaginationLinks(
@@ -117,7 +122,8 @@ public class EventController {
 
         // Content
         Event event = es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
-        String eventHashCode = String.valueOf(event.hashCode());
+        // Add to JWT the userId information
+        String eventHashCode = String.valueOf(event.hashCode()); // this hash code should also change
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -125,7 +131,7 @@ public class EventController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(EventDto.fromEvent(event, uriInfo))
+        return Response.ok(EventDto.fromEvent(event, null, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(eventHashCode)
                 .build();
@@ -168,7 +174,7 @@ public class EventController {
         final Event updatedEvent = es.updateEvent(neighborhoodId, eventId, updateForm.getName(), updateForm.getDescription(), extractDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
         String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
-        return Response.ok(EventDto.fromEvent(updatedEvent, uriInfo))
+        return Response.ok(EventDto.fromEvent(updatedEvent, null, uriInfo))
                 .tag(eventHashCode)
                 .build();
     }

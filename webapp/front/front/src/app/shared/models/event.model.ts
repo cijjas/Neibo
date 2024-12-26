@@ -5,6 +5,7 @@ export interface Event {
   startTime: string;
   endTime: string;
   duration: number;
+  attendees: string;
   attendeesCount: number;
   self: string;
 }

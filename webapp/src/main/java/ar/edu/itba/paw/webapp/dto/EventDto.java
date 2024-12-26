@@ -35,9 +35,11 @@ public class EventDto {
     @NotNull(groups = Null.class)
     private String endTime;
 
+    private Boolean willAttend;
+
     private Links _links;
 
-    public static EventDto fromEvent(Event event, UriInfo uriInfo) {
+    public static EventDto fromEvent(Event event, Boolean willAttend, UriInfo uriInfo) {
         final EventDto dto = new EventDto();
 
         dto.name = event.getName();
@@ -45,6 +47,7 @@ public class EventDto {
         dto.eventDate = event.getDate().toString();
         dto.startTime = event.getStartTime().getTimeInterval().toString();
         dto.endTime = event.getEndTime().getTimeInterval().toString();
+        dto.willAttend = willAttend;
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -122,5 +125,13 @@ public class EventDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public Boolean getWillAttend() {
+        return willAttend;
+    }
+
+    public void setWillAttend(Boolean willAttend) {
+        this.willAttend = willAttend;
     }
 }

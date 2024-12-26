@@ -1,53 +1,43 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { HateoasLinksService } from '../../shared/services/index.service';
+import { HateoasLinksService, UserSessionService } from '../../shared/services/index.service';
 
 @Component({
   selector: 'app-left-column',
   templateUrl: './left-column.component.html',
 })
 export class LeftColumnComponent implements OnInit {
-  channelClass: string = '';
-  feedChannelUrl: string;
-  announcementsChannelUrl: string;
-  complaintsChannelUrl: string;
-  channel: string;
+  userRole: string | null = ''; // Role of the logged-in user
+  userId: string | null = '';   // ID of the logged-in user
+  channelClass: string = ''; // Active channel class
 
   constructor(
-    private route: ActivatedRoute,
     private linkService: HateoasLinksService,
+    private userSessionService: UserSessionService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    // Fetch channel URLs from the link service
-    this.feedChannelUrl = this.linkService.getLink('neighborhood:feedChannel');
-    this.announcementsChannelUrl = this.linkService.getLink('neighborhood:announcementsChannel');
-    this.complaintsChannelUrl = this.linkService.getLink('neighborhood:complaintsChannel');
+    // Fetch the current user role and ID
+    const currentUser = this.userSessionService['currentUserSubject'].value; // Direct synchronous access
+    if (currentUser) {
+      this.userRole = currentUser.userRole;
+      this.userId = currentUser.self; // Assuming `self` contains the user ID
+    }
 
-    // Subscribe to router events to track URL changes
+    // Listen for navigation changes to update the channel
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.updateChannelClass();
-      });
+      .subscribe(() => this.updateChannelClass());
 
-    // Initial call to set the channel class
+    // Initial update of the channel class
     this.updateChannelClass();
   }
 
-  // Update channelClass based on the current URL
   updateChannelClass(): void {
     const currentUrl = this.router.url;
-
-    if (currentUrl.includes('/posts') && this.route.snapshot.queryParams['SPAInChannel'] === this.feedChannelUrl) {
-      this.channelClass = 'Feed';
-    } else if (currentUrl.includes('/posts') && this.route.snapshot.queryParams['SPAInChannel'] === this.announcementsChannelUrl) {
-      this.channelClass = 'Announcements';
-    } else if (currentUrl.includes('/posts') && this.route.snapshot.queryParams['SPAInChannel'] === this.complaintsChannelUrl) {
-      this.channelClass = 'Complaints';
-    } else if (currentUrl.startsWith('/marketplace')) {
+    if (currentUrl.startsWith('/marketplace')) {
       this.channelClass = 'Marketplace';
     } else if (currentUrl.startsWith('/services')) {
       this.channelClass = 'Services';
@@ -55,30 +45,35 @@ export class LeftColumnComponent implements OnInit {
       this.channelClass = 'Reservations';
     } else if (currentUrl.startsWith('/information')) {
       this.channelClass = 'Information';
+    } else if (currentUrl.includes('/posts')) {
+      const queryParams = this.router.routerState.snapshot.root.queryParams;
+      if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:feedChannel')) {
+        this.channelClass = 'Feed';
+      } else if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:announcementsChannel')) {
+        this.channelClass = 'Announcements';
+      } else if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:complaintsChannel')) {
+        this.channelClass = 'Complaints';
+      }
     } else {
       this.channelClass = '';
     }
   }
 
-  // Navigation methods
   changeChannelToComplaints(): void {
     this.router.navigate(['/posts'], {
-      relativeTo: this.route,
-      queryParams: { SPAInChannel: this.complaintsChannelUrl },
+      queryParams: { SPAInChannel: this.linkService.getLink('neighborhood:complaintsChannel') },
     }).then(() => this.updateChannelClass());
   }
 
   changeChannelToAnnouncements(): void {
     this.router.navigate(['/posts'], {
-      relativeTo: this.route,
-      queryParams: { SPAInChannel: this.announcementsChannelUrl },
+      queryParams: { SPAInChannel: this.linkService.getLink('neighborhood:announcementsChannel') },
     }).then(() => this.updateChannelClass());
   }
 
   changeChannelToFeed(): void {
     this.router.navigate(['/posts'], {
-      relativeTo: this.route,
-      queryParams: { SPAInChannel: this.feedChannelUrl },
+      queryParams: { SPAInChannel: this.linkService.getLink('neighborhood:feedChannel') },
     }).then(() => this.updateChannelClass());
   }
 }
