@@ -61,21 +61,21 @@
       <trans-unit id="5423991647761194551" datatype="html">
         <source>Newest</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/upper-feed-buttons/upper-feed-buttons.component.html</context>
+          <context context-type="sourcefile">src/app/components/upper-feed-buttons/feed-control-bar.component.html</context>
           <context context-type="linenumber">8,9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="232050922346936574" datatype="html">
         <source>Trending</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/upper-feed-buttons/upper-feed-buttons.component.html</context>
+          <context context-type="sourcefile">src/app/components/upper-feed-buttons/feed-control-bar.component.html</context>
           <context context-type="linenumber">13,14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="676860092433275829" datatype="html">
         <source>Hot</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/upper-feed-buttons/upper-feed-buttons.component.html</context>
+          <context context-type="sourcefile">src/app/components/upper-feed-buttons/feed-control-bar.component.html</context>
           <context context-type="linenumber">17,18</context>
         </context-group>
       </trans-unit>

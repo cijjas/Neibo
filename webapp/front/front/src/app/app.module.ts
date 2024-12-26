@@ -25,44 +25,44 @@ import {
 
 import {
   UserProfileWidgetComponent
-  , BlogpostComponent
-  , UpperFeedButtonsComponent
+  , FeedPostPreviewComponent
+  , FeedControlBarComponent
   , LoginDialogComponent
   , SignupDialogComponent
-  , PostCardComponent
+  , FeedPostContentComponent
   , CalendarWidgetComponent
   , CalendarBoxComponent
   , CalendarEventsColumnComponent
-  , ReservationsListComponent
-  , UpperMarketplaceButtonsComponent
-  , ProductCardComponent
-  , UpperServiceButtonsComponent
-  , ServiceProfileCardComponent
-  , TabbedBoxComponent
-  , ServiceProfilePageComponent
-  , ReviewDialogComponent
-  , EditDialogComponent
-  , BlogPostServicesComponent
-  , FeedComponent
-  , MarketplaceComponent
-  , ServicesComponent
-  , InformationComponent
-  , ReservationsComponent
+  , AmenitiesReservationsListComponent
+  , MarketplaceControlBarComponent
+  , MarketplaceProductPreviewComponent
+  , ServiceProvidersControlBarComponent
+  , ServiceProvidersPreviewComponent
+  , ServiceProvidersReviewsAndPostsComponent
+  , ServiceProvidersDetailPageComponent
+  , ServiceProvidersReviewDialogComponent
+  , ServiceProvidersEditDialogComponent
+  , ServiceProvidersPostPreviewComponent
+  , FeedPageComponent
+  , MarketplacePageComponent
+  , ServiceProvidersPageComponent
+  , InformationPageComponent
+  , AmenitiesReservationsPageComponent
   , NotFoundComponent
-  , LoginComponent
-  , CalendarComponent
+  , LoginPageComponent
+  , CalendarPageComponent
   , UserProfileComponent
-  , ChooseTimeComponent
-  , ProductDetailComponent
-  , CreatePostComponent
-  , PostDetailComponent
-  , ProductSellComponent
-  , ProductEditComponent
-  , BuyerHubComponent
-  , SellerHubComponent
-  , EventPageComponent
-  , ListingRequestsComponent
-  , ServiceProfileWidgetComponent
+  , AmenitiesChooseTimePageComponent
+  , MarketplaceProductDetailPageComponent
+  , FeedCreatePostPageComponent
+  , FeedPostDetailPageComponent
+  , MarketplaceProductSellPageComponent
+  , MarketplaceProductEditPageComponent
+  , MarketplaceDashboardBuyerPageComponent
+  , MarketplaceDashboardSellerPageComponent
+  , CalendarEventPageComponent
+  , MarketplaceProductRequestsPageComponent
+  , ServiceProvidersWidgetComponent
 } from '@features/index';
 
 import {
@@ -82,52 +82,52 @@ import { AddHoursPipe, TimeAgoPipe } from '@shared/index';
     AppComponent,
     NavbarComponent,
     UserProfileWidgetComponent,
-    BlogpostComponent,
-    FeedComponent,
-    PostDetailComponent,
+    FeedPostPreviewComponent,
+    FeedPageComponent,
+    FeedPostDetailPageComponent,
     LeftColumnComponent,
-    UpperFeedButtonsComponent,
+    FeedControlBarComponent,
     WaveFooterComponent,
-    MarketplaceComponent,
-    ServicesComponent,
-    InformationComponent,
-    ReservationsComponent,
+    MarketplacePageComponent,
+    ServiceProvidersPageComponent,
+    InformationPageComponent,
+    AmenitiesReservationsPageComponent,
     LandingPageNavbarComponent,
     NotFoundComponent,
-    LoginComponent,
+    LoginPageComponent,
     LoginDialogComponent,
     SignupDialogComponent,
-    PostCardComponent,
+    FeedPostContentComponent,
     PaginatorComponent,
     RightColumnComponent,
-    CreatePostComponent,
+    FeedCreatePostPageComponent,
     CalendarWidgetComponent,
-    CalendarComponent,
+    CalendarPageComponent,
     CalendarBoxComponent,
     CalendarEventsColumnComponent,
     UserProfileComponent,
-    ChooseTimeComponent,
-    ReservationsListComponent,
-    UpperMarketplaceButtonsComponent,
-    ProductCardComponent,
-    ProductDetailComponent,
+    AmenitiesChooseTimePageComponent,
+    AmenitiesReservationsListComponent,
+    MarketplaceControlBarComponent,
+    MarketplaceProductPreviewComponent,
+    MarketplaceProductDetailPageComponent,
     SuccessToastComponent,
-    ProductSellComponent,
-    ProductEditComponent,
-    BuyerHubComponent,
-    SellerHubComponent,
-    ListingRequestsComponent,
-    ServiceProfileWidgetComponent,
-    UpperServiceButtonsComponent,
-    ServiceProfileCardComponent,
-    TabbedBoxComponent,
-    ServiceProfilePageComponent,
-    EditDialogComponent,
-    ReviewDialogComponent,
-    ServiceProfileCardComponent,
-    ServiceProfileWidgetComponent,
-    BlogPostServicesComponent,
-    EventPageComponent,
+    MarketplaceProductSellPageComponent,
+    MarketplaceProductEditPageComponent,
+    MarketplaceDashboardBuyerPageComponent,
+    MarketplaceDashboardSellerPageComponent,
+    MarketplaceProductRequestsPageComponent,
+    ServiceProvidersWidgetComponent,
+    ServiceProvidersControlBarComponent,
+    ServiceProvidersPreviewComponent,
+    ServiceProvidersReviewsAndPostsComponent,
+    ServiceProvidersDetailPageComponent,
+    ServiceProvidersEditDialogComponent,
+    ServiceProvidersReviewDialogComponent,
+    ServiceProvidersPreviewComponent,
+    ServiceProvidersWidgetComponent,
+    ServiceProvidersPostPreviewComponent,
+    CalendarEventPageComponent,
     BackgroundCloudsComponent,
     BackgroundDrawingComponent,
   ],

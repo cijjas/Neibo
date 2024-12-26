@@ -1,0 +1,58 @@
+<!-- service-providers-page.component.html -->
+<div [class.dark-mode]="darkMode">
+  <div style="position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 1">
+    <!-- Replaces <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %> -->
+    <app-navbar></app-navbar>
+
+    <div class="container">
+
+      <div class="row">
+        <!-- Left column -->
+        <div class="column-left">
+          <!-- Replaces <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %> -->
+          <app-left-column></app-left-column>
+        </div>
+
+        <!-- Middle column -->
+        <div class="column-middle">
+          <!-- Replaces <%@include file="/WEB-INF/jsp/serviceProvider/components/upperServiceButtons.jsp"%> -->
+          <app-upper-service-buttons></app-upper-service-buttons>
+
+          <!-- If workersList is empty, show "not found" -->
+          <ng-container *ngIf="workersList && workersList.length > 0; else noWorkersFound">
+            <!-- The main service widgets -->
+            <div class="f-c-c-c ">
+              <div *ngFor="let worker of workersList">
+                <app-service-profile-widget [worker]="worker"></app-service-profile-widget>
+              </div>
+            </div>
+
+            <!-- Another paginator at the bottom -->
+            <app-paginator [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)">
+            </app-paginator>
+          </ng-container>
+          <!-- Template shown when there are no workers -->
+          <ng-template #noWorkersFound>
+            <div class="no-posts-found">
+              <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+              <span>Workers not found</span>
+            </div>
+          </ng-template>
+
+        </div>
+
+        <!-- Right column -->
+        <div class="column-right">
+          <div class="column justify-content-center align-items-center" style="gap: 1em">
+            <!-- Replaces <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %> -->
+            <app-calendar-widget></app-calendar-widget>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Replaces <%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %> -->
+    <app-wave-footer></app-wave-footer>
+  </div>
+</div>
