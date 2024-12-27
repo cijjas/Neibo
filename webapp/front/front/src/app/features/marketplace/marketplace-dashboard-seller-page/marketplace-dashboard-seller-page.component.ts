@@ -144,4 +144,10 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   goToRequests(productId: string): void {
     this.router.navigate(['/marketplace/products', productId, 'requests']);
   }
+
+  getProductImage(product:Product): string {
+    return product?.firstImage
+      ? product?.firstImage
+      : 'assets/images/default-product.png';
+  }
 }

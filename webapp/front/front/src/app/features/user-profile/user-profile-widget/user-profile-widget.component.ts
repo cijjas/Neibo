@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-user-profile-widget',
   templateUrl: './user-profile-widget.component.html',
+  standalone: true
 })
 export class UserProfileWidgetComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;

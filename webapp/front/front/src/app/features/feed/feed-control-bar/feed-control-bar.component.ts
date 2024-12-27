@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService, UserSessionService } from '@core/index';
 import { User } from '@shared/index';
-import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-feed-control-bar',
@@ -103,7 +102,7 @@ export class FeedControlBarComponent implements OnInit {
   }
 
   publishInChannel(): void {
-    this.router.navigate(['posts/new'], {
+    this.router.navigate(['/posts/new'], {
       queryParams: { SPAInChannel: this.channel }
     });
   }

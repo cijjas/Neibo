@@ -1,7 +1,7 @@
 <div class="wrapper-widget">
     <div id="calendar-box" class="f-c-c-c" *ngIf="!isLoading">
         <header class="header-content">
-            <a class="current-date" style="font-weight: bold" routerLink="/calendar">{{ currentDate }}</a>
+            <a class="current-date" style="font-weight: bold" [routerLink]="['/calendar']">{{ currentDate }}</a>
             <div class="icons">
                 <span id="prev" (click)="changeMonth(-1)"><i class="fa-solid fa-angle-left"></i></span>
                 <span id="next" (click)="changeMonth(1)"><i class="fa-solid fa-angle-right"></i></span>

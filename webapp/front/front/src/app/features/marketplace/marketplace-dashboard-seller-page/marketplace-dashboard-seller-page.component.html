@@ -62,7 +62,7 @@
                                     <div class="f-r-c-c w-100 g-0">
                                         <div class="ps-0">
                                             <div class="purchased-product-image f-c-c-c placeholder-glow">
-                                                <img [src]="product.firstImage" class="" style="max-height: 100px"
+                                                <img [src]="getProductImage(product)" class="" style="max-height: 100px"
                                                     alt="purchased_product_image_{{ product.self }}" />
                                             </div>
                                         </div>
@@ -185,7 +185,7 @@
                                     <div class="f-r-c-c w-100 g-1">
                                         <div class="ps-0">
                                             <div class="purchased-product-image f-c-c-c placeholder-glow">
-                                                <img [src]="purchase.product?.firstImage" class=""
+                                                <img [src]="getProductImage(purchase.product)" class=""
                                                     alt="purchased_product_image_{{ purchase.product?.self }}" />
                                             </div>
                                         </div>

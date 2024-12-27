@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { catchError, forkJoin, map, mergeMap, Observable, of, tap } from "rxjs";
+import { catchError, forkJoin, mergeMap, Observable, of, tap } from "rxjs";
 import { NeighborhoodDto, UserDto, mapNeighborhood, mapUser } from "@shared/index";
 import { HateoasLinksService, UserSessionService } from "@core/index";
 

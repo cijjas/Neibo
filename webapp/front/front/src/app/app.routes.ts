@@ -29,61 +29,93 @@ import { RoleGuard } from '@core/index'
 import { Roles } from '@shared/index'
 
 
-export const routes: Routes = [
+export const appRoutes: Routes = [
+  // Redirect root to login
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
   // Admin
-  { path: 'admin/publish', component: AdminPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
-  // { path: 'admin/neighbors/requests', component: AdminComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
-  // { path: 'admin/neighbors/list', component: AdminComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
-  // { path: 'admin/service-providers/requests', component: AdminComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
-  // { path: 'admin/service-providers/list', component: AdminComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
-  // { path: 'admin/amenities', component: AdminComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
-  // { path: 'admin/information', component: AdminComponent, canActivate: [RoleGuard], data: { roles: [Roles.ADMINISTRATOR] } },
+  // {
+  //   path: 'admin',
+  //   loadChildren: () =>
+  //     import('@features/admin/admin.module').then((m) => m.AdminModule),
+  //   canActivate: [RoleGuard],
+  //   data: { roles: [Roles.ADMINISTRATOR] },
+  // },
 
   // Amenities
-  { path: 'amenities', component: AmenitiesReservationsPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'amenities/choose-time', component: AmenitiesChooseTimePageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'reservations', component: AmenitiesReservationsPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'reservations/choose-time', component: AmenitiesChooseTimePageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  {
+    path: 'amenities',
+    loadChildren: () =>
+      import('@features/amenities/amenities.module').then(
+        (m) => m.AmenitiesModule
+      ),
+  },
 
   // Authentication
-  { path: '', component: LoginPageComponent },
-  { path: 'login', component: LoginPageComponent },
-
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('@features/auth/auth.module').then((m) => m.AuthModule),
+  },
 
   // Calendar
-  { path: 'calendar', component: CalendarPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'calendar/events/:id', component: CalendarEventPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  {
+    path: 'calendar',
+    loadChildren: () =>
+      import('@features/calendar/calendar.module').then((m) => m.CalendarModule),
+  },
 
-  // feed
-  { path: 'posts', component: FeedPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'posts/:id', component: FeedPostDetailPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'posts/new', component: FeedCreatePostPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  // Feed
+  {
+    path: 'posts',
+    loadChildren: () =>
+      import('@features/feed/feed.module').then((m) => m.FeedModule),
+  },
 
   // Information
-  { path: 'information', component: InformationPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  {
+    path: 'information',
+    loadChildren: () =>
+      import('@features/information/information.module').then(
+        (m) => m.InformationModule
+      ),
+  },
 
   // Marketplace
-  { path: 'marketplace', component: MarketplacePageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'marketplace/buyer-hub/:mode', component: MarketplaceDashboardBuyerPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'marketplace/seller-hub/:mode', component: MarketplaceDashboardSellerPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'marketplace/products/new', component: MarketplaceProductSellPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'marketplace/products/:id', component: MarketplaceProductDetailPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'marketplace/products/:id/edit', component: MarketplaceProductEditPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'marketplace/products/:id/requests', component: MarketplaceProductRequestsPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  {
+    path: 'marketplace',
+    loadChildren: () =>
+      import('@features/marketplace/marketplace.module').then(
+        (m) => m.MarketplaceModule
+      ),
+  },
 
   // Services
-  { path: 'services', component: ServiceProvidersPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  { path: 'services/profile/:id', component: ServiceProvidersDetailPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-
-  // Service providers
-  // { path: 'services/profiles/:id', component: ServiceProvidersPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  // { path: 'services/feed/', component: ServiceProvidersPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
-  // { path: 'services/all-neighborhoods/', component: ServiceProvidersPageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  {
+    path: 'services',
+    loadChildren: () =>
+      import('@features/service-providers/service-providers.module').then(
+        (m) => m.ServiceProvidersModule
+      ),
+  },
 
   // User Profile
-  { path: 'user/:id', component: UserProfilePageComponent, canActivate: [RoleGuard], data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] } },
+  {
+    path: 'user',
+    loadChildren: () =>
+      import('@features/user-profile/user-profile.module').then(
+        (m) => m.UserProfileModule
+      ),
+  },
 
   // 404 and Wildcard
-  { path: 'not-found', component: NotFoundPageComponent },
+  {
+    path: 'not-found',
+    loadChildren: () =>
+      import('@features/not-found/not-found.module').then(
+        (m) => m.NotFoundModule
+      ),
+  },
   { path: '**', redirectTo: '/not-found', pathMatch: 'full' },
 ];
+

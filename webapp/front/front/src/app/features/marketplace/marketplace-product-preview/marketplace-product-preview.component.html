@@ -25,7 +25,7 @@
             <div class="img-product placeholder-glow" (click)="onProductClick()">
                 <!-- Replace with actual image fetching logic if needed -->
                 <!-- class="placeholder" -->
-                <img [src]="product.firstImage || 'placeholder-image.jpg'" alt="product image" />
+                <img [src]="getProductImage()" />
             </div>
         </div>
 

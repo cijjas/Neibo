@@ -160,7 +160,7 @@
                                     <div class="f-r-c-c w-100 g-1">
                                         <div class="ps-0">
                                             <div class="purchased-product-image f-c-c-c placeholder-glow">
-                                                <img [src]="request.product.firstImage" class=""
+                                                <img [src]="getProductImage(request.product)" class=""
                                                     alt="purchased_product_image_{{ request.product.seller?.name }}" />
                                             </div>
                                         </div>
@@ -213,7 +213,7 @@
                                                 <a [routerLink]="['/marketplace/products',request.product.self]"
                                                     class="cool-button small-a marketplace-button font-weight-bold">
                                                     <i class="fa-solid fa-arrow-right-to-bracket pe-1"></i>
-                                                    View listing
+                                                    View Product
                                                 </a>
                                             </div>
                                         </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { RequestService, Department, Request } from '@shared/index';
+import { RequestService, Department, Request, Product } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -136,7 +136,11 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
   }
-
+  getProductImage(product:Product): string {
+    return product?.firstImage
+      ? product?.firstImage
+      : 'assets/images/default-product.png';
+  }
   /** Department navigation (shared by both requests and purchases) */
   goToDepartment(department: Department): void {
     this.router.navigate(['/marketplace'], {

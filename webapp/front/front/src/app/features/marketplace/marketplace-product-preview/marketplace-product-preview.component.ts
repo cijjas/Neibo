@@ -21,6 +21,12 @@ export class MarketplaceProductPreviewComponent {
     this.router.navigate(['/marketplace/products', this.product.self]);
   }
 
+  getProductImage(): string {
+    return this.product?.firstImage
+      ? this.product?.firstImage
+      : 'assets/images/default-product.png';
+  }
+
 
   goToDepartment(department: Department): void {
     this.router.navigate(['/marketplace'], {
