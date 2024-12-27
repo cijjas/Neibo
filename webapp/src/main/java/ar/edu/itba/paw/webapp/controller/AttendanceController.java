@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.dto.AttendanceCountDto;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.EventURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
@@ -35,7 +38,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - A User/Admin can confirm his attendance to a certain event
  */
 
-@Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
+@Path("neighborhoods/{neighborhoodId}/attendance")
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -61,18 +64,28 @@ public class AttendanceController {
     @GET
     public Response listAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint Long eventId,
+            @QueryParam("forEvent") @EventURNConstraint String event,
+            @QueryParam("forUser") @UserURNConstraint String user,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
-        // Path Verification
-        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
+        // ID Extraction
+        Long eventId = extractOptionalSecondId(event);
+        Long userId = extractOptionalSecondId(user);
 
         // Content
-        final List<Attendance> attendance = as.getAttendance(neighborhoodId, eventId, size, page);
-        String attendanceHashCode = String.valueOf(attendance.hashCode());
+        final List<Attendance> attendance = as.getAttendance(neighborhoodId, eventId, userId, size, page);
+        String attendanceHashCode;
+
+        // This is required to keep a consistent hash code across creates and this endpoint used as a find
+        if (attendance.size() == 1) {
+            Attendance singleAttendance = attendance.get(0);
+            attendanceHashCode = String.valueOf(singleAttendance.hashCode());
+        } else {
+            attendanceHashCode = String.valueOf(attendance.hashCode());
+        }
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -91,7 +104,7 @@ public class AttendanceController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events/" + eventId + "/attendance",
-                as.calculateAttendancePages(neighborhoodId, eventId, size),
+                as.calculateAttendancePages(neighborhoodId, userId, eventId, size),
                 page,
                 size
         );
@@ -108,15 +121,17 @@ public class AttendanceController {
     @Path("/count")
     public Response countAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint Long eventId
+            @QueryParam("forEvent") @EventURNConstraint String event,
+            @QueryParam("forUser") @UserURNConstraint String user
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/count'", neighborhoodId, eventId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/attendance/count'", neighborhoodId);
 
-        // Path Verification
-        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
+        // ID Extraction
+        Long eventId = extractOptionalSecondId(event);
+        Long userId = extractOptionalSecondId(user);
 
         // Content
-        int count = as.countAttendance(neighborhoodId, eventId);
+        int count = as.countAttendance(neighborhoodId, eventId, userId);
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -125,7 +140,7 @@ public class AttendanceController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, eventId, neighborhoodId,  uriInfo);
+        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, neighborhoodId,  uriInfo);
 
         return Response.ok(new GenericEntity<AttendanceCountDto>(dto) {
                 })
@@ -134,71 +149,54 @@ public class AttendanceController {
                 .build();
     }
 
-    @GET
-    @Path("/{userId}")
-    public Response findAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint Long eventId,
-            @PathParam("userId") @GenericIdConstraint Long userId
-    ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
-
-        // Content
-        Attendance attendance = as.findAttendance(neighborhoodId, eventId, userId).orElseThrow(NotFoundException::new);
-        String attendanceHashCode = String.valueOf(attendance.hashCode());
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(attendanceHashCode));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
-        return Response.ok(AttendanceDto.fromAttendance(attendance, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(attendanceHashCode)
-                .build();
-    }
-
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint Long eventId,
             @Valid AttendanceDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
-
-        // Path Verification
-        es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Attendance attendance = as.createAttendance(eventId, extractSecondId(createForm.getUser()));
+        final Attendance attendance = as.createAttendance(extractSecondId(createForm.getEvent()), extractSecondId(createForm.getUser()));
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
-        // Resource URN
-        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId().getUserId())).build();
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
+        final URI uri = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(neighborhoodId))
+                .path("attendance")
+                .queryParam("forEvent",
+                        uriInfo.getBaseUriBuilder()
+                                .path("neighborhoods")
+                                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
+                                .path("events")
+                                .path(String.valueOf(attendance.getEvent().getEventId()))
+                                .build())
+                .queryParam("forUser",
+                        uriInfo.getBaseUriBuilder()
+                                .path("neighborhoods")
+                                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
+                                .path("users")
+                                .path(String.valueOf(attendance.getUser().getUserId()))
+                                .build())
+                .build();
 
         return Response.created(uri)
-                .cacheControl(cacheControl)
                 .tag(attendanceHashCode)
                 .build();
     }
 
     @DELETE
-    @Path("/{userId}")
-    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#userId)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#user)")
     public Response deleteAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("eventId") @GenericIdConstraint Long eventId,
-            @PathParam("userId") @GenericIdConstraint long userId
+            @QueryParam("forEvent") @EventURNConstraint String event,
+            @QueryParam("forUser") @UserURNConstraint String user
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
         // Deletion Attempt
-        if (as.deleteAttendance(neighborhoodId, eventId, userId))
+        if (as.deleteAttendance(neighborhoodId, extractOptionalSecondId(event), extractSecondId(user)))
             return Response.noContent()
                     .build();
 

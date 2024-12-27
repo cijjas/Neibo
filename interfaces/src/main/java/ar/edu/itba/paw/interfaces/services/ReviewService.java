@@ -19,6 +19,8 @@ public interface ReviewService {
 
     List<Review> getReviews(long workerId, int page, int size);
 
+    int countReviews(long workerId);
+
     int calculateReviewPages(long workerId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------

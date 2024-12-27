@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.dto.ReviewsAverageDto;
+import ar.edu.itba.paw.webapp.dto.ReviewsCountDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.WorkerIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -93,6 +94,32 @@ public class ReviewController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(reviewsHashCode)
+                .build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response countReviews(
+            @PathParam("workerId") @WorkerIdConstraint long workerId
+    ) {
+        LOGGER.info("GET request arrived at '/workers/{}/reviews/count'", workerId);
+
+        // Content
+        int count = rs.countReviews(workerId);
+        String countHashCode = String.valueOf(count);
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        ReviewsCountDto dto = ReviewsCountDto.fromReviewsCount(count, workerId,  uriInfo);
+
+        return Response.ok(new GenericEntity<ReviewsCountDto>(dto) {
+                })
+                .cacheControl(cacheControl)
+                .tag(countHashCode)
                 .build();
     }
 

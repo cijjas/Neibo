@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.dto.forms;
 
-import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TransactionTypeURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.RequestStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.TransactionTypeURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.UserTransactionPairConstraint;
 
@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import java.util.Objects;
 
 @UserTransactionPairConstraint
 public class RequestForm {

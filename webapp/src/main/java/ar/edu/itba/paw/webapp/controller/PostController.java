@@ -3,10 +3,11 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.PostDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ChannelURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.PostStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
+import ar.edu.itba.paw.webapp.dto.PostsCountDto;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.PostStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -73,7 +74,7 @@ public class PostController {
 
         // ID Extraction
         Long channelId = extractOptionalSecondId(channel);
-        List<Long> tagIds = extractSecondIds(tags); // handles null an empty list correctly
+        List<Long> tagIds = extractSecondIds(tags);
         Long postStatusId = extractOptionalFirstId(postStatus);
         Long userId = extractOptionalSecondId(user);
 
@@ -108,6 +109,42 @@ public class PostController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(postsHashCode)
+                .build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response countPosts(
+            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam("postedBy") @UserURNConstraint String user,
+            @QueryParam("inChannel") @ChannelURNConstraint String channel,
+            @QueryParam("withTags") @TagsURNConstraint List<String> tags,
+            @QueryParam("withStatus") @PostStatusURNConstraint String postStatus
+    ) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/count'", neighborhoodId);
+
+        // ID Extraction
+        Long channelId = extractOptionalSecondId(channel);
+        List<Long> tagIds = extractSecondIds(tags);
+        Long postStatusId = extractOptionalFirstId(postStatus);
+        Long userId = extractOptionalSecondId(user);
+
+        // Content
+        int count = ps.countPosts(neighborhoodId, userId, channelId, tagIds, postStatusId);
+        String countHashCode = String.valueOf(count);
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        PostsCountDto dto = PostsCountDto.fromPostsCount(count, neighborhoodId,  uriInfo);
+
+        return Response.ok(new GenericEntity<PostsCountDto>(dto) {
+                })
+                .cacheControl(cacheControl)
+                .tag(countHashCode)
                 .build();
     }
 

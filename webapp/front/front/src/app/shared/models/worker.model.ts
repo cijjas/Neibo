@@ -8,6 +8,8 @@ export interface Worker {
   averageRating: number;
   user: User;
   reviews: string;
+  totalReviews: number;
+  totalPosts: number;
   posts: string;
   backgroundImage: string;
   neighborhoodAffiliated: string[];

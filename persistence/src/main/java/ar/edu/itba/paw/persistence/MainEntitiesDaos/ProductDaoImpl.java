@@ -137,12 +137,6 @@ public class ProductDaoImpl implements ProductDao {
         if (userId != null) {
             query.setParameter("userId", userId);
         }
-//        if(productStatusId != null && productStatusId != ProductStatus.SELLING.getId()) {
-//            query.setParameter("requestStatus", RequestStatus.ACCEPTED);
-//        }
-
-
-        // No parameters have to be set for the ProductStatus Condition
 
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
@@ -211,11 +205,6 @@ public class ProductDaoImpl implements ProductDao {
         if (userId != null) {
             query.setParameter("userId", userId);
         }
-//        if(productStatusId != null && productStatusId != ProductStatus.SELLING.getId()) {
-//            query.setParameter("requestStatus", RequestStatus.ACCEPTED);
-//        }
-
-        // No parameters have to be set for the ProductStatus Condition
 
         Object countResult = query.getSingleResult();
         return Integer.parseInt(countResult.toString());

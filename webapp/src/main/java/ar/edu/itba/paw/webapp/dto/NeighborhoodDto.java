@@ -153,6 +153,11 @@ public class NeighborhoodDto {
             links.setImages(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .build());
+            links.setAttendance(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("attendance")
+                    .build());
             links.setLikes(uriInfo.getBaseUriBuilder()
                     .path("likes")
                     .build());
@@ -247,6 +252,12 @@ public class NeighborhoodDto {
                             .path("professions")
                             .build()
             );
+            links.setPostsCount(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("posts")
+                    .path("count")
+                    .build());
         }
         dto.set_links(links);
         return dto;

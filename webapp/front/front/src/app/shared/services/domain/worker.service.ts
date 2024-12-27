@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession } from '@shared/index';
+import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession, ReviewsCountDto, PostsCountDto } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -78,8 +78,10 @@ export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Wo
         http.get<NeighborhoodDto[]>(workerDto._links.workerNeighborhoods),
         http.get<ProfessionDto[]>(workerDto._links.professions),
         http.get<ReviewsAverageDto>(workerDto._links.reviewsAverage),
+        http.get<ReviewsCountDto>(workerDto._links.reviewsCount),
+        http.get<PostsCountDto>(workerDto._links.postsCount),
     ]).pipe(
-        map(([user, neighborhoods, professions, reviewAverage]) => {
+        map(([user, neighborhoods, professions, reviewAverage, reviewsCount, postsCount]) => {
             return {
                 phoneNumber: workerDto.phoneNumber,
                 businessName: workerDto.businessName,
@@ -87,7 +89,9 @@ export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Wo
                 bio: workerDto.bio,
                 averageRating: reviewAverage.average,
                 reviews: workerDto._links.reviews,
+                totalReviews: reviewsCount.count,
                 posts: workerDto._links.posts,
+                totalPosts: postsCount.count,
                 user: user,
                 backgroundImage: workerDto._links.backgroundImage,
                 neighborhoodAffiliated: neighborhoods.map((n) => n.name),

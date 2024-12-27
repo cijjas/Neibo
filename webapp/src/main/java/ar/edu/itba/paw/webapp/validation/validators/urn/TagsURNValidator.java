@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
-import ar.edu.itba.paw.webapp.validation.constraints.form.TagsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;

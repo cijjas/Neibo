@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceConstraintUpdate;
-import ar.edu.itba.paw.webapp.validation.constraints.form.DepartmentURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ImagesURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.DepartmentURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ImagesURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -116,6 +117,19 @@ public class ProductDto {
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("requests")
                 .queryParam("forProduct", self)
+                .build());
+        links.setPendingRequestsCount(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
+                .path("requests")
+                .path("count")
+                .queryParam("forProduct", self)
+                .queryParam("withStatus",
+                        uriInfo.getBaseUriBuilder()
+                        .path("request-statuses")
+                        .path(String.valueOf(RequestStatus.REQUESTED.getId()))
+                        .build()
+                )
                 .build());
         dto.set_links(links);
         return dto;

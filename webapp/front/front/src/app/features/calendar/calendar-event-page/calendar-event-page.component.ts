@@ -18,7 +18,6 @@ export class CalendarEventPageComponent implements OnInit {
 
   // Attendees
   attendees: Attendance[] = []; // Replace `Attendance` with your actual Attendee type if different
-  attendanceUrl: string = '';   // e.g. /events/1/attendance
 
   // Attendee pagination
   attendanceCurrentPage = 1;
@@ -55,20 +54,15 @@ export class CalendarEventPageComponent implements OnInit {
   loadEvent(eventId: string): void {
     this.eventService.getEvent(eventId).subscribe(event => {
       this.event = event;
-      this.attendanceUrl = this.event.attendees;
-      // Determine if current user is already attending, if needed
-      // this.willAttend = ...some logic to see if user is in event.attendees
 
-      // Optionally load initial attendees list
       this.loadAttendance();
     });
   }
 
   loadAttendance(): void {
-    if (!this.attendanceUrl) return;
-
     this.attendanceService
-      .getAttendances(this.attendanceUrl, {
+      .getAttendances({
+        forEvent: this.event.self,
         page: this.attendanceCurrentPage,
         size: this.attendancePageSize
       })
@@ -87,7 +81,7 @@ export class CalendarEventPageComponent implements OnInit {
 
   attendEvent(): void {
     const userUrl = this.linkService.getLink('user:self');
-    this.attendanceService.createAttendance(this.attendanceUrl, userUrl)
+    this.attendanceService.createAttendance(this.event.self, userUrl)
       .subscribe(() => {
         console.log('Attendance created');
         this.willAttend = true;
@@ -97,7 +91,9 @@ export class CalendarEventPageComponent implements OnInit {
   }
 
   unattendEvent(): void {
-    this.attendanceService.deleteAttendance(this.attendanceUrl)
+    this.attendanceService.deleteAttendance(
+
+    )
       .subscribe(() => {
         console.log('Attendance removed');
         this.willAttend = false;

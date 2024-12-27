@@ -3,13 +3,11 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ProductURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.RequestStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.PhoneNumberConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.RequestStatusURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -35,6 +33,7 @@ public class RequestDto {
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
     @UserURNCreateReferenceConstraint(groups = Authorization.class)
+    @PhoneNumberConstraint(groups = Specific.class)
     private String user;
 
     @RequestStatusURNConstraint(groups = URN.class)

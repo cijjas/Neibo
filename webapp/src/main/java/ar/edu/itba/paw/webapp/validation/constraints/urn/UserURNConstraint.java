@@ -1,6 +1,6 @@
-package ar.edu.itba.paw.webapp.validation.constraints.form;
+package ar.edu.itba.paw.webapp.validation.constraints.urn;
 
-import ar.edu.itba.paw.webapp.validation.validators.urn.ImageURNValidator;
+import ar.edu.itba.paw.webapp.validation.validators.urn.UserURNValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,9 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Documented
-@Constraint(validatedBy = ImageURNValidator.class)
+@Constraint(validatedBy = UserURNValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ImageURNConstraint {
+public @interface UserURNConstraint {
     String message() default "Invalid URN";
 
     Class<?>[] groups() default {};

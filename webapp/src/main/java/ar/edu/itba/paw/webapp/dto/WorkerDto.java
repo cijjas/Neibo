@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.form.ProfessionsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.URN;
@@ -79,6 +79,14 @@ public class WorkerDto {
                         .path("average")
                         .build()
         );
+        links.setReviewsCount(
+                uriInfo.getBaseUriBuilder()
+                        .path("workers")
+                        .path(String.valueOf(worker.getWorkerId()))
+                        .path("reviews")
+                        .path("count")
+                        .build()
+        );
         links.setReviews(
                 uriInfo.getBaseUriBuilder()
                         .path("workers")
@@ -103,6 +111,20 @@ public class WorkerDto {
                         .path("neighborhoods")
                         .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
                         .path("posts")
+                        .queryParam("postedBy",
+                                uriInfo.getBaseUriBuilder()
+                                        .path("neighborhoods")
+                                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
+                                        .path("users")
+                                        .path(String.valueOf(worker.getUser().getUserId())))
+                        .build()
+        );
+        links.setPostsCount(
+                uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("posts")
+                        .path("count")
                         .queryParam("postedBy",
                                 uriInfo.getBaseUriBuilder()
                                         .path("neighborhoods")

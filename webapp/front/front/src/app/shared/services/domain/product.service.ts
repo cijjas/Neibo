@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { mapDepartment, parseLinkHeader, mapUser, ProductDto, UserDto, DepartmentDto, Product } from '@shared/index';
+import { mapDepartment, parseLinkHeader, mapUser, ProductDto, UserDto, DepartmentDto, Product, RequestsCountDto } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -119,9 +119,10 @@ export class ProductService {
 export function mapProduct(http: HttpClient, productDto: ProductDto): Observable<Product> {
     return forkJoin([
         http.get<UserDto>(productDto._links.productUser).pipe(mergeMap(userDto => mapUser(http, userDto))),
-        http.get<DepartmentDto>(productDto._links.department)
+        http.get<DepartmentDto>(productDto._links.department),
+        http.get<RequestsCountDto>(productDto._links.pendingRequestsCount),
     ]).pipe(
-        map(([seller, department]) => {
+        map(([seller, department, pendingRequestsCount]) => {
             return {
                 name: productDto.name,
                 description: productDto.description,
@@ -129,6 +130,7 @@ export function mapProduct(http: HttpClient, productDto: ProductDto): Observable
                 used: productDto.used,
                 stock: productDto.remainingUnits,
                 inquiries: productDto._links.inquiries,
+                totalPendingRequests: pendingRequestsCount.count,
                 createdAt: productDto.creationDate,
                 firstImage: productDto._links.firstProductImage,
                 secondImage: productDto._links.secondProductImage,

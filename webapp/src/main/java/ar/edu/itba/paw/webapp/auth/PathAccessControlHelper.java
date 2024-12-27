@@ -210,8 +210,7 @@ public class PathAccessControlHelper {
     // Neighbors can delete their own Likes
     // Administrators can delete the Likes of the Neighbors they monitor
     public boolean canDeleteLike(String userURN) {
-        LOGGER.info("Verifying Accessibility for the User's entities");
-        System.out.println("authenticating");
+        LOGGER.info("Verifying Delete Like accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
@@ -272,15 +271,24 @@ public class PathAccessControlHelper {
 
     // ---------------------------------------------- ATTENDANCES ------------------------------------------------------
 
+    // Restricted from Anonymous, Unverified and Rejected
     // Neighbors can delete their own Attendance
-    public boolean canDeleteAttendance(long userId) {
+    // Administrators can delete the Attendance of the Neighbors they monitor
+    public boolean canDeleteAttendance(String userURN) {
         LOGGER.info("Verifying Delete Attendance Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
-        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
+        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
+            return false;
+
+        if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == userId;
+        if (authHelper.isAdministrator(authentication))
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
+
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN)
+                && authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
     }
 
     // ------------------------------------------------ COMMENTS -------------------------------------------------------

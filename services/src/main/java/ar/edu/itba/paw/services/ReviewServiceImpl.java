@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +66,13 @@ public class ReviewServiceImpl implements ReviewService {
         LOGGER.info("Getting Reviews for Worker {}", workerId);
 
         return reviewDao.getReviews(workerId, page, size);
+    }
+
+    @Override
+    public int countReviews(long workerId) {
+        LOGGER.info("Counting Reviews for Worker {}", workerId);
+
+        return reviewDao.countReviews(workerId);
     }
 
     @Override

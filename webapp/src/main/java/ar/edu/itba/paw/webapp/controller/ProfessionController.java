@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ProfessionService;
 import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.webapp.dto.ProfessionDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.WorkerURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;

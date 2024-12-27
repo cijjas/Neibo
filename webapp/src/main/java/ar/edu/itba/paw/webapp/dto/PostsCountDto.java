@@ -1,28 +1,26 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-public class AttendanceCountDto {
+public class PostsCountDto {
 
     private int count;
 
     private Links _links;
 
-    public static AttendanceCountDto fromAttendanceCount(int attendeesCount, long neighborhoodId, UriInfo uriInfo) {
-        final AttendanceCountDto dto = new AttendanceCountDto();
+    public static PostsCountDto fromPostsCount(int postCount, long neighborhoodId, UriInfo uriInfo) {
+        final PostsCountDto dto = new PostsCountDto();
 
-        dto.count = attendeesCount;
+        dto.count = postCount;
 
         Links links = new Links();
 
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder()
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhoodId))
-                .path("attendance")
-                .path("count");
-
-        links.setSelf(uriBuilder.build());
+                .path("posts")
+                .path("count")
+                .build());
 
         dto.set_links(links);
         return dto;

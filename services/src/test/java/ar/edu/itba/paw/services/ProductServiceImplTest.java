@@ -124,21 +124,21 @@ public class ProductServiceImplTest {
     @Test
     public void update_noImage() {
         // Pre Conditions
-        long neighborhooId = 1L;
+        long neighborhoodId = 1L;
         long productId = 1L;
 
         Product product = new Product.Builder().build();
-        when(productDao.findProduct(neighborhooId, productId)).thenReturn(Optional.of(product));
+        when(productDao.findProduct(neighborhoodId, productId)).thenReturn(Optional.of(product));
 
         // Exercise
-        productService.updateProduct(neighborhooId, productId, "Product Name", null, null, null, null, null, Collections.emptyList());
+        productService.updateProduct(neighborhoodId, productId, "Product Name", null, null, null, null, null, Collections.emptyList());
 
         // Validations & Post Conditions
         assertNull(product.getPrimaryPicture());
         assertNull(product.getSecondaryPicture());
         assertNull(product.getTertiaryPicture());
 
-        verify(productDao, times(1)).findProduct(neighborhooId, productId);
+        verify(productDao, times(1)).findProduct(neighborhoodId, productId);
         verify(imageService, never()).findImage(anyLong());
     }
 
@@ -221,5 +221,33 @@ public class ProductServiceImplTest {
         verify(imageService, times(1)).findImage(imageIds.get(0));
         verify(imageService, times(1)).findImage(imageIds.get(1));
         verify(imageService, times(1)).findImage(imageIds.get(2));
+    }
+
+    @Test
+    public void update_replaceImages() {
+        // Pre Conditions
+        long neighborhoodId = 1L;
+        long productId = 1L;
+        List<Long> newImageIds = Collections.singletonList(1L);
+
+        Product product = new Product.Builder()
+                .primaryPicture(new Image.Builder().imageId(4L).build())
+                .secondaryPicture(new Image.Builder().imageId(5L).build())
+                .build();
+
+        Image newPrimaryImage = new Image.Builder().imageId(1L).build();
+        when(productDao.findProduct(neighborhoodId, productId)).thenReturn(Optional.of(product));
+        when(imageService.findImage(newImageIds.get(0))).thenReturn(Optional.of(newPrimaryImage));
+
+        // Exercise
+        productService.updateProduct(neighborhoodId, productId, null, null, null, null, null, null, newImageIds);
+
+        // Validations & Post Conditions
+        assertEquals(newPrimaryImage, product.getPrimaryPicture());
+        assertNull(product.getSecondaryPicture());
+        assertNull(product.getTertiaryPicture());
+
+        verify(productDao, times(1)).findProduct(neighborhoodId, productId);
+        verify(imageService, times(1)).findImage(newImageIds.get(0));
     }
 }

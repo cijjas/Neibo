@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
-import ar.edu.itba.paw.webapp.validation.constraints.form.AmenityURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

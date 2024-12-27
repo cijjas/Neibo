@@ -73,7 +73,7 @@ public class InquiryDaoImpl implements InquiryDao {
                 "SELECT i.inquiryId FROM Inquiry i " +
                         "WHERE i.product.productId = :productId " +
                         "AND i.product.seller.neighborhood.neighborhoodId = :neighborhoodId " +
-                        "ORDER BY i.inquiryDate, i.inquiryId DESC", Long.class);
+                        "ORDER BY i.inquiryDate DESC, i.inquiryId DESC", Long.class);
         idQuery.setParameter("productId", productId);
         idQuery.setParameter("neighborhoodId", neighborhoodId);
         idQuery.setFirstResult((page - 1) * size);
@@ -85,7 +85,7 @@ public class InquiryDaoImpl implements InquiryDao {
             TypedQuery<Inquiry> inquiryQuery = em.createQuery(
                     "SELECT i FROM Inquiry i " +
                             "WHERE i.inquiryId IN :inquiryIds " +
-                            "ORDER BY i.inquiryDate, i.inquiryId DESC", Inquiry.class);
+                            "ORDER BY i.inquiryDate DESC, i.inquiryId DESC", Inquiry.class);
             inquiryQuery.setParameter("inquiryIds", inquiryIds);
             return inquiryQuery.getResultList();
         }

@@ -86,6 +86,26 @@ public class Links {
     private URI boughtProductStatus;
     private URI soldProductStatus;
     private URI sellingProductStatus;
+    private URI attendance;
+    private URI reviewsCount;
+    private URI postsCount;
+    private URI pendingRequestsCount;
+
+    public URI getReviewsCount() {
+        return reviewsCount;
+    }
+
+    public void setReviewsCount(URI reviewsCount) {
+        this.reviewsCount = reviewsCount;
+    }
+
+    public URI getPostsCount() {
+        return postsCount;
+    }
+
+    public void setPostsCount(URI postsCount) {
+        this.postsCount = postsCount;
+    }
 
     public URI getAcceptedRequestStatus() {
         return acceptedRequestStatus;
@@ -749,5 +769,21 @@ public class Links {
 
     public void setReviewUser(URI reviewUser) {
         this.reviewUser = reviewUser;
+    }
+
+    public URI getAttendance() {
+        return attendance;
+    }
+
+    public void setAttendance(URI attendance) {
+        this.attendance = attendance;
+    }
+
+    public URI getPendingRequestsCount() {
+        return pendingRequestsCount;
+    }
+
+    public void setPendingRequestsCount(URI pendingRequestsCount) {
+        this.pendingRequestsCount = pendingRequestsCount;
     }
 }

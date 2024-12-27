@@ -78,6 +78,13 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public int countRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId) {
+        LOGGER.info("Counting Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
+
+        return requestDao.countRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int size) {
         LOGGER.info("Calculating Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
@@ -94,16 +101,15 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestDao.findRequest(neighborhoodId, requestId).orElseThrow(NotFoundException::new);
 
         if (requestStatusId != null){
-            request.setStatus(RequestStatus.fromId(requestStatusId));
             if (requestStatusId == RequestStatus.ACCEPTED.getId()) {
                 Product p = request.getProduct();
                 long finalUnits = p.getRemainingUnits() - request.getUnits();
                 if ( finalUnits < 0)
                     throw new IllegalArgumentException("Cant fulfill the request, not enough stock.");
                 request.setPurchaseDate(new Date(System.currentTimeMillis()));
-                request.setStatus(RequestStatus.ACCEPTED);
                 p.setRemainingUnits(p.getRemainingUnits() - request.getUnits());
             }
+            request.setStatus(RequestStatus.fromId(requestStatusId));
         }
 
         return request;
