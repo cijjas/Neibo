@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.TwoId;
+import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import java.util.List;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, List<String>> {
+
+    @Autowired
+    private FormAccessControlHelper formAccessControlHelper;
 
     @Autowired
     private TagService tagService;
@@ -30,6 +34,8 @@ public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, 
                 return false;
             TwoId twoId = extractTwoId(urn);
             if (!tagService.findTag(twoId.getFirstId(), twoId.getSecondId()).isPresent())
+                return false;
+            if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
                 return false;
         }
         return true;

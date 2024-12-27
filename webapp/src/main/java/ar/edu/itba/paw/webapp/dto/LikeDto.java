@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.PostURNReferenceInLikeConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInLikeConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -17,7 +16,6 @@ public class LikeDto {
 
     @NotNull(groups = Null.class)
     @PostURNConstraint(groups = URN.class)
-    @PostURNReferenceInLikeConstraint(groups = Authorization.class)
     private String post;
 
     @NotNull(groups = Null.class)

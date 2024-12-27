@@ -2,8 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceConstraintUpdate;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.DepartmentURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImagesURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -48,9 +47,7 @@ public class ProductDto {
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
-    // Temporal fix until group sequences are resolved they are fixed and i dont what i should do hehehe
-    @UserURNCreateReferenceConstraint(groups = Authorization.class)
-    @UserURNReferenceConstraintUpdate(groups = Authorization.class)
+    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
     private String user;
 
     private Date creationDate;

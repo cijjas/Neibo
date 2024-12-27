@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Inquiry;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
@@ -21,7 +21,7 @@ public class InquiryDto {
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
-    @UserURNCreateReferenceConstraint(groups = Authorization.class)
+    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
     private String user;
 
     @Size(max = 500, groups = Basic.class)

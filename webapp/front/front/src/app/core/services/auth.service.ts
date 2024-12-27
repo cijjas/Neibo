@@ -113,6 +113,8 @@ export class AuthService {
      * ===============================
      */
     refreshToken(): Observable<boolean> {
+        console.log("REFRESHING ACTIVATED");
+
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
             // No refresh token stored; cannot refresh

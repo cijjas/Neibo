@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -32,7 +32,7 @@ public class BookingDto {
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
-    @UserURNCreateReferenceConstraint(groups = Authorization.class)
+    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
     private String user;
 
     private Links _links;

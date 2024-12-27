@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.webapp.security.UserAuth;
 import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
 import ar.edu.itba.paw.webapp.security.enums.TokenType;
+import ar.edu.itba.paw.webapp.security.exception.ExpiredTokenException;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +118,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     }
 
     private boolean handleJwtAuthentication(String authorizationHeader, HttpServletRequest request,
-                                         HttpServletResponse response) throws IOException, ServletException {
+                                            HttpServletResponse response) throws IOException, ServletException {
         try {
             String authenticationToken = authorizationHeader.substring(7);
 
@@ -125,10 +126,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             if (tokenDetails.getTokenType() == TokenType.REFRESH) {
                 if (ZonedDateTime.now().isAfter(tokenDetails.getExpirationDate()))
-                    throw new IllegalArgumentException("Refresh token has expired");
+                    throw new ExpiredTokenException("Refresh token has expired");
                 String newAccessToken = authenticationTokenService.issueAccessToken(tokenDetails.getUsername(), tokenDetails.getAuthorities());
                 response.addHeader("X-Access-Token", newAccessToken);
             }
+
+            if (ZonedDateTime.now().isAfter(tokenDetails.getExpirationDate()))
+                throw new ExpiredTokenException("Access token has expired");
 
             Authentication authenticationRequest = new JwtAuthenticationToken(authenticationToken);
             Authentication authenticationResult = authenticationManager.authenticate(authenticationRequest);
@@ -136,8 +140,12 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(authenticationResult);
             SecurityContextHolder.setContext(context);
+        } catch (ExpiredTokenException e) {
+            LOGGER.debug("Expired token provided", e);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            return false;
         } catch (AuthenticationException e) {
-            LOGGER.debug("Invalid access token provided");
+            LOGGER.debug("Invalid access token provided", e);
             SecurityContextHolder.clearContext();
             authenticationEntryPoint.commence(request, response, e);
             return false;
