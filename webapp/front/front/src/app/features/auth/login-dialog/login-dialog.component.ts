@@ -16,6 +16,7 @@ export class LoginDialogComponent
   @Output() showSignupDialogChange = new EventEmitter<boolean>();
 
   loginForm: FormGroup;
+  showPassword = false;
   loginFailed: boolean = false;
   loading: boolean = false;
 
@@ -34,7 +35,9 @@ export class LoginDialogComponent
     });
   }
 
-
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   closeLoginDialog(): void {
     this.showLoginDialog = false;

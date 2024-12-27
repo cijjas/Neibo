@@ -1,30 +1,6 @@
 
 import { Routes } from '@angular/router'
 
-import {
-  FeedPostDetailPageComponent
-  , FeedPageComponent
-  , ServiceProvidersPageComponent
-  , MarketplacePageComponent
-  , AmenitiesReservationsPageComponent
-  , InformationPageComponent
-  , FeedCreatePostPageComponent
-  , MarketplaceProductDetailPageComponent
-  , MarketplaceProductSellPageComponent
-  , ServiceProvidersDetailPageComponent
-  , CalendarEventPageComponent
-  , NotFoundPageComponent
-  , LoginPageComponent
-  , CalendarPageComponent
-  , UserProfilePageComponent
-  , AmenitiesChooseTimePageComponent
-  , MarketplaceProductEditPageComponent
-  , MarketplaceDashboardBuyerPageComponent
-  , MarketplaceDashboardSellerPageComponent
-  , MarketplaceProductRequestsPageComponent
-  , AdminPageComponent
-} from '@features/index'
-
 import { RoleGuard } from '@core/index'
 import { Roles } from '@shared/index'
 

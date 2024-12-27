@@ -1,5 +1,5 @@
 // @index('./**/*.ts', f => `export * from '${f.path}'`)
-export * from './admin-page/admin-page.component'
+export * from '@features/admin/admin-create-announcement-page/admin-create-announcement-page.component'
 export * from './amenities/amenities-choose-time-page/amenities-choose-time-page.component'
 export * from './amenities/amenities-reservations-list/amenities-reservations-list.component'
 export * from './amenities/amenities-reservations-page/amenities-reservations-page.component'
