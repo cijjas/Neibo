@@ -62,6 +62,7 @@ export interface Links {
     reviewsAverage: string;
     reviewsCount: string;
     postsCount: string;
+    requestsCount: string;
 }
 
 export interface AffiliationDto {
@@ -207,6 +208,11 @@ export interface RequestDto {
     unitsRequested: number;
     requestDate: Date;
     purchaseDate: Date;
+    _links: Links;
+}
+
+export interface RequestsCountDto {
+    count: number,
     _links: Links;
 }
 

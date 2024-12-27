@@ -117,6 +117,13 @@ public class ProductDto {
                 .path("requests")
                 .queryParam("forProduct", self)
                 .build());
+        links.setRequestsCount(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
+                .path("requests")
+                .path("count")
+                .queryParam("forProduct", self)
+                .build());
         dto.set_links(links);
         return dto;
     }

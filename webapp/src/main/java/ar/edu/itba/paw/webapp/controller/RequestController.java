@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
+import ar.edu.itba.paw.webapp.dto.RequestsCountDto;
 import ar.edu.itba.paw.webapp.dto.forms.RequestForm;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -65,8 +66,8 @@ public class RequestController {
         // ID Extraction
         Long userId = extractOptionalSecondId(requestForm.getRequestedBy());
         Long productId = extractOptionalSecondId(requestForm.getForProduct());
-        Long transactionTypeId = extractOptionalFirstId(requestForm.getWithType());
         Long requestStatusId = extractOptionalFirstId(requestForm.getWithStatus());
+        Long transactionTypeId = extractOptionalFirstId(requestForm.getWithType());
 
         // Content
         final List<Request> requests = rs.getRequests(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId,
@@ -102,6 +103,38 @@ public class RequestController {
                 .links(links)
                 .tag(requestsHashCode)
                 .cacheControl(cacheControl)
+                .build();
+    }
+
+    @GET
+    @Path("/count")
+    public Response countRequests(
+            @Valid @BeanParam RequestForm requestForm
+    ) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/count'", requestForm.getNeighborhoodId());
+
+        // ID Extraction
+        Long userId = extractOptionalSecondId(requestForm.getRequestedBy());
+        Long productId = extractOptionalSecondId(requestForm.getForProduct());
+        Long requestStatusId = extractOptionalFirstId(requestForm.getWithStatus());
+        Long transactionTypeId = extractOptionalFirstId(requestForm.getWithType());
+
+        // Content
+        int count = rs.countRequests(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId);
+        String countHashCode = String.valueOf(count);
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestForm.getNeighborhoodId(),  uriInfo);
+
+        return Response.ok(new GenericEntity<RequestsCountDto>(dto) {
+                })
+                .cacheControl(cacheControl)
+                .tag(countHashCode)
                 .build();
     }
 

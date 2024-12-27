@@ -17,7 +17,9 @@ public interface RequestService {
 
     List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int page, int size);
 
-    int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusURN, Long transactionTypeURN, int size);
+    int countRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId);
+
+    int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
