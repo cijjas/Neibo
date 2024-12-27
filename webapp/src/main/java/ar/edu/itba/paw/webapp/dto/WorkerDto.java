@@ -79,6 +79,14 @@ public class WorkerDto {
                         .path("average")
                         .build()
         );
+        links.setReviewsCount(
+                uriInfo.getBaseUriBuilder()
+                        .path("workers")
+                        .path(String.valueOf(worker.getWorkerId()))
+                        .path("reviews")
+                        .path("count")
+                        .build()
+        );
         links.setReviews(
                 uriInfo.getBaseUriBuilder()
                         .path("workers")
@@ -103,6 +111,20 @@ public class WorkerDto {
                         .path("neighborhoods")
                         .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
                         .path("posts")
+                        .queryParam("postedBy",
+                                uriInfo.getBaseUriBuilder()
+                                        .path("neighborhoods")
+                                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
+                                        .path("users")
+                                        .path(String.valueOf(worker.getUser().getUserId())))
+                        .build()
+        );
+        links.setPostsCount(
+                uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("posts")
+                        .path("count")
                         .queryParam("postedBy",
                                 uriInfo.getBaseUriBuilder()
                                         .path("neighborhoods")

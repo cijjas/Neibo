@@ -252,6 +252,12 @@ public class NeighborhoodDto {
                             .path("professions")
                             .build()
             );
+            links.setPostsCount(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("posts")
+                    .path("count")
+                    .build());
         }
         dto.set_links(links);
         return dto;

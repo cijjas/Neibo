@@ -18,7 +18,8 @@
                         <!-- Replaces serviceProfileCard.jsp -->
                         <!-- Provide [worker]="..." and other inputs as you see fit -->
                         <app-service-providers-content [worker]="worker" [averageRating]="worker?.averageRating"
-                            [reviewsCount]="666" [postCount]="666" (openEditProfile)="openEditDialog()">
+                            [reviewsCount]="worker?.totalReviews" [postCount]="worker?.totalPosts"
+                            (openEditProfile)="openEditDialog()">
                         </app-service-providers-content>
 
                         <!-- Replaces tabbedBox.jsp -->

@@ -60,6 +60,8 @@ export interface Links {
     requestUser: string;
     attendanceCount: string;
     reviewsAverage: string;
+    reviewsCount: string;
+    postsCount: string;
 }
 
 export interface AffiliationDto {
@@ -167,6 +169,11 @@ export interface PostDto {
 
 }
 
+export interface PostsCountDto {
+    count: number,
+    _links: Links;
+}
+
 export interface PostStatusDto {
     status: string
     _links: Links
@@ -219,6 +226,11 @@ export interface ReviewDto {
     message?: string;
     creationDate?: Date;
     _links?: Links;
+}
+
+export interface ReviewsCountDto {
+    count: number,
+    _links: Links;
 }
 
 export interface ReviewsAverageDto {
