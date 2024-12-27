@@ -93,8 +93,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             String refreshToken = authenticationTokenService.issueRefreshToken(username, authorities);
 
             // Add both tokens to the response headers
-            response.addHeader("X-Access-Token", "Bearer " + jwtToken);
-            response.addHeader("X-Refresh-Token", "Bearer " + refreshToken);
+            response.addHeader("X-Access-Token", jwtToken);
+            response.addHeader("X-Refresh-Token", refreshToken);
 
             // Construct a full URL for the User URL and Neighborhood URL and add them to the response headers
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -127,7 +127,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 if (ZonedDateTime.now().isAfter(tokenDetails.getExpirationDate()))
                     throw new IllegalArgumentException("Refresh token has expired");
                 String newAccessToken = authenticationTokenService.issueAccessToken(tokenDetails.getUsername(), tokenDetails.getAuthorities());
-                response.addHeader("X-Access-Token", "Bearer " + newAccessToken);
+                response.addHeader("X-Access-Token", newAccessToken);
             }
 
             Authentication authenticationRequest = new JwtAuthenticationToken(authenticationToken);
@@ -162,7 +162,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 throw new IllegalArgumentException("Refresh token has expired");
 
             String newAccessToken = authenticationTokenService.issueAccessToken(tokenDetails.getUsername(), tokenDetails.getAuthorities());
-            response.addHeader("X-Access-Token", "Bearer " + newAccessToken);
+            response.addHeader("X-Access-Token", newAccessToken);
 
         } catch (AuthenticationException e) {
             LOGGER.debug("Error processing refresh token", e);

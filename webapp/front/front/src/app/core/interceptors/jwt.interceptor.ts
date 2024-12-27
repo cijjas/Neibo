@@ -24,6 +24,7 @@ export class JwtInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
+          // is this making a request
           return this.authService.refreshToken().pipe(
             switchMap((refreshSuccess) => {
               if (!refreshSuccess) {

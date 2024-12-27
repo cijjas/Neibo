@@ -120,7 +120,7 @@ export class AuthService {
         }
 
         // Example endpoint -> adjust to your backend
-        const url = `${this.apiServerUrl}/refresh`; // Ensure endpoint is correct
+        const url = `${this.apiServerUrl}/`; // Ensure endpoint is correct
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${refreshToken}` // Pass refresh token in header
@@ -129,23 +129,20 @@ export class AuthService {
         // Decide which storage to use based on "remember me" or your own logic
         const storage = this.getRememberMe() ? localStorage : sessionStorage;
 
-        return this.http.post<any>(url, {}, { headers, observe: 'response' })
+        return this.http.get<any>(url, { headers, observe: 'response' })
             .pipe(
                 tap((response) => {
                     const newAccessToken = response.headers.get('X-Access-Token');
-                    const newRefreshToken = response.headers.get('X-Refresh-Token');
 
-                    if (!newAccessToken || !newRefreshToken) {
+                    if (!newAccessToken) {
                         throw new Error('No tokens returned in refresh response');
                     }
 
                     // Store them
                     storage.setItem(this.authTokenKey, newAccessToken);
-                    storage.setItem(this.refreshTokenKey, newRefreshToken);
 
                     // Update your session service
                     this.userSessionService.setAccessToken(newAccessToken);
-                    // this.userSessionService.setRefreshToken(newRefreshToken); // Uncomment if needed
                 }),
                 catchError((error) => {
                     console.error('Refresh token failed:', error);
