@@ -113,7 +113,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
             const date = this.reservationForm.get('date')?.value;
 
             // Navigate to the Choose Time page with query parameters
-            this.router.navigate(['/reservations/choose-time'], {
+            this.router.navigate(['/amenities/choose-time'], {
                 queryParams: { amenityUrl, date }
             });
         } else {

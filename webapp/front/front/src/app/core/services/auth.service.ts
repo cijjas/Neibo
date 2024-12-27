@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { catchError, forkJoin, map, mergeMap, Observable, of, tap } from "rxjs";
+import { catchError, forkJoin, mergeMap, Observable, of, tap, throwError } from "rxjs";
 import { NeighborhoodDto, UserDto, mapNeighborhood, mapUser } from "@shared/index";
 import { HateoasLinksService, UserSessionService } from "@core/index";
 
@@ -12,6 +12,7 @@ export class AuthService {
     private apiServerUrl = environment.apiBaseUrl;
     private rememberMeKey = 'rememberMe';
     private authTokenKey = 'authToken';
+    private refreshTokenKey = 'refreshToken'; // NEW
 
     constructor(
         private http: HttpClient,
@@ -19,6 +20,11 @@ export class AuthService {
         private userSessionService: UserSessionService
     ) { }
 
+    /**
+     * ===============================
+     *            LOGIN
+     * ===============================
+     */
     login(mail: string, password: string, rememberMe: boolean): Observable<boolean> {
         const headers = new HttpHeaders({
             Authorization: 'Basic ' + btoa(`${mail}:${password}`),
@@ -27,86 +33,188 @@ export class AuthService {
 
         // Store "remember me" preference
         localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
-        this.clearAccessToken(); // Clear old token
 
-        return this.http.get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' }).pipe(
-            mergeMap((response) => {
-                // Handle Access Token
-                const accessToken = response.headers.get('X-Access-Token');
-                if (accessToken) {
-                    storage.setItem(this.authTokenKey, accessToken);
-                    this.userSessionService.setAccessToken(accessToken);
-                }
+        // Clear old tokens
+        this.clearTokens();
 
-                // Extract User and Neighborhood URLs
-                const userUrl = response.headers.get('X-User-URL')?.split(';')[0].replace(/[<>]/g, '');
-                const neighborhoodUrl = response.headers.get('X-Neighborhood-URL')?.split(';')[0].replace(/[<>]/g, '');
+        // Attempt login
+        return this.http.get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
+            .pipe(
+                mergeMap((response) => {
+                    // Handle Access Token from the response headers
+                    const accessToken = response.headers.get('X-Access-Token');
+                    // Handle Refresh Token from the response headers (if your backend sets it)
+                    const refreshToken = response.headers.get('X-Refresh-Token'); // e.g., "X-Refresh-Token"
 
-                // Prepare Observables for user and neighborhood
-                const userObservable = userUrl ? this.http.get<UserDto>(userUrl).pipe(
-                    mergeMap((userDto) => {
-                        this.saveLinksFromDto(userDto._links, 'user');
-                        return mapUser(this.http, userDto);
-                    }),
-                    tap((user) => this.userSessionService.setUserInformation(user)),
-                    catchError((error) => {
-                        console.error('Error fetching user:', error);
-                        return of(null);
-                    })
-                ) : of(null);
+                    if (accessToken) {
+                        storage.setItem(this.authTokenKey, accessToken);
+                        this.userSessionService.setAccessToken(accessToken);
+                    }
+                    if (refreshToken) {
+                        storage.setItem(this.refreshTokenKey, refreshToken);
+                        // If you want to store it in your session service, you can:
+                        // this.userSessionService.setRefreshToken(refreshToken);
+                    }
 
-                const neighborhoodObservable = neighborhoodUrl ? this.http.get<NeighborhoodDto>(neighborhoodUrl).pipe(
-                    tap((neighborhoodDto) => {
-                        this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood');
-                        this.userSessionService.setNeighborhoodInformation(
-                            mapNeighborhood(neighborhoodDto)
-                        );
-                    }),
-                    catchError((error) => {
-                        console.error('Error fetching neighborhood:', error);
-                        return of(null);
-                    })
-                ) : of(null);
+                    // Extract User and Neighborhood URLs
+                    const userUrl = response.headers.get('X-User-URL')
+                        ?.split(';')[0].replace(/[<>]/g, '');
+                    const neighborhoodUrl = response.headers.get('X-Neighborhood-URL')
+                        ?.split(';')[0].replace(/[<>]/g, '');
 
-                // Wait for both Observables to complete
-                return forkJoin([userObservable, neighborhoodObservable]).pipe(
-                    mergeMap(() => {
-                        // Poll until all links are loaded
-                        return this.waitForLinksToLoad();
-                    })
-                );
-            }),
-            catchError((error) => {
-                console.error('Authentication error:', error);
-                return of(false);
-            })
-        );
+                    // Prepare Observables for user and neighborhood
+                    const userObservable = userUrl
+                        ? this.http.get<UserDto>(userUrl).pipe(
+                            mergeMap((userDto) => {
+                                this.saveLinksFromDto(userDto._links, 'user');
+                                return mapUser(this.http, userDto);
+                            }),
+                            tap((user) => this.userSessionService.setUserInformation(user)),
+                            catchError((error) => {
+                                console.error('Error fetching user:', error);
+                                return of(null);
+                            })
+                        )
+                        : of(null);
+
+                    const neighborhoodObservable = neighborhoodUrl
+                        ? this.http.get<NeighborhoodDto>(neighborhoodUrl).pipe(
+                            tap((neighborhoodDto) => {
+                                this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood');
+                                this.userSessionService.setNeighborhoodInformation(
+                                    mapNeighborhood(neighborhoodDto)
+                                );
+                            }),
+                            catchError((error) => {
+                                console.error('Error fetching neighborhood:', error);
+                                return of(null);
+                            })
+                        )
+                        : of(null);
+
+                    // Wait for both Observables to complete
+                    return forkJoin([userObservable, neighborhoodObservable]).pipe(
+                        mergeMap(() => {
+                            // Poll until all links are loaded
+                            return this.waitForLinksToLoad();
+                        })
+                    );
+                }),
+                catchError((error) => {
+                    console.error('Authentication error:', error);
+                    return of(false);
+                })
+            );
     }
 
+    /**
+     * ===============================
+     *         REFRESH TOKEN
+     * ===============================
+     */
+    refreshToken(): Observable<boolean> {
+        const refreshToken = this.getRefreshToken();
+        if (!refreshToken) {
+            // No refresh token stored; cannot refresh
+            return of(false);
+        }
+
+        // Example endpoint -> adjust to your backend
+        const url = `${this.apiServerUrl}/refresh`; // Ensure endpoint is correct
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${refreshToken}` // Pass refresh token in header
+        });
+
+        // Decide which storage to use based on "remember me" or your own logic
+        const storage = this.getRememberMe() ? localStorage : sessionStorage;
+
+        return this.http.post<any>(url, {}, { headers, observe: 'response' })
+            .pipe(
+                tap((response) => {
+                    const newAccessToken = response.headers.get('X-Access-Token');
+                    const newRefreshToken = response.headers.get('X-Refresh-Token');
+
+                    if (!newAccessToken || !newRefreshToken) {
+                        throw new Error('No tokens returned in refresh response');
+                    }
+
+                    // Store them
+                    storage.setItem(this.authTokenKey, newAccessToken);
+                    storage.setItem(this.refreshTokenKey, newRefreshToken);
+
+                    // Update your session service
+                    this.userSessionService.setAccessToken(newAccessToken);
+                    // this.userSessionService.setRefreshToken(newRefreshToken); // Uncomment if needed
+                }),
+                catchError((error) => {
+                    console.error('Refresh token failed:', error);
+                    // Force a logout or cleanup if needed
+                    this.logout();
+                    return throwError(() => error);
+                }),
+                mergeMap(() => of(true))
+            );
+    }
+
+
+    /**
+     * ===============================
+     *          LOGOUT
+     * ===============================
+     */
     logout(): void {
         sessionStorage.clear();
         localStorage.clear();
+        // If your backend requires an explicit logout endpoint, call it here
+        // this.http.post(`${this.apiServerUrl}/logout`, {}).subscribe();
     }
 
+    /**
+     * ===============================
+     *       TOKEN GETTERS
+     * ===============================
+     */
     getAccessToken(): string {
         const storageType = this.getRememberMe() ? localStorage : sessionStorage;
         return storageType.getItem(this.authTokenKey) || '';
+    }
+
+    getRefreshToken(): string {
+        const storageType = this.getRememberMe() ? localStorage : sessionStorage;
+        return storageType.getItem(this.refreshTokenKey) || '';
     }
 
     getRememberMe(): boolean {
         return JSON.parse(localStorage.getItem(this.rememberMeKey) || 'false');
     }
 
+    /**
+     * ===============================
+     *         SESSION CHECK
+     * ===============================
+     */
     isLoggedIn(): boolean {
         return !!this.getAccessToken();
     }
 
-    clearAccessToken(): void {
+    /**
+     * ===============================
+     *          CLEAR TOKENS
+     * ===============================
+     */
+    clearTokens(): void {
         sessionStorage.removeItem(this.authTokenKey);
         localStorage.removeItem(this.authTokenKey);
+        sessionStorage.removeItem(this.refreshTokenKey);
+        localStorage.removeItem(this.refreshTokenKey);
     }
 
-    // Helpers
+    /**
+     * ===============================
+     *          HATEOAS LINKS
+     * ===============================
+     */
     private saveLinksFromDto(links: Partial<Record<string, string>>, namespace: string): void {
         for (const [key, value] of Object.entries(links)) {
             this.hateoasLinksService.setLink(`${namespace}:${key}`, value);

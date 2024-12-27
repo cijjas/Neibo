@@ -3,11 +3,15 @@ import { HateoasLinksService, UserSessionService, ImageService } from '@core/ind
 import { User } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-profile-widget',
   templateUrl: './user-profile-widget.component.html',
+  standalone: true,
+  imports: [CommonModule, RouterModule]
+
 })
 export class UserProfileWidgetComponent implements OnInit, OnDestroy {
   currentUser: User | null = null;

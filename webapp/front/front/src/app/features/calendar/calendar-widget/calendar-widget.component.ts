@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { EventService } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-calendar-widget',
   templateUrl: './calendar-widget.component.html',
+  standalone: true,
+  imports: [CommonModule, RouterModule]
+
 })
 export class CalendarWidgetComponent implements OnInit {
   isLoading = true;

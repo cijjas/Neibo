@@ -198,7 +198,6 @@ form {
 }
 
 
-
 select,
 input[type="text"],
 input[type="password"],
@@ -533,3 +532,6 @@ p {
 .g-05 {
   gap: 0.5em;
 }
+
+
+/* ...................... */

@@ -1,4 +1,5 @@
 // @index('./**/*.ts', f => `export * from '${f.path}'`)
+export * from './core.module'
 export * from './guards/role.guard'
 export * from './interceptors/error.interceptor'
 export * from './interceptors/jwt.interceptor'

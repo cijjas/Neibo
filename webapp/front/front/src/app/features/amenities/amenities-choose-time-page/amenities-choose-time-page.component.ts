@@ -133,7 +133,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
 
     redirectToReservations() {
         this.showReservationDialog = false;
-        this.router.navigate(['/reservations']);
+        this.router.navigate(['/amenities']);
     }
 
     ngOnDestroy(): void {

@@ -1,0 +1,20 @@
+<div [class.dark-mode]="darkMode">
+    <app-navbar></app-navbar>
+    <div class="container">
+        <div class="row init">
+            <div class="column-left">
+                <!-- <app-control-panel-left-buttons></app-control-panel-left-buttons> -->
+            </div>
+
+            <div class="column-middle">
+                <!-- Dynamic content loaded here -->
+                <router-outlet></router-outlet>
+            </div>
+
+            <div class="column-right">
+                <app-calendar-widget></app-calendar-widget>
+            </div>
+        </div>
+    </div>
+    <app-wave-footer></app-wave-footer>
+</div>

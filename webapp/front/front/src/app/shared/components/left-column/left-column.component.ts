@@ -41,7 +41,7 @@ export class LeftColumnComponent implements OnInit {
       this.channelClass = 'Marketplace';
     } else if (currentUrl.startsWith('/services')) {
       this.channelClass = 'Services';
-    } else if (currentUrl.startsWith('/reservations')) {
+    } else if (currentUrl.startsWith('/amenities')) {
       this.channelClass = 'Reservations';
     } else if (currentUrl.startsWith('/information')) {
       this.channelClass = 'Information';
