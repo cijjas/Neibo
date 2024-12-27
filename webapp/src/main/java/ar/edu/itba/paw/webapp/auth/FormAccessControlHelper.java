@@ -34,8 +34,8 @@ public class FormAccessControlHelper {
 
         Authentication authentication = authHelper.getAuthentication();
 
-        System.out.println(neighborhoodId);
-        System.out.println(authHelper.getRequestingUserNeighborhoodId(authentication));
+        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
+            return false;
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
@@ -62,10 +62,6 @@ public class FormAccessControlHelper {
     public boolean canReferenceUserInUpdate(String userURN) {
         LOGGER.info("Verifying update reference to the User's entities");
 
-        // null is an valid value when in PATCH
-        if (userURN == null)
-            return true;
-
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
@@ -77,7 +73,8 @@ public class FormAccessControlHelper {
     // ------------------------------------------------- LIKES ---------------------------------------------------------
 
     // Restricted from Anonymous, Unverified and Rejected
-    // Neighbors and Administrators can reference any User that belongs to their neighborhood
+    // Neighbors can reference themselves
+    // Administrators can reference any User that belongs to their neighborhood
     public boolean canReferenceUserInLike(String userURN) {
         LOGGER.info("Verifying User Reference In Like Form");
         Authentication authentication = authHelper.getAuthentication();
@@ -92,21 +89,6 @@ public class FormAccessControlHelper {
             return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
 
         return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
-    }
-
-    // Restricted from Anonymous, Unverified and Rejected
-    // Neighbors and Administrators can reference any Post that belongs to their neighborhood
-    public boolean canReferencePostInLike(String postURN) {
-        LOGGER.info("Verifying Post Reference In Like Form");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
-            return false;
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN);
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------

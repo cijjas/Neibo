@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.PhoneNumberConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.RequestStatusURNConstraint;
@@ -32,7 +32,7 @@ public class RequestDto {
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
-    @UserURNCreateReferenceConstraint(groups = Authorization.class)
+    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
     @PhoneNumberConstraint(groups = Specific.class)
     private String user;
 

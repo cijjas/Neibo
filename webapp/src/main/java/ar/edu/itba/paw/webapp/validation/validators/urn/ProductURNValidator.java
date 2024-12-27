@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.TwoId;
+import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import javax.validation.ConstraintValidatorContext;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class ProductURNValidator implements ConstraintValidator<ProductURNConstraint, String> {
+
+    @Autowired
+    private FormAccessControlHelper formAccessControlHelper;
 
     @Autowired
     private ProductService productService;
@@ -27,6 +31,8 @@ public class ProductURNValidator implements ConstraintValidator<ProductURNConstr
         if (!URNValidator.validateURN(productURN, "product"))
             return false;
         TwoId twoId = extractTwoId(productURN);
+        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
+            return false;
         return productService.findProduct(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

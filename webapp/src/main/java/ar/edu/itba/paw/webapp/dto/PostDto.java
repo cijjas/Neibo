@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
@@ -39,7 +39,7 @@ public class PostDto {
 
     @NotNull(groups = Null.class)
     @UserURNConstraint(groups = URN.class)
-    @UserURNCreateReferenceConstraint(groups = Authorization.class)
+    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
     private String user;
 
     private Date creationDate;

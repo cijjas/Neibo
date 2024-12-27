@@ -148,6 +148,7 @@ public class ReviewController {
                 .tag(averageHashCode)
                 .build();
     }
+
     @GET
     @Path("/{reviewId}")
     public Response findReview(

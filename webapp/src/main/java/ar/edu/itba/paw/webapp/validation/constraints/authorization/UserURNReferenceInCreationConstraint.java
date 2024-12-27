@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.constraints.authorization;
 
-import ar.edu.itba.paw.webapp.validation.validators.authorization.UserURNUpdateAuthorizationValidator;
+import ar.edu.itba.paw.webapp.validation.validators.authorization.UserURNReferenceInCreationValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,9 +9,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Documented
-@Constraint(validatedBy = UserURNUpdateAuthorizationValidator.class)
+@Constraint(validatedBy = UserURNReferenceInCreationValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UserURNReferenceConstraintUpdate {
+public @interface UserURNReferenceInCreationConstraint {
     String message() default "Unauthorized URN Reference";
 
     Class<?>[] groups() default {};
