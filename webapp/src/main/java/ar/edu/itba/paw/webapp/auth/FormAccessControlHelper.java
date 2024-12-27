@@ -40,7 +40,7 @@ public class FormAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == 0;
     }
 
     // ----------------------------------------------- USER REFS -------------------------------------------------------
