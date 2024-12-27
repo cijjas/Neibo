@@ -40,10 +40,14 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
+
     private final CommentService cs;
+
     private final PostService ps;
+
     @Context
     private UriInfo uriInfo;
+
     @Context
     private Request request;
 

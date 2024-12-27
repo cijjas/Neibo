@@ -58,12 +58,10 @@ public class EventController {
     private Request request;
 
     private final EventService es;
-    private final AttendanceService as;
 
     @Autowired
-    public EventController(EventService es, AttendanceService as) {
+    public EventController(EventService es) {
         this.es = es;
-        this.as = as;
     }
 
     @GET

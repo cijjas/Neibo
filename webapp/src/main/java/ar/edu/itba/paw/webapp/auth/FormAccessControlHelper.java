@@ -26,6 +26,22 @@ public class FormAccessControlHelper {
         this.authHelper = new AuthHelper();
     }
 
+    // --------------------------------------- NEIGHBORHOOD ENTITIES REFS ----------------------------------------------
+
+    // Verifies that the referenced entity belongs to the same Neighborhood as the User that made the request
+    public boolean canReferenceNeighborhoodEntity(Long neighborhoodId) {
+        LOGGER.info("Verifying entity reference");
+
+        Authentication authentication = authHelper.getAuthentication();
+
+        System.out.println(neighborhoodId);
+        System.out.println(authHelper.getRequestingUserNeighborhoodId(authentication));
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
+    }
 
     // ----------------------------------------------- USER REFS -------------------------------------------------------
 

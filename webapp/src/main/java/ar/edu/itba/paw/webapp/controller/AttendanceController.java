@@ -1,14 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
-import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Attendance;
-import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.dto.AttendanceCountDto;
+import ar.edu.itba.paw.webapp.dto.AttendanceDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.EventURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,20 +43,17 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 public class AttendanceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceController.class);
 
+    private final AttendanceService as;
+
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
 
-    private final AttendanceService as;
-
-    private final EventService es;
-
     @Autowired
-    public AttendanceController(AttendanceService as, EventService es) {
+    public AttendanceController(AttendanceService as) {
         this.as = as;
-        this.es = es;
     }
 
     @GET
@@ -140,7 +135,7 @@ public class AttendanceController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, neighborhoodId,  uriInfo);
+        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, neighborhoodId, uriInfo);
 
         return Response.ok(new GenericEntity<AttendanceCountDto>(dto) {
                 })

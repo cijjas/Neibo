@@ -256,6 +256,9 @@ public class PathAccessControlHelper {
         LOGGER.info("Verifying Review Creation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
+        if (user == null)
+            return true;
+
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 

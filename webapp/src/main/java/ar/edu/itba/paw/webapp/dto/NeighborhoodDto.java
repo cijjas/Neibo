@@ -159,6 +159,8 @@ public class NeighborhoodDto {
                     .path("attendance")
                     .build());
             links.setLikes(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("likes")
                     .build());
             links.setLanguageEnglish(

@@ -38,9 +38,12 @@ import java.util.stream.Collectors;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class DepartmentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
+
     private final DepartmentService ds;
+
     @Context
     private UriInfo uriInfo;
+
     @Context
     private Request request;
 
