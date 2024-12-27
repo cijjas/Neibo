@@ -101,16 +101,15 @@ public class RequestServiceImpl implements RequestService {
         Request request = requestDao.findRequest(neighborhoodId, requestId).orElseThrow(NotFoundException::new);
 
         if (requestStatusId != null){
-            request.setStatus(RequestStatus.fromId(requestStatusId));
             if (requestStatusId == RequestStatus.ACCEPTED.getId()) {
                 Product p = request.getProduct();
                 long finalUnits = p.getRemainingUnits() - request.getUnits();
                 if ( finalUnits < 0)
                     throw new IllegalArgumentException("Cant fulfill the request, not enough stock.");
                 request.setPurchaseDate(new Date(System.currentTimeMillis()));
-                request.setStatus(RequestStatus.ACCEPTED);
                 p.setRemainingUnits(p.getRemainingUnits() - request.getUnits());
             }
+            request.setStatus(RequestStatus.fromId(requestStatusId));
         }
 
         return request;
