@@ -608,6 +608,14 @@ VALUES (4, 'Workers')
 ON CONFLICT DO NOTHING;
 
 INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (0, 1) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (0, 2) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (0, 3) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (0, 4) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
 VALUES (1, 1) ON CONFLICT DO NOTHING;
 INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
 VALUES (1, 2) ON CONFLICT DO NOTHING;
