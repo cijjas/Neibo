@@ -19,13 +19,14 @@ public class AccessDeniedExceptionMapper implements ExceptionMapper<AccessDenied
 
     @Override
     public Response toResponse(AccessDeniedException exception) {
+        return createResponse(Response.Status.FORBIDDEN, "You don't have enough permissions to perform this action");
+    }
 
-        Status status = Status.FORBIDDEN;
-
+    private Response createResponse(Response.Status status, String message) {
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setStatus(status.getStatusCode());
         errorDetails.setTitle(status.getReasonPhrase());
-        errorDetails.setMessage("You don't have enough permissions to perform this action");
+        errorDetails.setMessage(message);
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
 
         return Response.status(status).entity(errorDetails).type(MediaType.APPLICATION_JSON).build();
