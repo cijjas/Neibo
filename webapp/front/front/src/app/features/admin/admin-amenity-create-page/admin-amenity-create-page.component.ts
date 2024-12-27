@@ -2,16 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-admin-amenity-edit-page',
-  templateUrl: './admin-amenity-edit-page.component.html',
+  selector: 'app-admin-amenity-create-page',
+  templateUrl: './admin-amenity-create-page.component.html',
 })
-export class AdminAmenityEditPageComponent implements OnInit {
+export class AdminAmenityCreatePageComponent implements OnInit {
 
   amenityForm!: FormGroup;
 
-  amenityName: string = 'Sample Amenity';
-
-  // Example day/time data
+  // Example data for days/times
   daysPairs = [
     { key: 1, value: 'Monday' },
     { key: 2, value: 'Tuesday' },
@@ -39,10 +37,6 @@ export class AdminAmenityEditPageComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
-
-    // Possibly load from a service:
-    // amenityService.getAmenity(amenityUrl).subscribe( amenity => {...} );
-    // and fill `selectedShifts` from amenity.availableShifts
   }
 
   get nameControl() {
@@ -53,51 +47,44 @@ export class AdminAmenityEditPageComponent implements OnInit {
     return this.amenityForm.get('description');
   }
 
+  // If at least one shift is selected, enable "Create" button
+  get anyShiftChecked(): boolean {
+    return this.selectedShifts.length > 0;
+  }
+
   onSubmit() {
-    if (this.amenityForm.invalid) {
+    if (this.amenityForm.invalid || !this.anyShiftChecked) {
       this.amenityForm.markAllAsTouched();
       return;
     }
-    const formValue = this.amenityForm.value;
-    console.log('Saving amenity with:', formValue, 'Selected Shifts:', this.selectedShifts);
 
-    // this.amenityService.updateAmenity(...)
+    console.log('Creating amenity with:', this.amenityForm.value, 'Shifts:', this.selectedShifts);
+    // e.g. this.amenityService.createAmenity({...})
     //   .subscribe(...)
   }
 
-  // Check if a specific shift (day/time) is currently selected
+  // Utility to see if a shift (day/time) is selected
   isShiftSelected(dayKey: number, timeKey: number): boolean {
     return this.selectedShifts.some(s => s.day === dayKey && s.time === timeKey);
   }
 
-  // Toggle a shift on or off
   onShiftChange(dayKey: number, timeKey: number, checked: boolean) {
     if (checked) {
       this.selectedShifts.push({ day: dayKey, time: timeKey });
     } else {
-      this.selectedShifts = this.selectedShifts.filter(
-        s => !(s.day === dayKey && s.time === timeKey)
-      );
+      this.selectedShifts = this.selectedShifts.filter(s => !(s.day === dayKey && s.time === timeKey));
     }
   }
 
-  // Example logic to toggle entire row of checkboxes
   toggleRow(rowIndex: number) {
-    // rowIndex references the timesPairs[rowIndex]
+    // Toggle all shifts for the given row
     const timeKey = this.timesPairs[rowIndex].key;
-    // For each day, we either add or remove that shift.  
-    // Here’s a simplistic approach:  
     const isAllSelected = this.daysPairs.every(d => this.isShiftSelected(d.key, timeKey));
-    // If all are selected, remove them. If not all selected, add them
+
+    // If all selected, unselect them, else select them
     if (isAllSelected) {
-      // remove
-      this.daysPairs.forEach(d => {
-        this.selectedShifts = this.selectedShifts.filter(
-          s => !(s.day === d.key && s.time === timeKey)
-        );
-      });
+      this.selectedShifts = this.selectedShifts.filter(s => s.time !== timeKey);
     } else {
-      // add
       this.daysPairs.forEach(d => {
         if (!this.isShiftSelected(d.key, timeKey)) {
           this.selectedShifts.push({ day: d.key, time: timeKey });
@@ -106,10 +93,9 @@ export class AdminAmenityEditPageComponent implements OnInit {
     }
   }
 
-  // Check 9:00 to 17:00 for weekdays, as example
+  // Check 9-17 for weekdays
   check9to5() {
-    const weekdays = [1, 2, 3, 4, 5]; // Monday-Friday
-    // timesPairs might be from 9...17
+    const weekdays = [1, 2, 3, 4, 5];
     this.timesPairs.forEach(tp => {
       if (tp.key >= 9 && tp.key <= 17) {
         weekdays.forEach(day => {
@@ -121,13 +107,15 @@ export class AdminAmenityEditPageComponent implements OnInit {
     });
   }
 
-  // Uncheck weekends
+  // Uncheck Saturdays & Sundays
   uncheckWeekends() {
-    const weekends = [6, 7]; // Saturday, Sunday
-    this.selectedShifts = this.selectedShifts.filter(s => !weekends.includes(s.day));
+    const weekends = [6, 7];
+    this.selectedShifts = this.selectedShifts.filter(
+      s => !weekends.includes(s.day)
+    );
   }
 
-  // Clear all
+  // Clear everything
   clearAllCheckedHours() {
     this.selectedShifts = [];
   }

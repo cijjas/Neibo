@@ -4,10 +4,10 @@ import { filter } from 'rxjs/operators';
 import { HateoasLinksService, UserSessionService } from '@core/index';
 
 @Component({
-  selector: 'app-left-column',
-  templateUrl: './left-column.component.html',
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
 })
-export class LeftColumnComponent implements OnInit {
+export class SidebarComponent implements OnInit {
   userRole: string | null = ''; // Role of the logged-in user
   userId: string | null = '';   // ID of the logged-in user
   channelClass: string = ''; // Active channel class

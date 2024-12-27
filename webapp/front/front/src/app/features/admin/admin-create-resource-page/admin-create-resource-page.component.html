@@ -1,0 +1,52 @@
+<div class="column-publish">
+    <div class="cool-static-container">
+        <h2 class="card-title">Create Resource</h2>
+        <div class="divider"></div>
+
+        <form [formGroup]="resourceForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" novalidate>
+            <!-- Potentially show overall errors -->
+            <!-- <p class="error" *ngIf="formLevelError">{{ formLevelError }}</p> -->
+
+            <div class="form-column" style="margin-top:1rem;">
+                <!-- Title -->
+                <div class="form-group">
+                    <input formControlName="title" class="cool-input" placeholder="Title" type="text" />
+                    <div class="form-row form-error" *ngIf="titleControl?.invalid && titleControl?.touched">
+                        <p class="error">Title is required</p>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <input formControlName="description" class="cool-input" placeholder="Description" type="text" />
+                    <div class="form-row form-error" *ngIf="descControl?.invalid && descControl?.touched">
+                        <p class="error">Description is required</p>
+                    </div>
+                </div>
+
+                <!-- File Input -->
+                <div class="form-group">
+                    <label class="drop-container" [class.drag-active]="dragActive" (dragover)="onDragOver($event)"
+                        (dragleave)="onDragLeave()" (drop)="onDrop($event)">
+                        <span class="drop-title">Drop files</span> Or
+                        <input type="file" accept="image/*" (change)="previewImage($event)" />
+                    </label>
+                </div>
+
+                <!-- Preview -->
+                <div style="text-align: center">
+                    <img [src]="previewSrc" id="frame" class="blogpost-image" alt="uploading image"
+                        *ngIf="previewSrc" />
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bold mt-2"
+                    style="height:40px;">
+                    Create
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

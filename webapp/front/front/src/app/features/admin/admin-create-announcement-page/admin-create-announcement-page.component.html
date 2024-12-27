@@ -1,0 +1,65 @@
+<div class="cool-static-container">
+    <h2 class="card-title">Create an announcement</h2>
+    <div class="divider"></div>
+
+    <!-- Angular form in place of spring:form -->
+    <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" novalidate>
+        <!-- Subject -->
+        <div class="form-column" style="margin-top:1rem;">
+            <div class="form-group">
+                <div class="form-row">
+                    <input formControlName="subject" class="cool-input" placeholder="Subject" type="text" />
+                    <!-- Example area for error message -->
+                    <div class="form-row form-error" *ngIf="subjectControl?.invalid && subjectControl?.touched">
+                        <p class="error">Subject is required</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message -->
+            <div class="form-group">
+                <textarea formControlName="message" class="cool-input textarea-min-max" rows="5"
+                    placeholder="Message"></textarea>
+                <div class="form-row form-error" *ngIf="messageControl?.invalid && messageControl?.touched">
+                    <p class="error">Message is required</p>
+                </div>
+            </div>
+
+            <!-- File input -->
+            <div class="form-group">
+                <label for="images" class="drop-container" id="dropcontainer">
+                    <span class="drop-title">Drop files</span>
+                    Or
+                    <input type="file" id="images" accept="image/*" (change)="preview($event)" />
+                </label>
+            </div>
+
+            <!-- Image preview -->
+            <div>
+                <img id="frame" class="blogpost-image" [src]="previewImage" alt="uploading image"
+                    *ngIf="previewImage" />
+            </div>
+
+            <!-- Tags Input (example) -->
+            <div class="tags-input mb-0" style="display:flex; flex-direction:column; align-items:center;">
+                <input #tagInput type="text" placeholder="Enter a tag"
+                    (keyup.enter)="addTagToApply(tagInput.value); tagInput.value='';" />
+                <input type="hidden" id="tags-input" value="" />
+            </div>
+
+            <!-- Available Tags (click to add) -->
+            <div class="m-b-10 tags-row tags">
+                <a class="tag-option" *ngFor="let tag of availableTags" (click)="addTagToApply(tag)">
+                    {{ tag }}
+                </a>
+            </div>
+        </div>
+
+        <!-- Submit button -->
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="height:40px;">
+                Post
+            </button>
+        </div>
+    </form>
+</div>

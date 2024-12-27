@@ -5,8 +5,6 @@
 
         <div class="f-r-sb-c w-100 ">
             <h3 class="pt-1 pb-1 m-1"><spring:message code="Filter.by.tags"/></h3>
-
-
         </div>
 
         <div class="m-b-10 w-100">
