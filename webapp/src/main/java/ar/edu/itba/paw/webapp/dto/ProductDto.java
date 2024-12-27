@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNCreateReferenceConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceConstraintUpdate;
@@ -117,12 +118,18 @@ public class ProductDto {
                 .path("requests")
                 .queryParam("forProduct", self)
                 .build());
-        links.setRequestsCount(uriInfo.getBaseUriBuilder()
+        links.setPendingRequestsCount(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("requests")
                 .path("count")
                 .queryParam("forProduct", self)
+                .queryParam("withStatus",
+                        uriInfo.getBaseUriBuilder()
+                        .path("request-statuses")
+                        .path(String.valueOf(RequestStatus.REQUESTED.getId()))
+                        .build()
+                )
                 .build());
         dto.set_links(links);
         return dto;

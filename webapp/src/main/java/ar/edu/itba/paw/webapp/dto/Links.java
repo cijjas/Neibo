@@ -89,7 +89,7 @@ public class Links {
     private URI attendance;
     private URI reviewsCount;
     private URI postsCount;
-    private URI requestsCount;
+    private URI pendingRequestsCount;
 
     public URI getReviewsCount() {
         return reviewsCount;
@@ -779,11 +779,11 @@ public class Links {
         this.attendance = attendance;
     }
 
-    public URI getRequestsCount() {
-        return requestsCount;
+    public URI getPendingRequestsCount() {
+        return pendingRequestsCount;
     }
 
-    public void setRequestsCount(URI requestsCount) {
-        this.requestsCount = requestsCount;
+    public void setPendingRequestsCount(URI pendingRequestsCount) {
+        this.pendingRequestsCount = pendingRequestsCount;
     }
 }

@@ -120,9 +120,9 @@ export function mapProduct(http: HttpClient, productDto: ProductDto): Observable
     return forkJoin([
         http.get<UserDto>(productDto._links.productUser).pipe(mergeMap(userDto => mapUser(http, userDto))),
         http.get<DepartmentDto>(productDto._links.department),
-        http.get<RequestsCountDto>(productDto._links.requestsCount),
+        http.get<RequestsCountDto>(productDto._links.pendingRequestsCount),
     ]).pipe(
-        map(([seller, department, requestsCount]) => {
+        map(([seller, department, pendingRequestsCount]) => {
             return {
                 name: productDto.name,
                 description: productDto.description,
@@ -130,7 +130,7 @@ export function mapProduct(http: HttpClient, productDto: ProductDto): Observable
                 used: productDto.used,
                 stock: productDto.remainingUnits,
                 inquiries: productDto._links.inquiries,
-                totalRequests: requestsCount.count,
+                totalPendingRequests: pendingRequestsCount.count,
                 createdAt: productDto.creationDate,
                 firstImage: productDto._links.firstProductImage,
                 secondImage: productDto._links.secondProductImage,

@@ -62,7 +62,7 @@ export interface Links {
     reviewsAverage: string;
     reviewsCount: string;
     postsCount: string;
-    requestsCount: string;
+    pendingRequestsCount: string;
 }
 
 export interface AffiliationDto {

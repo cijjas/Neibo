@@ -7,7 +7,7 @@ export interface Product {
   used: boolean;
   stock: number;
   inquiries: string;
-  totalRequests: number;
+  totalPendingRequests: number;
   createdAt: Date;
   firstImage: string;
   secondImage: string;
