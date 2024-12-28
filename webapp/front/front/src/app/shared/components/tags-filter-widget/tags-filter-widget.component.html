@@ -1,0 +1,39 @@
+<div class="grey-static-container">
+    <div class="f-c-c-s g-0">
+        <div class="f-r-sb-c w-100">
+            <h3 class="pt-1 pb-1 m-1">Filter by tags</h3>
+        </div>
+
+        <div class="m-b-10 w-100">
+            <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                <input type="hidden" id="niakaniaka" [value]="placeholderText" />
+                <label for="tag-input2" class="w-100">
+                    <input type="text" id="tag-input2" [(ngModel)]="currentTag" (input)="filterTags(currentTag)"
+                        placeholder="{{ placeholderText }}" />
+                </label>
+            </div>
+        </div>
+
+        <div class="m-b-10 tags-row tags">
+            <ng-container *ngFor="let tag of tagList; let i = index">
+                <a class="tag-option" *ngIf="i < 20" (click)="addTagToApply(tag.name)">{{ tag.name }}</a>
+                <a class="tag-option" *ngIf="i >= 20" (click)="addTagToApply(tag.name)" style="display: none">{{
+                    tag.name }}</a>
+            </ng-container>
+        </div>
+
+        <div hidden id="applied-tags" [attr.data-tags]="appliedTags | json"></div>
+
+        <div class="w-100">
+            <div class="f-r-sb-c g-1">
+                <a class="cool-button red font-weight-bold" (click)="clearAllTags()">
+                    Clear
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+                <a class="cool-button cool-small on-bg font-weight-bold" (click)="applyTagsAsFilter()">
+                    Apply
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

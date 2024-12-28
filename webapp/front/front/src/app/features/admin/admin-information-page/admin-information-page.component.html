@@ -1,0 +1,82 @@
+<div class="column-middle">
+
+    <!-- Contact Information -->
+    <div class="cool-static-container m-b-20" style="word-wrap: break-word;">
+      <p class="mb-3 font-weight-bold c-text font-size-16">Contact Information</p>
+  
+      <!-- If no phone numbers -->
+      <div class="no-posts-found" *ngIf="phoneNumbersList?.length === 0">
+        <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+        Information not found
+      </div>
+  
+      <!-- Otherwise, show table -->
+      <div class="d-flex flex-column justify-content-center align-items-center w-100" *ngIf="phoneNumbersList?.length > 0">
+        <table class="table-striped w-100">
+          <tr>
+            <th class="day">Name</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let contact of phoneNumbersList">
+            <td class="day">{{ contact.contactName }}</td>
+            <td>{{ contact.contactAddress }}</td>
+            <td>{{ contact.contactPhone }}</td>
+            <td>
+              <!-- Example delete button -->
+              <button class="btn btn-link" (click)="deleteContact(contact.contactId)">
+                <i class="fas fa-trash" style="color: var(--error);"></i>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+  
+      <!-- Add contact button -->
+      <div class="add-button m-t-40">
+        <button class="cool-button cool-small on-bg" (click)="goToCreateContact()">
+          Add <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </div>
+  
+    <!-- Add resource button -->
+    <div class="upper-feed-buttons-box m-b-20">
+      <button class="cool-feed-button" (click)="goToCreateResource()">
+        Add Resource <i class="fa-solid fa-plus"></i>
+      </button>
+    </div>
+  
+    <!-- Resources list -->
+    <div class="no-posts-found" *ngIf="resourceList?.length === 0">
+      <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+      Resources not found
+    </div>
+  
+    <div *ngFor="let resource of resourceList" class="cool-static-container m-b-20" style="word-wrap: break-word;">
+      <div class="row">
+        <div class="col-md-8">
+          <h2>{{ resource.title }}</h2>
+        </div>
+        <div class="col-md-4 text-right">
+          <button class="btn btn-link" (click)="deleteResource(resource.resourceId)">
+            <i class="fas fa-trash" style="color: var(--error);"></i>
+          </button>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <h3 style="font-weight: normal">{{ resource.description }}</h3>
+      <div class="d-flex flex-column justify-content-center align-items-center w-100">
+        <div *ngIf="resource.imageId">
+          <img
+            [src]="getResourceImageUrl(resource.imageId)"
+            style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
+            [alt]="'resource_' + resource.imageId + '_img'"
+          />
+        </div>
+      </div>
+    </div>
+  
+  </div>
+  

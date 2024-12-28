@@ -1,0 +1,54 @@
+<div class="left-column-container">
+    <div class="left-box admin-box">
+        <div class="f-c-c-c">
+            <a [routerLink]="'/posts'" class="cool-left-button admin-button f-r-sb-c">
+                <i class="fa-solid fa-chevron-left mr-5"></i>
+                <span class="text-end">Leave Admin</span>
+            </a>
+            <a [routerLink]="'/admin/announcement/new'" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/announcement/new')}">
+                <i class="fas fa-bullhorn m-r-5"></i>
+                <span class="text-end">Create Announcement</span>
+            </a>
+            <div class="divider"></div>
+            <a [routerLink]="'/admin/neighbors/requests'" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/neighbors/requests')}">
+                <i class="fa-solid fa-user-check m-r-5"></i>
+                <span class="text-end">Requests</span>
+            </a>
+            <a [routerLink]="'/admin/neighbors'" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/neighbors')}">
+                <i class="fa-solid fa-users m-r-5"></i>
+                <span class="text-end">Neighbor List</span>
+            </a>
+            <a [routerLink]="'/admin/service-providers/requests'" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/service-providers/requests')}">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span class="text-end">Worker Requests</span>
+            </a>
+            <a [routerLink]="'/admin/service-providers'" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/service-providers')}">
+                <i class="fa-solid fa-hard-hat m-r-5"></i>
+                <span class="text-end">Workers</span>
+            </a>
+            <div class="divider"></div>
+            <a [routerLink]="'/admin/amenities'" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/amenities')}">
+                <i class="fas fa-table-tennis-paddle-ball m-r-5"></i>
+                <span class="text-end">Amenities</span>
+            </a>
+            <a [routerLink]="'/admin/information'" id="informationButton" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/information')}">
+                <i class="fas fa-address-card m-r-5"></i>
+                <span class="text-end">Information</span>
+            </a>
+        </div>
+        <div class="f-c-c-c">
+            <a [routerLink]="'/admin/calendar/events/create'" class="cool-left-button admin-button f-r-sb-c"
+                [ngClass]="{'active': isActive('/admin/calendar/events/create')}">
+                <i class="fas fa-calendar-days m-r-5"></i>
+                <span class="text-end">Calendar</span>
+            </a>
+        </div>
+    </div>
+</div>

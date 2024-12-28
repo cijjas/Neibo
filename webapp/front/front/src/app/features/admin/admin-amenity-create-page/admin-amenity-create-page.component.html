@@ -1,0 +1,94 @@
+<div class="cool-static-container shifts-reservation">
+    <h2 class="card-title">Create New Amenity</h2>
+    <div class="divider"></div>
+    <div>
+        <!-- Angular form in place of spring:form -->
+        <form [formGroup]="amenityForm" (ngSubmit)="onSubmit()" novalidate>
+
+            <!-- Amenity Name -->
+            <div class="d-flex flex-column justify-content-between align-items-center mb-2 mt-2">
+                <div class="form-row">
+                    <input formControlName="name" class="cool-input" placeholder="Name" type="text" />
+                    <div class="form-row form-error" *ngIf="nameControl?.invalid && nameControl?.touched">
+                        <p class="error">Name is required</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amenity Description -->
+            <div class="d-flex flex-column justify-content-between align-items-center">
+                <textarea formControlName="description" class="cool-input textarea-min-max" rows="5"
+                    placeholder="Description"></textarea>
+                <div class="form-row form-error" *ngIf="descControl?.invalid && descControl?.touched">
+                    <p class="error">Description is required</p>
+                </div>
+            </div>
+
+            <p class="m-t-40">Amenity Hours</p>
+            <div class="divider"></div>
+
+            <!-- Potential place for overall form errors -->
+            <div class="f-c-c-c w-100 m-t-40">
+                <!-- <p class="error" *ngIf="formErrorMsg">{{ formErrorMsg }}</p> -->
+            </div>
+
+            <!-- Action buttons for 9-17, Clear weekend, Clear all -->
+            <div class="f-r-sb-c w-100 pl-3 pr-3">
+                <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">9-17</a>
+                <a (click)="uncheckWeekends()" class="w-100 cool-button red">Clear weekend</a>
+                <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">Clear all</a>
+            </div>
+
+            <!-- Time Table -->
+            <div class="cool-table w-100 p-4">
+                <table>
+                    <tr>
+                        <th>Row</th>
+                        <th>Mo</th>
+                        <th>Tu</th>
+                        <th>We</th>
+                        <th>Th</th>
+                        <th>Fr</th>
+                        <th>Sa</th>
+                        <th>Su</th>
+                    </tr>
+
+                    <tr *ngFor="let time of timesPairs; let rowIndex = index">
+                        <td>
+                            <label class="container">
+                                <input type="checkbox" (click)="toggleRow(rowIndex)" />
+                            </label>
+                        </td>
+
+                        <td *ngFor="let day of daysPairs">
+                            <div class="cat creation">
+                                <label class="w-100">
+                                    <!-- <input type="checkbox" [checked]="isShiftSelected(day.key, time.key)"
+                                            (change)="onShiftChange(day.key, time.key, $event.target.checked)" />
+                                        <span>{{ time.value.key }}</span> -->
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Info text -->
+            <div class="f-c-c-c">
+                <div class="f-r-c-c" style="gap: 5px">
+                    Remember that
+                    <span class="c-primary font-weight-bolder"> only selected shifts </span>
+                    will be active for your amenity.
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="d-flex justify-content-end m-t-40">
+                <button id="submit-checks" type="submit" class="cool-button cool-small on-bg w-25" style="height:40px;"
+                    [disabled]="!anyShiftChecked">
+                    Create
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

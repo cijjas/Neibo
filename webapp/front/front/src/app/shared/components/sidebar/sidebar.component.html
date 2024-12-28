@@ -27,7 +27,7 @@
       <div class="left-box">
         <div class="f-c-c-c first">
 
-          <a *ngIf="userRole === 'ADMINISTRATOR'" routerLink="/admin/publish"
+          <a *ngIf="userRole === 'ADMINISTRATOR'" [routerLink]='["/admin/announcement/new"]'
             class="cool-left-button admin-button f-r-sb-c">
             <i class="fa-solid fa-chart-pie"></i>
             <span i18n>Admin Panel</span>

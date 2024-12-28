@@ -1,0 +1,53 @@
+<div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+    <!-- If no amenities -->
+    <div class="no-posts-found" *ngIf="amenities?.length === 0 && !isLoading">
+        <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+        Amenities not found
+    </div>
+
+    <!-- If amenities are available -->
+    <div *ngIf="amenities?.length > 0">
+        <h2>Amenities</h2>
+        <div class="divider"></div>
+
+        <!-- List each amenity -->
+        <div *ngFor="let amenity of amenities" class="cool-static-container m-b-20" style="word-wrap: break-word;"
+            aria-hidden="true">
+            <h2>{{ amenity.name }}</h2>
+            <p class="mb-3" style="color:var(--lighttext);">{{ amenity.description }}</p>
+
+            <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                <div class="cool-table w-100">
+                    <table class="table-striped w-100">
+                        <tr>
+                            <th>Amenity Hours</th>
+                            <th *ngFor="let d of days">{{ d.label }}</th>
+                        </tr>
+                        <tr *ngFor="let t of times">
+                            <td>{{ t.label }}</td>
+                            <td *ngFor="let d of days">
+                                <ng-container
+                                    *ngIf="checkAvailability(amenity.availableShifts, d.key, t.key); else notAvailable">
+                                    <span style="color: var(--primary);" class="col-12">
+                                        <i class="fa-solid fa-check"></i>
+                                    </span>
+                                </ng-container>
+                                <ng-template #notAvailable>
+                                    <span style="color: var(--error);" class="col-12">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </span>
+                                </ng-template>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PAGINATOR -->
+<!-- <div class="m-t-20">
+    <app-paginator [totalPages]="totalPages" [currentPage]="currentPage" (pageChange)="onPageChange($event)">
+    </app-paginator>
+</div> -->

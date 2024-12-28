@@ -10,13 +10,13 @@ export const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   // Admin
-  // {
-  //   path: 'admin',
-  //   loadChildren: () =>
-  //     import('@features/admin/admin.module').then((m) => m.AdminModule),
-  //   canActivate: [RoleGuard],
-  //   data: { roles: [Roles.ADMINISTRATOR] },
-  // },
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('@features/admin/admin.module').then((m) => m.AdminModule),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.ADMINISTRATOR] },
+  },
 
   // Amenities
   {

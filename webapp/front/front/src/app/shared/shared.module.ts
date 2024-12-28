@@ -7,13 +7,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
     NavbarComponent,
     SuccessToastComponent,
-    LeftColumnComponent,
+    SidebarComponent,
     WaveFooterComponent,
     BackgroundCloudsComponent,
     LandingPageNavbarComponent,
     BackgroundDrawingComponent,
     PaginatorComponent,
-    RightColumnComponent
+    RightColumnComponent,
+    TagsFilterWidgetComponent
 } from "@shared/index";
 
 import { TimeAgoPipe, AddHoursPipe } from "@shared/index";
@@ -24,12 +25,13 @@ import { CalendarWidgetComponent, UserProfileWidgetComponent } from '@features/i
         NavbarComponent,
         PaginatorComponent,
         SuccessToastComponent,
-        LeftColumnComponent,
+        SidebarComponent,
         WaveFooterComponent,
         BackgroundCloudsComponent,
         LandingPageNavbarComponent,
         RightColumnComponent,
         BackgroundDrawingComponent,
+        TagsFilterWidgetComponent,
     ],
     imports: [
         CommonModule,
@@ -46,17 +48,20 @@ import { CalendarWidgetComponent, UserProfileWidgetComponent } from '@features/i
         RouterModule, // Export this to make router directives available in other modules
         FormsModule,
         ReactiveFormsModule,
+
         NavbarComponent,
         PaginatorComponent,
         SuccessToastComponent,
-        LeftColumnComponent,
+        SidebarComponent,
         WaveFooterComponent,
         BackgroundCloudsComponent,
         LandingPageNavbarComponent,
         RightColumnComponent,
         BackgroundDrawingComponent,
+        TagsFilterWidgetComponent,
+
         TimeAgoPipe,
-        AddHoursPipe
+        AddHoursPipe,
     ]
 })
 export class SharedModule { }
