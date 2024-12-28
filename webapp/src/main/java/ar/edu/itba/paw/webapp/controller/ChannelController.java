@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -125,7 +126,7 @@ public class ChannelController {
     @Validated(CreateValidationSequence.class)
     public Response createChannel(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @Valid ChannelDto createForm
+            @Valid @NotNull ChannelDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 

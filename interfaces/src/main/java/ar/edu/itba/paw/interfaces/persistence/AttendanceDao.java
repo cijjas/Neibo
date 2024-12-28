@@ -13,7 +13,7 @@ public interface AttendanceDao {
 
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
 
-    Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId);
+    Optional<Attendance> findAttendance(long eventId, long userId);
 
     List<Attendance> getAttendance(long neighborhoodId, Long eventId, Long userId, int page, int size);
 
@@ -21,5 +21,5 @@ public interface AttendanceDao {
 
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 
-    boolean deleteAttendee(long neighborhoodId, long eventId, long userId);
+    boolean deleteAttendee(long eventId, long userId);
 }

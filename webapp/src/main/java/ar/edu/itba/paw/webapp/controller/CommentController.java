@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -132,7 +133,7 @@ public class CommentController {
     public Response createComment(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam("postId") @GenericIdConstraint Long postId,
-            @Valid CommentDto createForm
+            @Valid @NotNull CommentDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 

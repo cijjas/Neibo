@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -148,7 +149,7 @@ public class AttendanceController {
     @Validated(CreateValidationSequence.class)
     public Response createAttendance(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @Valid AttendanceDto createForm
+            @Valid @NotNull AttendanceDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
@@ -191,7 +192,7 @@ public class AttendanceController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
         // Deletion Attempt
-        if (as.deleteAttendance(neighborhoodId, extractOptionalSecondId(event), extractSecondId(user)))
+        if (as.deleteAttendance(extractOptionalSecondId(event), extractSecondId(user)))
             return Response.noContent()
                     .build();
 

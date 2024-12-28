@@ -11,7 +11,7 @@ public interface AttendanceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId);
+    Optional<Attendance> findAttendance(long eventId, long userId);
 
     List<Attendance> getAttendance(long neighborhoodId, Long eventId, Long userId, int size, int page);
 
@@ -21,5 +21,5 @@ public interface AttendanceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteAttendance(long neighborhoodId, long eventId, long userId);
+    boolean deleteAttendance(long eventId, long userId);
 }

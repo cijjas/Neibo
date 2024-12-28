@@ -81,8 +81,8 @@ public class AffiliationController {
         LOGGER.info("GET request arrived at '/affiliations'");
 
         // ID Extraction
-        Long workerId = extractOptionalFirstId(worker);
         Long neighborhoodId = extractOptionalFirstId(neighborhood);
+        Long workerId = extractOptionalFirstId(worker);
 
         // Content
         List<Affiliation> affiliations = nws.getAffiliations(neighborhoodId, workerId, page, size);
@@ -128,7 +128,7 @@ public class AffiliationController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createAffiliation(
-            @Valid AffiliationDto createForm
+            @Valid @NotNull AffiliationDto createForm
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
 
@@ -160,7 +160,7 @@ public class AffiliationController {
     public Response updateAffiliation(
             @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
             @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker,
-            @Valid AffiliationDto updateForm
+            @Valid @NotNull AffiliationDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 

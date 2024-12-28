@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -69,8 +70,8 @@ public class ProductController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // ID Extraction
-        Long departmentId = extractOptionalFirstId(department);
         Long userId = extractOptionalSecondId(user);
+        Long departmentId = extractOptionalFirstId(department);
         Long productStatusId = extractOptionalFirstId(productStatus);
 
         // Content
@@ -135,7 +136,7 @@ public class ProductController {
     @Validated(CreateValidationSequence.class)
     public Response createProduct(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @Valid ProductDto createForm
+            @Valid @NotNull ProductDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
@@ -159,7 +160,7 @@ public class ProductController {
     public Response updateProduct(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam("productId") @GenericIdConstraint long productId,
-            @Valid ProductDto updateForm
+            @Valid @NotNull ProductDto updateForm
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 

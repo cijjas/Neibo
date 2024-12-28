@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -72,7 +73,7 @@ public class InquiryController {
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Content
-        final List<Inquiry> inquiries = is.getInquiries(neighborhoodId, productId, size, page);
+        final List<Inquiry> inquiries = is.getInquiries(productId, size, page);
         String inquiriesHashCode = String.valueOf(inquiries.hashCode());
 
         // Cache Control
@@ -92,7 +93,7 @@ public class InquiryController {
         // Pagination Link
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "/inquiries",
-                is.calculateInquiryPages(neighborhoodId, productId, size),
+                is.calculateInquiryPages(productId, size),
                 page,
                 size
         );
@@ -136,7 +137,7 @@ public class InquiryController {
     public Response createInquiry(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam("productId") @GenericIdConstraint Long productId,
-            @Valid InquiryDto createForm
+            @Valid @NotNull InquiryDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
@@ -165,7 +166,7 @@ public class InquiryController {
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam("productId") @GenericIdConstraint Long productId,
             @PathParam("inquiryId") @GenericIdConstraint long inquiryId,
-            @Valid InquiryDto updateForm
+            @Valid @NotNull InquiryDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -73,10 +74,10 @@ public class PostController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // ID Extraction
+        Long userId = extractOptionalSecondId(user);
         Long channelId = extractOptionalSecondId(channel);
         List<Long> tagIds = extractSecondIds(tags);
         Long postStatusId = extractOptionalFirstId(postStatus);
-        Long userId = extractOptionalSecondId(user);
 
         // Content
         final List<Post> posts = ps.getPosts(neighborhoodId, userId, channelId, tagIds, postStatusId, page, size);
@@ -124,10 +125,10 @@ public class PostController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/count'", neighborhoodId);
 
         // ID Extraction
+        Long userId = extractOptionalSecondId(user);
         Long channelId = extractOptionalSecondId(channel);
         List<Long> tagIds = extractSecondIds(tags);
         Long postStatusId = extractOptionalFirstId(postStatus);
-        Long userId = extractOptionalSecondId(user);
 
         // Content
         int count = ps.countPosts(neighborhoodId, userId, channelId, tagIds, postStatusId);
@@ -176,7 +177,7 @@ public class PostController {
     @Validated(CreateValidationSequence.class)
     public Response createPost(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @Valid PostDto createForm
+            @Valid @NotNull PostDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 

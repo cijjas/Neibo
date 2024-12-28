@@ -17,9 +17,9 @@ public interface InquiryDao {
 
     Optional<Inquiry> findInquiry(long inquiryId);
 
-    List<Inquiry> getInquiries(long neighborhoodId, long productId, int page, int size);
+    List<Inquiry> getInquiries(long productId, int page, int size);
 
-    int countInquiries(long neighborhoodId, long productId);
+    int countInquiries(long productId);
 
     // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
 

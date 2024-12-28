@@ -67,8 +67,8 @@ public class LikeController {
         LOGGER.info("GET request arrived at '/likes'");
 
         // ID Extraction
-        Long postId = extractOptionalSecondId(post);
         Long userId = extractOptionalSecondId(user);
+        Long postId = extractOptionalSecondId(post);
 
         // Content
         final List<Like> likes = ls.getLikes(userId, postId, page, size);
@@ -141,7 +141,7 @@ public class LikeController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createLike(
-            @Valid LikeDto createForm
+            @Valid @NotNull LikeDto createForm
     ) {
         LOGGER.info("POST request arrived at '/likes'");
 

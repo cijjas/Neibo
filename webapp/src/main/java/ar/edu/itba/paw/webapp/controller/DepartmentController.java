@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -108,7 +109,7 @@ public class DepartmentController {
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createDepartment(
-            @Valid DepartmentDto createForm
+            @Valid @NotNull DepartmentDto createForm
     ) {
         LOGGER.info("POST request arrived at '/departments'");
 

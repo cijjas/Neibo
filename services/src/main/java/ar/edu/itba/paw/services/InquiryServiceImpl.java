@@ -68,18 +68,18 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Inquiry> getInquiries(long neighborhoodId, long productId, int size, int page) {
-        LOGGER.info("Getting Inquiries for Product {} from Neighborhood {}", productId, neighborhoodId);
+    public List<Inquiry> getInquiries(long productId, int size, int page) {
+        LOGGER.info("Getting Inquiries for Product {}}", productId);
 
-        return inquiryDao.getInquiries(neighborhoodId, productId, page, size);
+        return inquiryDao.getInquiries(productId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateInquiryPages(long neighborhoodId, long productId, int size) {
-        LOGGER.info("Calculating Inquiry Pages for Product {} in Neighborhood {}", productId, neighborhoodId);
+    public int calculateInquiryPages(long productId, int size) {
+        LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
 
-        return PaginationUtils.calculatePages(inquiryDao.countInquiries(neighborhoodId, productId), size);
+        return PaginationUtils.calculatePages(inquiryDao.countInquiries(productId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

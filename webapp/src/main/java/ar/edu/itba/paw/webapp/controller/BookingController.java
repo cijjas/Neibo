@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -137,7 +138,7 @@ public class BookingController {
     @Validated(CreateValidationSequence.class)
     public Response createBooking(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @Valid BookingDto createForm
+            @Valid @NotNull BookingDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 

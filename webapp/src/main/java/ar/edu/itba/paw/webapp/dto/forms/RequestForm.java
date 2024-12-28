@@ -15,7 +15,11 @@ import javax.ws.rs.QueryParam;
 @UserTransactionPairConstraint
 public class RequestForm {
 
+    @PathParam("neighborhoodId")
+    @NeighborhoodIdConstraint
+    private long neighborhoodId;
     @QueryParam("page")
+
     @DefaultValue("1")
     @Min(1)
     private int page;
@@ -24,10 +28,6 @@ public class RequestForm {
     @DefaultValue("10")
     @Min(1)
     private int size;
-
-    @PathParam("neighborhoodId")
-    @NeighborhoodIdConstraint
-    private long neighborhoodId;
 
     @QueryParam("requestedBy")
     @UserURNConstraint

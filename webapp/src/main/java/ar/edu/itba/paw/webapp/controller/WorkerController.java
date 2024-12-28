@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -71,8 +72,8 @@ public class WorkerController {
         LOGGER.info("GET request arrived at '/workers'");
 
         // ID Extraction
-        List<Long> professionIds = extractFirstIds(professions);
         List<Long> neighborhoodIds = extractFirstIds(neighborhoods);
+        List<Long> professionIds = extractFirstIds(professions);
         Long workerRoleId = extractOptionalFirstId(workerRole);
         Long workerStatusId = extractOptionalFirstId(workerRole);
 
@@ -138,7 +139,7 @@ public class WorkerController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createWorker(
-            @Valid WorkerDto createForm
+            @Valid @NotNull WorkerDto createForm
     ) {
         LOGGER.info("POST request arrived at '/workers'");
 
@@ -160,7 +161,7 @@ public class WorkerController {
     @Validated(UpdateValidationSequence.class)
     public Response updateWorker(
             @PathParam("workerId") @GenericIdConstraint long workerId,
-            @Valid WorkerDto updateForm
+            @Valid @NotNull WorkerDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 

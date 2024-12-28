@@ -38,16 +38,15 @@ public class AttendanceDaoImpl implements AttendanceDao {
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
 
     @Override
-    public Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId) {
-        LOGGER.debug("Selecting Attendance with Neighborhood Id {}, Event Id {} and User Id {}", neighborhoodId, eventId, userId);
+    public Optional<Attendance> findAttendance(long eventId, long userId) {
+        LOGGER.debug("Selecting Attendance with Event Id {} and User Id {}", eventId, userId);
 
         TypedQuery<Attendance> query = em.createQuery(
-                "SELECT a FROM Attendance a WHERE a.id = :attendanceId " + " AND a.event.neighborhood.neighborhoodId = :neighborhoodId",
+                "SELECT a FROM Attendance a WHERE a.id = :attendanceId ",
                 Attendance.class
         );
 
         query.setParameter("attendanceId", new AttendanceKey(userId, eventId));
-        query.setParameter("neighborhoodId", neighborhoodId);
 
         List<Attendance> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
@@ -128,21 +127,14 @@ public class AttendanceDaoImpl implements AttendanceDao {
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 
     @Override
-    public boolean deleteAttendee(long neighborhoodId, long eventId, long userId) {
-        LOGGER.debug("Deleting Attendance with Neighborhood Id {}, Event Id {}, and User Id {}", neighborhoodId, eventId, userId);
+    public boolean deleteAttendee(long eventId, long userId) {
+        LOGGER.debug("Deleting Attendance with Event Id {} and User Id {}", eventId, userId);
 
         String sql = "DELETE FROM events_users " +
                 "WHERE eventid = :eventId " +
-                "  AND userid = :userId " +
-                "  AND eventid IN ( " +
-                "      SELECT e.eventid " +
-                "      FROM events e " +
-                "      WHERE e.eventid = :eventId " +
-                "        AND e.neighborhoodid = :neighborhoodId " +
-                "  )";
+                "  AND userid = :userId";
 
         int rowsAffected = em.createNativeQuery(sql)
-                .setParameter("neighborhoodId", neighborhoodId)
                 .setParameter("userId", userId)
                 .setParameter("eventId", eventId)
                 .executeUpdate();

@@ -38,10 +38,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Attendance> findAttendance(long neighborhoodId, long eventId, long userId) {
-        LOGGER.info("Finding Attendance for User {} and Event {} in Neighborhood {}", userId, eventId, neighborhoodId);
+    public Optional<Attendance> findAttendance(long eventId, long userId) {
+        LOGGER.info("Finding Attendance for User {} and Event {}", userId, eventId);
 
-        return attendanceDao.findAttendance(neighborhoodId, eventId, userId);
+        return attendanceDao.findAttendance(eventId, userId);
     }
 
     @Override
@@ -70,9 +70,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteAttendance(long neighborhoodId, long eventId, long userId) {
-        LOGGER.info("Removing User {} as Attendee for Event {} in Neighborhood {}", userId, eventId, neighborhoodId);
+    public boolean deleteAttendance(long eventId, long userId) {
+        LOGGER.info("Removing User {} as Attendee for Event {}", userId, eventId);
 
-        return attendanceDao.deleteAttendee(neighborhoodId, eventId, userId);
+        return attendanceDao.deleteAttendee(eventId, userId);
     }
 }

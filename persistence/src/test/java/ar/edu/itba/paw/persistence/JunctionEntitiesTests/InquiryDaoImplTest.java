@@ -271,7 +271,7 @@ public class InquiryDaoImplTest {
         long iqKey2 = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(nhKey, pKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(pKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, inquiryList.size());
@@ -287,7 +287,7 @@ public class InquiryDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
-        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(nhKey, pKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(pKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(inquiryList.isEmpty());
@@ -310,7 +310,7 @@ public class InquiryDaoImplTest {
         long iqKey3 = testInserter.createInquiry(pKey, uKey3);
 
         // Exercise
-        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(nhKey, pKey, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(pKey, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, inquiryList.size());
@@ -331,7 +331,7 @@ public class InquiryDaoImplTest {
         long iqKey2 = testInserter.createInquiry(pKey, uKey2);
 
         // Exercise
-        int countInquiries = inquiryDaoImpl.countInquiries(nhKey, pKey);
+        int countInquiries = inquiryDaoImpl.countInquiries(pKey);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countInquiries);
@@ -347,7 +347,7 @@ public class InquiryDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
-        int countInquiries = inquiryDaoImpl.countInquiries(nhKey, pKey);
+        int countInquiries = inquiryDaoImpl.countInquiries(pKey);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countInquiries);

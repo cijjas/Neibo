@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -179,9 +180,14 @@ public class ReviewController {
     @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #createForm.user)")
     public Response createReview(
             @PathParam("workerId") @WorkerIdConstraint long workerId,
-            @Valid ReviewDto createForm
+            @Valid @NotNull ReviewDto createForm
     ) {
         /*
+        1) Primero Path Param Constraint
+        2) Preauthorize
+        3) Form Constraint
+
+
         Authentication is being executed before validations
         when the validation is using path params the validation goes first :D
         when the validation is using NOT object query params the validation validation goes second D:, but doesnt really matter apparently a forbidden catches the issue

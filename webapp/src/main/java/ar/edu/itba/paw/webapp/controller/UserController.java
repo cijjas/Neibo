@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -133,7 +134,7 @@ public class UserController {
     @Validated(CreateValidationSequence.class)
     public Response createUser(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @Valid UserDto createForm
+            @Valid @NotNull UserDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
@@ -156,7 +157,7 @@ public class UserController {
     public Response updateUser(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam("userId") @GenericIdConstraint long userId,
-            @Valid UserDto updateForm
+            @Valid @NotNull UserDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
 

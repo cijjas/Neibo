@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -127,7 +128,7 @@ public class NeighborhoodController {
     @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Validated(CreateValidationSequence.class)
     public Response createNeighborhood(
-            @Valid NeighborhoodDto createForm
+            @Valid @NotNull NeighborhoodDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -120,8 +121,7 @@ public class EventController {
 
         // Content
         Event event = es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
-        // Add to JWT the userId information
-        String eventHashCode = String.valueOf(event.hashCode()); // this hash code should also change
+        String eventHashCode = String.valueOf(event.hashCode());
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -140,7 +140,7 @@ public class EventController {
     @Validated(CreateValidationSequence.class)
     public Response createEvent(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @Valid EventDto createForm
+            @Valid @NotNull EventDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
@@ -164,7 +164,7 @@ public class EventController {
     public Response updateEvent(
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam("eventId") @GenericIdConstraint long eventId,
-            @Valid EventDto updateForm
+            @Valid @NotNull EventDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 

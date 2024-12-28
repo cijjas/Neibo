@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -113,7 +114,7 @@ public class ProfessionController {
     @Secured({"ROLE_SUPER_ADMINISTRATOR"})
     @Validated(CreateValidationSequence.class)
     public Response createProfession(
-            @Valid ProfessionDto createForm
+            @Valid @NotNull ProfessionDto createForm
     ) {
         LOGGER.info("POST request arrived at '/professions'");
 
