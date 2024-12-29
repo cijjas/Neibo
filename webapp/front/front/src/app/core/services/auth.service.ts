@@ -234,6 +234,7 @@ export class AuthService {
             'neighborhood:amenities',
             'neighborhood:announcements',
             'neighborhood:announcementsChannel',
+            'neighborhood:affiliations',
             'neighborhood:bookings',
             'neighborhood:channels',
             'neighborhood:complaints',

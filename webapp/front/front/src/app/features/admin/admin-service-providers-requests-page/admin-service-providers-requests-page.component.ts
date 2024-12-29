@@ -62,7 +62,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
   }
 
   rejectWorker(worker: Worker) {
-    this.affiliationService.rejectWorker(worker.user.self).subscribe({
+    this.affiliationService.rejectWorker(worker.self).subscribe({
       next: () => {
         this.toastService.showToast('Worker ' + worker.user.name + ' rejected successfully.', 'success');
         this.loadWorkers(this.route.snapshot.url.map(segment => segment.path).join('/'));
@@ -74,7 +74,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
   }
 
   verifyWorker(worker: Worker) {
-    this.affiliationService.verifyWorker(worker.user.self).subscribe({
+    this.affiliationService.verifyWorker(worker.self).subscribe({
       next: () => {
         this.toastService.showToast('Worker ' + worker.user.name + ' was verified successfully.', 'success');
         this.loadWorkers(this.route.snapshot.url.map(segment => segment.path).join('/'));

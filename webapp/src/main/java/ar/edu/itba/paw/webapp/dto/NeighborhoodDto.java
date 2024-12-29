@@ -294,6 +294,9 @@ public class NeighborhoodDto {
                     .path("worker-roles")
                     .path(String.valueOf(WorkerRole.REJECTED.getId()))
                     .build());
+            links.setAffiliations(uriInfo.getBaseUriBuilder()
+                    .path("affiliations")
+                    .build());
         }
         dto.set_links(links);
         return dto;

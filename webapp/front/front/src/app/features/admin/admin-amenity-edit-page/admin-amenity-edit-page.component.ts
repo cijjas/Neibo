@@ -1,134 +1,228 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from '@core/index';
+import { ShiftService, Shift, AmenityService } from '@shared/index';
 
 @Component({
   selector: 'app-admin-amenity-edit-page',
   templateUrl: './admin-amenity-edit-page.component.html',
 })
 export class AdminAmenityEditPageComponent implements OnInit {
-
   amenityForm!: FormGroup;
 
-  amenityName: string = 'Sample Amenity';
+  amenityName = '';
 
-  // Example day/time data
-  daysPairs = [
-    { key: 1, value: 'Monday' },
-    { key: 2, value: 'Tuesday' },
-    { key: 3, value: 'Wednesday' },
-    { key: 4, value: 'Thursday' },
-    { key: 5, value: 'Friday' },
-    { key: 6, value: 'Saturday' },
-    { key: 7, value: 'Sunday' }
-  ];
+  allShifts: Shift[] = [];
 
-  timesPairs = [
-    { key: 9, value: { key: '09:00' } },
-    { key: 10, value: { key: '10:00' } },
-    { key: 11, value: { key: '11:00' } },
-    // ...
-    { key: 17, value: { key: '17:00' } },
-  ];
+  uniqueDays: string[] = [];
+  uniqueTimes: string[] = [];
 
-  selectedShifts: { day: number; time: number }[] = [];
+  // Shifts currently selected in the UI
+  selectedShifts: Shift[] = [];
+  amenityShiftRefs: string[] = [];
 
-  constructor(private fb: FormBuilder) { }
+
+  private dayAbbreviations: Record<string, string> = {
+    Monday: 'Mon',
+    Tuesday: 'Tue',
+    Wednesday: 'Wed',
+    Thursday: 'Thu',
+    Friday: 'Fri',
+    Saturday: 'Sat',
+    Sunday: 'Sun',
+  };
+
+  getAbbreviatedDay(day: string): string {
+    return this.dayAbbreviations[day] || day; // Fallback to original name if not found
+  }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private shiftService: ShiftService,
+    private amenityService: AmenityService,
+    private toastService: ToastService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    // Create the form
     this.amenityForm = this.fb.group({
       name: ['', Validators.required],
-      description: ['', Validators.required]
+      description: ['', Validators.required],
     });
 
-    // Possibly load from a service:
-    // amenityService.getAmenity(amenityUrl).subscribe( amenity => {...} );
-    // and fill `selectedShifts` from amenity.availableShifts
+    // Get the ID from the URL
+    const amenityId = this.route.snapshot.params['id'];
+
+    // 1) Load the Amenity
+    // We'll store the amenity’s shift references in some temporary variable
+    // until we’ve loaded allShifts
+
+    this.amenityService.getAmenity(amenityId).subscribe({
+      next: (amenityData) => {
+        // Fill name & desc
+        this.amenityName = amenityData.name;
+        this.amenityForm.patchValue({
+          name: amenityData.name,
+          description: amenityData.description,
+        });
+
+        this.amenityShiftRefs = amenityData.availableShifts.map((s) => s.self);
+        // 2) Load all Shifts
+        this.shiftService.getShifts().subscribe({
+          next: (shiftsFromApi) => {
+            this.allShifts = shiftsFromApi;
+
+            // Build uniqueDays / uniqueTimes
+            const daysSet = new Set<string>();
+            const timesSet = new Set<string>();
+            for (const shift of this.allShifts) {
+              daysSet.add(shift.day);
+              timesSet.add(shift.startTime);
+            }
+            this.uniqueDays = Array.from(daysSet).sort(sortDays);
+            this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
+
+
+            // E.g., if amenityShiftRefs are shift 'self' URLs:
+            if (this.amenityShiftRefs?.length) {
+              this.selectedShifts = this.allShifts.filter((shift) =>
+                this.amenityShiftRefs.includes(shift.self)
+              );
+            }
+
+
+          },
+          error: (err) => console.error(err),
+        });
+
+
+      },
+      error: (err) => console.error('Error loading amenity:', err),
+    });
+
+
   }
 
   get nameControl() {
     return this.amenityForm.get('name');
   }
-
   get descControl() {
     return this.amenityForm.get('description');
   }
+  get anyShiftChecked(): boolean {
+    return this.selectedShifts.length > 0;
+  }
 
   onSubmit() {
-    if (this.amenityForm.invalid) {
+    if (this.amenityForm.invalid || !this.anyShiftChecked) {
       this.amenityForm.markAllAsTouched();
       return;
     }
+
     const formValue = this.amenityForm.value;
-    console.log('Saving amenity with:', formValue, 'Selected Shifts:', this.selectedShifts);
+    const amenityId = this.route.snapshot.params['id'];
+    // Convert selectedShifts to an array of SHIFT URLs or SHIFT IDs
+    const selectedShiftRefs: string[] = this.selectedShifts.map((s) => s.self);
 
-    // this.amenityService.updateAmenity(...)
-    //   .subscribe(...)
-  }
+    this.amenityService.updateAmenity(
+      amenityId,
+      formValue.name,
+      formValue.description,
+      selectedShiftRefs
+    ).subscribe({
+      next: (updatedAmenity) => {
+        this.toastService.showToast('Amenity updated successfully!', 'success');
+        this.router.navigate(['admin/amenities'])
+      },
+      error: (err) => {
+        this.toastService.showToast('Error updating amenity, try again later.', 'error');
 
-  // Check if a specific shift (day/time) is currently selected
-  isShiftSelected(dayKey: number, timeKey: number): boolean {
-    return this.selectedShifts.some(s => s.day === dayKey && s.time === timeKey);
-  }
-
-  // Toggle a shift on or off
-  onShiftChange(dayKey: number, timeKey: number, checked: boolean) {
-    if (checked) {
-      this.selectedShifts.push({ day: dayKey, time: timeKey });
-    } else {
-      this.selectedShifts = this.selectedShifts.filter(
-        s => !(s.day === dayKey && s.time === timeKey)
-      );
-    }
-  }
-
-  // Example logic to toggle entire row of checkboxes
-  toggleRow(rowIndex: number) {
-    // rowIndex references the timesPairs[rowIndex]
-    const timeKey = this.timesPairs[rowIndex].key;
-    // For each day, we either add or remove that shift.  
-    // Here’s a simplistic approach:  
-    const isAllSelected = this.daysPairs.every(d => this.isShiftSelected(d.key, timeKey));
-    // If all are selected, remove them. If not all selected, add them
-    if (isAllSelected) {
-      // remove
-      this.daysPairs.forEach(d => {
-        this.selectedShifts = this.selectedShifts.filter(
-          s => !(s.day === d.key && s.time === timeKey)
-        );
-      });
-    } else {
-      // add
-      this.daysPairs.forEach(d => {
-        if (!this.isShiftSelected(d.key, timeKey)) {
-          this.selectedShifts.push({ day: d.key, time: timeKey });
-        }
-      });
-    }
-  }
-
-  // Check 9:00 to 17:00 for weekdays, as example
-  check9to5() {
-    const weekdays = [1, 2, 3, 4, 5]; // Monday-Friday
-    // timesPairs might be from 9...17
-    this.timesPairs.forEach(tp => {
-      if (tp.key >= 9 && tp.key <= 17) {
-        weekdays.forEach(day => {
-          if (!this.isShiftSelected(day, tp.key)) {
-            this.selectedShifts.push({ day, time: tp.key });
-          }
-        });
-      }
+      },
     });
   }
 
-  // Uncheck weekends
-  uncheckWeekends() {
-    const weekends = [6, 7]; // Saturday, Sunday
-    this.selectedShifts = this.selectedShifts.filter(s => !weekends.includes(s.day));
+  // Reuse your shift selection toggles, identical to your create component
+  isShiftSelected(shift: Shift): boolean {
+    return this.selectedShifts.some(
+      (s) => s.day === shift.day && s.startTime === shift.startTime && s.endTime === shift.endTime
+    );
   }
+  toggleCellSelection(dayName: string, startTime: string) {
+    const foundShift = this.allShifts.find(
+      (s) => s.day === dayName && s.startTime === startTime
+    );
+    if (!foundShift) return;
 
-  // Clear all
+    if (this.isShiftSelected(foundShift)) {
+      // remove it
+      this.selectedShifts = this.selectedShifts.filter(
+        (s) =>
+          !(
+            s.day === foundShift.day &&
+            s.startTime === foundShift.startTime &&
+            s.endTime === foundShift.endTime
+          )
+      );
+    } else {
+      this.selectedShifts.push(foundShift);
+    }
+  }
+  isRowSelected(time: string): boolean {
+    return this.uniqueDays.every((day) => {
+      const shift = this.allShifts.find((s) => s.day === day && s.startTime === time);
+      return shift && this.isShiftSelected(shift);
+    });
+  }
+  toggleRow(time: string) {
+    const fullySelected = this.isRowSelected(time);
+    if (fullySelected) {
+      this.selectedShifts = this.selectedShifts.filter((sel) => sel.startTime !== time);
+    } else {
+      for (const day of this.uniqueDays) {
+        const shift = this.allShifts.find((s) => s.day === day && s.startTime === time);
+        if (shift && !this.isShiftSelected(shift)) {
+          this.selectedShifts.push(shift);
+        }
+      }
+    }
+  }
+  check9to5() {
+    const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    for (const shift of this.allShifts) {
+      const hour = parseInt(shift.startTime.split(':')[0], 10);
+      if (weekdays.includes(shift.day) && hour >= 9 && hour < 17) {
+        if (!this.isShiftSelected(shift)) {
+          this.selectedShifts.push(shift);
+        }
+      }
+    }
+  }
+  uncheckWeekends() {
+    this.selectedShifts = this.selectedShifts.filter(
+      (s) => s.day !== 'Saturday' && s.day !== 'Sunday'
+    );
+  }
   clearAllCheckedHours() {
     this.selectedShifts = [];
   }
+  getShift(day: string, time: string): Shift | null {
+    return this.allShifts.find((s) => s.day === day && s.startTime === time) || null;
+  }
+  isShiftSelectedByDayTime(day: string, time: string): boolean {
+    const shift = this.getShift(day, time);
+    return shift ? this.isShiftSelected(shift) : false;
+  }
+}
+
+// Sorting functions
+function sortDays(a: string, b: string) {
+  const order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  return order.indexOf(a) - order.indexOf(b);
+}
+function sortTimes(a: string, b: string) {
+  const aH = parseInt(a.split(':')[0], 10);
+  const bH = parseInt(b.split(':')[0], 10);
+  return aH - bH;
 }

@@ -87,7 +87,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
         this.isLoading = true;
 
         const amenitiesUrl = this.linkService.getLink('neighborhood:amenities');
-        this.amenityService.getAmenities(amenitiesUrl, { page }).subscribe({
+        this.amenityService.getAmenities({ page }).subscribe({
             next: (data) => {
                 if (page === 1) {
                     this.amenities = data.amenities;

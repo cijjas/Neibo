@@ -3,10 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Shift, ShiftDto } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class ShiftService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private linkService: HateoasLinksService
+    ) { }
 
     public getShift(url: string): Observable<Shift> {
         return this.http.get<ShiftDto>(url).pipe(
@@ -15,19 +19,19 @@ export class ShiftService {
     }
 
     public getShifts(
-        url: string,
         queryParams: {
             forAmenity?: string;
             forDate?: string;
         } = {}
     ): Observable<Shift[]> {
-        // use link service
+        let shiftsUrl: string = this.linkService.getLink('neighborhood:shifts')
+
         let params = new HttpParams();
 
         if (queryParams.forAmenity) params = params.set('forAmenity', queryParams.forAmenity);
         if (queryParams.forDate) params = params.set('forDate', queryParams.forDate);
 
-        return this.http.get<ShiftDto[]>(url, { params }).pipe(
+        return this.http.get<ShiftDto[]>(shiftsUrl, { params }).pipe(
             map((shiftsDto) => shiftsDto.map(mapShift))
         );
     }

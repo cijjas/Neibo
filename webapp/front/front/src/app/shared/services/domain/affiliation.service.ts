@@ -57,16 +57,30 @@ export class AffiliationService {
             );
     }
 
-    public verifyWorker(updateUrl: string): Observable<Affiliation> {
-        let verifiedWorkerRole: string = this.linkService.getLink('neighborhood:verifiedWorkerRole')
-        return this.http.patch<AffiliationDto>(updateUrl, { workerRole: verifiedWorkerRole }).pipe(
+    public verifyWorker(workerUrl: string): Observable<Affiliation> {
+        const affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
+        const neighborhoodUrl: string = this.linkService.getLink('neighborhood:self');
+        const verifiedWorkerRoleUrl: string = this.linkService.getLink('neighborhood:verifiedWorkerRole');
+
+        let params = new HttpParams()
+            .set('inNeighborhood', neighborhoodUrl)
+            .set('forWorker', workerUrl);
+
+        return this.http.patch<AffiliationDto>(affiliationsUrl, { workerRole: verifiedWorkerRoleUrl }, { params }).pipe(
             mergeMap((newAffiliation) => mapAffiliation(this.http, newAffiliation))
         );
     }
 
-    public rejectWorker(updateUrl: string): Observable<Affiliation> {
-        let rejectedUserRoleUrl: string = this.linkService.getLink('neighborhood:rejectedWorkerRole')
-        return this.http.patch<AffiliationDto>(updateUrl, { workerRole: rejectedUserRoleUrl }).pipe(
+    public rejectWorker(workerUrl: string): Observable<Affiliation> {
+        const affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
+        const neighborhoodUrl: string = this.linkService.getLink('neighborhood:self');
+        const rejectedWorkerRoleUrl: string = this.linkService.getLink('neighborhood:rejectedWorkerRole');
+
+        let params = new HttpParams()
+            .set('inNeighborhood', neighborhoodUrl)
+            .set('forWorker', workerUrl);
+
+        return this.http.patch<AffiliationDto>(affiliationsUrl, { workerRole: rejectedWorkerRoleUrl }, { params }).pipe(
             mergeMap((newAffiliation) => mapAffiliation(this.http, newAffiliation))
         );
     }

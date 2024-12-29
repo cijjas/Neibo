@@ -1,5 +1,12 @@
 <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
     <!-- If no amenities -->
+    <div class="upper-feed-buttons-box m-b-20">
+        <a [routerLink]="['/admin/amenities/new']" class="cool-feed-button">
+            Create Amenity
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    </div>
+
     <div class="no-posts-found" *ngIf="amenities?.length === 0 && !isLoading">
         <i class="circle-icon fa-solid fa-magnifying-glass"></i>
         Amenities not found
@@ -13,14 +20,29 @@
         <!-- List each amenity -->
         <div *ngFor="let amenity of amenities" class="cool-static-container m-b-20" style="word-wrap: break-word;"
             aria-hidden="true">
-            <h2>{{ amenity.name }}</h2>
+
+            <div class="f-r-sb-c">
+                <h2>{{ amenity.name }}</h2>
+                <div class="f-r-sb-c">
+                    <a class="btn  " [routerLink]="['/admin/amenities', amenity.self, 'edit']">
+                        <i class="fa-solid fa-pen"></i>
+                        Edit
+                    </a>
+                    <a class="btn btn-link">
+                        <i class="fas fa-trash" style="color: var(--error);" (click)="deleteAmenity(amenity.self)"></i>
+                    </a>
+                </div>
+
+            </div>
+
+
             <p class="mb-3" style="color:var(--lighttext);">{{ amenity.description }}</p>
 
             <div class="d-flex flex-column justify-content-center align-items-center w-100">
                 <div class="cool-table w-100">
                     <table class="table-striped w-100">
                         <tr>
-                            <th>Amenity Hours</th>
+                            <th>Hours</th>
                             <th *ngFor="let d of days">{{ d.label }}</th>
                         </tr>
                         <tr *ngFor="let t of times">
@@ -43,11 +65,7 @@
                 </div>
             </div>
         </div>
+        <app-paginator [totalPages]="totalPages" [currentPage]="currentPage"
+            (pageChange)="onPageChange($event)"></app-paginator>
     </div>
 </div>
-
-<!-- PAGINATOR -->
-<!-- <div class="m-t-20">
-    <app-paginator [totalPages]="totalPages" [currentPage]="currentPage" (pageChange)="onPageChange($event)">
-    </app-paginator>
-</div> -->

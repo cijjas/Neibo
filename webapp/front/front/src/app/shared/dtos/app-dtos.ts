@@ -72,7 +72,8 @@ export interface AffiliationDto {
 export interface AmenityDto {
     name: string;
     description: string;
-    _links: Links;
+    selectedShifts?: string[];
+    _links?: Links;
 }
 
 export interface AttendanceDto {

@@ -7,8 +7,6 @@ import { AdminNeighborsRequestsPageComponent } from './admin-neighbors-requests-
 import { AdminAmenityEditPageComponent } from './admin-amenity-edit-page/admin-amenity-edit-page.component';
 import { AdminServiceProvidersRequestsPageComponent } from './admin-service-providers-requests-page/admin-service-providers-requests-page.component';
 import { AdminInformationPageComponent } from './admin-information-page/admin-information-page.component';
-import { AdminContactCreatePageComponent } from './admin-contact-create-page/admin-contact-create-page.component';
-import { AdminCreateResourcePageComponent } from './admin-create-resource-page/admin-create-resource-page.component';
 import { AdminCreateEventComponent } from './admin-create-event/admin-create-event.component';
 import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenities-page.component';
 import { AdminAmenityCreatePageComponent } from './admin-amenity-create-page/admin-amenity-create-page.component';
@@ -19,23 +17,21 @@ const routes: Routes = [
         component: AdminLayoutComponent,
         children: [
             { path: 'announcement/new', component: AdminCreateAnnouncementPageComponent },
-
+            // neighbors and services
             { path: 'neighbors/requests', component: AdminNeighborsRequestsPageComponent },
             { path: 'neighbors', component: AdminNeighborsRequestsPageComponent },
-
             { path: 'service-providers/requests', component: AdminServiceProvidersRequestsPageComponent },
             { path: 'service-providers', component: AdminServiceProvidersRequestsPageComponent },
-
+            // amenities
             { path: 'amenities', component: AdminAmenitiesPageComponent },
             { path: 'amenities/new', component: AdminAmenityCreatePageComponent },
-            { path: 'amenities/edit', component: AdminAmenityEditPageComponent },
+            { path: 'amenities/:id/edit', component: AdminAmenityEditPageComponent },
+            // calendar
             { path: 'calendar/events/create', component: AdminCreateEventComponent },
-
+            // information
             { path: 'information', component: AdminInformationPageComponent },
         ]
     },
-    { path: 'information/contact-info/new', component: AdminContactCreatePageComponent },
-    { path: 'information/resource-info/new', component: AdminCreateResourcePageComponent },
 ];
 
 

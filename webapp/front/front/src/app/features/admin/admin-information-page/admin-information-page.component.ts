@@ -1,31 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastService } from '@core/index';
+import { ImageService, ToastService } from '@core/index';
 import { ContactService, ResourceService } from '@shared/index';
+import { catchError, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-admin-information-page',
   templateUrl: './admin-information-page.component.html',
 })
 export class AdminInformationPageComponent implements OnInit {
-  // Contacts
+  // ------------------ Contacts ------------------
   phoneNumbersList: any[] = [];
   contactCurrentPage = 1;
   contactPageSize = 10;
   contactTotalPages = 1;
+  showCreateContactDialog = false;
+  contactForm: FormGroup;
 
-  // Resources
+  // ------------------ Resources ------------------
   resourceList: any[] = [];
   resourceCurrentPage = 1;
   resourcePageSize = 10;
   resourceTotalPages = 1;
-
-  // Dialog toggle
-  showCreateContactDialog = false;
-
-  // Reactive form for Contact
-  contactForm: FormGroup;
+  // New Resource dialog
+  showCreateResourceDialog = false;
+  resourceForm: FormGroup;
+  // For image preview
+  previewSrc: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,32 +35,23 @@ export class AdminInformationPageComponent implements OnInit {
     private fb: FormBuilder,
     private contactService: ContactService,
     private resourceService: ResourceService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private imageService: ImageService
   ) { }
 
   ngOnInit(): void {
-    // Build the contact form
+    // ------------------ Contact Form ------------------
     this.contactForm = this.fb.group({
-      contactName: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(50), // Limit to 50 characters
-        ],
-      ],
-      contactAddress: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(50), // Limit to 50 characters
-        ],
-      ],
-      contactPhone: [
-        '',
-        [
-          Validators.required,
-        ],
-      ],
+      contactName: ['', [Validators.required, Validators.maxLength(50)]],
+      contactAddress: ['', [Validators.required, Validators.maxLength(50)]],
+      contactPhone: ['', [Validators.required]],
+    });
+
+    // ------------------ Resource Form ------------------
+    this.resourceForm = this.fb.group({
+      title: ['', Validators.required],
+      description: ['', Validators.required],
+      imageFile: [null],
     });
 
     // Subscribe to query params for pagination
@@ -75,7 +68,7 @@ export class AdminInformationPageComponent implements OnInit {
     });
   }
 
-  // Getters for form controls (for simpler usage in template)
+  // ------------------ CONTACT GETTERS ------------------
   get contactNameControl() {
     return this.contactForm.get('contactName');
   }
@@ -86,7 +79,15 @@ export class AdminInformationPageComponent implements OnInit {
     return this.contactForm.get('contactPhone');
   }
 
-  // DIALOG CONTROL
+  // ------------------ RESOURCE GETTERS ------------------
+  get titleControl() {
+    return this.resourceForm.get('title');
+  }
+  get descControl() {
+    return this.resourceForm.get('description');
+  }
+
+  // ------------------ CONTACT DIALOG CONTROL ------------------
   openCreateContactDialog() {
     this.showCreateContactDialog = true;
   }
@@ -94,32 +95,112 @@ export class AdminInformationPageComponent implements OnInit {
     this.showCreateContactDialog = false;
   }
 
-  // SUBMIT CONTACT FORM
+  // ------------------ RESOURCE DIALOG CONTROL ------------------
+  openCreateResourceDialog() {
+    this.showCreateResourceDialog = true;
+    // Reset preview each time we open the dialog
+    this.previewSrc = null;
+    this.resourceForm.reset();
+  }
+  closeCreateResourceDialog() {
+    this.showCreateResourceDialog = false;
+  }
+
+  // ------------------ CONTACT CREATE ------------------
   onSubmit() {
     if (this.contactForm.invalid) {
-      // Mark all as touched so errors appear
       this.contactForm.markAllAsTouched();
       return;
     }
 
-    this.contactService.createContact(
-      this.contactForm.value.contactName,
-      this.contactForm.value.contactPhone,
-      this.contactForm.value.contactAddress
-    ).subscribe({
-      next: (res) => {
-        this.toastService.showToast('Contact created!', 'success');
-        this.closeCreateContactDialog();
-        this.fetchContacts(); // Refresh the contact list
-      },
-      error: (err) => {
-        console.error('Error creating contact:', err);
-        this.toastService.showToast('Failed to create contact.', 'error');
-      },
-    });
+    this.contactService
+      .createContact(
+        this.contactForm.value.contactName,
+        this.contactForm.value.contactPhone,
+        this.contactForm.value.contactAddress
+      )
+      .subscribe({
+        next: () => {
+          this.toastService.showToast('Contact created!', 'success');
+          this.closeCreateContactDialog();
+          this.fetchContacts(); // Refresh
+        },
+        error: (err) => {
+          console.error('Error creating contact:', err);
+          this.toastService.showToast('Failed to create contact.', 'error');
+        },
+      });
   }
 
-  // CONTACTS
+  // ------------------ RESOURCE CREATE ------------------
+  onSubmitResource() {
+    if (this.resourceForm.invalid) {
+      this.resourceForm.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.resourceForm.value;
+    const file: File | null = formValue.imageFile;
+
+    // Create the image first, then create the resource
+    this.createImageObservable(file)
+      .pipe(
+        switchMap((imageUrl) => {
+          if (!imageUrl) {
+            throw new Error('Image upload failed. Resource creation aborted.');
+          }
+          // Proceed to create the resource using the uploaded image URL
+          return this.resourceService.createResource(
+            formValue.title,
+            formValue.description,
+            imageUrl,
+          );
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.toastService.showToast('Resource created successfully!', 'success');
+          this.closeCreateResourceDialog();
+          this.fetchResources(); // Refresh the list of resources
+        },
+        error: (err) => {
+          console.error('Error creating resource:', err);
+          this.toastService.showToast('Failed to create resource.', 'error');
+        },
+      });
+  }
+
+  private createImageObservable(imageFile: File | null): Observable<string | null> {
+    return imageFile
+      ? this.imageService.createImage(imageFile).pipe(
+        catchError((error) => {
+          console.error('Error uploading image:', error);
+          return of(null); // Return null if image upload fails
+        })
+      )
+      : of(null);
+  }
+
+
+
+  // ------------------ IMAGE PREVIEW ------------------
+  onFileChange(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.resourceForm.patchValue({ imageFile: file });
+
+      // file preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewSrc = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.previewSrc = null;
+    }
+  }
+
+  // ------------------ CONTACTS ------------------
   fetchContacts(): void {
     this.contactService
       .getContacts({ page: this.contactCurrentPage, size: this.contactPageSize })
@@ -141,7 +222,6 @@ export class AdminInformationPageComponent implements OnInit {
 
   onContactPageChange(newPage: number): void {
     this.contactCurrentPage = newPage;
-    // Update the query params in the URL (merging with existing)
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { contactsPage: this.contactCurrentPage },
@@ -157,7 +237,7 @@ export class AdminInformationPageComponent implements OnInit {
     });
   }
 
-  // RESOURCES
+  // ------------------ RESOURCES ------------------
   fetchResources(): void {
     this.resourceService
       .getResources({ page: this.resourceCurrentPage, size: this.resourcePageSize })
@@ -194,8 +274,4 @@ export class AdminInformationPageComponent implements OnInit {
     });
   }
 
-  // NAVIGATION
-  goToCreateResource() {
-    this.router.navigate(['admin/information/resource-info/new']);
-  }
 }

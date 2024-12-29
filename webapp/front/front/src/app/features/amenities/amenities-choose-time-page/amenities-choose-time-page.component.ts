@@ -66,7 +66,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
             }
         });
 
-        this.shiftService.getShifts(this.linkService.getLink('neighborhood:shifts'), { forAmenity: this.amenityUrl, forDate: this.date }).subscribe({
+        this.shiftService.getShifts({ forAmenity: this.amenityUrl, forDate: this.date }).subscribe({
             next: (data: Shift[]) => {
                 this.bookings = data;
 

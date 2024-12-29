@@ -99,6 +99,7 @@ public class Links {
     private URI verifiedWorkerRole;
     private URI unverifiedWorkerRole;
     private URI rejectedWorkerRole;
+    private URI affiliations;
 
     public URI getReviewsCount() {
         return reviewsCount;
@@ -866,5 +867,13 @@ public class Links {
 
     public void setRejectedWorkerRole(URI rejectedWorkerRole) {
         this.rejectedWorkerRole = rejectedWorkerRole;
+    }
+
+    public URI getAffiliations() {
+        return affiliations;
+    }
+
+    public void setAffiliations(URI affiliations) {
+        this.affiliations = affiliations;
     }
 }

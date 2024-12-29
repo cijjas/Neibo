@@ -53,7 +53,7 @@
 
   <!-- Add resource button -->
   <div class="upper-feed-buttons-box m-b-20">
-    <button class="cool-feed-button" (click)="goToCreateResource()">
+    <button class="cool-feed-button" (click)="openCreateResourceDialog()">
       Add Resource <i class="fa-solid fa-plus"></i>
     </button>
   </div>
@@ -149,6 +149,69 @@
       <!-- Submit Button -->
       <div class="d-flex justify-content-center mt-4">
         <button type="submit" class="w-75 cool-button pure filled-interesting square-radius font-size-14 "
+          style="height:40px;">
+          Create
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<!-- Create Resource DIALOG -->
+<div class="dialog" [ngClass]="{ 'show-dialog': showCreateResourceDialog }">
+  <div class="dialog-content">
+    <div class="dialog-header">
+      <h3 class="font-size-20 font-weight-bold" style="color: var(--primary)">
+        Create Resource
+      </h3>
+    </div>
+
+    <!-- Close button -->
+    <a class="close-button" (click)="closeCreateResourceDialog()">
+      <i class="fas fa-close"></i>
+    </a>
+
+    <!-- Resource Form -->
+    <form [formGroup]="resourceForm" (ngSubmit)="onSubmitResource()" enctype="multipart/form-data" novalidate>
+      <div class="form-column" style="margin-top:1rem;">
+        <!-- Title -->
+        <div class="form-group">
+          <input formControlName="title" class="cool-input" placeholder="Title" type="text" />
+          <div class="form-row form-error" *ngIf="titleControl?.invalid && titleControl?.touched">
+            <p class="error">Title is required</p>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <input formControlName="description" class="cool-input" placeholder="Description" type="text" />
+          <div class="form-row form-error" *ngIf="descControl?.invalid && descControl?.touched">
+            <p class="error">Description is required</p>
+          </div>
+        </div>
+
+        <!-- Image File Input -->
+        <!-- If you want to keep drag-and-drop, replace this input with your drag/drop code -->
+        <div class="form-group">
+          <label class="drop-container">
+            <span class="drop-title">Drop files</span>
+            Or
+            <input type="file" accept="image/*" (change)="onFileChange($event)" />
+          </label>
+        </div>
+
+        <!-- Preview (optional) -->
+        <div style="text-align: center">
+          <img *ngIf="previewSrc" [src]="previewSrc" class="blogpost-image"
+            style="max-width:90% !important; max-height: 30vh !important; object-fit: contain;" alt="uploading image" />
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="w-75 cool-button pure filled-interesting square-radius font-size-14"
           style="height:40px;">
           Create
         </button>

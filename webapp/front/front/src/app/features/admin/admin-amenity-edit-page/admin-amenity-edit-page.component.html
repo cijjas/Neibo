@@ -1,91 +1,85 @@
 <div class="cool-static-container shifts-reservation">
-    <h2 class="card-title c-primary">{{ amenityName }}</h2>
+    <h2 class="card-title">Edit New Amenity</h2>
     <div class="divider"></div>
-
-    <form [formGroup]="amenityForm" (ngSubmit)="onSubmit()" novalidate>
-        <!-- Name -->
-        <div class="d-flex flex-column justify-content-between align-items-center mb-2 mt-2">
-            <div class="form-row">
-                <input formControlName="name" class="cool-input" placeholder="Name" />
-                <!-- Error example -->
-                <div class="form-row form-error" *ngIf="nameControl?.invalid && nameControl?.touched">
-                    <p class="error">Name is required</p>
+    <div>
+        <form [formGroup]="amenityForm" (ngSubmit)="onSubmit()" novalidate>
+            <!-- Amenity Name -->
+            <div class="d-flex flex-column justify-content-between align-items-center mb-2 mt-2">
+                <div class="form-row">
+                    <input formControlName="name" class="cool-input" placeholder="Name" type="text" />
+                    <div class="form-row form-error" *ngIf="nameControl?.invalid && nameControl?.touched">
+                        <p class="error">Name is required</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Description -->
-        <div class="d-flex flex-column justify-content-between align-items-center">
-            <textarea formControlName="description" class="cool-input textarea-min-max" rows="5"
-                placeholder="Description"></textarea>
-            <div class="form-row form-error" *ngIf="descControl?.invalid && descControl?.touched">
-                <p class="error">Description is required</p>
+            <!-- Amenity Description -->
+            <div class="d-flex flex-column justify-content-between align-items-center">
+                <textarea formControlName="description" class="cool-input textarea-min-max" rows="5"
+                    placeholder="Description"></textarea>
+                <div class="form-row form-error" *ngIf="descControl?.invalid && descControl?.touched">
+                    <p class="error">Description is required</p>
+                </div>
             </div>
-        </div>
 
-        <p class="m-t-40">Amenity Hours</p>
-        <div class="divider"></div>
+            <p class="m-t-40">Amenity Hours</p>
+            <div class="divider"></div>
 
-        <!-- Any global form errors could go here -->
-        <div class="f-c-c-c w-100 m-t-40">
-            <!-- <p class="error" *ngIf="formErrorMsg">{{ formErrorMsg }}</p> -->
-        </div>
+            <!-- Action buttons -->
+            <div class="f-r-sb-c w-100 pl-3 pr-3">
+                <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">9-17</a>
+                <a (click)="uncheckWeekends()" class="w-100 cool-button red">Clear weekend</a>
+                <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">Clear all</a>
+            </div>
 
-        <div class="f-r-sb-c w-100 pl-3 pr-3">
-            <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">9-17</a>
-            <a (click)="uncheckWeekends()" class="w-100 cool-button red">Clear weekend</a>
-            <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">Clear all</a>
-        </div>
+            <!-- Time Table (Dynamic) -->
+            <div class="cool-table w-100 p-4">
+                <table>
+                    <tr>
+                        <th>Row</th>
+                        <!-- Header columns for unique days -->
+                        <th *ngFor="let day of uniqueDays">
+                            {{ getAbbreviatedDay(day) }}
+                        </th>
+                    </tr>
 
-        <div class="cool-table w-100 p-4">
-            <table>
-                <tr>
-                    <th>Row</th>
-                    <th>Mo</th>
-                    <th>Tu</th>
-                    <th>We</th>
-                    <th>Th</th>
-                    <th>Fr</th>
-                    <th>Sa</th>
-                    <th>Su</th>
-                </tr>
-
-                <!-- For each row of timePairs -->
-                <tr *ngFor="let time of timesPairs; let rowIndex = index">
-                    <td>
-                        <label class="container">
-                            <input type="checkbox" (click)="toggleRow(rowIndex)" />
-                        </label>
-                    </td>
-
-                    <!-- For each day in daysPairs -->
-                    <td *ngFor="let day of daysPairs; let colIndex = index">
-                        <div class="cat creation">
-                            <label class="w-100">
-                                <!-- Example of referencing "time-day" checkboxes -->
-                                <!-- <input type="checkbox" [checked]="isShiftSelected(day.key, time.key)"
-                                    (change)="onShiftChange(day.key, time.key, $event.target.checked)" />
-                                <span>{{ time.value.key }}</span> -->
+                    <!-- For each time as a row -->
+                    <tr *ngFor="let time of uniqueTimes; let rowIndex = index">
+                        <td>
+                            <label class="container">
+                                <!-- Toggle entire row (time) -->
+                                <input type="checkbox" [checked]="isRowSelected(time)" (click)="toggleRow(time)" />
                             </label>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                        </td>
 
-        <div class="f-c-c-c">
-            <div class="f-r-c-c" style="gap: 5px">
-                Remember that
-                <span class="c-primary font-weight-bolder"> only selected shifts are active </span>
-                for your amenity.
+                        <!-- For each day, show a cell you can toggle -->
+                        <td *ngFor="let day of uniqueDays" [class.selected]="isShiftSelectedByDayTime(day, time)">
+                            <div class="cell-wrapper" (click)="toggleCellSelection(day, time)">
+                                <!-- Invisible checkbox for accessibility -->
+                                <input type="checkbox" [checked]="isShiftSelectedByDayTime(day, time)"
+                                    class="hidden-checkbox" />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
-        </div>
 
-        <!-- Submit button -->
-        <div class="d-flex justify-content-end m-t-40">
-            <button id="submit-checks" type="submit" class="cool-button cool-small on-bg w-25" style="height:40px;">
-                Save changes
-            </button>
-        </div>
-    </form>
+            <!-- Info text -->
+            <div class="f-c-c-c">
+                <div class="f-r-c-c" style="gap: 5px">
+                    Remember that
+                    <span class="c-primary font-weight-bolder"> only selected shifts </span>
+                    will be active for your amenity.
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="d-flex justify-content-end m-t-40">
+                <button id="submit-checks" type="submit" class="cool-button cool-small on-bg w-25" style="height: 40px;"
+                    [disabled]="!anyShiftChecked">
+                    Save changes
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
