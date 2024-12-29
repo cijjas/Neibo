@@ -83,7 +83,6 @@ export class CalendarEventPageComponent implements OnInit {
     const userUrl = this.linkService.getLink('user:self');
     this.attendanceService.createAttendance(this.event.self, userUrl)
       .subscribe(() => {
-        console.log('Attendance created');
         this.willAttend = true;
         // Reload attendees if needed
         this.loadAttendance();
@@ -95,7 +94,6 @@ export class CalendarEventPageComponent implements OnInit {
 
     )
       .subscribe(() => {
-        console.log('Attendance removed');
         this.willAttend = false;
         // Reload attendees
         this.loadAttendance();

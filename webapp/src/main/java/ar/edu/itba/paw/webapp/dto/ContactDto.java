@@ -29,13 +29,13 @@ public class ContactDto {
 
         dto.name = contact.getContactName();
         dto.address = contact.getContactAddress();
-        dto.phone = contact.getContactAddress();
+        dto.phone = contact.getContactPhone();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(contact.getNeighborhood().getNeighborhoodId()))
-                .path("contact")
+                .path("contacts")
                 .path(String.valueOf(contact.getContactId()))
                 .build());
         links.setNeighborhood(uriInfo.getBaseUriBuilder()

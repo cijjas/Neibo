@@ -26,17 +26,16 @@ const routes: Routes = [
             { path: 'service-providers/requests', component: AdminServiceProvidersRequestsPageComponent },
             { path: 'service-providers', component: AdminServiceProvidersRequestsPageComponent },
 
-            { path: 'information', component: AdminInformationPageComponent },
-            { path: 'information/contact-info/new', component: AdminContactCreatePageComponent },
-            { path: 'information/resource-info/new', component: AdminCreateResourcePageComponent },
-
             { path: 'amenities', component: AdminAmenitiesPageComponent },
             { path: 'amenities/new', component: AdminAmenityCreatePageComponent },
             { path: 'amenities/edit', component: AdminAmenityEditPageComponent },
+            { path: 'calendar/events/create', component: AdminCreateEventComponent },
 
+            { path: 'information', component: AdminInformationPageComponent },
         ]
     },
-    { path: 'calendar/events/create', component: AdminCreateEventComponent },
+    { path: 'information/contact-info/new', component: AdminContactCreatePageComponent },
+    { path: 'information/resource-info/new', component: AdminCreateResourcePageComponent },
 ];
 
 

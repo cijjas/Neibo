@@ -54,7 +54,7 @@ export class InformationPageComponent implements OnInit {
   }
 
   fetchContacts(): void {
-    this.contactService.getContacts(this.contactsUrl, { page: this.contactCurrentPage, size: this.contactPageSize })
+    this.contactService.getContacts({ page: this.contactCurrentPage, size: this.contactPageSize })
       .subscribe((result) => {
         this.contacts = result.contacts;
         this.contactTotalPages = result.totalPages;
@@ -63,7 +63,7 @@ export class InformationPageComponent implements OnInit {
   }
 
   fetchResources(): void {
-    this.resourceService.getResources(this.resourcesUrl, { page: this.resourceCurrentPage, size: this.resourcePageSize })
+    this.resourceService.getResources({ page: this.resourceCurrentPage, size: this.resourcePageSize })
       .subscribe((result) => {
         this.resources = result.resources;
         this.resourceTotalPages = result.totalPages;

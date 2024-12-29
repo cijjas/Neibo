@@ -75,7 +75,7 @@ public class WorkerController {
         List<Long> neighborhoodIds = extractFirstIds(neighborhoods);
         List<Long> professionIds = extractFirstIds(professions);
         Long workerRoleId = extractOptionalFirstId(workerRole);
-        Long workerStatusId = extractOptionalFirstId(workerRole);
+        Long workerStatusId = extractOptionalFirstId(workerStatus);
 
         // Content
         List<Worker> workers = ws.getWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId, page, size);

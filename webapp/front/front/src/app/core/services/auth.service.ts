@@ -222,6 +222,15 @@ export class AuthService {
 
     private waitForLinksToLoad(): Observable<boolean> {
         const requiredLinks = [
+            'neighborhood:superAdministratorUserRole',
+            'neighborhood:administratorUserRole',
+            'neighborhood:neighborUserRole',
+            'neighborhood:unverifiedNeighborUserRole',
+            'neighborhood:rejectedUserRole',
+            'neighborhood:workerUserRole',
+            'neighborhood:verifiedWorkerRole',
+            'neighborhood:unverifiedWorkerRole',
+            'neighborhood:rejectedWorkerRole',
             'neighborhood:amenities',
             'neighborhood:announcements',
             'neighborhood:announcementsChannel',

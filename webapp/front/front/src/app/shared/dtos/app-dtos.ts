@@ -104,7 +104,7 @@ export interface ContactDto {
     name: string;
     address: string;
     phone: string;
-    _links: Links;
+    _links?: Links;
 }
 
 export interface DepartmentDto {
@@ -118,7 +118,7 @@ export interface EventDto {
     eventDate: Date;
     startTime: string;
     endTime: string;
-    _links: Links;
+    _links?: Links;
 }
 
 export interface ImageDto {
@@ -224,7 +224,8 @@ export interface RequestStatusDto {
 export interface ResourceDto {
     title: string;
     description: string;
-    _links: Links;
+    image?: string;
+    _links?: Links;
 }
 
 export interface ReviewDto {

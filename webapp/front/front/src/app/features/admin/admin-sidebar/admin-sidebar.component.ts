@@ -10,6 +10,9 @@ export class AdminSidebarComponent {
   constructor(private router: Router) { }
 
   isActive(route: string): boolean {
-    return this.router.url === route;
+    const currentPath = this.router.url.split('?')[0];
+    return currentPath === route;
   }
+
+
 }

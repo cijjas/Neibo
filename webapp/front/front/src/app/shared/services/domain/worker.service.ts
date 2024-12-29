@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession, ReviewsCountDto, PostsCountDto } from '@shared/index';
+import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession, ReviewsCountDto, PostsCountDto, Affiliation } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })

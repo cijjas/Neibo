@@ -80,8 +80,6 @@ export class PostService {
             );
     }
 
-
-
     public createPost(postForm: PostDto): Observable<string | null> {
         const createPostUrl = this.linkService.getLink('neighborhood:posts');
 

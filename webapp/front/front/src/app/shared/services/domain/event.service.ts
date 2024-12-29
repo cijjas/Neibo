@@ -11,7 +11,7 @@ import { catchError } from 'rxjs/operators';
 export class EventService {
     constructor(
         private http: HttpClient,
-        private linkStorage: HateoasLinksService
+        private linkService: HateoasLinksService
     ) { }
 
     public getEvent(url: string): Observable<Event> {
@@ -77,24 +77,43 @@ export class EventService {
         );
     }
 
-    public createEvent(event: Partial<Event>): Observable<Event> {
-        const eventsUrl = this.linkStorage.getLink('neighborhood:events');
+    public createEvent(
+        name: string,
+        description: string,
+        eventDate: Date,
+        startTime: string,
+        endTime: string,
+    ): Observable<string | null> {
 
-        const eventPayload = {
-            name: event.name,
-            description: event.description,
-            eventDate: event.eventDate,
-            startTime: event.startTime,
-            endTime: event.endTime
+        const body: EventDto = {
+            name: name,
+            description: description,
+            eventDate: eventDate,
+            startTime: startTime,
+            endTime: endTime
         };
 
-        return this.http.post<EventDto>(eventsUrl, eventPayload).pipe(
-            mergeMap((eventDto) => mapEvent(this.http, eventDto))
-        );
+        let eventsUrl: string = this.linkService.getLink('neighborhood:events')
+
+        return this.http.post(eventsUrl, body, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found:');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating event', name, error);
+                return of(null);
+            })
+        )
     }
 
-    public deleteEvent(url: string): Observable<void> {
-        return this.http.delete<void>(url);
+    public deleteEvent(eventUrl: string): Observable<void> {
+        return this.http.delete<void>(eventUrl);
     }
 }
 

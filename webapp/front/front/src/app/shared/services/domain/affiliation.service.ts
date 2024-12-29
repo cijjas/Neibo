@@ -3,10 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { Affiliation, mapWorker, parseLinkHeader, WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class AffiliationService {
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private linkService: HateoasLinksService,
+    ) { }
 
     public getAffiliation(url: string): Observable<Affiliation> {
         return this.http.get<AffiliationDto>(url).pipe(
@@ -51,6 +55,20 @@ export class AffiliationService {
                     );
                 })
             );
+    }
+
+    public verifyWorker(updateUrl: string): Observable<Affiliation> {
+        let verifiedWorkerRole: string = this.linkService.getLink('neighborhood:verifiedWorkerRole')
+        return this.http.patch<AffiliationDto>(updateUrl, { workerRole: verifiedWorkerRole }).pipe(
+            mergeMap((newAffiliation) => mapAffiliation(this.http, newAffiliation))
+        );
+    }
+
+    public rejectWorker(updateUrl: string): Observable<Affiliation> {
+        let rejectedUserRoleUrl: string = this.linkService.getLink('neighborhood:rejectedWorkerRole')
+        return this.http.patch<AffiliationDto>(updateUrl, { workerRole: rejectedUserRoleUrl }).pipe(
+            mergeMap((newAffiliation) => mapAffiliation(this.http, newAffiliation))
+        );
     }
 }
 

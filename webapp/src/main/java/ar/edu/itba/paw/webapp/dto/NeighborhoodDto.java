@@ -258,6 +258,42 @@ public class NeighborhoodDto {
                     .path("posts")
                     .path("count")
                     .build());
+            links.setAdministratorUserRole(uriInfo.getBaseUriBuilder()
+                    .path("user-roles")
+                    .path(String.valueOf(UserRole.ADMINISTRATOR.getId()))
+                    .build());
+            links.setNeighborUserRole(uriInfo.getBaseUriBuilder()
+                    .path("user-roles")
+                    .path(String.valueOf(UserRole.NEIGHBOR.getId()))
+                    .build());
+            links.setUnverifiedNeighborUserRole(uriInfo.getBaseUriBuilder()
+                    .path("user-roles")
+                    .path(String.valueOf(UserRole.UNVERIFIED_NEIGHBOR.getId()))
+                    .build());
+            links.setRejectedUserRole(uriInfo.getBaseUriBuilder()
+                    .path("user-roles")
+                    .path(String.valueOf(UserRole.REJECTED.getId()))
+                    .build());
+            links.setWorkerUserRole(uriInfo.getBaseUriBuilder()
+                    .path("user-roles")
+                    .path(String.valueOf(UserRole.WORKER.getId()))
+                    .build());
+            links.setSuperAdministratorUserRole(uriInfo.getBaseUriBuilder()
+                    .path("user-roles")
+                    .path(String.valueOf(UserRole.SUPER_ADMINISTRATOR.getId()))
+                    .build());
+            links.setVerifiedWorkerRole(uriInfo.getBaseUriBuilder()
+                    .path("worker-roles")
+                    .path(String.valueOf(WorkerRole.VERIFIED_WORKER.getId()))
+                    .build());
+            links.setUnverifiedWorkerRole(uriInfo.getBaseUriBuilder()
+                    .path("worker-roles")
+                    .path(String.valueOf(WorkerRole.UNVERIFIED_WORKER.getId()))
+                    .build());
+            links.setRejectedWorkerRole(uriInfo.getBaseUriBuilder()
+                    .path("worker-roles")
+                    .path(String.valueOf(WorkerRole.REJECTED.getId()))
+                    .build());
         }
         dto.set_links(links);
         return dto;

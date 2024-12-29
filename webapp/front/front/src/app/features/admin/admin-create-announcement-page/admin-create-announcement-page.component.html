@@ -1,15 +1,13 @@
 <div class="cool-static-container">
-    <h2 class="card-title">Create an announcement</h2>
+    <h2 class="card-title">Create an Announcement</h2>
     <div class="divider"></div>
 
-    <!-- Angular form in place of spring:form -->
-    <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" novalidate>
+    <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
         <!-- Subject -->
         <div class="form-column" style="margin-top:1rem;">
             <div class="form-group">
                 <div class="form-row">
                     <input formControlName="subject" class="cool-input" placeholder="Subject" type="text" />
-                    <!-- Example area for error message -->
                     <div class="form-row form-error" *ngIf="subjectControl?.invalid && subjectControl?.touched">
                         <p class="error">Subject is required</p>
                     </div>
@@ -32,6 +30,8 @@
                     Or
                     <input type="file" id="images" accept="image/*" (change)="preview($event)" />
                 </label>
+                <!-- Error message if any -->
+                <p class="error" *ngIf="fileUploadError">{{ fileUploadError }}</p>
             </div>
 
             <!-- Image preview -->
@@ -44,7 +44,6 @@
             <div class="tags-input mb-0" style="display:flex; flex-direction:column; align-items:center;">
                 <input #tagInput type="text" placeholder="Enter a tag"
                     (keyup.enter)="addTagToApply(tagInput.value); tagInput.value='';" />
-                <input type="hidden" id="tags-input" value="" />
             </div>
 
             <!-- Available Tags (click to add) -->
@@ -52,6 +51,13 @@
                 <a class="tag-option" *ngFor="let tag of availableTags" (click)="addTagToApply(tag)">
                     {{ tag }}
                 </a>
+            </div>
+
+            <!-- Display selected tags with a remove button -->
+            <div class="m-b-10 tags-row tags">
+                <span class="tag-option" *ngFor="let tag of selectedTags" (click)="removeTag(tag)">
+                    {{ tag }} &times;
+                </span>
             </div>
         </div>
 

@@ -90,6 +90,15 @@ public class Links {
     private URI reviewsCount;
     private URI postsCount;
     private URI pendingRequestsCount;
+    private URI administratorUserRole;
+    private URI superAdministratorUserRole;
+    private URI neighborUserRole;
+    private URI unverifiedNeighborUserRole;
+    private URI rejectedUserRole;
+    private URI workerUserRole;
+    private URI verifiedWorkerRole;
+    private URI unverifiedWorkerRole;
+    private URI rejectedWorkerRole;
 
     public URI getReviewsCount() {
         return reviewsCount;
@@ -785,5 +794,77 @@ public class Links {
 
     public void setPendingRequestsCount(URI pendingRequestsCount) {
         this.pendingRequestsCount = pendingRequestsCount;
+    }
+
+    public URI getAdministratorUserRole() {
+        return administratorUserRole;
+    }
+
+    public void setAdministratorUserRole(URI administratorUserRole) {
+        this.administratorUserRole = administratorUserRole;
+    }
+
+    public URI getSuperAdministratorUserRole() {
+        return superAdministratorUserRole;
+    }
+
+    public void setSuperAdministratorUserRole(URI superAdministratorUserRole) {
+        this.superAdministratorUserRole = superAdministratorUserRole;
+    }
+
+    public URI getNeighborUserRole() {
+        return neighborUserRole;
+    }
+
+    public void setNeighborUserRole(URI neighborUserRole) {
+        this.neighborUserRole = neighborUserRole;
+    }
+
+    public URI getUnverifiedNeighborUserRole() {
+        return unverifiedNeighborUserRole;
+    }
+
+    public void setUnverifiedNeighborUserRole(URI unverifiedNeighborUserRole) {
+        this.unverifiedNeighborUserRole = unverifiedNeighborUserRole;
+    }
+
+    public URI getRejectedUserRole() {
+        return rejectedUserRole;
+    }
+
+    public void setRejectedUserRole(URI rejectedUserRole) {
+        this.rejectedUserRole = rejectedUserRole;
+    }
+
+    public URI getWorkerUserRole() {
+        return workerUserRole;
+    }
+
+    public void setWorkerUserRole(URI workerUserRole) {
+        this.workerUserRole = workerUserRole;
+    }
+
+    public URI getVerifiedWorkerRole() {
+        return verifiedWorkerRole;
+    }
+
+    public void setVerifiedWorkerRole(URI verifiedWorkerRole) {
+        this.verifiedWorkerRole = verifiedWorkerRole;
+    }
+
+    public URI getUnverifiedWorkerRole() {
+        return unverifiedWorkerRole;
+    }
+
+    public void setUnverifiedWorkerRole(URI unverifiedWorkerRole) {
+        this.unverifiedWorkerRole = unverifiedWorkerRole;
+    }
+
+    public URI getRejectedWorkerRole() {
+        return rejectedWorkerRole;
+    }
+
+    public void setRejectedWorkerRole(URI rejectedWorkerRole) {
+        this.rejectedWorkerRole = rejectedWorkerRole;
     }
 }

@@ -16,6 +16,7 @@ import { AdminInformationPageComponent } from './admin-information-page/admin-in
 import { AdminContactCreatePageComponent } from './admin-contact-create-page/admin-contact-create-page.component';
 import { AdminCreateResourcePageComponent } from './admin-create-resource-page/admin-create-resource-page.component';
 import { AdminCreateEventComponent } from './admin-create-event/admin-create-event.component';
+import { AdminServiceProvidersRequestsPageComponent } from './admin-service-providers-requests-page/admin-service-providers-requests-page.component';
 
 
 @NgModule({
@@ -29,14 +30,14 @@ import { AdminCreateEventComponent } from './admin-create-event/admin-create-eve
         AdminInformationPageComponent,
         AdminContactCreatePageComponent,
         AdminCreateResourcePageComponent,
-        AdminCreateEventComponent
+        AdminCreateEventComponent,
+        AdminServiceProvidersRequestsPageComponent
     ],
     imports: [
         CommonModule,
         SharedModule,
         CalendarWidgetComponent,
         AdminRoutingModule,
-
     ],
 
 })

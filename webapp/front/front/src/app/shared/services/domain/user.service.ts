@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { map, mergeMap } from 'rxjs/operators'
-import { LanguageDto, UserDto, UserRoleDto, User, parseLinkHeader } from '@shared/index'
+import { LanguageDto, UserDto, UserRoleDto, User, parseLinkHeader, Roles } from '@shared/index'
 import { HateoasLinksService, ImageService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -10,8 +10,7 @@ export class UserService {
     constructor(
         private http: HttpClient,
         private linkService: HateoasLinksService,
-        private imageService: ImageService
-
+        private imageService: ImageService,
     ) { }
 
     public getUser(userUrl: string): Observable<User> {
@@ -21,13 +20,14 @@ export class UserService {
     }
 
     public getUsers(
-        userUrl: string,
         queryParams: {
             userRole?: string;
             page?: number;
             size?: number;
         } = {}
     ): Observable<{ users: User[]; totalPages: number; currentPage: number }> {
+        let userUrl: string = this.linkService.getLink('neighborhood:users');
+
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -87,6 +87,20 @@ export class UserService {
                     mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
                 );
             })
+        );
+    }
+
+    public verifyUser(user: User): Observable<User> {
+        let neighborUserRoleUrl: string = this.linkService.getLink('neighborhood:neighborUserRole')
+        return this.http.patch<UserDto>(user.self, { userRole: neighborUserRoleUrl }).pipe(
+            mergeMap((newUser) => mapUser(this.http, newUser))
+        );
+    }
+
+    public rejectUser(user: User): Observable<User> {
+        let rejectedUserRoleUrl: string = this.linkService.getLink('neighborhood:rejectedUserRole')
+        return this.http.patch<UserDto>(user.self, { userRole: rejectedUserRoleUrl }).pipe(
+            mergeMap((newUser) => mapUser(this.http, newUser))
         );
     }
 }

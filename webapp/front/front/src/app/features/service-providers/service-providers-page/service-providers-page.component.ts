@@ -55,10 +55,7 @@ export class ServiceProvidersPageComponent implements OnInit {
 
     this.workerService.getWorkers(workerParams)
       .subscribe(result => {
-        console.log(result)
         this.workersList = result.workers;
-        console.log(this.workersList)
-
         this.totalPages = result.totalPages;
         this.currentPage = result.currentPage;
       });

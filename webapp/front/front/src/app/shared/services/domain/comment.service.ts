@@ -73,9 +73,6 @@ export function mapComment(http: HttpClient, commentDto: CommentDto): Observable
             .pipe(mergeMap((userDto) => mapUser(http, userDto))),
     ]).pipe(
         map(([author]) => {
-            console.log("HOLA");
-            console.log(commentDto.creationDate)
-            console.log(new Date(commentDto.creationDate))
             return {
                 message: commentDto.message,
                 createdAt: commentDto.creationDate,

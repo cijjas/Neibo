@@ -17,6 +17,6 @@ export class ToastService {
         this.toastSubject.next({ message, type, visible: true });
         setTimeout(() => {
             this.toastSubject.next({ message: '', type, visible: false });
-        }, 5000); // Hide the toast after 3 seconds
+        }, 7000);
     }
 }
