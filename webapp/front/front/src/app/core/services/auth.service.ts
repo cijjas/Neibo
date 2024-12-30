@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { catchError, forkJoin, mergeMap, Observable, of, tap, throwError } from "rxjs";
 import { NeighborhoodDto, UserDto, mapNeighborhood, mapUser } from "@shared/index";
 import { HateoasLinksService, UserSessionService } from "@core/index";
+import { ApiRegistry } from "./api-registry.service";
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthService {
     constructor(
         private http: HttpClient,
         private hateoasLinksService: HateoasLinksService,
-        private userSessionService: UserSessionService
+        private userSessionService: UserSessionService,
+        private apiRegistry: ApiRegistry
     ) { }
 
     /**
@@ -37,42 +39,34 @@ export class AuthService {
         // Clear old tokens
         this.clearTokens();
 
-        // Attempt login
         return this.http.get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
             .pipe(
                 mergeMap((response) => {
-                    // Handle Access Token from the response headers
                     const accessToken = response.headers.get('X-Access-Token');
-                    // Handle Refresh Token from the response headers (if your backend sets it)
-                    const refreshToken = response.headers.get('X-Refresh-Token'); // e.g., "X-Refresh-Token"
+                    const refreshToken = response.headers.get('X-Refresh-Token');
+                    const userUrl = this.extractUrl(response.headers.get('X-User-URL'));
+                    const neighborhoodUrl = this.extractUrl(response.headers.get('X-Neighborhood-URL'));
 
                     if (accessToken) {
                         storage.setItem(this.authTokenKey, accessToken);
-                        this.userSessionService.setAccessToken(accessToken);
+                        this.userSessionService.setAccessToken(accessToken);    // This line is unnecessary, as the getAccessToken is never utilized
                     }
                     if (refreshToken) {
                         storage.setItem(this.refreshTokenKey, refreshToken);
-                        // If you want to store it in your session service, you can:
-                        // this.userSessionService.setRefreshToken(refreshToken);
                     }
 
-                    // Extract User and Neighborhood URLs
-                    const userUrl = response.headers.get('X-User-URL')
-                        ?.split(';')[0].replace(/[<>]/g, '');
-                    const neighborhoodUrl = response.headers.get('X-Neighborhood-URL')
-                        ?.split(';')[0].replace(/[<>]/g, '');
+                    // Register Root Endpoints
+                    const rootLinks = response.body._links;
+                    this.registerLinks(rootLinks, 'root');
 
-                    // Prepare Observables for user and neighborhood
                     const userObservable = userUrl
                         ? this.http.get<UserDto>(userUrl).pipe(
-                            mergeMap((userDto) => {
-                                this.saveLinksFromDto(userDto._links, 'user');
-                                return mapUser(this.http, userDto);
-                            }),
-                            tap((user) => this.userSessionService.setUserInformation(user)),
-                            catchError((error) => {
-                                console.error('Error fetching user:', error);
-                                return of(null);
+                            tap((userDto) => {
+                                this.registerLinks(userDto._links, 'user');
+                                this.saveLinksFromDto(userDto._links, 'user'); // Soon to be deprecated
+                                mapUser(this.http, userDto).subscribe({
+                                    next: (user) => this.userSessionService.setUserInformation(user)
+                                });
                             })
                         )
                         : of(null);
@@ -80,24 +74,17 @@ export class AuthService {
                     const neighborhoodObservable = neighborhoodUrl
                         ? this.http.get<NeighborhoodDto>(neighborhoodUrl).pipe(
                             tap((neighborhoodDto) => {
-                                this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood');
+                                this.registerLinks(neighborhoodDto._links, 'neighborhood');
+                                this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood'); // Soon to be deprecated
                                 this.userSessionService.setNeighborhoodInformation(
                                     mapNeighborhood(neighborhoodDto)
                                 );
-                            }),
-                            catchError((error) => {
-                                console.error('Error fetching neighborhood:', error);
-                                return of(null);
                             })
                         )
                         : of(null);
 
-                    // Wait for both Observables to complete
                     return forkJoin([userObservable, neighborhoodObservable]).pipe(
-                        mergeMap(() => {
-                            // Poll until all links are loaded
-                            return this.waitForLinksToLoad();
-                        })
+                        mergeMap(() => this.waitForLinksToLoad())
                     );
                 }),
                 catchError((error) => {
@@ -105,6 +92,28 @@ export class AuthService {
                     return of(false);
                 })
             );
+    }
+
+    // Helper method to extract URLs from headers
+    private extractUrl(headerValue: string | null): string | null {
+        return headerValue?.split(';')[0].replace(/[<>]/g, '') ?? null;
+    }
+
+    // Register links in ApiRegistry
+    private registerLinks(links: Record<string, string>, context: string): void {
+        if (!links) return;
+
+        Object.entries(links).forEach(([name, uri]) => {
+            if (!uri) {
+                console.warn(`Link for ${context}:${name} is invalid:`, uri);
+                return;
+            }
+
+            const baseUri = uri.split('{')[0]; // Base URI
+            const template = uri.includes('{') ? uri : null; // Template URI
+
+            this.apiRegistry.registerEndpoint(`${context}:${name}`, baseUri, template);
+        });
     }
 
     /**
