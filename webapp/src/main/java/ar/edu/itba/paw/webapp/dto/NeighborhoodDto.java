@@ -55,6 +55,12 @@ public class NeighborhoodDto {
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("contacts")
                     .build());
+            links.setPosts2(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("posts")
+                    .toTemplate() + "?postedBy={postedBy}&inChannel={inChannel}&withTags={withTags}&withStatus={withStatus}&page={page}&size={size}");
+
             links.setPosts(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))

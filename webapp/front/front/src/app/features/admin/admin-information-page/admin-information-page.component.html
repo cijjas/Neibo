@@ -3,7 +3,8 @@
   <!-- Contact Information -->
   <div class="cool-static-container m-b-20" style="word-wrap: break-word;">
     <div class="f-r-sb-c mb-4">
-      <p class="mb-3 font-weight-bold c-text font-size-16">Contact Information</p>
+      <h3 class="mb-0"> Contact Information</h3>
+
 
       <!-- Add contact button -->
       <button class="cool-feed-button " (click)="openCreateContactDialog()">
@@ -53,6 +54,7 @@
 
   <!-- Add resource button -->
   <div class="upper-feed-buttons-box m-b-20">
+    <h3 class="mb-0"> Resources</h3>
     <button class="cool-feed-button" (click)="openCreateResourceDialog()">
       Add Resource <i class="fa-solid fa-plus"></i>
     </button>
@@ -66,17 +68,15 @@
 
   <div *ngFor="let resource of resourceList" class="cool-static-container m-b-20" style="word-wrap: break-word;">
     <div class="f-r-sb-c">
-      <div class="">
-        <h2>{{ resource.title }}</h2>
-      </div>
+      <h3 class="mb-0">{{ resource.title }}</h3>
       <div class="">
         <button class="btn btn-link" (click)="deleteResource(resource.self)">
           <i class="fas fa-trash" style="color: var(--error);"></i>
         </button>
       </div>
     </div>
-    <div class="divider"></div>
-    <h3 style="font-weight: normal">{{ resource.description }}</h3>
+    <div class="divider "></div>
+    <h3 style="font-weight: normal " class="mt-2 mb-2">{{ resource.description }}</h3>
 
     <!-- If the resource has an image string -->
     <div class="d-flex flex-column justify-content-center align-items-center w-100" *ngIf="resource.image">

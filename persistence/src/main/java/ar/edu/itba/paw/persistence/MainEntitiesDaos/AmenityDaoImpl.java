@@ -72,7 +72,7 @@ public class AmenityDaoImpl implements AmenityDao {
         // We join through the neighborhoodId
         Join<Amenity, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
         idQuery.where(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
-        idQuery.orderBy(cb.asc(idRoot.get("amenityId")));
+        idQuery.orderBy(cb.desc(idRoot.get("amenityId")));
         // Create the query
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
         // We implement pagination in the query
@@ -89,7 +89,7 @@ public class AmenityDaoImpl implements AmenityDao {
         // Add predicate that enforces existence within the IDs recovered in the first query
         dataQuery.where(dataRoot.get("amenityId").in(amenityIds));
         // Order by amenityId in the final query as well
-        dataQuery.orderBy(cb.asc(dataRoot.get("amenityId")));
+        dataQuery.orderBy(cb.desc(dataRoot.get("amenityId")));
         // Create!
         TypedQuery<Amenity> dataTypedQuery = em.createQuery(dataQuery);
         // Return Results
