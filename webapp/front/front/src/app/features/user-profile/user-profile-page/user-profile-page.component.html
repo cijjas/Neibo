@@ -1,103 +1,101 @@
-<div [class.dark-mode]="darkMode">
     <!-- Include your Angular navbar component if needed -->
-    <div style="position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 0">
+<div class="w-100 h-100">
+    <app-navbar></app-navbar>
 
-        <app-navbar></app-navbar>
-
-        <div class="container">
-            <div class="cool-static-container p-0">
-                <div class="page-content page-container" id="page-content">
-                    <div class="row m-l-0 m-r-0">
-                        <div class="col-sm-4 bg-c-lite-green user-profile">
-                            <div class="card-block text-center text-white">
-                                <div class="m-b-25">
-                                    <div class="profile-pic">
-                                        <!-- Instead of JSP form, use a normal file input and handle the event in TS -->
-                                        <label class="-label" for="file">
-                                            <span class="glyphicon glyphicon-camera"></span>
-                                            <span>Change Image</span>
-                                        </label>
-                                        <input id="file" type="file" accept="image/*"
-                                            (change)="onProfilePictureSelected($event)" style="display:none;">
-                                        <img id="output"
-                                            [src]="profileImageSafeUrl || 'assets/images/default-profile.png'"
-                                            alt="profile_picture_img" />
-                                    </div>
+    <div class="container f-c-c-c">
+        <div class="cool-static-container p-0">
+            <div class="page-content page-container" id="page-content">
+                <div class="row m-l-0 m-r-0">
+                    <div class="col-sm-4 bg-c-lite-green user-profile">
+                        <div class="card-block text-center text-white">
+                            <div class="m-b-25">
+                                <div class="profile-pic">
+                                    <!-- Instead of JSP form, use a normal file input and handle the event in TS -->
+                                    <label class="-label" for="file">
+                                        <span class="glyphicon glyphicon-camera"></span>
+                                        <span>Change Image</span>
+                                    </label>
+                                    <input id="file" type="file" accept="image/*"
+                                        (change)="onProfilePictureSelected($event)" style="display:none;">
+                                    <img id="output"
+                                        [src]="profileImageSafeUrl || 'assets/images/default-profile.png'"
+                                        alt="profile_picture_img" />
                                 </div>
-                                <h6 class="f-w-600">{{ currentUser?.name }}</h6>
-                                <p>{{ currentUser?.userRole }}</p>
                             </div>
+                            <h6 class="f-w-600">{{ currentUser?.name }}</h6>
+                            <p>{{ currentUser?.userRole }}</p>
                         </div>
-                        <div class="col-sm-8">
-                            <div class="card-block">
-                                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Email</p>
-                                        <h6 class="text-muted f-w-400">{{ currentUser?.email }}</h6>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Name</p>
-                                        <h6 class="text-muted f-w-400">{{ currentUser?.name }}</h6>
-                                    </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="card-block">
+                            <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p class="m-b-10 f-w-600">Email</p>
+                                    <h6 class="text-muted f-w-400">{{ currentUser?.email }}</h6>
                                 </div>
-                                <div class="divider m-t-40"></div>
-                                <div class="row m-t-40">
-                                    <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Surname</p>
-                                        <h6 class="text-muted f-w-400">{{ currentUser?.surname }}</h6>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">User since</p>
-                                        <h6 class="text-muted f-w-400">{{ currentUser?.creationDate }}</h6>
-                                    </div>
+                                <div class="col-sm-6">
+                                    <p class="m-b-10 f-w-600">Name</p>
+                                    <h6 class="text-muted f-w-400">{{ currentUser?.name }}</h6>
                                 </div>
-                                <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Preferences</h6>
-                                <div class="row m-t-40">
-                                    <!-- Dark mode toggle -->
-                                    <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Dark Mode</p>
-                                        <div class="controlled">
-                                            <h6 class="text-muted f-w-400">Off</h6>
-                                            <label class="switch">
-                                                <input class="toggle" type="checkbox" [checked]="darkMode"
-                                                    (change)="toggleDarkMode()">
-                                                <span class="slider"></span>
-                                                <span class="card-side"></span>
-                                            </label>
-                                            <h6 class="text-muted f-w-400">On</h6>
-                                        </div>
-                                    </div>
-
-                                    <!-- Language toggle -->
-                                    <div class="col-sm-6">
-                                        <p class="m-b-10 f-w-600">Language</p>
-                                        <div class="controlled">
-                                            <h6 class="text-muted f-w-400">English</h6>
-                                            <label class="switch">
-                                                <input class="toggle" type="checkbox" [checked]="language === 'es'"
-                                                    (change)="toggleLanguage()">
-                                                <span class="slider"></span>
-                                                <span class="card-side"></span>
-                                            </label>
-                                            <h6 class="text-muted f-w-400">Spanish</h6>
-                                        </div>
+                            </div>
+                            <div class="divider m-t-40"></div>
+                            <div class="row m-t-40">
+                                <div class="col-sm-6">
+                                    <p class="m-b-10 f-w-600">Surname</p>
+                                    <h6 class="text-muted f-w-400">{{ currentUser?.surname }}</h6>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p class="m-b-10 f-w-600">User since</p>
+                                    <h6 class="text-muted f-w-400">{{ currentUser?.creationDate }}</h6>
+                                </div>
+                            </div>
+                            <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Preferences</h6>
+                            <div class="row m-t-40">
+                                <!-- Dark mode toggle -->
+                                <div class="col-sm-6">
+                                    <p class="m-b-10 f-w-600">Dark Mode</p>
+                                    <div class="controlled">
+                                        <h6 class="text-muted f-w-400">Off</h6>
+                                        <label class="switch">
+                                            <input class="toggle" type="checkbox" [checked]="darkMode"
+                                                (change)="toggleDarkMode()">
+                                            <span class="slider"></span>
+                                            <span class="card-side"></span>
+                                        </label>
+                                        <h6 class="text-muted f-w-400">On</h6>
                                     </div>
                                 </div>
 
-                                <div class="row justify-content-end m-t-40">
-                                    <a href="javascript:void(0)" (click)="logout()"
-                                        class="cool-button cool-small on-bg w-25 font-weight-bolder">
-                                        Logout
-                                    </a>
+                                <!-- Language toggle -->
+                                <div class="col-sm-6">
+                                    <p class="m-b-10 f-w-600">Language</p>
+                                    <div class="controlled">
+                                        <h6 class="text-muted f-w-400">English</h6>
+                                        <label class="switch">
+                                            <input class="toggle" type="checkbox" [checked]="language === 'es'"
+                                                (change)="toggleLanguage()">
+                                            <span class="slider"></span>
+                                            <span class="card-side"></span>
+                                        </label>
+                                        <h6 class="text-muted f-w-400">Spanish</h6>
+                                    </div>
                                 </div>
+                            </div>
+
+                            <div class="row justify-content-end m-t-40">
+                                <a href="javascript:void(0)" (click)="logout()"
+                                    class="cool-button cool-small on-bg w-25 font-weight-bolder">
+                                    Logout
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <app-wave-footer></app-wave-footer>
     </div>
+
+    <app-wave-footer></app-wave-footer>
 
 </div>

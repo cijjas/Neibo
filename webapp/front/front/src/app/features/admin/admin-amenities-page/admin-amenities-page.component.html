@@ -1,12 +1,18 @@
 <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-    <!-- If no amenities -->
-    <div class="upper-feed-buttons-box m-b-20">
+    <div class="f-r-sb-c">
+        <h2 class="mb-0">
+            Amenities
+        </h2>
         <a [routerLink]="['/admin/amenities/new']" class="cool-feed-button">
             Create Amenity
             <i class="fa-solid fa-plus"></i>
         </a>
     </div>
 
+    <div class="divider mb-3 mt-3"></div>
+
+
+    <!-- If no amenities -->
     <div class="no-posts-found" *ngIf="amenities?.length === 0 && !isLoading">
         <i class="circle-icon fa-solid fa-magnifying-glass"></i>
         Amenities not found
@@ -14,8 +20,6 @@
 
     <!-- If amenities are available -->
     <div *ngIf="amenities?.length > 0">
-        <h2>Amenities</h2>
-        <div class="divider"></div>
 
         <!-- List each amenity -->
         <div *ngFor="let amenity of amenities" class="cool-static-container m-b-20" style="word-wrap: break-word;"

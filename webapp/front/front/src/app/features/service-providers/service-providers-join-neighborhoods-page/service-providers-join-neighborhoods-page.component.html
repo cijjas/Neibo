@@ -1,0 +1,163 @@
+<div [class.dark-mode]="darkMode">
+    <!-- 
+      Replicates the JSP <body> content, minus the <head> and <header>. 
+      Navbar, left column, and calendar widget become separate Angular components.
+    -->
+    <div style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1">
+      
+      <!-- Replace JSP navbar include with your Angular navbar component -->
+      <app-navbar></app-navbar>
+      
+      <div class="container">
+        <div class="row">
+          
+          <!-- Left column: replace JSP include with Angular component -->
+          <div class="column-left">
+            <app-sidebar></app-sidebar>
+          </div>
+          
+          <!-- Middle column -->
+          <div class="column-middle">
+            
+            <!-- “My Neighborhoods” block -->
+            <div class="cool-static-container mb-4">
+              <!-- If no associated neighborhoods -->
+              <div
+                class="f-c-c-c w-100 mt-3"
+                style="text-align: center"
+                *ngIf="associatedNeighborhoods?.length === 0"
+              >
+                <div class="w-75">
+                  No associated neighborhoods
+                </div>
+              </div>
+              
+              <!-- Otherwise, show the table of associated neighborhoods -->
+              <div
+                class="f-c-s-c mt-2 w-100"
+                *ngIf="associatedNeighborhoods?.length > 0"
+              >
+                <span class="font-weight-bold font-size-20">
+                  My Neighborhoods
+                </span>
+                <table class="table-striped w-100 mt-3">
+                  <thead>
+                    <tr></tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let entry of associatedNeighborhoods">
+                      <td style="text-align: start;">
+                        <span class="pl-2">{{ entry.name }}</span>
+                      </td>
+                      <td>
+                        <!-- Equivalent to the old JSP trash button -->
+                        <button
+                          class="btn btn-link"
+                          (click)="removeNeighborhood(entry)"
+                        >
+                          <i class="fas fa-trash" style="color: var(--error);"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- “Join Neighborhoods” block -->
+            <div class="cool-static-container" style="overflow: visible">
+              <!-- If no new neighborhoods -->
+              <div
+                class="f-c-c-c w-100 mb-3"
+                style="text-align: center"
+                *ngIf="otherNeighborhoods?.length === 0 && !isLoading"
+              >
+                <div class="w-75">
+                  No new neighborhoods
+                </div>
+              </div>
+              
+              <!-- Otherwise, show the infinite scroll form -->
+              <div *ngIf="otherNeighborhoods?.length > 0 || isLoading">
+                <form [formGroup]="neighborhoodsForm" (ngSubmit)="onSubmit()"
+                      class="f-c-c-c w-100">
+                  
+                  <!-- Show errors if needed
+                       <p class="error" *ngIf="...">
+                         ...
+                       </p>
+                  -->
+                  
+                  <span class="font-weight-bold font-size-20 mb-2">
+                    Join neighborhoods
+                  </span>
+                  
+                  <!-- Infinite-scroll container (similar to amenities) -->
+                  <div
+                    class="neighborhoods-select mb-4 w-100"
+                    style="border: 1px solid #ccc; max-height: 200px; overflow-y: auto; padding: 0.5rem;"
+                    (scroll)="onScroll($event)"
+                  >
+                    <!-- List neighborhoods with check/select logic -->
+                    <div
+                      *ngFor="let neighborhood of otherNeighborhoods"
+                      class="item"
+                      [class.checked]="selectedNeighborhoodIds.includes(neighborhood.self)"
+                      (click)="toggleNeighborhoodSelection(neighborhood)"
+                      style="cursor: pointer; padding: 0.5rem; border-bottom: 1px solid #eee;"
+                    >
+                      <!-- A check icon if selected -->
+                      <span class="checkbox">
+                        <i *ngIf="selectedNeighborhoodIds.includes(neighborhood.self)"
+                           class="fa-solid fa-check check-icon"></i>
+                      </span>
+                      <span class="item-text ml-2">
+                        {{ neighborhood.name }}
+                      </span>
+                    </div>
+                    
+                    <!-- Loading indicator while fetching more pages -->
+                    <div
+                      *ngIf="isLoading"
+                      class="loading-indicator"
+                      style="text-align: center; padding: 1rem;"
+                    >
+                      Loading more neighborhoods...
+                    </div>
+                  </div>
+                  
+                  <!-- Hidden input or formControl to store neighborhood IDs -->
+                  <input
+                    type="hidden"
+                    formControlName="neighborhoodIds"
+                    [value]="selectedNeighborhoodIds.join(',')"
+                  />
+                  
+                  <!-- Submit button -->
+                  <button
+                    type="submit"
+                    class="cool-button cool-small on-bg font-weight-bold w-25"
+                  >
+                    Add
+                    <i class="fa-solid fa-share ml-1"></i>
+                  </button>
+                  
+                </form>
+              </div>
+            </div>
+            
+          </div>
+          
+          <!-- Right column: replace JSP include with Angular calendar component -->
+          <div class="column-right">
+            <app-calendar-widget></app-calendar-widget>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- Replace JSP footer include with your Angular footer component -->
+      <app-wave-footer></app-wave-footer>
+      
+    </div>
+  </div>

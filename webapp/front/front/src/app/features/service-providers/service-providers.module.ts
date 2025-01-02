@@ -9,7 +9,8 @@ import {
     ServiceProvidersPostPreviewComponent,
     ServiceProvidersPreviewComponent,
     ServiceProvidersReviewDialogComponent,
-    ServiceProvidersReviewsAndPostsComponent
+    ServiceProvidersReviewsAndPostsComponent,
+    ServiceProvidersJoinNeighborhoodsComponent
 } from '@features/index';
 
 import { SharedModule } from '@shared/shared.module';
@@ -26,7 +27,8 @@ import { ServiceProvidersRoutingModule } from './service-providers-routing.modul
         ServiceProvidersPostPreviewComponent,
         ServiceProvidersPreviewComponent,
         ServiceProvidersReviewDialogComponent,
-        ServiceProvidersReviewsAndPostsComponent
+        ServiceProvidersReviewsAndPostsComponent,
+        ServiceProvidersJoinNeighborhoodsComponent
     ],
     imports: [
         CommonModule,

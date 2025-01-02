@@ -46,6 +46,7 @@ export * from './service-providers/service-providers-content/service-providers-c
 export * from './service-providers/service-providers-control-bar/service-providers-control-bar.component'
 export * from './service-providers/service-providers-detail-page/service-providers-detail-page.component'
 export * from './service-providers/service-providers-edit-dialog/service-providers-edit-dialog.component'
+export * from './service-providers/service-providers-join-neighborhoods-page/service-providers-join-neighborhoods-page.component'
 export * from './service-providers/service-providers-page/service-providers-page.component'
 export * from './service-providers/service-providers-post-preview/service-providers-post-preview.component'
 export * from './service-providers/service-providers-preview/service-providers-preview.component'

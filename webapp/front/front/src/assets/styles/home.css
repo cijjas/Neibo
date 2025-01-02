@@ -1525,6 +1525,7 @@ footer {
   position: relative;
   /* Default position relative to the content */
   bottom: 0;
+
   /* Aligns to the bottom of its container */
 }
 
@@ -1532,9 +1533,11 @@ footer div {
   background-color: var(--primary);
   margin: 0;
   /* Remove negative margin */
-  color: #fff;
+  color: var(--onprimary);
   text-align: center;
 }
+
+
 
 .wave-footer {
   animation: wave-footer 3s linear infinite;
@@ -1565,13 +1568,6 @@ footer div {
   to {
     transform: translateX(-100%);
   }
-}
-
-app-wave-footer {
-  position: relative;
-  /* Normal flow */
-  z-index: 1;
-  /* Above the background */
 }
 
 /*------------------------------------------------- clouds --------------------*/

@@ -2,6 +2,14 @@
     <!-- Possibly a switch to show verified or unverified neighbors -->
     <div class="req-acc-users-list p-3">
         <!-- If there are no users -->
+        <div class="f-r-s-c w-100 p-2">
+            <h2 class="mb-0">
+                {{!neighbors ? 'Pending Requests': 'Current Neighbors'}}
+            </h2>
+            
+        </div>
+        <div class="divider"></div>
+
         <div class="user-row" *ngIf="users.length === 0">
             <div class="information">
                 <!-- This is your fallback message -->
