@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "environments/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { catchError, forkJoin, mergeMap, Observable, of, tap, throwError } from "rxjs";
+import { catchError, forkJoin, map, mergeMap, Observable, of, tap, throwError } from "rxjs";
 import { NeighborhoodDto, UserDto, mapNeighborhood, mapUser } from "@shared/index";
 import { HateoasLinksService, UserSessionService } from "@core/index";
 import { ApiRegistry } from "./api-registry.service";
@@ -46,6 +46,7 @@ export class AuthService {
                     const refreshToken = response.headers.get('X-Refresh-Token');
                     const userUrl = this.extractUrl(response.headers.get('X-User-URL'));
                     const neighborhoodUrl = this.extractUrl(response.headers.get('X-Neighborhood-URL'));
+                    const workersNeighborhoodUrl = this.extractUrl(response.headers.get('X-Workers-Neighborhood-URL'));
 
                     if (accessToken) {
                         storage.setItem(this.authTokenKey, accessToken);
@@ -83,8 +84,29 @@ export class AuthService {
                         )
                         : of(null);
 
-                    return forkJoin([userObservable, neighborhoodObservable]).pipe(
-                        mergeMap(() => this.waitForLinksToLoad())
+                    // should be added to the wait for links to load
+                    const workersNeighborhoodObservable = workersNeighborhoodUrl
+                        ? this.http.get<NeighborhoodDto>(workersNeighborhoodUrl).pipe(
+                            tap((workersNeighborhoodDto) => {
+                                this.registerLinks(workersNeighborhoodDto._links, 'workersNeighborhood');
+                            }),
+                            catchError((error) => {
+                                console.error("Error fetching workers neighborhood:", error);
+                                return of(null); // Continue without breaking the observable chain
+                            })
+                        )
+                        : of(null);
+
+                    this.apiRegistry.logLinks();
+                    return forkJoin([userObservable, neighborhoodObservable, workersNeighborhoodObservable]).pipe(
+                        mergeMap(() =>
+                            forkJoin([
+                                this.waitForLinksToLoad(),
+                                this.waitForLinksToLoadFromApiRegistry()
+                            ]).pipe(
+                                map(([result1, result2]) => result1 && result2) // Combine the results into a single boolean
+                            )
+                        )
                     );
                 }),
                 catchError((error) => {
@@ -99,7 +121,6 @@ export class AuthService {
         return headerValue?.split(';')[0].replace(/[<>]/g, '') ?? null;
     }
 
-    // Register links in ApiRegistry
     private registerLinks(links: Record<string, string>, context: string): void {
         if (!links) return;
 
@@ -109,8 +130,11 @@ export class AuthService {
                 return;
             }
 
-            const baseUri = uri.split('{')[0]; // Base URI
-            const template = uri.includes('{') ? uri : null; // Template URI
+            // Store the entire URI as the template (if it includes placeholders)
+            const template = uri.includes('{') ? uri : null;
+
+            // Base URI is the part before any query params or placeholders
+            const baseUri = uri.split('?')[0]; // Separate the base path before query params
 
             this.apiRegistry.registerEndpoint(`${context}:${name}`, baseUri, template);
         });
@@ -303,6 +327,94 @@ export class AuthService {
                     observer.complete();
                 }
             }, 100);
+        });
+    }
+
+    private waitForLinksToLoadFromApiRegistry(): Observable<boolean> {
+        const requiredLinks = [
+            'root:self',
+            'root:workerPosts',
+            'workersNeighborhood:amenities',
+            'workersNeighborhood:channels',
+            'workersNeighborhood:users',
+            'workersNeighborhood:self',
+            'workersNeighborhood:workers',
+            'neighborhood:superAdministratorUserRole',
+            'neighborhood:administratorUserRole',
+            'neighborhood:neighborUserRole',
+            'neighborhood:unverifiedNeighborUserRole',
+            'neighborhood:rejectedUserRole',
+            'neighborhood:workerUserRole',
+            'neighborhood:verifiedWorkerRole',
+            'neighborhood:unverifiedWorkerRole',
+            'neighborhood:rejectedWorkerRole',
+            'neighborhood:amenities',
+            'neighborhood:announcements',
+            'neighborhood:announcementsChannel',
+            'neighborhood:affiliations',
+            'neighborhood:bookings',
+            'neighborhood:channels',
+            'neighborhood:complaints',
+            'neighborhood:complaintsChannel',
+            'neighborhood:departments',
+            'neighborhood:contacts',
+            'neighborhood:events',
+            'neighborhood:feed',
+            'neighborhood:feedChannel',
+            'neighborhood:hotPostStatus',
+            'neighborhood:images',
+            'neighborhood:languageEnglish',
+            'neighborhood:languageSpanish',
+            'neighborhood:likes',
+            'neighborhood:nonePostStatus',
+            'neighborhood:posts',
+            'neighborhood:postsCount',
+            'neighborhood:postStatuses',
+            'neighborhood:professions',
+            'neighborhood:requests',
+            'neighborhood:requestedRequestStatus',
+            'neighborhood:acceptedRequestStatus',
+            'neighborhood:declinedRequestStatus',
+            'neighborhood:purchaseTransactionType',
+            'neighborhood:saleTransactionType',
+            'neighborhood:resources',
+            'neighborhood:shifts',
+            'neighborhood:self',
+            'neighborhood:tags',
+            'neighborhood:trendingPostStatus',
+            'neighborhood:users',
+            'neighborhood:workers',
+            'neighborhood:products',
+            'neighborhood:boughtProductStatus',
+            'neighborhood:soldProductStatus',
+            'neighborhood:sellingProductStatus',
+            'user:bookings',
+            'user:language',
+            'user:likedPosts',
+            'user:neighborhood',
+            'user:posts',
+            'user:purchases',
+            'user:requests',
+            'user:sales',
+            'user:self',
+            'user:userRole'
+        ];
+
+        return new Observable<boolean>((observer) => {
+            const interval = setInterval(() => {
+                const allLinksLoaded = requiredLinks.every((link) =>
+                    !!this.apiRegistry.getEndpoint(link)
+                );
+                if (allLinksLoaded) {
+                    this.apiRegistry.logLinks()
+                    clearInterval(interval);
+                    observer.next(true);
+                    observer.complete();
+                }
+            }, 100);
+
+            // Clean up in case the observable is unsubscribed
+            return () => clearInterval(interval);
         });
     }
 }

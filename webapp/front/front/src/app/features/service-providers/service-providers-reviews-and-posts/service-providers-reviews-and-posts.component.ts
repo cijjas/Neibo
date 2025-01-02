@@ -107,7 +107,7 @@ export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestr
     const worker = this.workerSubject.getValue();
     if (worker?.posts) {
       const queryParams = { page: this.postCurrentPage, size: this.postPageSize };
-      this.postService.getPosts(worker.posts, queryParams).subscribe({
+      this.postService.getWorkerPosts(queryParams).subscribe({
         next: (response) => {
           this.posts = response.posts;
           this.postTotalPages = response.totalPages;
