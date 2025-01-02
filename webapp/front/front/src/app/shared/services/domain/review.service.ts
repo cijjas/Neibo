@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Review, ReviewDto, UserDto, mapUser, parseLinkHeader } from '@shared/index';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Review, ReviewDto, parseLinkHeader } from '@shared/index';
 
 @Injectable({ providedIn: 'root' })
 export class ReviewService {
@@ -10,7 +10,7 @@ export class ReviewService {
 
     public getReview(url: string): Observable<Review> {
         return this.http.get<ReviewDto>(url).pipe(
-            mergeMap((reviewDto: ReviewDto) => mapReview(this.http, reviewDto))
+            map(mapReview)
         );
     }
 
@@ -29,20 +29,22 @@ export class ReviewService {
         return this.http
             .get<ReviewDto[]>(url, { params, observe: 'response' })
             .pipe(
-                mergeMap((response) => {
+                map((response) => {
                     const reviewsDto = response.body || [];
                     const linkHeader = response.headers.get('Link');
                     const paginationInfo = parseLinkHeader(linkHeader);
 
-                    const reviewObservables = reviewsDto.map((reviewDto) => mapReview(this.http, reviewDto));
+                    const reviews = reviewsDto.map(mapReview);
 
-                    return forkJoin(reviewObservables).pipe(
-                        map((reviews) => ({
-                            reviews,
-                            totalPages: paginationInfo.totalPages,
-                            currentPage: paginationInfo.currentPage,
-                        }))
-                    );
+                    return {
+                        reviews,
+                        totalPages: paginationInfo.totalPages,
+                        currentPage: paginationInfo.currentPage,
+                    };
+                }),
+                catchError((error) => {
+                    console.error('Error fetching reviews:', error);
+                    return throwError(() => new Error('Failed to fetch reviews.'));
                 })
             );
     }
@@ -64,18 +66,11 @@ export class ReviewService {
     }
 }
 
-export function mapReview(http: HttpClient, reviewDto: ReviewDto): Observable<Review> {
-    return forkJoin([
-        http.get<UserDto>(reviewDto._links.reviewUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
-    ]).pipe(
-        map(([user]) => {
-            return {
-                rating: reviewDto.rating,
-                message: reviewDto.message,
-                createdAt: reviewDto.creationDate,
-                user: user,
-                self: reviewDto._links.self
-            } as Review;
-        })
-    );
+export function mapReview(reviewDto: ReviewDto): Review {
+    return {
+        rating: reviewDto.rating,
+        message: reviewDto.message,
+        createdAt: reviewDto.creationDate,
+        self: reviewDto._links.self
+    } as Review;
 }

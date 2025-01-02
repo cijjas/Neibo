@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HateoasLinksService } from '@core/index';
 import { NeighborhoodService, Neighborhood } from '@shared/index';
 
 @Component({
@@ -12,6 +13,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
   // Arrays for "my" vs. "other" neighborhoods
   associatedNeighborhoods: Neighborhood[] = [];
   otherNeighborhoods: Neighborhood[] = [];
+  allNeighborhoods: Neighborhood[] = [];
 
   neighborhoodsForm!: FormGroup;
 
@@ -25,8 +27,9 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private neighborhoodService: NeighborhoodService
-  ) {}
+    private neighborhoodService: NeighborhoodService,
+    private linkService: HateoasLinksService
+  ) { }
 
   ngOnInit(): void {
     // Set up form
@@ -45,13 +48,17 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
    * Loads the neighborhoods the user is already associated with.
    */
   loadAssociatedNeighborhoods(): void {
-    // Example: Suppose your backend returns an array of Neighborhood
-    // Adjust the URL or add any parameters as needed.
-    const url = '/api/neighborhoods/associated';
-
-    this.neighborhoodService.getNeighborhoods(url).subscribe({
+    let neighborhoodsUrl: string = this.linkService.getLink('neighborhood:neighborhoods')
+    this.neighborhoodService.getNeighborhoods(neighborhoodsUrl).subscribe({
       next: (data) => {
-        // data might look like { neighborhoods: Neighborhood[], ... }
+        this.allNeighborhoods = data.neighborhoods;
+      },
+      error: (err) => console.error(err)
+    });
+
+    let workerUrl: string = this.linkService.getLink('user:worker')
+    this.neighborhoodService.getNeighborhoods(neighborhoodsUrl, { withWorker: workerUrl }).subscribe({
+      next: (data) => {
         this.associatedNeighborhoods = data.neighborhoods;
       },
       error: (err) => console.error(err)

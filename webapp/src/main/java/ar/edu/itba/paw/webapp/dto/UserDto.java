@@ -154,6 +154,8 @@ public class UserDto {
                             .path("request-statuses")
                             .path(String.valueOf(RequestStatus.ACCEPTED.getId())))
                     .build());
+        }else{
+           links.setWorker(uriInfo.getBaseUriBuilder().path("workers").path(String.valueOf(user.getUserId())).build());
         }
         dto.set_links(links);
         return dto;

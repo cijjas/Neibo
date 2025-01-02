@@ -58,17 +58,19 @@ public class NeighborhoodController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#workerId)")
     public Response listNeighborhoods(
-            @QueryParam("withWorker") @WorkerURNConstraint String worker,
+            @QueryParam("withWorker") @WorkerURNConstraint String withWorker,
+            @QueryParam("withoutWorker") @WorkerURNConstraint String withoutWorker,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
         // ID Extraction
-        Long workerId = extractOptionalFirstId(worker);
+        Long withWorkerId = extractOptionalFirstId(withWorker);
+        Long withoutWorkerId = extractOptionalFirstId(withoutWorker);
 
         // Content
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(workerId, size, page);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(withWorkerId, withoutWorkerId, size, page);
         String neighborhoodsHashCode = String.valueOf(neighborhoods.hashCode());
 
         // Cache Control
@@ -88,7 +90,7 @@ public class NeighborhoodController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "/neighborhoods",
-                ns.calculateNeighborhoodPages(workerId, size),
+                ns.calculateNeighborhoodPages(withWorkerId, withoutWorkerId, size),
                 page,
                 size
         );

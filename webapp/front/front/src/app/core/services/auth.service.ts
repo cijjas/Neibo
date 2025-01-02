@@ -99,14 +99,17 @@ export class AuthService {
 
                     this.apiRegistry.logLinks();
                     return forkJoin([userObservable, neighborhoodObservable, workersNeighborhoodObservable]).pipe(
-                        mergeMap(() =>
-                            forkJoin([
-                                this.waitForLinksToLoad(),
-                                this.waitForLinksToLoadFromApiRegistry()
-                            ]).pipe(
-                                map(([result1, result2]) => result1 && result2) // Combine the results into a single boolean
-                            )
-                        )
+                        mergeMap(() => {
+                            const userRole = this.userSessionService.getCurrentUserRole(); // Assume this function exists to fetch the user's role
+                            return this.waitForLinksToLoadByRole(userRole).pipe(
+                                tap((result) => {
+                                    if (!result) {
+                                        console.error('Failed to load all required links for the role:', userRole);
+                                    }
+                                })
+                            );
+                        })
+
                     );
                 }),
                 catchError((error) => {
@@ -251,6 +254,108 @@ export class AuthService {
         for (const [key, value] of Object.entries(links)) {
             this.hateoasLinksService.setLink(`${namespace}:${key}`, value);
         }
+    }
+
+    private waitForLinksToLoadByRole(userRole: string): Observable<boolean> {
+        const requiredLinksForNeighbor = [
+            'neighborhood:superAdministratorUserRole',
+            'neighborhood:administratorUserRole',
+            'neighborhood:neighborUserRole',
+            'neighborhood:unverifiedNeighborUserRole',
+            'neighborhood:rejectedUserRole',
+            'neighborhood:workerUserRole',
+            'neighborhood:verifiedWorkerRole',
+            'neighborhood:unverifiedWorkerRole',
+            'neighborhood:rejectedWorkerRole',
+            'neighborhood:amenities',
+            'neighborhood:announcements',
+            'neighborhood:announcementsChannel',
+            'neighborhood:affiliations',
+            'neighborhood:bookings',
+            'neighborhood:channels',
+            'neighborhood:complaints',
+            'neighborhood:complaintsChannel',
+            'neighborhood:departments',
+            'neighborhood:contacts',
+            'neighborhood:events',
+            'neighborhood:feed',
+            'neighborhood:feedChannel',
+            'neighborhood:hotPostStatus',
+            'neighborhood:images',
+            'neighborhood:languageEnglish',
+            'neighborhood:languageSpanish',
+            'neighborhood:likes',
+            'neighborhood:nonePostStatus',
+            'neighborhood:posts',
+            'neighborhood:postsCount',
+            'neighborhood:postStatuses',
+            'neighborhood:professions',
+            'neighborhood:requests',
+            'neighborhood:requestedRequestStatus',
+            'neighborhood:acceptedRequestStatus',
+            'neighborhood:declinedRequestStatus',
+            'neighborhood:purchaseTransactionType',
+            'neighborhood:saleTransactionType',
+            'neighborhood:resources',
+            'neighborhood:shifts',
+            'neighborhood:self',
+            'neighborhood:tags',
+            'neighborhood:trendingPostStatus',
+            'neighborhood:users',
+            'neighborhood:workers',
+            'neighborhood:products',
+            'neighborhood:boughtProductStatus',
+            'neighborhood:soldProductStatus',
+            'neighborhood:sellingProductStatus',
+            'user:bookings',
+            'user:language',
+            'user:likedPosts',
+            'user:neighborhood',
+            'user:posts',
+            'user:purchases',
+            'user:requests',
+            'user:sales',
+            'user:self',
+            'user:userRole'
+        ];
+
+        const requiredLinksForWorker = [
+            'neighborhood:amenities',
+            'neighborhood:channels',
+            'neighborhood:users',
+            'neighborhood:neighborhoods',
+            'neighborhood:self',
+            'neighborhood:workers',
+            'neighborhood:posts',
+            'user:self',
+            'user:language',
+            'user:posts',
+            'user:userImage',
+            'user:userRole',
+            'user:worker',
+            'user:neighborhood',
+
+        ];
+
+        const requiredLinks = userRole === 'VERIFIED_NEIGHBOR'
+            ? requiredLinksForNeighbor
+            : requiredLinksForWorker;
+
+        return new Observable<boolean>((observer) => {
+            const interval = setInterval(() => {
+                const allLinksLoaded = requiredLinks.every((link) =>
+                    !!this.hateoasLinksService.getLink(link) || !!this.apiRegistry.getEndpoint(link)
+                );
+                if (allLinksLoaded) {
+                    clearInterval(interval);
+                    observer.next(true);
+                    observer.complete();
+                }
+            }, 100);
+
+            // Clean up in case the observable is unsubscribed
+            return () => clearInterval(interval);
+        });
     }
 
     private waitForLinksToLoad(): Observable<boolean> {

@@ -20,7 +20,7 @@
                 <div class="review-box f-c-s-s w-100" *ngFor="let review of reviews; index as i">
                     <div class="f-r-sb-c w-100">
                         <span class="font-size-16 font-weight-bold">
-                            {{ review.user?.name || 'Loading...' }}
+                            Annonymous Reviewer
                         </span>
                         <div>
                             <span class="post-date">
@@ -52,9 +52,9 @@
     <!-- Posts Tab Content -->
     <section id="content2" *ngIf="selectedTab === 'posts'">
         <div class="f-c-c-c w-100" style="gap:10px">
-            <!-- If loggedUser is the same as the worker's user, show "Post" button -->
+            <!-- TODO If loggedUser is the same as the worker's user, show "Post" button -->
             <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px"
-                *ngIf="loggedUser?.userId === worker?.user?.self" [routerLink]="['/publish']"
+                *ngIf="loggedUser?.self === worker?.user?.self" [routerLink]="['/publish']"
                 [queryParams]="{ onChannelId: 4 }">
                 Post
             </a>

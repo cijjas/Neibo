@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserSessionService } from '@core/index';
+import { Router } from '@angular/router';
+import { HateoasLinksService, UserSessionService } from '@core/index';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +11,9 @@ export class NavbarComponent implements OnInit {
   neighborhoodName: string;
 
   constructor(
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
+    private router: Router,
+    private linkService: HateoasLinksService,
   ) { }
 
   ngOnInit(): void {
@@ -23,5 +26,17 @@ export class NavbarComponent implements OnInit {
         this.neighborhoodName = 'Error loading neighborhood';
       }
     });
+  }
+
+  routeBasedOnRole() {
+    const userRole = this.userSessionService.getCurrentUserRole()
+    if (userRole == 'WORKER') {
+      const workerId = this.linkService.getLink('user:worker');
+      this.router.navigate(['services', 'profile', workerId]);
+    }
+    else {
+      this.router.navigate(['posts']);
+
+    }
   }
 }

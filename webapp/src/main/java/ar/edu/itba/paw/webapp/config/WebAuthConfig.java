@@ -168,7 +168,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
                 .antMatchers(
-                        "/neighborhoods/*/posts", "/neighborhoods/*/posts/**"
+                        "/neighborhoods/*/posts", "/neighborhoods/*/posts/**",
+                        "/neighborhoods/*/events", "/neighborhoods/*/events/*"
                 ).access(
                         "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
@@ -185,7 +186,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/neighborhoods/*/bookings", "/neighborhoods/*/bookings/*",
                         "/neighborhoods/*/resources", "/neighborhoods/*/resources/*",
                         "/neighborhoods/*/contacts", "/neighborhoods/*/contacts/*",
-                        "/neighborhoods/*/events", "/neighborhoods/*/events/*",
                         "/neighborhoods/*/attendance", "/neighborhoods/*/attendance/**"
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +

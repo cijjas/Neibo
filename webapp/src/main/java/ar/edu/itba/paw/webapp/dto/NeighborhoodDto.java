@@ -40,17 +40,30 @@ public class NeighborhoodDto {
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("amenities")
                 .build());
-        links.setWorkers(uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .queryParam("inNeighborhoods", self)
-                .build());
         links.setChannels(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("channels")
                 .build());
+        links.setPosts(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                .path("posts")
+                .build());
+        links.setEvents(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                .path("events")
+                .build());
+        links.setNeighborhoods(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .build());
 
         if (neighborhood.getNeighborhoodId() > 0) {
+            links.setWorkers(uriInfo.getBaseUriBuilder()
+                    .path("workers")
+                    .queryParam("inNeighborhoods", self)
+                    .build());
             links.setContacts(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
@@ -64,11 +77,6 @@ public class NeighborhoodDto {
             String uriTemplate = builder + "{?postedBy,inChannel,withTags*,withStatus,page,size}";
             links.setPosts2(uriTemplate);
 
-            links.setPosts(uriInfo.getBaseUriBuilder()
-                    .path("neighborhoods")
-                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
-                    .path("posts")
-                    .build());
             links.setAnnouncements(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
@@ -144,11 +152,6 @@ public class NeighborhoodDto {
                             .path(String.valueOf(PostStatus.NONE.getId()))
                             .build()
             );
-            links.setEvents(uriInfo.getBaseUriBuilder()
-                    .path("neighborhoods")
-                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
-                    .path("events")
-                    .build());
             links.setResources(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
@@ -305,6 +308,10 @@ public class NeighborhoodDto {
                     .build());
             links.setAffiliations(uriInfo.getBaseUriBuilder()
                     .path("affiliations")
+                    .build());
+        } else {
+            links.setWorkers(uriInfo.getBaseUriBuilder()
+                    .path("workers")
                     .build());
         }
         dto.set_links(links);

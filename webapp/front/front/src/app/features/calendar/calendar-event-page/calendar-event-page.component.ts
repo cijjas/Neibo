@@ -55,7 +55,7 @@ export class CalendarEventPageComponent implements OnInit {
         this.willAttend = next.attendances.length != 0;
       },
       error: (error) => {
-        console.log("shit went sideways");
+        console.error("Error getting attendance");
       }
     })
   }

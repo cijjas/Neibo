@@ -50,12 +50,6 @@ public class ReviewDto {
                 .path("workers")
                 .path(String.valueOf(review.getWorker().getWorkerId()))
                 .build());
-        links.setReviewUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(review.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(review.getUser().getUserId()))
-                .build());
         dto.set_links(links);
         return dto;
     }

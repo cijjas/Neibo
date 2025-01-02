@@ -56,9 +56,6 @@ export class AmenityService {
         description: string,
         selectedShifts: string[]
     ): Observable<string | null> {
-        console.log(name);
-        console.log(description);
-        console.log(selectedShifts);
 
         let amenitiesUrl: string = this.linkService.getLink('neighborhood:amenities')
 

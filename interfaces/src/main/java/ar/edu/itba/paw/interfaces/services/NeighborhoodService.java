@@ -13,9 +13,9 @@ public interface NeighborhoodService {
 
     Optional<Neighborhood> findNeighborhood(long neighborhoodId);
 
-    List<Neighborhood> getNeighborhoods(Long workerId, int size, int page);
+    List<Neighborhood> getNeighborhoods(Long withWorkerId, Long withoutWorkerId, int size, int page);
 
-    int calculateNeighborhoodPages(Long workerId, int size);
+    int calculateNeighborhoodPages(Long withWorkerId, Long withoutWorkerId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

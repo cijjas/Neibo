@@ -23,7 +23,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
   // The user’s current selections
   selectedShifts: Shift[] = [];
 
-  
+
 
   private dayAbbreviations: Record<string, string> = {
     Monday: 'Mon',
@@ -107,7 +107,6 @@ export class AdminAmenityCreatePageComponent implements OnInit {
 
       },
     })
-    console.log('Amenity:', this.amenityForm.value, 'Selected Shifts:', this.selectedShifts);
   }
 
   /**

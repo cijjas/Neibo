@@ -5,17 +5,17 @@
 
     <div class="left-box worker" *ngIf="userRole === 'WORKER'; else notWorker">
       <div class="f-c-c-c">
-        <a id="profileButton" [routerLink]="['/service-provider/profile', userId]" class="cool-left-button f-r-sb-c"
+        <a id="profileButton" [routerLink]="['/services/profile', workerId]" class="cool-left-button f-r-sb-c"
           [ngClass]="{ 'active': channelClass === 'Profile' }">
           <i class="fa-solid fa-address-card"></i>
           <span i18n>Business Card</span>
         </a>
-        <a id="workerServicesButton" routerLink="/service-provider" class="cool-left-button f-r-sb-c"
+        <a id="workerServicesButton" [routerLink]="['/services']" class="cool-left-button f-r-sb-c"
           [ngClass]="{ 'active': channelClass === 'Services' }">
           <i class="fa-solid fa-handshake-angle"></i>
           <span i18n>See Services</span>
         </a>
-        <a id="neighborhoodsButton" routerLink="/service-provider/choose-neighborhoods" class="cool-left-button f-r-sb-c"
+        <a id="neighborhoodsButton" [routerLink]="['/services', 'join-neighborhoods']" class="cool-left-button f-r-sb-c"
           [ngClass]="{ 'active': channelClass === 'Neighborhoods' }">
           <i class="fa-solid fa-house"></i>
           <span i18n>My Neighborhoods</span>

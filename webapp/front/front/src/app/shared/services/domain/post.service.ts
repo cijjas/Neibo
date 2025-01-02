@@ -34,7 +34,8 @@ export class PostService {
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
 
         // Retrieve the template endpoint
-        const listPostsEndpoint = this.apiRegistry.getEndpoint("root:workerPosts");
+        const listPostsEndpoint = this.apiRegistry.getEndpoint("user:posts");
+
         if (!listPostsEndpoint) {
             console.error("Worker posts endpoint not found");
             return of({ posts: [], totalPages: 0, currentPage: 0 });
@@ -64,7 +65,7 @@ export class PostService {
                     const paginationInfo = linkHeader ? parseLinkHeader(linkHeader) : { totalPages: 0, currentPage: 0 };
 
                     // Process the posts
-                    const postObservables = postsDto.map((postDto) => mapPost(this.http, postDto));
+                    const postObservables = postsDto.map((postDto) => mapWorkerPost(this.http, postDto));
 
                     return forkJoin(postObservables).pipe(
                         map((posts) => ({
@@ -81,6 +82,7 @@ export class PostService {
             );
     }
 
+    // should not receive query params, should receive individual params
     public getPosts(
         queryParams: {
             page?: number;
@@ -91,6 +93,7 @@ export class PostService {
             postedBy?: string;
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
+
 
         // Retrieve the template endpoint
         const postsEndpoint = this.apiRegistry.getEndpoint("neighborhood:posts2");
@@ -175,6 +178,24 @@ export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
                 image: postDto._links.postImage,
                 channel: channelDto.name,
                 likeCount: likeCountDto.count,
+                comments: postDto._links.comments,
+                author: user,
+                self: postDto._links.self
+            } as Post;
+        })
+    );
+}
+
+export function mapWorkerPost(http: HttpClient, postDto: PostDto): Observable<Post> {
+    return forkJoin([
+        http.get<UserDto>(postDto._links.postUser).pipe(mergeMap(userDto => mapUser(http, userDto)))
+    ]).pipe(
+        map(([user]) => {
+            return {
+                title: postDto.title,
+                body: postDto.body,
+                createdAt: postDto.creationDate,
+                image: postDto._links.postImage,
                 comments: postDto._links.comments,
                 author: user,
                 self: postDto._links.self
