@@ -23,6 +23,8 @@ export class AdminAmenityCreatePageComponent implements OnInit {
   // The user’s current selections
   selectedShifts: Shift[] = [];
 
+  
+
   private dayAbbreviations: Record<string, string> = {
     Monday: 'Mon',
     Tuesday: 'Tue',
@@ -233,6 +235,11 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     return shift ? this.isShiftSelected(shift) : false;
   }
 
+  formatTime(time: string): string {
+    // Assuming `time` is in the format "HH:mm:ss"
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`; // Return only hours and minutes
+  }
 
 }
 

@@ -214,6 +214,12 @@ export class AdminAmenityEditPageComponent implements OnInit {
     const shift = this.getShift(day, time);
     return shift ? this.isShiftSelected(shift) : false;
   }
+
+  formatTime(time: string): string {
+    // Assuming `time` is in the format "HH:mm:ss"
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`; // Return only hours and minutes
+  }
 }
 
 // Sorting functions

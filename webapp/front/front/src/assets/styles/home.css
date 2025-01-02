@@ -3383,24 +3383,37 @@ input[type=time] {
   /* Accent color for the shift times */
 }
 
+/* TOAS ------------------------------------------ */
+
 
 .toast {
   position: fixed;
   bottom: 20px;
   right: 20px;
   padding: 10px 15px;
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   display: none;
   /* Hidden by default */
   align-items: center;
   z-index: 1000;
   max-width: 300px;
+  /* Ensure this line-height is applied */
+  opacity: 0;
+  /* Start hidden */
+  transform: translateY(20px);
+  /* Slightly move down for animation effect */
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  /* Smooth fade-in and slide-up */
 }
 
 .toast.show {
   display: flex;
   /* Show when the 'show' class is present */
+  opacity: 1;
+  /* Fully visible */
+  transform: translateY(0);
+  /* Reset transform */
 }
 
 .toast.success {
@@ -3435,8 +3448,6 @@ input[type=time] {
   display: flex;
   align-items: center;
 }
-
-
 
 
 
@@ -3637,4 +3648,28 @@ input[type=time] {
 .text-end {
   margin-left: auto;
   text-align: right;
+}
+
+
+
+/* ... */
+
+.cell-wrapper {
+  cursor: pointer;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid var(--lightertext);
+  user-select: none;
+  /* Prevent text selection on click */
+}
+
+.cell-wrapper:hover {
+  background-color: var(--border-color);
+  /* Highlight on hover */
+}
+
+td.selected .cell-wrapper {
+  background-color: var(--primary);
+  /* Green for selected */
+  color: var(--onprimary);
 }

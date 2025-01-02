@@ -55,9 +55,7 @@
                         <!-- For each day, show a cell you can toggle -->
                         <td *ngFor="let day of uniqueDays" [class.selected]="isShiftSelectedByDayTime(day, time)">
                             <div class="cell-wrapper" (click)="toggleCellSelection(day, time)">
-                                <!-- Invisible checkbox for accessibility -->
-                                <input type="checkbox" [checked]="isShiftSelectedByDayTime(day, time)"
-                                    class="hidden-checkbox" />
+                                {{ formatTime(time)}}
                             </div>
                         </td>
                     </tr>

@@ -15,7 +15,7 @@
 
                 <div class="f-r-s-c placeholder-glow">
                     <div>
-                        <img src="{{ worker.user.image }}" class="big-profile-picture "
+                        <img [src]=" worker.user.image ?  worker.user.image : '/assets/images/default-profile.png'"
                             style="width: 50px; height: 50px" [alt]="'user_picture_img_' + worker.user.self" />
                     </div>
                     <div class="information">
