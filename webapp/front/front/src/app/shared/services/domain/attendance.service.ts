@@ -13,12 +13,6 @@ export class AttendanceService {
         private linkService: HateoasLinksService
     ) { }
 
-    public getAttendance(url: string): Observable<Attendance> {
-        return this.http.get<AttendanceDto>(url).pipe(
-            mergeMap((attendanceDto: AttendanceDto) => mapAttendance(this.http, attendanceDto))
-        );
-    }
-
     public getAttendances(
         queryParams: { forEvent?: string; forUser?: string; page?: number; size?: number } = {}
     ): Observable<{ attendances: Attendance[]; totalPages: number; currentPage: number }> {
@@ -28,7 +22,8 @@ export class AttendanceService {
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
-        if (queryParams.forEvent !== undefined) params = params.set('forEvent', queryParams.size.toString());
+        if (queryParams.forEvent !== undefined) params = params.set('forEvent', queryParams.forEvent.toString());
+        if (queryParams.forUser !== undefined) params = params.set('forUser', queryParams.forUser.toString());
 
         return this.http.get<AttendanceDto[]>(attendanceUrl, { params, observe: 'response' }).pipe(
             mergeMap((response) => {
@@ -52,13 +47,14 @@ export class AttendanceService {
 
     public createAttendance(
         eventUrl: string,
-        userUrl: string
     ): Observable<string | null> {
+        let attendanceUrl: string = this.linkService.getLink('neighborhood:attendance')
+        const userUrl = this.linkService.getLink('user:self');
+
         const body = {
             event: eventUrl,
             user: userUrl,
         };
-        let attendanceUrl: string = this.linkService.getLink('neighborhood:attendance')
 
         return this.http.post(attendanceUrl, body, { observe: 'response' }).pipe(
             map(response => {
@@ -78,15 +74,15 @@ export class AttendanceService {
     }
 
     public deleteAttendance(
-        queryParams: { forEvent?: string; forUser?: string } = {}
+        forEvent: string
     ): Observable<void> {
         let attendanceUrl: string = this.linkService.getLink('neighborhood:attendance')
-
-        if ((queryParams.forEvent && !queryParams.forUser) || (!queryParams.forEvent && queryParams.forUser) || (!queryParams.forEvent && !queryParams.forUser)) {
-            throw new Error('Both `forEvent` and `forUser` must be provided together.');
-        }
+        let userUrl = this.linkService.getLink('user:self');
 
         let params = new HttpParams();
+
+        params = params.set("forUser", userUrl)
+        params = params.set("forEvent", forEvent)
 
         return this.http.delete<void>(attendanceUrl, { params });
     }

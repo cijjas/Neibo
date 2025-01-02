@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.webapp.dto.RootDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,10 @@ import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 
 @Path("")
@@ -20,59 +23,14 @@ import javax.ws.rs.core.Response;
 public class RootController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RootController.class);
 
+    @Context
+    private UriInfo uriInfo;
+
     @GET
     public Response getTreeStructure() {
         LOGGER.info("GET request arrived at '/'");
 
-        // Content
-        JsonObject tree = createTreeStructure();
-
-        return Response.ok(tree.toString())
-                .header("Content-Type", "application/json")
+        return Response.ok(RootDto.createRootDto(uriInfo))
                 .build();
-    }
-
-    private JsonObject createTreeStructure() {
-        JsonObjectBuilder treeBuilder = Json.createObjectBuilder();
-
-        // First layer entities
-        addEndpoints(treeBuilder, "affiliations", "departments", "images", "neighborhoods",
-                "languages", "product-statuses", "professions", "post-statuses", "shifts",
-                "shift-statuses", "transaction-types", "user-roles", "worker-roles", "workers",
-                "request-status");
-
-        // Second layer: Nested within neighborhoods
-        treeBuilder.add("neighborhoods", Json.createObjectBuilder()
-                .add("id", Json.createObjectBuilder()
-                        .add("amenities", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
-                        .add("bookings", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
-                        .add("channels", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
-                        .add("contacts", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
-                        .add("events", Json.createObjectBuilder()
-                                .add("id", Json.createObjectBuilder()
-                                        .add("attendance", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))))
-                        .add("posts", Json.createObjectBuilder()
-                                .add("id", Json.createObjectBuilder()
-                                        .add("comments", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))))
-                        .add("products", Json.createObjectBuilder()
-                                .add("id", Json.createObjectBuilder()
-                                        .add("inquiries", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))))
-                        .add("requests", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
-                        .add("resources", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
-                        .add("tags", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))
-                        .add("users", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))));
-
-        // Second layer: Nested within workers
-        treeBuilder.add("workers", Json.createObjectBuilder()
-                .add("id", Json.createObjectBuilder()
-                        .add("reviews", Json.createObjectBuilder().add("id", Json.createObjectBuilder()))));
-
-        return treeBuilder.build();
-    }
-
-    private void addEndpoints(JsonObjectBuilder treeBuilder, String... endpoints) {
-        for (String endpoint : endpoints) {
-            treeBuilder.add(endpoint, Json.createObjectBuilder().add("id", Json.createObjectBuilder()));
-        }
     }
 }

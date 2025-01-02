@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 // Import your services and models as needed
 import { AttendanceService, EventService, Attendance, Event } from '@shared/index';
-import { HateoasLinksService } from '@core/index';
+import { HateoasLinksService, ToastService } from '@core/index';
 @Component({
   selector: 'app-calendar-event-page',
   templateUrl: './calendar-event-page.component.html',
@@ -30,7 +30,8 @@ export class CalendarEventPageComponent implements OnInit {
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
     private eventService: EventService,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private toastService: ToastService,
   ) { }
 
   ngOnInit(): void {
@@ -48,6 +49,15 @@ export class CalendarEventPageComponent implements OnInit {
       this.attendanceCurrentPage = attendancePageParam ? +attendancePageParam : 1;
       this.loadAttendance(); // fetch attendees again if page changes
     });
+
+    this.attendanceService.getAttendances({ forUser: this.linkService.getLink('user:self'), forEvent: eventId, page: 1, size: 1 }).subscribe({
+      next: (next) => {
+        this.willAttend = next.attendances.length != 0;
+      },
+      error: (error) => {
+        console.log("shit went sideways");
+      }
+    })
   }
 
   // Example: fetch the event from your EventService
@@ -60,6 +70,7 @@ export class CalendarEventPageComponent implements OnInit {
   }
 
   loadAttendance(): void {
+    this.attendees = [];
     this.attendanceService
       .getAttendances({
         forEvent: this.event.self,
@@ -80,25 +91,29 @@ export class CalendarEventPageComponent implements OnInit {
   }
 
   attendEvent(): void {
-    const userUrl = this.linkService.getLink('user:self');
-    this.attendanceService.createAttendance(this.event.self, userUrl)
+    this.attendanceService.createAttendance(this.event.self)
       .subscribe(() => {
         this.willAttend = true;
-        // Reload attendees if needed
-        this.loadAttendance();
+        // Manually increment the count in your local event object
+        this.event.attendeesCount = (this.event.attendeesCount ?? 0) + 1;
+
+        this.toastService.showToast('Attendance to event confirmed.', 'success');
+        this.loadAttendance();  // Refresh the list of attendees
       });
   }
 
   unattendEvent(): void {
-    this.attendanceService.deleteAttendance(
-
-    )
+    this.attendanceService.deleteAttendance(this.event.self)
       .subscribe(() => {
         this.willAttend = false;
-        // Reload attendees
-        this.loadAttendance();
+        // Manually decrement the count
+        this.event.attendeesCount = Math.max((this.event.attendeesCount ?? 1) - 1, 0);
+
+        this.toastService.showToast('You were unlisted from the event.', 'success');
+        this.loadAttendance();  // Refresh the list of attendees
       });
   }
+
 
   onAttendancePageChange(page: number): void {
     this.attendanceCurrentPage = page;
