@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.validation.groups.Null;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
@@ -55,11 +56,13 @@ public class NeighborhoodDto {
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("contacts")
                     .build());
-            links.setPosts2(uriInfo.getBaseUriBuilder()
+
+            UriBuilder builder = uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
-                    .path("posts")
-                    .toTemplate() + "?postedBy={postedBy}&inChannel={inChannel}&withTags={withTags}&withStatus={withStatus}&page={page}&size={size}");
+                    .path("posts");
+            String uriTemplate = builder + "{?postedBy,inChannel,withTags*,withStatus,page,size}";
+            links.setPosts2(uriTemplate);
 
             links.setPosts(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")

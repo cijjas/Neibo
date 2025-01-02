@@ -9,10 +9,13 @@ export class ApiRegistry {
 
     registerEndpoint(name: string, baseUri: string, template: string | null = null): void {
         this.endpoints.set(name, new ApiEndpoint(baseUri, template));
-        console.log(this.endpoints);
     }
 
     getEndpoint(name: string): ApiEndpoint | undefined {
         return this.endpoints.get(name);
+    }
+
+    logLinks() {
+        console.log(this.endpoints);
     }
 }

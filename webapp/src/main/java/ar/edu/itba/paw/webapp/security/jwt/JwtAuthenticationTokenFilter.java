@@ -97,8 +97,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             response.addHeader("X-Access-Token", jwtToken);
             response.addHeader("X-Refresh-Token", refreshToken);
 
-            // Construct a full URL for the User URL and Neighborhood URL and add them to the response headers
+            // Construct a full URL for the User URL, Workers' Neighborhood and User's Neighborhood URL and add them to the response headers
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (userAuth.getNeighborhoodId() != 0) {
+                String workersNeighborhoodURL = String.format("%s://%s:%d%s/neighborhoods/%d",
+                        request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), 0);
+                response.addHeader("X-Workers-Neighborhood-URL", Link.fromUri(workersNeighborhoodURL).rel("workers-neighborhood-url").build().toString());
+            }
             String neighborhoodURL = String.format("%s://%s:%d%s/neighborhoods/%d",
                     request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
                     userAuth.getNeighborhoodId());

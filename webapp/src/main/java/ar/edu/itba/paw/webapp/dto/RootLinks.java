@@ -31,6 +31,8 @@ public class RootLinks {
     private String unverifiedNeighborUserRole;
     private String rejectedUserRole;
     private String workerUserRole;
+    // Worker Posts
+    private String workerPosts;
     // Worker Roles (Affiliation)
     private String verifiedWorkerRole;
     private String unverifiedWorkerRole;
@@ -59,6 +61,14 @@ public class RootLinks {
 
     public void setSelf(String self) {
         this.self = self;
+    }
+
+    public String getWorkerPosts() {
+        return workerPosts;
+    }
+
+    public void setWorkerPosts(String workerPosts) {
+        this.workerPosts = workerPosts;
     }
 
     public String getAffiliations() {

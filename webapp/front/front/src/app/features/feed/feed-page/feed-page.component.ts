@@ -79,7 +79,7 @@ export class FeedPageComponent implements OnInit {
     const queryParams = { page: this.currentPage, size: this.pageSize, inChannel: this.channel, withStatus: this.postStatus, withTags: this.tags };
 
     return this.postService
-      .getPosts(this.linkService.getLink('neighborhood:posts'), queryParams)
+      .getPosts(queryParams)
       .pipe(
         map((response) => {
           if (response) {
