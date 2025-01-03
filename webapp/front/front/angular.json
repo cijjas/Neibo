@@ -46,7 +46,9 @@
               "src/assets/styles/calendarBox.css",
               "src/assets/styles/service.css"
             ],
-            "scripts": []
+            "scripts": [
+  "src/assets/js/tagsWidgetHandler.js"
+]
           },
           "configurations": {
             "production": {
