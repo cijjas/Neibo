@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Amenity, Shift, AmenityService } from '@shared/index';
+import { Amenity, Shift, AmenityService, ShiftService } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 
@@ -8,74 +8,82 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './admin-amenities-page.component.html',
 })
 export class AdminAmenitiesPageComponent implements OnInit {
-  darkMode: Boolean = false;
+  darkMode = false;
   amenities: Amenity[] = [];
   currentPage = 1;
   totalPages = 1;
-  pageSize: number = 10; // Number of amenities per page
+  pageSize = 10; // Number of amenities per page
 
   isLoading = false;
 
-  // Days and times (analogous to JSP)
-  days = [
-    { key: 'Monday', label: 'Mon' },
-    { key: 'Tuesday', label: 'Tue' },
-    { key: 'Wednesday', label: 'Wed' },
-    { key: 'Thursday', label: 'Thu' },
-    { key: 'Friday', label: 'Fri' },
-    { key: 'Saturday', label: 'Sat' },
-    { key: 'Sunday', label: 'Sun' }
-  ];
+  // Dynamically loaded from the backend
+  allShifts: Shift[] = [];
+  uniqueDays: string[] = [];
+  uniqueTimes: string[] = [];
 
-  times = [
-    { key: '00:00:00', label: '00:00 - 01:00' },
-    { key: '01:00:00', label: '01:00 - 02:00' },
-    { key: '02:00:00', label: '02:00 - 03:00' },
-    { key: '03:00:00', label: '03:00 - 04:00' },
-    { key: '04:00:00', label: '04:00 - 05:00' },
-    { key: '05:00:00', label: '05:00 - 06:00' },
-    { key: '06:00:00', label: '06:00 - 07:00' },
-    { key: '07:00:00', label: '07:00 - 08:00' },
-    { key: '08:00:00', label: '08:00 - 09:00' },
-    { key: '09:00:00', label: '09:00 - 10:00' },
-    { key: '10:00:00', label: '10:00 - 11:00' },
-    { key: '11:00:00', label: '11:00 - 12:00' },
-    { key: '12:00:00', label: '12:00 - 13:00' },
-    { key: '13:00:00', label: '13:00 - 14:00' },
-    { key: '14:00:00', label: '14:00 - 15:00' },
-    { key: '15:00:00', label: '15:00 - 16:00' },
-    { key: '16:00:00', label: '16:00 - 17:00' },
-    { key: '17:00:00', label: '17:00 - 18:00' },
-    { key: '18:00:00', label: '18:00 - 19:00' },
-    { key: '19:00:00', label: '19:00 - 20:00' },
-    { key: '20:00:00', label: '20:00 - 21:00' },
-    { key: '21:00:00', label: '21:00 - 22:00' },
-    { key: '22:00:00', label: '22:00 - 23:00' },
-    { key: '23:00:00', label: '23:00 - 24:00' },
-
-  ];
-
+  // Optional day abbreviations if you want them
+  private dayAbbreviations: Record<string, string> = {
+    Monday: 'Mon',
+    Tuesday: 'Tue',
+    Wednesday: 'Wed',
+    Thursday: 'Thu',
+    Friday: 'Fri',
+    Saturday: 'Sat',
+    Sunday: 'Sun',
+  };
+  getAbbreviatedDay(day: string): string {
+    return this.dayAbbreviations[day] || day;
+  }
 
   constructor(
     private amenityService: AmenityService,
+    private shiftService: ShiftService, // 1) Inject shift service
     private router: Router,
     private route: ActivatedRoute,
     private linkService: HateoasLinksService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    // Get initial page and size from query params
+    // Get initial page/size from query params
     this.route.queryParams.subscribe((params) => {
       this.currentPage = +params['page'] || 1;
       this.pageSize = +params['size'] || 10;
       this.loadAmenities();
     });
+
+    // Also load all shifts
+    this.loadShifts();
+  }
+
+  /**
+   * Fetch all possible shifts from the API, then generate uniqueDays/uniqueTimes.
+   */
+  private loadShifts(): void {
+    this.shiftService.getShifts().subscribe({
+      next: (shiftsFromApi) => {
+        this.allShifts = shiftsFromApi;
+
+        const daysSet = new Set<string>();
+        const timesSet = new Set<string>();
+
+        for (const shift of this.allShifts) {
+          daysSet.add(shift.day);
+          timesSet.add(shift.startTime);
+        }
+
+        this.uniqueDays = Array.from(daysSet).sort(sortDays);
+        this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
+      },
+      error: (err) => {
+        console.error('Error loading shifts:', err);
+      },
+    });
   }
 
   loadAmenities(): void {
     if (this.isLoading) return;
-
     this.isLoading = true;
+
     this.amenityService
       .getAmenities({
         page: this.currentPage,
@@ -97,13 +105,23 @@ export class AdminAmenitiesPageComponent implements OnInit {
 
   deleteAmenity(amenityUrl: string) {
     this.amenityService.deleteAmenity(amenityUrl).subscribe({
-      next: (response) => {
-        // success toast
+      next: () => {
+        // handle success (e.g. show toast)
+        // Reload amenities or remove from local list
+        this.loadAmenities();
       },
       error: (err) => {
         console.error('Error deleting amenities:', err);
       },
     });
+  }
+
+  // Check if a given day/time slot is available for this amenity
+  checkAvailability(shifts: Shift[], dayKey: string, timeKey: string): boolean {
+    if (!shifts) return false;
+    return shifts.some(
+      (shift) => shift.day === dayKey && shift.startTime === timeKey
+    );
   }
 
   onPageChange(page: number): void {
@@ -120,7 +138,36 @@ export class AdminAmenitiesPageComponent implements OnInit {
     });
   }
 
-  checkAvailability(shifts: Shift[], dayKey: string, timeKey: string): boolean {
-    return shifts.some(shift => shift.day === dayKey && shift.startTime === timeKey);
+  /**
+   * (Optional) formatting for "HH:mm:ss" -> "HH:mm"
+   */
+  formatTime(time: string): string {
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
   }
+}
+
+/**
+ * Example sort for days – so they appear Monday, Tuesday, etc.
+ */
+function sortDays(a: string, b: string) {
+  const order = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  return order.indexOf(a) - order.indexOf(b);
+}
+
+/**
+ * Example sort for times as strings "HH:mm:ss".
+ */
+function sortTimes(a: string, b: string) {
+  const aH = parseInt(a.split(':')[0], 10);
+  const bH = parseInt(b.split(':')[0], 10);
+  return aH - bH;
 }

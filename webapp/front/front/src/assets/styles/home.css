@@ -3566,3 +3566,26 @@ td.selected .cell-wrapper {
   /* Green for selected */
   color: var(--onprimary);
 }
+
+.pagination-arrows {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+
+.pagination-arrows span {
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 0 1rem;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+}
+
+.pagination-arrows span.disabled {
+  color: var(--lighttext);
+  cursor: not-allowed;
+}

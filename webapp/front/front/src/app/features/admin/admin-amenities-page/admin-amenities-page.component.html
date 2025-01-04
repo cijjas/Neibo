@@ -1,75 +1,100 @@
-<div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-    <div class="f-r-sb-c">
-        <h2 class="mb-0">
-            Amenities
-        </h2>
-        <a [routerLink]="['/admin/amenities/new']" class="cool-feed-button">
-            Create Amenity
-            <i class="fa-solid fa-plus"></i>
-        </a>
-    </div>
+<div
+  class="cool-static-container m-b-20"
+  style="word-wrap: break-word"
+  aria-hidden="true"
+>
+  <div class="f-r-sb-c">
+    <h2 class="mb-0">Amenities</h2>
+    <a [routerLink]="['/admin/amenities/new']" class="cool-feed-button">
+      Create Amenity
+      <i class="fa-solid fa-plus"></i>
+    </a>
+  </div>
 
-    <div class="divider mb-3 mt-3"></div>
+  <div class="divider mb-3 mt-3"></div>
 
+  <!-- If no amenities -->
+  <div class="no-posts-found" *ngIf="amenities?.length === 0 && !isLoading">
+    <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+    Amenities not found
+  </div>
 
-    <!-- If no amenities -->
-    <div class="no-posts-found" *ngIf="amenities?.length === 0 && !isLoading">
-        <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-        Amenities not found
-    </div>
-
-    <!-- If amenities are available -->
-    <div *ngIf="amenities?.length > 0">
-
-        <!-- List each amenity -->
-        <div *ngFor="let amenity of amenities" class="cool-static-container m-b-20" style="word-wrap: break-word;"
-            aria-hidden="true">
-
-            <div class="f-r-sb-c">
-                <h2>{{ amenity.name }}</h2>
-                <div class="f-r-sb-c">
-                    <a class="btn  " [routerLink]="['/admin/amenities', amenity.self, 'edit']">
-                        <i class="fa-solid fa-pen"></i>
-                        Edit
-                    </a>
-                    <a class="btn btn-link">
-                        <i class="fas fa-trash" style="color: var(--error);" (click)="deleteAmenity(amenity.self)"></i>
-                    </a>
-                </div>
-
-            </div>
-
-
-            <p class="mb-3" style="color:var(--lighttext);">{{ amenity.description }}</p>
-
-            <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                <div class="cool-table w-100">
-                    <table class="table-striped w-100">
-                        <tr>
-                            <th>Hours</th>
-                            <th *ngFor="let d of days">{{ d.label }}</th>
-                        </tr>
-                        <tr *ngFor="let t of times">
-                            <td>{{ t.label }}</td>
-                            <td *ngFor="let d of days">
-                                <ng-container
-                                    *ngIf="checkAvailability(amenity.availableShifts, d.key, t.key); else notAvailable">
-                                    <span style="color: var(--primary);" class="col-12">
-                                        <i class="fa-solid fa-check"></i>
-                                    </span>
-                                </ng-container>
-                                <ng-template #notAvailable>
-                                    <span style="color: var(--error);" class="col-12">
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </span>
-                                </ng-template>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+  <!-- If amenities are available -->
+  <div *ngIf="amenities?.length > 0">
+    <!-- List each amenity -->
+    <div
+      *ngFor="let amenity of amenities"
+      class="cool-static-container m-b-20"
+      style="word-wrap: break-word"
+      aria-hidden="true"
+    >
+      <div class="f-r-sb-c">
+        <h2>{{ amenity.name }}</h2>
+        <div class="f-r-sb-c">
+          <a
+            class="btn"
+            [routerLink]="['/admin/amenities', amenity.self, 'edit']"
+          >
+            <i class="fa-solid fa-pen"></i>
+            Edit
+          </a>
+          <a class="btn btn-link">
+            <i
+              class="fas fa-trash"
+              style="color: var(--error)"
+              (click)="deleteAmenity(amenity.self)"
+            ></i>
+          </a>
         </div>
-        <app-paginator [totalPages]="totalPages" [currentPage]="currentPage"
-            (pageChange)="onPageChange($event)"></app-paginator>
+      </div>
+
+      <p class="mb-3" style="color: var(--lighttext)">
+        {{ amenity.description }}
+      </p>
+
+      <div
+        class="d-flex flex-column justify-content-center align-items-center w-100"
+      >
+        <div class="cool-table w-100">
+          <table class="table-striped w-100">
+            <tr>
+              <th>Hours</th>
+              <!-- Use the abbreviations if you want them: getAbbreviatedDay(d) -->
+              <th *ngFor="let d of uniqueDays">
+                {{ getAbbreviatedDay(d) }}
+              </th>
+            </tr>
+            <tr *ngFor="let t of uniqueTimes">
+              <!-- Show time or formatTime(t) if you want "HH:mm" -->
+              <td>{{ formatTime(t) }}</td>
+              <td *ngFor="let d of uniqueDays">
+                <ng-container
+                  *ngIf="
+                    checkAvailability(amenity.availableShifts, d, t);
+                    else notAvailable
+                  "
+                >
+                  <span style="color: var(--primary)" class="col-12">
+                    <i class="fa-solid fa-check"></i>
+                  </span>
+                </ng-container>
+                <ng-template #notAvailable>
+                  <span style="color: var(--error)" class="col-12">
+                    <i class="fa-solid fa-xmark"></i>
+                  </span>
+                </ng-template>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
     </div>
+
+    <!-- Paginator -->
+    <app-paginator
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)"
+    ></app-paginator>
+  </div>
 </div>

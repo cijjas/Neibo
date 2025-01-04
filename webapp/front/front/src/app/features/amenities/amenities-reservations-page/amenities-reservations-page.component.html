@@ -1,124 +1,187 @@
 <div [class.dark-mode]="darkMode">
-    <app-navbar></app-navbar>
-    <div class="container">
-        <div class="row init">
-            <div class="column-left">
-                <app-sidebar></app-sidebar>
-            </div>
+  <app-navbar></app-navbar>
+  <div class="container">
+    <div class="row init">
+      <div class="column-left">
+        <app-sidebar></app-sidebar>
+      </div>
 
-            <div class="column-middle">
-                <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+      <div class="column-middle">
+        <div
+          class="cool-static-container m-b-20"
+          style="word-wrap: break-word"
+          aria-hidden="true"
+        >
+          <!-- If no amenities -->
+          <div class="no-posts-found" *ngIf="amenities?.length === 0">
+            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            Amenities not found
+          </div>
 
-                    <!-- If no amenities -->
-                    <div class="no-posts-found" *ngIf="amenities?.length === 0 ">
-                        <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-                        Amenities not found
-                    </div>
+          <!-- If amenities are available -->
+          <div *ngIf="amenities?.length > 0">
+            <h2>Make Reservation</h2>
+            <div class="divider"></div>
 
-                    <!-- If amenities are available -->
-                    <div *ngIf="amenities?.length > 0">
-                        <h2>Make Reservation</h2>
-                        <div class="divider"></div>
+            <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+              <div class="col-md-12">
+                <label for="amenityUrl" class="mt-3 mb-1">Select Amenity</label>
+                <div
+                  class="amenity-scroll-container"
+                  (scroll)="onScroll($event)"
+                  style="
+                    border: 1px solid #ccc;
+                    max-height: 200px;
+                    overflow-y: auto;
+                    padding: 0.5rem;
+                  "
+                >
+                  <div
+                    *ngFor="let entry of amenities"
+                    class="amenity-item"
+                    [class.selected]="
+                      reservationForm.get('amenityUrl')?.value === entry.self
+                    "
+                    (click)="selectAmenity(entry.self)"
+                    style="
+                      cursor: pointer;
+                      padding: 0.5rem;
+                      border-bottom: 1px solid #eee;
+                    "
+                  >
+                    {{ entry.name }}
+                  </div>
 
-                        <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
-                            <div class="col-md-12">
-                                <label for="amenityUrl" class="mt-3 mb-1">Select Amenity</label>
-                                <div class="amenity-scroll-container" (scroll)="onScroll($event)"
-                                    style="border:1px solid #ccc; max-height:200px; overflow-y:auto; padding:0.5rem;">
-
-                                    <div *ngFor="let entry of amenities" class="amenity-item"
-                                        [class.selected]="reservationForm.get('amenityUrl')?.value === entry.self"
-                                        (click)="selectAmenity(entry.self)"
-                                        style="cursor:pointer; padding:0.5rem; border-bottom:1px solid #eee;">
-                                        {{ entry.name }}
-                                    </div>
-
-                                    <div *ngIf="isLoading" class="loading-indicator"
-                                        style="text-align:center; padding:1rem;">
-                                        Loading more amenities...
-                                    </div>
-                                </div>
-
-                                <p class="error"
-                                    *ngIf="reservationForm.get('amenityUrl')?.invalid && reservationForm.get('amenityUrl')?.touched">
-                                    Please select an amenity.
-                                </p>
-                            </div>
-
-                            <div class="col-md-12">
-                                <label for="date" class="mt-3 mb-1">Choose Date</label>
-                                <input type="date" id="date" formControlName="date" class="cool-input mb-1" required />
-                                <p class="error"
-                                    *ngIf="reservationForm.get('date')?.invalid && reservationForm.get('date')?.touched">
-                                    Please choose a valid date.
-                                </p>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="d-flex justify-content-end m-t-40">
-                                    <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bold"
-                                        style="height:40px;">
-                                        See Times
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                  <div
+                    *ngIf="isLoading"
+                    class="loading-indicator"
+                    style="text-align: center; padding: 1rem"
+                  >
+                    Loading more amenities...
+                  </div>
                 </div>
 
-                <!-- The schedule table for each amenity -->
-                <div *ngFor="let amenity of amenities" class="cool-static-container m-b-20"
-                    style="word-wrap: break-word;" aria-hidden="true">
-                    <h2>{{ amenity.name }}</h2>
-                    <p class="mb-3" style="color:var(--lighttext);">{{ amenity.description }}</p>
+                <p
+                  class="error"
+                  *ngIf="
+                    reservationForm.get('amenityUrl')?.invalid &&
+                    reservationForm.get('amenityUrl')?.touched
+                  "
+                >
+                  Please select an amenity.
+                </p>
+              </div>
 
-                    <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                        <div class="cool-table w-100">
-                            <table class="table-striped w-100">
-                                <tr>
-                                    <th>Amenity Hours</th>
-                                    <th *ngFor="let d of days">{{ d.label }}</th>
-                                </tr>
-                                <tr *ngFor="let t of times">
-                                    <td>{{ t.label }}</td>
-                                    <td *ngFor="let d of days">
-                                        <ng-container
-                                            *ngIf="checkAvailability(amenity.availableShifts, d.key, t.key); else notAvailable">
-                                            <span style="color: var(--primary);" class="col-12">
-                                                <i class="fa-solid fa-check"></i>
-                                            </span>
-                                        </ng-container>
-                                        <ng-template #notAvailable>
-                                            <span style="color: var(--error);" class="col-12">
-                                                <i class="fa-solid fa-xmark"></i>
-                                            </span>
-                                        </ng-template>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+              <div class="col-md-12">
+                <label for="date" class="mt-3 mb-1">Choose Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  formControlName="date"
+                  class="cool-input mb-1"
+                  required
+                />
+                <p
+                  class="error"
+                  *ngIf="
+                    reservationForm.get('date')?.invalid &&
+                    reservationForm.get('date')?.touched
+                  "
+                >
+                  Please choose a valid date.
+                </p>
+              </div>
+
+              <div class="col-md-12">
+                <div class="d-flex justify-content-end m-t-40">
+                  <button
+                    type="submit"
+                    class="cool-button cool-small on-bg w-25 font-weight-bold"
+                    style="height: 40px"
+                  >
+                    See Times
+                  </button>
                 </div>
+              </div>
+            </form>
+          </div>
+        </div>
 
-                <!-- PAGINATOR  -->
-                <div class="m-t-20">
-                    <app-paginator [totalPages]="totalPages" [currentPage]="currentPage"
-                        (pageChange)="onPageChange($event)">
-                    </app-paginator>
-                </div>
+        <!-- The schedule table for each amenity -->
+        <!-- Example snippet showing how to iterate over dynamic days & times -->
+        <div
+          *ngFor="let amenity of amenities"
+          class="cool-static-container m-b-20"
+          style="word-wrap: break-word"
+          aria-hidden="true"
+        >
+          <h2>{{ amenity.name }}</h2>
+          <p class="mb-3" style="color: var(--lighttext)">
+            {{ amenity.description }}
+          </p>
 
+          <div
+            class="d-flex flex-column justify-content-center align-items-center w-100"
+          >
+            <div class="cool-table w-100">
+              <table class="table-striped w-100">
+                <tr>
+                  <th>Amenity Hours</th>
+                  <!-- Use the abbreviated day name -->
+                  <th *ngFor="let d of uniqueDays">
+                    {{ getAbbreviatedDay(d) }}
+                  </th>
+                </tr>
 
+                <!-- For each unique time, display a row -->
+                <tr *ngFor="let t of uniqueTimes">
+                  <!-- Format the time string (e.g. "HH:mm:ss" -> "HH:mm") -->
+                  <td>{{ formatTime(t) }}</td>
+
+                  <!-- For each day, check if the shift is available for this amenity -->
+                  <td *ngFor="let d of uniqueDays">
+                    <ng-container
+                      *ngIf="
+                        checkAvailability(amenity.availableShifts, d, t);
+                        else notAvailable
+                      "
+                    >
+                      <span style="color: var(--primary)" class="col-12">
+                        <i class="fa-solid fa-check"></i>
+                      </span>
+                    </ng-container>
+                    <ng-template #notAvailable>
+                      <span style="color: var(--error)" class="col-12">
+                        <i class="fa-solid fa-xmark"></i>
+                      </span>
+                    </ng-template>
+                  </td>
+                </tr>
+              </table>
             </div>
+          </div>
+        </div>
 
-            <div class="column-right">
-                <app-calendar-widget></app-calendar-widget>
-                <app-amenities-reservations-list></app-amenities-reservations-list>
-            </div>
+        <!-- PAGINATOR  -->
+        <div class="m-t-20">
+          <app-paginator
+            [totalPages]="totalPages"
+            [currentPage]="currentPage"
+            (pageChange)="onPageChange($event)"
+          >
+          </app-paginator>
+        </div>
+      </div>
 
+      <div class="column-right">
+        <app-calendar-widget></app-calendar-widget>
+        <app-amenities-reservations-list></app-amenities-reservations-list>
+      </div>
 
-            <!-- end column-right -->
-
-        </div> <!-- end row -->
-    </div> <!-- end container -->
-    <app-wave-footer></app-wave-footer>
+      <!-- end column-right -->
+    </div>
+    <!-- end row -->
+  </div>
+  <!-- end container -->
+  <app-wave-footer></app-wave-footer>
 </div>

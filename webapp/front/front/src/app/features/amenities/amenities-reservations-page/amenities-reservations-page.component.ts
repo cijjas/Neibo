@@ -1,175 +1,244 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HateoasLinksService } from '@core/index';
-import { Booking, Amenity, Shift, AmenityService, BookingService } from '@shared/index';
+import {
+  Booking,
+  Amenity,
+  Shift,
+  AmenityService,
+  BookingService,
+  ShiftService,
+} from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-    selector: 'app-amenities-reservations-page',
-    templateUrl: './amenities-reservations-page.component.html',
+  selector: 'app-amenities-reservations-page',
+  templateUrl: './amenities-reservations-page.component.html',
 })
 export class AmenitiesReservationsPageComponent implements OnInit {
-    darkMode: Boolean = false;
-    amenities: Amenity[] = [];
-    reservationsList: Booking[] = [];
-    reservationForm!: FormGroup;
+  darkMode = false;
 
-    showSuccessMessage = false;
-    showErrorMessage = false;
+  amenities: Amenity[] = [];
+  reservationsList: Booking[] = [];
+  reservationForm!: FormGroup;
 
-    currentPage = 1;
-    totalPages = 1;
-    isLoading = false;
+  currentPage = 1; // Current or highest loaded page
+  totalPages = 1;
+  isLoading = false;
 
-    // Example static day and time definitions:
-    // daysPairs and timesPairs are analogous to those in JSP
-    days = [
-        { key: 'Monday', label: 'Mon' },
-        { key: 'Tuesday', label: 'Tue' },
-        { key: 'Wednesday', label: 'Wed' },
-        { key: 'Thursday', label: 'Thu' },
-        { key: 'Friday', label: 'Fri' },
-        { key: 'Saturday', label: 'Sat' },
-        { key: 'Sunday', label: 'Sun' }
-    ];
+  // For dynamic day/time
+  allShifts: Shift[] = [];
+  uniqueDays: string[] = [];
+  uniqueTimes: string[] = [];
 
-    // times could be in 24hr format or any format you like;
-    // the key is the start time, and you can display a label if you wish.
-    // For example, times every hour from 08:00 to 20:00:
-    times = [
-        { key: '00:00:00', label: '00:00 - 01:00' },
-        { key: '01:00:00', label: '01:00 - 02:00' },
-        { key: '02:00:00', label: '02:00 - 03:00' },
-        { key: '03:00:00', label: '03:00 - 04:00' },
-        { key: '04:00:00', label: '04:00 - 05:00' },
-        { key: '05:00:00', label: '05:00 - 06:00' },
-        { key: '06:00:00', label: '06:00 - 07:00' },
-        { key: '07:00:00', label: '07:00 - 08:00' },
-        { key: '08:00:00', label: '08:00 - 09:00' },
-        { key: '09:00:00', label: '09:00 - 10:00' },
-        { key: '10:00:00', label: '10:00 - 11:00' },
-        { key: '11:00:00', label: '11:00 - 12:00' },
-        { key: '12:00:00', label: '12:00 - 13:00' },
-        { key: '13:00:00', label: '13:00 - 14:00' },
-        { key: '14:00:00', label: '14:00 - 15:00' },
-        { key: '15:00:00', label: '15:00 - 16:00' },
-        { key: '16:00:00', label: '16:00 - 17:00' },
-        { key: '17:00:00', label: '17:00 - 18:00' },
-        { key: '18:00:00', label: '18:00 - 19:00' },
-        { key: '19:00:00', label: '19:00 - 20:00' },
-        { key: '20:00:00', label: '20:00 - 21:00' },
-        { key: '21:00:00', label: '21:00 - 22:00' },
-        { key: '22:00:00', label: '22:00 - 23:00' },
-        { key: '23:00:00', label: '23:00 - 24:00' },
+  // (Optional) day name abbreviations
+  private dayAbbreviations: Record<string, string> = {
+    Monday: 'Mon',
+    Tuesday: 'Tue',
+    Wednesday: 'Wed',
+    Thursday: 'Thu',
+    Friday: 'Fri',
+    Saturday: 'Sat',
+    Sunday: 'Sun',
+  };
 
-    ];
+  getAbbreviatedDay(day: string): string {
+    return this.dayAbbreviations[day] || day;
+  }
 
-    constructor(
-        private fb: FormBuilder,
-        private amenityService: AmenityService,
-        private linkService: HateoasLinksService,
-        private bookingService: BookingService,
-        private router: Router,
-        private route: ActivatedRoute
-    ) { }
+  constructor(
+    private fb: FormBuilder,
+    private amenityService: AmenityService,
+    private linkService: HateoasLinksService,
+    private bookingService: BookingService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private shiftService: ShiftService
+  ) {}
 
-    ngOnInit(): void {
-        this.reservationForm = this.fb.group({
-            amenityUrl: ['', Validators.required],
-            date: ['', Validators.required]
-        });
+  ngOnInit(): void {
+    this.reservationForm = this.fb.group({
+      amenityUrl: ['', Validators.required],
+      date: ['', Validators.required],
+    });
 
-        this.loadAmenities(this.currentPage);
+    // Load the first page + shifts
+    this.loadAmenities(this.currentPage);
+    this.loadShifts();
+  }
+
+  // Example shift-loading logic
+  private loadShifts(): void {
+    this.shiftService.getShifts().subscribe({
+      next: (shiftsFromApi) => {
+        this.allShifts = shiftsFromApi;
+        const daysSet = new Set<string>();
+        const timesSet = new Set<string>();
+
+        for (const shift of this.allShifts) {
+          daysSet.add(shift.day);
+          timesSet.add(shift.startTime);
+        }
+
+        this.uniqueDays = Array.from(daysSet).sort(sortDays);
+        this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
+      },
+      error: (err) => {
+        console.error('Error fetching shifts:', err);
+      },
+    });
+  }
+
+  // Unified loader
+  loadAmenities(page: number): void {
+    // If we’re already loading or page is invalid, do nothing
+    if (this.isLoading || page < 1 || page > this.totalPages) {
+      return;
     }
 
-    loadAmenities(page: number): void {
-        if (this.isLoading) return;
-        this.isLoading = true;
+    this.isLoading = true;
 
-        const amenitiesUrl = this.linkService.getLink('neighborhood:amenities');
-        this.amenityService.getAmenities({ page }).subscribe({
-            next: (data) => {
-                if (page === 1) {
-                    this.amenities = data.amenities;
-                } else {
-                    this.amenities = [...this.amenities, ...data.amenities];
-                }
-                this.currentPage = data.currentPage;
-                this.totalPages = data.totalPages;
-                this.isLoading = false;
-            },
-            error: (err) => {
-                console.error(err);
-                this.isLoading = false;
-            }
-        });
-    }
-
-
-
-    onSubmit(): void {
-        if (this.reservationForm.valid) {
-            const amenityUrl = this.reservationForm.get('amenityUrl')?.value;
-            const date = this.reservationForm.get('date')?.value;
-
-            // Navigate to the Choose Time page with query parameters
-            this.router.navigate(['/amenities/choose-time'], {
-                queryParams: { amenityUrl, date }
-            });
+    this.amenityService.getAmenities({ page }).subscribe({
+      next: (data) => {
+        /**
+         * If `page === 1`, we're refreshing from scratch.
+         * Or you might want to always push if you want to keep old pages.
+         */
+        if (page === 1) {
+          this.amenities = data.amenities;
         } else {
-            // Mark all controls as touched to trigger validation messages
-            this.reservationForm.markAllAsTouched();
+          // Append new data
+          this.amenities = [...this.amenities, ...data.amenities];
         }
+
+        // Update page tracking
+        this.currentPage = data.currentPage;
+        this.totalPages = data.totalPages;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  // When the user scrolls near the bottom in the Amenity selector
+  onScroll(event: Event): void {
+    // If already loading or on the last page, do nothing
+    if (this.isLoading || this.currentPage >= this.totalPages) return;
+
+    const target = event.target as HTMLElement;
+    const threshold = 100;
+
+    if (
+      target.scrollHeight - target.scrollTop - target.clientHeight <
+      threshold
+    ) {
+      // Load next page
+      this.loadAmenities(this.currentPage + 1);
+    }
+  }
+
+  // When the user selects a page from the paginator
+  onPageChange(pageNumber: number): void {
+    // If the user picks the same page or something invalid, skip
+    if (
+      pageNumber < 1 ||
+      pageNumber > this.totalPages ||
+      pageNumber === this.currentPage
+    ) {
+      return;
     }
 
+    // Set the loading state
+    this.isLoading = true;
 
-    selectAmenity(amenitySelfLink: string) {
-        this.reservationForm.get('amenityUrl')?.setValue(amenitySelfLink);
+    // Fetch the selected page and replace the amenities array
+    this.amenityService.getAmenities({ page: pageNumber }).subscribe({
+      next: (data) => {
+        this.amenities = data.amenities; // Replace the previous page's data
+        this.currentPage = pageNumber; // Update the current page
+        this.isLoading = false; // Reset the loading state
+      },
+      error: (err) => {
+        console.error('Error fetching amenities:', err);
+        this.isLoading = false; // Reset the loading state even on error
+      },
+    });
+
+    // Optionally, reflect the new page in the URL
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: pageNumber },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  // Reservation form submission
+  onSubmit(): void {
+    if (this.reservationForm.valid) {
+      const amenityUrl = this.reservationForm.get('amenityUrl')?.value;
+      const date = this.reservationForm.get('date')?.value;
+      this.router.navigate(['/amenities/choose-time'], {
+        queryParams: { amenityUrl, date },
+      });
+    } else {
+      this.reservationForm.markAllAsTouched();
     }
+  }
 
-    onScroll(event: Event): void {
-        const target = event.target as HTMLElement;
-        const threshold = 100;
-        if (
-            !this.isLoading &&
-            this.currentPage < this.totalPages &&
-            target.scrollHeight - target.scrollTop - target.clientHeight < threshold
-        ) {
-            this.loadAmenities(this.currentPage + 1);
-        }
-    }
+  selectAmenity(amenitySelfLink: string) {
+    this.reservationForm.get('amenityUrl')?.setValue(amenitySelfLink);
+  }
 
+  deleteReservation(bookingUrl: string): void {
+    this.isLoading = true;
+    this.bookingService.deleteBooking(bookingUrl).subscribe({
+      next: () => {
+        this.reservationsList = this.reservationsList.filter(
+          (reservation) => reservation.self !== bookingUrl
+        );
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isLoading = false;
+      },
+    });
+  }
 
-    deleteReservation(bookingUrl: string): void {
-        this.isLoading = true;
+  // Check if day/time is available
+  checkAvailability(shifts: Shift[], dayKey: string, timeKey: string): boolean {
+    if (!shifts) return false;
+    return shifts.some(
+      (shift) => shift.day === dayKey && shift.startTime === timeKey
+    );
+  }
 
-        this.bookingService.deleteBooking(bookingUrl).subscribe({
-            next: () => {
-                this.reservationsList = this.reservationsList.filter(reservation => reservation.self !== bookingUrl);
-                this.isLoading = false;
-                this.showSuccessMessage = true;
-            },
-            error: (err) => {
-                console.error(err);
-                this.showErrorMessage = true;
-                this.isLoading = false;
-            }
-        });
-    }
+  // Format "HH:mm:ss" -> "HH:mm"
+  formatTime(time: string): string {
+    const [hours, minutes] = time.split(':');
+    return `${hours}:${minutes}`;
+  }
+}
 
-    // Checks if a given day/time slot is available for this amenity
-    checkAvailability(shifts: Shift[], dayKey: string, timeKey: string): boolean {
-        return shifts.some(shift => shift.day === dayKey && shift.startTime === timeKey);
-    }
+/** Utility sorting functions */
+function sortDays(a: string, b: string) {
+  const order = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+  return order.indexOf(a) - order.indexOf(b);
+}
 
-
-    // Handle page changes from the paginator
-    onPageChange(pageNumber: number): void {
-        // Update the query param to reflect the new page
-        this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { page: pageNumber },
-            queryParamsHandling: 'merge' // keep any other existing query params
-        });
-    }
+function sortTimes(a: string, b: string) {
+  const aH = parseInt(a.split(':')[0], 10);
+  const bH = parseInt(b.split(':')[0], 10);
+  return aH - bH;
 }

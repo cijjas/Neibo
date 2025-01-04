@@ -1,65 +1,81 @@
 <div>
-    <!-- Possibly a switch to show verified or unverified neighbors -->
-    <div class="req-acc-users-list p-3">
-        <!-- If there are no users -->
-        <div class="f-r-s-c w-100 p-2">
-            <h2 class="mb-0">
-                {{!neighbors ? 'Pending Requests': 'Current Neighbors'}}
-            </h2>
-            
-        </div>
-        <div class="divider"></div>
-
-        <div class="user-row" *ngIf="users.length === 0">
-            <div class="information">
-                <!-- This is your fallback message -->
-                <div>No new requests found.</div>
-            </div>
-        </div>
-
-        <!-- If we have users -->
-        <div class="w-100" *ngFor="let user of users; let i = index">
-            <div class="user-row">
-                <div class="f-r-s-c placeholder-glow">
-                    <div>
-                        <img [src]="user.image ? user.image : '/assets/images/default-profile.png'"
-                            class="big-profile-picture" style="width: 50px; height: 50px"
-                            [alt]="'user_picture_img_' + user.self" />
-                    </div>
-                    <div class="information">
-                        <div>
-                            <span style="color: var(--text)">Name: </span>
-                            <span style="color: var(--primary)">{{ user.name }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">Surname: </span>
-                            <span style="color: var(--primary)">{{ user.surname }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">Email: </span>
-                            <span style="color: var(--primary)">{{ user.email }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">Identification: </span>
-                            <span style="color: var(--primary)">{{ user.identification }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="f-r-c-c">
-                    <button class="ignore-button outlined on-bg" (click)="rejectUser(user)">
-                        {{ neighbors ? 'Remove' : 'Reject' }}
-                    </button>
-                    <button *ngIf="!neighbors" class="cool-button cool-small font-weight-normal on-bg p-2"
-                        (click)="verifyUser(user)">
-                        Accept
-                    </button>
-                </div>
-            </div>
-            <div class="divider" *ngIf="i < users.length - 1"></div>
-        </div>
-        <app-paginator [totalPages]="totalPages" [currentPage]="currentPage" [pageSize]="pageSize"
-            (pageChange)="onPageChange($event)">
-        </app-paginator>
+  <!-- Possibly a switch to show verified or unverified neighbors -->
+  <div class="req-acc-users-list p-3">
+    <!-- If there are no users -->
+    <div class="f-r-s-c w-100 p-2">
+      <h2 class="mb-0">
+        {{ !neighbors ? "Pending Neighbor Requests" : "Current Neighbors" }}
+      </h2>
     </div>
+    <div class="divider"></div>
+
+    <div class="user-row" *ngIf="users.length === 0">
+      <div class="information">
+        <!-- This is your fallback message -->
+        <div>No new requests found.</div>
+      </div>
+    </div>
+
+    <!-- If we have users -->
+    <div class="w-100" *ngFor="let user of users; let i = index">
+      <div class="user-row">
+        <div class="f-r-s-c placeholder-glow">
+          <div>
+            <img
+              [src]="
+                user.image ? user.image : '/assets/images/default-profile.png'
+              "
+              class="big-profile-picture"
+              style="width: 50px; height: 50px"
+              [alt]="'user_picture_img_' + user.self"
+            />
+          </div>
+          <div class="information">
+            <div>
+              <span style="color: var(--text)">Name: </span>
+              <span style="color: var(--primary)">{{ user.name }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">Surname: </span>
+              <span style="color: var(--primary)">{{ user.surname }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">Email: </span>
+              <span style="color: var(--primary)">{{ user.email }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">Identification: </span>
+              <span style="color: var(--primary)">{{
+                user.identification
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="f-r-c-c">
+          <button
+            class="ignore-button outlined on-bg"
+            (click)="rejectUser(user)"
+          >
+            {{ neighbors ? "Remove" : "Reject" }}
+          </button>
+          <button
+            *ngIf="!neighbors"
+            class="cool-button cool-small font-weight-normal on-bg p-2"
+            (click)="verifyUser(user)"
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+      <div class="divider" *ngIf="i < users.length - 1"></div>
+    </div>
+    <app-paginator
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+    >
+    </app-paginator>
+  </div>
 </div>

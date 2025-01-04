@@ -23,8 +23,6 @@ export class AdminAmenityCreatePageComponent implements OnInit {
   // The user’s current selections
   selectedShifts: Shift[] = [];
 
-  
-
   private dayAbbreviations: Record<string, string> = {
     Monday: 'Mon',
     Tuesday: 'Tue',
@@ -43,8 +41,8 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     private shiftService: ShiftService,
     private amenityService: AmenityService,
     private toastService: ToastService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.amenityForm = this.fb.group({
@@ -95,19 +93,33 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     const formValue = { ...this.amenityForm.value };
 
     // Assuming selectedShifts is an array of Shift objects
-    const selectedShiftUrls: string[] = this.selectedShifts.map(shift => shift.self);
+    const selectedShiftUrls: string[] = this.selectedShifts.map(
+      (shift) => shift.self
+    );
 
-    this.amenityService.createAmenity(formValue.name, formValue.description, selectedShiftUrls).subscribe({
-      next: (amenity) => {
-        this.toastService.showToast('Amenity created successfully!', 'success');
-        this.router.navigate(['admin/amenities'])
-      },
-      error: (err) => {
-        this.toastService.showToast('Error creating amenity, try again later.', 'error');
-
-      },
-    })
-    console.log('Amenity:', this.amenityForm.value, 'Selected Shifts:', this.selectedShifts);
+    this.amenityService
+      .createAmenity(formValue.name, formValue.description, selectedShiftUrls)
+      .subscribe({
+        next: (next) => {
+          this.toastService.showToast(
+            `Amenity '${formValue.name}' created successfully!`,
+            'success'
+          );
+          this.router.navigate(['admin/amenities']);
+        },
+        error: (err) => {
+          this.toastService.showToast(
+            `Error creating amenity '${formValue.name}' , try again later.`,
+            'error'
+          );
+        },
+      });
+    console.log(
+      'Amenity:',
+      this.amenityForm.value,
+      'Selected Shifts:',
+      this.selectedShifts
+    );
   }
 
   /**
@@ -159,7 +171,9 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     // For each day, check if there's a shift. If it exists, is it selected?
     // The row is "fully selected" only if for every day, the shift is selected
     return this.uniqueDays.every((day) => {
-      const shift = this.allShifts.find((s) => s.day === day && s.startTime === time);
+      const shift = this.allShifts.find(
+        (s) => s.day === day && s.startTime === time
+      );
       return shift && this.isShiftSelected(shift);
     });
   }
@@ -178,7 +192,9 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     } else {
       // Select all shifts in this row
       for (const day of this.uniqueDays) {
-        const shift = this.allShifts.find((s) => s.day === day && s.startTime === time);
+        const shift = this.allShifts.find(
+          (s) => s.day === day && s.startTime === time
+        );
         if (shift && !this.isShiftSelected(shift)) {
           this.selectedShifts.push(shift);
         }
@@ -219,12 +235,13 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     this.selectedShifts = [];
   }
 
-
   /**
    * Returns the Shift object for a given day and time, or null if not found
    */
   getShift(day: string, time: string): Shift | null {
-    return this.allShifts.find((s) => s.day === day && s.startTime === time) || null;
+    return (
+      this.allShifts.find((s) => s.day === day && s.startTime === time) || null
+    );
   }
 
   /**
@@ -240,7 +257,6 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`; // Return only hours and minutes
   }
-
 }
 
 /**
@@ -248,7 +264,15 @@ export class AdminAmenityCreatePageComponent implements OnInit {
  * If you want a different day ordering, adjust this function
  */
 function sortDays(a: string, b: string) {
-  const order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const order = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
   return order.indexOf(a) - order.indexOf(b);
 }
 
