@@ -78,13 +78,13 @@ public class PathAccessControlHelper {
 
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
 
-    // Usage of optional Worker Query Param in '/neighborhoods' is restricted for anonymous Users
-    public boolean canUseWorkerQPInNeighborhoods(Long workerId) {
+    // Usage of optional Worker Query Params in '/neighborhoods' is restricted for anonymous Users
+    public boolean canUseWorkerQPInNeighborhoods(Long withWorker, Long withoutWorker) {
         LOGGER.info("Verifying Query Params Accessibility");
 
         Authentication authentication = authHelper.getAuthentication();
 
-        if (workerId == null)
+        if (withWorker == null && withoutWorker == null)
             return true;
 
         return !authHelper.isAnonymous(authentication);

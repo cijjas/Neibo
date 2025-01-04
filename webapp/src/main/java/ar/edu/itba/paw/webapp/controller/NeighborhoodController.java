@@ -34,7 +34,6 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  * # Use cases
  *   - When registering all Neighborhoods have to be displayed
  */
-
 @Path("neighborhoods")
 @Component
 @Validated
@@ -56,9 +55,9 @@ public class NeighborhoodController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#workerId)")
+    @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#withWorker, #withoutWorker)")
     public Response listNeighborhoods(
-            @QueryParam("withWorker") @WorkerURNConstraint String withWorker,
+            @QueryParam(QueryParameters.WITH_WORKER) @WorkerURNConstraint String withWorker,
             @QueryParam("withoutWorker") @WorkerURNConstraint String withoutWorker,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size

@@ -5,10 +5,16 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import java.util.Arrays;
 
 public enum BaseChannel {
-    ANNOUNCEMENTS,
-    COMPLAINTS,
-    FEED,
-    WORKERS;
+    ANNOUNCEMENTS(1),
+    COMPLAINTS(2),
+    FEED(3),
+    WORKERS(4);
+
+    private final int id;
+
+    BaseChannel(int id) {
+        this.id = id;
+    }
 
     public static BaseChannel fromId(long id) {
         if (id <= 0)
@@ -26,7 +32,6 @@ public enum BaseChannel {
     }
 
     public int getId() {
-        return ordinal() + 1;
+        return id;
     }
 }
-
