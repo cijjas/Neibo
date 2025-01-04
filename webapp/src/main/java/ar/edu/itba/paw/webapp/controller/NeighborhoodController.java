@@ -34,7 +34,6 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  * # Use cases
  *   - When registering all Neighborhoods have to be displayed
  */
-
 @Path("neighborhoods")
 @Component
 @Validated
@@ -56,19 +55,21 @@ public class NeighborhoodController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#workerId)")
+    @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#withWorker, #withoutWorker)")
     public Response listNeighborhoods(
-            @QueryParam("withWorker") @WorkerURNConstraint String worker,
+            @QueryParam(QueryParameters.WITH_WORKER) @WorkerURNConstraint String withWorker,
+            @QueryParam("withoutWorker") @WorkerURNConstraint String withoutWorker,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
         // ID Extraction
-        Long workerId = extractOptionalFirstId(worker);
+        Long withWorkerId = extractOptionalFirstId(withWorker);
+        Long withoutWorkerId = extractOptionalFirstId(withoutWorker);
 
         // Content
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(workerId, size, page);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(withWorkerId, withoutWorkerId, size, page);
         String neighborhoodsHashCode = String.valueOf(neighborhoods.hashCode());
 
         // Cache Control
@@ -88,7 +89,7 @@ public class NeighborhoodController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "/neighborhoods",
-                ns.calculateNeighborhoodPages(workerId, size),
+                ns.calculateNeighborhoodPages(withWorkerId, withoutWorkerId, size),
                 page,
                 size
         );

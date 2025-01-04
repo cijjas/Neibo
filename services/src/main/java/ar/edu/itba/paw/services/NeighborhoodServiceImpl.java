@@ -45,18 +45,18 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(Long workerId, int size, int page) {
-        LOGGER.info("Getting Neighborhoods that have an Affiliation with Worker {}", workerId);
+    public List<Neighborhood> getNeighborhoods(Long withWorkerId, Long withoutWorkerId, int size, int page) {
+        LOGGER.info("Getting Neighborhoods that have an Affiliation with Worker {} and without Worker {}", withWorkerId, withoutWorkerId);
 
-        return neighborhoodDao.getNeighborhoods(workerId, page, size);
+        return neighborhoodDao.getNeighborhoods(withWorkerId, withoutWorkerId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateNeighborhoodPages(Long workerId, int size) {
-        LOGGER.info("Calculating Neighborhood Pages that have an Affiliation with Worker {}", workerId);
+    public int calculateNeighborhoodPages(Long withWorkerId, Long withoutWorkerId, int size) {
+        LOGGER.info("Calculating Neighborhood Pages that have an Affiliation with Worker {} and without Worker {}", withWorkerId, withoutWorkerId);
 
-        return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(workerId), size);
+        return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(withWorkerId, withoutWorkerId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

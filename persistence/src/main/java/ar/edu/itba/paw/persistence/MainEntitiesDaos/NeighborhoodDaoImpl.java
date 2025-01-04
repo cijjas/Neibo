@@ -54,40 +54,56 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public List<Neighborhood> getNeighborhoods(Long workerId, int page, int size) {
-        LOGGER.debug("Selecting Neighborhoods with Worker Id {}", workerId);
+    public List<Neighborhood> getNeighborhoods(Long withWorkerId, Long withoutWorkerId, int page, int size) {
+        LOGGER.debug("Selecting Neighborhoods with Worker Id {} and without Worker Id {}", withWorkerId, withoutWorkerId);
 
-        // Build the first query to fetch neighborhood IDs with ordering
-        StringBuilder idQueryStringBuilder = new StringBuilder();
-        idQueryStringBuilder.append("SELECT DISTINCT n.neighborhoodid FROM neighborhoods n ");
+        // Build the query
+        StringBuilder queryBuilder = new StringBuilder(
+                "SELECT DISTINCT n.neighborhoodid " +
+                        "FROM neighborhoods n " +
+                        "LEFT JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid "
+        );
 
-        if (workerId != null) {
-            idQueryStringBuilder.append("JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid ");
-            idQueryStringBuilder.append("WHERE wn.workerid = :workerId ");
+        if (withWorkerId != null) {
+            queryBuilder.append("WHERE wn.workerid = :withWorkerId ");
+        }
+        if (withoutWorkerId != null) {
+            if (withWorkerId != null) {
+                queryBuilder.append("AND ");
+            } else {
+                queryBuilder.append("WHERE ");
+            }
+            queryBuilder.append("n.neighborhoodid NOT IN ( " +
+                    "SELECT wn2.neighborhoodid " +
+                    "FROM neighborhoods neigh " +
+                    "LEFT JOIN workers_neighborhoods wn2 ON neigh.neighborhoodid = wn2.neighborhoodid " +
+                    "WHERE wn2.workerid = :withoutWorkerId ) ");
         }
 
-        // Add ordering to the first query
-        idQueryStringBuilder.append("ORDER BY n.neighborhoodid");
+        queryBuilder.append("ORDER BY n.neighborhoodid");
 
-        Query idQuery = em.createNativeQuery(idQueryStringBuilder.toString());
-        idQuery.setFirstResult((page - 1) * size);
-        idQuery.setMaxResults(size);
-
-        if (workerId != null) {
-            idQuery.setParameter("workerId", workerId);
+        // Create and parameterize the query
+        Query query = em.createNativeQuery(queryBuilder.toString());
+        if (withWorkerId != null) {
+            query.setParameter("withWorkerId", withWorkerId);
         }
+        if (withoutWorkerId != null) {
+            query.setParameter("withoutWorkerId", withoutWorkerId);
+        }
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
 
-        // If List<Long> is used it returns this error "Parameter value element [-1] did not match expected type [java.lang.Long (n/a)]"
-        // There is an ID = -1 in the result set, the banned users
-        List<?> result = idQuery.getResultList();
+        // Execute the query and map results
+        List<?> result = query.getResultList();
         List<Long> neighborhoodIds = result.stream()
                 .map(id -> ((Number) id).longValue())
                 .collect(Collectors.toList());
+
         if (neighborhoodIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // Build the second query to fetch neighborhoods using the fetched IDs and order the results
+        // Fetch neighborhoods based on the IDs
         TypedQuery<Neighborhood> dataQuery = em.createQuery(
                 "SELECT n FROM Neighborhood n WHERE n.neighborhoodId IN :neighborhoodIds ORDER BY n.neighborhoodId",
                 Neighborhood.class
@@ -107,24 +123,44 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public int countNeighborhoods(Long workerId) {
-        LOGGER.debug("Counting Neighborhoods with Worker Id {}", workerId);
+    public int countNeighborhoods(Long withWorkerId, Long withoutWorkerId) {
+        LOGGER.debug("Counting Neighborhoods with Worker Id {} and without Worker Id {}", withWorkerId, withoutWorkerId);
 
-        StringBuilder queryStringBuilder = new StringBuilder();
-        queryStringBuilder.append("SELECT COUNT(DISTINCT n.neighborhoodid) FROM neighborhoods n ");
+        // Build the query
+        StringBuilder queryBuilder = new StringBuilder(
+                "SELECT COUNT(DISTINCT n.neighborhoodid) " +
+                        "FROM neighborhoods n " +
+                        "LEFT JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid "
+        );
 
-        if (workerId != null) {
-            queryStringBuilder.append("JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid ");
-            queryStringBuilder.append("WHERE wn.workerid = :workerId ");
+        if (withWorkerId != null) {
+            queryBuilder.append("WHERE wn.workerid = :withWorkerId ");
+        }
+        if (withoutWorkerId != null) {
+            if (withWorkerId != null) {
+                queryBuilder.append("AND ");
+            } else {
+                queryBuilder.append("WHERE ");
+            }
+            queryBuilder.append("n.neighborhoodid NOT IN ( " +
+                    "SELECT wn2.neighborhoodid " +
+                    "FROM neighborhoods neigh " +
+                    "LEFT JOIN workers_neighborhoods wn2 ON neigh.neighborhoodid = wn2.neighborhoodid " +
+                    "WHERE wn2.workerid = :withoutWorkerId ) ");
         }
 
-        Query nativeQuery = em.createNativeQuery(queryStringBuilder.toString());
-
-        if (workerId != null) {
-            nativeQuery.setParameter("workerId", workerId);
+        // Create and parameterize the query
+        Query query = em.createNativeQuery(queryBuilder.toString());
+        if (withWorkerId != null) {
+            query.setParameter("withWorkerId", withWorkerId);
+        }
+        if (withoutWorkerId != null) {
+            query.setParameter("withoutWorkerId", withoutWorkerId);
         }
 
-        return Integer.parseInt((nativeQuery.getSingleResult()).toString());
+        // Execute the query and return the count
+        Object result = query.getSingleResult();
+        return ((Number) result).intValue();
     }
 
     // ----------------------------------------- NEIGHBORHOODS DELETE --------------------------------------------------

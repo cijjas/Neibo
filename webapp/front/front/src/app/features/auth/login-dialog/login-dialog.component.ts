@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
-import { HateoasLinksService, AuthService } from '@core/index';
+import { HateoasLinksService, AuthService, UserSessionService } from '@core/index';
 
 @Component({
   selector: 'app-login-dialog',
@@ -24,6 +24,7 @@ export class LoginDialogComponent
     private authService: AuthService,
     private router: Router,
     private linkStorage: HateoasLinksService,
+    private userSessionService: UserSessionService,
     private cdr: ChangeDetectorRef // Add this
 
   ) { }
@@ -61,11 +62,20 @@ export class LoginDialogComponent
           next: (success) => {
             this.loading = false;
             if (success) {
-              const feedChannelUrl = this.linkStorage.getLink('neighborhood:feedChannel');
-              const nonePostStatus = this.linkStorage.getLink('neighborhood:nonePostStatus');
-              this.router.navigate(['/posts'], { queryParams: { SPAInChannel: feedChannelUrl, SPAWithStatus: nonePostStatus } }).then(() => {
-                this.closeLoginDialog();
-              });
+              const userRole = this.userSessionService.getCurrentUserRole();
+              if (userRole === 'WORKER') {
+                const workerUrl = this.linkStorage.getLink('user:worker'); // Fetch the workerUrl value
+                this.router.navigate(['services', 'profile', workerUrl]).then(() => {
+                  this.closeLoginDialog();
+                });
+              } else {
+                const feedChannelUrl = this.linkStorage.getLink('neighborhood:feedChannel');
+                const nonePostStatus = this.linkStorage.getLink('neighborhood:nonePostStatus');
+                this.router.navigate(['/posts'], { queryParams: { SPAInChannel: feedChannelUrl, SPAWithStatus: nonePostStatus } }).then(() => {
+                  this.closeLoginDialog();
+                });
+              }
+
             } else {
               this.loginFailed = true;
               this.loading = false;

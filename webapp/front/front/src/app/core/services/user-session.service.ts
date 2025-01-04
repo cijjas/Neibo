@@ -52,6 +52,8 @@ export class UserSessionService {
         return currentUser ? currentUser.userRole : null;
     }
 
+
+
     getNeighborhood(): Observable<Neighborhood | null> {
         return this.neighborhoodSubject.asObservable();
     }

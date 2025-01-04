@@ -5,23 +5,27 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import java.util.Arrays;
 
 public enum UserRole {
-    ADMINISTRATOR,
-    NEIGHBOR,
-    UNVERIFIED_NEIGHBOR,
-    REJECTED,
-    WORKER,
-    SUPER_ADMINISTRATOR;
+    ADMINISTRATOR(1),
+    NEIGHBOR(2),
+    UNVERIFIED_NEIGHBOR(3),
+    REJECTED(4),
+    WORKER(5),
+    SUPER_ADMINISTRATOR(6);
+
+    private final int id;
+
+    UserRole(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public static UserRole fromId(long id) {
-        if (id <= 0)
-            throw new IllegalArgumentException("Invalid value (" + id + ") for the User Role ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(ur -> ur.getId() == id)
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("User Role Not Found"));
-    }
-
-    public int getId() {
-        return ordinal() + 1;
     }
 }

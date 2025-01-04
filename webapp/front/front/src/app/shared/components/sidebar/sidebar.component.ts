@@ -10,6 +10,7 @@ import { HateoasLinksService, UserSessionService } from '@core/index';
 export class SidebarComponent implements OnInit {
   userRole: string | null = ''; // Role of the logged-in user
   userId: string | null = '';   // ID of the logged-in user
+  workerId: string | null = '';
   channelClass: string = ''; // Active channel class
 
   constructor(
@@ -24,6 +25,8 @@ export class SidebarComponent implements OnInit {
     if (currentUser) {
       this.userRole = currentUser.userRole;
       this.userId = currentUser.self; // Assuming `self` contains the user ID
+
+      this.workerId = this.linkService.getLink('user:worker');
     }
 
     // Listen for navigation changes to update the channel
@@ -37,15 +40,25 @@ export class SidebarComponent implements OnInit {
 
   updateChannelClass(): void {
     const currentUrl = this.router.url;
-    if (currentUrl.startsWith('/marketplace')) {
-      this.channelClass = 'Marketplace';
-    } else if (currentUrl.startsWith('/services')) {
+
+    // 1) Check more specific routes first
+    if (currentUrl.startsWith('/services/profile')) {
+      this.channelClass = 'Profile';
+    } else if (currentUrl.startsWith('/services/join-neighborhoods')) {
+      this.channelClass = 'Neighborhoods';
+    }
+    // 2) Then check the more generic routes
+    else if (currentUrl.startsWith('/services')) {
       this.channelClass = 'Services';
+    } else if (currentUrl.startsWith('/marketplace')) {
+      this.channelClass = 'Marketplace';
     } else if (currentUrl.startsWith('/amenities')) {
       this.channelClass = 'Reservations';
     } else if (currentUrl.startsWith('/information')) {
       this.channelClass = 'Information';
-    } else if (currentUrl.includes('/posts')) {
+    }
+    // 3) Handle /posts routes with query parameters
+    else if (currentUrl.includes('/posts')) {
       const queryParams = this.router.routerState.snapshot.root.queryParams;
       if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:feedChannel')) {
         this.channelClass = 'Feed';
@@ -53,6 +66,8 @@ export class SidebarComponent implements OnInit {
         this.channelClass = 'Announcements';
       } else if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:complaintsChannel')) {
         this.channelClass = 'Complaints';
+      } else {
+        this.channelClass = '';
       }
     } else {
       this.channelClass = '';

@@ -11,12 +11,12 @@ import { Roles } from '@shared/models';
 const routes: Routes = [
     { path: '', component: ServiceProvidersPageComponent },
     { path: 'profile/:id', component: ServiceProvidersDetailPageComponent },
-    { 
-        path: 'joins-neighborhoods', 
+    {
+        path: 'join-neighborhoods',
         component: ServiceProvidersJoinNeighborhoodsComponent,
         canActivate: [RoleGuard],
-        data: {roles: [Roles.WORKER]}
-     },
+        data: { roles: [Roles.WORKER] }
+    },
 ];
 
 @NgModule({

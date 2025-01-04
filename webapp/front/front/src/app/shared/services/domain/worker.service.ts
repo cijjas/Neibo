@@ -94,7 +94,7 @@ export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Wo
                 totalPosts: postsCount.count,
                 user: user,
                 backgroundImage: workerDto._links.backgroundImage,
-                neighborhoodAffiliated: neighborhoods.map((n) => n.name),
+                neighborhoodAffiliated: neighborhoods ? neighborhoods.map((n) => n.name) : null,
                 professions: professions.map((p) => mapProfession(p)),
                 self: workerDto._links.self
             } as Worker;
