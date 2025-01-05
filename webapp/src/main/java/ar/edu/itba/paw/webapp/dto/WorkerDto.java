@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
@@ -10,6 +12,7 @@ import ar.edu.itba.paw.webapp.validation.groups.URN;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
@@ -54,85 +57,37 @@ public class WorkerDto {
         dto.bio = worker.getBio();
 
         Links links = new Links();
-        URI self = uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .path(String.valueOf(worker.getWorkerId()))
-                .build();
-        links.setSelf(self);
-        links.setUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(worker.getUser().getUserId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId());
+        String workerId = String.valueOf(worker.getWorkerId());
+        String userId = String.valueOf(worker.getUser().getUserId());
+
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(workerId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS.toString()).queryParam(QueryParameters.FOR_WORKER, workerUri.build());
+        UriBuilder workerNeighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).queryParam(QueryParameters.WITH_WORKER, workerUri.build());
+        UriBuilder reviewsUri = workerUri.clone().path(Endpoint.REVIEWS.toString());
+        UriBuilder reviewsAverageUri = reviewsUri.clone().path(Endpoint.AVERAGE.toString());
+        UriBuilder reviewsCountUri = reviewsUri.clone().path(Endpoint.COUNT.toString());
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
+        UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).queryParam(QueryParameters.POSTED_BY, userUri.build());
+        UriBuilder postsCountUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(Endpoint.COUNT.toString()).queryParam(QueryParameters.POSTED_BY, userUri.build());
+
+        links.setSelf(workerUri.build());
+        links.setUser(userUri.build());
+        links.setReviewsAverage(reviewsAverageUri.build());
+        links.setReviewsCount(reviewsCountUri.build());
+        links.setReviews(reviewsUri.build());
+        links.setProfessions(professionsUri.build());
+        links.setWorkerNeighborhoods(workerNeighborhoodsUri.build());
+        links.setPosts(postsUri.build());
+        links.setPostsCount(postsCountUri.build());
         if (worker.getBackgroundPictureId() != null) {
-            links.setBackgroundImage(uriInfo.getBaseUriBuilder()
-                    .path("images")
-                    .path(String.valueOf(worker.getBackgroundPictureId()))
-                    .build());
+            String backgroundPictureId = String.valueOf(worker.getBackgroundPictureId());
+            UriBuilder backgroundPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(backgroundPictureId);
+            links.setBackgroundImage(backgroundPictureUri.build());
         }
-        links.setReviewsAverage(
-                uriInfo.getBaseUriBuilder()
-                        .path("workers")
-                        .path(String.valueOf(worker.getWorkerId()))
-                        .path("reviews")
-                        .path("average")
-                        .build()
-        );
-        links.setReviewsCount(
-                uriInfo.getBaseUriBuilder()
-                        .path("workers")
-                        .path(String.valueOf(worker.getWorkerId()))
-                        .path("reviews")
-                        .path("count")
-                        .build()
-        );
-        links.setReviews(
-                uriInfo.getBaseUriBuilder()
-                        .path("workers")
-                        .path(String.valueOf(worker.getWorkerId()))
-                        .path("reviews")
-                        .build()
-        );
-        links.setProfessions(
-                uriInfo.getBaseUriBuilder()
-                        .path("professions")
-                        .queryParam("forWorker", self)
-                        .build()
-        );
-        links.setWorkerNeighborhoods(
-                uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .queryParam("withWorker", self)
-                        .build()
-        );
-        links.setPosts(
-                uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
-                        .path("posts")
-                        .queryParam("postedBy",
-                                uriInfo.getBaseUriBuilder()
-                                        .path("neighborhoods")
-                                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
-                                        .path("users")
-                                        .path(String.valueOf(worker.getUser().getUserId())))
-                        .build()
-        );
-        links.setPostsCount(
-                uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
-                        .path("posts")
-                        .path("count")
-                        .queryParam("postedBy",
-                                uriInfo.getBaseUriBuilder()
-                                        .path("neighborhoods")
-                                        .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
-                                        .path("users")
-                                        .path(String.valueOf(worker.getUser().getUserId())))
-                        .build()
-        );
+
         dto.set_links(links);
         return dto;
     }

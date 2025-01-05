@@ -54,6 +54,7 @@ export * from './service-providers/service-providers-review-dialog/service-provi
 export * from './service-providers/service-providers-reviews-and-posts/service-providers-reviews-and-posts.component'
 export * from './service-providers/service-providers-routing.module'
 export * from './service-providers/service-providers.module'
+export * from './unverified/unverified-page/unverified-page.component'
 export * from './user-profile/user-profile-page/user-profile-page.component'
 export * from './user-profile/user-profile-routing.module'
 export * from './user-profile/user-profile-widget/user-profile-widget.component'

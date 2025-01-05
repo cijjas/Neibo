@@ -10,8 +10,8 @@
     <section id="content1" *ngIf="selectedTab === 'reviews'">
         <div class="f-c-c-c g-0">
             <!-- Only show the "Create Review" button if user is not a WORKER -->
-            <button class="cool-button cool-small on-bg font-weight-bold mb-4" style="width: 200px"
-                *ngIf="loggedUser?.role !== 'WORKER'" (click)="openReviewDialog.emit()">
+            <button class="cool-button cool-small on-bg font-weight-bold mb-4" style="width: 200px" *ngIf="!isWorker"
+                (click)="openReviewDialog.emit()">
                 Create Review
                 <i class="fa-solid fa-star ml-1"></i>
             </button>
@@ -53,9 +53,8 @@
     <section id="content2" *ngIf="selectedTab === 'posts'">
         <div class="f-c-c-c w-100" style="gap:10px">
             <!-- TODO If loggedUser is the same as the worker's user, show "Post" button -->
-            <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px"
-                *ngIf="loggedUser?.self === worker?.user?.self" [routerLink]="['/publish']"
-                [queryParams]="{ onChannelId: 4 }">
+            <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px" *ngIf="isTheWorker"
+                [routerLink]="['/publish']" [queryParams]="{ onChannelId: 4 }">
                 Post
             </a>
 

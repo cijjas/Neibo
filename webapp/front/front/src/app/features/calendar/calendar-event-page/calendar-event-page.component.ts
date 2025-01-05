@@ -84,11 +84,7 @@ export class CalendarEventPageComponent implements OnInit {
       });
   }
 
-  get formattedDate(): string {
-    if (!this.event) return '';
-    const dateObj = new Date(this.event.eventDate);
-    return `${dateObj.getDate()}-${(dateObj.getMonth() + 1)}-${dateObj.getFullYear()} `;
-  }
+
 
   attendEvent(): void {
     this.attendanceService.createAttendance(this.event.self)

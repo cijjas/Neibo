@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
@@ -12,6 +13,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
@@ -54,28 +56,24 @@ public class RequestDto {
         dto.purchaseDate = request.getPurchaseDate();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("requests")
-                .path(String.valueOf(request.getRequestId()))
-                .build());
-        links.setRequestStatus(uriInfo.getBaseUriBuilder()
-                .path("request-statuses")
-                .path(String.valueOf(request.getStatus().getId()))
-                .build());
-        links.setProduct(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("products")
-                .path(String.valueOf(request.getProduct().getProductId()))
-                .build());
-        links.setRequestUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(request.getUser().getUserId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId());
+        String requestId = String.valueOf(request.getRequestId());
+        String requestStatusId = String.valueOf(request.getStatus().getId());
+        String productId = String.valueOf(request.getProduct().getProductId());
+        String requestUserId = String.valueOf(request.getUser().getUserId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString()).path(requestStatusId);
+        UriBuilder requestUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString()).path(requestId);
+        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS.toString()).path(productId);
+        UriBuilder requestUserUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(requestUserId);
+
+        links.setSelf(requestUri.build());
+        links.setProduct(productUri.build());
+        links.setRequestStatus(requestStatusUri.build());
+        links.setRequestUser(requestUserUri.build());
+
         dto.set_links(links);
         return dto;
     }

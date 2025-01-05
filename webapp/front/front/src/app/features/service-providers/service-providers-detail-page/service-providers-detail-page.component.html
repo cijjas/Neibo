@@ -1,5 +1,5 @@
 <!-- service-providers-detail-page.component.html -->
-<div [class.dark-mode]="darkMode">
+<div [class.dark-mode]="darkMode" class="w-100">
     <div style="position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 1">
         <!-- Replaces navbar.jsp -->
         <app-navbar></app-navbar>
@@ -17,14 +17,11 @@
                     <div class="f-c-c-c">
                         <!-- Replaces serviceProfileCard.jsp -->
                         <!-- Provide [worker]="..." and other inputs as you see fit -->
-                        <app-service-providers-content [worker]="worker" [averageRating]="worker?.averageRating"
-                            [reviewsCount]="worker?.totalReviews" [postCount]="worker?.totalPosts"
-                            (openEditProfile)="openEditDialog()">
+                        <app-service-providers-content (openEditProfile)="openEditDialog()">
                         </app-service-providers-content>
 
                         <!-- Replaces tabbedBox.jsp -->
-                        <app-service-providers-reviews-and-posts [worker]="worker" [loggedUser]="loggedUser"
-                            (openReviewDialog)="openReviewDialog()">
+                        <app-service-providers-reviews-and-posts (openReviewDialog)="openReviewDialog()">
                         </app-service-providers-reviews-and-posts>
                     </div>
                 </div>

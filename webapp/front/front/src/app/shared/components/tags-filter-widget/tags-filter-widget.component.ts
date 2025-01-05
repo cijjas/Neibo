@@ -7,6 +7,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 import { Tag, TagService } from '@shared/index';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-tags-filter-widget',
@@ -32,11 +33,38 @@ export class TagsFilterWidgetComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Read the 'tagsCurrent' query param for pagination
     this.route.queryParams.subscribe((params) => {
       this.currentPage = +params['tagsCurrent'] || 1;
+
+      // Handle tags from query params
+      const tagUrls = params['withTag'];
+      if (tagUrls) {
+        const tagUrlArray = Array.isArray(tagUrls) ? tagUrls : [tagUrls]; // Ensure it's an array
+        this.fetchAndApplyTags(tagUrlArray);
+      } else {
+        // Clear applied tags if `withTag` is not in query params
+        this.appliedTags = [];
+      }
+
       this.loadTagsFromApi();
-      this.initializeAppliedTags();
+    });
+  }
+
+  private fetchAndApplyTags(tagUrls: string[]): void {
+    // Fetch all tags concurrently
+    const tagObservables = tagUrls.map((url) => this.tagService.getTag(url));
+
+    forkJoin(tagObservables).subscribe({
+      next: (tags) => {
+        // Update `appliedTags` with only the fetched tags
+        this.appliedTags = tags.map((tag) => ({
+          name: tag.name,
+          self: tag.self,
+        }));
+      },
+      error: (err) => {
+        console.error('Failed to fetch tags:', err);
+      },
     });
   }
 

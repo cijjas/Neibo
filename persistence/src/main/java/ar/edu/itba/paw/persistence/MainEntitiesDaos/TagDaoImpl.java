@@ -68,7 +68,6 @@ public class TagDaoImpl implements TagDao {
             query = em.createQuery("SELECT t.tagId FROM Tag t JOIN t.posts p WHERE p.postId = :postId ORDER BY t.tagId", Long.class)
                     .setParameter("postId", postId);
         } else {
-            // Case when postId is not provided but neighborhoodId is provided (applies to both normal user/admin and superadmin)
             query = em.createQuery(
                             "SELECT DISTINCT t.tagId FROM Tag t JOIN t.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId ORDER BY t.tagId", Long.class)
                     .setParameter("neighborhoodId", neighborhoodId);
@@ -97,7 +96,6 @@ public class TagDaoImpl implements TagDao {
             query = em.createQuery("SELECT t.tagId FROM Tag t JOIN t.posts p WHERE p.postId = :postId ORDER BY t.tagId", Long.class)
                     .setParameter("postId", postId);
         } else {
-            // Case when postId is not provided but neighborhoodId is provided (applies to both normal user/admin and superadmin)
             query = em.createQuery(
                             "SELECT DISTINCT t.tagId FROM Tag t JOIN t.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId ORDER BY t.tagId", Long.class)
                     .setParameter("neighborhoodId", neighborhoodId);

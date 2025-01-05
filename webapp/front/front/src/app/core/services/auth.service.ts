@@ -32,7 +32,7 @@ export class AuthService {
             Authorization: 'Basic ' + btoa(`${mail}:${password}`),
         });
         const storage = rememberMe ? localStorage : sessionStorage;
-
+        console.log('got in login' + mail, password)
         // Store "remember me" preference
         localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
 
@@ -321,6 +321,7 @@ export class AuthService {
 
         const requiredLinksForWorker = [
             'neighborhood:amenities',
+            'neighborhood:affiliations',
             'neighborhood:channels',
             'neighborhood:users',
             'neighborhood:neighborhoods',

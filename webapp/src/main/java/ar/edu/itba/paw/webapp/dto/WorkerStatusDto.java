@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.WorkerStatus;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class WorkerStatusDto {
@@ -16,10 +18,13 @@ public class WorkerStatusDto {
         dto.status = workerStatus;
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("worker-statuses")
-                .path(String.valueOf(workerStatus.getId()))
-                .build());
+
+        String workerStatusId = String.valueOf(workerStatus.getId());
+
+        UriBuilder workerStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_STATUSES.toString()).path(workerStatusId);
+
+        links.setSelf(workerStatusUri.build());
+
         dto.set_links(links);
         return dto;
     }

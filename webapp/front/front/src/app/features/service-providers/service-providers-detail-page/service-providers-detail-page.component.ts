@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService, HateoasLinksService, UserSessionService } from '@core/index';
-import { WorkerService, ReviewService, User, Worker } from '@shared/index';
+import { WorkerService, ReviewService, User, Worker, WorkerDto } from '@shared/index';
 import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
 
 @Component({
@@ -11,7 +11,6 @@ import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
 export class ServiceProvidersDetailPageComponent implements OnInit {
   darkMode = false;
   worker: Worker | null = null;
-  loggedUser: User = null;
   reviewDialogVisible = false;
   editDialogVisible = false;
   @ViewChild(ServiceProvidersReviewsAndPostsComponent) tabbedBox!: ServiceProvidersReviewsAndPostsComponent;
@@ -29,9 +28,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
   ngOnInit(): void {
     const workerId = this.route.snapshot.paramMap.get('id');
     if (workerId) this.loadWorker(workerId);
-    this.userSessionService.getCurrentUser().subscribe(
-      (user) => this.loggedUser = user
-    )
+
 
   }
 
@@ -83,14 +80,16 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     });
   }
 
-  onSaveProfile(worker: Worker): void {
-    // this.workerService.updateWorker(worker).subscribe({
-    //   next: () => {
-    //     this.worker = worker;
-    //     this.showEditDialog = false;
-    //   },
-    //   error: (err) => console.error('Error saving profile:', err),
-    // });
+  onSaveProfile(worker: WorkerDto): void {
+    this.workerService.updateWorker(worker).subscribe({
+      next: () => {
+        this.toastService.showToast('New profile information saved successfully!', 'success');
+      },
+      error: (err) => {
+        this.toastService.showToast('There was an error updating profile. Try again.', 'error');
+        console.error('Error saving profile:', err);
+      },
+    });
   }
 
 

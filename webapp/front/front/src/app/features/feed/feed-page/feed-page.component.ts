@@ -40,11 +40,21 @@ export class FeedPageComponent implements OnInit {
           this.pageSize = +params['size'] || 10;
           this.channel = params['SPAInChannel'] || defaultChannel;
           this.postStatus = params['SPAWithStatus'] || defaultStatus;
-          // Tag Handling medio falopa
-          const tagsParam = params['withTag'];
-          this.tags = tagsParam ? (Array.isArray(tagsParam) ? tagsParam : [tagsParam]) : []; // Ensure tags are always an array
 
-          // Add default query parameters if missing
+          // ---------------------------
+          // Handle multiple withTag params
+          // Angular automatically parses repeated param keys
+          // as an array. If it's a single string, convert it to array manually.
+          // If no tags are present, this.tags should become [].
+          // ---------------------------
+          const tagsParam = params['withTag'];
+          this.tags = Array.isArray(tagsParam)
+            ? tagsParam
+            : tagsParam
+              ? [tagsParam]
+              : [];
+
+          // Provide default params if missing
           const missingParams: any = {};
           if (!params['SPAInChannel']) {
             missingParams['SPAInChannel'] = defaultChannel;
@@ -62,11 +72,45 @@ export class FeedPageComponent implements OnInit {
             });
           }
 
-
           return this.loadPosts();
         })
       )
       .subscribe();
+  }
+
+
+
+  loadPosts(): Observable<void> {
+    // This array can be ["tag1", "tag2", ...]
+    const queryParams = {
+      page: this.currentPage,
+      size: this.pageSize,
+      inChannel: this.channel,
+      withStatus: this.postStatus,
+      withTag: this.tags,
+    };
+
+    return this.postService.getPosts(queryParams).pipe(
+      map((response) => {
+        if (response) {
+          this.postList = response.posts;
+          this.totalPages = response.totalPages;
+          this.currentPage = response.currentPage;
+        } else {
+          this.postList = [];
+          this.totalPages = 0;
+        }
+
+        this.loading = false;
+      }),
+      catchError((error) => {
+        console.error('Error loading posts:', error);
+        this.postList = [];
+        this.totalPages = 0;
+        this.loading = false;
+        return of();
+      })
+    );
   }
 
   onPageChange(page: number): void {
@@ -75,43 +119,19 @@ export class FeedPageComponent implements OnInit {
     this.loadPosts().subscribe();
   }
 
-  loadPosts(): Observable<void> {
-    const queryParams = { page: this.currentPage, size: this.pageSize, inChannel: this.channel, withStatus: this.postStatus, withTag: this.tags };
-
-    return this.postService
-      .getPosts(queryParams)
-      .pipe(
-        map((response) => {
-          if (response) {
-
-            this.postList = response.posts;
-            this.totalPages = response.totalPages;
-            this.currentPage = response.currentPage;
-          } else {
-
-            this.postList = [];
-            this.totalPages = 0;
-          }
-
-          this.loading = false;
-        }),
-        catchError((error) => {
-
-          console.error('Error loading posts:', error);
-          this.postList = [];
-          this.totalPages = 0;
-          this.loading = false;
-          return of();
-        })
-      );
-  }
-
-
   private updateQueryParams(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { page: this.currentPage, size: this.pageSize },
+      queryParams: {
+        page: this.currentPage,
+        size: this.pageSize,
+        // Add the tags to keep them in the URL
+        withTag: this.tags,
+      },
       queryParamsHandling: 'merge',
     });
   }
+
+
+
 }

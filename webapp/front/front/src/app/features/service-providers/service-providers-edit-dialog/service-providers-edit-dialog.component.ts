@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-service-providers-edit-dialog',
   templateUrl: './service-providers-edit-dialog.component.html',
 })
-export class ServiceProvidersEditDialogComponent {
+export class ServiceProvidersEditDialogComponent implements OnChanges {
   @Input() editDialogVisible = false;
-  @Input() worker: any;
+  @Input() worker: any; // Worker data passed from parent component
   @Output() closeDialog = new EventEmitter<void>();
   @Output() saveProfile = new EventEmitter<any>();
 
@@ -15,12 +15,14 @@ export class ServiceProvidersEditDialogComponent {
   phoneNumber = '';
   address = '';
 
-  ngOnInit(): void {
-    if (this.worker) {
-      this.businessName = this.worker.businessName || '';
-      this.bio = this.worker.bio || '';
-      this.phoneNumber = this.worker.phoneNumber || '';
-      this.address = this.worker.address || '';
+  ngOnChanges(changes: SimpleChanges): void {
+    // Check if the `worker` input changes
+    if (changes['worker'] && changes['worker'].currentValue) {
+      const worker = changes['worker'].currentValue;
+      this.businessName = worker.businessName || '';
+      this.bio = worker.bio || '';
+      this.phoneNumber = worker.phoneNumber || '';
+      this.address = worker.address || '';
     }
   }
 
@@ -29,8 +31,8 @@ export class ServiceProvidersEditDialogComponent {
   }
 
   submitEditProfileForm(): void {
+    // Emit the updated profile details
     this.saveProfile.emit({
-      ...this.worker,
       businessName: this.businessName,
       bio: this.bio,
       phoneNumber: this.phoneNumber,

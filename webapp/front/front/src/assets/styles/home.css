@@ -139,8 +139,6 @@
   border-radius: 10px;
 }
 
-.custom-navbar {
-}
 
 .custom-btn {
   background-color: var(--primary);
@@ -922,6 +920,7 @@
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 1;
+    line-clamp: 1;
     font-size: 1em;
     -webkit-box-orient: vertical;
     line-height: 1.5;
@@ -2231,11 +2230,11 @@ h6 {
   width: 0;
   height: 0;
 
-  &:checked + .slider {
+  &:checked+.slider {
     background-color: var(--input-focus);
   }
 
-  &:checked + .slider:before {
+  &:checked+.slider:before {
     transform: translateX(30px);
   }
 }
@@ -2361,7 +2360,7 @@ h6 {
     transform: scale(1.1);
   }
 
-  & .pl-3 .pe-3 .pt-2 .pb-2 :hover {
+  & .ps-3 .pe-3 .pt-2 .pb-2 :hover {
     transform: scale(1.1);
   }
 
@@ -2448,18 +2447,18 @@ h6 {
         display: none;
         color: var(--text) !important;
 
-        & + span {
+        &+span {
           color: var(--text);
         }
       }
     }
 
-    & input:checked + span {
+    & input:checked+span {
       color: var(--background);
       background-color: var(--primary);
     }
 
-    & input:disabled + span {
+    & input:disabled+span {
       color: var(--text);
       background-color: var(--lightertext);
       opacity: 0.4;
@@ -2494,13 +2493,13 @@ h6 {
         display: none;
         color: var(--text) !important;
 
-        & + span {
+        &+span {
           color: var(--text);
         }
       }
     }
 
-    & input:checked + span {
+    & input:checked+span {
       color: var(--background);
       background-color: var(--primary);
     }
@@ -2653,7 +2652,7 @@ input[type="time"] {
         transform: rotate(-180deg);
       }
 
-      & ~ .list-items {
+      &~.list-items {
         display: block;
       }
     }
@@ -2816,6 +2815,7 @@ input[type="time"] {
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       /* Number of lines to display */
       /* Add line-height and max-height to prevent extra lines */
     }
@@ -3111,6 +3111,7 @@ input[type="time"] {
 }
 
 @media (max-width: 775px) {
+
   /* Add a CSS class to hide the icons when the screen width is 775 pixels or more */
   .hide-text {
     display: none;
@@ -3169,7 +3170,7 @@ input[type="time"] {
   display: block;
 }
 
-.dropdown-toggle:hover + .dropdown-options,
+.dropdown-toggle:hover+.dropdown-options,
 .dropdown-options:hover {
   display: block;
 }
@@ -3588,4 +3589,24 @@ td.selected .cell-wrapper {
 .pagination-arrows span.disabled {
   color: var(--lighttext);
   cursor: not-allowed;
+}
+
+.badge-pending {
+  display: inline-block;
+  background-color: #FFA500;
+  /* Orange-yellow color */
+  color: white;
+  /* Text color */
+  font-size: 12px;
+  /* Small text size */
+  font-weight: bold;
+  /* Bold text */
+  padding: 2px 6px;
+  /* Padding for badge */
+  border-radius: 12px;
+  /* Rounded corners */
+  text-align: center;
+  /* Center the text */
+  line-height: 1;
+  /* Adjust line height */
 }

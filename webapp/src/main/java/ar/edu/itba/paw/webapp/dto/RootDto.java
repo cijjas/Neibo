@@ -13,6 +13,8 @@ public class RootDto {
 
         RootLinks rootLinks= new RootLinks();
 
+        // This should be filled up with the first layer URLs
+
         String self = uriInfo.getBaseUriBuilder().build().toString();
         UriBuilder builder = uriInfo.getBaseUriBuilder().path("neighborhoods").path("0").path("posts");
         String uriTemplate = builder + "{?postedBy,inChannel,withTags,withStatus,page,size}";

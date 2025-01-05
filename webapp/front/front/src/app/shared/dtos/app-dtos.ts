@@ -267,12 +267,13 @@ export interface UserDto {
     mail: string;
     name: string;
     surname: string;
-    darkMode: boolean;
-    phoneNumber: string;
+    password?: string;
+    darkMode?: boolean;
+    phoneNumber?: string;
     language: string;
     identification: number;
-    creationDate: Date;
-    _links: Links;
+    creationDate?: Date;
+    _links?: Links;
 }
 
 export interface UserRoleDto {
@@ -281,11 +282,13 @@ export interface UserRoleDto {
 }
 
 export interface WorkerDto {
-    phoneNumber: string;
-    businessName: string;
-    address: string;
-    bio: string;
-    _links: Links;
+    user?: string;
+    professions?: string[];
+    phoneNumber?: string;
+    businessName?: string;
+    address?: string;
+    bio?: string;
+    _links?: Links;
 }
 
 export interface WorkerRoleDto {

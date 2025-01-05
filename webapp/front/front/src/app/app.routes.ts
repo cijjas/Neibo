@@ -84,6 +84,17 @@ export const appRoutes: Routes = [
       ),
   },
 
+  // Unverified
+  {
+    path: 'unverified',
+    loadChildren: () =>
+      import('@features/unverified/unverified.module').then(
+        (m) => m.UnverifiedModule
+      ),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.UNVERIFIED_NEIGHBOR, Roles.UNVERIFIED_WORKER] }
+  },
+
   // 404 and Wildcard
   {
     path: 'not-found',
@@ -94,4 +105,3 @@ export const appRoutes: Routes = [
   },
   { path: '**', redirectTo: '/not-found', pathMatch: 'full' },
 ];
-

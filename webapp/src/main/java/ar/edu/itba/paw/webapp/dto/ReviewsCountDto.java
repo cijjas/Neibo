@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
+
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -9,20 +11,18 @@ public class ReviewsCountDto {
 
     private Links _links;
 
-    public static ReviewsCountDto fromReviewsCount(int reviewsCount, long workerId, UriInfo uriInfo) {
+    public static ReviewsCountDto fromReviewsCount(int reviewsCount, long workerIdLong, UriInfo uriInfo) {
         final ReviewsCountDto dto = new ReviewsCountDto();
 
         dto.count = reviewsCount;
 
         Links links = new Links();
 
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .path(String.valueOf(workerId))
-                .path("reviews")
-                .path("count");
+        String workerId = String.valueOf(workerIdLong);
 
-        links.setSelf(uriBuilder.build());
+        UriBuilder workerReviewCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(workerId).path(Endpoint.REVIEWS.toString()).path(Endpoint.COUNT.toString());
+
+        links.setSelf(workerReviewCountUri.build());
 
         dto.set_links(links);
         return dto;

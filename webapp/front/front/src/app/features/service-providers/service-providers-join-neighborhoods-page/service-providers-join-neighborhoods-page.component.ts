@@ -1,181 +1,168 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HateoasLinksService } from '@core/index';
-import { NeighborhoodService, Neighborhood } from '@shared/index';
+import { Component, ElementRef, ViewChild, OnInit, HostListener } from '@angular/core';
+import { HateoasLinksService, ToastService, UserSessionService } from '@core/index';
+import { AffiliationService, NeighborhoodService } from '@shared/index';
+import { Affiliation, Neighborhood } from '@shared/models';
+
 
 @Component({
-  selector: 'app-join-neighborhoods',
+  selector: 'app-neighborhoods',
   templateUrl: './service-providers-join-neighborhoods-page.component.html',
 })
 export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
   darkMode = false;
 
-  // Arrays for "my" vs. "other" neighborhoods
-  associatedNeighborhoods: Neighborhood[] = [];
+  // Simulates the data from your JSP
+  associatedNeighborhoods: Affiliation[] = [];
   otherNeighborhoods: Neighborhood[] = [];
-  allNeighborhoods: Neighborhood[] = [];
 
-  neighborhoodsForm!: FormGroup;
-
-  // Track which neighborhoods the user selects from "otherNeighborhoods"
+  // Tracks the neighborhood IDs that the user selects
   selectedNeighborhoodIds: string[] = [];
 
-  // Infinite scroll
-  currentPage = 1;
-  totalPages = 1;
-  isLoading = false;
+  // Whether the drop-down is open or not
+  isSelectOpen = false;
+
+  // For referencing DOM elements
+  @ViewChild('selectBtn') selectBtnRef!: ElementRef;
 
   constructor(
-    private fb: FormBuilder,
     private neighborhoodService: NeighborhoodService,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
+    private toastService: ToastService,
+    private affiliationService: AffiliationService
   ) { }
 
   ngOnInit(): void {
-    // Set up form
-    this.neighborhoodsForm = this.fb.group({
-      neighborhoodIds: [''] // will hold the list of selected IDs, comma-separated if needed
-    });
-
-    // Load existing (joined) neighborhoods
     this.loadAssociatedNeighborhoods();
-
-    // Load first page of “other” neighborhoods
-    this.loadOtherNeighborhoods(this.currentPage);
+    this.loadOtherNeighborhoods();
+    this.updateDisplayText();
   }
 
-  /**
-   * Loads the neighborhoods the user is already associated with.
-   */
   loadAssociatedNeighborhoods(): void {
-    let neighborhoodsUrl: string = this.linkService.getLink('neighborhood:neighborhoods')
-    this.neighborhoodService.getNeighborhoods(neighborhoodsUrl).subscribe({
-      next: (data) => {
-        this.allNeighborhoods = data.neighborhoods;
-      },
-      error: (err) => console.error(err)
-    });
-
-    let workerUrl: string = this.linkService.getLink('user:worker')
-    this.neighborhoodService.getNeighborhoods(neighborhoodsUrl, { withWorker: workerUrl }).subscribe({
-      next: (data) => {
-        this.associatedNeighborhoods = data.neighborhoods;
-      },
-      error: (err) => console.error(err)
-    });
-  }
-
-  /**
-   * Loads neighborhoods not yet joined, possibly paginated.
-   */
-  loadOtherNeighborhoods(page: number): void {
-    if (this.isLoading) return;
-
-    this.isLoading = true;
-    const url = '/api/neighborhoods/other'; // Adjust to your endpoint
-
-    this.neighborhoodService
-      .getNeighborhoods(url, { page, size: 10 })  // example query params
-      .subscribe({
-        next: (data) => {
-          // If page=1, reset the array, else push
-          if (page === 1) {
-            this.otherNeighborhoods = data.neighborhoods;
-          } else {
-            this.otherNeighborhoods = [
-              ...this.otherNeighborhoods,
-              ...data.neighborhoods
-            ];
-          }
-
-          this.currentPage = data.currentPage;
-          this.totalPages = data.totalPages;
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error(err);
-          this.isLoading = false;
-        }
-      });
-  }
-
-  /**
-   * Toggle the selection of a neighborhood from the "otherNeighborhoods" list.
-   */
-  toggleNeighborhoodSelection(neighborhood: Neighborhood): void {
-    const index = this.selectedNeighborhoodIds.indexOf(neighborhood.self);
-    if (index > -1) {
-      // Already selected => deselect
-      this.selectedNeighborhoodIds.splice(index, 1);
-    } else {
-      // Not selected => add
-      this.selectedNeighborhoodIds.push(neighborhood.self);
+    const queryParams = {
+      forWorker: this.linkService.getLink('user:worker')
     }
-    // Update the form control value
-    this.neighborhoodsForm
-      .get('neighborhoodIds')
-      ?.setValue(this.selectedNeighborhoodIds);
-  }
 
-  /**
-   * Removes one neighborhood from the user's associated list.
-   */
-  removeNeighborhood(entry: Neighborhood): void {
-    // Example: call the service to remove the neighborhood
-    // Adjust the endpoint or logic as needed
-    const removeUrl = entry.self; // or something like `/api/neighborhoods/remove/${id}`
-    // For demonstration:
-    /*
-    this.neighborhoodService.deleteNeighborhood(removeUrl).subscribe({
-      next: () => {
-        // remove from the UI list
-        this.associatedNeighborhoods = this.associatedNeighborhoods.filter(
-          (nh) => nh.self !== entry.self
-        );
+    this.affiliationService.getAffiliations(queryParams).subscribe({
+      next: (response) => {
+        this.associatedNeighborhoods = response.affiliations;
       },
-      error: (err) => console.error(err)
+      error: () => {
+        this.toastService.showToast('Could not load associated neighborhoods.', 'error');
+
+      }
+    })
+  }
+
+  loadOtherNeighborhoods(): void {
+    const queryParams = {
+      withoutWorker: this.linkService.getLink('user:worker')
+    }
+
+    this.neighborhoodService.getNeighborhoods(queryParams).subscribe({
+      next: (response) => {
+        this.otherNeighborhoods = response.neighborhoods;
+      },
+      error: (error) => {
+        this.toastService.showToast('Could not load unassociated neighborhoods.', 'error');
+
+      }
+    })
+  }
+  onRemoveNeighborhood(neighborhood: Neighborhood): void {
+    this.affiliationService.deleteAffiliation(neighborhood.self).subscribe({
+      next: () => {
+        this.associatedNeighborhoods = this.associatedNeighborhoods.filter(
+          (affiliation) => affiliation.neighborhood.self !== neighborhood.self
+        );
+        this.loadOtherNeighborhoods();
+        this.toastService.showToast(`You have successfully left '${neighborhood.name}'.`, 'success');
+      },
+      error: (err) => {
+        console.error(`Failed to unaffiliate from '${neighborhood.name}':`, err);
+        this.toastService.showToast(`Failed to leave '${neighborhood.name}'. Please try again.`, 'error');
+      }
     });
-    */
-    console.log('Removing neighborhood:', entry.name);
   }
 
   /**
-   * Submits the selected neighborhoods to join.
+   * Handles toggling an item in the "otherNeighborhoods" drop-down
+   */
+  toggleItem(neighborhoodId: string, name: string, event: MouseEvent): void {
+    event.stopPropagation(); // So we don’t also trigger toggleSelect()
+
+    if (this.selectedNeighborhoodIds.includes(neighborhoodId)) {
+      // Remove it
+      this.selectedNeighborhoodIds = this.selectedNeighborhoodIds.filter(
+        (id) => id !== neighborhoodId
+      );
+    } else {
+      // Add it
+      this.selectedNeighborhoodIds.push(neighborhoodId);
+    }
+
+    // Update the displayed text with newly selected items
+    this.updateDisplayText();
+  }
+
+  /**
+   * Updates the text shown on the select button
+   */
+  get displayText(): string {
+    if (this.selectedNeighborhoodIds.length === 0) {
+      return 'Select neighborhood';
+    }
+    // Optionally show them all, or abbreviate
+    const selected = this.otherNeighborhoods
+      .filter((o) => this.selectedNeighborhoodIds.includes(o.self))
+      .map((o) => o.name);
+
+    if (selected.length > 1) {
+      return `(${selected.length}) ${selected.join(', ')}`;
+    } else {
+      return selected.join(', ');
+    }
+  }
+
+  updateDisplayText(): void {
+    // Forces the template to recompute 'displayText'
+  }
+
+  /**
+   * Opens/closes the drop-down list
+   */
+  toggleSelect(): void {
+    this.isSelectOpen = !this.isSelectOpen;
+  }
+
+  /**
+   * Submit action for the form
    */
   onSubmit(): void {
-    if (this.neighborhoodsForm.valid && this.selectedNeighborhoodIds.length > 0) {
-      // Example: /api/neighborhoods/join
-      console.log('Joining neighborhoods:', this.selectedNeighborhoodIds);
-      /*
-      this.neighborhoodService.joinNeighborhoods(this.selectedNeighborhoodIds).subscribe({
-        next: () => {
-          // Possibly refresh the lists
-          this.loadAssociatedNeighborhoods();
-          this.loadOtherNeighborhoods(1);
-          this.selectedNeighborhoodIds = [];
-          this.neighborhoodsForm.reset();
-        },
-        error: (err) => console.error(err)
-      });
-      */
-    } else {
-      // Mark as touched or show an error
-      this.neighborhoodsForm.markAllAsTouched();
-    }
+    this.affiliationService.createAffiliations(this.selectedNeighborhoodIds).subscribe({
+      next: () => {
+        this.toastService.showToast('Affiliations created successfully!', 'success');
+        this.loadAssociatedNeighborhoods(); // Reload associated neighborhoods
+        this.loadOtherNeighborhoods(); // Optionally reload other neighborhoods if needed
+        this.selectedNeighborhoodIds = []; // Clear the selected IDs after submission
+      },
+      error: () => {
+        this.toastService.showToast('Affiliations to neighborhoods could not be done, try again later.', 'error');
+      }
+    });
   }
 
   /**
-   * Loads more neighborhoods on scroll, if not on the last page.
+   * Clicking outside the drop-down will close it, similar to your JSP script logic
    */
-  onScroll(event: Event): void {
-    const target = event.target as HTMLElement;
-    const threshold = 100;
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // If the click is outside the .select-btn or its children, close the list
     if (
-      !this.isLoading &&
-      this.currentPage < this.totalPages &&
-      target.scrollHeight - target.scrollTop - target.clientHeight < threshold
+      this.isSelectOpen &&
+      this.selectBtnRef &&
+      !this.selectBtnRef.nativeElement.contains(event.target)
     ) {
-      this.loadOtherNeighborhoods(this.currentPage + 1);
+      this.isSelectOpen = false;
     }
   }
 }

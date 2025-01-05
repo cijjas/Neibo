@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EventService } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-calendar-widget',
@@ -24,7 +24,9 @@ export class CalendarWidgetComponent implements OnInit {
 
   constructor(
     private eventService: EventService,
-    private linkStorage: HateoasLinksService
+    private linkStorage: HateoasLinksService,
+    private router: Router
+
   ) { }
 
   ngOnInit() {
@@ -165,7 +167,11 @@ export class CalendarWidgetComponent implements OnInit {
 
 
   navigateToDay(day: { date: number; month: number; year: number; inactive: boolean }): void {
-    const selectedDate = new Date(day.year, day.month, day.date);
-    window.location.href = `/calendar?timestamp=${selectedDate.getTime()}`;
+    const selectedDate = new Date(Date.UTC(day.year, day.month, day.date));
+    const year = selectedDate.getUTCFullYear();
+    const month = ('0' + (selectedDate.getUTCMonth() + 1)).slice(-2);
+    const dayDate = ('0' + selectedDate.getUTCDate()).slice(-2);
+
+    this.router.navigate(['/calendar'], { queryParams: { date: `${year}-${month}-${dayDate}` } });
   }
 }

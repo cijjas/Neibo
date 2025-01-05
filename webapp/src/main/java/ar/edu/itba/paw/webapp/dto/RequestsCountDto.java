@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
+
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -9,12 +11,19 @@ public class RequestsCountDto {
 
     private Links _links;
 
-    public static RequestsCountDto fromRequestsCount(int requestsCount, long neighborhoodId, UriInfo uriInfo) {
+    public static RequestsCountDto fromRequestsCount(int requestsCount, long neighborhoodIdLong, UriInfo uriInfo) {
         final RequestsCountDto dto = new RequestsCountDto();
 
         dto.count = requestsCount;
 
         Links links = new Links();
+/*
+* Also missing the many query params needed to define a count
+*
+* */
+        String neighborhoodId = String.valueOf(neighborhoodIdLong);
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")

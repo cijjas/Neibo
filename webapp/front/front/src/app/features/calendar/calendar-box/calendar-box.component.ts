@@ -31,17 +31,13 @@ export class CalendarBoxComponent implements OnInit {
       const dateParam = params['date'];
       if (dateParam) {
         const [year, month, day] = dateParam.split('-').map(Number);
-        // Create the date in UTC to avoid time zone offsets
-        this.selectedDate = new Date(Date.UTC(year, month - 1, day, 12));
+        this.selectedDate = new Date(Date.UTC(year, month - 1, day));
       } else {
-        // Default to the current date at noon UTC
         const now = new Date();
-        this.selectedDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12));
+        this.selectedDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
       }
 
       this.date = new Date(this.selectedDate);
-
-      // Initialize selectedDay based on selectedDate
       this.selectedDay = {
         date: this.selectedDate.getUTCDate(),
         month: this.selectedDate.getUTCMonth(),

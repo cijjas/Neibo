@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
@@ -13,6 +15,7 @@ import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
@@ -54,53 +57,34 @@ public class PostDto {
         dto.creationDate = post.getDate();
 
         Links links = new Links();
-        URI self = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .path(String.valueOf(post.getPostId()))
-                .build();
-        links.setSelf(self);
-        links.setPostUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(post.getUser().getUserId()))
-                .build());
-        links.setChannel(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("channels")
-                .path(String.valueOf(post.getChannel().getChannelId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId());
+        String postId = String.valueOf(post.getPostId());
+        String userId = String.valueOf(post.getUser().getUserId());
+        String channelId = String.valueOf((post.getChannel().getChannelId()));
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(postId);
+        UriBuilder commentsUri = postUri.clone().path(Endpoint.COMMENTS.toString());
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
+        UriBuilder channelUri = neighborhoodUri.clone().path(Endpoint.CHANNELS.toString()).path(channelId);
+        UriBuilder tagsUri = neighborhoodUri.clone().path(Endpoint.TAGS.toString()).queryParam(QueryParameters.ON_POST, postUri.build());
+        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).queryParam(QueryParameters.ON_POST, postUri.build());
+        UriBuilder likesCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).path(Endpoint.COUNT.toString()).queryParam(QueryParameters.ON_POST, postUri.build());
+
+        links.setSelf(postUri.build());
+        links.setPostUser(userUri.build());
+        links.setChannel(channelUri.build());
+        links.setComments(commentsUri.build());
+        links.setTags(tagsUri.build());
+        links.setLikes(likesUri.build());
+        links.setLikeCount(likesCountUri.build());
         if (post.getPostPicture() != null) {
-            links.setPostImage(uriInfo.getBaseUriBuilder()
-                    .path("images")
-                    .path(String.valueOf(post.getPostPicture().getImageId()))
-                    .build());
+            String imageId = String.valueOf(post.getPostPicture().getImageId());
+            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(imageId);
+            links.setPostImage(imageUri.build());
         }
-        links.setComments(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .path(String.valueOf(post.getPostId()))
-                .path("comments")
-                .build());
-        links.setTags(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("tags")
-                .queryParam("post", self)
-                .build());
-        links.setLikes(uriInfo.getBaseUriBuilder()
-                .path("likes")
-                .queryParam("onPost", self)
-                .build());
-        links.setLikeCount(uriInfo.getBaseUriBuilder()
-                .path("likes")
-                .path("count")
-                .queryParam("onPost", self)
-                .build());
+
         dto.set_links(links);
         return dto;
     }

@@ -4,6 +4,7 @@ public enum Endpoint {
     AFFILIATIONS("affiliations"),
     AMENITIES("amenities"),
     ATTENDANCE("attendance"),
+    AVERAGE("average"),
     BOOKINGS("bookings"),
     CHANNELS("channels"),
     COMMENTS("comments"),

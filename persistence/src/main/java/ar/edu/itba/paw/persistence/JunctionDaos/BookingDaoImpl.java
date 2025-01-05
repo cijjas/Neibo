@@ -81,7 +81,7 @@ public class BookingDaoImpl implements BookingDao {
 
         query.append(" AND a.neighborhoodid = :neighborhoodId");
 
-        query.append(" ORDER BY uav.date, asa.amenityid, timeinterval ASC");
+        query.append(" ORDER BY uav.date ASC, asa.amenityid, timeinterval ASC");
         query.append(" LIMIT :limit OFFSET :offset");
 
         String sql = query.toString();

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
-import { Observable, forkJoin } from 'rxjs'
+import { Observable, forkJoin, of } from 'rxjs'
 import { Injectable } from '@angular/core'
-import { map, mergeMap } from 'rxjs/operators'
+import { catchError, map, mergeMap } from 'rxjs/operators'
 import { LanguageDto, UserDto, UserRoleDto, User, parseLinkHeader, Roles } from '@shared/index'
 import { HateoasLinksService, ImageService } from '@core/index';
 
@@ -53,6 +53,43 @@ export class UserService {
                     );
                 })
             );
+    }
+
+    public createUser(
+        neighborhoodUrl: string,
+        name: string,
+        surname: string,
+        password: string,
+        mail: string,
+        language: string,
+        identification: number
+    ): Observable<(string | null)> {
+        let usersUrl: string = this.linkService.getLink('neighborhood:users')
+
+        let body: UserDto = {
+            name: name,
+            surname: surname,
+            password: password,
+            mail: mail,
+            language: language,
+            identification: identification
+        }
+
+        return this.http.post(neighborhoodUrl + '/users', body, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found:');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating User', error);
+                return of(null);
+            })
+        )
     }
 
     public toggleDarkMode(user: User): Observable<User> {

@@ -15,8 +15,12 @@ export class LoginPageComponent {
   openSignupDialog(): void {
     this.showSignupDialog = true;
   }
+
   closeLoginDialog(): void {
     this.showLoginDialog = false;
   }
 
+  closeSignupDialog(): void {
+    this.showSignupDialog = false;
+  }
 }

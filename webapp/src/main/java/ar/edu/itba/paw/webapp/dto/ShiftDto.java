@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Shift;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class ShiftDto {
@@ -23,10 +25,13 @@ public class ShiftDto {
             dto.isBooked = shift.getTaken();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("shifts")
-                .path(String.valueOf(shift.getShiftId()))
-                .build());
+
+        String shiftId = String.valueOf(shift.getShiftId());
+
+        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS.toString()).path(shiftId);
+
+        links.setSelf(shiftUri.build());
+
         dto.set_links(links);
         return dto;
     }

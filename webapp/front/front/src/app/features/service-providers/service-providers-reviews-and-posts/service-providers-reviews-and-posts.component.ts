@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { Review, Post, Worker } from '@shared/index';
+import { Review, Post, Worker, WorkerService } from '@shared/index';
 import { ReviewService, PostService } from '@shared/index';
+import { HateoasLinksService } from '@core/index';
 
 @Component({
   selector: 'app-service-providers-reviews-and-posts',
@@ -13,11 +14,7 @@ export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestr
   private workerSubject = new BehaviorSubject<Worker | null>(null);
   private subscriptions = new Subscription();
 
-  @Input()
-  set worker(value: Worker | null) {
-    this.workerSubject.next(value);
-  }
-  @Input() loggedUser: any = null;
+
   @Output() openReviewDialog = new EventEmitter<void>();
 
   reviews: Review[] = [];
@@ -31,49 +28,82 @@ export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestr
   postCurrentPage = 1;
   postPageSize = 10;
 
+  isTheWorker = false;
+  isWorker = false;
+
+  worker: Worker = null;
+
   // Track which tab is selected. Possible values: 'reviews' or 'posts'.
   selectedTab: 'reviews' | 'posts' = 'reviews';
 
   constructor(
     private reviewService: ReviewService,
+    private linkService: HateoasLinksService,
     private postService: PostService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private workerService: WorkerService
   ) { }
 
   ngOnInit(): void {
-    // Subscribe to query parameters for pagination *and* for tab selection
-    this.subscriptions.add(
-      this.route.queryParams.subscribe((params) => {
-        // Pagination params
-        this.reviewCurrentPage = +params['reviewPage'] || 1;
-        this.reviewPageSize = +params['reviewSize'] || 10;
-        this.postCurrentPage = +params['postPage'] || 1;
-        this.postPageSize = +params['postSize'] || 10;
+    const workerId = this.route.snapshot.paramMap.get('id');
+    if (workerId) {
+      // Ensure `loadWorker` completes first
+      this.loadWorker(workerId).then(() => {
+        // Execute only after worker is loaded
+        this.isTheWorker = this.linkService.getLink('user:worker') === this.worker.self;
+        this.isWorker = this.linkService.getLink('user:userRole') === this.linkService.getLink('neighborhood:workerUserRole');
 
-        // Tab param (default to "reviews" if not set)
-        this.selectedTab = params['tab'] === 'posts' ? 'posts' : 'reviews';
+        // Subscribe to query parameters for pagination *and* for tab selection
+        this.subscriptions.add(
+          this.route.queryParams.subscribe((params) => {
+            // Pagination params
+            this.reviewCurrentPage = +params['reviewPage'] || 1;
+            this.reviewPageSize = +params['reviewSize'] || 10;
+            this.postCurrentPage = +params['postPage'] || 1;
+            this.postPageSize = +params['postSize'] || 10;
 
-        // Whenever query params change, reload the data
-        this.loadReviews();
-        this.loadPosts();
-      })
-    );
+            // Tab param (default to "reviews" if not set)
+            this.selectedTab = params['tab'] === 'posts' ? 'posts' : 'reviews';
 
-    // Reactively load data when the worker changes
-    this.subscriptions.add(
-      this.workerSubject
-        .pipe(
-          switchMap((worker) => {
-            if (worker) {
-              this.loadReviews();
-              this.loadPosts();
-            }
-            return [];
+            // Reload data after query params change
+            this.loadReviews();
+            this.loadPosts();
           })
-        )
-        .subscribe()
-    );
+        );
+
+        // Reactively load data when the worker changes
+        this.subscriptions.add(
+          this.workerSubject
+            .pipe(
+              switchMap((worker) => {
+                if (worker) {
+                  this.loadReviews();
+                  this.loadPosts();
+                }
+                return [];
+              })
+            )
+            .subscribe()
+        );
+      });
+    }
+  }
+
+  loadWorker(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.workerService.getWorker(id).subscribe({
+        next: (worker) => {
+          this.worker = worker;
+          this.workerSubject.next(worker); // Update workerSubject
+          resolve();
+        },
+        error: (err) => {
+          console.error('Error loading worker:', err);
+          reject(err);
+        },
+      });
+    });
   }
 
   /**

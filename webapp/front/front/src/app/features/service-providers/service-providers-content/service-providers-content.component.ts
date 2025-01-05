@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Profession, Worker } from '@shared/index';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Profession, Worker, WorkerService } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 
@@ -8,11 +8,11 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './service-providers-content.component.html',
 })
 export class ServiceProvidersContentComponent {
-  @Input() worker: Worker | null = null;
-  @Input() loggedUser: any = null;
-  @Input() averageRating: number = 0;
-  @Input() reviewsCount: number = 0;
-  @Input() postCount: number = 0;
+  worker: Worker | null = null; // No longer an @Input()
+  averageRating: number = 0; // Optional: Could be fetched from worker data
+  reviewsCount: number = 0; // Optional: Could be fetched from worker data
+  postCount: number = 0; // Optional: Could be fetched from worker data
+  isTheWorker = false;
 
   @Output() openEditProfile = new EventEmitter<void>();
 
@@ -21,9 +21,34 @@ export class ServiceProvidersContentComponent {
     private router: Router,
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
+    private workerService: WorkerService // Inject WorkerService to fetch worker
   ) { }
 
-  // Optionally compute a fallback background
+  ngOnInit(): void {
+    const workerId = this.route.snapshot.paramMap.get('id');
+    if (workerId) {
+      this.fetchWorker(workerId);
+    }
+  }
+  fetchWorker(id: string): void {
+    this.workerService.getWorker(id).subscribe({
+      next: (worker) => {
+
+        this.worker = worker;
+        this.averageRating = worker.averageRating || 0;
+        this.reviewsCount = worker.totalReviews;
+        this.postCount = worker.totalPosts;
+
+        this.isTheWorker = this.linkService.getLink('user:worker') === this.worker.self;
+
+      },
+      error: (err) => {
+        console.error('Error fetching worker:', err);
+      },
+    });
+  }
+
+
   get backgroundImageUrl(): string {
     if (this.worker && this.worker.backgroundImage) {
       // If your API returns a link, use that

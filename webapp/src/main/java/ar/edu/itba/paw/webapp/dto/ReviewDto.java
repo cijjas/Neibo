@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
@@ -40,16 +42,16 @@ public class ReviewDto {
         dto.creationDate = review.getDate();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .path(String.valueOf(review.getWorker().getWorkerId()))
-                .path("reviews")
-                .path(String.valueOf(review.getReviewId()))
-                .build());
-        links.setWorker(uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .path(String.valueOf(review.getWorker().getWorkerId()))
-                .build());
+
+        String workerId = String.valueOf(review.getWorker().getWorkerId());
+        String reviewId = String.valueOf(review.getReviewId());
+
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(workerId);
+        UriBuilder reviewUri = workerUri.clone().path(Endpoint.REVIEWS.toString()).path(reviewId);
+
+        links.setSelf(reviewUri.build());
+        links.setWorker(workerUri.build());
+
         dto.set_links(links);
         return dto;
     }

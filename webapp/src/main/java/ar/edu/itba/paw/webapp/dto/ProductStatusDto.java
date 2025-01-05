@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.ProductStatus;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class ProductStatusDto {
@@ -16,10 +18,13 @@ public class ProductStatusDto {
         dto.status = productStatus;
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("product-statuses")
-                .path(String.valueOf(productStatus.getId()))
-                .build());
+
+        String productStatusId = String.valueOf(productStatus.getId());
+
+        UriBuilder productStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.PRODUCT_STATUSES.toString()).path(productStatusId);
+
+        links.setSelf(productStatusUri.build());
+
         dto.set_links(links);
         return dto;
     }

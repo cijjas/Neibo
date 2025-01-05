@@ -4,39 +4,20 @@
   <div>
     <form [formGroup]="amenityForm" (ngSubmit)="onSubmit()" novalidate>
       <!-- Amenity Name -->
-      <div
-        class="d-flex flex-column justify-content-between align-items-center mb-2 mt-2"
-      >
+      <div class="d-flex flex-column justify-content-between align-items-center mb-2 mt-2">
         <div class="form-row">
-          <input
-            formControlName="name"
-            class="cool-input"
-            placeholder="Name"
-            type="text"
-          />
-          <div
-            class="form-row form-error"
-            *ngIf="nameControl?.invalid && nameControl?.touched"
-          >
+          <input formControlName="name" class="cool-input" placeholder="Name" type="text" />
+          <div class="form-row form-error" *ngIf="nameControl?.invalid && nameControl?.touched">
             <p class="error">Name is required</p>
           </div>
         </div>
       </div>
 
       <!-- Amenity Description -->
-      <div
-        class="d-flex flex-column justify-content-between align-items-center"
-      >
-        <textarea
-          formControlName="description"
-          class="cool-input textarea-min-max"
-          rows="5"
-          placeholder="Description"
-        ></textarea>
-        <div
-          class="form-row form-error"
-          *ngIf="descControl?.invalid && descControl?.touched"
-        >
+      <div class="d-flex flex-column justify-content-between align-items-center">
+        <textarea formControlName="description" class="cool-input textarea-min-max" rows="5"
+          placeholder="Description"></textarea>
+        <div class="form-row form-error" *ngIf="descControl?.invalid && descControl?.touched">
           <p class="error">Description is required</p>
         </div>
       </div>
@@ -45,16 +26,10 @@
       <div class="divider"></div>
 
       <!-- Action buttons -->
-      <div class="f-r-sb-c w-100 pl-3 pr-3">
-        <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg"
-          >9-17</a
-        >
-        <a (click)="uncheckWeekends()" class="w-100 cool-button red"
-          >Clear weekend</a
-        >
-        <a (click)="clearAllCheckedHours()" class="w-100 cool-button red"
-          >Clear all</a
-        >
+      <div class="f-r-sb-c w-100 ps-3 pr-3">
+        <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">9-17</a>
+        <a (click)="uncheckWeekends()" class="w-100 cool-button red">Clear weekend</a>
+        <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">Clear all</a>
       </div>
 
       <!-- Time Table (Dynamic) -->
@@ -71,23 +46,13 @@
             <td>
               <label class="container">
                 <!-- Toggle entire row (time) -->
-                <input
-                  type="checkbox"
-                  [checked]="isRowSelected(time)"
-                  (click)="toggleRow(time)"
-                />
+                <input type="checkbox" [checked]="isRowSelected(time)" (click)="toggleRow(time)" />
               </label>
             </td>
 
             <!-- For each day, show a cell you can toggle -->
-            <td
-              *ngFor="let day of uniqueDays"
-              [class.selected]="isShiftSelectedByDayTime(day, time)"
-            >
-              <div
-                class="cell-wrapper"
-                (click)="toggleCellSelection(day, time)"
-              >
+            <td *ngFor="let day of uniqueDays" [class.selected]="isShiftSelectedByDayTime(day, time)">
+              <div class="cell-wrapper" (click)="toggleCellSelection(day, time)">
                 {{ formatTime(time) }}
               </div>
             </td>
@@ -108,13 +73,8 @@
 
       <!-- Submit button -->
       <div class="d-flex justify-content-end m-t-40">
-        <button
-          id="submit-checks"
-          type="submit"
-          class="cool-button cool-small on-bg w-25"
-          style="height: 40px"
-          [disabled]="!anyShiftChecked"
-        >
+        <button id="submit-checks" type="submit" class="cool-button cool-small on-bg w-25" style="height: 40px"
+          [disabled]="!anyShiftChecked">
           Create
         </button>
       </div>

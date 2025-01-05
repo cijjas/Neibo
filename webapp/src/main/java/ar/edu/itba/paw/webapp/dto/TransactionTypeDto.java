@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.TransactionType;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class TransactionTypeDto {
@@ -16,10 +18,13 @@ public class TransactionTypeDto {
         dto.type = transactionType;
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("transaction-types")
-                .path(String.valueOf(transactionType.getId()))
-                .build());
+
+        String transactionTypeId = String.valueOf(transactionType.getId());
+
+        UriBuilder transactionTypeUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES.toString()).path(transactionTypeId);
+
+        links.setSelf(transactionTypeUri.build());
+
         dto.set_links(links);
         return dto;
     }
@@ -31,7 +36,6 @@ public class TransactionTypeDto {
     public void setType(TransactionType type) {
         this.type = type;
     }
-
 
     public Links get_links() {
         return _links;

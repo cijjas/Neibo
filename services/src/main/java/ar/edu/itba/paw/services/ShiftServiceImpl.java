@@ -43,7 +43,9 @@ public class ShiftServiceImpl implements ShiftService {
         LOGGER.info("Getting Shifts for amenity {} on date {}", amenityId, date);
 
         // Extract Day ID from the date
-        int dayOfWeek = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfWeek().getValue(); // 1 for Monday, 7 for Sunday
+        int dayOfWeek = 0;
+        if (date != null)
+            dayOfWeek = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfWeek().getValue(); // 1 for Monday, 7 for Sunday
 
         // Pass amenityId, date, and dayOfWeek to DAO
         return shiftDao.getShifts(amenityId, date, dayOfWeek);

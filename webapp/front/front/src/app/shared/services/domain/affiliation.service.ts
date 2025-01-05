@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
-import { Affiliation, mapWorker, parseLinkHeader, WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto } from '@shared/index';
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { Affiliation, mapWorker, parseLinkHeader, WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto, NeighborhoodService, mapNeighborhood } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +19,6 @@ export class AffiliationService {
     }
 
     public getAffiliations(
-        url: string,
         queryParams: {
             page?: number;
             size?: number;
@@ -27,6 +26,9 @@ export class AffiliationService {
             forWorker?: string;
         } = {}
     ): Observable<{ affiliations: Affiliation[]; totalPages: number; currentPage: number }> {
+
+        let affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
+
         let params = new HttpParams();
 
         if (queryParams.inNeighborhood) params = params.set('inNeighborhood', queryParams.inNeighborhood);
@@ -35,7 +37,7 @@ export class AffiliationService {
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
 
         return this.http
-            .get<AffiliationDto[]>(url, { params, observe: 'response' })
+            .get<AffiliationDto[]>(affiliationsUrl, { params, observe: 'response' })
             .pipe(
                 mergeMap((response: HttpResponse<AffiliationDto[]>) => {
                     const affiliationsDto = response.body || [];
@@ -55,6 +57,58 @@ export class AffiliationService {
                     );
                 })
             );
+    }
+
+    public createAffiliation(
+        neighborhoodUrl: string,
+    ): Observable<string | null> {
+        let affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
+        let unverifiedWorkerRoleUrl: string = this.linkService.getLink('neighborhood:unverifiedWorkerRole');
+        let workerUrl: string = this.linkService.getLink('user:worker');
+
+        console.log(unverifiedWorkerRoleUrl);
+        console.log(affiliationsUrl);
+
+        const body = {
+            worker: workerUrl,
+            neighborhood: neighborhoodUrl,
+            workerRole: unverifiedWorkerRoleUrl
+        };
+
+        return this.http.post(affiliationsUrl, body, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found:');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating Affiliation for worker', workerUrl, error);
+                return of(null);
+            })
+        )
+    }
+    /**
+     * Creates multiple affiliations by calling createAffiliation() for each neighborhoodUrl.
+     * @param neighborhoodUrls A list of neighborhood (amenity) URLs
+     * @returns An observable that emits an array of string | null (location headers or null)
+     */
+    public createAffiliations(neighborhoodUrls: string[]): Observable<(string | null)[]> {
+        if (!neighborhoodUrls || neighborhoodUrls.length === 0) {
+            // No URLs to process; return an empty array right away
+            return of([]);
+        }
+
+        // Map each URL to your single-affiliation creation request
+        const affiliationRequests: Observable<string | null>[] = neighborhoodUrls.map((url) =>
+            this.createAffiliation(url) // your existing function
+        );
+
+        // Use forkJoin to run them in parallel
+        return forkJoin(affiliationRequests);
     }
 
     public verifyWorker(workerUrl: string): Observable<Affiliation> {
@@ -84,6 +138,20 @@ export class AffiliationService {
             mergeMap((newAffiliation) => mapAffiliation(this.http, newAffiliation))
         );
     }
+
+    public deleteAffiliation(
+        neighborhoodUrl: string
+    ): Observable<void> {
+        const affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
+        let workerUrl: string = this.linkService.getLink('user:worker');
+
+        let params = new HttpParams();
+
+        params = params.set("forWorker", workerUrl);
+        params = params.set("inNeighborhood", neighborhoodUrl);
+
+        return this.http.delete<void>(affiliationsUrl, { params });
+    }
 }
 
 export function mapAffiliation(http: HttpClient, affiliationDto: AffiliationDto): Observable<Affiliation> {
@@ -95,7 +163,7 @@ export function mapAffiliation(http: HttpClient, affiliationDto: AffiliationDto)
         map(([worker, neighborhoodDto, workerRoleDto]) => ({
             worker: worker,
             role: workerRoleDto.role,
-            neighborhoodName: neighborhoodDto.name,
+            neighborhood: mapNeighborhood(neighborhoodDto),
             self: affiliationDto._links.self,
         }))
     );

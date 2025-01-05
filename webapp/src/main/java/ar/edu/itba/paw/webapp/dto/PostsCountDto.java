@@ -1,6 +1,10 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
+
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 public class PostsCountDto {
 
@@ -8,12 +12,21 @@ public class PostsCountDto {
 
     private Links _links;
 
-    public static PostsCountDto fromPostsCount(int postCount, long neighborhoodId, UriInfo uriInfo) {
+    public static PostsCountDto fromPostsCount(int postCount, long neighborhoodIdLong, String userURI, String channelUri, List<String> tagUriList, String postStatusUri, UriInfo uriInfo) {
         final PostsCountDto dto = new PostsCountDto();
 
         dto.count = postCount;
 
         Links links = new Links();
+
+        String neighborhoodId = String.valueOf(neighborhoodIdLong);
+
+        /*
+        * This should be receiving the 4 query params that the original method is receiving
+        * is .queryParam smart enough to not put the null, gotta check that out, would save some conditionals
+        * Como se handlea la lista, please no me digas que tengo que hacer un for!
+        * */
+        // UriBuilder postsCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.POSTS.toString()).path(Endpoint.COUNT);
 
         links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")

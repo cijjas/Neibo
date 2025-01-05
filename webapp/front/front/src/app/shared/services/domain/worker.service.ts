@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession, ReviewsCountDto, PostsCountDto, Affiliation } from '@shared/index';
+import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession, ReviewsCountDto, PostsCountDto, Affiliation, UserService } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -11,6 +11,7 @@ export class WorkerService {
     constructor(
         private http: HttpClient,
         private linkService: HateoasLinksService,
+        private userService: UserService
     ) { }
 
     public getWorker(url: string): Observable<Worker> {
@@ -70,6 +71,61 @@ export class WorkerService {
             );
     }
 
+    public createWorker(
+        neighborhoodUrl: string,
+        name: string,
+        surname: string,
+        password: string,
+        mail: string,
+        language: string,
+        identification: number,
+        professions: string[],
+        phoneNumber: string,
+        businessName: string,
+        address: string,
+        bio: string
+    ): Observable<(string | null)> {
+        let workersUrl: string = this.linkService.getLink('root:workers');
+
+        let createdUserUrl: string;
+        this.userService.createUser(neighborhoodUrl, name, surname, password, mail, language, identification)
+            .subscribe({ next: (createdUserLocation) => createdUserUrl = createdUserLocation });
+
+        let body: WorkerDto = {
+            user: createdUserUrl,
+            professions: professions,
+            phoneNumber: phoneNumber,
+            businessName: businessName,
+            address: address,
+            bio: bio,
+        }
+
+        return this.http.post('http://localhost:8080/workers', body, { observe: 'response' }).pipe(
+            map(response => {
+                const locationHeader = response.headers.get('Location');
+                if (locationHeader) {
+                    return locationHeader;
+                } else {
+                    console.error('Location header not found:');
+                    return null;
+                }
+            }),
+            catchError(error => {
+                console.error('Error creating Worker', error);
+                return of(null);
+            })
+        )
+    }
+
+    public updateWorker(worker: WorkerDto): Observable<void> {
+        let workerUrl: string = this.linkService.getLink('user:worker');
+        return this.http.patch<void>(workerUrl, worker).pipe(
+            catchError(error => {
+                console.error('Error updating product:', error);
+                return throwError(() => new Error('Failed to update worker.'));
+            })
+        );
+    }
 }
 
 export function mapWorker(http: HttpClient, workerDto: WorkerDto): Observable<Worker> {

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
@@ -8,6 +9,7 @@ import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class ResourceDto {
@@ -31,22 +33,21 @@ public class ResourceDto {
         dto.description = resource.getDescription();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(resource.getNeighborhood().getNeighborhoodId()))
-                .path("resources")
-                .path(String.valueOf(resource.getResourceId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(resource.getNeighborhood().getNeighborhoodId());
+        String resourceId = String.valueOf(resource.getResourceId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder resourceUri = uriInfo.getBaseUriBuilder().path(Endpoint.RESOURCES.toString()).path(resourceId);
+
+        links.setSelf(resourceUri.build());
+        links.setNeighborhood(neighborhoodUri.build());
         if (resource.getImage() != null) {
-            links.setResourceImage(uriInfo.getBaseUriBuilder()
-                    .path("images")
-                    .path(String.valueOf(resource.getImage().getImageId()))
-                    .build());
+            String imageId = String.valueOf(resource.getImage().getImageId());
+            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(imageId);
+            links.setResourceImage(imageUri.build());
         }
-        links.setNeighborhood(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(resource.getNeighborhood().getNeighborhoodId()))
-                .build());
+
         dto.set_links(links);
         return dto;
     }

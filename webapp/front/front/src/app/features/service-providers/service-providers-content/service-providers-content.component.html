@@ -32,9 +32,8 @@
                 </p>
 
                 <!-- Show "Edit" if loggedUser is the same user -->
-                <button *ngIf="loggedUser?.userId === worker?.user?.self" id="editProfileButton"
-                    class="cool-button cool-small on-bg font-weight-bold" style="width: 100px"
-                    (click)="openEditProfile.emit()">
+                <button *ngIf="isTheWorker" id="editProfileButton" class="cool-button cool-small on-bg font-weight-bold"
+                    style="width: 100px" (click)="openEditProfile.emit()">
                     Edit
                     <i class="fa-solid fa-user-pen ml-1"></i>
                 </button>

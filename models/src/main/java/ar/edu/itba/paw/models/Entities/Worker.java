@@ -59,7 +59,6 @@ public class Worker {
         this.backgroundPictureId = builder.backgroundPictureId;
     }
 
-
     public String getPhoneNumber() {
         return phoneNumber;
     }

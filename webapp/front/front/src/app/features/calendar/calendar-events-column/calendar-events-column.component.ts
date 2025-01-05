@@ -35,6 +35,7 @@ export class CalendarEventsColumnComponent implements OnInit {
     });
   }
 
+
   loadEventsForSelectedDate(): void {
     if (!this.selectedDate) {
       console.error('No selected date provided');
@@ -44,6 +45,8 @@ export class CalendarEventsColumnComponent implements OnInit {
     const eventUrl = this.linkStorage.getLink('neighborhood:events');
     const dateString = this.selectedDate.toISOString().split('T')[0];
 
+    // Clear events before loading
+    this.events = [];
     this.isLoading = true;
 
     this.eventService
@@ -58,6 +61,11 @@ export class CalendarEventsColumnComponent implements OnInit {
         next: (response) => {
           this.events = response.events;
           this.totalPages = response.totalPages;
+
+          // If no events are returned, set totalPages to 1
+          if (this.events.length === 0) {
+            this.totalPages = 1;
+          }
         },
         error: (error) => console.error('Error fetching events:', error),
         complete: () => (this.isLoading = false),

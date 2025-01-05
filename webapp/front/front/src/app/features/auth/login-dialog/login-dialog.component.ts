@@ -45,6 +45,12 @@ export class LoginDialogComponent
     this.showLoginDialogChange.emit(this.showLoginDialog);
   }
 
+  closeSignupDialog(): void {
+    this.showSignupDialog = false;
+    this.showSignupDialogChange.emit(this.showSignupDialog);
+  }
+
+
   openSignupDialog(): void {
     this.showLoginDialog = false;
     this.showLoginDialogChange.emit(false);
@@ -68,11 +74,16 @@ export class LoginDialogComponent
                 this.router.navigate(['services', 'profile', workerUrl]).then(() => {
                   this.closeLoginDialog();
                 });
-              } else {
+              } else if (userRole === 'VERIFIED') {
                 const feedChannelUrl = this.linkStorage.getLink('neighborhood:feedChannel');
                 const nonePostStatus = this.linkStorage.getLink('neighborhood:nonePostStatus');
                 this.router.navigate(['/posts'], { queryParams: { SPAInChannel: feedChannelUrl, SPAWithStatus: nonePostStatus } }).then(() => {
                   this.closeLoginDialog();
+                });
+              } else if (userRole === 'UNVERIFIED_NEIGHBOR' || userRole === 'UNVERIFIED_WORKER') {
+                this.router.navigate(['/unverified']).then(() => {
+                  this.closeLoginDialog();
+
                 });
               }
 

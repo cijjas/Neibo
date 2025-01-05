@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-not-found-page',
@@ -10,7 +9,7 @@ export class NotFoundPageComponent implements OnInit {
   errorCode: string = '404'; // Default code for unmatched routes
   errorMessage: string = 'The page you are looking for cannot be found.';
 
-  constructor(private route: ActivatedRoute, private location: Location) { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     // Check for query parameters (HTTP errors)
@@ -25,6 +24,6 @@ export class NotFoundPageComponent implements OnInit {
   }
 
   goBack(): void {
-    this.location.back();
+    this.router.navigate(['/']);
   }
 }

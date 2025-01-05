@@ -83,24 +83,26 @@ export class PostService {
             page?: number;
             size?: number;
             inChannel?: string;
-            withTag?: string[];
+            withTag?: string[]; // Array of tags
             withStatus?: string;
             postedBy?: string;
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
-
-        // For debugging purposes
-        // this.linkService.logLinks()
-        let postsUrl: string = this.linkService.getLink('neighborhood:posts');
-
+        const postsUrl: string = this.linkService.getLink('neighborhood:posts');
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
         if (queryParams.inChannel) params = params.set('inChannel', queryParams.inChannel);
-        if (queryParams.withTag && queryParams.withTag.length > 0) params = params.set('withTag', queryParams.withTag.join(','));
         if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
         if (queryParams.postedBy) params = params.set('postedBy', queryParams.postedBy);
+
+        // Add each withTag as a separate query parameter
+        if (queryParams.withTag && queryParams.withTag.length > 0) {
+            queryParams.withTag.forEach((tag) => {
+                params = params.append('withTag', tag);
+            });
+        }
 
         return this.http
             .get<PostDto[]>(postsUrl, { params, observe: 'response' })
@@ -118,10 +120,14 @@ export class PostService {
                     // Parse the response for normal cases
                     const postsDto = response.body || [];
                     const linkHeader = response.headers.get('Link');
-                    const paginationInfo = linkHeader ? parseLinkHeader(linkHeader) : { totalPages: 0, currentPage: 0 };
+                    const paginationInfo = linkHeader
+                        ? parseLinkHeader(linkHeader)
+                        : { totalPages: 0, currentPage: 0 };
 
                     // Process the posts
-                    const postObservables = postsDto.map((postDto) => mapPost(this.http, postDto));
+                    const postObservables = postsDto.map((postDto) =>
+                        mapPost(this.http, postDto)
+                    );
 
                     return forkJoin(postObservables).pipe(
                         map((posts) => ({

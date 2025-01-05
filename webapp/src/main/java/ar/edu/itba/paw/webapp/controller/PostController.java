@@ -140,7 +140,7 @@ public class PostController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        PostsCountDto dto = PostsCountDto.fromPostsCount(count, neighborhoodId,  uriInfo);
+        PostsCountDto dto = PostsCountDto.fromPostsCount(count, neighborhoodId, user, channel, tags, postStatus,  uriInfo);
 
         return Response.ok(new GenericEntity<PostsCountDto>(dto) {
                 })
