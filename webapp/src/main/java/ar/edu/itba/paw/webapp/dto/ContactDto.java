@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Contact;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class ContactDto {
@@ -32,16 +34,16 @@ public class ContactDto {
         dto.phone = contact.getContactPhone();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(contact.getNeighborhood().getNeighborhoodId()))
-                .path("contacts")
-                .path(String.valueOf(contact.getContactId()))
-                .build());
-        links.setNeighborhood(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(contact.getNeighborhood().getNeighborhoodId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(contact.getNeighborhood().getNeighborhoodId());
+        String contactId = String.valueOf(contact.getContactId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder contactUri = neighborhoodUri.clone().path(Endpoint.CONTACTS.toString()).path(contactId);
+
+        links.setSelf(contactUri.build());
+        links.setNeighborhood(neighborhoodUri.build());
+
         dto.set_links(links);
         return dto;
     }

@@ -47,16 +47,16 @@ public class ShiftDaoImpl implements ShiftDao {
     }
 
     @Override
-    public List<Shift> getShifts(Long amenityId, Date date) {
+    public List<Shift> getShifts(Long amenityId, Date date, Integer dayId) {
         LOGGER.debug("Selecting Shifts with Amenity Id {} on Date {}", amenityId, date);
 
-        // If both amenityId and date are null, return all shifts ordered by day and start time.
+        // If both amenityId and date are null, return all shifts ordered by day and start time
         if (amenityId == null && date == null) {
             return em.createQuery("SELECT s FROM Shift s ORDER BY s.day DESC, s.startTime DESC", Shift.class)
                     .getResultList();
         }
 
-        // If date is null, use HQL to fetch shifts for a specific amenity.
+        // If date is null, use HQL to fetch shifts for a specific amenity
         if (date == null) {
             String hql = "SELECT s FROM Shift s JOIN s.amenities a WHERE a.amenityId = :amenityId ORDER BY s.day DESC, s.startTime DESC";
             TypedQuery<Shift> query = em.createQuery(hql, Shift.class);
@@ -64,7 +64,7 @@ public class ShiftDaoImpl implements ShiftDao {
             return query.getResultList();
         }
 
-        // If both amenityId and date are provided, use a native query to fetch shifts with availability status.
+        // If both amenityId and date are provided and due to the service also dayId, use a native query to fetch shifts with availability status
         String nativeQuery = "SELECT s.shiftid, s.dayid, s.starttime, " +
                 "CASE " +
                 "   WHEN (" +
@@ -78,11 +78,12 @@ public class ShiftDaoImpl implements ShiftDao {
                 "FROM shifts s " +
                 "JOIN amenities_shifts_availability a ON s.shiftId = a.shiftId " +
                 "INNER JOIN times t ON s.starttime = t.timeid " +
-                "WHERE amenityid = :amenityId";
+                "WHERE amenityid = :amenityId AND dayid = :dayId";
 
         List<Object[]> results = em.createNativeQuery(nativeQuery)
                 .setParameter("date", date)
                 .setParameter("amenityId", amenityId)
+                .setParameter("dayId", dayId)
                 .getResultList();
 
         List<Shift> shifts = new ArrayList<>();

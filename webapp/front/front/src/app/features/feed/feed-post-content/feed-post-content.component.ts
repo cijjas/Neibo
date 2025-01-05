@@ -140,7 +140,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   private fetchTags(tagLink: string | undefined): void {
     if (tagLink) {
       this.tagService.getTags(tagLink, { onPost: this.post.self }).subscribe({
-        next: (tags) => {
+        next: ({ tags }: { tags: Tag[] }) => {
           this.tags = tags || [];
         },
         error: (err) => {

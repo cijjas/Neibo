@@ -10,7 +10,7 @@ export class ShiftService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService
-  ) {}
+  ) { }
 
   public getShift(url: string): Observable<Shift> {
     return this.http
@@ -26,14 +26,19 @@ export class ShiftService {
   ): Observable<Shift[]> {
     let shiftsUrl: string = this.linkService.getLink('neighborhood:shifts');
 
+
     let params = new HttpParams();
-
-    if (queryParams.forAmenity)
+    if (queryParams.forAmenity) {
       params = params.set('forAmenity', queryParams.forAmenity);
-    if (queryParams.forDate)
+    }
+    if (queryParams.forDate) {
       params = params.set('forDate', queryParams.forDate);
+    }
 
-    console.log(params);
+    console.log(params.toString()); // Should now only include valid params
+    console.log(params.has('forDate')); // Check existence
+    console.log(params.has('forAmenity'));
+
     return this.http
       .get<ShiftDto[]>(shiftsUrl, { params })
       .pipe(map((shiftsDto) => shiftsDto.map(mapShift)));

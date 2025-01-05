@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.ImageConstraint;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class ImageDto {
@@ -18,10 +20,13 @@ public class ImageDto {
         dto.data = image.getImage();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("images")
-                .path(String.valueOf(image.getImageId()))
-                .build());
+
+        String imageId = String.valueOf(image.getImageId());
+
+        UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(imageId);
+
+        links.setSelf(imageUri.build());
+
         dto.set_links(links);
         return dto;
     }

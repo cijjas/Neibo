@@ -136,7 +136,7 @@ public class AttendanceController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, neighborhoodId, uriInfo);
+        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, neighborhoodId, event, user, uriInfo);
 
         return Response.ok(new GenericEntity<AttendanceCountDto>(dto) {
                 })

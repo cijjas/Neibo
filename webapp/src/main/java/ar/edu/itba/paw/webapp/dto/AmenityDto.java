@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -9,6 +11,7 @@ import ar.edu.itba.paw.webapp.validation.groups.URN;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
@@ -37,22 +40,20 @@ public class AmenityDto {
         dto.description = amenity.getDescription();
 
         Links links = new Links();
-        URI self = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
-                .path("amenities")
-                .path(String.valueOf(amenity.getAmenityId()))
-                .build();
-        links.setSelf(self);
-        links.setNeighborhood(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
-                .build());
-        links.setShifts(uriInfo.getBaseUriBuilder()
-                .path("shifts")
-                .queryParam("forAmenity", self)
-                .build());
+
+        String neighborhoodId = String.valueOf(amenity.getNeighborhood().getNeighborhoodId());
+        String amenityId = String.valueOf(amenity.getAmenityId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder amenityUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.AMENITIES.toString()).path(amenityId);
+        UriBuilder shiftsUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS.toString()).queryParam(QueryParameters.FOR_AMENITY, amenityUri.build());
+
+        links.setSelf(amenityUri.build());
+        links.setNeighborhood(neighborhoodUri.build());
+        links.setShifts(shiftsUri.build());
+
         dto.set_links(links);
+
         return dto;
     }
 

@@ -18,7 +18,7 @@ export class AmenityService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService
-  ) {}
+  ) { }
 
   public getAmenity(amenityUrl: string): Observable<Amenity> {
     return this.http
@@ -28,7 +28,6 @@ export class AmenityService {
       );
   }
 
-<<<<<<< HEAD
   public getAmenities(
     queryParams: {
       page?: number;
@@ -41,101 +40,6 @@ export class AmenityService {
   }> {
     let amenitiesUrl: string = this.linkService.getLink(
       'neighborhood:amenities'
-=======
-    public getAmenities(
-        queryParams: {
-            page?: number;
-            size?: number
-        } = {}
-    ): Observable<{ amenities: Amenity[]; totalPages: number; currentPage: number }> {
-        let amenitiesUrl: string = this.linkService.getLink('neighborhood:amenities')
-
-        let params = new HttpParams();
-
-        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
-        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
-
-        return this.http.get<AmenityDto[]>(amenitiesUrl, { params, observe: 'response' }).pipe(
-            mergeMap((response) => {
-                const amenitiesDto: AmenityDto[] = response.body || [];
-                const pagination = parseLinkHeader(response.headers.get('Link'));
-
-                const amenityObservables = amenitiesDto.map((amenityDto) =>
-                    mapAmenity(this.http, amenityDto)
-                );
-                return forkJoin(amenityObservables).pipe(
-                    map((amenities) => ({
-                        amenities,
-                        totalPages: pagination.totalPages,
-                        currentPage: pagination.currentPage,
-                    }))
-                );
-            })
-        );
-    }
-
-    public createAmenity(
-        name: string,
-        description: string,
-        selectedShifts: string[]
-    ): Observable<string | null> {
-
-        let amenitiesUrl: string = this.linkService.getLink('neighborhood:amenities')
-
-        const body: AmenityDto = {
-            name: name,
-            description: description,
-            selectedShifts: selectedShifts,
-        };
-
-        return this.http.post(amenitiesUrl, body, { observe: 'response' }).pipe(
-            map(response => {
-                const locationHeader = response.headers.get('Location');
-                if (locationHeader) {
-                    return locationHeader;
-                } else {
-                    console.error('Location header not found:');
-                    return null;
-                }
-            }),
-            catchError(error => {
-                console.error('Error creating amenity', error);
-                return of(null);
-            })
-        )
-    }
-
-    public updateAmenity(amenityUrl: string, name: string, description: string, selectedShifts: string[]): Observable<Amenity> {
-
-        const body: AmenityDto = {
-            name: name,
-            description: description,
-            selectedShifts: selectedShifts,
-        };
-
-        return this.http.patch<AmenityDto>(amenityUrl, body).pipe(
-            mergeMap((newAmenity) => mapAmenity(this.http, newAmenity))
-        );
-    }
-
-    public deleteAmenity(amenityUrl: string): Observable<void> {
-        return this.http.delete<void>(amenityUrl);
-    }
-}
-
-export function mapAmenity(http: HttpClient, amenityDto: AmenityDto): Observable<Amenity> {
-    return forkJoin([http.get<ShiftDto[]>(amenityDto._links.shifts)]).pipe(
-        map(([shiftsDto]) => {
-            const shifts: Shift[] = shiftsDto.map(mapShift);
-
-            return {
-                name: amenityDto.name,
-                description: amenityDto.description,
-                availableShifts: shifts,
-                self: amenityDto._links.self,
-            } as Amenity;
-        })
->>>>>>> bebd6115b91410bd6316330cb90963eba08d94ff
     );
 
     let params = new HttpParams();
@@ -226,12 +130,10 @@ export function mapAmenity(
 ): Observable<Amenity> {
   return forkJoin([http.get<ShiftDto[]>(amenityDto._links.shifts)]).pipe(
     map(([shiftsDto]) => {
-      const shifts: Shift[] = shiftsDto.map(mapShift);
-
       return {
         name: amenityDto.name,
         description: amenityDto.description,
-        availableShifts: shifts,
+        availableShifts: shiftsDto ? shiftsDto.map(mapShift) : null,
         self: amenityDto._links.self,
       } as Amenity;
     })

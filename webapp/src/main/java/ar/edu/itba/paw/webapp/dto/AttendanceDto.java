@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Attendance;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.EventURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -9,6 +11,7 @@ import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class AttendanceDto {
@@ -28,37 +31,21 @@ public class AttendanceDto {
         final AttendanceDto dto = new AttendanceDto();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
-                .path("attendance")
-                .queryParam("forEvent",
-                        uriInfo.getBaseUriBuilder()
-                                .path("neighborhoods")
-                                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
-                                .path("events")
-                                .path(String.valueOf(attendance.getEvent().getEventId()))
-                                .build())
-                .queryParam("forUser",
-                        uriInfo.getBaseUriBuilder()
-                                .path("neighborhoods")
-                                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
-                                .path("users")
-                                .path(String.valueOf(attendance.getUser().getUserId()))
-                                .build())
-                .build());
-        links.setAttendanceUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(attendance.getUser().getUserId()))
-                .build());
-        links.setEvent(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
-                .path("events")
-                .path(String.valueOf(attendance.getEvent().getEventId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()) ;
+        String eventId = String.valueOf(attendance.getEvent().getEventId());
+        String userId = String.valueOf(attendance.getUser().getUserId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder eventUri = neighborhoodUri.clone().path(Endpoint.EVENTS.toString()).path(eventId);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
+        UriBuilder attendanceUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE.toString())
+                .queryParam(QueryParameters.FOR_EVENT, eventUri.build())
+                .queryParam(QueryParameters.FOR_USER, userUri.build());
+
+        links.setSelf(attendanceUri.build());
+        links.setAttendanceUser(userUri.build());
+        links.setEvent(eventUri.build());
         dto.set_links(links);
         return dto;
     }

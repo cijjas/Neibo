@@ -33,6 +33,7 @@ public class ShiftDaoImplTest {
     public static final String DAY_NAME_1 = "DAY 1";
     public static final String DAY_NAME_2 = "DAY 2";
     public static final String DAY_NAME_3 = "DAY 3";
+    public static final int TIME_2 = 432432;
 
     @Autowired
     private DataSource ds;
@@ -116,7 +117,7 @@ public class ShiftDaoImplTest {
         long sKey3 = testInserter.createShift(dKey3, tKey);
 
         // Exercise
-        List<Shift> shiftList = shiftDaoImpl.getShifts(EMPTY_FIELD, NO_DATE);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(EMPTY_FIELD, NO_DATE, NO_DAY_ID);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, shiftList.size());
@@ -139,7 +140,7 @@ public class ShiftDaoImplTest {
         testInserter.createAvailability(aKey1, sKey2);
 
         // Exercise
-        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, NO_DATE);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, NO_DATE, NO_DAY_ID);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, shiftList.size());
@@ -151,19 +152,23 @@ public class ShiftDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         long aKey1 = testInserter.createAmenity(nhKey);
-        long dKey1 = testInserter.createDay(DAY_NAME_1);
-        long dKey2 = testInserter.createDay(DAY_NAME_2);
-        long dKey3 = testInserter.createDay(DAY_NAME_3);
+        int dKey1 = testInserter.createDay(DAY_NAME_1);
+        int dKey2 = testInserter.createDay(DAY_NAME_2);
+        int dKey3 = testInserter.createDay(DAY_NAME_3);
         long tKey = testInserter.createTime();
+        long tKey2 = testInserter.createTime(new java.sql.Time(TIME_2));
         long sKey1 = testInserter.createShift(dKey1, tKey);
         long sKey2 = testInserter.createShift(dKey2, tKey);
         long sKey3 = testInserter.createShift(dKey3, tKey);
+        long sKey4 = testInserter.createShift(dKey1, tKey2);
         long avKey1 = testInserter.createAvailability(aKey1, sKey1);
         long avKey2 = testInserter.createAvailability(aKey1, sKey2);
+        long avKey3 = testInserter.createAvailability(aKey1, sKey3);
+        long avKey4 = testInserter.createAvailability(aKey1, sKey4);
         testInserter.createBooking(uKey, avKey1, DATE_1);
 
         // Exercise
-        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE_1);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE_1, dKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, shiftList.size());
@@ -174,12 +179,12 @@ public class ShiftDaoImplTest {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey1 = testInserter.createAmenity(nhKey);
-        long dKey = testInserter.createDay();
+        int dKey = testInserter.createDay();
         long tKey = testInserter.createTime();
         long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE_1);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1, DATE_1, dKey);
 
         // Validations & Post Conditions
         assertTrue(shiftList.isEmpty());

@@ -41,7 +41,7 @@ export class FeedPageComponent implements OnInit {
           this.channel = params['SPAInChannel'] || defaultChannel;
           this.postStatus = params['SPAWithStatus'] || defaultStatus;
           // Tag Handling medio falopa
-          const tagsParam = params['SPAWithTags'];
+          const tagsParam = params['withTag'];
           this.tags = tagsParam ? (Array.isArray(tagsParam) ? tagsParam : [tagsParam]) : []; // Ensure tags are always an array
 
           // Add default query parameters if missing
@@ -76,7 +76,7 @@ export class FeedPageComponent implements OnInit {
   }
 
   loadPosts(): Observable<void> {
-    const queryParams = { page: this.currentPage, size: this.pageSize, inChannel: this.channel, withStatus: this.postStatus, withTags: this.tags };
+    const queryParams = { page: this.currentPage, size: this.pageSize, inChannel: this.channel, withStatus: this.postStatus, withTag: this.tags };
 
     return this.postService
       .getPosts(queryParams)

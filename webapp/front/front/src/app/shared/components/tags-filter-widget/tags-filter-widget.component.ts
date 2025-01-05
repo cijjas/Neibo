@@ -1,75 +1,104 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { Router } from '@angular/router'; // Import Angular Router
+import { Router, ActivatedRoute } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
-import { TagService } from '@shared/index'; // Adjust import path based on your project structure
+import { Tag, TagService } from '@shared/index';
 
 @Component({
   selector: 'app-tags-filter-widget',
   templateUrl: './tags-filter-widget.component.html',
 })
-export class TagsFilterWidgetComponent implements OnInit, AfterViewInit {
-  @ViewChild('tagInput2', { static: true }) tagInput2Ref!: ElementRef;
+export class TagsFilterWidgetComponent implements OnInit {
+  // Pagination state
+  currentPage: number = 1;
+  totalPages: number = 1;
+  pageSize: number = 20; // Show 20 tags per page
 
-  placeholderText: string = 'Enter a tag';
-  appliedTags: string[] = [];
-  tagList: Array<{ tag: string }> = [];
-  private tagInput2: any;
+  // Tags data
+  tagList: Array<{ name: string; self: string }> = [];
+
+  // Selected (applied) tags
+  appliedTags: Array<{ name: string; self: string }> = []; // Store full tag objects
 
   constructor(
     private tagService: TagService,
     private linkService: HateoasLinksService,
-    private router: Router // Inject Angular Router
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
-    this.loadTagsFromApi(this.linkService.getLink('neighborhood:tags')); // Replace with your actual API endpoint
-  }
-
-  ngAfterViewInit(): void {
-    // Initialize the TagsInput plugin after the DOM is ready
-    this.tagInput2 = new (window as any).TagsInput({
-      selector: 'tag-input2',
-      wrapperClass: 'tags-input-wrapper',
-      duplicate: false,
-      max: 5,
+    // Read the 'tagsCurrent' query param for pagination
+    this.route.queryParams.subscribe((params) => {
+      this.currentPage = +params['tagsCurrent'] || 1;
+      this.loadTagsFromApi();
+      this.initializeAppliedTags();
     });
-
-    // Initialize applied tags if any
-    this.initializeAppliedTags();
   }
 
-  // Fetch tags from the API
-  loadTagsFromApi(tagsUrl: string): void {
+  // Fetch tags for the current page
+  loadTagsFromApi(): void {
+    const tagsUrl = this.linkService.getLink('neighborhood:tags');
     const queryParams = {
-      page: 1,
-      size: 20,
+      page: this.currentPage,
+      size: this.pageSize,
     };
+
     this.tagService.getTags(tagsUrl, queryParams).subscribe({
-      next: (tags: any[]) => {
-        console.log(tags);
-        // Map the API response to extract the `name` property for each tag
-        this.tagList = tags.map((tag) => ({ tag: tag.name }));
+      next: ({ tags, totalPages }: { tags: Tag[]; totalPages: number }) => {
+        this.tagList = tags.map((tag) => ({
+          name: tag.name,
+          self: tag.self,
+        }));
+        this.totalPages = totalPages || 1;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to load tags:', err);
       },
     });
   }
 
-  addTagToApply(tagText: string): void {
-    this.tagInput2?.addTag(tagText);
+  // Pagination methods
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.goToPage(this.currentPage + 1);
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.goToPage(this.currentPage - 1);
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+
+    this.currentPage = page;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tagsCurrent: this.currentPage },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  addTagToApply(tag: { name: string; self: string }): void {
+    // Only add if it's not already selected
+    if (!this.appliedTags.find((t) => t.self === tag.self)) {
+      this.appliedTags.push(tag);
+    }
+  }
+
+  removeTag(tag: { name: string; self: string }): void {
+    this.appliedTags = this.appliedTags.filter((t) => t.self !== tag.self);
   }
 
   clearAllTags(): void {
-    this.tagInput2?.clearAllTags();
-
-    // Also remove the 'tags' param from the URL
+    this.appliedTags = [];
     this.router.navigate([], {
       queryParams: { tags: null },
       queryParamsHandling: 'merge',
@@ -77,32 +106,46 @@ export class TagsFilterWidgetComponent implements OnInit, AfterViewInit {
   }
 
   applyTagsAsFilter(): void {
-    const tagsArray = this.tagInput2?.arr || [];
-    if (tagsArray.length === 0) {
+    if (this.appliedTags.length === 0) {
       console.warn('No tags selected.');
       return;
     }
 
-    // Create query parameters
-    const queryParams = { tags: tagsArray.join(',') };
+    const queryParams = this.appliedTags.map(tag => ({ withTag: tag.self }));
 
-    // Navigate with query parameters
+    const flattenedQueryParams = queryParams.reduce((params, param) => {
+      Object.keys(param).forEach(key => {
+        if (!params[key]) {
+          params[key] = [];
+        }
+        params[key].push(param[key]);
+      });
+      return params;
+    }, {});
+
     this.router.navigate([], {
-      queryParams,
-      queryParamsHandling: 'merge', // Merge with existing query parameters
+      queryParams: flattenedQueryParams,
+      queryParamsHandling: 'merge',
     });
-
-    console.log('Tags applied:', queryParams);
   }
 
   initializeAppliedTags(): void {
     const appliedTagsDiv = document.getElementById('applied-tags');
-    const tagsString = appliedTagsDiv?.getAttribute('data-tags');
+    if (!appliedTagsDiv) return;
+
+    const tagsString = appliedTagsDiv.getAttribute('data-tags');
     if (tagsString) {
-      this.appliedTags = JSON.parse(tagsString);
-      this.appliedTags.forEach((tagText) => {
-        this.tagInput2?.addTag(tagText);
-      });
+      try {
+        const parsed = JSON.parse(tagsString);
+        if (Array.isArray(parsed)) {
+          this.appliedTags = parsed.map((tag: any) => ({
+            name: tag.name,
+            self: tag.self,
+          }));
+        }
+      } catch (e) {
+        console.error('Error parsing applied tags:', e);
+      }
     }
   }
 }

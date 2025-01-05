@@ -66,7 +66,7 @@ public class PostController {
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
             @QueryParam("postedBy") @UserURNConstraint String user,
             @QueryParam("inChannel") @ChannelURNConstraint String channel,
-            @QueryParam("withTags") @TagsURNConstraint List<String> tags,
+            @QueryParam("withTag") @TagsURNConstraint List<String> tags,
             @QueryParam("withStatus") @PostStatusURNConstraint String postStatus,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
@@ -119,7 +119,7 @@ public class PostController {
             @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam("postedBy") @UserURNConstraint String user,
             @QueryParam("inChannel") @ChannelURNConstraint String channel,
-            @QueryParam("withTags") @TagsURNConstraint List<String> tags,
+            @QueryParam("withTag") @TagsURNConstraint List<String> tags,
             @QueryParam("withStatus") @PostStatusURNConstraint String postStatus
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/count'", neighborhoodId);

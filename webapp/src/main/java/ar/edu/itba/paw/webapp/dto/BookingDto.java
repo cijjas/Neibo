@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
@@ -13,6 +14,7 @@ import ar.edu.itba.paw.webapp.validation.groups.Specific;
 import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 @BookingDateConstraint
@@ -43,28 +45,24 @@ public class BookingDto {
         dto.bookingDate = booking.getBookingDate().toString();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("bookings")
-                .path(String.valueOf(booking.getBookingId()))
-                .build());
-        links.setBookingUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(booking.getUser().getUserId()))
-                .build());
-        links.setAmenity(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("amenities")
-                .path(String.valueOf(booking.getAmenityAvailability().getAmenity().getAmenityId()))
-                .build());
-        links.setShift(uriInfo.getBaseUriBuilder()
-                .path("shifts")
-                .path(String.valueOf(booking.getAmenityAvailability().getShift().getShiftId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId());
+        String shiftId = String.valueOf(booking.getAmenityAvailability().getShift().getShiftId());
+        String amenityId = String.valueOf(booking.getAmenityAvailability().getAmenity().getAmenityId());
+        String userId = String.valueOf(booking.getUser().getUserId());
+        String bookingId = String.valueOf(booking.getBookingId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS.toString()).path(shiftId);
+        UriBuilder bookingUri = neighborhoodUri.clone().path(Endpoint.BOOKINGS.toString()).path(bookingId);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
+        UriBuilder amenityUri = neighborhoodUri.clone().path(Endpoint.AMENITIES.toString()).path(amenityId);
+
+        links.setSelf(bookingUri.build());
+        links.setBookingUser(userUri.build());
+        links.setAmenity(amenityUri.build());
+        links.setShift(shiftUri.build());
+
         dto.set_links(links);
         return dto;
     }

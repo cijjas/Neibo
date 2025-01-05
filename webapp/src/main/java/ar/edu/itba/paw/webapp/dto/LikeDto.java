@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInLikeConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -9,6 +11,7 @@ import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
@@ -33,35 +36,21 @@ public class LikeDto {
         dto.likeDate = like.getLikeDate();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("likes")
-                .queryParam("likedBy", uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
-                        .path("users")
-                        .path(String.valueOf(like.getUser().getUserId()))
-                        .build())
-                .queryParam("onPost", uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(like.getPost().getUser().getNeighborhood().getNeighborhoodId()))
-                        .path("posts")
-                        .path(String.valueOf(like.getPost().getPostId()))
-                        .build())
-                .build());
-        links.setPost(
-                uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
-                        .path("posts")
-                        .path(String.valueOf(like.getPost().getPostId()))
-                        .build());
-        links.setLikeUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(like.getUser().getUserId()))
-                .build()
-        );
+
+        String neighborhoodId = String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId());
+        String userId = String.valueOf(like.getUser().getUserId());
+        String postId = String.valueOf(like.getPost().getPostId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString());
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
+        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(postId);
+        UriBuilder likeUri = likesUri.clone().queryParam(QueryParameters.LIKED_BY, userUri).queryParam(QueryParameters.ON_POST, postUri);
+
+        links.setSelf(likeUri.build());
+        links.setPost(postUri.build());
+        links.setLikeUser(userUri.build());
+
         dto.set_links(links);
         return dto;
     }

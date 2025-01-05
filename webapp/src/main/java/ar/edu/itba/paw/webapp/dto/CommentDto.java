@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -10,6 +11,7 @@ import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
@@ -34,26 +36,21 @@ public class CommentDto {
         dto.creationDate = comment.getDate();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .path(String.valueOf(comment.getPost().getPostId()))
-                .path("comments")
-                .path(String.valueOf(comment.getCommentId()))
-                .build());
-        links.setCommentUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(comment.getUser().getUserId()))
-                .build());
-        links.setPost(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .path(String.valueOf(comment.getPost().getPostId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId());
+        String postId = String.valueOf(comment.getPost().getPostId());
+        String userId = String.valueOf((comment.getUser().getUserId()));
+        String commentId = String.valueOf(comment.getCommentId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(postId);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
+        UriBuilder commentUri = postUri.clone().path(Endpoint.COMMENTS.toString()).path(commentId);
+
+        links.setSelf(commentUri.build());
+        links.setPost(postUri.build());
+        links.setCommentUser(userUri.build());
+
         dto.set_links(links);
         return dto;
     }

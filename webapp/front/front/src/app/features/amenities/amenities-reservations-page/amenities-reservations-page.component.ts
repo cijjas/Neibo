@@ -54,7 +54,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private shiftService: ShiftService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.reservationForm = this.fb.group({
@@ -96,10 +96,10 @@ export class AmenitiesReservationsPageComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
-
     this.amenityService.getAmenities({ page }).subscribe({
       next: (data) => {
+        console.log(data);
+
         /**
          * If `page === 1`, we're refreshing from scratch.
          * Or you might want to always push if you want to keep old pages.

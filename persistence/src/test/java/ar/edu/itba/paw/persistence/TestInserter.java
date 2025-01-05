@@ -199,13 +199,13 @@ public class TestInserter {
         return booking.getBookingId();
     }
 
-    public long createDay(String dayName) {
+    public int createDay(String dayName) {
         Day day = new Day.Builder()
                 .dayName(dayName)
                 .build();
         em.persist(day);
         em.flush();
-        return day.getDayId();
+        return Math.toIntExact(day.getDayId());
     }
 
     public long createTime(Time timeInterval) {
@@ -466,7 +466,7 @@ public class TestInserter {
         return createBooking(userId, amenityAvailabilityId, date);
     }
 
-    public long createDay() {
+    public int createDay() {
         String dayName = "Groundhog Day";
         return createDay(dayName);
     }

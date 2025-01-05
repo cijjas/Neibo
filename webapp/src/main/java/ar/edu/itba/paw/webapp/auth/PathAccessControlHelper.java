@@ -75,14 +75,16 @@ public class PathAccessControlHelper {
         return false;
     }
 
-
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
 
     // Usage of optional Worker Query Params in '/neighborhoods' is restricted for anonymous Users
-    public boolean canUseWorkerQPInNeighborhoods(Long withWorker, Long withoutWorker) {
+    public boolean canUseWorkerQPInNeighborhoods(String withWorker, String withoutWorker) {
         LOGGER.info("Verifying Query Params Accessibility");
 
         Authentication authentication = authHelper.getAuthentication();
+
+        System.out.println(withWorker);
+        System.out.println(withoutWorker);
 
         if (withWorker == null && withoutWorker == null)
             return true;

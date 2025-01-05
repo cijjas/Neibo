@@ -4,16 +4,13 @@ import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { ChannelDto, PostDto, UserDto, LikeCountDto, Post, mapUser, parseLinkHeader } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
-import { ApiRegistry } from '@core/services/api-registry.service';
-
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
 
     constructor(
         private http: HttpClient,
-        private linkService: HateoasLinksService,
-        private apiRegistry: ApiRegistry,
+        private linkService: HateoasLinksService
     ) { }
 
     public getPost(postUrl: string): Observable<Post> {
@@ -27,27 +24,26 @@ export class PostService {
             page?: number;
             size?: number;
             inChannel?: string;
-            withTags?: string[];
+            withTag?: string[];
             withStatus?: string;
             postedBy?: string;
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
 
         // Retrieve the template endpoint
-        const listPostsEndpoint = this.apiRegistry.getEndpoint("user:posts");
+        const workerPostsUrl = this.linkService.getLink("user:posts");
 
-        if (!listPostsEndpoint) {
-            console.error("Worker posts endpoint not found");
-            return of({ posts: [], totalPages: 0, currentPage: 0 });
-        }
+        let params = new HttpParams();
 
-        // Build the URI using the template and query parameters
-        const workerPostsUrl = listPostsEndpoint.buildUri({
-            ...queryParams,     // Spread the query parameters directly
-        });
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.inChannel) params = params.set('inChannel', queryParams.inChannel);
+        if (queryParams.withTag && queryParams.withTag.length > 0) params = params.set('withTag', queryParams.withTag.join(','));
+        if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
+        if (queryParams.postedBy) params = params.set('postedBy', queryParams.postedBy);
 
         return this.http
-            .get<PostDto[]>(workerPostsUrl, { observe: 'response' })
+            .get<PostDto[]>(workerPostsUrl, { params, observe: 'response' })
             .pipe(
                 mergeMap((response) => {
                     // Handle 204 No Content response
@@ -82,33 +78,32 @@ export class PostService {
             );
     }
 
-    // should not receive query params, should receive individual params
     public getPosts(
         queryParams: {
             page?: number;
             size?: number;
             inChannel?: string;
-            withTags?: string[];
+            withTag?: string[];
             withStatus?: string;
             postedBy?: string;
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
 
+        // For debugging purposes
+        // this.linkService.logLinks()
+        let postsUrl: string = this.linkService.getLink('neighborhood:posts');
 
-        // Retrieve the template endpoint
-        const postsEndpoint = this.apiRegistry.getEndpoint("neighborhood:posts2");
-        if (!postsEndpoint) {
-            console.error("Posts endpoint not found");
-            return of({ posts: [], totalPages: 0, currentPage: 0 });
-        }
+        let params = new HttpParams();
 
-        // Build the URI using the template and query parameters
-        const postsUrl = postsEndpoint.buildUri({
-            ...queryParams, // Spread the query parameters directly
-        });
+        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
+        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
+        if (queryParams.inChannel) params = params.set('inChannel', queryParams.inChannel);
+        if (queryParams.withTag && queryParams.withTag.length > 0) params = params.set('withTag', queryParams.withTag.join(','));
+        if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
+        if (queryParams.postedBy) params = params.set('postedBy', queryParams.postedBy);
 
         return this.http
-            .get<PostDto[]>(postsUrl, { observe: 'response' })
+            .get<PostDto[]>(postsUrl, { params, observe: 'response' })
             .pipe(
                 mergeMap((response) => {
                     // Handle 204 No Content response

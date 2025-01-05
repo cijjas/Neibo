@@ -40,8 +40,9 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
     this.likesUrl = this.linkStorage.getLink('neighborhood:likes');
     this.loadLikeStatus();
 
+    // Fetch tags with pagination support
     this.tagService.getTags(tagLink, { onPost: this.post.self }).subscribe({
-      next: (tags) => {
+      next: ({ tags }: { tags: Tag[] }) => {
         this.tags = tags || [];
       },
       error: (err) => {
@@ -53,12 +54,14 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
     this.updateHumanReadableDate();
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
+    // Fetch post image
     const postImageSub = this.imageService.fetchImage(this.post.image).subscribe(({ safeUrl, isFallback }) => {
       this.postImageSafeUrl = safeUrl;
       this.isPostImageFallback = isFallback;
     });
     this.subscriptions.add(postImageSub);
 
+    // Fetch author image
     const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe(({ safeUrl }) => {
       this.authorImageSafeUrl = safeUrl;
     });
@@ -138,10 +141,8 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
     // Get the current query parameters
     const currentQueryParams = { ...this.route.snapshot.queryParams };
 
-    // Update or replace the SPAWithTags parameter
-    currentQueryParams['SPAWithTags'] = tagName;
+    currentQueryParams['withTag'] = tagName;
 
-    // Ensure no additional SPAWithTags values are present
     // Preserve the current channel and page
     this.router.navigate([], {
       relativeTo: this.route,

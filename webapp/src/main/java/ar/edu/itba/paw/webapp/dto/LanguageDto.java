@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.Language;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class LanguageDto {
@@ -16,10 +18,13 @@ public class LanguageDto {
         dto.name = language;
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("languages")
-                .path(String.valueOf(language.getId()))
-                .build());
+
+        String languageId = String.valueOf(language.getId());
+
+        UriBuilder languageUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES.toString()).path(languageId);
+
+        links.setSelf(languageUri.build());
+
         dto.set_links(links);
         return dto;
     }

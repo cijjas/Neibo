@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Channel;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
@@ -17,23 +20,23 @@ public class ChannelDto {
 
     private Links _links;
 
-    public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodId) {
+    public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodIdLong) {
         final ChannelDto dto = new ChannelDto();
 
         dto.name = channel.getChannel();
 
         Links links = new Links();
-        URI self = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhoodId))
-                .path("channels")
-                .path(String.valueOf(channel.getChannelId()))
-                .build();
-        links.setSelf(self);
-        links.setPosts(uriInfo.getBaseUriBuilder()
-                .path("posts")
-                .queryParam("inChannel", self)
-                .build());
+
+        String neighborhoodId = String.valueOf(neighborhoodIdLong);
+        String channelId = String.valueOf(channel.getChannelId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder channelUri = neighborhoodUri.clone().path(Endpoint.CHANNELS.toString()).path(channelId);
+        UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).queryParam(QueryParameters.IN_CHANNEL, channelUri.build());
+
+        links.setSelf(channelUri.build());
+        links.setPosts(postsUri.build());
+
         dto.set_links(links);
         return dto;
     }

@@ -4,23 +4,35 @@
       <h3 class="pt-1 pb-1 m-1">Filter by tags</h3>
     </div>
 
-    <div class="m-b-10 w-100">
-      <div
-        class="d-flex flex-column justify-content-center align-items-center w-100"
-      >
-        <input type="hidden" id="niakaniaka" [value]="placeholderText" />
-        <label for="tag-input2" class="w-100">
-          <input #tagInput2 type="text" id="tag-input2" />
-        </label>
-      </div>
+    <!-- Display selected tags -->
+    <div *ngIf="appliedTags.length > 0" class="m-b-10 w-100">
+      <span class="tag-option static" *ngFor="let selTag of appliedTags">
+        {{ selTag.name }}
+        <i class="fa-solid fa-xmark" (click)="removeTag(selTag)"></i>
+      </span>
     </div>
 
-    <div class="m-b-10 tags-row tags">
+    <div class="m-b-10 w-100 tags-row tags">
       <ng-container *ngFor="let tag of tagList">
-        <a class="tag-option" (click)="addTagToApply(tag.tag)">{{ tag.tag }}</a>
+        <a class="tag-option" (click)="addTagToApply(tag)">
+          {{ tag.name }}
+        </a>
       </ng-container>
     </div>
 
+    <!-- Pagination Arrows -->
+    <div class="pagination-arrows">
+      <span id="prev" [class.disabled]="currentPage <= 1" (click)="prevPage()">
+        <i class="fa-solid fa-angle-left"></i>
+      </span>
+      <p>Page {{ currentPage }} of {{ totalPages }}</p>
+      <span id="next" [class.disabled]="currentPage >= totalPages" (click)="nextPage()">
+        <i class="fa-solid fa-angle-right"></i>
+      </span>
+    </div>
+
+    <!-- We keep the hidden div for backward compatibility
+         or if you want to store the selected tags for init -->
     <div hidden id="applied-tags" [attr.data-tags]="appliedTags | json"></div>
 
     <div class="w-100">
@@ -29,10 +41,7 @@
           Clear
           <i class="fa-solid fa-xmark"></i>
         </a>
-        <a
-          class="cool-button cool-small on-bg tag-button"
-          (click)="applyTagsAsFilter()"
-        >
+        <a class="cool-button cool-small on-bg tag-button" (click)="applyTagsAsFilter()">
           Apply
         </a>
       </div>

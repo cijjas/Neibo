@@ -48,6 +48,30 @@ public class Channel {
         return channel;
     }
 
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
+    }
+
+    public Set<Neighborhood> getNeighborhoods() {
+        return neighborhoods;
+    }
+
+    public void setNeighborhoods(Set<Neighborhood> neighborhoods) {
+        this.neighborhoods = neighborhoods;
+    }
+
     @Override
     public String toString() {
         return "Channel{" +

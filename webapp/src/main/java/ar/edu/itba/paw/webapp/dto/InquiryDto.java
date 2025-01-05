@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -10,6 +11,7 @@ import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
@@ -39,33 +41,25 @@ public class InquiryDto {
         dto.inquiryDate = inquiry.getInquiryDate();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("products")
-                .path(String.valueOf(inquiry.getProduct().getProductId()))
-                .path("inquiries")
-                .path(String.valueOf(inquiry.getInquiryId()))
-                .build());
-        links.setProduct(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("products")
-                .path(String.valueOf(inquiry.getProduct().getProductId()))
-                .build());
-        links.setInquiryUser(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(inquiry.getUser().getUserId()))
-                .build());
+
+        String neighborhoodId = String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId());
+        String productId = String.valueOf(inquiry.getProduct().getProductId());
+        String inquiryUserId = String.valueOf(inquiry.getUser().getUserId());
+        String replyUserId = String.valueOf(inquiry.getProduct().getSeller().getUserId());
+        String inquiryId = String.valueOf(inquiry.getInquiryId());
+
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS.toString()).path(productId);
+        UriBuilder inquiryUserUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(inquiryUserId);
+        UriBuilder replyUserUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(replyUserId);
+        UriBuilder inquiryUri = productUri.clone().path(Endpoint.INQUIRIES.toString()).path(inquiryId);
+
+        links.setSelf(inquiryUri.build());
+        links.setProduct(productUri.build());
+        links.setInquiryUser(inquiryUserUri.build());
         if (inquiry.getReply() != null)
-            links.setReplyUser(uriInfo.getBaseUriBuilder()
-                    .path("neighborhoods")
-                    .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
-                    .path("users")
-                    .path(String.valueOf(inquiry.getProduct().getSeller().getUserId()))
-                    .build());
+            links.setReplyUser(replyUserUri.build());
+
         dto.set_links(links);
         return dto;
     }

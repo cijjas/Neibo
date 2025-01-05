@@ -1,8 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { Tag, TagDto } from '@shared/index';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import { parseLinkHeader, Tag, TagDto } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -25,18 +25,41 @@ export class TagService {
             page?: number;
             size?: number;
         } = {}
-    ): Observable<Tag[]> {
+    ): Observable<{ tags: Tag[]; totalPages: number; currentPage: number }> {
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
         if (queryParams.onPost) params = params.set('onPost', queryParams.onPost);
 
-        return this.http.get<TagDto[]>(url, { params }).pipe(
-            map((tagsDto) => tagsDto?.map(mapTag) || []),
-            catchError((err) => {
-                console.error('Error fetching tags:', err);
-                return of([]);
+        return this.http.get<TagDto[]>(url, { params, observe: 'response' }).pipe(
+            mergeMap((response: HttpResponse<TagDto[]>) => {
+                // Handle 204 No Content response
+                if (response.status === 204 || !response.body) {
+                    return of({
+                        tags: [],
+                        totalPages: 0,
+                        currentPage: 0,
+                    });
+                }
+
+                // Parse the response body
+                const tagsDto = response.body || [];
+                const tags = tagsDto.map(mapTag);
+
+                // Extract pagination info from the 'Link' header if available
+                const linkHeader = response.headers.get('Link');
+                const paginationInfo = linkHeader ? parseLinkHeader(linkHeader) : { totalPages: 0, currentPage: 0 };
+
+                return of({
+                    tags,
+                    totalPages: paginationInfo.totalPages || 0,
+                    currentPage: paginationInfo.currentPage || 0,
+                });
+            }),
+            catchError((error) => {
+                console.error('Error fetching tags:', error);
+                return of({ tags: [], totalPages: 0, currentPage: 0 });
             })
         );
     }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -7,6 +8,7 @@ import ar.edu.itba.paw.webapp.validation.groups.Null;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class DepartmentDto {
@@ -24,10 +26,13 @@ public class DepartmentDto {
         dto.name = department.getDepartment();
 
         Links links = new Links();
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("departments")
-                .path(String.valueOf(department.getDepartmentId()))
-                .build());
+
+        String departmentId = String.valueOf(department.getDepartmentId());
+
+        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS.toString()).path(departmentId);
+
+        links.setSelf(departmentUri.build());
+
         dto.set_links(links);
         return dto;
     }

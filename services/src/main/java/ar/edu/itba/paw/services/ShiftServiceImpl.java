@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +42,10 @@ public class ShiftServiceImpl implements ShiftService {
     public List<Shift> getShifts(Long amenityId, Date date) {
         LOGGER.info("Getting Shifts for amenity {} on date {}", amenityId, date);
 
-        return shiftDao.getShifts(amenityId, date);
+        // Extract Day ID from the date
+        int dayOfWeek = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getDayOfWeek().getValue(); // 1 for Monday, 7 for Sunday
+
+        // Pass amenityId, date, and dayOfWeek to DAO
+        return shiftDao.getShifts(amenityId, date, dayOfWeek);
     }
 }

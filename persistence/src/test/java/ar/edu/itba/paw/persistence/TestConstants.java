@@ -74,5 +74,6 @@ public class TestConstants {
     }
 
     public static final Date NO_DATE = null;
+    public static final Integer NO_DAY_ID = null;
 
 }
