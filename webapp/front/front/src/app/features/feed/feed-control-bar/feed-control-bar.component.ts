@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService, UserSessionService } from '@core/index';
-import { User } from '@shared/index';
+import { User, LinkKey } from '@shared/index';
 
 @Component({
   selector: 'app-feed-control-bar',
@@ -38,13 +38,13 @@ export class FeedControlBarComponent implements OnInit {
   ngOnInit(): void {
     this.userSessionService.getCurrentUser().subscribe((user: User) => { this.currentUser = user; });
 
-    this.latestUrl = this.linkService.getLink('neighborhood:nonePostStatus');
-    this.hotUrl = this.linkService.getLink('neighborhood:hotPostStatus');
-    this.trendingUrl = this.linkService.getLink('neighborhood:trendingPostStatus');
+    this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
+    this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);
+    this.trendingUrl = this.linkService.getLink(LinkKey.TRENDING_POST_STATUS);
 
-    this.feedChannelUrl = this.linkService.getLink('neighborhood:feedChannel');
-    this.announcementsChannelUrl = this.linkService.getLink('neighborhood:announcementsChannel');
-    this.complaintsChannelUrl = this.linkService.getLink('neighborhood:complaintsChannel');
+    this.feedChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL);
+    this.announcementsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL);
+    this.complaintsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL);
 
     this.route.queryParams.subscribe((params) => {
       this.status = params['SPAWithStatus'];

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 // Replace with your actual models and services
-import { ProductService, RequestService, Department, Product, Request } from '@shared/index';
+import { ProductService, RequestService, Department, Product, Request, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -71,8 +71,8 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   }
 
   loadListings(): void {
-    const userUrl: string = this.linkService.getLink('user:self');
-    const productStatusUrl: string = this.linkService.getLink('neighborhood:sellingProductStatus');
+    const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
+    const productStatusUrl: string = this.linkService.getLink(LinkKey.SELLING_PRODUCT_STATUS);
 
     this.productService.getProducts({
       forUser: userUrl,
@@ -90,9 +90,9 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   }
 
   loadSales(): void {
-    const userUrl: string = this.linkService.getLink('user:self');
-    const requestStatusUrl: string = this.linkService.getLink('neighborhood:acceptedRequestStatus');
-    const transactionTypeUrl: string = this.linkService.getLink('neighborhood:saleTransactionType');
+    const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
+    const requestStatusUrl: string = this.linkService.getLink(LinkKey.ACCEPTED_REQUEST_STATUS);
+    const transactionTypeUrl: string = this.linkService.getLink(LinkKey.SALE_TRANSACTION_TYPE);
 
     this.requestService
       .getRequests({
@@ -145,7 +145,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     this.router.navigate(['/marketplace/products', productId, 'requests']);
   }
 
-  getProductImage(product:Product): string {
+  getProductImage(product: Product): string {
     return product?.firstImage
       ? product?.firstImage
       : 'assets/images/default-product.png';

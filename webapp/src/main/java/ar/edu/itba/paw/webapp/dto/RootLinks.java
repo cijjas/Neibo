@@ -1,313 +1,352 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import java.net.URI;
+
 public class RootLinks {
     // Self
-    private String self;
+    private URI self;
 
     // ------- Dynamic Endpoints
+    // Neighborhoods
+    private URI neighborhoods;
     // Affiliations
-    private String affiliations;
+    private URI affiliations;
     // Images
-    private String images;
+    private URI images;
     // Neighborhood
-    private String neighborhood;
+    private URI neighborhood;
     // Workers
-    private String workers;
+    private URI workers;
     // Departments
-    private String departments;
+    private URI departments;
     // Professions
-    private String professions;
+    private URI professions;
     // Shifts
-    private String shifts;
+    private URI shifts;
 
     // ------- Static Endpoints
     // Languages
-    private String englishLanguage;
-    private String spanishLanguage;
+    private URI languages;
+    private URI englishLanguage;
+    private URI spanishLanguage;
     // User Roles
-    private String administratorUserRole;
-    private String superAdministratorUserRole;
-    private String neighborUserRole;
-    private String unverifiedNeighborUserRole;
-    private String rejectedUserRole;
-    private String workerUserRole;
+    private URI administratorUserRole;
+    private URI superAdministratorUserRole;
+    private URI neighborUserRole;
+    private URI unverifiedNeighborUserRole;
+    private URI rejectedUserRole;
+    private URI workerUserRole;
     // Worker Posts
-    private String workerPosts;
+    private URI workerPosts;
     // Worker Roles (Affiliation)
-    private String verifiedWorkerRole;
-    private String unverifiedWorkerRole;
-    private String rejectedWorkerRole;
+    private URI verifiedWorkerRole;
+    private URI unverifiedWorkerRole;
+    private URI rejectedWorkerRole;
     // Worker Statuses
-    private String hotWorkerStatus;
-    private String trendingWorkerStatus;
+    private URI hotWorkerStatus;
+    private URI trendingWorkerStatus;
     // Post Statuses
-    private String hotPostStatus;
-    private String trendingPostStatus;
+    private URI postStatuses;
+    private URI nonePostStatus;
+    private URI hotPostStatus;
+    private URI trendingPostStatus;
     // Product Status
-    private String boughtProductStatus;
-    private String soldProductStatus;
-    private String sellingProductStatus;
+    private URI boughtProductStatus;
+    private URI soldProductStatus;
+    private URI sellingProductStatus;
     // Request Statuses
-    private String acceptedRequestStatus;
-    private String declinedRequestStatus;
-    private String requestedRequestStatus;
+    private URI acceptedRequestStatus;
+    private URI declinedRequestStatus;
+    private URI requestedRequestStatus;
     // Transaction Types
-    private String purchaseTransactionType;
-    private String saleTransactionType;
+    private URI purchaseTransactionType;
+    private URI saleTransactionType;
 
-    public String getSelf() {
+    public URI getSelf() {
         return self;
     }
 
-    public void setSelf(String self) {
+    public void setSelf(URI self) {
         this.self = self;
     }
 
-    public String getWorkerPosts() {
+    public URI getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(URI languages) {
+        this.languages = languages;
+    }
+
+    public URI getPostStatuses() {
+        return postStatuses;
+    }
+
+    public void setPostStatuses(URI postStatuses) {
+        this.postStatuses = postStatuses;
+    }
+
+    public URI getNeighborhoods() {
+        return neighborhoods;
+    }
+
+    public void setNeighborhoods(URI neighborhoods) {
+        this.neighborhoods = neighborhoods;
+    }
+
+    public URI getNonePostStatus() {
+        return nonePostStatus;
+    }
+
+    public void setNonePostStatus(URI nonePostStatus) {
+        this.nonePostStatus = nonePostStatus;
+    }
+
+    public URI getWorkerPosts() {
         return workerPosts;
     }
 
-    public void setWorkerPosts(String workerPosts) {
+    public void setWorkerPosts(URI workerPosts) {
         this.workerPosts = workerPosts;
     }
 
-    public String getAffiliations() {
+    public URI getAffiliations() {
         return affiliations;
     }
 
-    public void setAffiliations(String affiliations) {
+    public void setAffiliations(URI affiliations) {
         this.affiliations = affiliations;
     }
 
-    public String getImages() {
+    public URI getImages() {
         return images;
     }
 
-    public void setImages(String images) {
+    public void setImages(URI images) {
         this.images = images;
     }
 
-    public String getNeighborhood() {
+    public URI getNeighborhood() {
         return neighborhood;
     }
 
-    public void setNeighborhood(String neighborhood) {
+    public void setNeighborhood(URI neighborhood) {
         this.neighborhood = neighborhood;
     }
 
-    public String getWorkers() {
+    public URI getWorkers() {
         return workers;
     }
 
-    public void setWorkers(String workers) {
+    public void setWorkers(URI workers) {
         this.workers = workers;
     }
 
-    public String getDepartments() {
+    public URI getDepartments() {
         return departments;
     }
 
-    public void setDepartments(String departments) {
+    public void setDepartments(URI departments) {
         this.departments = departments;
     }
 
-    public String getProfessions() {
+    public URI getProfessions() {
         return professions;
     }
 
-    public void setProfessions(String professions) {
+    public void setProfessions(URI professions) {
         this.professions = professions;
     }
 
-    public String getShifts() {
+    public URI getShifts() {
         return shifts;
     }
 
-    public void setShifts(String shifts) {
+    public void setShifts(URI shifts) {
         this.shifts = shifts;
     }
 
-    public String getEnglishLanguage() {
+    public URI getEnglishLanguage() {
         return englishLanguage;
     }
 
-    public void setEnglishLanguage(String englishLanguage) {
+    public void setEnglishLanguage(URI englishLanguage) {
         this.englishLanguage = englishLanguage;
     }
 
-    public String getSpanishLanguage() {
+    public URI getSpanishLanguage() {
         return spanishLanguage;
     }
 
-    public void setSpanishLanguage(String spanishLanguage) {
+    public void setSpanishLanguage(URI spanishLanguage) {
         this.spanishLanguage = spanishLanguage;
     }
 
-    public String getAdministratorUserRole() {
+    public URI getAdministratorUserRole() {
         return administratorUserRole;
     }
 
-    public void setAdministratorUserRole(String administratorUserRole) {
+    public void setAdministratorUserRole(URI administratorUserRole) {
         this.administratorUserRole = administratorUserRole;
     }
 
-    public String getSuperAdministratorUserRole() {
+    public URI getSuperAdministratorUserRole() {
         return superAdministratorUserRole;
     }
 
-    public void setSuperAdministratorUserRole(String superAdministratorUserRole) {
+    public void setSuperAdministratorUserRole(URI superAdministratorUserRole) {
         this.superAdministratorUserRole = superAdministratorUserRole;
     }
 
-    public String getNeighborUserRole() {
+    public URI getNeighborUserRole() {
         return neighborUserRole;
     }
 
-    public void setNeighborUserRole(String neighborUserRole) {
+    public void setNeighborUserRole(URI neighborUserRole) {
         this.neighborUserRole = neighborUserRole;
     }
 
-    public String getUnverifiedNeighborUserRole() {
+    public URI getUnverifiedNeighborUserRole() {
         return unverifiedNeighborUserRole;
     }
 
-    public void setUnverifiedNeighborUserRole(String unverifiedNeighborUserRole) {
+    public void setUnverifiedNeighborUserRole(URI unverifiedNeighborUserRole) {
         this.unverifiedNeighborUserRole = unverifiedNeighborUserRole;
     }
 
-    public String getRejectedUserRole() {
+    public URI getRejectedUserRole() {
         return rejectedUserRole;
     }
 
-    public void setRejectedUserRole(String rejectedUserRole) {
+    public void setRejectedUserRole(URI rejectedUserRole) {
         this.rejectedUserRole = rejectedUserRole;
     }
 
-    public String getWorkerUserRole() {
+    public URI getWorkerUserRole() {
         return workerUserRole;
     }
 
-    public void setWorkerUserRole(String workerUserRole) {
+    public void setWorkerUserRole(URI workerUserRole) {
         this.workerUserRole = workerUserRole;
     }
 
-    public String getVerifiedWorkerRole() {
+    public URI getVerifiedWorkerRole() {
         return verifiedWorkerRole;
     }
 
-    public void setVerifiedWorkerRole(String verifiedWorkerRole) {
+    public void setVerifiedWorkerRole(URI verifiedWorkerRole) {
         this.verifiedWorkerRole = verifiedWorkerRole;
     }
 
-    public String getUnverifiedWorkerRole() {
+    public URI getUnverifiedWorkerRole() {
         return unverifiedWorkerRole;
     }
 
-    public void setUnverifiedWorkerRole(String unverifiedWorkerRole) {
+    public void setUnverifiedWorkerRole(URI unverifiedWorkerRole) {
         this.unverifiedWorkerRole = unverifiedWorkerRole;
     }
 
-    public String getRejectedWorkerRole() {
+    public URI getRejectedWorkerRole() {
         return rejectedWorkerRole;
     }
 
-    public void setRejectedWorkerRole(String rejectedWorkerRole) {
+    public void setRejectedWorkerRole(URI rejectedWorkerRole) {
         this.rejectedWorkerRole = rejectedWorkerRole;
     }
 
-    public String getHotWorkerStatus() {
+    public URI getHotWorkerStatus() {
         return hotWorkerStatus;
     }
 
-    public void setHotWorkerStatus(String hotWorkerStatus) {
+    public void setHotWorkerStatus(URI hotWorkerStatus) {
         this.hotWorkerStatus = hotWorkerStatus;
     }
 
-    public String getTrendingWorkerStatus() {
+    public URI getTrendingWorkerStatus() {
         return trendingWorkerStatus;
     }
 
-    public void setTrendingWorkerStatus(String trendingWorkerStatus) {
+    public void setTrendingWorkerStatus(URI trendingWorkerStatus) {
         this.trendingWorkerStatus = trendingWorkerStatus;
     }
 
-    public String getHotPostStatus() {
+    public URI getHotPostStatus() {
         return hotPostStatus;
     }
 
-    public void setHotPostStatus(String hotPostStatus) {
+    public void setHotPostStatus(URI hotPostStatus) {
         this.hotPostStatus = hotPostStatus;
     }
 
-    public String getTrendingPostStatus() {
+    public URI getTrendingPostStatus() {
         return trendingPostStatus;
     }
 
-    public void setTrendingPostStatus(String trendingPostStatus) {
+    public void setTrendingPostStatus(URI trendingPostStatus) {
         this.trendingPostStatus = trendingPostStatus;
     }
 
-    public String getBoughtProductStatus() {
+    public URI getBoughtProductStatus() {
         return boughtProductStatus;
     }
 
-    public void setBoughtProductStatus(String boughtProductStatus) {
+    public void setBoughtProductStatus(URI boughtProductStatus) {
         this.boughtProductStatus = boughtProductStatus;
     }
 
-    public String getSoldProductStatus() {
+    public URI getSoldProductStatus() {
         return soldProductStatus;
     }
 
-    public void setSoldProductStatus(String soldProductStatus) {
+    public void setSoldProductStatus(URI soldProductStatus) {
         this.soldProductStatus = soldProductStatus;
     }
 
-    public String getSellingProductStatus() {
+    public URI getSellingProductStatus() {
         return sellingProductStatus;
     }
 
-    public void setSellingProductStatus(String sellingProductStatus) {
+    public void setSellingProductStatus(URI sellingProductStatus) {
         this.sellingProductStatus = sellingProductStatus;
     }
 
-    public String getAcceptedRequestStatus() {
+    public URI getAcceptedRequestStatus() {
         return acceptedRequestStatus;
     }
 
-    public void setAcceptedRequestStatus(String acceptedRequestStatus) {
+    public void setAcceptedRequestStatus(URI acceptedRequestStatus) {
         this.acceptedRequestStatus = acceptedRequestStatus;
     }
 
-    public String getDeclinedRequestStatus() {
+    public URI getDeclinedRequestStatus() {
         return declinedRequestStatus;
     }
 
-    public void setDeclinedRequestStatus(String declinedRequestStatus) {
+    public void setDeclinedRequestStatus(URI declinedRequestStatus) {
         this.declinedRequestStatus = declinedRequestStatus;
     }
 
-    public String getRequestedRequestStatus() {
+    public URI getRequestedRequestStatus() {
         return requestedRequestStatus;
     }
 
-    public void setRequestedRequestStatus(String requestedRequestStatus) {
+    public void setRequestedRequestStatus(URI requestedRequestStatus) {
         this.requestedRequestStatus = requestedRequestStatus;
     }
 
-    public String getPurchaseTransactionType() {
+    public URI getPurchaseTransactionType() {
         return purchaseTransactionType;
     }
 
-    public void setPurchaseTransactionType(String purchaseTransactionType) {
+    public void setPurchaseTransactionType(URI purchaseTransactionType) {
         this.purchaseTransactionType = purchaseTransactionType;
     }
 
-    public String getSaleTransactionType() {
+    public URI getSaleTransactionType() {
         return saleTransactionType;
     }
 
-    public void setSaleTransactionType(String saleTransactionType) {
+    public void setSaleTransactionType(URI saleTransactionType) {
         this.saleTransactionType = saleTransactionType;
     }
 }

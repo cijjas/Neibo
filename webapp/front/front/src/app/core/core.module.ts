@@ -1,13 +1,18 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { APP_INITIALIZER, NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 
 import { AuthService } from './services/auth.service';
+import { AppInitService } from './services/app-init.service';
 import { ToastService } from './services/toast.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+
+export function initializeApp(appInitService: AppInitService): () => Promise<void> {
+    return () => appInitService.loadInitialLinks();
+}
 
 @NgModule({
     imports: [
@@ -15,6 +20,8 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
     providers: [
         AuthService,
         ToastService,
+        AppInitService,
+
         {
             provide: HTTP_INTERCEPTORS,
             useClass: JwtInterceptor,
@@ -24,7 +31,13 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorInterceptor,
             multi: true
-        }
+        },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeApp,
+            deps: [AppInitService],
+            multi: true,
+        },
     ]
 })
 export class CoreModule {

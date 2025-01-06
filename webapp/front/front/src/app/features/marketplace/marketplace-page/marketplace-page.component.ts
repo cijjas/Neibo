@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService, DepartmentService, Product } from '@shared/index';
+import { ProductService, DepartmentService, Product, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -41,7 +41,7 @@ export class MarketplacePageComponent implements OnInit {
   }
 
   private loadProducts(): void {
-    const productsUrl: string = this.linkService.getLink('neighborhood:products');
+    const productsUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_PRODUCTS);
 
     this.productService.getProducts({ page: this.page, size: this.size, inDepartment: this.selectedDepartment }).subscribe({
       next: (data) => {

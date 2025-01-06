@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Resource, ResourceDto, parseLinkHeader } from '@shared/index';
+import { LinkKey, Resource, ResourceDto, parseLinkHeader } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +24,7 @@ export class ResourceService {
             size?: number;
         } = {}
     ): Observable<{ resources: Resource[]; totalPages: number; currentPage: number }> {
-        let resourcesUrl: string = this.linkService.getLink('neighborhood:resources')
+        let resourcesUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_RESOURCES)
 
         let params = new HttpParams();
 
@@ -58,7 +58,7 @@ export class ResourceService {
             image: image
         };
 
-        let resourcesUrl: string = this.linkService.getLink('neighborhood:resources')
+        let resourcesUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_RESOURCES)
 
         return this.http.post(resourcesUrl, body, { observe: 'response' }).pipe(
             map(response => {

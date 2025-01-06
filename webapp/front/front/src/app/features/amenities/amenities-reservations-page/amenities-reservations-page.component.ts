@@ -98,8 +98,6 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 
     this.amenityService.getAmenities({ page }).subscribe({
       next: (data) => {
-        console.log(data);
-
         /**
          * If `page === 1`, we're refreshing from scratch.
          * Or you might want to always push if you want to keep old pages.

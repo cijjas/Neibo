@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { HateoasLinksService, UserSessionService } from '@core/index';
+import { LinkKey } from '@shared/models';
 
 @Component({
   selector: 'app-sidebar',
@@ -26,7 +27,7 @@ export class SidebarComponent implements OnInit {
       this.userRole = currentUser.userRole;
       this.userId = currentUser.self; // Assuming `self` contains the user ID
 
-      this.workerId = this.linkService.getLink('user:worker');
+      this.workerId = this.linkService.getLink(LinkKey.USER_WORKER);
     }
 
     // Listen for navigation changes to update the channel
@@ -60,11 +61,11 @@ export class SidebarComponent implements OnInit {
     // 3) Handle /posts routes with query parameters
     else if (currentUrl.includes('/posts')) {
       const queryParams = this.router.routerState.snapshot.root.queryParams;
-      if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:feedChannel')) {
+      if (queryParams['SPAInChannel'] === this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL)) {
         this.channelClass = 'Feed';
-      } else if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:announcementsChannel')) {
+      } else if (queryParams['SPAInChannel'] === this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL)) {
         this.channelClass = 'Announcements';
-      } else if (queryParams['SPAInChannel'] === this.linkService.getLink('neighborhood:complaintsChannel')) {
+      } else if (queryParams['SPAInChannel'] === this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL)) {
         this.channelClass = 'Complaints';
       } else {
         this.channelClass = '';
@@ -76,19 +77,19 @@ export class SidebarComponent implements OnInit {
 
   changeChannelToComplaints(): void {
     this.router.navigate(['/posts'], {
-      queryParams: { SPAInChannel: this.linkService.getLink('neighborhood:complaintsChannel') },
+      queryParams: { SPAInChannel: this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL) },
     }).then(() => this.updateChannelClass());
   }
 
   changeChannelToAnnouncements(): void {
     this.router.navigate(['/posts'], {
-      queryParams: { SPAInChannel: this.linkService.getLink('neighborhood:announcementsChannel') },
+      queryParams: { SPAInChannel: this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL) },
     }).then(() => this.updateChannelClass());
   }
 
   changeChannelToFeed(): void {
     this.router.navigate(['/posts'], {
-      queryParams: { SPAInChannel: this.linkService.getLink('neighborhood:feedChannel') },
+      queryParams: { SPAInChannel: this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL) },
     }).then(() => this.updateChannelClass());
   }
 }

@@ -105,11 +105,11 @@ public class UserDto {
 
         // Worker Specific Links
         if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()) {
-           links.setWorker(uriInfo.getBaseUriBuilder().path("workers").path(String.valueOf(user.getUserId())).build());
+           links.setWorker(uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(String.valueOf(user.getUserId())).build());
         }
 
         // Neighbor Specific Link
-        if (BaseNeighborhood.isABaseNeighborhood(neighborhoodIdLong)){
+        if (!BaseNeighborhood.isABaseNeighborhood(neighborhoodIdLong)){
             String purchaseTransactionTypeId = String.valueOf(TransactionType.PURCHASE.getId());
             String saleTransactionTypeId = String.valueOf(TransactionType.SALE.getId());
             String acceptedRequestStatusId = String.valueOf(RequestStatus.ACCEPTED.getId());

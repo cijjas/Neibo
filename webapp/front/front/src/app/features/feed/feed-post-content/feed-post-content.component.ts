@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { formatDistanceToNow } from 'date-fns';
 
-import { Post, Comment, Tag } from '@shared/index';
+import { Post, Comment, Tag, LinkKey } from '@shared/index';
 import { CommentService, LikeService, TagService, } from '@shared/index';
 
 import { SafeUrl } from '@angular/platform-browser';
@@ -51,8 +51,8 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
       comment: ['', [Validators.required, Validators.minLength(3)]],
     });
 
-    this.likesUrl = this.linkStorage.getLink('neighborhood:likes');
-    const tagLink = this.linkStorage.getLink('neighborhood:tags');
+    const tagLink = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_TAGS);
+    this.likesUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_LIKES);
 
     this.loadLikeStatus();
     this.fetchTags(tagLink);

@@ -48,8 +48,6 @@ export class AdminCreateEventComponent {
     formValue.startTime = this.ensureSeconds(formValue.startTime);
     formValue.endTime = this.ensureSeconds(formValue.endTime);
 
-    console.log('Event Data with seconds:', formValue);
-
     this.eventService.createEvent(
       formValue.name,
       formValue.description,

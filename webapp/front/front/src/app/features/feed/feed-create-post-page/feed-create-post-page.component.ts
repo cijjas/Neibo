@@ -8,7 +8,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Tag, Channel, PostService, TagService } from '@shared/index';
+import { Tag, Channel, PostService, TagService, LinkKey } from '@shared/index';
 import {
   HateoasLinksService,
   UserSessionService,
@@ -62,7 +62,7 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private userSessionService: UserSessionService,
     private toastService: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Build form
@@ -76,13 +76,9 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     });
 
     // Fetch channels & tags
-    this.feedChannelUrl = this.linkService.getLink('neighborhood:feedChannel');
-    this.announcementsChannelUrl = this.linkService.getLink(
-      'neighborhood:announcementsChannel'
-    );
-    this.complaintsChannelUrl = this.linkService.getLink(
-      'neighborhood:complaintsChannel'
-    );
+    this.feedChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL);
+    this.announcementsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL);
+    this.complaintsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL);
 
     this.route.queryParams.subscribe((params) => {
       this.channel = params['SPAInChannel'];
@@ -129,7 +125,7 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
 
   // --- Tag Loading
   fetchTags(): void {
-    const tagsUrl = this.linkService.getLink('neighborhood:tags');
+    const tagsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_TAGS);
     this.tagService.getTags(tagsUrl).subscribe((tags: any) => {
       this.tagList = tags; // e.g. [{ name: 'JavaScript', self: '...' }, ...]
     });

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession, ReviewsCountDto, PostsCountDto, Affiliation, UserService } from '@shared/index';
+import { Worker, WorkerDto, UserDto, NeighborhoodDto, ProfessionDto, ImageDto, ReviewsAverageDto, mapUser, parseLinkHeader, mapProfession, ReviewsCountDto, PostsCountDto, Affiliation, UserService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -30,7 +30,7 @@ export class WorkerService {
             withStatus?: string;
         } = {}
     ): Observable<{ workers: Worker[]; totalPages: number; currentPage: number }> {
-        let workersUrl: string = this.linkService.getLink('neighborhood:workers')
+        let workersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_WORKERS)
 
         let params = new HttpParams();
 
@@ -85,7 +85,7 @@ export class WorkerService {
         address: string,
         bio: string
     ): Observable<(string | null)> {
-        let workersUrl: string = this.linkService.getLink('root:workers');
+        let workersUrl: string = this.linkService.getLink(LinkKey.WORKERS);
 
         let createdUserUrl: string;
         this.userService.createUser(neighborhoodUrl, name, surname, password, mail, language, identification)
@@ -118,7 +118,7 @@ export class WorkerService {
     }
 
     public updateWorker(worker: WorkerDto): Observable<void> {
-        let workerUrl: string = this.linkService.getLink('user:worker');
+        let workerUrl: string = this.linkService.getLink(LinkKey.USER_WORKER);
         return this.http.patch<void>(workerUrl, worker).pipe(
             catchError(error => {
                 console.error('Error updating product:', error);

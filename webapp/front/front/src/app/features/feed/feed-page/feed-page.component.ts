@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PostService, Post } from '@shared/index';
+import { PostService, Post, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -30,8 +30,8 @@ export class FeedPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const defaultChannel = this.linkService.getLink('neighborhood:feedChannel');
-    const defaultStatus = this.linkService.getLink('neighborhood:nonePostStatus');
+    const defaultChannel = this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL);
+    const defaultStatus = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
 
     this.route.queryParams
       .pipe(

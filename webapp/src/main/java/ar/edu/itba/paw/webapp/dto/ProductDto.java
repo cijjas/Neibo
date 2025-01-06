@@ -77,12 +77,13 @@ public class ProductDto {
 
         UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
         UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS.toString()).path(departmentId);
+        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString()).path(requestStatusId);
         UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS.toString()).path(productId);
         UriBuilder inquiriesUri = productUri.clone().path(Endpoint.INQUIRIES.toString());
         UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString()).queryParam(QueryParameters.FOR_PRODUCT, productUri.build());
         UriBuilder pendingRequestsCountUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString()).path(Endpoint.COUNT.toString())
                 .queryParam(QueryParameters.FOR_PRODUCT, productUri.build())
-                .queryParam(QueryParameters.WITH_STATUS, requestStatusId);
+                .queryParam(QueryParameters.WITH_STATUS, requestStatusUri.build());
         UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
 
         links.setSelf(productUri.build());

@@ -25,215 +25,234 @@
 
     <!-- ============== NEIGHBOR SIGNUP FORM ============== -->
     <div *ngIf="selectedOption === 'neighbor'">
-      <form [formGroup]="signupForm" (ngSubmit)="trySignup()" class="signup-form">
-        <div class="f-c-c-c pl-3 pr-3">
+      <div *ngIf="loading; else neighborSignupForm">
+        <div class="f-c-c-c">
+          <div style="font-size: 16px">Creating your account. Please wait...</div>
+          <div class="w-100 loader" style="margin-top: 20px"></div>
+        </div>
+      </div>
+      <ng-template #neighborSignupForm>
+        <form [formGroup]="signupForm" (ngSubmit)="trySignup()" class="signup-form">
+          <div class="f-c-c-c pl-3 pr-3">
 
-          <!-- Neighborhood Selection -->
-          <div class="form-group">
-            <select id="neighborhood" formControlName="neighborhoodId" class="cool-select">
-              <option value="" disabled selected class="placeholder-option">
-                Select Neighborhood
-              </option>
-              <option *ngFor="let neighborhood of neighborhoodsList" [value]="neighborhood.self">
-                {{ neighborhood.name }}
-              </option>
-            </select>
-            <small class="form-error" *ngIf="
+            <!-- Neighborhood Selection -->
+            <div class="form-group">
+              <select id="neighborhood" formControlName="neighborhoodId" class="cool-select">
+                <option value="" disabled selected class="placeholder-option">
+                  Select Neighborhood
+                </option>
+                <option *ngFor="let neighborhood of neighborhoodsList" [value]="neighborhood.self">
+                  {{ neighborhood.name }}
+                </option>
+              </select>
+              <small class="form-error" *ngIf="
                 signupForm.get('neighborhoodId')?.invalid &&
                 signupForm.get('neighborhoodId')?.touched
               ">
-              *Neighborhood is required
-            </small>
-          </div>
+                *Neighborhood is required
+              </small>
+            </div>
 
-          <!-- Name and Surname -->
-          <div class="row">
-            <div class="col">
-              <label>
-                <input placeholder="First name" class="input" formControlName="name" />
-              </label>
+            <!-- Name and Surname -->
+            <div class="row">
+              <div class="col">
+                <label>
+                  <input placeholder="First name" class="input" formControlName="name" />
+                </label>
+              </div>
+              <div class="col">
+                <label>
+                  <input placeholder="Surname" class="input" formControlName="surname" />
+                </label>
+              </div>
             </div>
-            <div class="col">
-              <label>
-                <input placeholder="Surname" class="input" formControlName="surname" />
-              </label>
-            </div>
-          </div>
 
-          <!-- Email and Password -->
-          <div class="row">
-            <div class="col">
-              <label>
-                <input placeholder="Email" type="email" class="input" formControlName="mail" autocomplete="email" />
-              </label>
+            <!-- Email and Password -->
+            <div class="row">
+              <div class="col">
+                <label>
+                  <input placeholder="Email" type="email" class="input" formControlName="mail" autocomplete="email" />
+                </label>
+              </div>
+              <div class="col">
+                <label>
+                  <input placeholder="Password" type="password" class="input" formControlName="password"
+                    autocomplete="new-password" />
+                </label>
+              </div>
             </div>
-            <div class="col">
-              <label>
-                <input placeholder="Password" type="password" class="input" formControlName="password"
-                  autocomplete="new-password" />
-              </label>
-            </div>
-          </div>
 
-          <!-- Identification and Language -->
-          <div class="row">
-            <div class="col">
-              <label>
-                <input placeholder="Identification" type="number" class="input" formControlName="identification" />
-              </label>
-            </div>
-            <div class="col">
-              <label>
-                <select formControlName="language" class="cool-select">
-                  <option value="" disabled selected class="placeholder-option">
-                    Select Language
-                  </option>
-                  <option *ngFor="let language of languages" [value]="language.self">
-                    {{ language.displayName }}
-                  </option>
-                </select>
-                <small class="form-error" *ngIf="
+            <!-- Identification and Language -->
+            <div class="row">
+              <div class="col">
+                <label>
+                  <input placeholder="Identification" type="number" class="input" formControlName="identification" />
+                </label>
+              </div>
+              <div class="col">
+                <label>
+                  <select formControlName="language" class="cool-select">
+                    <option value="" disabled selected class="placeholder-option">
+                      Select Language
+                    </option>
+                    <option *ngFor="let language of languages" [value]="language.self">
+                      {{ language.displayName }}
+                    </option>
+                  </select>
+                  <small class="form-error" *ngIf="
                     signupForm.get('language')?.invalid &&
                     signupForm.get('language')?.touched
                   ">
-                  *Language is required
-                </small>
-              </label>
+                    *Language is required
+                  </small>
+                </label>
+              </div>
             </div>
-          </div>
 
-          <!-- Submit Button -->
-          <button type="submit" class="action-button" [disabled]="signupForm.invalid">
-            Sign up
-          </button>
-        </div>
-      </form>
+            <!-- Submit Button -->
+            <button type="submit" class="action-button" [disabled]="signupForm.invalid">
+              Sign up
+            </button>
+          </div>
+        </form>
+      </ng-template>
     </div>
 
     <!-- ============== SERVICE PROVIDER (WORKER) SIGNUP FORM ============== -->
     <div *ngIf="selectedOption === 'service'">
-      <form [formGroup]="serviceForm" (ngSubmit)="submitServiceForm()" class="signup-form">
-        <div class="f-c-c-c pl-3 pr-3">
+      <div *ngIf="loading; else serviceSignupForm">
+        <div class="f-c-c-c">
+          <div style="font-size: 16px">Creating your service provider account. Please wait...</div>
+          <div class="w-100 loader" style="margin-top: 20px"></div>
+        </div>
+      </div>
 
-          <!-- Business Name -->
-          <div class="form-group">
-            <label>
-              <input placeholder="Business Name" class="input" formControlName="businessName" />
-            </label>
-            <div class="landing-error" *ngIf="
+      <ng-template #serviceSignupForm>
+
+        <form [formGroup]="serviceForm" (ngSubmit)="submitServiceForm()" class="signup-form">
+          <div class="f-c-c-c pl-3 pr-3">
+
+            <!-- Business Name -->
+            <div class="form-group">
+              <label>
+                <input placeholder="Business Name" class="input" formControlName="businessName" />
+              </label>
+              <div class="landing-error" *ngIf="
                    serviceForm.get('businessName')?.invalid &&
                    (serviceForm.get('businessName')?.touched || serviceForm.get('businessName')?.dirty)
                  ">
-              *Business name is required
-            </div>
-          </div>
-
-          <!-- ================== PROFESSION MULTI-SELECT ================== -->
-          <!-- Profession selector -->
-          <div class="form-group profession-select">
-            <!-- The "select button" container -->
-            <div class="select-btn" [class.open]="isProfessionSelectOpen" #professionSelectBtn
-              (click)="toggleProfessionSelect()">
-              <span class="btn-text">{{ professionDisplayText }}</span>
-              <span class="arrow-dwn">
-                <i class="fa-solid fa-chevron-down"></i>
-              </span>
+                *Business name is required
+              </div>
             </div>
 
-            <!-- The dropdown UL has no *ngIf; it’s always in the DOM, hidden by default -->
-            <ul class="list-items" [class.open]="isProfessionSelectOpen">
-              <li class="item" *ngFor="let profession of professionOptions"
-                [class.checked]="selectedProfessionIds.includes(profession.self)"
-                (click)="toggleProfessionItem(profession.self, $event)">
-                <span class="checkbox">
-                  <i class="fa-solid fa-check check-icon"></i>
+            <!-- ================== PROFESSION MULTI-SELECT ================== -->
+            <!-- Profession selector -->
+            <div class="form-group profession-select">
+              <!-- The "select button" container -->
+              <div class="select-btn" [class.open]="isProfessionSelectOpen" #professionSelectBtn
+                (click)="toggleProfessionSelect()">
+                <span class="btn-text">{{ professionDisplayText }}</span>
+                <span class="arrow-dwn">
+                  <i class="fa-solid fa-chevron-down"></i>
                 </span>
-                <span class="item-text">{{ profession.displayName }}</span>
-              </li>
-            </ul>
+              </div>
 
-            <!-- Validation error for professionIds -->
-            <div class="landing-error" *ngIf="
+              <!-- The dropdown UL has no *ngIf; it’s always in the DOM, hidden by default -->
+              <ul class="list-items" [class.open]="isProfessionSelectOpen">
+                <li class="item" *ngFor="let profession of professionOptions"
+                  [class.checked]="selectedProfessionIds.includes(profession.self)"
+                  (click)="toggleProfessionItem(profession.self, $event)">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">{{ profession.displayName }}</span>
+                </li>
+              </ul>
+
+              <!-- Validation error for professionIds -->
+              <div class="landing-error" *ngIf="
       serviceForm.get('professionIds')?.invalid &&
       (serviceForm.get('professionIds')?.touched ||
         serviceForm.get('professionIds')?.dirty)
     ">
-              *Please select at least one profession
+                *Please select at least one profession
+              </div>
             </div>
-          </div>
 
-          <!-- Name and Surname -->
-          <div class="row w-100">
-            <div class="col pr-2">
-              <label>
-                <input placeholder="First Name" class="input" formControlName="w_name" />
-              </label>
+            <!-- Name and Surname -->
+            <div class="row w-100">
+              <div class="col pr-2">
+                <label>
+                  <input placeholder="First Name" class="input" formControlName="w_name" />
+                </label>
+              </div>
+              <div class="col pl-2">
+                <label>
+                  <input placeholder="Surname" class="input" formControlName="w_surname" />
+                </label>
+              </div>
             </div>
-            <div class="col pl-2">
-              <label>
-                <input placeholder="Surname" class="input" formControlName="w_surname" />
-              </label>
-            </div>
-          </div>
 
-          <!-- Email and Password -->
-          <div class="row w-100">
-            <div class="col pr-2">
-              <label>
-                <input type="email" placeholder="Email" class="input" formControlName="w_mail" />
-              </label>
+            <!-- Email and Password -->
+            <div class="row w-100">
+              <div class="col pr-2">
+                <label>
+                  <input type="email" placeholder="Email" class="input" formControlName="w_mail" />
+                </label>
+              </div>
+              <div class="col pl-2">
+                <label>
+                  <input type="password" placeholder="Password" autocomplete="new-password" class="input"
+                    formControlName="w_password" />
+                </label>
+              </div>
             </div>
-            <div class="col pl-2">
-              <label>
-                <input type="password" placeholder="Password" autocomplete="new-password" class="input"
-                  formControlName="w_password" />
-              </label>
-            </div>
-          </div>
 
-          <!-- Address and Identification -->
-          <div class="row w-100">
-            <div class="col pr-2">
-              <label>
-                <input placeholder="Address" class="input" formControlName="address" />
-              </label>
+            <!-- Address and Identification -->
+            <div class="row w-100">
+              <div class="col pr-2">
+                <label>
+                  <input placeholder="Address" class="input" formControlName="address" />
+                </label>
+              </div>
+              <div class="col pl-2">
+                <label>
+                  <input type="number" pattern="[0-9]*" inputmode="numeric" min="1" max="99999999"
+                    placeholder="Identification" class="input" formControlName="w_identification" />
+                </label>
+              </div>
             </div>
-            <div class="col pl-2">
-              <label>
-                <input type="number" pattern="[0-9]*" inputmode="numeric" min="1" max="99999999"
-                  placeholder="Identification" class="input" formControlName="w_identification" />
-              </label>
-            </div>
-          </div>
 
-          <!-- Language and Phone -->
-          <div class="row w-100">
-            <div class="col pr-2">
-              <label>
-                <select class="cool-select" formControlName="w_language">
-                  <option value="" disabled selected class="placeholder-option">
-                    Select Language
-                  </option>
-                  <option *ngFor="let language of languages" [value]="language.self">
-                    {{ language.displayName }}
-                  </option>
-                </select>
-              </label>
+            <!-- Language and Phone -->
+            <div class="row w-100">
+              <div class="col pr-2">
+                <label>
+                  <select class="cool-select" formControlName="w_language">
+                    <option value="" disabled selected class="placeholder-option">
+                      Select Language
+                    </option>
+                    <option *ngFor="let language of languages" [value]="language.self">
+                      {{ language.displayName }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+              <div class="col pl-2">
+                <label>
+                  <input placeholder="Phone Number (e.g. +54 9 11 1234 5678)" class="input"
+                    formControlName="phoneNumber" />
+                </label>
+              </div>
             </div>
-            <div class="col pl-2">
-              <label>
-                <input placeholder="Phone Number (e.g. +54 9 11 1234 5678)" class="input"
-                  formControlName="phoneNumber" />
-              </label>
-            </div>
-          </div>
 
-          <!-- Submit Button -->
-          <button type="submit" class="action-button font-weight-bolder mb-5" [disabled]="serviceForm.invalid">
-            Sign up
-          </button>
-        </div>
-      </form>
+            <!-- Submit Button -->
+            <button type="submit" class="action-button font-weight-bolder mb-5" [disabled]="serviceForm.invalid">
+              Sign up
+            </button>
+          </div>
+        </form>
+      </ng-template>
+
     </div>
   </div>
 </div>

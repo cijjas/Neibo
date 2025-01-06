@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ProductService, RequestService, Product, Request } from '@shared/index';
+import { ProductService, RequestService, Product, Request, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -57,7 +57,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
   }
 
   private fetchRequests(): void {
-    const statusUrl = this.linkService.getLink('neighborhood:requestedRequestStatus');
+    const statusUrl = this.linkService.getLink(LinkKey.REQUESTED_REQUEST_STATUS);
     this.requestService.getRequests({
       page: this.page,
       size: 20,
@@ -93,7 +93,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     // Show loader
     this.showLoader = true;
 
-    let requestStatusUrl: string = this.linkService.getLink('neighborhood:acceptedRequestStatus')
+    let requestStatusUrl: string = this.linkService.getLink(LinkKey.ACCEPTED_REQUEST_STATUS)
     this.requestService.updateRequest(this.selectedRequestId, { requestStatus: requestStatusUrl }).subscribe({
       next: () => {
         this.showLoader = false;
@@ -115,7 +115,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
       requestId: this.selectedRequestId
     };
 
-    let requestStatusUrl: string = this.linkService.getLink('neighborhood:declinedRequestStatus')
+    let requestStatusUrl: string = this.linkService.getLink(LinkKey.DECLINED_REQUEST_STATUS)
     this.requestService.updateRequest(this.selectedRequestId, { requestStatus: requestStatusUrl }).subscribe({
       next: () => {
         this.showLoader = false;

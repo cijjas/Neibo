@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-
 import { HateoasLinksService } from '@core/index';
+import { LinkKey } from '@shared/index'
 
 @Injectable({
     providedIn: 'root',
@@ -48,7 +48,7 @@ export class ImageService {
 
 
     createImage(image: File): Observable<string> {
-        const uploadUrl = this.linkService.getLink('neighborhood:images');
+        const uploadUrl = this.linkService.getLink(LinkKey.IMAGES);
 
         const formData: FormData = new FormData();
         formData.append('imageFile', image, image.name);

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { combineLatest, map, switchMap } from 'rxjs';
-import { Department } from '@shared/index';
+import { Department, LinkKey } from '@shared/index';
 import { Router } from '@angular/router';
 import {
   HateoasLinksService, ImageService,
@@ -133,7 +133,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
 
     // Extract and clean form data
     const rawValue = this.listingForm.value;
-    const userSelf = this.linkService.getLink('user:self');
+    const userSelf = this.linkService.getLink(LinkKey.USER_SELF);
 
     // Prepare product data
     const productData: any = {

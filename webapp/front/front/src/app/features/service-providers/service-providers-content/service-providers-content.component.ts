@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { Profession, Worker, WorkerService } from '@shared/index';
+import { LinkKey, Profession, Worker, WorkerService } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 
@@ -39,7 +39,7 @@ export class ServiceProvidersContentComponent {
         this.reviewsCount = worker.totalReviews;
         this.postCount = worker.totalPosts;
 
-        this.isTheWorker = this.linkService.getLink('user:worker') === this.worker.self;
+        this.isTheWorker = this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
 
       },
       error: (err) => {

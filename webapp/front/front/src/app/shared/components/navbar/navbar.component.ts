@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HateoasLinksService, UserSessionService } from '@core/index';
+import { LinkKey } from '@shared/models';
 
 @Component({
   selector: 'app-navbar',
@@ -31,7 +32,7 @@ export class NavbarComponent implements OnInit {
   routeBasedOnRole() {
     const userRole = this.userSessionService.getCurrentUserRole()
     if (userRole == 'WORKER') {
-      const workerId = this.linkService.getLink('user:worker');
+      const workerId = this.linkService.getLink(LinkKey.USER_WORKER);
       this.router.navigate(['services', 'profile', workerId]);
     }
     else {

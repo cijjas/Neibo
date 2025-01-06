@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { mapDepartment, parseLinkHeader, mapUser, ProductDto, UserDto, DepartmentDto, Product, RequestsCountDto } from '@shared/index';
+import { mapDepartment, parseLinkHeader, mapUser, ProductDto, UserDto, DepartmentDto, Product, RequestsCountDto, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class ProductService {
             withStatus?: string;
         } = {}
     ): Observable<{ products: Product[]; totalPages: number; currentPage: number }> {
-        let url: string = this.linkService.getLink('neighborhood:products')
+        let url: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_PRODUCTS)
 
         let params = new HttpParams();
 
@@ -89,7 +89,7 @@ export class ProductService {
             images,
         };
 
-        return this.http.post(this.linkService.getLink('neighborhood:products'), payload, {
+        return this.http.post(this.linkService.getLink(LinkKey.NEIGHBORHOOD_PRODUCTS), payload, {
             observe: 'response'
         }).pipe(
             map(response => {

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { Contact, ContactDto, parseLinkHeader } from '@shared/index';
+import { Contact, ContactDto, parseLinkHeader, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +24,7 @@ export class ContactService {
             size?: number;
         } = {}
     ): Observable<{ contacts: Contact[]; totalPages: number; currentPage: number }> {
-        let contactsUrl: string = this.linkService.getLink('neighborhood:contacts')
+        let contactsUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_CONTACTS)
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -58,7 +58,7 @@ export class ContactService {
             address: address
         };
 
-        let contactsUrl: string = this.linkService.getLink('neighborhood:contacts')
+        let contactsUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_CONTACTS)
 
         return this.http.post(contactsUrl, body, { observe: 'response' }).pipe(
             map(response => {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService, ToastService } from '@core/index';
-import { WorkerService, Worker, AffiliationService } from '@shared/index';
+import { WorkerService, Worker, AffiliationService, LinkKey } from '@shared/index';
 
 @Component({
   selector: 'app-admin-service-providers-requests-page',
@@ -36,14 +36,14 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
   }
 
   loadWorkers(currentRoute: string): void {
-    const neighborhoodUrl: string = this.linkService.getLink('neighborhood:self');
+    const neighborhoodUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_SELF);
     let roleUrl: string;
 
     if (currentRoute === 'service-providers/requests') {
-      roleUrl = this.linkService.getLink('neighborhood:unverifiedWorkerRole');
+      roleUrl = this.linkService.getLink(LinkKey.UNVERIFIED_WORKER_ROLE);
     } else if (currentRoute === 'service-providers') {
       this.serviceProviders = true;
-      roleUrl = this.linkService.getLink('neighborhood:verifiedWorkerRole');
+      roleUrl = this.linkService.getLink(LinkKey.VERIFIED_WORKER_ROLE);
     } else {
       return;
     }

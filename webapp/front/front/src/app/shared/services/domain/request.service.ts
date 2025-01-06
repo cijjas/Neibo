@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Request, RequestDto, UserDto, RequestStatusDto, ProductDto, mapUser, parseLinkHeader, mapProduct } from '@shared/index';
+import { Request, RequestDto, UserDto, RequestStatusDto, ProductDto, mapUser, parseLinkHeader, mapProduct, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -28,7 +28,7 @@ export class RequestService {
             withStatus?: string;
         } = {}
     ): Observable<{ requests: Request[]; totalPages: number; currentPage: number }> {
-        const url: string = this.linkService.getLink('neighborhood:requests')
+        const url: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_REQUESTS)
 
         let params = new HttpParams();
 
@@ -62,7 +62,7 @@ export class RequestService {
     }
 
     public createRequest(message: string, unitsRequested: number, product: string, user: string): Observable<string> {
-        const url: string = this.linkService.getLink('neighborhood:requests')
+        const url: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_REQUESTS)
         return this.http.post(url, { message, unitsRequested, product, user }, { observe: 'response' }).pipe(
             map((response) => {
                 const location = response.headers.get('Location');

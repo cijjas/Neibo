@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Contact, Resource, ContactService, ResourceService } from '@shared/index';
+import { Contact, Resource, ContactService, ResourceService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -36,8 +36,8 @@ export class InformationPageComponent implements OnInit {
   ngOnInit(): void {
     this.linkService.logLinks();
 
-    this.resourcesUrl = this.linkService.getLink('neighborhood:resources');
-    this.contactsUrl = this.linkService.getLink('neighborhood:contacts');
+    this.resourcesUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_RESOURCES);
+    this.contactsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_CONTACTS);
 
     // Read initial page states from query parameters
     this.route.queryParamMap.subscribe(params => {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService, ToastService } from '@core/index';
-import { User, UserService } from '@shared/index';
+import { User, UserService, LinkKey } from '@shared/index';
 
 @Component({
   selector: 'app-admin-neighbors-requests-page',
@@ -37,10 +37,10 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
   loadUsers(currentRoute: string): void {
     let userRoleUrl: string;
     if (currentRoute === 'neighbors/requests') {
-      userRoleUrl = this.linkService.getLink('neighborhood:unverifiedNeighborUserRole');
+      userRoleUrl = this.linkService.getLink(LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE);
     } else if (currentRoute === 'neighbors') {
       this.neighbors = true;
-      userRoleUrl = this.linkService.getLink('neighborhood:neighborUserRole');
+      userRoleUrl = this.linkService.getLink(LinkKey.NEIGHBOR_USER_ROLE);
     } else {
       return;
     }

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Event, EventService } from '@shared/index';
+import { Event, EventService, LinkKey } from '@shared/index';
 
 @Component({
   selector: 'app-calendar-events-column',
@@ -42,7 +42,7 @@ export class CalendarEventsColumnComponent implements OnInit {
       return;
     }
 
-    const eventUrl = this.linkStorage.getLink('neighborhood:events');
+    const eventUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_EVENTS);
     const dateString = this.selectedDate.toISOString().split('T')[0];
 
     // Clear events before loading

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImageService, HateoasLinksService, UserSessionService, ToastService } from '@core/index'
-import { PostService, TagService } from '@shared/index';
+import { PostService, TagService, LinkKey } from '@shared/index';
 import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
 
 @Component({
@@ -24,13 +24,7 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
   // The tags that the user has selected (optional)
   selectedTags: string[] = [];
 
-  // Channel link or string
-  // If your backend expects the actual link from Hateoas, you can fetch it from linkService.
-  // If it simply wants 'announcements', keep it as a literal string.
-  // For example:
-  // announcementsChannelUrl = this.linkService.getLink('neighborhood:announcementsChannel');
-  // But if a simple string "announcements" is enough, keep it as below:
-  channel: string = this.linkService.getLink('neighborhood:announcementsChannel');
+  channel: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL);
 
   // For demonstration purposes
   loggedUser = { darkMode: false, role: 'ADMIN' };
@@ -89,7 +83,6 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     if (!this.selectedTags.includes(tag)) {
       this.selectedTags.push(tag);
     }
-    console.log('Current selected tags:', this.selectedTags);
   }
 
   removeTag(tag: string) {

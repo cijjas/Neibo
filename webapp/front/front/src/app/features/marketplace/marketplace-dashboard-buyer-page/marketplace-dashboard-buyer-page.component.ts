@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { RequestService, Department, Request, Product } from '@shared/index';
+import { RequestService, Department, Request, Product, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -74,9 +74,9 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   }
 
   loadRequests(): void {
-    const userUrl: string = this.linkService.getLink('user:self');
-    const requestStatusUrl: string = this.linkService.getLink('neighborhood:requestedRequestStatus');
-    const transactionTypeUrl: string = this.linkService.getLink('neighborhood:purchaseTransactionType');
+    const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
+    const requestStatusUrl: string = this.linkService.getLink(LinkKey.REQUESTED_REQUEST_STATUS);
+    const transactionTypeUrl: string = this.linkService.getLink(LinkKey.PURCHASE_TRANSACTION_TYPE);
 
     this.requestService
       .getRequests({
@@ -96,9 +96,9 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   }
 
   loadPurchases(): void {
-    const userUrl: string = this.linkService.getLink('user:self');
-    const requestStatusUrl: string = this.linkService.getLink('neighborhood:acceptedRequestStatus');
-    const transactionTypeUrl: string = this.linkService.getLink('neighborhood:purchaseTransactionType');
+    const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
+    const requestStatusUrl: string = this.linkService.getLink(LinkKey.ACCEPTED_REQUEST_STATUS);
+    const transactionTypeUrl: string = this.linkService.getLink(LinkKey.PURCHASE_TRANSACTION_TYPE);
 
     this.requestService
       .getRequests({
@@ -136,7 +136,7 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
   }
-  getProductImage(product:Product): string {
+  getProductImage(product: Product): string {
     return product?.firstImage
       ? product?.firstImage
       : 'assets/images/default-product.png';

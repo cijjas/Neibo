@@ -7,7 +7,6 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 })
 export class ServiceProvidersReviewDialogComponent implements OnDestroy {
   private workerSubject = new BehaviorSubject<any>(null);
-  private subscriptions = new Subscription();
 
   @Input()
   set worker(value: any) {
@@ -24,22 +23,6 @@ export class ServiceProvidersReviewDialogComponent implements OnDestroy {
   stars = [1, 2, 3, 4, 5];
   rating = 0;
   reviewMessage = '';
-
-  constructor() {
-    // Reactively handle changes to the `worker` input
-    this.subscriptions.add(
-      this.workerSubject.subscribe((worker) => {
-        if (worker) {
-          this.initializeWorkerDetails(worker);
-        }
-      })
-    );
-  }
-
-  initializeWorkerDetails(worker: any): void {
-    console.log('Worker details loaded:', worker);
-    // Add any initialization logic based on the worker here if needed
-  }
 
   closeReviewDialog(): void {
     this.closeDialog.emit();
@@ -60,6 +43,7 @@ export class ServiceProvidersReviewDialogComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    // Clean up BehaviorSubject
+    this.workerSubject.complete();
   }
 }

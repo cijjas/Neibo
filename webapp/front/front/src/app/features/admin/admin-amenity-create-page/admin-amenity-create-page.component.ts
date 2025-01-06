@@ -42,7 +42,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     private amenityService: AmenityService,
     private toastService: ToastService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.amenityForm = this.fb.group({
@@ -114,12 +114,6 @@ export class AdminAmenityCreatePageComponent implements OnInit {
           );
         },
       });
-    console.log(
-      'Amenity:',
-      this.amenityForm.value,
-      'Selected Shifts:',
-      this.selectedShifts
-    );
   }
 
   /**

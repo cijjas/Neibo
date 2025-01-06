@@ -1,243 +1,205 @@
-import { Injectable } from "@angular/core";
-import { environment } from "environments/environment";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { catchError, forkJoin, map, mergeMap, Observable, of, tap, throwError } from "rxjs";
-import { NeighborhoodDto, UserDto, mapNeighborhood, mapUser } from "@shared/index";
-import { HateoasLinksService, UserSessionService } from "@core/index";
-import { ApiRegistry } from "./api-registry.service";
+import { Injectable } from '@angular/core';
+import { environment } from 'environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {
+    BehaviorSubject,
+    catchError,
+    forkJoin,
+    mergeMap,
+    Observable,
+    of,
+    tap,
+    throwError
+} from 'rxjs';
+import {
+    NeighborhoodDto,
+    UserDto,
+    mapNeighborhood,
+    mapUser
+} from '@shared/index';
+import { UserSessionService } from './user-session.service';
+import { HateoasLinksService } from './link.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private apiServerUrl = environment.apiBaseUrl;
-    private rememberMeKey = 'rememberMe';
-    private authTokenKey = 'authToken';
-    private refreshTokenKey = 'refreshToken'; // NEW
+    private readonly apiServerUrl = environment.apiBaseUrl;
+    private readonly rememberMeKey = 'rememberMe';
+    private readonly authTokenKey = 'authToken';
+    private readonly refreshTokenKey = 'refreshToken';
 
     constructor(
         private http: HttpClient,
-        private hateoasLinksService: HateoasLinksService,
-        private userSessionService: UserSessionService,
-        private apiRegistry: ApiRegistry
+        private linkRegistry: HateoasLinksService,
+        private userSessionService: UserSessionService
     ) { }
 
-    /**
-     * ===============================
-     *            LOGIN
-     * ===============================
-     */
-    login(mail: string, password: string, rememberMe: boolean): Observable<boolean> {
+    // LOGIN
+    login(
+        mail: string,
+        password: string,
+        rememberMe: boolean
+    ): Observable<boolean> {
         const headers = new HttpHeaders({
-            Authorization: 'Basic ' + btoa(`${mail}:${password}`),
+            Authorization: 'Basic ' + btoa(`${mail}:${password}`)
         });
         const storage = rememberMe ? localStorage : sessionStorage;
-        console.log('got in login' + mail, password)
-        // Store "remember me" preference
-        localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
 
-        // Clear old tokens
+        localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
         this.clearTokens();
 
-        return this.http.get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
+        return this.http
+            .get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
             .pipe(
-                mergeMap((response) => {
+                mergeMap(response => {
+                    // Extract tokens
                     const accessToken = response.headers.get('X-Access-Token');
                     const refreshToken = response.headers.get('X-Refresh-Token');
                     const userUrl = this.extractUrl(response.headers.get('X-User-URL'));
-                    const neighborhoodUrl = this.extractUrl(response.headers.get('X-Neighborhood-URL'));
-                    const workersNeighborhoodUrl = this.extractUrl(response.headers.get('X-Workers-Neighborhood-URL'));
+                    const neighUrl = this.extractUrl(
+                        response.headers.get('X-Neighborhood-URL')
+                    );
+                    const workersNeighUrl = this.extractUrl(
+                        response.headers.get('X-Workers-Neighborhood-URL')
+                    );
 
+                    // Store tokens
                     if (accessToken) {
                         storage.setItem(this.authTokenKey, accessToken);
-                        this.userSessionService.setAccessToken(accessToken);    // This line is unnecessary, as the getAccessToken is never utilized
+                        this.userSessionService.setAccessToken(accessToken);
                     }
                     if (refreshToken) {
                         storage.setItem(this.refreshTokenKey, refreshToken);
                     }
 
-                    // Register Root Endpoints
-                    const rootLinks = response.body._links;
-                    this.registerLinks(rootLinks, 'root');
-
-                    const userObservable = userUrl
+                    // 1) Load user data (if present)
+                    const userObs = userUrl
                         ? this.http.get<UserDto>(userUrl).pipe(
-                            tap((userDto) => {
-                                this.registerLinks(userDto._links, 'user');
-                                this.saveLinksFromDto(userDto._links, 'user'); // Soon to be deprecated
+                            tap(userDto => {
+                                // Register links from userDto
+                                if (userDto._links) {
+                                    this.linkRegistry.registerLinks(userDto._links, 'user:');
+                                }
+                                // Map user data
                                 mapUser(this.http, userDto).subscribe({
-                                    next: (user) => this.userSessionService.setUserInformation(user)
+                                    next: user => this.userSessionService.setUserInformation(user)
                                 });
                             })
                         )
                         : of(null);
 
-                    const neighborhoodObservable = neighborhoodUrl
-                        ? this.http.get<NeighborhoodDto>(neighborhoodUrl).pipe(
-                            tap((neighborhoodDto) => {
-                                this.registerLinks(neighborhoodDto._links, 'neighborhood');
-                                this.saveLinksFromDto(neighborhoodDto._links, 'neighborhood'); // Soon to be deprecated
+                    // 2) Load neighborhood data
+                    const neighObs = neighUrl
+                        ? this.http.get<NeighborhoodDto>(neighUrl).pipe(
+                            tap(neighDto => {
+                                if (neighDto._links) {
+                                    this.linkRegistry.registerLinks(neighDto._links, 'neighborhood:');
+                                }
                                 this.userSessionService.setNeighborhoodInformation(
-                                    mapNeighborhood(neighborhoodDto)
+                                    mapNeighborhood(neighDto)
                                 );
                             })
                         )
                         : of(null);
 
-                    // should be added to the wait for links to load
-                    const workersNeighborhoodObservable = workersNeighborhoodUrl
-                        ? this.http.get<NeighborhoodDto>(workersNeighborhoodUrl).pipe(
-                            tap((workersNeighborhoodDto) => {
-                                this.registerLinks(workersNeighborhoodDto._links, 'workersNeighborhood');
+                    // 3) Load workers-neighborhood data (if present)
+                    const workersNeighObs = workersNeighUrl
+                        ? this.http.get<NeighborhoodDto>(workersNeighUrl).pipe(
+                            tap(workersNeighDto => {
+                                if (workersNeighDto._links) {
+                                    this.linkRegistry.registerLinks(
+                                        workersNeighDto._links,
+                                        'workerNeighborhood:'
+                                    );
+                                }
                             }),
-                            catchError((error) => {
-                                console.error("Error fetching workers neighborhood:", error);
-                                return of(null); // Continue without breaking the observable chain
+                            catchError(error => {
+                                console.error('Error fetching workers neighborhood:', error);
+                                return of(null);
                             })
                         )
                         : of(null);
 
-                    this.apiRegistry.logLinks();
-                    return forkJoin([userObservable, neighborhoodObservable, workersNeighborhoodObservable]).pipe(
+                    // Wait for user + neighborhood + workers neighborhood
+                    return forkJoin([userObs, neighObs, workersNeighObs]).pipe(
+                        tap(() => {
+                            // (Optional) If you want to auto-explore newly discovered links
+                            // you could add a "discovery" step here, or just declare success.
+                            // e.g. this.discoverAllCurrentlyRegisteredLinks();
+                        }),
                         mergeMap(() => {
-                            const userRole = this.userSessionService.getCurrentUserRole(); // Assume this function exists to fetch the user's role
-                            return this.waitForLinksToLoadByRole(userRole).pipe(
-                                tap((result) => {
-                                    if (!result) {
-                                        console.error('Failed to load all required links for the role:', userRole);
-                                    }
-                                })
-                            );
+                            // If everything fetched without error, we’re good
+                            return of(true);
                         })
-
                     );
                 }),
-                catchError((error) => {
+                catchError(error => {
                     console.error('Authentication error:', error);
                     return of(false);
                 })
             );
     }
 
-    // Helper method to extract URLs from headers
-    private extractUrl(headerValue: string | null): string | null {
-        return headerValue?.split(';')[0].replace(/[<>]/g, '') ?? null;
-    }
-
-    private registerLinks(links: Record<string, string>, context: string): void {
-        if (!links) return;
-
-        Object.entries(links).forEach(([name, uri]) => {
-            if (!uri) {
-                console.warn(`Link for ${context}:${name} is invalid:`, uri);
-                return;
-            }
-
-            // Store the entire URI as the template (if it includes placeholders)
-            const template = uri.includes('{') ? uri : null;
-
-            // Base URI is the part before any query params or placeholders
-            const baseUri = uri.split('?')[0]; // Separate the base path before query params
-
-            this.apiRegistry.registerEndpoint(`${context}:${name}`, baseUri, template);
-        });
-    }
-
-    /**
-     * ===============================
-     *         REFRESH TOKEN
-     * ===============================
-     */
+    // REFRESH TOKEN
     refreshToken(): Observable<boolean> {
-        console.log("REFRESHING ACTIVATED");
-
         const refreshToken = this.getRefreshToken();
         if (!refreshToken) {
-            // No refresh token stored; cannot refresh
             return of(false);
         }
 
-        // Example endpoint -> adjust to your backend
-        const url = `${this.apiServerUrl}/`; // Ensure endpoint is correct
+        const url = `${this.apiServerUrl}/`; // your refresh URL
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${refreshToken}` // Pass refresh token in header
+            Authorization: `Bearer ${refreshToken}`
         });
-
-        // Decide which storage to use based on "remember me" or your own logic
         const storage = this.getRememberMe() ? localStorage : sessionStorage;
 
-        return this.http.get<any>(url, { headers, observe: 'response' })
-            .pipe(
-                tap((response) => {
-                    const newAccessToken = response.headers.get('X-Access-Token');
-
-                    if (!newAccessToken) {
-                        throw new Error('No tokens returned in refresh response');
-                    }
-
-                    // Store them
-                    storage.setItem(this.authTokenKey, newAccessToken);
-
-                    // Update your session service
-                    this.userSessionService.setAccessToken(newAccessToken);
-                }),
-                catchError((error) => {
-                    console.error('Refresh token failed:', error);
-                    // Force a logout or cleanup if needed
-                    this.logout();
-                    return throwError(() => error);
-                }),
-                mergeMap(() => of(true))
-            );
+        return this.http.get<any>(url, { headers, observe: 'response' }).pipe(
+            tap(response => {
+                const newAccessToken = response.headers.get('X-Access-Token');
+                if (!newAccessToken) {
+                    throw new Error('No tokens returned in refresh response');
+                }
+                storage.setItem(this.authTokenKey, newAccessToken);
+                this.userSessionService.setAccessToken(newAccessToken);
+            }),
+            catchError(error => {
+                console.error('Refresh token failed:', error);
+                this.logout();
+                return throwError(() => error);
+            }),
+            mergeMap(() => of(true))
+        );
     }
 
-
-    /**
-     * ===============================
-     *          LOGOUT
-     * ===============================
-     */
+    // LOGOUT
     logout(): void {
         sessionStorage.clear();
         localStorage.clear();
-        // If your backend requires an explicit logout endpoint, call it here
-        // this.http.post(`${this.apiServerUrl}/logout`, {}).subscribe();
+        this.userSessionService.logout();
+        // Possibly also clear the link registry
+        // this.linkRegistry.clearLinks();
     }
 
-    /**
-     * ===============================
-     *       TOKEN GETTERS
-     * ===============================
-     */
     getAccessToken(): string {
-        const storageType = this.getRememberMe() ? localStorage : sessionStorage;
-        return storageType.getItem(this.authTokenKey) || '';
+        const storage = this.getRememberMe() ? localStorage : sessionStorage;
+        return storage.getItem(this.authTokenKey) || '';
     }
 
     getRefreshToken(): string {
-        const storageType = this.getRememberMe() ? localStorage : sessionStorage;
-        return storageType.getItem(this.refreshTokenKey) || '';
+        const storage = this.getRememberMe() ? localStorage : sessionStorage;
+        return storage.getItem(this.refreshTokenKey) || '';
     }
 
     getRememberMe(): boolean {
         return JSON.parse(localStorage.getItem(this.rememberMeKey) || 'false');
     }
 
-    /**
-     * ===============================
-     *         SESSION CHECK
-     * ===============================
-     */
     isLoggedIn(): boolean {
         return !!this.getAccessToken();
     }
 
-    /**
-     * ===============================
-     *          CLEAR TOKENS
-     * ===============================
-     */
     clearTokens(): void {
         sessionStorage.removeItem(this.authTokenKey);
         localStorage.removeItem(this.authTokenKey);
@@ -245,282 +207,17 @@ export class AuthService {
         localStorage.removeItem(this.refreshTokenKey);
     }
 
-    /**
-     * ===============================
-     *          HATEOAS LINKS
-     * ===============================
-     */
-    private saveLinksFromDto(links: Partial<Record<string, string>>, namespace: string): void {
-        for (const [key, value] of Object.entries(links)) {
-            this.hateoasLinksService.setLink(`${namespace}:${key}`, value);
-        }
+    private extractUrl(headerValue: string | null): string | null {
+        return headerValue?.split(';')[0].replace(/[<>]/g, '') ?? null;
     }
 
-    private waitForLinksToLoadByRole(userRole: string): Observable<boolean> {
-        const requiredLinksForNeighbor = [
-            'neighborhood:superAdministratorUserRole',
-            'neighborhood:administratorUserRole',
-            'neighborhood:neighborUserRole',
-            'neighborhood:unverifiedNeighborUserRole',
-            'neighborhood:rejectedUserRole',
-            'neighborhood:workerUserRole',
-            'neighborhood:verifiedWorkerRole',
-            'neighborhood:unverifiedWorkerRole',
-            'neighborhood:rejectedWorkerRole',
-            'neighborhood:amenities',
-            'neighborhood:announcements',
-            'neighborhood:announcementsChannel',
-            'neighborhood:affiliations',
-            'neighborhood:bookings',
-            'neighborhood:channels',
-            'neighborhood:complaints',
-            'neighborhood:complaintsChannel',
-            'neighborhood:departments',
-            'neighborhood:contacts',
-            'neighborhood:events',
-            'neighborhood:feed',
-            'neighborhood:feedChannel',
-            'neighborhood:hotPostStatus',
-            'neighborhood:images',
-            'neighborhood:languageEnglish',
-            'neighborhood:languageSpanish',
-            'neighborhood:likes',
-            'neighborhood:nonePostStatus',
-            'neighborhood:posts',
-            'neighborhood:postsCount',
-            'neighborhood:postStatuses',
-            'neighborhood:professions',
-            'neighborhood:requests',
-            'neighborhood:requestedRequestStatus',
-            'neighborhood:acceptedRequestStatus',
-            'neighborhood:declinedRequestStatus',
-            'neighborhood:purchaseTransactionType',
-            'neighborhood:saleTransactionType',
-            'neighborhood:resources',
-            'neighborhood:shifts',
-            'neighborhood:self',
-            'neighborhood:tags',
-            'neighborhood:trendingPostStatus',
-            'neighborhood:users',
-            'neighborhood:workers',
-            'neighborhood:products',
-            'neighborhood:boughtProductStatus',
-            'neighborhood:soldProductStatus',
-            'neighborhood:sellingProductStatus',
-            'user:bookings',
-            'user:language',
-            'user:likedPosts',
-            'user:neighborhood',
-            'user:posts',
-            'user:purchases',
-            'user:requests',
-            'user:sales',
-            'user:self',
-            'user:userRole'
-        ];
-
-        const requiredLinksForWorker = [
-            'neighborhood:amenities',
-            'neighborhood:affiliations',
-            'neighborhood:channels',
-            'neighborhood:users',
-            'neighborhood:neighborhoods',
-            'neighborhood:self',
-            'neighborhood:workers',
-            'neighborhood:posts',
-            'user:self',
-            'user:language',
-            'user:posts',
-            'user:userImage',
-            'user:userRole',
-            'user:worker',
-            'user:neighborhood',
-
-        ];
-
-        const requiredLinks = userRole === 'VERIFIED_NEIGHBOR'
-            ? requiredLinksForNeighbor
-            : requiredLinksForWorker;
-
-        return new Observable<boolean>((observer) => {
-            const interval = setInterval(() => {
-                const allLinksLoaded = requiredLinks.every((link) =>
-                    !!this.hateoasLinksService.getLink(link) || !!this.apiRegistry.getEndpoint(link)
-                );
-                if (allLinksLoaded) {
-                    clearInterval(interval);
-                    observer.next(true);
-                    observer.complete();
-                }
-            }, 100);
-
-            // Clean up in case the observable is unsubscribed
-            return () => clearInterval(interval);
-        });
+    // Example: A BFS or DFS approach to further discover new links after you’ve registered them
+    /*
+    private discoverAllCurrentlyRegisteredLinks(): void {
+      // For advanced scenarios only:
+      // 1) gather all known link URLs
+      // 2) for each, if not visited, fetch and register
+      // 3) repeat until no new links discovered or a time limit is reached
     }
-
-    private waitForLinksToLoad(): Observable<boolean> {
-        const requiredLinks = [
-            'neighborhood:superAdministratorUserRole',
-            'neighborhood:administratorUserRole',
-            'neighborhood:neighborUserRole',
-            'neighborhood:unverifiedNeighborUserRole',
-            'neighborhood:rejectedUserRole',
-            'neighborhood:workerUserRole',
-            'neighborhood:verifiedWorkerRole',
-            'neighborhood:unverifiedWorkerRole',
-            'neighborhood:rejectedWorkerRole',
-            'neighborhood:amenities',
-            'neighborhood:announcements',
-            'neighborhood:announcementsChannel',
-            'neighborhood:affiliations',
-            'neighborhood:bookings',
-            'neighborhood:channels',
-            'neighborhood:complaints',
-            'neighborhood:complaintsChannel',
-            'neighborhood:departments',
-            'neighborhood:contacts',
-            'neighborhood:events',
-            'neighborhood:feed',
-            'neighborhood:feedChannel',
-            'neighborhood:hotPostStatus',
-            'neighborhood:images',
-            'neighborhood:languageEnglish',
-            'neighborhood:languageSpanish',
-            'neighborhood:likes',
-            'neighborhood:nonePostStatus',
-            'neighborhood:posts',
-            'neighborhood:postsCount',
-            'neighborhood:postStatuses',
-            'neighborhood:professions',
-            'neighborhood:requests',
-            'neighborhood:requestedRequestStatus',
-            'neighborhood:acceptedRequestStatus',
-            'neighborhood:declinedRequestStatus',
-            'neighborhood:purchaseTransactionType',
-            'neighborhood:saleTransactionType',
-            'neighborhood:resources',
-            'neighborhood:shifts',
-            'neighborhood:self',
-            'neighborhood:tags',
-            'neighborhood:trendingPostStatus',
-            'neighborhood:users',
-            'neighborhood:workers',
-            'neighborhood:products',
-            'neighborhood:boughtProductStatus',
-            'neighborhood:soldProductStatus',
-            'neighborhood:sellingProductStatus',
-            'user:bookings',
-            'user:language',
-            'user:likedPosts',
-            'user:neighborhood',
-            'user:posts',
-            'user:purchases',
-            'user:requests',
-            'user:sales',
-            'user:self',
-            'user:userRole'
-        ];
-
-        return new Observable<boolean>((observer) => {
-            const interval = setInterval(() => {
-                const allLinksLoaded = requiredLinks.every((link) =>
-                    !!this.hateoasLinksService.getLink(link)
-                );
-                if (allLinksLoaded) {
-                    clearInterval(interval);
-                    observer.next(true);
-                    observer.complete();
-                }
-            }, 100);
-        });
-    }
-
-    private waitForLinksToLoadFromApiRegistry(): Observable<boolean> {
-        const requiredLinks = [
-            'root:self',
-            'root:workerPosts',
-            'workersNeighborhood:amenities',
-            'workersNeighborhood:channels',
-            'workersNeighborhood:users',
-            'workersNeighborhood:self',
-            'workersNeighborhood:workers',
-            'neighborhood:superAdministratorUserRole',
-            'neighborhood:administratorUserRole',
-            'neighborhood:neighborUserRole',
-            'neighborhood:unverifiedNeighborUserRole',
-            'neighborhood:rejectedUserRole',
-            'neighborhood:workerUserRole',
-            'neighborhood:verifiedWorkerRole',
-            'neighborhood:unverifiedWorkerRole',
-            'neighborhood:rejectedWorkerRole',
-            'neighborhood:amenities',
-            'neighborhood:announcements',
-            'neighborhood:announcementsChannel',
-            'neighborhood:affiliations',
-            'neighborhood:bookings',
-            'neighborhood:channels',
-            'neighborhood:complaints',
-            'neighborhood:complaintsChannel',
-            'neighborhood:departments',
-            'neighborhood:contacts',
-            'neighborhood:events',
-            'neighborhood:feed',
-            'neighborhood:feedChannel',
-            'neighborhood:hotPostStatus',
-            'neighborhood:images',
-            'neighborhood:languageEnglish',
-            'neighborhood:languageSpanish',
-            'neighborhood:likes',
-            'neighborhood:nonePostStatus',
-            'neighborhood:posts',
-            'neighborhood:postsCount',
-            'neighborhood:postStatuses',
-            'neighborhood:professions',
-            'neighborhood:requests',
-            'neighborhood:requestedRequestStatus',
-            'neighborhood:acceptedRequestStatus',
-            'neighborhood:declinedRequestStatus',
-            'neighborhood:purchaseTransactionType',
-            'neighborhood:saleTransactionType',
-            'neighborhood:resources',
-            'neighborhood:shifts',
-            'neighborhood:self',
-            'neighborhood:tags',
-            'neighborhood:trendingPostStatus',
-            'neighborhood:users',
-            'neighborhood:workers',
-            'neighborhood:products',
-            'neighborhood:boughtProductStatus',
-            'neighborhood:soldProductStatus',
-            'neighborhood:sellingProductStatus',
-            'user:bookings',
-            'user:language',
-            'user:likedPosts',
-            'user:neighborhood',
-            'user:posts',
-            'user:purchases',
-            'user:requests',
-            'user:sales',
-            'user:self',
-            'user:userRole'
-        ];
-
-        return new Observable<boolean>((observer) => {
-            const interval = setInterval(() => {
-                const allLinksLoaded = requiredLinks.every((link) =>
-                    !!this.apiRegistry.getEndpoint(link)
-                );
-                if (allLinksLoaded) {
-                    this.apiRegistry.logLinks()
-                    clearInterval(interval);
-                    observer.next(true);
-                    observer.complete();
-                }
-            }, 100);
-
-            // Clean up in case the observable is unsubscribed
-            return () => clearInterval(interval);
-        });
-    }
+    */
 }

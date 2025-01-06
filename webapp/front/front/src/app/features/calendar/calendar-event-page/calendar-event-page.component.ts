@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Import your services and models as needed
-import { AttendanceService, EventService, Attendance, Event } from '@shared/index';
+import { AttendanceService, EventService, Attendance, Event, LinkKey } from '@shared/index';
 import { HateoasLinksService, ToastService } from '@core/index';
 @Component({
   selector: 'app-calendar-event-page',
@@ -50,7 +50,7 @@ export class CalendarEventPageComponent implements OnInit {
       this.loadAttendance(); // fetch attendees again if page changes
     });
 
-    this.attendanceService.getAttendances({ forUser: this.linkService.getLink('user:self'), forEvent: eventId, page: 1, size: 1 }).subscribe({
+    this.attendanceService.getAttendances({ forUser: this.linkService.getLink(LinkKey.USER_SELF), forEvent: eventId, page: 1, size: 1 }).subscribe({
       next: (next) => {
         this.willAttend = next.attendances.length != 0;
       },

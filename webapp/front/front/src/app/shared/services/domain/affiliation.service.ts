@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Affiliation, mapWorker, parseLinkHeader, WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto, NeighborhoodService, mapNeighborhood } from '@shared/index';
+import { Affiliation, mapWorker, parseLinkHeader, WorkerDto, NeighborhoodDto, AffiliationDto, WorkerRoleDto, NeighborhoodService, mapNeighborhood, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class AffiliationService {
         } = {}
     ): Observable<{ affiliations: Affiliation[]; totalPages: number; currentPage: number }> {
 
-        let affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
+        let affiliationsUrl: string = this.linkService.getLink(LinkKey.AFFILIATIONS);
 
         let params = new HttpParams();
 
@@ -62,12 +62,9 @@ export class AffiliationService {
     public createAffiliation(
         neighborhoodUrl: string,
     ): Observable<string | null> {
-        let affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
-        let unverifiedWorkerRoleUrl: string = this.linkService.getLink('neighborhood:unverifiedWorkerRole');
-        let workerUrl: string = this.linkService.getLink('user:worker');
-
-        console.log(unverifiedWorkerRoleUrl);
-        console.log(affiliationsUrl);
+        let affiliationsUrl: string = this.linkService.getLink(LinkKey.AFFILIATIONS);
+        let unverifiedWorkerRoleUrl: string = this.linkService.getLink(LinkKey.UNVERIFIED_WORKER_ROLE);
+        let workerUrl: string = this.linkService.getLink(LinkKey.USER_WORKER);
 
         const body = {
             worker: workerUrl,
@@ -112,9 +109,9 @@ export class AffiliationService {
     }
 
     public verifyWorker(workerUrl: string): Observable<Affiliation> {
-        const affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
-        const neighborhoodUrl: string = this.linkService.getLink('neighborhood:self');
-        const verifiedWorkerRoleUrl: string = this.linkService.getLink('neighborhood:verifiedWorkerRole');
+        const affiliationsUrl: string = this.linkService.getLink(LinkKey.AFFILIATIONS);
+        const neighborhoodUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_SELF);
+        const verifiedWorkerRoleUrl: string = this.linkService.getLink(LinkKey.VERIFIED_WORKER_ROLE);
 
         let params = new HttpParams()
             .set('inNeighborhood', neighborhoodUrl)
@@ -126,9 +123,9 @@ export class AffiliationService {
     }
 
     public rejectWorker(workerUrl: string): Observable<Affiliation> {
-        const affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
-        const neighborhoodUrl: string = this.linkService.getLink('neighborhood:self');
-        const rejectedWorkerRoleUrl: string = this.linkService.getLink('neighborhood:rejectedWorkerRole');
+        const affiliationsUrl: string = this.linkService.getLink(LinkKey.AFFILIATIONS);
+        const neighborhoodUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_SELF);
+        const rejectedWorkerRoleUrl: string = this.linkService.getLink(LinkKey.REJECTED_WORKER_ROLE);
 
         let params = new HttpParams()
             .set('inNeighborhood', neighborhoodUrl)
@@ -142,8 +139,8 @@ export class AffiliationService {
     public deleteAffiliation(
         neighborhoodUrl: string
     ): Observable<void> {
-        const affiliationsUrl: string = this.linkService.getLink('neighborhood:affiliations');
-        let workerUrl: string = this.linkService.getLink('user:worker');
+        const affiliationsUrl: string = this.linkService.getLink(LinkKey.AFFILIATIONS);
+        let workerUrl: string = this.linkService.getLink(LinkKey.USER_WORKER);
 
         let params = new HttpParams();
 

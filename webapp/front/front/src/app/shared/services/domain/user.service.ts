@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
 import { Observable, forkJoin, of } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { catchError, map, mergeMap } from 'rxjs/operators'
-import { LanguageDto, UserDto, UserRoleDto, User, parseLinkHeader, Roles } from '@shared/index'
+import { LanguageDto, UserDto, UserRoleDto, User, parseLinkHeader, Roles, LinkKey } from '@shared/index'
 import { HateoasLinksService, ImageService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +26,7 @@ export class UserService {
             size?: number;
         } = {}
     ): Observable<{ users: User[]; totalPages: number; currentPage: number }> {
-        let userUrl: string = this.linkService.getLink('neighborhood:users');
+        let userUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS);
 
         let params = new HttpParams();
 
@@ -55,6 +55,7 @@ export class UserService {
             );
     }
 
+    // ! THERE IS AN ISSUE HERE, in sign up you dont have that endpoint yet, there should be a quick request in signup using the selected neighborhood or something
     public createUser(
         neighborhoodUrl: string,
         name: string,
@@ -64,7 +65,7 @@ export class UserService {
         language: string,
         identification: number
     ): Observable<(string | null)> {
-        let usersUrl: string = this.linkService.getLink('neighborhood:users')
+        let usersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS)
 
         let body: UserDto = {
             name: name,
@@ -101,8 +102,9 @@ export class UserService {
         );
     }
 
+    // ! WTF IS GOING ON HERE 'SPANISH'?? should use self and compare with that! or change the model so it has the whole object
     public toggleLanguage(user: User): Observable<User> {
-        const newLanguage = user.language === 'SPANISH' ? this.linkService.getLink('neighborhood:languageEnglish') : this.linkService.getLink('neighborhood:languageSpanish');
+        const newLanguage = user.language === 'SPANISH' ? this.linkService.getLink(LinkKey.ENGLISH_LANGUAGE) : this.linkService.getLink(LinkKey.SPANISH_LANGUAGE);
         const updateUrl = user.self;
 
         return this.http.patch<UserDto>(updateUrl, { language: newLanguage }).pipe(
@@ -128,14 +130,14 @@ export class UserService {
     }
 
     public verifyUser(user: User): Observable<User> {
-        let neighborUserRoleUrl: string = this.linkService.getLink('neighborhood:neighborUserRole')
+        let neighborUserRoleUrl: string = this.linkService.getLink(LinkKey.NEIGHBOR_USER_ROLE)
         return this.http.patch<UserDto>(user.self, { userRole: neighborUserRoleUrl }).pipe(
             mergeMap((newUser) => mapUser(this.http, newUser))
         );
     }
 
     public rejectUser(user: User): Observable<User> {
-        let rejectedUserRoleUrl: string = this.linkService.getLink('neighborhood:rejectedUserRole')
+        let rejectedUserRoleUrl: string = this.linkService.getLink(LinkKey.REJECTED_USER_ROLE)
         return this.http.patch<UserDto>(user.self, { userRole: rejectedUserRoleUrl }).pipe(
             mergeMap((newUser) => mapUser(this.http, newUser))
         );

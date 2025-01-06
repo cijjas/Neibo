@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Booking, mapShift, BookingDto, AmenityDto, ShiftDto, mapAmenity, parseLinkHeader } from '@shared/index';
+import { Booking, mapShift, BookingDto, AmenityDto, ShiftDto, mapAmenity, parseLinkHeader, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -57,7 +57,7 @@ export class BookingService {
     public createBooking(amenity: string, bookingDate: string, shifts: string[], user: string): Observable<(string | null)[]> {
         return forkJoin(
             shifts.map(shift =>
-                this.http.post(this.linkService.getLink('neighborhood:bookings'), {
+                this.http.post(this.linkService.getLink(LinkKey.NEIGHBORHOOD_BOOKINGS), {
                     amenity,
                     bookingDate,
                     shift,

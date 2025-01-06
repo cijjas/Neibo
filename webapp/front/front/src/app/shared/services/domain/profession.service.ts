@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProfessionDto, Profession, formatName } from '@shared/index';
+import { ProfessionDto, Profession, formatName, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class ProfessionService {
 
         if (queryParams.forWorker !== undefined) params = params.set('forWorker', queryParams.forWorker.toString());
 
-        const url = this.linkService.getLink('neighborhood:professions')
+        const url = this.linkService.getLink(LinkKey.PROFESSIONS)
 
         return this.http.get<ProfessionDto[]>(url, { params }).pipe(
             map((professionDtos) => professionDtos.map(mapProfession))

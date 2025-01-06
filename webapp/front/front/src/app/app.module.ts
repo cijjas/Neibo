@@ -49,6 +49,7 @@ import { CalendarModule } from "@features/index";
 
 
   ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

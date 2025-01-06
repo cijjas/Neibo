@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
+import { LinkKey } from '@shared/index';
 // todoaca
 import {
   Amenity,
@@ -39,7 +40,7 @@ export class AmenityService {
     currentPage: number;
   }> {
     let amenitiesUrl: string = this.linkService.getLink(
-      'neighborhood:amenities'
+      LinkKey.NEIGHBORHOOD_AMENITIES
     );
 
     let params = new HttpParams();
@@ -76,7 +77,7 @@ export class AmenityService {
     selectedShifts: string[]
   ): Observable<string | null> {
     let amenitiesUrl: string = this.linkService.getLink(
-      'neighborhood:amenities'
+      LinkKey.NEIGHBORHOOD_AMENITIES
     );
 
     const body: AmenityDto = {

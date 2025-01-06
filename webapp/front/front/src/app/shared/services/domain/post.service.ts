@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { ChannelDto, PostDto, UserDto, LikeCountDto, Post, mapUser, parseLinkHeader } from '@shared/index';
+import { ChannelDto, PostDto, UserDto, LikeCountDto, Post, mapUser, parseLinkHeader, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -29,9 +29,7 @@ export class PostService {
             postedBy?: string;
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
-
-        // Retrieve the template endpoint
-        const workerPostsUrl = this.linkService.getLink("user:posts");
+        const workerPostsUrl = this.linkService.getLink(LinkKey.USER_POSTS);
 
         let params = new HttpParams();
 
@@ -88,7 +86,8 @@ export class PostService {
             postedBy?: string;
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
-        const postsUrl: string = this.linkService.getLink('neighborhood:posts');
+        const postsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_POSTS);
+
         let params = new HttpParams();
 
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
@@ -145,7 +144,7 @@ export class PostService {
     }
 
     public createPost(postForm: PostDto): Observable<string | null> {
-        const createPostUrl = this.linkService.getLink('neighborhood:posts');
+        const createPostUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_POSTS);
 
         return this.http.post<PostDto>(createPostUrl, postForm, { observe: 'response' }).pipe(
             map(response => {

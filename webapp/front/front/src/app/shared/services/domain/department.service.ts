@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Department, DepartmentDto, formatName } from '@shared/index';
+import { Department, DepartmentDto, formatName, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -19,7 +19,7 @@ export class DepartmentService {
     }
 
     public getDepartments(): Observable<Department[]> {
-        const url = this.linkService.getLink('neighborhood:departments')
+        const url = this.linkService.getLink(LinkKey.DEPARTMENTS)
 
         return this.http.get<DepartmentDto[]>(url).pipe(
             map((departmentDtos) => departmentDtos.map(mapDepartment))

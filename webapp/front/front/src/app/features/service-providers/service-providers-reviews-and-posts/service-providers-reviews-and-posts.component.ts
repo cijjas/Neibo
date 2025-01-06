@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { Review, Post, Worker, WorkerService } from '@shared/index';
+import { Review, Post, Worker, WorkerService, LinkKey } from '@shared/index';
 import { ReviewService, PostService } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
@@ -51,8 +51,8 @@ export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestr
       // Ensure `loadWorker` completes first
       this.loadWorker(workerId).then(() => {
         // Execute only after worker is loaded
-        this.isTheWorker = this.linkService.getLink('user:worker') === this.worker.self;
-        this.isWorker = this.linkService.getLink('user:userRole') === this.linkService.getLink('neighborhood:workerUserRole');
+        this.isTheWorker = this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
+        this.isWorker = this.linkService.getLink(LinkKey.USER_USER_ROLE) === this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
 
         // Subscribe to query parameters for pagination *and* for tab selection
         this.subscriptions.add(

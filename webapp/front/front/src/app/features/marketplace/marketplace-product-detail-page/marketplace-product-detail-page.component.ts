@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-import { DepartmentService, InquiryService, ProductService, RequestService, UserService } from '@shared/index';
+import { DepartmentService, InquiryService, LinkKey, ProductService, RequestService, UserService } from '@shared/index';
 import { Department, Inquiry, Product, User } from '@shared/index';
 import { ToastService, HateoasLinksService, UserSessionService } from '@core/index';
 
@@ -79,7 +79,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     });
 
     // Get current user
-    this.userService.getUser(this.linkService.getLink('user:self')).subscribe((user) => {
+    this.userService.getUser(this.linkService.getLink(LinkKey.USER_SELF)).subscribe((user) => {
       this.loggedUser = user;
     });
   }
@@ -171,7 +171,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
 
     const { message, amount } = requestForm.value;
 
-    this.requestService.createRequest(message, amount, this.product.self, this.linkService.getLink('user:self')).subscribe({
+    this.requestService.createRequest(message, amount, this.product.self, this.linkService.getLink(LinkKey.USER_SELF)).subscribe({
       next: () => {
         this.toastService.showToast('Request sent successfully', 'success');
         this.requestDialogVisible = false;

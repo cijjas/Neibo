@@ -1,69 +1,85 @@
 import { Injectable } from '@angular/core';
+import { LinkKey } from '@shared/index';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HateoasLinksService {
-    private storageKey = 'hateoas-links';
-    private links: { [key: string]: string } = {};
+    private readonly STORAGE_KEY = 'hateoas-links';
+    private linksMap = new Map<LinkKey, string>();
 
     constructor() {
-        // Initialize links from sessionStorage if available
-        const storedLinks = sessionStorage.getItem(this.storageKey);
-        if (storedLinks) {
-            this.links = JSON.parse(storedLinks);
+        const stored = sessionStorage.getItem(this.STORAGE_KEY);
+        if (stored) {
+            const parsed: Record<string, string> = JSON.parse(stored);
+            Object.entries(parsed).forEach(([k, v]) => {
+                this.linksMap.set(k as LinkKey, v);
+            });
         }
     }
 
-
-    /**
-     * Stores a link with a specific key.
-     * @param key - The key identifying the link (e.g., 'tags', 'users', etc.).
-     * @param url - The URL of the link to store.
-     */
-    setLink(key: string, url: string): void {
-        this.links[key] = url;
-        this.saveLinksToSession();
-        // this.logLinks()
+    setLink(key: LinkKey, url: string): void {
+        this.linksMap.set(key, url);
+        this.saveToSession();
     }
 
-    /**
-     * Retrieves a stored link by its key.
-     * @param key - The key identifying the link.
-     * @returns The URL if found, otherwise undefined.
-     */
-    getLink(key: string): string | undefined {
-        return this.links[key];
+    getLink(key: LinkKey): string | undefined {
+        return this.linksMap.get(key);
     }
 
-    /**
-     * Removes a link by its key.
-     * @param key - The key identifying the link to remove.
-     */
-    removeLink(key: string): void {
-        delete this.links[key];
-        this.saveLinksToSession();
+    hasLink(key: LinkKey): boolean {
+        return this.linksMap.has(key);
     }
 
-    /**
-     * Clears all stored links.
-     */
+    registerLinks(links: Record<string, string>, prefix?: string): void {
+        if (!links) return;
+
+        for (const [rel, href] of Object.entries(links)) {
+            if (!href) continue;
+
+            const rawKey = prefix ? `${prefix}${rel}` : rel;
+            const enumKey = this.toEnumKey(rawKey);
+            if (!enumKey) {
+                console.warn(`Unrecognized link relationship: ${rawKey}`);
+                continue;
+            }
+
+            this.linksMap.set(enumKey, href);
+        }
+
+        this.saveToSession();
+    }
+
+    removeLink(key: LinkKey): void {
+        this.linksMap.delete(key);
+        this.saveToSession();
+    }
+
     clearLinks(): void {
-        this.links = {};
-        this.saveLinksToSession();
+        this.linksMap.clear();
+        sessionStorage.removeItem(this.STORAGE_KEY);
     }
 
-    /**
-     * Logs all stored links to the console.
-     */
     logLinks(): void {
-        console.log('Stored HATEOAS Links:', this.links);
+        console.log('Current link registry:', this.linksMap);
     }
 
-    /**
-     * Saves the current links object to sessionStorage.
-     */
-    private saveLinksToSession(): void {
-        sessionStorage.setItem(this.storageKey, JSON.stringify(this.links));
+    private saveToSession(): void {
+        const obj: Record<string, string> = {};
+        this.linksMap.forEach((value, key) => {
+            obj[key] = value;
+        });
+        sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(obj));
+    }
+
+    private toEnumKey(raw: string): LinkKey | null {
+        const possibleKey = Object.values(LinkKey).find(v => v === raw);
+        if (possibleKey) {
+            const enumKey = (Object.keys(LinkKey) as Array<keyof typeof LinkKey>)
+                .find(k => LinkKey[k] === raw);
+            return enumKey ? LinkKey[enumKey] : null;
+        }
+        // Normal fallback
+        return null;
     }
 }

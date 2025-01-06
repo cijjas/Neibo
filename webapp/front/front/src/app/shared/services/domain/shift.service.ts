@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Shift, ShiftDto } from '@shared/index';
+import { LinkKey, Shift, ShiftDto } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -24,7 +24,7 @@ export class ShiftService {
       forDate?: string;
     } = {}
   ): Observable<Shift[]> {
-    let shiftsUrl: string = this.linkService.getLink('neighborhood:shifts');
+    let shiftsUrl: string = this.linkService.getLink(LinkKey.SHIFTS);
 
 
     let params = new HttpParams();
@@ -34,10 +34,6 @@ export class ShiftService {
     if (queryParams.forDate) {
       params = params.set('forDate', queryParams.forDate);
     }
-
-    console.log(params.toString()); // Should now only include valid params
-    console.log(params.has('forDate')); // Check existence
-    console.log(params.has('forAmenity'));
 
     return this.http
       .get<ShiftDto[]>(shiftsUrl, { params })

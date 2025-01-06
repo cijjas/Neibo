@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastService, HateoasLinksService, UserSessionService } from '@core/index';
-import { WorkerService, ReviewService, User, Worker, WorkerDto } from '@shared/index';
+import { WorkerService, ReviewService, User, Worker, WorkerDto, LinkKey } from '@shared/index';
 import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
 
 @Component({
@@ -61,7 +61,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     this.reviewDialogVisible = false;
     const newReview = {
       ...review,
-      user: this.linkService.getLink('user:self')
+      user: this.linkService.getLink(LinkKey.USER_SELF)
     };
 
     // Let's assume this.worker exists

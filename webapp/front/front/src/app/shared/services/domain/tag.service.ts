@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { parseLinkHeader, Tag, TagDto } from '@shared/index';
+import { LinkKey, parseLinkHeader, Tag, TagDto } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -65,7 +65,7 @@ export class TagService {
     }
 
     public createTag(name: string): Observable<string | null> {
-        const tagsUrl = this.linkService.getLink('neighborhood:tags');
+        const tagsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_TAGS);
         return this.http.post(tagsUrl, { name }, { observe: 'response' }).pipe(
             map(response => {
                 const locationHeader = response.headers.get('Location');

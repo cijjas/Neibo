@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 // todoaca
-import { Attendance, EventDto, UserDto, AttendanceDto, mapUser, mapEvent, parseLinkHeader } from '@shared/index';
+import { Attendance, EventDto, UserDto, AttendanceDto, mapUser, mapEvent, parseLinkHeader, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -16,7 +16,7 @@ export class AttendanceService {
     public getAttendances(
         queryParams: { forEvent?: string; forUser?: string; page?: number; size?: number } = {}
     ): Observable<{ attendances: Attendance[]; totalPages: number; currentPage: number }> {
-        let attendanceUrl: string = this.linkService.getLink('neighborhood:attendance')
+        let attendanceUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ATTENDANCE)
 
         let params = new HttpParams();
 
@@ -48,8 +48,8 @@ export class AttendanceService {
     public createAttendance(
         eventUrl: string,
     ): Observable<string | null> {
-        let attendanceUrl: string = this.linkService.getLink('neighborhood:attendance')
-        const userUrl = this.linkService.getLink('user:self');
+        let attendanceUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ATTENDANCE)
+        const userUrl = this.linkService.getLink(LinkKey.USER_SELF);
 
         const body = {
             event: eventUrl,
@@ -76,8 +76,8 @@ export class AttendanceService {
     public deleteAttendance(
         forEvent: string
     ): Observable<void> {
-        let attendanceUrl: string = this.linkService.getLink('neighborhood:attendance')
-        let userUrl = this.linkService.getLink('user:self');
+        let attendanceUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ATTENDANCE)
+        let userUrl = this.linkService.getLink(LinkKey.USER_SELF);
 
         let params = new HttpParams();
 

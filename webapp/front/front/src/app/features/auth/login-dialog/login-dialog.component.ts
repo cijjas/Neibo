@@ -2,6 +2,7 @@ import { ChangeDetectorRef, ChangeDetectionStrategy, Component, EventEmitter, In
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from "@angular/router";
 import { HateoasLinksService, AuthService, UserSessionService } from '@core/index';
+import { LinkKey } from '@shared/index'
 
 @Component({
   selector: 'app-login-dialog',
@@ -68,19 +69,30 @@ export class LoginDialogComponent
           next: (success) => {
             this.loading = false;
             if (success) {
-              const userRole = this.userSessionService.getCurrentUserRole();
-              if (userRole === 'WORKER') {
-                const workerUrl = this.linkStorage.getLink('user:worker'); // Fetch the workerUrl value
+              let currentUserRoleUrl: string = this.linkStorage.getLink(LinkKey.USER_USER_ROLE);
+              let neighborUserRole: string = this.linkStorage.getLink(LinkKey.NEIGHBOR_USER_ROLE);
+              let workerUserRole: string = this.linkStorage.getLink(LinkKey.WORKER_USER_ROLE);
+              let unverifiedUserRole: string = this.linkStorage.getLink(LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE);
+              let rejectedUserRole: string = this.linkStorage.getLink(LinkKey.REJECTED_USER_ROLE);
+              let administratorUserRole: string = this.linkStorage.getLink(LinkKey.ADMINISTRATOR_USER_ROLE);
+
+              if (currentUserRoleUrl === workerUserRole) {
+                const workerUrl = this.linkStorage.getLink(LinkKey.USER_WORKER); // Fetch the workerUrl value
                 this.router.navigate(['services', 'profile', workerUrl]).then(() => {
                   this.closeLoginDialog();
                 });
-              } else if (userRole === 'VERIFIED') {
-                const feedChannelUrl = this.linkStorage.getLink('neighborhood:feedChannel');
-                const nonePostStatus = this.linkStorage.getLink('neighborhood:nonePostStatus');
+              } else if (currentUserRoleUrl === neighborUserRole || currentUserRoleUrl === administratorUserRole) {
+                const feedChannelUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL);
+                const nonePostStatus = this.linkStorage.getLink(LinkKey.NONE_POST_STATUS);
                 this.router.navigate(['/posts'], { queryParams: { SPAInChannel: feedChannelUrl, SPAWithStatus: nonePostStatus } }).then(() => {
                   this.closeLoginDialog();
                 });
-              } else if (userRole === 'UNVERIFIED_NEIGHBOR' || userRole === 'UNVERIFIED_WORKER') {
+              } else if (currentUserRoleUrl === unverifiedUserRole) {
+                this.router.navigate(['/unverified']).then(() => {
+                  this.closeLoginDialog();
+
+                });
+              } else if (currentUserRoleUrl === rejectedUserRole) {
                 this.router.navigate(['/unverified']).then(() => {
                   this.closeLoginDialog();
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { EventService } from '@shared/index';
+import { EventService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -51,7 +51,7 @@ export class CalendarBoxComponent implements OnInit {
 
 
   private loadEventTimestamps(): void {
-    const eventUrl = this.linkStorage.getLink('neighborhood:events');
+    const eventUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_EVENTS);
     const datesInMonth = this.getDatesInMonth(this.date.getFullYear(), this.date.getMonth());
 
     const dateStrings = datesInMonth.map((date) => date.toISOString().split('T')[0]);

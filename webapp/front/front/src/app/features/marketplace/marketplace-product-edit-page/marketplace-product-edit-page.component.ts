@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { DepartmentService, ProductService, Department, Product } from '@shared/index';
+import { DepartmentService, ProductService, Department, Product, LinkKey } from '@shared/index';
 import { ImageService, ToastService, HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map, switchMap } from 'rxjs';
@@ -173,7 +173,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
 
     // Extract form values
     const rawValue = this.listingForm.value;
-    const userSelf = this.linkService.getLink('user:self');
+    const userSelf = this.linkService.getLink(LinkKey.USER_SELF);
 
     const productData: any = {
       name: rawValue.title,

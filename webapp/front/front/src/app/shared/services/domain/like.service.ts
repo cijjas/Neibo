@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { Like, LikeDto, PostDto, mapPost, parseLinkHeader } from '@shared/index';
+import { Like, LikeDto, LinkKey, PostDto, mapPost, parseLinkHeader } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
@@ -54,7 +54,7 @@ export class LikeService {
     }
 
     public createLike(likeDto: LikeDto): Observable<string> {
-        const likesUrl = this.linksService.getLink('neighborhood:likes');
+        const likesUrl = this.linksService.getLink(LinkKey.NEIGHBORHOOD_LIKES);
 
         return this.http.post(likesUrl, likeDto, { observe: 'response' }).pipe(
             map(response => {
@@ -73,7 +73,7 @@ export class LikeService {
 
 
     public deleteLike(onPost: string, likedBy: string): Observable<void> {
-        const likesUrl = this.linksService.getLink('neighborhood:likes'); // Base URL for the likes resource
+        const likesUrl = this.linksService.getLink(LinkKey.NEIGHBORHOOD_LIKES);
 
         // Set up the query parameters for the DELETE request
         const params = new HttpParams()

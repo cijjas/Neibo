@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ImageService, HateoasLinksService, UserSessionService } from '@core/index';
-import { LikeService, TagService, Post, Tag } from '@shared/index';
+import { LikeService, TagService, Post, Tag, LinkKey } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -36,8 +36,8 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.SPAInChannel = this.route.snapshot.queryParams['SPAInChannel'];
 
-    const tagLink = this.linkStorage.getLink('neighborhood:tags');
-    this.likesUrl = this.linkStorage.getLink('neighborhood:likes');
+    const tagLink = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_TAGS);
+    this.likesUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_LIKES);
     this.loadLikeStatus();
 
     // Fetch tags with pagination support

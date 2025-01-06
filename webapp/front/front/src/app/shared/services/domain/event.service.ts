@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, timeout, toArray } from 'rxjs/operators';
-import { AttendanceCountDto, EventDto, Event, parseLinkHeader } from '@shared/index';
+import { AttendanceCountDto, EventDto, Event, parseLinkHeader, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { from } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -93,7 +93,7 @@ export class EventService {
             endTime: endTime
         };
 
-        let eventsUrl: string = this.linkService.getLink('neighborhood:events')
+        let eventsUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_EVENTS)
 
         return this.http.post(eventsUrl, body, { observe: 'response' }).pipe(
             map(response => {

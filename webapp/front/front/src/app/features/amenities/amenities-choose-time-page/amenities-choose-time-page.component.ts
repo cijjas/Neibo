@@ -9,6 +9,7 @@ import {
   AmenityService,
   BookingService,
   ShiftService,
+  LinkKey
 } from '@shared/index';
 import { Subscription } from 'rxjs';
 
@@ -43,7 +44,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
     private shiftService: ShiftService,
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(
@@ -73,7 +74,6 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
       .subscribe({
         next: (data: Shift[]) => {
           this.bookings = data;
-          console.log(this.bookings);
 
           const formArray = this.shiftsForm.get('selectedShifts') as FormArray;
           formArray.clear();
@@ -118,7 +118,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
       }
     });
 
-    let userUrl: string = this.linkService.getLink('user:self');
+    let userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
 
     this.bookingService
       .createBooking(this.amenityUrl, this.date, selectedShifts, userUrl)

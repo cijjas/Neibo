@@ -32,65 +32,7 @@ public class NeighborhoodDto {
         // Templating Test
         links.setPosts2("http://localhost:8080/neighborhoods/1/posts{?postedBy,inChannel,withTags*,withStatus,page,size}");
 
-        // First layer - Should eventually be moved into Root Dto
-        UriBuilder affiliationsUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS.toString());
-        UriBuilder userRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES.toString());
         UriBuilder neighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString());
-        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString());
-        UriBuilder imagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString());
-
-        UriBuilder departmentsUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS.toString());
-        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS.toString());
-        UriBuilder shiftsUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS.toString());
-
-        UriBuilder languagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES.toString());
-        UriBuilder postStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.POST_STATUSES.toString());
-        UriBuilder productStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.PRODUCT_STATUSES.toString());
-        UriBuilder requestStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString());
-        UriBuilder transactionTypesUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES.toString());
-        UriBuilder workerRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES.toString());
-
-        // Setting First Layer
-        links.setAffiliations(affiliationsUri.build());
-        links.setNeighborhoods(neighborhoodsUri.build());
-        links.setWorkers(workersUri.build());
-        links.setImages(imagesUri.build());
-
-        links.setDepartments(departmentsUri.build());
-        links.setProfessions(professionsUri.build());
-        links.setShifts(shiftsUri.build());
-
-        links.setLanguageEnglish(languagesUri.clone().path(String.valueOf(Language.ENGLISH.getId())).build());
-        links.setLanguageSpanish(languagesUri.clone().path(String.valueOf(Language.SPANISH.getId())).build());
-
-        links.setPostStatuses(postStatusesUri.build()); // Should be removed as its redundant, already extensively defined
-        links.setHotPostStatus(postStatusesUri.clone().path(String.valueOf(PostStatus.HOT.getId())).build());
-        links.setTrendingPostStatus(postStatusesUri.clone().path(String.valueOf(PostStatus.TRENDING.getId())).build());
-        links.setNonePostStatus(postStatusesUri.clone().path(String.valueOf(PostStatus.NONE.getId())).build());
-
-        links.setAcceptedRequestStatus(requestStatusesUri.clone().path(String.valueOf(RequestStatus.ACCEPTED.getId())).build());
-        links.setDeclinedRequestStatus(requestStatusesUri.clone().path(String.valueOf(RequestStatus.DECLINED.getId())).build());
-        links.setRequestedRequestStatus(requestStatusesUri.clone().path(String.valueOf(RequestStatus.REQUESTED.getId())).build());
-
-        links.setPurchaseTransactionType(transactionTypesUri.clone().path(String.valueOf(TransactionType.PURCHASE.getId())).build());
-        links.setSaleTransactionType(transactionTypesUri.clone().path(String.valueOf(TransactionType.SALE.getId())).build());
-
-        links.setBoughtProductStatus(productStatusesUri.clone().path(String.valueOf(ProductStatus.BOUGHT.getId())).build());
-        links.setSellingProductStatus(productStatusesUri.clone().path(String.valueOf(ProductStatus.SELLING.getId())).build());
-        links.setSoldProductStatus(productStatusesUri.clone().path(String.valueOf(ProductStatus.SOLD.getId())).build());
-
-        links.setAdministratorUserRole(userRolesUri.clone().path(String.valueOf(UserRole.ADMINISTRATOR.getId())).build());
-        links.setNeighborUserRole(userRolesUri.clone().path(String.valueOf(UserRole.NEIGHBOR.getId())).build());
-        links.setUnverifiedNeighborUserRole(userRolesUri.clone().path(String.valueOf(UserRole.UNVERIFIED_NEIGHBOR.getId())).build());
-        links.setRejectedUserRole(userRolesUri.clone().path(String.valueOf(UserRole.REJECTED.getId())).build());
-        links.setWorkerUserRole(userRolesUri.clone().path(String.valueOf(UserRole.WORKER.getId())).build());
-        links.setSuperAdministratorUserRole(userRolesUri.clone().path(String.valueOf(UserRole.SUPER_ADMINISTRATOR.getId())).build());
-
-        links.setVerifiedWorkerRole(workerRolesUri.clone().path(String.valueOf(WorkerRole.VERIFIED_WORKER.getId())).build());
-        links.setUnverifiedWorkerRole(workerRolesUri.clone().path(String.valueOf(WorkerRole.UNVERIFIED_WORKER.getId())).build());
-        links.setRejectedWorkerRole(workerRolesUri.clone().path(String.valueOf(WorkerRole.REJECTED.getId())).build());
-
-        // Second layer
         UriBuilder self = neighborhoodsUri.clone().path(neighborhoodId);
         UriBuilder channelsUri = self.clone().path(Endpoint.CHANNELS.toString());
         UriBuilder eventsUri = self.clone().path(Endpoint.EVENTS.toString());
@@ -98,7 +40,6 @@ public class NeighborhoodDto {
         UriBuilder postsCountUri = self.clone().path(Endpoint.POSTS.toString()).path(Endpoint.COUNT.toString());
         UriBuilder usersUri = self.clone().path(Endpoint.USERS.toString());
 
-        // Setting Second Layer
         links.setSelf(self.build());
         links.setChannels(channelsUri.build());
         links.setEvents(eventsUri.build());
@@ -106,21 +47,18 @@ public class NeighborhoodDto {
         links.setPostsCount(postsCountUri.build());
         links.setUsers(usersUri.build());
 
-//        if (neighborhoodId == BaseNeighborhood.WORKERS.getId()){
-//        }
-
-
         if (!BaseNeighborhood.isABaseNeighborhood(neighborhood.getNeighborhoodId())) {
             UriBuilder amenitiesUri = self.clone().path(Endpoint.AMENITIES.toString());
             UriBuilder attendanceUri = self.clone().path(Endpoint.ATTENDANCE.toString());
             UriBuilder contactsUri = self.clone().path(Endpoint.CONTACTS.toString());
             UriBuilder bookingsUri = self.clone().path(Endpoint.BOOKINGS.toString());
-            UriBuilder likesUri = self.clone().path(Endpoint.LIKES.toString()); // THIS SHOULD BE USED INSTEAD
+            UriBuilder likesUri = self.clone().path(Endpoint.LIKES.toString()); // THIS SHOULD BE USED INSTEAD, this includes neighborhoods!
             UriBuilder wrongLikesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()); // THIS SHOULD BE USED INSTEAD
             UriBuilder productsUri = self.clone().path(Endpoint.PRODUCTS.toString());
             UriBuilder requestsUri = self.clone().path(Endpoint.REQUESTS.toString());
             UriBuilder resourcesUri = self.clone().path(Endpoint.RESOURCES.toString());
             UriBuilder tagsUri = self.clone().path(Endpoint.TAGS.toString());
+            UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString());
 
             UriBuilder feedChannelUri = channelsUri.clone().path(String.valueOf(BaseChannel.FEED.getId()));
             UriBuilder complaintsChannelUri = channelsUri.clone().path(String.valueOf(BaseChannel.COMPLAINTS.getId()));

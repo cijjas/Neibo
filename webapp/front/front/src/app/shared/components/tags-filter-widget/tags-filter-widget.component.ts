@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
-import { Tag, TagService } from '@shared/index';
+import { LinkKey, Tag, TagService } from '@shared/index';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -70,7 +70,7 @@ export class TagsFilterWidgetComponent implements OnInit {
 
   // Fetch tags for the current page
   loadTagsFromApi(): void {
-    const tagsUrl = this.linkService.getLink('neighborhood:tags');
+    const tagsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_TAGS);
     const queryParams = {
       page: this.currentPage,
       size: this.pageSize,

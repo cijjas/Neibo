@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BookingService, Booking } from '@shared/index';
+import { BookingService, Booking, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -21,7 +21,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
     private linkService: HateoasLinksService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -33,13 +33,13 @@ export class AmenitiesReservationsListComponent implements OnInit {
 
   loadReservations(): void {
     this.isLoading = true;
-    const bookingsUrl = this.linkService.getLink('neighborhood:bookings');
+    const bookingsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_BOOKINGS);
 
     this.bookingService
       .getBookings(bookingsUrl, {
         page: this.currentPage,
         size: this.pageSize, // Include pagination parameters
-        bookedBy: this.linkService.getLink('user:self'),
+        bookedBy: this.linkService.getLink(LinkKey.USER_SELF),
       })
       .subscribe({
         next: (data) => {

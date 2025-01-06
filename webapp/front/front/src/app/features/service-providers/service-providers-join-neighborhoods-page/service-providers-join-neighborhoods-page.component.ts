@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild, OnInit, HostListener } from '@angular/core';
 import { HateoasLinksService, ToastService, UserSessionService } from '@core/index';
 import { AffiliationService, NeighborhoodService } from '@shared/index';
-import { Affiliation, Neighborhood } from '@shared/models';
+import { Affiliation, LinkKey, Neighborhood } from '@shared/models';
 
 
 @Component({
@@ -39,7 +39,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
 
   loadAssociatedNeighborhoods(): void {
     const queryParams = {
-      forWorker: this.linkService.getLink('user:worker')
+      forWorker: this.linkService.getLink(LinkKey.USER_WORKER)
     }
 
     this.affiliationService.getAffiliations(queryParams).subscribe({
@@ -55,7 +55,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
 
   loadOtherNeighborhoods(): void {
     const queryParams = {
-      withoutWorker: this.linkService.getLink('user:worker')
+      withoutWorker: this.linkService.getLink(LinkKey.USER_WORKER)
     }
 
     this.neighborhoodService.getNeighborhoods(queryParams).subscribe({

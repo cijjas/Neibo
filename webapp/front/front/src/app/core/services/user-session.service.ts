@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
-import { Neighborhood, User } from "@shared/index";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Neighborhood, User } from '@shared/index';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +11,6 @@ export class UserSessionService {
     private authToken: string | null = null;
 
     constructor() {
-        // Load user and token from localStorage
         const storedUser = localStorage.getItem('currentUser');
         if (storedUser) {
             this.currentUserSubject.next(JSON.parse(storedUser));
@@ -52,8 +51,6 @@ export class UserSessionService {
         return currentUser ? currentUser.userRole : null;
     }
 
-
-
     getNeighborhood(): Observable<Neighborhood | null> {
         return this.neighborhoodSubject.asObservable();
     }
@@ -80,8 +77,6 @@ export class UserSessionService {
         this.currentUserSubject.next(null);
         this.neighborhoodSubject.next(null);
         this.authToken = null;
-
-        // Clear localStorage
         localStorage.removeItem('currentUser');
         localStorage.removeItem('neighborhood');
         localStorage.removeItem('authToken');
