@@ -16,13 +16,12 @@ export class ServiceProvidersContentComponent {
 
   @Output() openEditProfile = new EventEmitter<void>();
 
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
     private workerService: WorkerService // Inject WorkerService to fetch worker
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const workerId = this.route.snapshot.paramMap.get('id');
@@ -33,14 +32,13 @@ export class ServiceProvidersContentComponent {
   fetchWorker(id: string): void {
     this.workerService.getWorker(id).subscribe({
       next: (worker) => {
-
         this.worker = worker;
         this.averageRating = worker.averageRating || 0;
         this.reviewsCount = worker.totalReviews;
         this.postCount = worker.totalPosts;
 
-        this.isTheWorker = this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
-
+        this.isTheWorker =
+          this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
       },
       error: (err) => {
         console.error('Error fetching worker:', err);
@@ -48,13 +46,10 @@ export class ServiceProvidersContentComponent {
     });
   }
 
-
   get backgroundImageUrl(): string {
     if (this.worker && this.worker.backgroundImage) {
-      // If your API returns a link, use that
       return this.worker.backgroundImage;
     }
-    // fallback
     return 'assets/images/default-background.png';
   }
 
@@ -68,12 +63,12 @@ export class ServiceProvidersContentComponent {
 
   setProfession(prof: Profession | null): void {
     if (prof === null) {
-      this.router.navigate(["/services"], {
+      this.router.navigate(['/services'], {
         relativeTo: this.route,
-        queryParams: { professions: null }
+        queryParams: { professions: null },
       });
     } else {
-      this.router.navigate(["/services"], {
+      this.router.navigate(['/services'], {
         relativeTo: this.route,
         queryParams: { professions: prof.self },
       });

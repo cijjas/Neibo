@@ -1,11 +1,19 @@
 <!-- service-providers-page.component.html -->
 <div [class.dark-mode]="darkMode">
-  <div style="position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 1">
+  <div
+    style="
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    "
+  >
     <!-- Replaces <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %> -->
     <app-navbar></app-navbar>
 
     <div class="container">
-
       <div class="row">
         <!-- Left column -->
         <div class="column-left">
@@ -19,39 +27,54 @@
           <app-service-providers-control-bar></app-service-providers-control-bar>
 
           <!-- If workersList is empty, show "not found" -->
-          <ng-container *ngIf="workersList && workersList.length > 0; else noWorkersFound">
+          <ng-container
+            *ngIf="workersList && workersList.length > 0; else noWorkersFound"
+          >
             <!-- The main service widgets -->
-            <div class="f-c-c-c ">
-              <div *ngFor="let worker of workersList">
-                <app-service-providers-preview [worker]="worker"></app-service-providers-preview>
+            <div class="f-c-c-c w-100">
+              <div class="w-100" *ngFor="let worker of workersList">
+                <app-service-providers-preview
+                  [worker]="worker"
+                ></app-service-providers-preview>
               </div>
             </div>
 
             <!-- Another paginator at the bottom -->
-            <app-paginator [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)">
+            <app-paginator
+              [currentPage]="currentPage"
+              [totalPages]="totalPages"
+              (pageChange)="onPageChange($event)"
+            >
             </app-paginator>
           </ng-container>
           <!-- Template shown when there are no workers -->
           <ng-template #noWorkersFound>
-            <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+            <div
+              class="cool-static-container m-b-20"
+              style="word-wrap: break-word"
+              aria-hidden="true"
+            >
               <div class="no-posts-found">
                 <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-                <span>We could not find service provider in you neighborhood yet!</span>
+                <span
+                  >We could not find service provider in you neighborhood
+                  yet!</span
+                >
               </div>
             </div>
-            
           </ng-template>
-
         </div>
 
         <!-- Right column -->
         <div class="column-right">
-          <div class="column justify-content-center align-items-center" style="gap: 1em">
+          <div
+            class="column justify-content-center align-items-center"
+            style="gap: 1em"
+          >
             <!-- Replaces <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %> -->
             <app-calendar-widget></app-calendar-widget>
           </div>
         </div>
-
       </div>
     </div>
 

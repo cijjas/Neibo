@@ -1,7 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ToastService, HateoasLinksService, UserSessionService } from '@core/index';
-import { WorkerService, ReviewService, User, Worker, WorkerDto, LinkKey } from '@shared/index';
+import {
+  ToastService,
+  HateoasLinksService,
+  UserSessionService,
+} from '@core/index';
+import {
+  WorkerService,
+  ReviewService,
+  User,
+  Worker,
+  WorkerDto,
+  LinkKey,
+} from '@shared/index';
 import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
 
 @Component({
@@ -13,8 +24,8 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
   worker: Worker | null = null;
   reviewDialogVisible = false;
   editDialogVisible = false;
-  @ViewChild(ServiceProvidersReviewsAndPostsComponent) tabbedBox!: ServiceProvidersReviewsAndPostsComponent;
-
+  @ViewChild(ServiceProvidersReviewsAndPostsComponent)
+  tabbedBox!: ServiceProvidersReviewsAndPostsComponent;
 
   constructor(
     private workerService: WorkerService,
@@ -22,14 +33,12 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     private reviewService: ReviewService,
     private toastService: ToastService,
     private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService,
-  ) { }
+    private userSessionService: UserSessionService
+  ) {}
 
   ngOnInit(): void {
     const workerId = this.route.snapshot.paramMap.get('id');
     if (workerId) this.loadWorker(workerId);
-
-
   }
 
   loadWorker(id: string): void {
@@ -61,13 +70,16 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     this.reviewDialogVisible = false;
     const newReview = {
       ...review,
-      user: this.linkService.getLink(LinkKey.USER_SELF)
+      user: this.linkService.getLink(LinkKey.USER_SELF),
     };
 
     // Let's assume this.worker exists
     this.reviewService.createReview(this.worker?.reviews, newReview).subscribe({
       next: () => {
-        this.toastService.showToast('Review submitted successfully!', 'success');
+        this.toastService.showToast(
+          'Review submitted successfully!',
+          'success'
+        );
 
         // 2) Directly call child's reload method
         if (this.tabbedBox) {
@@ -83,14 +95,18 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
   onSaveProfile(worker: WorkerDto): void {
     this.workerService.updateWorker(worker).subscribe({
       next: () => {
-        this.toastService.showToast('New profile information saved successfully!', 'success');
+        this.toastService.showToast(
+          'New profile information saved successfully!',
+          'success'
+        );
       },
       error: (err) => {
-        this.toastService.showToast('There was an error updating profile. Try again.', 'error');
+        this.toastService.showToast(
+          'There was an error updating profile. Try again.',
+          'error'
+        );
         console.error('Error saving profile:', err);
       },
     });
   }
-
-
 }

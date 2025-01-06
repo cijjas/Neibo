@@ -8,7 +8,6 @@
 
 .column-left {
   flex: 1;
-  max-width: 250px;
 }
 
 .column-center {
@@ -16,12 +15,10 @@
 }
 
 .column-right {
-  max-width: 320px;
   flex: 2;
 }
 
 .column-middle {
-  max-width: 565px;
   flex: 4;
 }
 
@@ -139,19 +136,18 @@
   border-radius: 10px;
 }
 
-
 .custom-btn {
   background-color: var(--primary);
 }
 
 .navbar-brand {
+  cursor: pointer;
   font-size: 32px;
   color: var(--background);
   transition: all 0.5s ease-in-out;
 
   &:hover {
-    color: var(--background);
-    text-shadow: 0 0 10px var(--onbackground);
+    color: var(--onbackground);
   }
 
   &:focus-within,
@@ -931,6 +927,31 @@
     color: var(--accent);
     transform: translateY(-4px);
     box-shadow: 0 4px 0 0 var(--accent);
+  }
+}
+
+.selected-tag {
+  font-size: 14px;
+  padding: 2px 5px;
+  color: var(--accent);
+  background-color: var(--background);
+  border: 1px solid var(--accent);
+  border-radius: var(--border-hard);
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  cursor: pointer;
+  color: var(--background);
+  background-color: var(--accent);
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 110%;
+    bottom: -4px;
+    left: 0;
+    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+    pointer-events: none;
   }
 }
 
@@ -2230,11 +2251,11 @@ h6 {
   width: 0;
   height: 0;
 
-  &:checked+.slider {
+  &:checked + .slider {
     background-color: var(--input-focus);
   }
 
-  &:checked+.slider:before {
+  &:checked + .slider:before {
     transform: translateX(30px);
   }
 }
@@ -2447,18 +2468,18 @@ h6 {
         display: none;
         color: var(--text) !important;
 
-        &+span {
+        & + span {
           color: var(--text);
         }
       }
     }
 
-    & input:checked+span {
+    & input:checked + span {
       color: var(--background);
       background-color: var(--primary);
     }
 
-    & input:disabled+span {
+    & input:disabled + span {
       color: var(--text);
       background-color: var(--lightertext);
       opacity: 0.4;
@@ -2493,13 +2514,13 @@ h6 {
         display: none;
         color: var(--text) !important;
 
-        &+span {
+        & + span {
           color: var(--text);
         }
       }
     }
 
-    & input:checked+span {
+    & input:checked + span {
       color: var(--background);
       background-color: var(--primary);
     }
@@ -2652,7 +2673,7 @@ input[type="time"] {
         transform: rotate(-180deg);
       }
 
-      &~.list-items {
+      & ~ .list-items {
         display: block;
       }
     }
@@ -2740,7 +2761,6 @@ input[type="time"] {
 .product-grid-row {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  /* grid-gap: 1em;  TODO*/
   z-index: 1;
 }
 
@@ -2749,7 +2769,6 @@ input[type="time"] {
   position: relative;
   margin-bottom: 1.25rem;
   padding: 0;
-  width: 200px;
   height: 300px;
   background-color: var(--onbackground);
   border: 1px solid var(--lightertext);
@@ -3111,7 +3130,6 @@ input[type="time"] {
 }
 
 @media (max-width: 775px) {
-
   /* Add a CSS class to hide the icons when the screen width is 775 pixels or more */
   .hide-text {
     display: none;
@@ -3170,7 +3188,7 @@ input[type="time"] {
   display: block;
 }
 
-.dropdown-toggle:hover+.dropdown-options,
+.dropdown-toggle:hover + .dropdown-options,
 .dropdown-options:hover {
   display: block;
 }
@@ -3268,9 +3286,28 @@ input[type="time"] {
 }
 
 .amenity-item.selected {
-  background-color: var(--between-primary);
+  background-color: var(--primary);
   color: var(--onprimary);
   font-weight: bold;
+}
+
+.time-container {
+  display: flex;
+  justify-content: space-between; /* Push items to the edges */
+  align-items: center; /* Center-align items vertically */
+  width: 100%;
+}
+
+.time-item {
+  flex: 1; /* Allows items to occupy equal space */
+}
+
+.start-time {
+  text-align: left; /* Align Start Time to the left (default) */
+}
+
+.end-time {
+  text-align: right; /* Align End Time to the right */
 }
 
 /* SHIFTS  */
@@ -3593,7 +3630,7 @@ td.selected .cell-wrapper {
 
 .badge-pending {
   display: inline-block;
-  background-color: #FFA500;
+  background-color: #ffa500;
   /* Orange-yellow color */
   color: white;
   /* Text color */

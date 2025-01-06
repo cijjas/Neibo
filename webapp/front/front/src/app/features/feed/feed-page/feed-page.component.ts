@@ -27,10 +27,12 @@ export class FeedPageComponent implements OnInit {
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    const defaultChannel = this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL);
+    const defaultChannel = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+    );
     const defaultStatus = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
 
     this.route.queryParams
@@ -38,8 +40,8 @@ export class FeedPageComponent implements OnInit {
         switchMap((params) => {
           this.currentPage = +params['page'] || 1;
           this.pageSize = +params['size'] || 10;
-          this.channel = params['SPAInChannel'] || defaultChannel;
-          this.postStatus = params['SPAWithStatus'] || defaultStatus;
+          this.channel = params['inChannel'] || defaultChannel;
+          this.postStatus = params['withStatus'] || defaultStatus;
 
           // ---------------------------
           // Handle multiple withTag params
@@ -51,16 +53,16 @@ export class FeedPageComponent implements OnInit {
           this.tags = Array.isArray(tagsParam)
             ? tagsParam
             : tagsParam
-              ? [tagsParam]
-              : [];
+            ? [tagsParam]
+            : [];
 
           // Provide default params if missing
           const missingParams: any = {};
-          if (!params['SPAInChannel']) {
-            missingParams['SPAInChannel'] = defaultChannel;
+          if (!params['inChannel']) {
+            missingParams['inChannel'] = defaultChannel;
           }
-          if (!params['SPAWithStatus']) {
-            missingParams['SPAWithStatus'] = defaultStatus;
+          if (!params['withStatus']) {
+            missingParams['withStatus'] = defaultStatus;
           }
 
           // Navigate to default parameters if any are missing
@@ -77,8 +79,6 @@ export class FeedPageComponent implements OnInit {
       )
       .subscribe();
   }
-
-
 
   loadPosts(): Observable<void> {
     // This array can be ["tag1", "tag2", ...]
@@ -131,7 +131,4 @@ export class FeedPageComponent implements OnInit {
       queryParamsHandling: 'merge',
     });
   }
-
-
-
 }

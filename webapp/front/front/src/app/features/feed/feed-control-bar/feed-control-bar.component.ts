@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService, UserSessionService } from '@core/index';
@@ -27,30 +26,37 @@ export class FeedControlBarComponent implements OnInit {
 
   currentUser: User;
 
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.userSessionService.getCurrentUser().subscribe((user: User) => { this.currentUser = user; });
+    this.userSessionService.getCurrentUser().subscribe((user: User) => {
+      this.currentUser = user;
+    });
 
     this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
     this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);
     this.trendingUrl = this.linkService.getLink(LinkKey.TRENDING_POST_STATUS);
 
-    this.feedChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL);
-    this.announcementsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL);
-    this.complaintsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL);
+    this.feedChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+    );
+    this.announcementsChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+    );
+    this.complaintsChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL
+    );
 
     this.route.queryParams.subscribe((params) => {
-      this.status = params['SPAWithStatus'];
-      this.channel = params['SPAInChannel']
+      this.status = params['withStatus'];
+      this.channel = params['inChannel'];
       this.updateStatusClass();
-      this.updateChannelClass()
+      this.updateChannelClass();
     });
   }
 
@@ -67,11 +73,9 @@ export class FeedControlBarComponent implements OnInit {
   updateStatusClass() {
     if (this.status === this.latestUrl) {
       this.statusClass = 'Latest';
-    }
-    else if (this.status === this.hotUrl) {
+    } else if (this.status === this.hotUrl) {
       this.statusClass = 'Hot';
-    }
-    else if (this.status === this.trendingUrl) {
+    } else if (this.status === this.trendingUrl) {
       this.statusClass = 'Trending';
     }
   }
@@ -79,34 +83,42 @@ export class FeedControlBarComponent implements OnInit {
   changeStatusToLatest(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { SPAWithStatus: this.latestUrl },
-    })
-    this.updateStatusClass()
+      queryParams: {
+        withStatus: this.latestUrl,
+        inChannel: this.channel, // Preserve the current channel
+      },
+      queryParamsHandling: 'merge', // Merge with existing query params
+    });
+    this.updateStatusClass();
   }
 
   changeStatusToHot(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { SPAWithStatus: this.hotUrl },
-    })
-    this.updateStatusClass()
-
+      queryParams: {
+        withStatus: this.hotUrl,
+        inChannel: this.channel, // Preserve the current channel
+      },
+      queryParamsHandling: 'merge', // Merge with existing query params
+    });
+    this.updateStatusClass();
   }
 
   changeStatusToTrending(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { SPAWithStatus: this.trendingUrl },
-    })
-    this.updateStatusClass()
+      queryParams: {
+        withStatus: this.trendingUrl,
+        inChannel: this.channel, // Preserve the current channel
+      },
+      queryParamsHandling: 'merge', // Merge with existing query params
+    });
+    this.updateStatusClass();
   }
 
   publishInChannel(): void {
     this.router.navigate(['/posts/new'], {
-      queryParams: { SPAInChannel: this.channel }
+      queryParams: { inChannel: this.channel },
     });
   }
-
-
-
 }

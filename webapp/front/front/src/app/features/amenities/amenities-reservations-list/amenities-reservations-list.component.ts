@@ -21,7 +21,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
     private linkService: HateoasLinksService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -38,19 +38,21 @@ export class AmenitiesReservationsListComponent implements OnInit {
     this.bookingService
       .getBookings(bookingsUrl, {
         page: this.currentPage,
-        size: this.pageSize, // Include pagination parameters
+        size: this.pageSize,
         bookedBy: this.linkService.getLink(LinkKey.USER_SELF),
       })
       .subscribe({
         next: (data) => {
-          this.reservationsList = data.bookings; // Assuming 'bookings' is the array in the response
-          this.totalPages = data.totalPages || 1; // Update total pages from API
-          this.isLoading = false;
+          console.log('success');
+          this.reservationsList = data.bookings || []; // Ensure it's an array
+          this.totalPages = data.totalPages || 1;
+          this.isLoading = false; // Stop loading
         },
         error: (err) => {
+          console.log('error');
           console.error(err);
           this.showErrorMessage = true;
-          this.isLoading = false;
+          this.isLoading = false; // Stop loading on error
         },
       });
   }

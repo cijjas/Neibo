@@ -3,20 +3,21 @@
 
   <div class="container">
     <div class="row init">
-
       <div class="column-left">
         <app-sidebar></app-sidebar>
       </div>
 
-      <div id="center-grid" class="column-center ps-3">
+      <div id="center-grid" class="column-center">
         <div style="position: relative">
           <!-- Upper Marketplace Buttons Component -->
           <app-marketplace-control-bar [channel]="channel">
           </app-marketplace-control-bar>
 
-
           <!-- If no products found -->
-          <div *ngIf="productList && productList.length === 0" class="cool-static-container w-100">
+          <div
+            *ngIf="productList && productList.length === 0"
+            class="cool-static-container w-100"
+          >
             <div class="no-posts-found">
               <i class="circle-icon fa-solid fa-magnifying-glass"></i>
               Products not found
@@ -24,16 +25,24 @@
           </div>
 
           <!-- If products exist -->
-          <div *ngIf="productList && productList.length > 0" class="row m-0 product-grid-row">
-            <app-marketplace-product-preview *ngFor="let product of productList"
-              [product]="product"></app-marketplace-product-preview>
+          <div
+            *ngIf="productList && productList.length > 0"
+            class="row product-grid-row"
+          >
+            <app-marketplace-product-preview
+              *ngFor="let product of productList"
+              [product]="product"
+            ></app-marketplace-product-preview>
           </div>
 
           <!-- Paginator -->
-          <app-paginator [totalPages]="totalPages" [currentPage]="page" [isMarketplace]="true"
-            (pageChange)="onPageChange($event)">
+          <app-paginator
+            [totalPages]="totalPages"
+            [currentPage]="page"
+            [isMarketplace]="true"
+            (pageChange)="onPageChange($event)"
+          >
           </app-paginator>
-
         </div>
       </div>
     </div>
@@ -41,5 +50,4 @@
     <!-- Footer component if you have it -->
   </div>
   <app-wave-footer [isMarketplace]="true"></app-wave-footer>
-
 </div>

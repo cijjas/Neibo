@@ -1,9 +1,7 @@
+import { Routes } from '@angular/router';
 
-import { Routes } from '@angular/router'
-
-import { RoleGuard } from '@core/index'
-import { Roles } from '@shared/index'
-
+import { RoleGuard, AuthGuard } from '@core/index';
+import { Roles } from '@shared/index';
 
 export const appRoutes: Routes = [
   // Redirect root to login
@@ -32,13 +30,16 @@ export const appRoutes: Routes = [
     path: 'login',
     loadChildren: () =>
       import('@features/auth/auth.module').then((m) => m.AuthModule),
+    canActivate: [AuthGuard], // Protect login with AuthGuard
   },
 
   // Calendar
   {
     path: 'calendar',
     loadChildren: () =>
-      import('@features/calendar/calendar.module').then((m) => m.CalendarModule),
+      import('@features/calendar/calendar.module').then(
+        (m) => m.CalendarModule
+      ),
   },
 
   // Feed
@@ -92,7 +93,7 @@ export const appRoutes: Routes = [
         (m) => m.UnverifiedModule
       ),
     canActivate: [RoleGuard],
-    data: { roles: [Roles.UNVERIFIED_NEIGHBOR, Roles.UNVERIFIED_WORKER] }
+    data: { roles: [Roles.UNVERIFIED_NEIGHBOR, Roles.UNVERIFIED_WORKER] },
   },
 
   // 404 and Wildcard

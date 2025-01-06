@@ -10,7 +10,7 @@ import { LinkKey } from '@shared/models';
 })
 export class SidebarComponent implements OnInit {
   userRole: string | null = ''; // Role of the logged-in user
-  userId: string | null = '';   // ID of the logged-in user
+  userId: string | null = ''; // ID of the logged-in user
   workerId: string | null = '';
   channelClass: string = ''; // Active channel class
 
@@ -18,7 +18,7 @@ export class SidebarComponent implements OnInit {
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     // Fetch the current user role and ID
@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit {
 
     // Listen for navigation changes to update the channel
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => this.updateChannelClass());
 
     // Initial update of the channel class
@@ -61,11 +61,20 @@ export class SidebarComponent implements OnInit {
     // 3) Handle /posts routes with query parameters
     else if (currentUrl.includes('/posts')) {
       const queryParams = this.router.routerState.snapshot.root.queryParams;
-      if (queryParams['SPAInChannel'] === this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL)) {
+      if (
+        queryParams['inChannel'] ===
+        this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL)
+      ) {
         this.channelClass = 'Feed';
-      } else if (queryParams['SPAInChannel'] === this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL)) {
+      } else if (
+        queryParams['inChannel'] ===
+        this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL)
+      ) {
         this.channelClass = 'Announcements';
-      } else if (queryParams['SPAInChannel'] === this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL)) {
+      } else if (
+        queryParams['inChannel'] ===
+        this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL)
+      ) {
         this.channelClass = 'Complaints';
       } else {
         this.channelClass = '';
@@ -76,20 +85,41 @@ export class SidebarComponent implements OnInit {
   }
 
   changeChannelToComplaints(): void {
-    this.router.navigate(['/posts'], {
-      queryParams: { SPAInChannel: this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL) },
-    }).then(() => this.updateChannelClass());
+    this.router
+      .navigate(['/posts'], {
+        queryParams: {
+          inChannel: this.linkService.getLink(
+            LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL
+          ),
+          withStatus: null, // Reset status filter
+        },
+      })
+      .then(() => this.updateChannelClass());
   }
 
   changeChannelToAnnouncements(): void {
-    this.router.navigate(['/posts'], {
-      queryParams: { SPAInChannel: this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL) },
-    }).then(() => this.updateChannelClass());
+    this.router
+      .navigate(['/posts'], {
+        queryParams: {
+          inChannel: this.linkService.getLink(
+            LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+          ),
+          withStatus: null, // Reset status filter
+        },
+      })
+      .then(() => this.updateChannelClass());
   }
 
   changeChannelToFeed(): void {
-    this.router.navigate(['/posts'], {
-      queryParams: { SPAInChannel: this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL) },
-    }).then(() => this.updateChannelClass());
+    this.router
+      .navigate(['/posts'], {
+        queryParams: {
+          inChannel: this.linkService.getLink(
+            LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+          ),
+          withStatus: null, // Reset status filter
+        },
+      })
+      .then(() => this.updateChannelClass());
   }
 }

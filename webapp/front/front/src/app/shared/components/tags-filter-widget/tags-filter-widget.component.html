@@ -5,8 +5,8 @@
     </div>
 
     <!-- Display selected tags -->
-    <div *ngIf="appliedTags.length > 0" class="m-b-10 w-100">
-      <span class="tag-option static" *ngFor="let selTag of appliedTags">
+    <div *ngIf="appliedTags.length > 0" class="tags-row tags m-b-10 w-100">
+      <span class="selected-tag" *ngFor="let selTag of appliedTags">
         {{ selTag.name }}
         <i class="fa-solid fa-xmark" (click)="removeTag(selTag)"></i>
       </span>
@@ -21,27 +21,39 @@
     </div>
 
     <!-- Pagination Arrows -->
-    <div class="pagination-arrows">
-      <span id="prev" [class.disabled]="currentPage <= 1" (click)="prevPage()">
+    <div class="pagination-arrows mt-2 mb-2">
+      <span
+        id="prev"
+        class="c-accent"
+        [class.disabled]="currentPage <= 1"
+        (click)="prevPage()"
+      >
         <i class="fa-solid fa-angle-left"></i>
       </span>
       <p>Page {{ currentPage }} of {{ totalPages }}</p>
-      <span id="next" [class.disabled]="currentPage >= totalPages" (click)="nextPage()">
+      <span
+        id="next"
+        class="c-accent"
+        [class.disabled]="currentPage >= totalPages"
+        (click)="nextPage()"
+      >
         <i class="fa-solid fa-angle-right"></i>
       </span>
     </div>
 
     <!-- We keep the hidden div for backward compatibility
          or if you want to store the selected tags for init -->
-    <div hidden id="applied-tags" [attr.data-tags]="appliedTags | json"></div>
 
-    <div class="w-100">
+    <div class="w-100 mt-2">
       <div class="f-r-sb-c g-1">
         <a class="cool-button red" (click)="clearAllTags()">
           Clear
           <i class="fa-solid fa-xmark"></i>
         </a>
-        <a class="cool-button cool-small on-bg tag-button" (click)="applyTagsAsFilter()">
+        <a
+          class="cool-button cool-small on-bg tag-button"
+          (click)="applyTagsAsFilter()"
+        >
           Apply
         </a>
       </div>

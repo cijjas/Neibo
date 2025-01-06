@@ -1,9 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 import { LinkKey, Tag, TagService } from '@shared/index';
@@ -30,7 +25,7 @@ export class TagsFilterWidgetComponent implements OnInit {
     private linkService: HateoasLinksService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -139,10 +134,10 @@ export class TagsFilterWidgetComponent implements OnInit {
       return;
     }
 
-    const queryParams = this.appliedTags.map(tag => ({ withTag: tag.self }));
+    const queryParams = this.appliedTags.map((tag) => ({ withTag: tag.self }));
 
     const flattenedQueryParams = queryParams.reduce((params, param) => {
-      Object.keys(param).forEach(key => {
+      Object.keys(param).forEach((key) => {
         if (!params[key]) {
           params[key] = [];
         }

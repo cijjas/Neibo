@@ -1,37 +1,127 @@
-<div id="edit-dialog" class="dialog" [ngClass]="{ 'show-dialog': editDialogVisible }">
-    <div class="dialog-content marketplace">
-        <div class="dialog-header">
-            <div class="dialog-svg-wrapper">
-                <div class="dialog-svg">
-                    <svg width="282" height="148" viewBox="0 0 282 148" xmlns="http://www.w3.org/2000/svg">
-                        <!-- SVG content omitted for brevity -->
-                    </svg>
-                </div>
-                <div class="reply-dialog-text">
-                    <h3 class="font-size-18 font-weight-bold">Edit Profile</h3>
-                    <p class="font-weight-normal font-size-14">Update your business details</p>
-                </div>
-            </div>
-        </div>
-        <a class="close-button marketplace" (click)="closeEditDialog()">
-            <i class="fas fa-close"></i>
-        </a>
-        <form (ngSubmit)="submitEditProfileForm()" #editForm="ngForm">
-            <div class="form-group w-75">
-                <input name="businessName" [(ngModel)]="businessName" type="text" class="cool-input marketplace-input"
-                    placeholder="Business Name" required />
-                <textarea name="bio" [(ngModel)]="bio" class="cool-input marketplace-input textarea-min-max" rows="3"
-                    placeholder="Bio" required></textarea>
-                <input name="phoneNumber" [(ngModel)]="phoneNumber" type="tel" class="cool-input marketplace-input"
-                    placeholder="Phone Number" required />
-                <input name="address" [(ngModel)]="address" type="text" class="cool-input marketplace-input"
-                    placeholder="Address" required />
-            </div>
-            <button type="submit"
-                class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
-                [disabled]="editForm.invalid">
-                Save Changes
-            </button>
-        </form>
+<div
+  id="editDialog"
+  class="dialog"
+  [ngClass]="{ 'show-dialog': editDialogVisible }"
+>
+  <div class="dialog-content" style="background-color: var(--onbackground)">
+    <!-- Close Button -->
+    <div class="close-button" (click)="closeEditDialog()">
+      <i class="fas fa-close"></i>
     </div>
+
+    <!-- Title -->
+    <div class="title mb-2 mt-3 f-c-c-c" style="font-size: 20px">
+      Edit Profile
+    </div>
+
+    <!-- Form -->
+    <form
+      (ngSubmit)="submitEditProfileForm()"
+      #editForm="ngForm"
+      enctype="multipart/form-data"
+    >
+      <div class="f-c-c-c pl-3 pr-3 c-text" style="width: 500px">
+        <!-- Error Messages Placeholder -->
+
+        <div class="w-75 f-c-c-c" style="gap: 10px">
+          <!-- Business Name Input -->
+          <input
+            name="businessName"
+            [(ngModel)]="businessName"
+            type="text"
+            class="cool-input"
+            placeholder="Business Name"
+            required
+          />
+          <p
+            *ngIf="
+              editForm.controls['businessName']?.invalid &&
+              editForm.controls['businessName']?.touched
+            "
+            class="error"
+          >
+            Business name is required.
+          </p>
+
+          <!-- Bio Input -->
+          <input
+            name="bio"
+            [(ngModel)]="bio"
+            type="text"
+            class="cool-input"
+            placeholder="Description"
+            required
+          />
+          <p
+            *ngIf="
+              editForm.controls['bio']?.invalid &&
+              editForm.controls['bio']?.touched
+            "
+            class="error"
+          >
+            Description is required.
+          </p>
+
+          <!-- Phone Number Input -->
+          <input
+            name="phoneNumber"
+            [(ngModel)]="phoneNumber"
+            type="tel"
+            class="cool-input"
+            placeholder="Phone Number"
+            required
+          />
+          <p
+            *ngIf="
+              editForm.controls['phoneNumber']?.invalid &&
+              editForm.controls['phoneNumber']?.touched
+            "
+            class="error"
+          >
+            Phone number is required.
+          </p>
+
+          <!-- Address Input -->
+          <input
+            name="address"
+            [(ngModel)]="address"
+            type="text"
+            class="cool-input"
+            placeholder="Address"
+            required
+          />
+          <p
+            *ngIf="
+              editForm.controls['address']?.invalid &&
+              editForm.controls['address']?.touched
+            "
+            class="error"
+          >
+            Address is required.
+          </p>
+        </div>
+
+        <!-- Image Upload -->
+        <label for="imageInput1" class="mt-3">Background Image</label>
+        <input
+          id="imageInput1"
+          name="imageFile"
+          type="file"
+          (change)="onFileSelected($event)"
+          class="cool-input"
+          accept="image/*"
+        />
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="cool-button cool-small on-bg font-weight-bolder mb-4 mt-3"
+          style="width: 150px"
+          [disabled]="editForm.invalid"
+        >
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

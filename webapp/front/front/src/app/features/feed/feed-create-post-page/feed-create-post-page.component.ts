@@ -62,7 +62,7 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute,
     private userSessionService: UserSessionService,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Build form
@@ -76,12 +76,18 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     });
 
     // Fetch channels & tags
-    this.feedChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_FEED_CHANNEL);
-    this.announcementsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL);
-    this.complaintsChannelUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL);
+    this.feedChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+    );
+    this.announcementsChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+    );
+    this.complaintsChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL
+    );
 
     this.route.queryParams.subscribe((params) => {
-      this.channel = params['SPAInChannel'];
+      this.channel = params['inChannel'];
       this.updateChannelTitle();
     });
 
@@ -192,7 +198,7 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
             'success'
           );
           this.router.navigate(['/posts'], {
-            queryParams: { SPAInChannel: this.channel },
+            queryParams: { inChannel: this.channel },
           });
         },
         error: (error) => {

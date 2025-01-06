@@ -7,38 +7,37 @@ import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class ProfessionService {
-    constructor(
-        private http: HttpClient,
-        private linkService: HateoasLinksService
-    ) { }
+  constructor(
+    private http: HttpClient,
+    private linkService: HateoasLinksService
+  ) {}
 
-    public getProfession(url: string): Observable<Profession> {
-        return this.http.get<ProfessionDto>(url).pipe(
-            map(mapProfession)
-        );
-    }
+  public getProfession(url: string): Observable<Profession> {
+    return this.http.get<ProfessionDto>(url).pipe(map(mapProfession));
+  }
 
-    public getProfessions(
-        queryParams: {
-            forWorker?: string;
-        } = {}
-    ): Observable<Profession[]> {
-        let params = new HttpParams();
+  public getProfessions(
+    queryParams: {
+      forWorker?: string;
+    } = {}
+  ): Observable<Profession[]> {
+    let params = new HttpParams();
 
-        if (queryParams.forWorker !== undefined) params = params.set('forWorker', queryParams.forWorker.toString());
+    if (queryParams.forWorker !== undefined)
+      params = params.set('forWorker', queryParams.forWorker.toString());
 
-        const url = this.linkService.getLink(LinkKey.PROFESSIONS)
+    const url = this.linkService.getLink(LinkKey.PROFESSIONS);
 
-        return this.http.get<ProfessionDto[]>(url, { params }).pipe(
-            map((professionDtos) => professionDtos.map(mapProfession))
-        );
-    }
+    return this.http
+      .get<ProfessionDto[]>(url, { params })
+      .pipe(map((professionDtos) => professionDtos.map(mapProfession)));
+  }
 }
 
 export function mapProfession(professionDto: ProfessionDto): Profession {
-    return {
-        name: professionDto.name,
-        displayName: formatName(professionDto.name),
-        self: professionDto._links.self
-    };
+  return {
+    name: professionDto.name,
+    displayName: formatName(professionDto.name),
+    self: professionDto._links.self,
+  };
 }

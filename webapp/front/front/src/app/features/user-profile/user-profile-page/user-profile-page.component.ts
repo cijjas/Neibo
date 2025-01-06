@@ -1,7 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService, User } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
-import { ImageService, AuthService, UserSessionService } from '@core/index';
+import {
+  ImageService,
+  AuthService,
+  UserSessionService,
+  ToastService,
+} from '@core/index';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -22,18 +27,21 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private imageService: ImageService,
     private authService: AuthService,
+    private toastService: ToastService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    const userSub = this.userSessionService.getCurrentUser().subscribe((user: User | null) => {
-      if (user) {
-        this.currentUser = user;
-        this.darkMode = !!user.darkMode;
-        this.language = user.language === 'SPANISH' ? 'es' : 'en';
-        this.loadProfileImage(user.image);
-      }
-    });
+    const userSub = this.userSessionService
+      .getCurrentUser()
+      .subscribe((user: User | null) => {
+        if (user) {
+          this.currentUser = user;
+          this.darkMode = !!user.darkMode;
+          this.language = user.language === 'SPANISH' ? 'es' : 'en';
+          this.loadProfileImage(user.image);
+        }
+      });
     this.subscriptions.add(userSub);
   }
 
@@ -42,25 +50,31 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   }
 
   loadProfileImage(imageUrl: string): void {
-    const imageSub = this.imageService.fetchImage(imageUrl).subscribe(({ safeUrl }) => {
-      this.profileImageSafeUrl = safeUrl;
-    });
+    const imageSub = this.imageService
+      .fetchImage(imageUrl)
+      .subscribe(({ safeUrl }) => {
+        this.profileImageSafeUrl = safeUrl;
+      });
     this.subscriptions.add(imageSub);
   }
 
   toggleDarkMode(): void {
     if (this.currentUser) {
-      this.userService.toggleDarkMode(this.currentUser).subscribe((updatedUser) => {
-        this.userSessionService.setUserInformation(updatedUser);
-      });
+      this.userService
+        .toggleDarkMode(this.currentUser)
+        .subscribe((updatedUser) => {
+          this.userSessionService.setUserInformation(updatedUser);
+        });
     }
   }
 
   toggleLanguage(): void {
     if (this.currentUser) {
-      this.userService.toggleLanguage(this.currentUser).subscribe((updatedUser) => {
-        this.userSessionService.setUserInformation(updatedUser);
-      });
+      this.userService
+        .toggleLanguage(this.currentUser)
+        .subscribe((updatedUser) => {
+          this.userSessionService.setUserInformation(updatedUser);
+        });
     }
   }
 
@@ -81,16 +95,19 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
 
   uploadProfilePicture(file: File): void {
     if (this.currentUser) {
-      this.userService.uploadProfilePicture(this.currentUser, file).subscribe((updatedUser) => {
-        this.userSessionService.setUserInformation(updatedUser);
-        this.loadProfileImage(updatedUser.image);
-      });
+      this.userService
+        .uploadProfilePicture(this.currentUser, file)
+        .subscribe((updatedUser) => {
+          this.userSessionService.setUserInformation(updatedUser);
+          this.loadProfileImage(updatedUser.image);
+        });
     }
   }
 
   logout(): void {
-    this.userSessionService.logout();
     this.authService.logout();
-    this.router.navigate(['/login']); // Redirect to the login page
+    this.router.navigate(['/login']).then(() => {
+      this.toastService.showToast('Successfully logged out.', 'success');
+    });
   }
 }

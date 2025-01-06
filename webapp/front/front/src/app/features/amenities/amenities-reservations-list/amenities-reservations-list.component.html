@@ -20,27 +20,32 @@
 
     <!-- No Reservations Found -->
     <div
-      *ngIf="reservationsList?.length === 0 && !isLoading"
-      class="f-c-c-c align-items-center"
+      *ngIf="!isLoading && reservationsList?.length === 0"
+      class="f-c-c-c align-items-center mb-4"
       style="text-align: center"
     >
-      <span class="w-100 mb-2">No reservations found</span>
+      <span class="w-100 mb-2 c-light-text"> You have no reservations. </span>
+      <span class="w-100 c-light-text">
+        Browse amenities and make your first reservation.
+      </span>
     </div>
 
     <!-- Reservations List -->
-    <div *ngIf="reservationsList?.length > 0">
+    <div class="w-100" *ngIf="reservationsList?.length > 0">
       <div
         *ngFor="let reservation of reservationsList"
         class="cool-static-container m-b-20"
         style="word-wrap: break-word"
         aria-hidden="true"
       >
-        <div class="f-c-c-c">
+        <div class="f-c-c-c w-100">
           <div
             class="f-r-sb-c w-100 align-items-center d-flex"
             style="align-items: center"
           >
-            <h5 class="m-0">{{ reservation.amenity?.name }}</h5>
+            <h5 class="m-0 font-weight-bold">
+              {{ reservation.amenity?.name }}
+            </h5>
             <a
               id="delete-reservation"
               class="pointer"
@@ -49,19 +54,28 @@
               <i class="fas fa-trash" style="color: var(--error)"></i>
             </a>
           </div>
-          <div>
+          <div class="w-100">
             <h6 class="mb-3" style="color: var(--lighttext)">
               Date
-              <span class="c-primary">{{ reservation.bookingDate }}</span>
+              <span class="c-primary font-weight-bold">{{
+                reservation.bookingDate
+              }}</span>
             </h6>
-            <h6 class="mb-3" style="color: var(--lighttext)">
-              Start Time
-              <span class="c-primary">{{ reservation.shift?.startTime }}</span>
-            </h6>
-            <h6 class="mb-3" style="color: var(--lighttext)">
-              End Time
-              <span class="c-primary">{{ reservation.shift?.endTime }}</span>
-            </h6>
+            <div class="w-100 f-r-sb-c time-container">
+              <h6 class="time-item start-time" style="color: var(--lighttext)">
+                Start Time
+                <span class="c-primary">{{
+                  reservation.shift?.startTime
+                }}</span>
+              </h6>
+              <h6
+                class="time-item end-time"
+                style="color: var(--lighttext); text-align: right"
+              >
+                End Time
+                <span class="c-primary">{{ reservation.shift?.endTime }}</span>
+              </h6>
+            </div>
           </div>
         </div>
       </div>

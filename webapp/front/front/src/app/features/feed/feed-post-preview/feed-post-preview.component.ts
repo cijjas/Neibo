@@ -2,7 +2,11 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { formatDistanceToNow } from 'date-fns';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { ImageService, HateoasLinksService, UserSessionService } from '@core/index';
+import {
+  ImageService,
+  HateoasLinksService,
+  UserSessionService,
+} from '@core/index';
 import { LikeService, TagService, Post, Tag, LinkKey } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -21,7 +25,7 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
   tags: Tag[] = [];
   hasLiked: boolean = false;
   likesUrl: string | undefined;
-  SPAInChannel: string;
+  inChannel: string;
 
   constructor(
     private linkStorage: HateoasLinksService,
@@ -31,10 +35,10 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.SPAInChannel = this.route.snapshot.queryParams['SPAInChannel'];
+    this.inChannel = this.route.snapshot.queryParams['inChannel'];
 
     const tagLink = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_TAGS);
     this.likesUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_LIKES);
@@ -55,36 +59,46 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
     // Fetch post image
-    const postImageSub = this.imageService.fetchImage(this.post.image).subscribe(({ safeUrl, isFallback }) => {
-      this.postImageSafeUrl = safeUrl;
-      this.isPostImageFallback = isFallback;
-    });
+    const postImageSub = this.imageService
+      .fetchImage(this.post.image)
+      .subscribe(({ safeUrl, isFallback }) => {
+        this.postImageSafeUrl = safeUrl;
+        this.isPostImageFallback = isFallback;
+      });
     this.subscriptions.add(postImageSub);
 
     // Fetch author image
-    const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe(({ safeUrl }) => {
-      this.authorImageSafeUrl = safeUrl;
-    });
+    const authorImageSub = this.imageService
+      .fetchImage(this.post.author.image)
+      .subscribe(({ safeUrl }) => {
+        this.authorImageSafeUrl = safeUrl;
+      });
     this.subscriptions.add(authorImageSub);
   }
 
   private updateHumanReadableDate(): void {
     if (this.post.createdAt) {
-      this.humanReadableDate = formatDistanceToNow(new Date(this.post.createdAt), { addSuffix: true });
+      this.humanReadableDate = formatDistanceToNow(
+        new Date(this.post.createdAt),
+        { addSuffix: true }
+      );
     }
   }
 
-
   private loadLikeStatus(): void {
     if (this.likesUrl) {
-      this.likeService.getLikes(this.likesUrl, { onPost: this.post.self }).subscribe({
-        next: (response) => {
-          this.hasLiked = response.likes.some((like) => like.post.self === this.post.self);
-        },
-        error: (err) => {
-          console.error('Error fetching like status:', err);
-        }
-      });
+      this.likeService
+        .getLikes(this.likesUrl, { onPost: this.post.self })
+        .subscribe({
+          next: (response) => {
+            this.hasLiked = response.likes.some(
+              (like) => like.post.self === this.post.self
+            );
+          },
+          error: (err) => {
+            console.error('Error fetching like status:', err);
+          },
+        });
     }
   }
 
@@ -99,40 +113,41 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
   private likePost(): void {
     if (this.likesUrl) {
       var userUrl: string;
-      this.userSessionService.getCurrentUser().subscribe(
-        (user) => userUrl = user.self
-      )
-      this.likeService.createLike(
-        {
+      this.userSessionService
+        .getCurrentUser()
+        .subscribe((user) => (userUrl = user.self));
+      this.likeService
+        .createLike({
           post: this.post.self,
-          user: userUrl
-        }
-      ).subscribe({
-        next: () => {
-          this.hasLiked = true;
-          this.post.likeCount++;
-        },
-        error: (err) => {
-          console.error('Error liking post:', err);
-        }
-      });
+          user: userUrl,
+        })
+        .subscribe({
+          next: () => {
+            this.hasLiked = true;
+            this.post.likeCount++;
+          },
+          error: (err) => {
+            console.error('Error liking post:', err);
+          },
+        });
     }
   }
 
   private unlikePost(): void {
     if (this.likesUrl) {
       var userUrl: string;
-      this.userSessionService.getCurrentUser().subscribe(
-        (user) => userUrl = user.self
-      )
-      this.likeService.deleteLike(this.post.self, userUrl).subscribe({ // Replace 'current-user-id' appropriately
+      this.userSessionService
+        .getCurrentUser()
+        .subscribe((user) => (userUrl = user.self));
+      this.likeService.deleteLike(this.post.self, userUrl).subscribe({
+        // Replace 'current-user-id' appropriately
         next: () => {
           this.hasLiked = false;
           this.post.likeCount--;
         },
         error: (err) => {
           console.error('Error unliking post:', err);
-        }
+        },
       });
     }
   }
@@ -150,8 +165,6 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
       queryParamsHandling: 'merge',
     });
   }
-
-
 
   ngOnDestroy(): void {
     clearInterval(this.timer);

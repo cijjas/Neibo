@@ -1,28 +1,44 @@
 <!--<c:if test="${channel != 'Announcements'}">-->
-<div class="upper-feed-buttons-box  ">
+<div class="upper-feed-buttons-box">
   <div class="f-r-s-c filters g-05">
-    <a (click)="changeStatusToLatest()" class="cool-feed-button rounded"
-      [ngClass]="{ 'active': statusClass === 'Latest' }">
+    <a
+      (click)="changeStatusToLatest()"
+      class="cool-feed-button rounded"
+      [ngClass]="{ active: statusClass === 'Latest' }"
+    >
       <i class="fa-solid fa-arrow-up-wide-short"></i>
       <span i18n>Latest</span>
     </a>
 
     <!-- Trending Button -->
-    <a (click)="changeStatusToTrending()" class="cool-feed-button rounded"
-      [ngClass]="{ 'active': statusClass === 'Trending' }">
+    <a
+      (click)="changeStatusToTrending()"
+      class="cool-feed-button rounded"
+      [ngClass]="{ active: statusClass === 'Trending' }"
+    >
       <i class="fa-solid fa-arrow-trend-up ms-1"></i>
       <span i18n>Trending</span>
     </a>
 
     <!-- Hot Button -->
-    <a (click)="changeStatusToHot()" class="coolest-button " [ngClass]="{ 'active': statusClass === 'Hot' }">
+    <a
+      (click)="changeStatusToHot()"
+      class="coolest-button"
+      [ngClass]="{ active: statusClass === 'Hot' }"
+    >
       <i class="fa-solid fa-fire ms-1"></i>
       <span i18n>Hot</span>
     </a>
   </div>
 
-  <div *ngIf="currentUser.userRole !== 'ADMINISTRATOR' && channelClass !== 'Announcements'">
-    <button (click)="publishInChannel()" class="cool-feed-button ">
+  <div
+    *ngIf="
+      currentUser &&
+      currentUser.userRole !== 'ADMINISTRATOR' &&
+      channelClass !== 'Announcements'
+    "
+  >
+    <button (click)="publishInChannel()" class="cool-feed-button">
       <i class="fa-solid fa-plus"></i>
 
       <ng-container [ngSwitch]="channelClass">
@@ -32,6 +48,7 @@
       </ng-container>
     </button>
   </div>
+
   <!--<c:if test='${loggedUser.role != "ADMINISTRATOR"}'>
       <a onclick="publishInChannel()" class="cool-feed-button p-3 ">
         <i class="fa-solid fa-plus"></i>

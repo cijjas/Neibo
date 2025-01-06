@@ -1,14 +1,27 @@
-import { Component, ElementRef, ViewChild, OnInit, HostListener } from '@angular/core';
-import { HateoasLinksService, ToastService, UserSessionService } from '@core/index';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  OnInit,
+  AfterViewInit,
+  HostListener,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  HateoasLinksService,
+  ToastService,
+  UserSessionService,
+} from '@core/index';
 import { AffiliationService, NeighborhoodService } from '@shared/index';
 import { Affiliation, LinkKey, Neighborhood } from '@shared/models';
-
 
 @Component({
   selector: 'app-neighborhoods',
   templateUrl: './service-providers-join-neighborhoods-page.component.html',
 })
-export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
+export class ServiceProvidersJoinNeighborhoodsComponent
+  implements OnInit, AfterViewInit
+{
   darkMode = false;
 
   // Simulates the data from your JSP
@@ -21,66 +34,187 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
   // Whether the drop-down is open or not
   isSelectOpen = false;
 
+  // --- NEW: for pagination ---
+  page = 1; // current page
+  size = 10; // items to fetch per page
+  hasMore = true; // indicates if more pages are available
+  isLoading = false; // to prevent multiple simultaneous fetches
+
+  currentAssociatedPage = 1; // Current page for affiliated neighborhoods
+  totalAssociatedPages = 1; // Total pages available
+  pageSize = 10; // Page size (items per page)
+
   // For referencing DOM elements
   @ViewChild('selectBtn') selectBtnRef!: ElementRef;
+  // --- NEW: reference to the scrollable UL ---
+  @ViewChild('listItems', { static: false })
+  listItemsRef!: ElementRef<HTMLUListElement>;
+  isListenerAttached = false;
 
   constructor(
     private neighborhoodService: NeighborhoodService,
     private linkService: HateoasLinksService,
     private toastService: ToastService,
-    private affiliationService: AffiliationService
-  ) { }
+    private affiliationService: AffiliationService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.loadAssociatedNeighborhoods();
-    this.loadOtherNeighborhoods();
-    this.updateDisplayText();
+    this.route.queryParams.subscribe((params) => {
+      this.currentAssociatedPage = +params['page'] || 1; // Default to page 1
+      this.pageSize = +params['size'] || 10; // Default to size 10
+      this.loadAssociatedNeighborhoods();
+      this.loadOtherNeighborhoods(true);
+    });
   }
 
+  // --- NEW: attach the scroll listener after view init ---
+  ngAfterViewInit(): void {
+    if (this.listItemsRef) {
+      this.listItemsRef.nativeElement.addEventListener(
+        'scroll',
+        this.onListScroll.bind(this)
+      );
+    }
+  }
+
+  ngAfterViewChecked(): void {
+    if (!this.listItemsRef || !this.listItemsRef.nativeElement) {
+      // console.log('ListItemsRef not yet defined');
+      return;
+    }
+
+    if (!this.isListenerAttached) {
+      console.log('Attaching scroll listener to listItemsRef');
+      this.listItemsRef.nativeElement.addEventListener(
+        'scroll',
+        this.onListScroll.bind(this)
+      );
+      this.isListenerAttached = true; // Prevent reattaching
+    }
+  }
+
+  // --- Existing logic (unchanged) ---
   loadAssociatedNeighborhoods(): void {
     const queryParams = {
-      forWorker: this.linkService.getLink(LinkKey.USER_WORKER)
-    }
+      forWorker: this.linkService.getLink(LinkKey.USER_WORKER),
+      page: this.currentAssociatedPage,
+      size: this.pageSize,
+    };
 
     this.affiliationService.getAffiliations(queryParams).subscribe({
       next: (response) => {
         this.associatedNeighborhoods = response.affiliations;
+        this.totalAssociatedPages = response.totalPages || 1; // Total pages from API response
+        this.updateQueryParams(); // Persist the current page in the URL
       },
       error: () => {
-        this.toastService.showToast('Could not load associated neighborhoods.', 'error');
-
-      }
-    })
+        this.toastService.showToast(
+          'Could not load associated neighborhoods.',
+          'error'
+        );
+      },
+    });
   }
 
-  loadOtherNeighborhoods(): void {
-    const queryParams = {
-      withoutWorker: this.linkService.getLink(LinkKey.USER_WORKER)
+  private updateQueryParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: this.currentAssociatedPage, size: this.pageSize },
+      queryParamsHandling: 'merge', // Preserve other query params
+    });
+  }
+
+  onAssociatedPageChange(page: number): void {
+    this.currentAssociatedPage = page;
+    this.updateQueryParams();
+    this.loadAssociatedNeighborhoods();
+  }
+
+  // --- Modified to handle paging ---
+  loadOtherNeighborhoods(isFirstPage = false): void {
+    if (isFirstPage) {
+      // Reset state for new
+      this.resetScrollState();
+      this.page = 1;
+      this.otherNeighborhoods = [];
+      this.hasMore = true;
     }
+
+    // If we have no more results or are already loading, do nothing
+    if (!this.hasMore || this.isLoading) return;
+
+    this.isLoading = true;
+
+    const queryParams = {
+      withoutWorker: this.linkService.getLink(LinkKey.USER_WORKER),
+      page: this.page,
+      size: this.size,
+    };
 
     this.neighborhoodService.getNeighborhoods(queryParams).subscribe({
       next: (response) => {
-        this.otherNeighborhoods = response.neighborhoods;
-      },
-      error: (error) => {
-        this.toastService.showToast('Could not load unassociated neighborhoods.', 'error');
+        const newItems = response.neighborhoods ?? [];
+        // Append new items to existing
+        this.otherNeighborhoods.push(...newItems);
 
-      }
-    })
+        // If we got fewer items than 'size', assume we're at the last page
+        if (newItems.length < this.size) {
+          this.hasMore = false;
+        } else {
+          this.page++;
+        }
+
+        this.isLoading = false;
+      },
+      error: () => {
+        this.toastService.showToast(
+          'Could not load unassociated neighborhoods.',
+          'error'
+        );
+        this.isLoading = false;
+      },
+    });
   }
+
+  // --- NEW: Handler for the scroll event on UL .list-items.n-workers ---
+  onListScroll(event: Event): void {
+    const element = event.target as HTMLElement;
+
+    // If the user is near the bottom, attempt to load more
+    const threshold = 30; // adjust to your liking
+    const position =
+      element.scrollHeight - element.scrollTop - element.clientHeight;
+
+    if (position < threshold) {
+      this.loadOtherNeighborhoods(false);
+    }
+  }
+
   onRemoveNeighborhood(neighborhood: Neighborhood): void {
     this.affiliationService.deleteAffiliation(neighborhood.self).subscribe({
       next: () => {
         this.associatedNeighborhoods = this.associatedNeighborhoods.filter(
           (affiliation) => affiliation.neighborhood.self !== neighborhood.self
         );
-        this.loadOtherNeighborhoods();
-        this.toastService.showToast(`You have successfully left '${neighborhood.name}'.`, 'success');
+        // After removal, reload the list (optional if you prefer)
+        this.loadOtherNeighborhoods(true);
+        this.toastService.showToast(
+          `You have successfully left '${neighborhood.name}'.`,
+          'success'
+        );
       },
       error: (err) => {
-        console.error(`Failed to unaffiliate from '${neighborhood.name}':`, err);
-        this.toastService.showToast(`Failed to leave '${neighborhood.name}'. Please try again.`, 'error');
-      }
+        console.error(
+          `Failed to unaffiliate from '${neighborhood.name}':`,
+          err
+        );
+        this.toastService.showToast(
+          `Failed to leave '${neighborhood.name}'. Please try again.`,
+          'error'
+        );
+      },
     });
   }
 
@@ -105,13 +239,12 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
   }
 
   /**
-   * Updates the text shown on the select button
+   * Displays text for selected neighborhoods
    */
   get displayText(): string {
     if (this.selectedNeighborhoodIds.length === 0) {
       return 'Select neighborhood';
     }
-    // Optionally show them all, or abbreviate
     const selected = this.otherNeighborhoods
       .filter((o) => this.selectedNeighborhoodIds.includes(o.self))
       .map((o) => o.name);
@@ -134,21 +267,61 @@ export class ServiceProvidersJoinNeighborhoodsComponent implements OnInit {
     this.isSelectOpen = !this.isSelectOpen;
   }
 
-  /**
-   * Submit action for the form
-   */
   onSubmit(): void {
-    this.affiliationService.createAffiliations(this.selectedNeighborhoodIds).subscribe({
-      next: () => {
-        this.toastService.showToast('Affiliations created successfully!', 'success');
-        this.loadAssociatedNeighborhoods(); // Reload associated neighborhoods
-        this.loadOtherNeighborhoods(); // Optionally reload other neighborhoods if needed
-        this.selectedNeighborhoodIds = []; // Clear the selected IDs after submission
-      },
-      error: () => {
-        this.toastService.showToast('Affiliations to neighborhoods could not be done, try again later.', 'error');
+    this.affiliationService
+      .createAffiliations(this.selectedNeighborhoodIds)
+      .subscribe({
+        next: () => {
+          this.toastService.showToast(
+            'Affiliations created successfully!',
+            'success'
+          );
+
+          // Reload associated neighborhoods
+          this.loadAssociatedNeighborhoods();
+
+          // Reset and reload other neighborhoods
+          this.resetScrollState();
+          this.loadOtherNeighborhoods(true);
+
+          // Clear selected IDs
+          this.selectedNeighborhoodIds = [];
+
+          // Reinitialize scroll listener after reload
+          this.reinitializeScrollListener();
+        },
+        error: () => {
+          this.toastService.showToast(
+            'Affiliations to neighborhoods could not be done, try again later.',
+            'error'
+          );
+        },
+      });
+  }
+
+  resetScrollState(): void {
+    this.page = 0;
+    this.hasMore = true;
+    this.isLoading = false;
+    this.isListenerAttached = false;
+  }
+
+  reinitializeScrollListener(): void {
+    setTimeout(() => {
+      if (!this.listItemsRef || !this.listItemsRef.nativeElement) {
+        // console.log('ListItemsRef not yet defined for reinitialization');
+        return;
       }
-    });
+
+      if (!this.isListenerAttached) {
+        // console.log('Reattaching scroll listener to listItemsRef');
+        this.listItemsRef.nativeElement.addEventListener(
+          'scroll',
+          this.onListScroll.bind(this)
+        );
+        this.isListenerAttached = true; // Prevent duplicate listeners
+      }
+    }, 0); // Delay to ensure DOM is updated
   }
 
   /**

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -10,10 +17,11 @@ import { HateoasLinksService } from '@core/index';
   selector: 'app-service-providers-reviews-and-posts',
   templateUrl: './service-providers-reviews-and-posts.component.html',
 })
-export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestroy {
+export class ServiceProvidersReviewsAndPostsComponent
+  implements OnInit, OnDestroy
+{
   private workerSubject = new BehaviorSubject<Worker | null>(null);
   private subscriptions = new Subscription();
-
 
   @Output() openReviewDialog = new EventEmitter<void>();
 
@@ -43,16 +51,20 @@ export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestr
     private route: ActivatedRoute,
     private router: Router,
     private workerService: WorkerService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const workerId = this.route.snapshot.paramMap.get('id');
     if (workerId) {
       // Ensure `loadWorker` completes first
+      console.log(workerId);
       this.loadWorker(workerId).then(() => {
         // Execute only after worker is loaded
-        this.isTheWorker = this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
-        this.isWorker = this.linkService.getLink(LinkKey.USER_USER_ROLE) === this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
+        this.isTheWorker =
+          this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
+        this.isWorker =
+          this.linkService.getLink(LinkKey.USER_USER_ROLE) ===
+          this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
 
         // Subscribe to query parameters for pagination *and* for tab selection
         this.subscriptions.add(
@@ -122,7 +134,10 @@ export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestr
   loadReviews(): void {
     const worker = this.workerSubject.getValue();
     if (worker?.reviews) {
-      const queryParams = { page: this.reviewCurrentPage, size: this.reviewPageSize };
+      const queryParams = {
+        page: this.reviewCurrentPage,
+        size: this.reviewPageSize,
+      };
       this.reviewService.getReviews(worker.reviews, queryParams).subscribe({
         next: (response) => {
           this.reviews = response.reviews;
@@ -136,7 +151,10 @@ export class ServiceProvidersReviewsAndPostsComponent implements OnInit, OnDestr
   loadPosts(): void {
     const worker = this.workerSubject.getValue();
     if (worker?.posts) {
-      const queryParams = { page: this.postCurrentPage, size: this.postPageSize };
+      const queryParams = {
+        page: this.postCurrentPage,
+        size: this.postPageSize,
+      };
       this.postService.getWorkerPosts(queryParams).subscribe({
         next: (response) => {
           this.posts = response.posts;
