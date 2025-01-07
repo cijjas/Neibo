@@ -1,34 +1,48 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
+import { HateoasLinksService } from '@core/services/link.service';
 import { UserSessionService } from '@core/services/user-session.service';
+import { LinkKey, Roles } from '@shared/index';
 
 export const AuthGuard = () => {
   const authService = inject(AuthService);
   const userSessionService = inject(UserSessionService);
   const router = inject(Router);
+  const linkStorage = inject(HateoasLinksService);
 
   if (authService.isLoggedIn()) {
-    // Get the current user's role from the UserSessionService
-    const userRole = userSessionService.getCurrentUserRole();
+    const userRole: Roles = userSessionService.getCurrentRole();
 
-    // Redirect based on the role
     switch (userRole) {
-      case 'ADMIN':
-        router.navigate(['/admin']);
-        break;
-      case 'USER':
+      case Roles.ADMINISTRATOR:
         router.navigate(['/posts']);
         break;
-      case 'UNVERIFIED':
+
+      case Roles.NEIGHBOR:
+        router.navigate(['/posts']);
+        break;
+
+      case Roles.WORKER:
+        const workerUrl = linkStorage.getLink(LinkKey.USER_WORKER);
+        router.navigate(['services', 'profile', workerUrl]);
+        break;
+
+      case Roles.UNVERIFIED_NEIGHBOR:
+      case Roles.UNVERIFIED_WORKER:
         router.navigate(['/unverified']);
         break;
+
+      case Roles.REJECTED:
+        router.navigate(['/rejected']);
+        break;
+
       default:
-        router.navigate(['/not-found']); // Fallback for undefined roles
+        router.navigate(['/not-found']);
         break;
     }
 
-    return false; // Prevent navigation to the login page
+    return false; // Prevent navigation to the login page if already logged in
   }
 
   return true; // Allow navigation to /login if not logged in

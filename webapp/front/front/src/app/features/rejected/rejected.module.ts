@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { UnverifiedPageComponent } from './unverified-page/unverified-page.component';
 import { SharedModule } from '@shared/shared.module';
+import { RejectedPageComponent } from '../rejected/rejected-page/rejected-page.component';
 
-const routes: Routes = [{ path: '', component: UnverifiedPageComponent }];
+const routes: Routes = [{ path: '', component: RejectedPageComponent }];
 
 @NgModule({
-  declarations: [UnverifiedPageComponent],
+  declarations: [RejectedPageComponent],
   imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
 })
-export class UnverifiedModule {}
+export class RejectedModule {}

@@ -1507,6 +1507,7 @@ footer div {
   /* Remove negative margin */
   color: var(--onprimary);
   text-align: center;
+  opacity: 0.96;
 }
 
 .wave-footer {
@@ -3326,67 +3327,61 @@ input[type="time"] {
   /* Accent color for the shift times */
 }
 
-/* TOAS ------------------------------------------ */
-
-.toast {
+/* TOAST ------------------------------------------ */
+.my-toast {
   position: fixed;
   bottom: 20px;
   right: 20px;
   padding: 10px 15px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  display: none;
-  /* Hidden by default */
   align-items: center;
   z-index: 1000;
   max-width: 300px;
-  /* Ensure this line-height is applied */
-  opacity: 0;
-  /* Start hidden */
-  transform: translateY(20px);
-  /* Slightly move down for animation effect */
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  /* Smooth fade-in and slide-up */
+  opacity: 0; /* Start hidden */
+  visibility: hidden; /* Hidden from view */
+  transform: scale(0.95); /* Slightly shrink */
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.4s; /* Visibility delay for smooth hide */
 }
 
-.toast.show {
-  display: flex;
-  /* Show when the 'show' class is present */
-  opacity: 1;
-  /* Fully visible */
-  transform: translateY(0);
-  /* Reset transform */
+.my-toast.show {
+  opacity: 1; /* Fully visible */
+  visibility: visible; /* Make visible */
+  transform: scale(1); /* Reset transform */
+  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.toast.success {
+.my-toast.success {
   background-color: #e6ffed;
   color: #155724;
 }
 
-.toast.error {
+.my-toast.error {
   background-color: #ffe6e6;
   color: #721c24;
 }
 
-.toast .dot {
+.my-toast .dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   margin-right: 10px;
   flex-shrink: 0;
-  background-color: #ccc;
-  /* Default color */
+  background-color: #ccc; /* Default color */
+  display: inline-block; /* Ensure it is rendered */
 }
 
-.toast.success .dot {
+.my-toast.success .dot {
   background-color: #28a745;
 }
 
-.toast.error .dot {
+.my-toast.error .dot {
   background-color: #dc3545;
 }
 
-.toast-content {
+.my-toast-content {
   display: flex;
   align-items: center;
 }
@@ -3646,4 +3641,10 @@ td.selected .cell-wrapper {
   /* Center the text */
   line-height: 1;
   /* Adjust line height */
+}
+
+.invisible-div {
+  height: 130px; /* You can adjust the height if needed */
+  background-color: transparent; /* Optional, to test if the space is occupied */
+  visibility: hidden; /* Makes the div invisible while still occupying space */
 }

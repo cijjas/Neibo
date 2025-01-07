@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingService, Booking, LinkKey } from '@shared/index';
-import { HateoasLinksService } from '@core/index';
+import { HateoasLinksService, ToastService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -20,6 +20,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
     private bookingService: BookingService,
     private linkService: HateoasLinksService,
     private route: ActivatedRoute,
+    private toastService: ToastService,
     private router: Router
   ) {}
 
@@ -43,14 +44,16 @@ export class AmenitiesReservationsListComponent implements OnInit {
       })
       .subscribe({
         next: (data) => {
-          console.log('success');
           this.reservationsList = data.bookings || []; // Ensure it's an array
           this.totalPages = data.totalPages || 1;
           this.isLoading = false; // Stop loading
         },
         error: (err) => {
-          console.log('error');
           console.error(err);
+          this.toastService.showToast(
+            'There was a problem getting your reservations.',
+            'error'
+          );
           this.showErrorMessage = true;
           this.isLoading = false; // Stop loading on error
         },
@@ -85,18 +88,26 @@ export class AmenitiesReservationsListComponent implements OnInit {
     });
   }
 
-  deleteReservation(bookingUrl: string): void {
+  deleteReservation(booking: Booking): void {
     this.isLoading = true;
 
-    this.bookingService.deleteBooking(bookingUrl).subscribe({
+    this.bookingService.deleteBooking(booking.self).subscribe({
       next: () => {
         this.reservationsList = this.reservationsList.filter(
-          (reservation) => reservation.self !== bookingUrl
+          (reservation) => reservation.self !== booking.self
         );
         this.loadReservations(); // Reload reservations after deletion
+        this.toastService.showToast(
+          `Reservation for ${booking.amenity.name} canceled.`,
+          'success'
+        );
       },
       error: (err) => {
         console.error(err);
+        this.toastService.showToast(
+          `Reservation for ${booking.amenity.name} could not be canceled. Try again.`,
+          'error'
+        );
         this.isLoading = false;
       },
     });

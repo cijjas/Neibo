@@ -6,7 +6,7 @@ import {
   Output,
   ViewChild,
   ElementRef,
-  HostListener
+  HostListener,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -16,20 +16,15 @@ import {
   LanguageService,
   Language,
   ProfessionService,
-  Profession
+  Profession,
 } from '@shared/index';
 import { environment } from '../../../../environments/environment';
-import {
-  AuthService,
-  ToastService,
-  UserSessionService
-} from '@core/index';
+import { AuthService, ToastService, UserSessionService } from '@core/index';
 import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-signup-dialog',
-  templateUrl: './signup-dialog.component.html'
+  templateUrl: './signup-dialog.component.html',
 })
 export class SignupDialogComponent implements OnInit {
   @Input() showSignupDialog: boolean = false;
@@ -75,7 +70,7 @@ export class SignupDialogComponent implements OnInit {
     private authService: AuthService,
     private professionService: ProfessionService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // 1) Load combos
@@ -92,9 +87,14 @@ export class SignupDialogComponent implements OnInit {
       password: ['', Validators.required],
       identification: [
         null,
-        [Validators.required, Validators.pattern('[0-9]*'), Validators.min(1), Validators.max(99999999)]
+        [
+          Validators.required,
+          Validators.pattern('[0-9]*'),
+          Validators.min(1),
+          Validators.max(99999999),
+        ],
       ],
-      language: ['', Validators.required]
+      language: ['', Validators.required],
     });
 
     // 3) Initialize service/worker form
@@ -108,10 +108,10 @@ export class SignupDialogComponent implements OnInit {
       address: ['', Validators.required],
       w_identification: [
         null,
-        [Validators.required, Validators.min(1), Validators.max(99999999)]
+        [Validators.required, Validators.min(1), Validators.max(99999999)],
       ],
       w_language: ['', Validators.required],
-      phoneNumber: ['', Validators.required]
+      phoneNumber: ['', Validators.required],
     });
   }
 
@@ -120,7 +120,10 @@ export class SignupDialogComponent implements OnInit {
   // =========================================
   trySignup(): void {
     if (this.signupForm.invalid) {
-      this.toastService.showToast('Please fill out all required fields.', 'error');
+      this.toastService.showToast(
+        'Please fill out all required fields.',
+        'error'
+      );
       return;
     }
 
@@ -140,40 +143,57 @@ export class SignupDialogComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.toastService.showToast('Neighbor signup successful! Logging you in...', 'success');
+          this.toastService.showToast(
+            'Neighbor signup successful! Logging you in...',
+            'success'
+          );
           // Attempt auto-login
-          this.authService.login(signupValues.mail, signupValues.password, false).subscribe({
-            next: (success) => {
-              this.loading = false;
-              if (success) {
-                const userRole = this.userSessionService.getCurrentUserRole();
-                if (userRole === 'UNVERIFIED_NEIGHBOR' || userRole === 'UNVERIFIED_WORKER') {
-                  this.router.navigate(['/unverified']).then(() => {
-                    this.closeSignupDialog();
-                  });
+          this.authService
+            .login(signupValues.mail, signupValues.password, false)
+            .subscribe({
+              next: (success) => {
+                this.loading = false;
+                if (success) {
+                  const userRole = this.userSessionService.getCurrentUserRole();
+                  if (
+                    userRole === 'UNVERIFIED_NEIGHBOR' ||
+                    userRole === 'UNVERIFIED_WORKER'
+                  ) {
+                    this.router.navigate(['/unverified']).then(() => {
+                      this.closeSignupDialog();
+                    });
+                  } else {
+                    this.router.navigate(['/posts']).then(() => {
+                      this.closeSignupDialog();
+                    });
+                  }
                 } else {
-                  this.router.navigate(['/posts']).then(() => {
-                    this.closeSignupDialog();
-                  });
+                  this.toastService.showToast(
+                    'Login failed after signup, please try manually.',
+                    'error'
+                  );
+                  this.closeSignupDialog();
                 }
-              } else {
-                this.toastService.showToast('Login failed after signup, please try manually.', 'error');
+              },
+              error: (err) => {
+                console.error('Automatic login error:', err);
+                this.loading = false;
+                this.toastService.showToast(
+                  'Login failed after signup, please try manually.',
+                  'error'
+                );
                 this.closeSignupDialog();
-              }
-            },
-            error: (err) => {
-              console.error('Automatic login error:', err);
-              this.loading = false;
-              this.toastService.showToast('Login failed after signup, please try manually.', 'error');
-              this.closeSignupDialog();
-            }
-          });
+              },
+            });
         },
         error: (error) => {
           console.error('Error during neighbor signup:', error);
           this.loading = false;
-          this.toastService.showToast('Signup failed. Please try again.', 'error');
-        }
+          this.toastService.showToast(
+            'Signup failed. Please try again.',
+            'error'
+          );
+        },
       });
   }
 
@@ -182,7 +202,10 @@ export class SignupDialogComponent implements OnInit {
   // =========================================
   submitServiceForm(): void {
     if (this.serviceForm.invalid) {
-      this.toastService.showToast('Please fill out all required fields.', 'error');
+      this.toastService.showToast(
+        'Please fill out all required fields.',
+        'error'
+      );
       return;
     }
     this.loading = true;
@@ -290,7 +313,7 @@ export class SignupDialogComponent implements OnInit {
           'There was a problem fetching the neighborhoods. Try again.',
           'error'
         );
-      }
+      },
     });
   }
 
@@ -305,14 +328,14 @@ export class SignupDialogComponent implements OnInit {
           'Could not retrieve available languages. Try Again.',
           'error'
         );
-      }
+      },
     });
   }
 
   getProfessions(): void {
     this.professionService.getProfessions().subscribe({
       next: (professions) => {
-        this.professionOptions = professions
+        this.professionOptions = professions;
       },
       error: (error) => {
         console.error('Error getting professions:', error);
@@ -320,7 +343,7 @@ export class SignupDialogComponent implements OnInit {
           'Could not retrieve professions. Try Again.',
           'error'
         );
-      }
+      },
     });
   }
 }

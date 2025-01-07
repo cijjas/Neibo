@@ -78,13 +78,11 @@
   <!-- Posts Tab Content -->
   <section id="content2" *ngIf="selectedTab === 'posts'">
     <div class="f-c-c-c w-100" style="gap: 10px">
-      <!-- TODO If loggedUser is the same as the worker's user, show "Post" button -->
       <a
         class="cool-button cool-small on-bg font-weight-bold mb-2"
         style="width: 200px"
         *ngIf="isTheWorker"
-        [routerLink]="['/publish']"
-        [queryParams]="{ onChannelId: 4 }"
+        (click)="goToServicePostCreation()"
       >
         Post
       </a>

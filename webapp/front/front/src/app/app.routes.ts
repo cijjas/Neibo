@@ -23,6 +23,8 @@ export const appRoutes: Routes = [
       import('@features/amenities/amenities.module').then(
         (m) => m.AmenitiesModule
       ),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
   },
 
   // Authentication
@@ -40,6 +42,8 @@ export const appRoutes: Routes = [
       import('@features/calendar/calendar.module').then(
         (m) => m.CalendarModule
       ),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
   },
 
   // Feed
@@ -47,6 +51,8 @@ export const appRoutes: Routes = [
     path: 'posts',
     loadChildren: () =>
       import('@features/feed/feed.module').then((m) => m.FeedModule),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
   },
 
   // Information
@@ -56,6 +62,8 @@ export const appRoutes: Routes = [
       import('@features/information/information.module').then(
         (m) => m.InformationModule
       ),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
   },
 
   // Marketplace
@@ -65,6 +73,8 @@ export const appRoutes: Routes = [
       import('@features/marketplace/marketplace.module').then(
         (m) => m.MarketplaceModule
       ),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
   },
 
   // Services
@@ -83,6 +93,8 @@ export const appRoutes: Routes = [
       import('@features/user-profile/user-profile.module').then(
         (m) => m.UserProfileModule
       ),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
   },
 
   // Unverified
@@ -94,6 +106,17 @@ export const appRoutes: Routes = [
       ),
     canActivate: [RoleGuard],
     data: { roles: [Roles.UNVERIFIED_NEIGHBOR, Roles.UNVERIFIED_WORKER] },
+  },
+
+  // Unverified
+  {
+    path: 'rejected',
+    loadChildren: () =>
+      import('@features/rejected/rejected.module').then(
+        (m) => m.RejectedModule
+      ),
+    canActivate: [RoleGuard],
+    data: { roles: [Roles.REJECTED] },
   },
 
   // 404 and Wildcard

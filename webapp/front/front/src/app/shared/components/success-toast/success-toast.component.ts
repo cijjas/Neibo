@@ -17,11 +17,17 @@ export class SuccessToastComponent {
       this.visible = toast.visible;
     });
   }
-
   get toastClasses() {
     return {
       show: this.visible,
       [this.type]: true,
     };
+  }
+
+  hideToast() {
+    this.visible = false; // Trigger CSS transition
+    setTimeout(() => {
+      this.message = ''; // Clear the message after transition ends
+    }, 400); // Matches CSS transition duration (400ms)
   }
 }

@@ -3,11 +3,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { formatDistanceToNow } from 'date-fns';
 
 import { Post, Comment, Tag, LinkKey } from '@shared/index';
-import { CommentService, LikeService, TagService, } from '@shared/index';
+import { CommentService, LikeService, TagService } from '@shared/index';
 
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { HateoasLinksService, UserSessionService, ImageService } from '@core/index';
+import {
+  HateoasLinksService,
+  UserSessionService,
+  ImageService,
+} from '@core/index';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -42,7 +46,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     //
@@ -67,35 +71,41 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     this.updateHumanReadableDate();
     this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // Update every minute
 
-    const postImageSub = this.imageService.fetchImage(this.post.image).subscribe(({ safeUrl, isFallback }) => {
-      this.postImageSafeUrl = safeUrl;
-      this.isPostImageFallback = isFallback;
-    });
+    const postImageSub = this.imageService
+      .fetchImage(this.post.image)
+      .subscribe(({ safeUrl, isFallback }) => {
+        this.postImageSafeUrl = safeUrl;
+        this.isPostImageFallback = isFallback;
+      });
     this.subscriptions.add(postImageSub);
 
-    const authorImageSub = this.imageService.fetchImage(this.post.author.image).subscribe(({ safeUrl }) => {
-      this.authorImageSafeUrl = safeUrl;
-    });
+    const authorImageSub = this.imageService
+      .fetchImage(this.post.author.image)
+      .subscribe(({ safeUrl }) => {
+        this.authorImageSafeUrl = safeUrl;
+      });
     this.subscriptions.add(authorImageSub);
   }
-
 
   /**
    * Likes
    */
   private loadLikeStatus(): void {
     if (this.likesUrl) {
-      this.likeService.getLikes(this.likesUrl, { onPost: this.post.self }).subscribe({
-        next: (response) => {
-          this.isLiked = response.likes.some((like) => like.post.self === this.post.self);
-        },
-        error: (err) => {
-          console.error('Error fetching like status:', err);
-        },
-      });
+      this.likeService
+        .getLikes(this.likesUrl, { onPost: this.post.self })
+        .subscribe({
+          next: (response) => {
+            this.isLiked = response.likes.some(
+              (like) => like.post.self === this.post.self
+            );
+          },
+          error: (err) => {
+            console.error('Error fetching like status:', err);
+          },
+        });
     }
   }
-
 
   toggleLike(): void {
     if (this.isLiked) {
@@ -108,15 +118,17 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   private likePost(): void {
     this.userSessionService.getCurrentUser().subscribe((user) => {
       if (this.likesUrl) {
-        this.likeService.createLike({ post: this.post.self, user: user.self }).subscribe({
-          next: () => {
-            this.isLiked = true;
-            this.post.likeCount++;
-          },
-          error: (err) => {
-            console.error('Error liking post:', err);
-          },
-        });
+        this.likeService
+          .createLike({ post: this.post.self, user: user.self })
+          .subscribe({
+            next: () => {
+              this.isLiked = true;
+              this.post.likeCount++;
+            },
+            error: (err) => {
+              console.error('Error liking post:', err);
+            },
+          });
       }
     });
   }
@@ -151,7 +163,6 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     }
   }
 
-
   /**
    * Comments
    */
@@ -164,34 +175,42 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     // Get the current user
     this.userSessionService.getCurrentUser().subscribe((user) => {
       // Submit the comment
-      this.commentService.createComment(this.post.comments, this.commentForm.get('comment')?.value, user.self).subscribe({
-        next: (createdComment) => {
-          // Reset the form
-          this.commentForm.reset();
+      this.commentService
+        .createComment(
+          this.post.comments,
+          this.commentForm.get('comment')?.value,
+          user.self
+        )
+        .subscribe({
+          next: (createdComment) => {
+            // Reset the form
+            this.commentForm.reset();
 
-          // Refresh the comments list
-          this.getComments(this.currentPage, this.pageSize);
-        },
-        error: (error) => {
-          console.error('Error creating comment:', error);
-        },
-      });
+            // Refresh the comments list
+            this.getComments(this.currentPage, this.pageSize);
+          },
+          error: (error) => {
+            console.error('Error creating comment:', error);
+          },
+        });
     });
   }
 
   getComments(page: number, size: number): void {
     if (this.post?.comments) {
-      this.commentService.getComments(this.post.comments, { page, size }).subscribe({
-        next: (response) => {
-          this.comments = response.comments || [];
-          this.totalPages = response.totalPages || 1;
-          this.currentPage = response.currentPage || 1;
-        },
-        error: (err) => {
-          console.error('Error fetching comments:', err);
-          this.comments = [];
-        },
-      });
+      this.commentService
+        .getComments(this.post.comments, { page, size })
+        .subscribe({
+          next: (response) => {
+            this.comments = response.comments || [];
+            this.totalPages = response.totalPages || 1;
+            this.currentPage = response.currentPage || 1;
+          },
+          error: (err) => {
+            console.error('Error fetching comments:', err);
+            this.comments = [];
+          },
+        });
     }
   }
 
@@ -211,12 +230,29 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
 
   private updateHumanReadableDate(): void {
     if (this.post.createdAt) {
-      this.humanReadableDate = formatDistanceToNow(new Date(this.post.createdAt), { addSuffix: true });
+      this.humanReadableDate = formatDistanceToNow(
+        new Date(this.post.createdAt),
+        { addSuffix: true }
+      );
     }
   }
 
   ngOnDestroy(): void {
     clearInterval(this.timer); // Clear the timer when the component is destroyed
     this.subscriptions.unsubscribe(); // Unsubscribe from all subscriptions
+  }
+
+  filterByTag(tagName: string): void {
+    // Get the current query parameters
+    const currentQueryParams = { ...this.route.snapshot.queryParams };
+    console.log(currentQueryParams['inChannel']);
+
+    currentQueryParams['withTag'] = tagName;
+
+    // Navigate to /posts with the updated query parameters
+    this.router.navigate(['/posts'], {
+      queryParams: currentQueryParams,
+      queryParamsHandling: 'merge',
+    });
   }
 }

@@ -1,60 +1,50 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    Router,
-    RouterStateSnapshot,
-    UrlTree
+  ActivatedRouteSnapshot,
+  Router,
+  RouterStateSnapshot,
+  UrlTree,
 } from '@angular/router';
-import { Observable, firstValueFrom } from 'rxjs';
-import { AuthService, UserSessionService } from '@core/index';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from '@core/services/auth.service';
+import { UserSessionService } from '@core/services/user-session.service';
+import { Roles } from '@shared/index';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class RoleGuard implements CanActivate {
-    constructor(
-        private router: Router,
-        private authService: AuthService,
-        private userSessionService: UserSessionService
-    ) { }
+export const RoleGuard = async (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+): Promise<boolean | UrlTree> => {
+  const router = inject(Router);
+  const authService = inject(AuthService);
+  const userSessionService = inject(UserSessionService);
 
-    async canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot
-    ): Promise<boolean | UrlTree> {
-        // 1) Check if user is logged in
-        if (!this.authService.isLoggedIn()) {
-            // Not logged in, redirect to login
-            return this.router.createUrlTree(['/login']);
-        }
+  // 1) Check if user is logged in
+  if (!authService.isLoggedIn()) {
+    // Not logged in, redirect to login
+    return router.createUrlTree(['/login']);
+  }
 
-        // 2) Check route data for roles required by this route
-        const requiredRoles = route.data['roles'] as string[] | undefined;
-        if (!requiredRoles || requiredRoles.length === 0) {
-            // If no roles are specified, just allow
-            return true;
-        }
+  // 2) Check route data for roles required by this route
+  const requiredRoles = route.data['roles'] as Roles[]; // gets the roles specified in router
+  if (!requiredRoles || requiredRoles.length === 0) {
+    // If no roles are specified, allow access
+    return true;
+  }
 
-        // 3) Get current user role from the session service (asynchronously)
-        const currentUser = await firstValueFrom(this.userSessionService.getCurrentUser());
+  // 3) Get current user role from UserSessionService (asynchronously)
+  const currentUser = userSessionService.getCurrentUser();
+  if (!currentUser) {
+    // No user in session, redirect to login
+    return router.createUrlTree(['/login']);
+  }
 
-        if (!currentUser) {
-            // No user in session, redirect to login
-            return this.router.createUrlTree(['/login']);
-        }
+  const userRole = userSessionService.getCurrentRole();
+  // 4) Check if the user's role matches any required role
+  if (requiredRoles.includes(userRole)) {
+    // Authorized
+    return true;
+  }
 
-        const userRole = currentUser.userRole;
-
-        // 4) Check if the user’s role matches any required role
-        const isAuthorized = requiredRoles.includes(userRole);
-
-        if (!isAuthorized) {
-            // User does not have the required roles, redirect to "Not Found"
-            return this.router.createUrlTree(['/not-found']);
-        }
-
-        // 5) Authorized
-        return true;
-    }
-}
+  // 5) Unauthorized, redirect to "Not Found"
+  return router.createUrlTree(['/not-found']);
+};

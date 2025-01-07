@@ -1,79 +1,121 @@
 <div class="left-column-container">
-
   <div class="f-c-c-c sticky">
-
-
-    <div class="left-box worker" *ngIf="userRole === 'WORKER'; else notWorker">
+    <!-- Worker-Specific Sidebar -->
+    <div
+      class="left-box worker"
+      *ngIf="userRole === Roles.WORKER; else notWorker"
+    >
       <div class="f-c-c-c">
-        <a id="profileButton" [routerLink]="['/services/profile', workerId]" class="cool-left-button f-r-sb-c"
-          [ngClass]="{ 'active': channelClass === 'Profile' }">
+        <a
+          id="profileButton"
+          [routerLink]="['/services/profile', workerId]"
+          class="cool-left-button f-r-sb-c"
+          [ngClass]="{ active: channelClass === 'Profile' }"
+        >
           <i class="fa-solid fa-address-card"></i>
           <span i18n>Business Card</span>
         </a>
-        <a id="workerServicesButton" [routerLink]="['/services']" class="cool-left-button f-r-sb-c"
-          [ngClass]="{ 'active': channelClass === 'Services' }">
+        <a
+          id="workerServicesButton"
+          [routerLink]="['/services']"
+          class="cool-left-button f-r-sb-c"
+          [ngClass]="{ active: channelClass === 'Services' }"
+        >
           <i class="fa-solid fa-handshake-angle"></i>
           <span i18n>See Services</span>
         </a>
-        <a id="neighborhoodsButton" [routerLink]="['/services', 'join-neighborhoods']" class="cool-left-button f-r-sb-c"
-          [ngClass]="{ 'active': channelClass === 'Neighborhoods' }">
+        <a
+          id="neighborhoodsButton"
+          [routerLink]="['/services', 'join-neighborhoods']"
+          class="cool-left-button f-r-sb-c"
+          [ngClass]="{ active: channelClass === 'Neighborhoods' }"
+        >
           <i class="fa-solid fa-house"></i>
           <span i18n>My Neighborhoods</span>
         </a>
       </div>
     </div>
 
+    <!-- Non-Worker Sidebar -->
     <ng-template #notWorker>
       <div class="left-box">
         <div class="f-c-c-c first">
-
-          <a *ngIf="userRole === 'ADMINISTRATOR'" [routerLink]='["/admin/announcement/new"]'
-            class="cool-left-button admin-button f-r-sb-c">
+          <a
+            *ngIf="userRole === Roles.ADMINISTRATOR"
+            [routerLink]="['/admin/announcement/new']"
+            class="cool-left-button admin-button f-r-sb-c"
+          >
             <i class="fa-solid fa-chart-pie"></i>
             <span i18n>Admin Panel</span>
           </a>
-          <a id="announcementsButton" (click)="changeChannelToAnnouncements()" class="cool-left-button f-r-sb-c"
-            [ngClass]="{ 'active': channelClass === 'Announcements' }">
+          <a
+            id="announcementsButton"
+            (click)="changeChannelToAnnouncements()"
+            class="cool-left-button f-r-sb-c"
+            [ngClass]="{ active: channelClass === 'Announcements' }"
+          >
             <i class="fas fa-bullhorn"></i>
             <span i18n>Announcements</span>
           </a>
-          <a id="feedButton" (click)="changeChannelToFeed()" class="cool-left-button f-r-sb-c"
-            [ngClass]="{ 'active': channelClass === 'Feed' }">
+          <a
+            id="feedButton"
+            (click)="changeChannelToFeed()"
+            class="cool-left-button f-r-sb-c"
+            [ngClass]="{ active: channelClass === 'Feed' }"
+          >
             <i class="fas fa-comments"></i>
             <span i18n>Feed</span>
           </a>
-          <a id="complaintsButton" (click)="changeChannelToComplaints()" class="cool-left-button f-r-sb-c"
-            [ngClass]="{ 'active': channelClass === 'Complaints' }">
+          <a
+            id="complaintsButton"
+            (click)="changeChannelToComplaints()"
+            class="cool-left-button f-r-sb-c"
+            [ngClass]="{ active: channelClass === 'Complaints' }"
+          >
             <i class="fas fa-envelope"></i>
             <span i18n>Complaints</span>
           </a>
         </div>
         <div class="f-c-c-c second">
           <div class="divider"></div>
-          <a id="marketplaceButton" routerLink="/marketplace" class="cool-left-button lila f-r-sb-c"
-            [ngClass]="{ 'active': channelClass === 'Marketplace' }">
+          <a
+            id="marketplaceButton"
+            routerLink="/marketplace"
+            class="cool-left-button lila f-r-sb-c"
+            [ngClass]="{ active: channelClass === 'Marketplace' }"
+          >
             <i class="fa-solid fa-store"></i>
             <span i18n>Marketplace</span>
           </a>
-          <a id="servicesButton" routerLink="/services" class="cool-left-button f-r-sb-c"
-            [ngClass]="{ 'active': channelClass === 'Services' }">
+          <a
+            id="servicesButton"
+            routerLink="/services"
+            class="cool-left-button f-r-sb-c"
+            [ngClass]="{ active: channelClass === 'Services' }"
+          >
             <i class="fa-solid fa-handshake-angle"></i>
             <span i18n>Services</span>
           </a>
-          <a id="reservationsButton" routerLink="/amenities" class="cool-left-button f-r-sb-c"
-            [ngClass]="{ 'active': channelClass === 'Reservations' }">
+          <a
+            id="reservationsButton"
+            routerLink="/amenities"
+            class="cool-left-button f-r-sb-c"
+            [ngClass]="{ active: channelClass === 'Reservations' }"
+          >
             <i class="fas fa-calendar-days"></i>
-            <span i18n>Amenities </span>
+            <span i18n>Amenities</span>
           </a>
-          <a id="informationButton" routerLink="/information" class="cool-left-button f-r-sb-c"
-            [ngClass]="{ 'active': channelClass === 'Information' }">
+          <a
+            id="informationButton"
+            routerLink="/information"
+            class="cool-left-button f-r-sb-c"
+            [ngClass]="{ active: channelClass === 'Information' }"
+          >
             <i class="fa-solid fa-circle-info"></i>
             <span i18n>Information</span>
           </a>
         </div>
       </div>
     </ng-template>
-
   </div>
-
 </div>

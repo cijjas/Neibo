@@ -15,7 +15,7 @@ import {
   AuthService,
   UserSessionService,
 } from '@core/index';
-import { LinkKey } from '@shared/index';
+import { LinkKey, Roles } from '@shared/index';
 
 @Component({
   selector: 'app-login-dialog',
@@ -71,81 +71,71 @@ export class LoginDialogComponent implements OnInit {
 
   tryLogin(): void {
     this.loading = true;
+
     if (this.loginForm.valid) {
       const { email, password, rememberMe } = this.loginForm.value;
 
       this.authService.login(email, password, rememberMe).subscribe({
         next: (success) => {
           this.loading = false;
-          if (success) {
-            let currentUserRoleUrl: string = this.linkStorage.getLink(
-              LinkKey.USER_USER_ROLE
-            );
-            let neighborUserRole: string = this.linkStorage.getLink(
-              LinkKey.NEIGHBOR_USER_ROLE
-            );
-            let workerUserRole: string = this.linkStorage.getLink(
-              LinkKey.WORKER_USER_ROLE
-            );
-            let unverifiedUserRole: string = this.linkStorage.getLink(
-              LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE
-            );
-            let rejectedUserRole: string = this.linkStorage.getLink(
-              LinkKey.REJECTED_USER_ROLE
-            );
-            let administratorUserRole: string = this.linkStorage.getLink(
-              LinkKey.ADMINISTRATOR_USER_ROLE
-            );
 
-            if (currentUserRoleUrl === workerUserRole) {
-              const workerUrl = this.linkStorage.getLink(LinkKey.USER_WORKER); // Fetch the workerUrl value
-              this.router
-                .navigate(['services', 'profile', workerUrl])
-                .then(() => {
-                  this.closeLoginDialog();
-                });
-            } else if (
-              currentUserRoleUrl === neighborUserRole ||
-              currentUserRoleUrl === administratorUserRole
-            ) {
-              const feedChannelUrl = this.linkStorage.getLink(
-                LinkKey.NEIGHBORHOOD_FEED_CHANNEL
-              );
-              const nonePostStatus = this.linkStorage.getLink(
-                LinkKey.NONE_POST_STATUS
-              );
-              this.router
-                .navigate(['/posts'], {
-                  queryParams: {
-                    inChannel: feedChannelUrl,
-                    withStatus: nonePostStatus,
-                  },
-                })
-                .then(() => {
-                  this.closeLoginDialog();
-                });
-            } else if (currentUserRoleUrl === unverifiedUserRole) {
-              this.router.navigate(['/unverified']).then(() => {
-                this.closeLoginDialog();
-              });
-            } else if (currentUserRoleUrl === rejectedUserRole) {
-              this.router.navigate(['/unverified']).then(() => {
-                this.closeLoginDialog();
-              });
+          if (success) {
+            // Get the user's role from UserSessionService
+            const userRole = this.userSessionService.getCurrentRole();
+
+            switch (userRole) {
+              case Roles.WORKER:
+                const workerUrl = this.linkStorage.getLink(LinkKey.USER_WORKER);
+                this.router
+                  .navigate(['services', 'profile', workerUrl])
+                  .then(() => this.closeLoginDialog());
+                break;
+
+              case Roles.NEIGHBOR:
+              case Roles.ADMINISTRATOR:
+                const feedChannelUrl = this.linkStorage.getLink(
+                  LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+                );
+                const nonePostStatus = this.linkStorage.getLink(
+                  LinkKey.NONE_POST_STATUS
+                );
+                this.router
+                  .navigate(['posts'], {
+                    queryParams: {
+                      inChannel: feedChannelUrl,
+                      withStatus: nonePostStatus,
+                    },
+                  })
+                  .then(() => this.closeLoginDialog());
+                break;
+
+              case Roles.UNVERIFIED_NEIGHBOR:
+              case Roles.UNVERIFIED_WORKER:
+                this.router
+                  .navigate(['unverified'])
+                  .then(() => this.closeLoginDialog());
+
+                break;
+              case Roles.REJECTED:
+                this.router
+                  .navigate(['rejected'])
+                  .then(() => this.closeLoginDialog());
+                break;
+
+              default:
+                // Fallback for unexpected or null roles
+                this.router
+                  .navigate(['not-found'])
+                  .then(() => this.closeLoginDialog());
+                break;
             }
           } else {
-            this.loginFailed = true;
-            this.loading = false;
-            this.clearPasswordField();
-            this.triggerViewUpdate();
+            this.handleLoginFailure();
           }
         },
         error: (error) => {
-          this.loginFailed = true;
-          this.loading = false;
-          this.clearPasswordField();
           console.error('Login failed:', error);
-          this.triggerViewUpdate();
+          this.handleLoginFailure();
         },
       });
     } else {
@@ -153,6 +143,13 @@ export class LoginDialogComponent implements OnInit {
       this.loading = false;
       this.triggerViewUpdate();
     }
+  }
+
+  private handleLoginFailure(): void {
+    this.loginFailed = true;
+    this.loading = false;
+    this.clearPasswordField();
+    this.triggerViewUpdate();
   }
 
   clearPasswordField(): void {

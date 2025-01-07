@@ -8,7 +8,14 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Tag, Channel, PostService, TagService, LinkKey } from '@shared/index';
+import {
+  Tag,
+  Channel,
+  PostService,
+  TagService,
+  LinkKey,
+  Roles,
+} from '@shared/index';
 import {
   HateoasLinksService,
   UserSessionService,
@@ -27,8 +34,6 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
   // Reactive form
   createPostForm: FormGroup;
 
-  // Example user (replace with real user data)
-  loggedUser = { darkMode: false, role: 'USER' };
   // Channel data (replace with real)
   channelList: Channel[] = [];
   // Tag suggestions
@@ -52,6 +57,8 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
   // Placeholder text used by the plugin
   placeholderText: string = 'Enter a tag';
 
+  notWorker: boolean = true;
+
   constructor(
     private fb: FormBuilder,
     private postService: PostService,
@@ -65,6 +72,9 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
+    const userRole = this.userSessionService.getCurrentRole();
+    this.notWorker = userRole !== Roles.WORKER;
+
     // Build form
     this.createPostForm = this.fb.group({
       title: ['', Validators.required],
@@ -91,34 +101,27 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
       this.updateChannelTitle();
     });
 
-    // Load tags from API
-    this.fetchTags();
+    if (this.notWorker) this.fetchTags();
   }
 
-  /**
-   * Instantiate the TagsInput plugin once the view is initialized.
-   */
   ngAfterViewInit(): void {
-    // We'll replicate the same plugin usage from your JSP
-    this.tagInput1 = new (window as any).TagsInput({
-      selector: 'tag-input1', // The ID we match in the HTML
-      wrapperClass: 'tags-input-wrapper',
-      tagClass: 'tag',
-      duplicate: false,
-      max: 5,
-    });
+    if (this.notWorker) {
+      this.tagInput1 = new (window as any).TagsInput({
+        selector: 'tag-input1',
+        wrapperClass: 'tags-input-wrapper',
+        tagClass: 'tag',
+        duplicate: false,
+        max: 5,
+      });
+    }
   }
 
-  /**
-   * Adds a tag to the plugin from the suggestion list.
-   */
   addTagToApply(tagName: string): void {
     if (this.tagInput1) {
       this.tagInput1.addTag(tagName);
     }
   }
 
-  // --- Channel Title Logic
   updateChannelTitle() {
     if (this.channel === this.feedChannelUrl) {
       this.title = 'Create Post';
@@ -129,7 +132,6 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // --- Tag Loading
   fetchTags(): void {
     const tagsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_TAGS);
     this.tagService.getTags(tagsUrl).subscribe((tags: any) => {
@@ -137,7 +139,6 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // --- File Input Logic
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -150,7 +151,6 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // --- Form Submission
   onSubmit(): void {
     if (this.createPostForm.invalid) {
       console.error('Form is invalid');
@@ -169,7 +169,6 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     // Build final payload
     const formValue = { ...this.createPostForm.value };
 
-    // Continue with your user logic
     this.userSessionService
       .getCurrentUser()
       .pipe(

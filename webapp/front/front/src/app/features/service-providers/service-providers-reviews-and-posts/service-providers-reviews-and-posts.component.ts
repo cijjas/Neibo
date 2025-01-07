@@ -56,8 +56,6 @@ export class ServiceProvidersReviewsAndPostsComponent
   ngOnInit(): void {
     const workerId = this.route.snapshot.paramMap.get('id');
     if (workerId) {
-      // Ensure `loadWorker` completes first
-      console.log(workerId);
       this.loadWorker(workerId).then(() => {
         // Execute only after worker is loaded
         this.isTheWorker =
@@ -209,5 +207,12 @@ export class ServiceProvidersReviewsAndPostsComponent
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+  goToServicePostCreation() {
+    this.router.navigate(['/services', 'posts', 'new'], {
+      queryParams: {
+        inChannel: 'Give me the CHanneeeeel',
+      },
+    });
   }
 }

@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { HateoasLinksService, UserSessionService } from '@core/index';
-import { LinkKey } from '@shared/models';
+import { LinkKey, Roles } from '@shared/models';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
-  userRole: string | null = ''; // Role of the logged-in user
-  userId: string | null = ''; // ID of the logged-in user
+  userRole: Roles | null = null; // Role of the logged-in user
   workerId: string | null = '';
   channelClass: string = ''; // Active channel class
+  public Roles = Roles; // Expose Roles enum to the template
 
   constructor(
     private linkService: HateoasLinksService,
@@ -21,14 +21,8 @@ export class SidebarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Fetch the current user role and ID
-    const currentUser = this.userSessionService['currentUserSubject'].value; // Direct synchronous access
-    if (currentUser) {
-      this.userRole = currentUser.userRole;
-      this.userId = currentUser.self; // Assuming `self` contains the user ID
-
-      this.workerId = this.linkService.getLink(LinkKey.USER_WORKER);
-    }
+    this.userRole = this.userSessionService.getCurrentRole();
+    this.workerId = this.linkService.getLink(LinkKey.USER_WORKER);
 
     // Listen for navigation changes to update the channel
     this.router.events

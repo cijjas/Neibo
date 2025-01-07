@@ -1,0 +1,60 @@
+<app-background-drawing></app-background-drawing>
+<div class="container">
+  <div class="d-flex flex-column justify-content-center align-items-center">
+    <div class="cool-static-container" style="width: 500px; margin-top: 100px">
+      <div
+        class="d-flex flex-column justify-content-center align-items-center"
+        style="text-align: center"
+      >
+        <p style="color: var(--primary); font-size: 30px">
+          Hello, looks like you aren't associated with a neighborhood yet!
+        </p>
+        <br />
+        <p>Please select one of the following neighborhoods to continue.</p>
+        <br />
+
+        <form [formGroup]="neighborhoodForm" (ngSubmit)="onSubmit()">
+          <div class="centered-column">
+            <div class="form-input">
+              <select
+                #neighborhoodSelect
+                formControlName="neighborhoodId"
+                class="cool-select"
+                (scroll)="onDropdownScroll()"
+              >
+                <option
+                  *ngFor="let entry of neighborhoodsList"
+                  [value]="entry.self"
+                >
+                  {{ entry.name }}
+                </option>
+              </select>
+              <div
+                *ngIf="neighborhoodForm.get('neighborhoodId')?.errors?.['required']"
+                class="error"
+              >
+                Neighborhood is required
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="action-button" [disabled]="isLoading">
+            Request
+          </button>
+        </form>
+
+        <a (click)="goBackToMainPage()" class="cool-button m-t-40">
+          Go Back to Login
+        </a>
+
+        <div
+          *ngIf="isLoading"
+          class="spinner-border text-primary mt-3"
+          role="status"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

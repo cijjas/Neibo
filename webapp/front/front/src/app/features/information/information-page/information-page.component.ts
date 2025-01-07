@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Contact, Resource, ContactService, ResourceService, LinkKey } from '@shared/index';
+import {
+  Contact,
+  Resource,
+  ContactService,
+  ResourceService,
+  LinkKey,
+} from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -31,16 +37,16 @@ export class InformationPageComponent implements OnInit {
     private contactService: ContactService,
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.linkService.logLinks();
-
-    this.resourcesUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_RESOURCES);
+    this.resourcesUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_RESOURCES
+    );
     this.contactsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_CONTACTS);
 
     // Read initial page states from query parameters
-    this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.subscribe((params) => {
       const contactPageParam = params.get('contactsPage');
       const resourcePageParam = params.get('resourcesPage');
 
@@ -54,7 +60,11 @@ export class InformationPageComponent implements OnInit {
   }
 
   fetchContacts(): void {
-    this.contactService.getContacts({ page: this.contactCurrentPage, size: this.contactPageSize })
+    this.contactService
+      .getContacts({
+        page: this.contactCurrentPage,
+        size: this.contactPageSize,
+      })
       .subscribe((result) => {
         this.contacts = result.contacts;
         this.contactTotalPages = result.totalPages;
@@ -63,7 +73,11 @@ export class InformationPageComponent implements OnInit {
   }
 
   fetchResources(): void {
-    this.resourceService.getResources({ page: this.resourceCurrentPage, size: this.resourcePageSize })
+    this.resourceService
+      .getResources({
+        page: this.resourceCurrentPage,
+        size: this.resourcePageSize,
+      })
       .subscribe((result) => {
         this.resources = result.resources;
         this.resourceTotalPages = result.totalPages;
@@ -77,7 +91,7 @@ export class InformationPageComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { contactsPage: this.contactCurrentPage },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     });
     this.fetchContacts();
   }
@@ -88,7 +102,7 @@ export class InformationPageComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { resourcesPage: this.resourceCurrentPage },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     });
     this.fetchResources();
   }

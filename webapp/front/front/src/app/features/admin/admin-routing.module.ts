@@ -12,31 +12,44 @@ import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenit
 import { AdminAmenityCreatePageComponent } from './admin-amenity-create-page/admin-amenity-create-page.component';
 
 const routes: Routes = [
-    {
-        path: '',
-        component: AdminLayoutComponent,
-        children: [
-            { path: 'announcement/new', component: AdminCreateAnnouncementPageComponent },
-            // neighbors and services
-            { path: 'neighbors/requests', component: AdminNeighborsRequestsPageComponent },
-            { path: 'neighbors', component: AdminNeighborsRequestsPageComponent },
-            { path: 'service-providers/requests', component: AdminServiceProvidersRequestsPageComponent },
-            { path: 'service-providers', component: AdminServiceProvidersRequestsPageComponent },
-            // amenities
-            { path: 'amenities', component: AdminAmenitiesPageComponent },
-            { path: 'amenities/new', component: AdminAmenityCreatePageComponent },
-            { path: 'amenities/:id/edit', component: AdminAmenityEditPageComponent },
-            // calendar
-            { path: 'calendar/events/create', component: AdminCreateEventComponent },
-            // information
-            { path: 'information', component: AdminInformationPageComponent },
-        ]
-    },
+  {
+    path: '',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', redirectTo: 'announcement/new', pathMatch: 'full' },
+
+      {
+        path: 'announcement/new',
+        component: AdminCreateAnnouncementPageComponent,
+      },
+      // neighbors and services
+      {
+        path: 'neighbors/requests',
+        component: AdminNeighborsRequestsPageComponent,
+      },
+      { path: 'neighbors', component: AdminNeighborsRequestsPageComponent },
+      {
+        path: 'service-providers/requests',
+        component: AdminServiceProvidersRequestsPageComponent,
+      },
+      {
+        path: 'service-providers',
+        component: AdminServiceProvidersRequestsPageComponent,
+      },
+      // amenities
+      { path: 'amenities', component: AdminAmenitiesPageComponent },
+      { path: 'amenities/new', component: AdminAmenityCreatePageComponent },
+      { path: 'amenities/:id/edit', component: AdminAmenityEditPageComponent },
+      // calendar
+      { path: 'calendar/events/create', component: AdminCreateEventComponent },
+      // information
+      { path: 'information', component: AdminInformationPageComponent },
+    ],
+  },
 ];
 
-
 @NgModule({
-    imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}

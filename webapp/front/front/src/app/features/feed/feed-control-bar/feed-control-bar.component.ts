@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService, UserSessionService } from '@core/index';
-import { User, LinkKey } from '@shared/index';
+import { User, LinkKey, Roles } from '@shared/index';
 
 @Component({
   selector: 'app-feed-control-bar',
@@ -25,6 +25,7 @@ export class FeedControlBarComponent implements OnInit {
   status: string;
 
   currentUser: User;
+  isNotAdmin: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +38,9 @@ export class FeedControlBarComponent implements OnInit {
     this.userSessionService.getCurrentUser().subscribe((user: User) => {
       this.currentUser = user;
     });
+
+    this.isNotAdmin =
+      this.userSessionService.getCurrentRole() != Roles.ADMINISTRATOR;
 
     this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
     this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);

@@ -1,187 +1,186 @@
 <!-- Include your head content here or in the index.html -->
-<div [ngClass]="{ 'dark-mode': loggedUser.darkMode }" class="body">
-  <!-- Include Navbar Component -->
-  <app-navbar></app-navbar>
+<!-- Include Navbar Component -->
+<app-navbar></app-navbar>
 
-  <div class="container">
-    <div class="row init">
-      <div class="column-publish">
-        <div class="cool-static-container">
-          <h2 class="card-title">{{ title }}</h2>
-          <div class="divider"></div>
+<div class="container">
+  <div class="row init">
+    <div class="column-publish">
+      <div class="cool-static-container">
+        <h2 class="card-title">{{ title }}</h2>
+        <div class="divider"></div>
 
-          <!-- Post Creation Form -->
-          <form
-            [formGroup]="createPostForm"
-            (ngSubmit)="onSubmit()"
-            enctype="multipart/form-data"
-          >
-            <div class="form-column" style="margin-top: 1rem">
-              <div class="form-group">
-                <!-- Hidden Channel Input -->
+        <!-- Post Creation Form -->
+        <form
+          [formGroup]="createPostForm"
+          (ngSubmit)="onSubmit()"
+          enctype="multipart/form-data"
+        >
+          <div class="form-column" style="margin-top: 1rem">
+            <div class="form-group">
+              <!-- Hidden Channel Input -->
+              <input
+                type="hidden"
+                formControlName="channel"
+                [value]="channel"
+              />
+
+              <div class="form-row">
+                <!-- Subject Input -->
                 <input
-                  type="hidden"
-                  formControlName="channel"
-                  [value]="channel"
+                  type="text"
+                  formControlName="title"
+                  class="cool-input"
+                  placeholder="Title"
                 />
-
-                <div class="form-row">
-                  <!-- Subject Input -->
-                  <input
-                    type="text"
-                    formControlName="title"
-                    class="cool-input"
-                    placeholder="Title"
-                  />
-                  <div
-                    *ngIf="
-                      createPostForm.get('title').invalid &&
-                      (createPostForm.get('title').dirty ||
-                        createPostForm.get('title').touched)
-                    "
-                    class="form-row form-error"
-                  >
-                    <p class="error">Title is required.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <!-- Message Textarea -->
-                <textarea
-                  formControlName="body"
-                  class="cool-input textarea-min-max"
-                  rows="5"
-                  placeholder="Body"
-                ></textarea>
                 <div
                   *ngIf="
-                    createPostForm.get('body').invalid &&
-                    (createPostForm.get('body').dirty ||
-                      createPostForm.get('body').touched)
+                    createPostForm.get('title').invalid &&
+                    (createPostForm.get('title').dirty ||
+                      createPostForm.get('title').touched)
                   "
                   class="form-row form-error"
                 >
-                  <p class="error">Body is required.</p>
+                  <p class="error">Title is required.</p>
                 </div>
               </div>
+            </div>
 
-              <div class="form-group w-50">
-                <!-- Image File Input -->
-                <label for="images" class="drop-container" id="dropcontainer">
-                  <span class="drop-title"> Drop files </span>
-                  Or
-                  <input
-                    type="file"
-                    class="select-file-button"
-                    id="images"
-                    accept="image/*"
-                    (change)="onFileChange($event)"
-                  />
+            <div class="form-group">
+              <!-- Message Textarea -->
+              <textarea
+                formControlName="body"
+                class="cool-input textarea-min-max"
+                rows="5"
+                placeholder="Body"
+              ></textarea>
+              <div
+                *ngIf="
+                  createPostForm.get('body').invalid &&
+                  (createPostForm.get('body').dirty ||
+                    createPostForm.get('body').touched)
+                "
+                class="form-row form-error"
+              >
+                <p class="error">Body is required.</p>
+              </div>
+            </div>
+
+            <div class="form-group w-50">
+              <!-- Image File Input -->
+              <label for="images" class="drop-container" id="dropcontainer">
+                <span class="drop-title"> Drop files </span>
+                Or
+                <input
+                  type="file"
+                  class="select-file-button"
+                  id="images"
+                  accept="image/*"
+                  (change)="onFileChange($event)"
+                />
+              </label>
+              <div style="text-align: center">
+                <p class="error" *ngIf="fileUploadError">
+                  {{ fileUploadError }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div>
+              <img
+                *ngIf="imagePreviewUrl"
+                [src]="imagePreviewUrl"
+                class="blogpost-image"
+                alt="uploading image"
+              />
+            </div>
+
+            <!-- Tags Input (visible if user is not a WORKER) -->
+            <div *ngIf="notWorker" class="w-50">
+              <div class="tags-input w-100">
+                <!-- The hidden input holding the placeholder text -->
+                <input
+                  id="niakaniaka"
+                  type="hidden"
+                  [value]="placeholderText"
+                />
+
+                <!-- The actual input for the plugin -->
+                <label for="tag-input1" class="w-100">
+                  <input #tagInput1 type="text" id="tag-input1" />
                 </label>
-                <div style="text-align: center">
-                  <p class="error" *ngIf="fileUploadError">
-                    {{ fileUploadError }}
-                  </p>
-                </div>
-              </div>
 
-              <!-- Image Preview -->
-              <div>
-                <img
-                  *ngIf="imagePreviewUrl"
-                  [src]="imagePreviewUrl"
-                  class="blogpost-image"
-                  alt="uploading image"
+                <!-- If you're using a hidden form control, place it here: -->
+                <input
+                  type="hidden"
+                  formControlName="tags"
+                  id="tags-hidden-input"
                 />
               </div>
 
-              <!-- Tags Input (visible if user is not a WORKER) -->
-              <div *ngIf="loggedUser.role !== 'WORKER'" class="w-50">
-                <div class="tags-input w-100">
-                  <!-- The hidden input holding the placeholder text -->
-                  <input
-                    id="niakaniaka"
-                    type="hidden"
-                    [value]="placeholderText"
-                  />
-
-                  <!-- The actual input for the plugin -->
-                  <label for="tag-input1" class="w-100">
-                    <input #tagInput1 type="text" id="tag-input1" />
-                  </label>
-
-                  <!-- If you're using a hidden form control, place it here: -->
-                  <input
-                    type="hidden"
-                    formControlName="tags"
-                    id="tags-hidden-input"
-                  />
-                </div>
-
-                <!-- Suggested Tags (similar to JSP's tagList display) -->
-                <div class="m-b-10 tags-row tags">
-                  <a
-                    *ngFor="let tag of tagList; let i = index"
-                    class="tag-option"
-                    (click)="addTagToApply(tag.name)"
-                    [style.display]="i < 20 ? 'block' : 'none'"
-                  >
-                    {{ tag.name }}
-                  </a>
-                </div>
+              <!-- Suggested Tags (similar to JSP's tagList display) -->
+              <div class="m-b-10 tags-row tags">
+                <a
+                  *ngFor="let tag of tagList; let i = index"
+                  class="tag-option"
+                  (click)="addTagToApply(tag.name)"
+                  [style.display]="i < 20 ? 'block' : 'none'"
+                >
+                  {{ tag.name }}
+                </a>
               </div>
             </div>
-
-            <!-- Submit Button -->
-            <div class="d-flex justify-content-end">
-              <button
-                type="submit"
-                class="cool-button cool-small on-bg w-25 font-weight-bolder"
-                style="height: 40px"
-              >
-                Post
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- Success Message -->
-      <div
-        *ngIf="showSuccessMessage"
-        id="success-container"
-        class="success-container"
-      >
-        <div
-          class="cool-static-container small-size-container justify-content-around"
-        >
-          <div>
-            <!-- Success Icon SVG -->
-            <!-- Include your SVG here -->
           </div>
-          <div
-            style="
-              text-align: center;
-              font-weight: bold;
-              font-size: 24px;
-              color: var(--old-primary);
-            "
-          >
-            Post created successfully
-          </div>
-        </div>
-      </div>
 
-      <!-- Include Calendar Widget Component if any -->
-      <div class="column-info">
-        <app-calendar-widget></app-calendar-widget>
+          <!-- Submit Button -->
+          <div class="d-flex justify-content-end">
+            <button
+              type="submit"
+              class="cool-button cool-small on-bg w-25 font-weight-bolder"
+              style="height: 40px"
+            >
+              Post
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-  </div>
 
-  <!-- Loader (optional) -->
-  <!-- <div id="loader-container" class="loader-container ">
+    <!-- Success Message -->
+    <div
+      *ngIf="showSuccessMessage"
+      id="success-container"
+      class="success-container"
+    >
+      <div
+        class="cool-static-container small-size-container justify-content-around"
+      >
+        <div>
+          <!-- Success Icon SVG -->
+          <!-- Include your SVG here -->
+        </div>
+        <div
+          style="
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: var(--old-primary);
+          "
+        >
+          Post created successfully
+        </div>
+      </div>
+    </div>
+
+    <!-- Include Calendar Widget Component if any -->
+    <div class="column-info">
+      <app-calendar-widget></app-calendar-widget>
+    </div>
+  </div>
+</div>
+
+<!-- Loader (optional) -->
+<!-- <div id="loader-container" class="loader-container ">
         <div class="cool-static-container medium-size-container">
             <app-placeholder-blogpost></app-placeholder-blogpost>
             <div style="font-weight: bold; font-size: 16px">Creating your post...</div>
@@ -189,6 +188,4 @@
         </div>
     </div> -->
 
-  <!-- Include Footer Component -->
-  <app-wave-footer></app-wave-footer>
-</div>
+<app-wave-footer></app-wave-footer>

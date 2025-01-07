@@ -78,15 +78,24 @@ export class AuthService {
           // 1) Load user data (if present)
           const userObs = userUrl
             ? this.http.get<UserDto>(userUrl).pipe(
-                tap((userDto) => {
+                tap((userDto: UserDto) => {
                   // Register links from userDto
                   if (userDto._links) {
                     this.linkRegistry.registerLinks(userDto._links, 'user:');
                   }
+                  const userRoleLink = userDto._links?.userRole;
+                  if (userRoleLink) {
+                    const role =
+                      this.userSessionService.mapLinkToRole(userRoleLink);
+                    if (role) {
+                      this.userSessionService.setUserRole(role);
+                    }
+                  }
                   // Map user data
                   mapUser(this.http, userDto).subscribe({
-                    next: (user) =>
-                      this.userSessionService.setUserInformation(user),
+                    next: (user) => {
+                      this.userSessionService.setUserInformation(user);
+                    },
                   });
                 })
               )
