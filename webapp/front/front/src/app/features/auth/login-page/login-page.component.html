@@ -1,30 +1,33 @@
-<div class="content-container ">
+<div class="content-container">
   <div class="container f-c-c-c" style="z-index: 2">
     <landing-page-navbar></landing-page-navbar>
-    <div class="landing-neibo ">
-      neibo
-    </div>
-    <p class="landing-description" style="mix-blend-mode: screen" i18n>A platform for gated communities that allows you
-      to share news, book courts, and stay connected with your neighbors at all times.</p>
+    <div class="landing-neibo">neibo</div>
+    <p class="landing-description" style="mix-blend-mode: screen" i18n>
+      A platform for gated communities that allows you to share news, book
+      courts, and stay connected with your neighbors at all times.
+    </p>
 
-    <a class="action-button font-weight-bolder" (click)="openLoginDialog()" i18n>
+    <a
+      class="action-button font-weight-bolder"
+      (click)="openLoginDialog()"
+      i18n
+    >
       Login
     </a>
-    <span style="color:var(--lighttext); font-size: 14px; mix-blend-mode: screen">
+    <span
+      style="color: var(--lighttext); font-size: 14px; mix-blend-mode: screen"
+    >
       <span i18n>Not a member?</span>
-      <a (click)="openSignupDialog()" class="a-link" i18n>
-        Signup now
-      </a>
+      <a (click)="openSignupDialog()" class="a-link" i18n> Signup now </a>
     </span>
-
-    <app-login-dialog [(showLoginDialog)]="showLoginDialog" [(showSignupDialog)]="showSignupDialog"></app-login-dialog>
-
-    <app-signup-dialog [(showSignupDialog)]="showSignupDialog"></app-signup-dialog>
-
-
   </div>
-
-
 </div>
+
+<app-login-dialog
+  [(showLoginDialog)]="showLoginDialog"
+  [(showSignupDialog)]="showSignupDialog"
+></app-login-dialog>
+
+<app-signup-dialog [(showSignupDialog)]="showSignupDialog"></app-signup-dialog>
 
 <app-background-drawing></app-background-drawing>

@@ -20,7 +20,6 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-
 }
 
 .landing-navbar {
@@ -70,7 +69,6 @@
   text-overflow: clip;
 }
 
-
 .action-button {
   text-align: center;
   font-weight: normal;
@@ -94,9 +92,9 @@
     height: 110%;
     bottom: -4px;
     left: 0;
-    -webkit-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
-    -o-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
-    transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
+    -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+    -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
     pointer-events: none;
   }
 
@@ -109,15 +107,12 @@
   }
 }
 
-
 /*----------------------------------- LOGIN POPUP --------------------*/
-
 
 .signup-content {
   height: 650px;
   width: 500px;
 }
-
 
 .login-form {
   gap: 10px;
@@ -135,24 +130,6 @@ input.ng-invalid.ng-touched {
   &:focus-visible {
     transform: translateY(-4px);
     box-shadow: 4px 4px var(--error);
-  }
-}
-
-.form-error {
-  margin-left: 5px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  font-weight: normal;
-  color: var(--error);
-  font-size: 12px;
-  margin-top: 5px;
-
-  &.centered {
-    justify-content: center;
-    margin: 0;
   }
 }
 
@@ -180,9 +157,9 @@ input[type="number"],
     height: 110%;
     bottom: -4px;
     left: 0;
-    -webkit-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
-    -o-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
-    transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
+    -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+    -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
     pointer-events: none;
   }
 
@@ -221,7 +198,6 @@ input[type="number"],
   font-size: 17px;
 }
 
-
 .a-link {
   color: var(--old-primary);
   font-weight: bold;
@@ -231,7 +207,6 @@ input[type="number"],
   color: var(--primary);
   cursor: pointer;
 }
-
 
 .centered-row {
   display: flex;
@@ -244,7 +219,6 @@ input[type="number"],
     color: var(--lighttext);
   }
 }
-
 
 .centered-column {
   margin: 1rem;
@@ -277,9 +251,9 @@ input[type="number"],
     height: 110%;
     bottom: -4px;
     left: 0;
-    -webkit-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
-    -o-transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
-    transition: bottom .3s cubic-bezier(.5, 2.5, .7, .7);
+    -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+    -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
     pointer-events: none;
   }
 
@@ -307,8 +281,48 @@ input[type="number"],
   opacity: 0.8;
 }
 
+.col {
+  display: flex;
+  flex-direction: column; /* Stack input and error messages */
+  align-items: flex-start; /* Align error messages to the left */
+  width: 100%; /* Ensure it takes up the full width of the form */
+  box-sizing: border-box; /* Include padding and borders in width */
+}
 
-.landing-error {
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  gap: 16px; /* Spacing between columns */
+  width: 100%;
+}
+
+.form-error {
+  margin-left: 5px;
+  white-space: normal; /* Allows text to wrap onto multiple lines */
+  word-break: break-word;
+  max-width: 100%; /* Ensure it doesn't exceed the container width */
+  display: block; /* Make sure error messages are on their own line */
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  font-weight: normal;
   color: var(--error);
-  font-size: 14px;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: left;
+  word-wrap: break-word;
+
+  &.centered {
+    justify-content: center;
+    margin: 0;
+  }
+}
+
+.signup-width-control {
+  width: 500px;
+  width: 500px;
+  max-width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
 }

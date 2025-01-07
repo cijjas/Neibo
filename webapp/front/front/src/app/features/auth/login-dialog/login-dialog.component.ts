@@ -70,6 +70,10 @@ export class LoginDialogComponent implements OnInit {
   }
 
   tryLogin(): void {
+    if (this.authService.isLoggedIn()) {
+      this.closeLoginDialog(); // Close if already logged in
+      return;
+    }
     this.loading = true;
 
     if (this.loginForm.valid) {
@@ -93,8 +97,8 @@ export class LoginDialogComponent implements OnInit {
 
               case Roles.NEIGHBOR:
               case Roles.ADMINISTRATOR:
-                const feedChannelUrl = this.linkStorage.getLink(
-                  LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+                const announcementesChannelUrl = this.linkStorage.getLink(
+                  LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
                 );
                 const nonePostStatus = this.linkStorage.getLink(
                   LinkKey.NONE_POST_STATUS
@@ -102,7 +106,7 @@ export class LoginDialogComponent implements OnInit {
                 this.router
                   .navigate(['posts'], {
                     queryParams: {
-                      inChannel: feedChannelUrl,
+                      inChannel: announcementesChannelUrl,
                       withStatus: nonePostStatus,
                     },
                   })

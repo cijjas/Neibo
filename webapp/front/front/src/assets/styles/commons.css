@@ -132,10 +132,6 @@ html {
   /* Standard scrollbar properties (for Firefox and others) */
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
-}
-
-/* This is the track, which is hidden in Firefox but styled in Webkit browsers */
-html {
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
 }

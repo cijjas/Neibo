@@ -1,6 +1,12 @@
-<div class="my-toast" [ngClass]="toastClasses">
-  <div class="my-toast-content">
-    <span class="dot"></span>
-    <span class="message" style="line-height: 1.5">{{ message }}</span>
+<div class="toast-container" [@listStagger]="toasts$ | async">
+  <div
+    *ngFor="let toast of toasts$ | async; trackBy: trackById"
+    class="my-toast"
+    [ngClass]="toast.type"
+  >
+    <div class="my-toast-content">
+      <span class="dot"></span>
+      <span class="message">{{ toast.message }}</span>
+    </div>
   </div>
 </div>

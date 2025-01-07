@@ -9,7 +9,7 @@ import {
   AmenityService,
   BookingService,
   ShiftService,
-  LinkKey
+  LinkKey,
 } from '@shared/index';
 import { Subscription } from 'rxjs';
 
@@ -18,8 +18,6 @@ import { Subscription } from 'rxjs';
   templateUrl: './amenities-choose-time-page.component.html',
 })
 export class AmenitiesChooseTimePageComponent implements OnInit {
-  darkMode: boolean = false; // or retrieve from a service or user settings
-
   amenityUrl!: string;
   date!: string;
   amenityName: string = '';
@@ -44,7 +42,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
     private shiftService: ShiftService,
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(

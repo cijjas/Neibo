@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { RequestService, Department, Request, Product, LinkKey } from '@shared/index';
+import {
+  RequestService,
+  Department,
+  Request,
+  Product,
+  LinkKey,
+} from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -8,8 +14,6 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './marketplace-dashboard-buyer-page.component.html',
 })
 export class MarketplaceDashboardBuyerPageComponent implements OnInit {
-  darkMode: boolean = false;
-
   // Pagination
   page: number = 1;
   totalPages: number = 1;
@@ -24,7 +28,7 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
     private router: Router,
     private linkService: HateoasLinksService,
     private requestService: RequestService
-  ) { }
+  ) {}
 
   /**
    * We'll use two getters to know the current mode (requests / purchases)
@@ -75,8 +79,12 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
 
   loadRequests(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
-    const requestStatusUrl: string = this.linkService.getLink(LinkKey.REQUESTED_REQUEST_STATUS);
-    const transactionTypeUrl: string = this.linkService.getLink(LinkKey.PURCHASE_TRANSACTION_TYPE);
+    const requestStatusUrl: string = this.linkService.getLink(
+      LinkKey.REQUESTED_REQUEST_STATUS
+    );
+    const transactionTypeUrl: string = this.linkService.getLink(
+      LinkKey.PURCHASE_TRANSACTION_TYPE
+    );
 
     this.requestService
       .getRequests({
@@ -97,8 +105,12 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
 
   loadPurchases(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
-    const requestStatusUrl: string = this.linkService.getLink(LinkKey.ACCEPTED_REQUEST_STATUS);
-    const transactionTypeUrl: string = this.linkService.getLink(LinkKey.PURCHASE_TRANSACTION_TYPE);
+    const requestStatusUrl: string = this.linkService.getLink(
+      LinkKey.ACCEPTED_REQUEST_STATUS
+    );
+    const transactionTypeUrl: string = this.linkService.getLink(
+      LinkKey.PURCHASE_TRANSACTION_TYPE
+    );
 
     this.requestService
       .getRequests({
@@ -144,7 +156,7 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   /** Department navigation (shared by both requests and purchases) */
   goToDepartment(department: Department): void {
     this.router.navigate(['/marketplace'], {
-      queryParams: { inDepartment: department.self }
+      queryParams: { inDepartment: department.self },
     });
   }
 }

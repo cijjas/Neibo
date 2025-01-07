@@ -1,3 +1,5 @@
+import { Roles } from './enums/roles.enum';
+
 export interface User {
   email: string;
   name: string;
@@ -8,6 +10,8 @@ export interface User {
   creationDate: Date;
   language: string;
   userRole: string;
+  userRoleEnum: Roles;
+  userRoleDisplay: string;
   image: string;
   self: string;
 }

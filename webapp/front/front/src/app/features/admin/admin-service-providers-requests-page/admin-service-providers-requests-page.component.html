@@ -1,77 +1,98 @@
 <div>
-    <div class="req-acc-users-list p-3">
-        <!-- If no workers -->
+  <div class="req-acc-users-list p-3">
+    <!-- If no workers -->
 
-        <div class="f-r-s-c w-100 p-2">
-            <h2 class="mb-0">
-                {{!serviceProviders? 'Pending Requests': 'Current Service Providers'}}
-            </h2>
-            
-        </div>
-        <div class="divider"></div>
+    <div class="f-r-s-c w-100 p-2">
+      <h2 class="mb-0">
+        {{
+          !serviceProviders ? "Pending Requests" : "Current Service Providers"
+        }}
+      </h2>
+    </div>
+    <div class="divider"></div>
 
-
-        <div class="user-row" *ngIf="workers.length === 0">
-            <div class="information">
-                <div>No new requests.</div>
-            </div>
-        </div>
-
-
-
-        <!-- If we have workers -->
-        <div class="w-100" *ngFor="let worker of workers; let i = index">
-            <div class="user-row">
-
-                <div class="f-r-s-c placeholder-glow">
-                    <div>
-                        <img [src]=" worker.user.image ?  worker.user.image : '/assets/images/default-profile.png'"
-                            style="width: 50px; height: 50px" [alt]="'user_picture_img_' + worker.user.self" />
-                    </div>
-                    <div class="information">
-                        <div>
-                            <span style="color: var(--text)">Name: </span>
-                            <span style="color: var(--primary)">{{ worker.user.name }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">Surname: </span>
-                            <span style="color: var(--primary)">{{ worker.user.surname }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">Email: </span>
-                            <span style="color: var(--primary)">{{ worker.user.email }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">Identification: </span>
-                            <span style="color: var(--primary)">{{ worker.user.identification }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">PhoneNumber: </span>
-                            <span style="color: var(--primary)">{{ worker.phoneNumber }}</span>
-                        </div>
-                        <div>
-                            <span style="color: var(--text)">Business name: </span>
-                            <span style="color: var(--primary)">{{ worker.businessName }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="f-r-c-c">
-                    <button class="ignore-button outlined on-bg" (click)="rejectWorker(worker)">
-                        {{ serviceProviders ? 'Remove' : 'Reject' }}
-                    </button>
-                    <button *ngIf="!serviceProviders" class="cool-button cool-small font-weight-bold on-bg p-2"
-                        (click)="verifyWorker(worker)">
-                        Accept
-                    </button>
-                </div>
-            </div>
-
-            <div class="divider" *ngIf="i < workers.length - 1"></div>
-        </div>
-        <app-paginator [totalPages]="totalPages" [currentPage]="currentPage" [pageSize]="pageSize"
-            (pageChange)="onPageChange($event)">
-        </app-paginator>
+    <div class="user-row" *ngIf="workers.length === 0">
+      <div class="information">
+        <div>No new requests.</div>
+      </div>
     </div>
 
+    <!-- If we have workers -->
+    <div class="w-100" *ngFor="let worker of workers; let i = index">
+      <div class="user-row">
+        <div class="f-r-s-c placeholder-glow">
+          <div>
+            <img
+              [src]="
+                worker.user.image
+                  ? worker.user.image
+                  : '/assets/images/default-profile.png'
+              "
+              style="width: 50px; height: 50px"
+              [alt]="'user_picture_img_' + worker.user.self"
+            />
+          </div>
+          <div class="information">
+            <div>
+              <span style="color: var(--text)">Name: </span>
+              <span style="color: var(--primary)">{{ worker.user.name }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">Surname: </span>
+              <span style="color: var(--primary)">{{
+                worker.user.surname
+              }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">Email: </span>
+              <span style="color: var(--primary)">{{ worker.user.email }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">Identification: </span>
+              <span style="color: var(--primary)">{{
+                worker.user.identification
+              }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">PhoneNumber: </span>
+              <span style="color: var(--primary)">{{
+                worker.phoneNumber
+              }}</span>
+            </div>
+            <div>
+              <span style="color: var(--text)">Business name: </span>
+              <span style="color: var(--primary)">{{
+                worker.businessName
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="f-r-c-c">
+          <button
+            class="ignore-button outlined on-bg"
+            (click)="rejectWorker(worker)"
+          >
+            {{ serviceProviders ? "Remove" : "Reject" }}
+          </button>
+          <button
+            *ngIf="!serviceProviders"
+            class="cool-button cool-small on-bg p-2"
+            (click)="verifyWorker(worker)"
+          >
+            Accept
+          </button>
+        </div>
+      </div>
+
+      <div class="divider" *ngIf="i < workers.length - 1"></div>
+    </div>
+    <app-paginator
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      [pageSize]="pageSize"
+      (pageChange)="onPageChange($event)"
+    >
+    </app-paginator>
+  </div>
 </div>

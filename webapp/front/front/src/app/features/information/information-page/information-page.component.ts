@@ -16,7 +16,6 @@ import { HateoasLinksService } from '@core/index';
 export class InformationPageComponent implements OnInit {
   contacts: Contact[] = [];
   resources: Resource[] = [];
-  darkMode = false;
 
   // Contacts Pagination
   contactCurrentPage = 1;

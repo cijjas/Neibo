@@ -98,14 +98,14 @@ export class AmenitiesReservationsListComponent implements OnInit {
         );
         this.loadReservations(); // Reload reservations after deletion
         this.toastService.showToast(
-          `Reservation for ${booking.amenity.name} canceled.`,
+          `Your reservation for '${booking.amenity.name}' on ${booking.shift.startTime} to ${booking.shift.endTime} has been successfully canceled.`,
           'success'
         );
       },
       error: (err) => {
         console.error(err);
         this.toastService.showToast(
-          `Reservation for ${booking.amenity.name} could not be canceled. Try again.`,
+          `Unable to cancel your reservation for '${booking.amenity.name}' on ${booking.shift.startTime} to ${booking.shift.endTime}. Please check your connection or try again later.`,
           'error'
         );
         this.isLoading = false;

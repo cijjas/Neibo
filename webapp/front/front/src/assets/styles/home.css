@@ -1490,57 +1490,6 @@ button.ellipsis:disabled {
   }
 }
 
-/*-------------------------FOOTER ------------------------------*/
-
-footer {
-  width: 100%;
-  position: relative;
-  /* Default position relative to the content */
-  bottom: 0;
-
-  /* Aligns to the bottom of its container */
-}
-
-footer div {
-  background-color: var(--primary);
-  margin: 0;
-  /* Remove negative margin */
-  color: var(--onprimary);
-  text-align: center;
-  opacity: 0.96;
-}
-
-.wave-footer {
-  animation: wave-footer 3s linear infinite;
-  /* Ensure animation shorthand */
-  fill: var(--primary);
-}
-
-.wave-footer.lila {
-  fill: var(--lila);
-}
-
-.wave-footer.admin {
-  fill: var(--admin-color);
-}
-
-#wave2 {
-  animation-duration: 5s;
-  animation-direction: reverse;
-  opacity: 0.9;
-}
-
-#wave3 {
-  animation-duration: 7s;
-  opacity: 0.6;
-}
-
-@keyframes wave-footer {
-  to {
-    transform: translateX(-100%);
-  }
-}
-
 /*------------------------------------------------- clouds --------------------*/
 app-background-clouds {
   position: fixed;
@@ -3325,65 +3274,6 @@ input[type="time"] {
 .shift-times strong {
   color: var(--primary);
   /* Accent color for the shift times */
-}
-
-/* TOAST ------------------------------------------ */
-.my-toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  align-items: center;
-  z-index: 1000;
-  max-width: 300px;
-  opacity: 0; /* Start hidden */
-  visibility: hidden; /* Hidden from view */
-  transform: scale(0.95); /* Slightly shrink */
-  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.4s; /* Visibility delay for smooth hide */
-}
-
-.my-toast.show {
-  opacity: 1; /* Fully visible */
-  visibility: visible; /* Make visible */
-  transform: scale(1); /* Reset transform */
-  transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.my-toast.success {
-  background-color: #e6ffed;
-  color: #155724;
-}
-
-.my-toast.error {
-  background-color: #ffe6e6;
-  color: #721c24;
-}
-
-.my-toast .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 10px;
-  flex-shrink: 0;
-  background-color: #ccc; /* Default color */
-  display: inline-block; /* Ensure it is rendered */
-}
-
-.my-toast.success .dot {
-  background-color: #28a745;
-}
-
-.my-toast.error .dot {
-  background-color: #dc3545;
-}
-
-.my-toast-content {
-  display: flex;
-  align-items: center;
 }
 
 /* -----------------------POPUP ---------------- */

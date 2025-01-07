@@ -17,9 +17,16 @@ import {
   Language,
   ProfessionService,
   Profession,
+  Roles,
+  LinkKey,
 } from '@shared/index';
-import { environment } from '../../../../environments/environment';
-import { AuthService, ToastService, UserSessionService } from '@core/index';
+
+import {
+  AuthService,
+  HateoasLinksService,
+  ToastService,
+  UserSessionService,
+} from '@core/index';
 import { Router } from '@angular/router';
 
 @Component({
@@ -29,8 +36,6 @@ import { Router } from '@angular/router';
 export class SignupDialogComponent implements OnInit {
   @Input() showSignupDialog: boolean = false;
   @Output() showSignupDialogChange = new EventEmitter<boolean>();
-
-  private apiServerUrl = environment.apiBaseUrl;
 
   // Toggle for neighbor vs service
   selectedOption: 'neighbor' | 'service' = 'neighbor';
@@ -68,6 +73,7 @@ export class SignupDialogComponent implements OnInit {
     private languageService: LanguageService,
     private userSessionService: UserSessionService,
     private authService: AuthService,
+    private linkStorage: HateoasLinksService,
     private professionService: ProfessionService,
     private router: Router
   ) {}
@@ -78,40 +84,86 @@ export class SignupDialogComponent implements OnInit {
     this.getLanguages();
     this.getProfessions();
 
-    // 2) Initialize neighbor form
+    // ========== NEIGHBOR SIGNUP FORM ==========
     this.signupForm = this.fb.group({
       neighborhoodId: ['', Validators.required],
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      mail: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[a-zA-ZÀ-ž\\s]+$'), // Example: Only letters/spaces
+        ],
+      ],
+      surname: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+      ],
+      mail: [
+        '',
+        [
+          Validators.required,
+          Validators.email, // Basic email check
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          // Simple example pattern:
+          // At least one uppercase, one lowercase, and a digit
+          Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
+        ],
+      ],
       identification: [
         null,
         [
           Validators.required,
-          Validators.pattern('[0-9]*'),
-          Validators.min(1),
-          Validators.max(99999999),
+          Validators.pattern('^[1-9][0-9]{6,7}$'), // 7 to 8 digits, no leading zeros
         ],
       ],
       language: ['', Validators.required],
     });
 
-    // 3) Initialize service/worker form
+    // ========== SERVICE SIGNUP FORM ==========
     this.serviceForm = this.fb.group({
       businessName: ['', Validators.required],
-      professionIds: [[], Validators.required], // we store an array of IDs
-      w_name: ['', Validators.required],
-      w_surname: ['', Validators.required],
+      professionIds: [[], Validators.required],
+      w_name: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+      ],
+      w_surname: [
+        '',
+        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+      ],
       w_mail: ['', [Validators.required, Validators.email]],
-      w_password: ['', Validators.required],
-      address: ['', Validators.required],
+      w_password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
+        ],
+      ],
+      w_address: ['', Validators.required],
       w_identification: [
         null,
-        [Validators.required, Validators.min(1), Validators.max(99999999)],
+        [
+          Validators.required,
+          Validators.pattern('^[1-9][0-9]{6,7}$'), // 7 to 8 digits, no leading zeros
+        ],
       ],
       w_language: ['', Validators.required],
-      phoneNumber: ['', Validators.required],
+      phoneNumber: [
+        '',
+        [
+          Validators.required,
+          // Example pattern for phone: +54 9 11 1234 5678
+          // This is just an example - adapt to your country or remove if not needed
+          Validators.pattern('^\\+?\\d[\\d\\s()-]+\\d$'),
+        ],
+      ],
     });
   }
 
@@ -154,18 +206,56 @@ export class SignupDialogComponent implements OnInit {
               next: (success) => {
                 this.loading = false;
                 if (success) {
-                  const userRole = this.userSessionService.getCurrentUserRole();
-                  if (
-                    userRole === 'UNVERIFIED_NEIGHBOR' ||
-                    userRole === 'UNVERIFIED_WORKER'
-                  ) {
-                    this.router.navigate(['/unverified']).then(() => {
-                      this.closeSignupDialog();
-                    });
-                  } else {
-                    this.router.navigate(['/posts']).then(() => {
-                      this.closeSignupDialog();
-                    });
+                  // Get the user's role from UserSessionService
+                  const userRole = this.userSessionService.getCurrentRole();
+                  console.log('hola' + userRole);
+                  switch (userRole) {
+                    case Roles.WORKER:
+                      const workerUrl = this.linkStorage.getLink(
+                        LinkKey.USER_WORKER
+                      );
+                      this.router
+                        .navigate(['services', 'profile', workerUrl])
+                        .then(() => this.closeSignupDialog());
+                      break;
+
+                    case Roles.NEIGHBOR:
+                    case Roles.ADMINISTRATOR:
+                      const announcementesChannelUrl = this.linkStorage.getLink(
+                        LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+                      );
+                      const nonePostStatus = this.linkStorage.getLink(
+                        LinkKey.NONE_POST_STATUS
+                      );
+                      this.router
+                        .navigate(['posts'], {
+                          queryParams: {
+                            inChannel: announcementesChannelUrl,
+                            withStatus: nonePostStatus,
+                          },
+                        })
+                        .then(() => this.closeSignupDialog());
+                      break;
+
+                    case Roles.UNVERIFIED_NEIGHBOR:
+                    case Roles.UNVERIFIED_WORKER:
+                      this.router
+                        .navigate(['unverified'])
+                        .then(() => this.closeSignupDialog());
+
+                      break;
+                    case Roles.REJECTED:
+                      this.router
+                        .navigate(['rejected'])
+                        .then(() => this.closeSignupDialog());
+                      break;
+
+                    default:
+                      // Fallback for unexpected or null roles
+                      this.router
+                        .navigate(['not-found'])
+                        .then(() => this.closeSignupDialog());
+                      break;
                   }
                 } else {
                   this.toastService.showToast(
@@ -297,8 +387,22 @@ export class SignupDialogComponent implements OnInit {
   }
 
   closeSignupDialog(): void {
+    if (this.signupForm.dirty || this.serviceForm.dirty) {
+      this.resetForms();
+    }
+
     this.showSignupDialog = false;
     this.showSignupDialogChange.emit(this.showSignupDialog);
+  }
+
+  resetForms(): void {
+    this.signupForm.reset(); // Clear values and reset validation
+    this.signupForm.markAsPristine(); // Mark form as pristine
+    this.signupForm.markAsUntouched(); // Reset touched states
+
+    this.serviceForm.reset();
+    this.serviceForm.markAsPristine();
+    this.serviceForm.markAsUntouched();
   }
 
   // =========== Data Fetching =============

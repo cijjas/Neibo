@@ -1,200 +1,177 @@
 <!-- This replaces the <body> tag with a single div that toggles dark mode -->
-<div
-  [class.dark-mode]="darkMode"
-  style="
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1;
-  "
->
-  <!-- You can replace these custom tags with your own or inline the HTML
+
+<!-- You can replace these custom tags with your own or inline the HTML
          from navbar.jsp, leftColumn.jsp, etc. -->
-  <app-navbar></app-navbar>
+<app-navbar></app-navbar>
 
-  <div class="container" style="margin-bottom: 5em !important">
-    <div class="row">
-      <!-- Left Column -->
-      <div class="column-left">
-        <app-sidebar></app-sidebar>
-      </div>
+<div class="container" style="margin-bottom: 5em !important">
+  <div class="row">
+    <!-- Left Column -->
+    <div class="column-left">
+      <app-sidebar></app-sidebar>
+    </div>
 
-      <!-- Middle Column -->
-      <div class="column-middle">
-        <!-- "Associated Neighborhoods" Section -->
-        <div class="cool-static-container mb-4">
-          <!-- If associatedNeighborhoods is empty -->
-          <div
-            *ngIf="
-              associatedNeighborhoods?.length === 0;
-              else associatedNotEmpty
-            "
-          >
-            <div class="f-c-c-c w-100 mt-3" style="text-align: center">
-              <div class="w-75">No associated neighborhoods</div>
-            </div>
+    <!-- Middle Column -->
+    <div class="column-middle">
+      <!-- "Associated Neighborhoods" Section -->
+      <div class="cool-static-container mb-4">
+        <!-- If associatedNeighborhoods is empty -->
+        <div
+          *ngIf="associatedNeighborhoods?.length === 0; else associatedNotEmpty"
+        >
+          <div class="f-c-c-c w-100 mt-3" style="text-align: center">
+            <div class="w-75">No associated neighborhoods</div>
           </div>
-
-          <!-- If associatedNeighborhoods is NOT empty -->
-          <!-- If associatedNeighborhoods is NOT empty -->
-          <ng-template #associatedNotEmpty>
-            <div class="f-c-s-c mt-2 w-100">
-              <span class="font-weight-bold font-size-20"
-                >My Neighborhoods</span
-              >
-              <table class="table-striped w-100 mt-3">
-                <thead>
-                  <tr></tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let entry of associatedNeighborhoods">
-                    <td style="text-align: start">
-                      <span class="ps-2 pe-2">{{
-                        entry.neighborhood.name
-                      }}</span>
-                      <!-- Show 'Pending' tag if role is 'UNVERIFIED_WORKER' -->
-                      <span
-                        *ngIf="entry.role === 'UNVERIFIED_WORKER'"
-                        class="badge-pending"
-                      >
-                        Pending
-                      </span>
-                    </td>
-                    <td>
-                      <!-- Button to remove neighborhood -->
-                      <button
-                        type="button"
-                        class="btn btn-link"
-                        (click)="onRemoveNeighborhood(entry.neighborhood)"
-                      >
-                        <i class="fas fa-trash" style="color: var(--error)"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <app-paginator
-              [totalPages]="totalAssociatedPages"
-              [currentPage]="currentAssociatedPage"
-              (pageChange)="onAssociatedPageChange($event)"
-            ></app-paginator>
-          </ng-template>
         </div>
 
-        <!-- "Other Neighborhoods" Section -->
-        <div class="cool-static-container" style="overflow: visible">
-          <!-- If otherNeighborhoods is empty -->
-          <div *ngIf="otherNeighborhoods?.length === 0; else othersNotEmpty">
-            <div class="f-c-c-c w-100 mb-3" style="text-align: center">
-              <div class="w-75">No new neighborhoods</div>
-            </div>
+        <!-- If associatedNeighborhoods is NOT empty -->
+        <!-- If associatedNeighborhoods is NOT empty -->
+        <ng-template #associatedNotEmpty>
+          <div class="f-c-s-c mt-2 w-100">
+            <span class="font-weight-bold font-size-20">My Neighborhoods</span>
+            <table class="table-striped w-100 mt-3">
+              <thead>
+                <tr></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let entry of associatedNeighborhoods">
+                  <td style="text-align: start">
+                    <span class="ps-2 pe-2">{{ entry.neighborhood.name }}</span>
+                    <!-- Show 'Pending' tag if role is 'UNVERIFIED_WORKER' -->
+                    <span
+                      *ngIf="entry.role === 'UNVERIFIED_WORKER'"
+                      class="badge-pending"
+                    >
+                      Pending
+                    </span>
+                  </td>
+                  <td>
+                    <!-- Button to remove neighborhood -->
+                    <button
+                      type="button"
+                      class="btn btn-link"
+                      (click)="onRemoveNeighborhood(entry.neighborhood)"
+                    >
+                      <i class="fas fa-trash" style="color: var(--error)"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+          <app-paginator
+            [totalPages]="totalAssociatedPages"
+            [currentPage]="currentAssociatedPage"
+            (pageChange)="onAssociatedPageChange($event)"
+          ></app-paginator>
+        </ng-template>
+      </div>
 
-          <!-- If otherNeighborhoods is NOT empty -->
-          <ng-template #othersNotEmpty>
-            <!-- Here we replicate the form from the JSP -->
-            <form class="f-c-c-c w-100" (ngSubmit)="onSubmit()">
-              <!-- Angular handle of errors or validations can go here -->
-              <!-- <p class="error"> ... </p> -->
+      <!-- "Other Neighborhoods" Section -->
+      <div class="cool-static-container" style="overflow: visible">
+        <!-- If otherNeighborhoods is empty -->
+        <div *ngIf="otherNeighborhoods?.length === 0; else othersNotEmpty">
+          <div class="f-c-c-c w-100 mb-3" style="text-align: center">
+            <div class="w-75">No new neighborhoods</div>
+          </div>
+        </div>
 
-              <span class="font-weight-bold font-size-20">
-                Join Neighborhoods
-              </span>
+        <!-- If otherNeighborhoods is NOT empty -->
+        <ng-template #othersNotEmpty>
+          <!-- Here we replicate the form from the JSP -->
+          <form class="f-c-c-c w-100" (ngSubmit)="onSubmit()">
+            <!-- Angular handle of errors or validations can go here -->
+            <!-- <p class="error"> ... </p> -->
 
-              <div class="neighborhoods-select mb-4 w-100">
-                <!-- Hidden input replaced by an Angular property binding (for storing IDs) -->
-                <input
-                  type="hidden"
-                  id="selectedNeighborhoods"
-                  name="selectedNeighborhoods"
-                  [value]="selectedNeighborhoodIds.join(',')"
-                />
+            <span class="font-weight-bold font-size-20">
+              Join Neighborhoods
+            </span>
 
-                <!-- The "select button" container -->
-                <div class="f-r-c-c w-100">
-                  <div class="container m-0" #listContainer>
-                    <!-- "select-btn" toggles the .open class -->
-                    <div
-                      class="select-btn n-workers"
-                      style="width: 100%"
-                      [class.open]="isSelectOpen"
-                      #selectBtn
-                      (click)="toggleSelect()"
-                    >
-                      <span class="btn-text" [innerText]="displayText"></span>
-                      <span class="arrow-dwn">
-                        <i class="fa-solid fa-chevron-down"></i>
-                      </span>
-                    </div>
+            <div class="neighborhoods-select mb-4 w-100">
+              <!-- Hidden input replaced by an Angular property binding (for storing IDs) -->
+              <input
+                type="hidden"
+                id="selectedNeighborhoods"
+                name="selectedNeighborhoods"
+                [value]="selectedNeighborhoodIds.join(',')"
+              />
 
-                    <!-- The dropdown UL has no .open class needed -->
-                    <ul
-                      [hidden]="otherNeighborhoods.length === 0"
-                      class="list-items n-workers"
-                      #listItems
-                    >
-                      <li
-                        class="item"
-                        *ngFor="let neighborhood of otherNeighborhoods"
-                        [class.checked]="
-                          selectedNeighborhoodIds.includes(neighborhood.self)
-                        "
-                        (click)="
-                          toggleItem(
-                            neighborhood.self,
-                            neighborhood.name,
-                            $event
-                          )
-                        "
-                      >
-                        <span class="checkbox">
-                          <i class="fa-solid fa-check check-icon"></i>
-                        </span>
-                        <span class="item-text">{{ neighborhood.name }}</span>
-                      </li>
-                    </ul>
+              <!-- The "select button" container -->
+              <div class="f-r-c-c w-100">
+                <div class="container m-0" #listContainer>
+                  <!-- "select-btn" toggles the .open class -->
+                  <div
+                    class="select-btn n-workers"
+                    style="width: 100%"
+                    [class.open]="isSelectOpen"
+                    #selectBtn
+                    (click)="toggleSelect()"
+                  >
+                    <span class="btn-text" [innerText]="displayText"></span>
+                    <span class="arrow-dwn">
+                      <i class="fa-solid fa-chevron-down"></i>
+                    </span>
                   </div>
 
-                  <button
-                    type="submit"
-                    class="cool-button cool-small on-bg font-weight-bold w-25"
+                  <!-- The dropdown UL has no .open class needed -->
+                  <ul
+                    [hidden]="otherNeighborhoods.length === 0"
+                    class="list-items n-workers"
+                    #listItems
                   >
-                    Add
-                    <i class="fa-solid fa-share ml-1"></i>
-                  </button>
+                    <li
+                      class="item"
+                      *ngFor="let neighborhood of otherNeighborhoods"
+                      [class.checked]="
+                        selectedNeighborhoodIds.includes(neighborhood.self)
+                      "
+                      (click)="
+                        toggleItem(neighborhood.self, neighborhood.name, $event)
+                      "
+                    >
+                      <span class="checkbox">
+                        <i class="fa-solid fa-check check-icon"></i>
+                      </span>
+                      <span class="item-text">{{ neighborhood.name }}</span>
+                    </li>
+                  </ul>
                 </div>
-              </div>
 
-              <!--
+                <button
+                  type="submit"
+                  class="cool-button cool-small on-bg font-weight-bold w-25"
+                >
+                  Add
+                  <i class="fa-solid fa-share ml-1"></i>
+                </button>
+              </div>
+            </div>
+
+            <!--
                   You can place error displays for `selectedNeighborhoodIds` here if needed.
                   <p class="error" *ngIf="someErrorCondition">Error message</p>
                 -->
 
-              <div
-                class="w-100 f-c-c-c"
-                style="font-size: 14px; text-align: center"
-              >
-                <span class="font-weight-normal">
-                  By adding neighborhoods, your request to join the neighborhood
-                  as a service provider will be submitted for review. Until
-                  approved, the request will remain pending.
-                </span>
-              </div>
-            </form>
-          </ng-template>
-        </div>
-      </div>
-
-      <!-- Right Column -->
-      <div class="column-right">
-        <app-calendar-widget></app-calendar-widget>
+            <div
+              class="w-100 f-c-c-c"
+              style="font-size: 14px; text-align: center"
+            >
+              <span class="font-weight-normal">
+                By adding neighborhoods, your request to join the neighborhood
+                as a service provider will be submitted for review. Until
+                approved, the request will remain pending.
+              </span>
+            </div>
+          </form>
+        </ng-template>
       </div>
     </div>
-  </div>
-  <app-wave-footer></app-wave-footer>
 
-  <!-- Example footer component -->
+    <!-- Right Column -->
+    <div class="column-right">
+      <app-calendar-widget></app-calendar-widget>
+    </div>
+  </div>
 </div>
+
+<app-wave-footer></app-wave-footer>

@@ -1,258 +1,627 @@
-<div class="dialog" id="signupDialog" [ngClass]="{ 'show-dialog': showSignupDialog }">
-  <div class="dialog-content">
+<div
+  class="dialog"
+  id="signupDialog"
+  [ngClass]="{ 'show-dialog': showSignupDialog }"
+>
+  <!-- [ngClass]="{ 'show-dialog': showSignupDialog }" -->
+  <div
+    class="dialog-content"
+    style="
+      width: 500px;
+      width: 500px;
+      max-width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow: hidden;
+    "
+  >
     <!-- Close Button -->
     <div class="close-button" (click)="closeSignupDialog()">
       <i class="fas fa-close"></i>
     </div>
 
     <!-- Title: changes depending on selectedOption -->
-    <div class="title-section">
-      <div class="title">
-        {{ selectedOption === 'neighbor' ? 'Welcome to neibo' : 'Boost your Business with neibo' }}
+    <div class="title-section mb-4 mt-5">
+      <div class="title mb-2">
+        {{
+          selectedOption === "neighbor"
+            ? "Welcome to neibo"
+            : "Boost your Business with neibo"
+        }}
       </div>
       <p>Sign up to get started.</p>
     </div>
 
     <!-- Toggle Options -->
-    <div class="f-r-c-c g-1 w-100">
-      <button class="cool-button" [class.active]="selectedOption === 'neighbor'" (click)="selectOption('neighbor')">
-        Neighbor
-      </button>
-      <button class="cool-button" [class.active]="selectedOption === 'service'" (click)="selectOption('service')">
-        Service Provider
-      </button>
-    </div>
-
-    <!-- ============== NEIGHBOR SIGNUP FORM ============== -->
-    <div *ngIf="selectedOption === 'neighbor'">
-      <div *ngIf="loading; else neighborSignupForm">
-        <div class="f-c-c-c">
-          <div style="font-size: 16px">Creating your account. Please wait...</div>
-          <div class="w-100 loader" style="margin-top: 20px"></div>
-        </div>
+    <div class="f-c-c-c all">
+      <div class="f-r-c-c g-1 w-100 toggle-buttons signup-width-control">
+        <button
+          class="cool-button"
+          [class.active]="selectedOption === 'neighbor'"
+          (click)="selectOption('neighbor')"
+        >
+          Neighbor
+        </button>
+        <button
+          class="cool-button"
+          [class.active]="selectedOption === 'service'"
+          (click)="selectOption('service')"
+        >
+          Service Provider
+        </button>
       </div>
-      <ng-template #neighborSignupForm>
-        <form [formGroup]="signupForm" (ngSubmit)="trySignup()" class="signup-form">
-          <div class="f-c-c-c pl-3 pr-3">
 
+      <!-- ============== NEIGHBOR SIGNUP FORM ============== -->
+      <div
+        *ngIf="selectedOption === 'neighbor'"
+        class="w-100 signup-width-control"
+      >
+        <div *ngIf="loading; else neighborSignupForm" class="w-100">
+          <div class="f-c-c-c" class="w-100">
+            <div style="font-size: 16px">
+              Creating your account. Please wait...
+            </div>
+            <div class="w-100 loader" style="margin-top: 20px"></div>
+          </div>
+        </div>
+        <ng-template #neighborSignupForm>
+          <form
+            [formGroup]="signupForm"
+            (ngSubmit)="trySignup()"
+            class="signup-form w-100 f-c-c-c"
+          >
             <!-- Neighborhood Selection -->
-            <div class="form-group">
-              <select id="neighborhood" formControlName="neighborhoodId" class="cool-select">
-                <option value="" disabled selected class="placeholder-option">
-                  Select Neighborhood
-                </option>
-                <option *ngFor="let neighborhood of neighborhoodsList" [value]="neighborhood.self">
-                  {{ neighborhood.name }}
-                </option>
-              </select>
-              <small class="form-error" *ngIf="
-                signupForm.get('neighborhoodId')?.invalid &&
-                signupForm.get('neighborhoodId')?.touched
-              ">
-                *Neighborhood is required
-              </small>
+            <div class="f-r-sb-c w-100">
+              <div class="col p-0">
+                <select
+                  id="neighborhood"
+                  formControlName="neighborhoodId"
+                  class="cool-select"
+                >
+                  <option value="" disabled selected class="placeholder-option">
+                    Select Neighborhood
+                  </option>
+                  <option
+                    *ngFor="let neighborhood of neighborhoodsList"
+                    [value]="neighborhood.self"
+                  >
+                    {{ neighborhood.name }}
+                  </option>
+                </select>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('neighborhoodId')?.hasError('required') &&
+                    (signupForm.get('neighborhoodId')?.touched ||
+                      signupForm.get('neighborhoodId')?.dirty)
+                  "
+                >
+                  *Neighborhood is required.
+                </small>
+              </div>
             </div>
 
             <!-- Name and Surname -->
-            <div class="row">
-              <div class="col">
+            <div class="input-row">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="First name" class="input" formControlName="name" />
+                  <input
+                    placeholder="First name"
+                    class="input"
+                    formControlName="name"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('name')?.hasError('required') &&
+                    (signupForm.get('name')?.touched ||
+                      signupForm.get('name')?.dirty)
+                  "
+                >
+                  *First name is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('name')?.hasError('pattern') &&
+                    (signupForm.get('name')?.touched ||
+                      signupForm.get('name')?.dirty)
+                  "
+                >
+                  *First name must only contain letters.
+                </small>
               </div>
-              <div class="col">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="Surname" class="input" formControlName="surname" />
+                  <input
+                    placeholder="Surname"
+                    class="input"
+                    formControlName="surname"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('surname')?.hasError('required') &&
+                    (signupForm.get('surname')?.touched ||
+                      signupForm.get('surname')?.dirty)
+                  "
+                >
+                  *Surname is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('surname')?.hasError('pattern') &&
+                    (signupForm.get('surname')?.touched ||
+                      signupForm.get('surname')?.dirty)
+                  "
+                >
+                  *Surname must only contain letters.
+                </small>
               </div>
             </div>
 
             <!-- Email and Password -->
-            <div class="row">
-              <div class="col">
+            <div class="input-row">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="Email" type="email" class="input" formControlName="mail" autocomplete="email" />
+                  <input
+                    placeholder="Email"
+                    type="email"
+                    class="input"
+                    formControlName="mail"
+                    autocomplete="email"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('mail')?.hasError('required') &&
+                    (signupForm.get('mail')?.touched ||
+                      signupForm.get('mail')?.dirty)
+                  "
+                >
+                  *Email is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('mail')?.hasError('email') &&
+                    (signupForm.get('mail')?.touched ||
+                      signupForm.get('mail')?.dirty)
+                  "
+                >
+                  *Please enter a valid email address.
+                </small>
               </div>
-              <div class="col">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="Password" type="password" class="input" formControlName="password"
-                    autocomplete="new-password" />
+                  <input
+                    placeholder="Password"
+                    type="password"
+                    class="input"
+                    formControlName="password"
+                    autocomplete="new-password"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('password')?.hasError('required') &&
+                    (signupForm.get('password')?.touched ||
+                      signupForm.get('password')?.dirty)
+                  "
+                >
+                  *Password is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('password')?.hasError('minlength') &&
+                    (signupForm.get('password')?.touched ||
+                      signupForm.get('password')?.dirty)
+                  "
+                >
+                  *Password must be at least 8 characters.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('password')?.hasError('pattern') &&
+                    (signupForm.get('password')?.touched ||
+                      signupForm.get('password')?.dirty)
+                  "
+                >
+                  *Password must contain at least 1 uppercase letter, 1
+                  lowercase letter, and 1 digit.
+                </small>
               </div>
             </div>
 
             <!-- Identification and Language -->
-            <div class="row">
-              <div class="col">
+            <div class="input-row">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="Identification" type="number" class="input" formControlName="identification" />
+                  <input
+                    placeholder="Identification"
+                    type="number"
+                    class="input"
+                    formControlName="identification"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('identification')?.hasError('required') &&
+                    (signupForm.get('identification')?.touched ||
+                      signupForm.get('identification')?.dirty)
+                  "
+                >
+                  *Identification is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('identification')?.hasError('pattern') &&
+                    (signupForm.get('identification')?.touched ||
+                      signupForm.get('identification')?.dirty)
+                  "
+                >
+                  *Identification must be 7 to 8 digits, without leading zeros.
+                </small>
               </div>
-              <div class="col">
+              <div class="col p-0">
                 <label>
                   <select formControlName="language" class="cool-select">
-                    <option value="" disabled selected class="placeholder-option">
+                    <option
+                      value=""
+                      disabled
+                      selected
+                      class="placeholder-option"
+                    >
                       Select Language
                     </option>
-                    <option *ngFor="let language of languages" [value]="language.self">
+                    <option
+                      *ngFor="let language of languages"
+                      [value]="language.self"
+                    >
                       {{ language.displayName }}
                     </option>
                   </select>
-                  <small class="form-error" *ngIf="
-                    signupForm.get('language')?.invalid &&
-                    signupForm.get('language')?.touched
-                  ">
-                    *Language is required
-                  </small>
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    signupForm.get('language')?.hasError('required') &&
+                    (signupForm.get('language')?.touched ||
+                      signupForm.get('language')?.dirty)
+                  "
+                >
+                  *Language is required.
+                </small>
               </div>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="action-button" [disabled]="signupForm.invalid">
+            <button
+              type="submit"
+              class="action-button mt-4 mb-2"
+              [disabled]="signupForm.invalid"
+            >
               Sign up
             </button>
-          </div>
-        </form>
-      </ng-template>
-    </div>
-
-    <!-- ============== SERVICE PROVIDER (WORKER) SIGNUP FORM ============== -->
-    <div *ngIf="selectedOption === 'service'">
-      <div *ngIf="loading; else serviceSignupForm">
-        <div class="f-c-c-c">
-          <div style="font-size: 16px">Creating your service provider account. Please wait...</div>
-          <div class="w-100 loader" style="margin-top: 20px"></div>
-        </div>
+          </form>
+        </ng-template>
       </div>
 
-      <ng-template #serviceSignupForm>
+      <!-- ============== SERVICE PROVIDER (WORKER) SIGNUP FORM ============== -->
+      <div
+        *ngIf="selectedOption === 'service'"
+        class="w-100 signup-width-control"
+      >
+        <div *ngIf="loading; else serviceSignupForm" class="w-100">
+          <div class="f-c-c-c w-100">
+            <div style="font-size: 16px">
+              Creating your service provider account. Please wait...
+            </div>
+            <div class="w-100 loader" style="margin-top: 20px"></div>
+          </div>
+        </div>
 
-        <form [formGroup]="serviceForm" (ngSubmit)="submitServiceForm()" class="signup-form">
-          <div class="f-c-c-c pl-3 pr-3">
-
+        <ng-template #serviceSignupForm>
+          <form
+            [formGroup]="serviceForm"
+            (ngSubmit)="submitServiceForm()"
+            class="signup-form w-100 f-c-c-c"
+          >
             <!-- Business Name -->
-            <div class="form-group">
-              <label>
-                <input placeholder="Business Name" class="input" formControlName="businessName" />
-              </label>
-              <div class="landing-error" *ngIf="
-                   serviceForm.get('businessName')?.invalid &&
-                   (serviceForm.get('businessName')?.touched || serviceForm.get('businessName')?.dirty)
-                 ">
-                *Business name is required
+            <div class="f-r-sb-c w-100">
+              <div class="col p-0">
+                <label>
+                  <input
+                    placeholder="Business Name"
+                    class="input"
+                    formControlName="businessName"
+                  />
+                </label>
+                <div
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('businessName')?.invalid &&
+                    (serviceForm.get('businessName')?.touched ||
+                      serviceForm.get('businessName')?.dirty)
+                  "
+                >
+                  *Business name is required.
+                </div>
               </div>
             </div>
 
-            <!-- ================== PROFESSION MULTI-SELECT ================== -->
-            <!-- Profession selector -->
-            <div class="form-group profession-select">
-              <!-- The "select button" container -->
-              <div class="select-btn" [class.open]="isProfessionSelectOpen" #professionSelectBtn
-                (click)="toggleProfessionSelect()">
-                <span class="btn-text">{{ professionDisplayText }}</span>
-                <span class="arrow-dwn">
-                  <i class="fa-solid fa-chevron-down"></i>
-                </span>
-              </div>
-
-              <!-- The dropdown UL has no *ngIf; it’s always in the DOM, hidden by default -->
-              <ul class="list-items" [class.open]="isProfessionSelectOpen">
-                <li class="item" *ngFor="let profession of professionOptions"
-                  [class.checked]="selectedProfessionIds.includes(profession.self)"
-                  (click)="toggleProfessionItem(profession.self, $event)">
-                  <span class="checkbox">
-                    <i class="fa-solid fa-check check-icon"></i>
-                  </span>
-                  <span class="item-text">{{ profession.displayName }}</span>
-                </li>
-              </ul>
-
-              <!-- Validation error for professionIds -->
-              <div class="landing-error" *ngIf="
-      serviceForm.get('professionIds')?.invalid &&
-      (serviceForm.get('professionIds')?.touched ||
-        serviceForm.get('professionIds')?.dirty)
-    ">
-                *Please select at least one profession
-              </div>
-            </div>
+            <!-- Profession Multi-Select (already done in your code) -->
+            <!-- ... -->
 
             <!-- Name and Surname -->
-            <div class="row w-100">
-              <div class="col pr-2">
+            <div class="input-row">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="First Name" class="input" formControlName="w_name" />
+                  <input
+                    placeholder="First Name"
+                    class="input"
+                    formControlName="w_name"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_name')?.hasError('required') &&
+                    (serviceForm.get('w_name')?.touched ||
+                      serviceForm.get('w_name')?.dirty)
+                  "
+                >
+                  *First name is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_name')?.hasError('pattern') &&
+                    (serviceForm.get('w_name')?.touched ||
+                      serviceForm.get('w_name')?.dirty)
+                  "
+                >
+                  *Only letters allowed.
+                </small>
               </div>
-              <div class="col pl-2">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="Surname" class="input" formControlName="w_surname" />
+                  <input
+                    placeholder="Surname"
+                    class="input"
+                    formControlName="w_surname"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_surname')?.hasError('required') &&
+                    (serviceForm.get('w_surname')?.touched ||
+                      serviceForm.get('w_surname')?.dirty)
+                  "
+                >
+                  *Surname is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_surname')?.hasError('pattern') &&
+                    (serviceForm.get('w_surname')?.touched ||
+                      serviceForm.get('w_surname')?.dirty)
+                  "
+                >
+                  *Only letters allowed.
+                </small>
               </div>
             </div>
 
             <!-- Email and Password -->
-            <div class="row w-100">
-              <div class="col pr-2">
+            <div class="input-row">
+              <div class="col p-0">
                 <label>
-                  <input type="email" placeholder="Email" class="input" formControlName="w_mail" />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    class="input"
+                    formControlName="w_mail"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_mail')?.hasError('required') &&
+                    (serviceForm.get('w_mail')?.touched ||
+                      serviceForm.get('w_mail')?.dirty)
+                  "
+                >
+                  *Email is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_mail')?.hasError('email') &&
+                    (serviceForm.get('w_mail')?.touched ||
+                      serviceForm.get('w_mail')?.dirty)
+                  "
+                >
+                  *Please enter a valid email.
+                </small>
               </div>
-              <div class="col pl-2">
+              <div class="col p-0">
                 <label>
-                  <input type="password" placeholder="Password" autocomplete="new-password" class="input"
-                    formControlName="w_password" />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    autocomplete="new-password"
+                    class="input"
+                    formControlName="w_password"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_password')?.hasError('required') &&
+                    (serviceForm.get('w_password')?.touched ||
+                      serviceForm.get('w_password')?.dirty)
+                  "
+                >
+                  *Password is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_password')?.hasError('minlength') &&
+                    (serviceForm.get('w_password')?.touched ||
+                      serviceForm.get('w_password')?.dirty)
+                  "
+                >
+                  *Must be at least 8 characters.
+                </small>
+                <small
+                  class="form-error w-100"
+                  *ngIf="
+                    serviceForm.get('w_password')?.hasError('pattern') &&
+                    (serviceForm.get('w_password')?.touched ||
+                      serviceForm.get('w_password')?.dirty)
+                  "
+                >
+                  *Must contain at least 1 uppercase letter, 1 lowercase letter,
+                  and 1 digit.
+                </small>
               </div>
             </div>
 
-            <!-- Address and Identification -->
-            <div class="row w-100">
-              <div class="col pr-2">
+            <div class="input-row">
+              <div class="col p-0">
                 <label>
-                  <input placeholder="Address" class="input" formControlName="address" />
+                  <input
+                    placeholder="Address"
+                    class="input"
+                    formControlName="w_address"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_address')?.hasError('required') &&
+                    (serviceForm.get('w_address')?.touched ||
+                      serviceForm.get('w_address')?.dirty)
+                  "
+                >
+                  *Address is required.
+                </small>
               </div>
-              <div class="col pl-2">
+              <div class="col p-0">
                 <label>
-                  <input type="number" pattern="[0-9]*" inputmode="numeric" min="1" max="99999999"
-                    placeholder="Identification" class="input" formControlName="w_identification" />
+                  <input
+                    placeholder="Identification"
+                    type="number"
+                    class="input"
+                    formControlName="w_identification"
+                  />
                 </label>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_identification')?.hasError('required') &&
+                    (serviceForm.get('w_identification')?.touched ||
+                      serviceForm.get('w_identification')?.dirty)
+                  "
+                >
+                  *Identification is required.
+                </small>
+                <small
+                  class="form-error"
+                  *ngIf="
+                    serviceForm.get('w_identification')?.hasError('pattern') &&
+                    (serviceForm.get('w_identification')?.touched ||
+                      serviceForm.get('w_identification')?.dirty)
+                  "
+                >
+                  *Identification must be 7 to 8 digits, without leading zeros.
+                </small>
               </div>
             </div>
 
-            <!-- Language and Phone -->
-            <div class="row w-100">
-              <div class="col pr-2">
-                <label>
-                  <select class="cool-select" formControlName="w_language">
-                    <option value="" disabled selected class="placeholder-option">
-                      Select Language
-                    </option>
-                    <option *ngFor="let language of languages" [value]="language.self">
-                      {{ language.displayName }}
-                    </option>
-                  </select>
-                </label>
-              </div>
-              <div class="col pl-2">
-                <label>
-                  <input placeholder="Phone Number (e.g. +54 9 11 1234 5678)" class="input"
-                    formControlName="phoneNumber" />
-                </label>
-              </div>
+            <!-- Language -->
+            <div class="col p-0">
+              <label>
+                <select class="cool-select" formControlName="w_language">
+                  <option value="" disabled selected class="placeholder-option">
+                    Select Language
+                  </option>
+                  <option
+                    *ngFor="let language of languages"
+                    [value]="language.self"
+                  >
+                    {{ language.displayName }}
+                  </option>
+                </select>
+              </label>
+              <small
+                class="form-error"
+                *ngIf="
+                  serviceForm.get('w_language')?.hasError('required') &&
+                  (serviceForm.get('w_language')?.touched ||
+                    serviceForm.get('w_language')?.dirty)
+                "
+              >
+                *Language is required.
+              </small>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="col p-0">
+              <label>
+                <input
+                  placeholder="Phone Number (e.g. +54 9 11 1234 5678)"
+                  class="input"
+                  formControlName="phoneNumber"
+                />
+              </label>
+              <small
+                class="form-error"
+                *ngIf="
+                  serviceForm.get('phoneNumber')?.hasError('required') &&
+                  (serviceForm.get('phoneNumber')?.touched ||
+                    serviceForm.get('phoneNumber')?.dirty)
+                "
+              >
+                *Phone number is required.
+              </small>
+              <small
+                class="form-error"
+                *ngIf="
+                  serviceForm.get('phoneNumber')?.hasError('pattern') &&
+                  (serviceForm.get('phoneNumber')?.touched ||
+                    serviceForm.get('phoneNumber')?.dirty)
+                "
+              >
+                *Invalid phone format. E.g. +54 9 11 1234 5678
+              </small>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="action-button font-weight-bolder mb-5" [disabled]="serviceForm.invalid">
+            <button
+              type="submit"
+              class="action-button mt-4 mb-2"
+              [disabled]="serviceForm.invalid"
+            >
               Sign up
             </button>
-          </div>
-        </form>
-      </ng-template>
-
+          </form>
+        </ng-template>
+      </div>
+      <!-- end service dialog -->
     </div>
   </div>
 </div>

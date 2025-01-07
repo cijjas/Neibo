@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ProductService, RequestService, Product, Request, LinkKey } from '@shared/index';
+import {
+  ProductService,
+  RequestService,
+  Product,
+  Request,
+  LinkKey,
+} from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -9,8 +15,6 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './marketplace-product-requests-page.component.html',
 })
 export class MarketplaceProductRequestsPageComponent implements OnInit {
-  // View-related properties
-  darkMode: boolean = false;
   channel: string = 'SellerHub';
 
   // Product & requests
@@ -41,7 +45,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private productService: ProductService,
     private requestService: RequestService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.productSelf = this.route.snapshot.paramMap.get('id')!;
@@ -49,7 +53,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     this.productService.getProduct(this.productSelf).subscribe((product) => {
       this.product = product;
       // Then load requests
-      this.route.queryParams.subscribe(params => {
+      this.route.queryParams.subscribe((params) => {
         this.page = params['page'] ? +params['page'] : 1;
         this.fetchRequests();
       });
@@ -57,31 +61,39 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
   }
 
   private fetchRequests(): void {
-    const statusUrl = this.linkService.getLink(LinkKey.REQUESTED_REQUEST_STATUS);
-    this.requestService.getRequests({
-      page: this.page,
-      size: 20,
-      forProduct: this.productSelf,
-      withStatus: statusUrl
-    }).subscribe({
-      next: (data) => {
-        this.requestList = data.requests;
-        this.totalPages = data.totalPages;
-      },
-      error: (err) => console.error(err),
-    });
+    const statusUrl = this.linkService.getLink(
+      LinkKey.REQUESTED_REQUEST_STATUS
+    );
+    this.requestService
+      .getRequests({
+        page: this.page,
+        size: 20,
+        forProduct: this.productSelf,
+        withStatus: statusUrl,
+      })
+      .subscribe({
+        next: (data) => {
+          this.requestList = data.requests;
+          this.totalPages = data.totalPages;
+        },
+        error: (err) => console.error(err),
+      });
   }
 
   // ============ Dialog Logic ============
   // Opening the dialog sets the boolean to true
-  openMarkAsSoldDialog(buyerId?: string, requestId?: string, unitsRequested?: number, requesterName?: string): void {
+  openMarkAsSoldDialog(
+    buyerId?: string,
+    requestId?: string,
+    unitsRequested?: number,
+    requesterName?: string
+  ): void {
     this.selectedBuyerId = buyerId;
     this.selectedRequestId = requestId;
     this.selectedUnitsRequested = unitsRequested;
     this.selectedRequesterName = requesterName;
     this.markAsSoldDialogVisible = true;
   }
-
 
   // Closing the dialog sets the boolean to false
   closeMarkAsSoldDialog(): void {
@@ -93,18 +105,24 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     // Show loader
     this.showLoader = true;
 
-    let requestStatusUrl: string = this.linkService.getLink(LinkKey.ACCEPTED_REQUEST_STATUS)
-    this.requestService.updateRequest(this.selectedRequestId, { requestStatus: requestStatusUrl }).subscribe({
-      next: () => {
-        this.showLoader = false;
-        this.closeMarkAsSoldDialog();
-        this.fetchRequests();
-      },
-      error: (err) => {
-        this.showLoader = false;
-        console.error('Error accepting the request:', err);
-      }
-    })
+    let requestStatusUrl: string = this.linkService.getLink(
+      LinkKey.ACCEPTED_REQUEST_STATUS
+    );
+    this.requestService
+      .updateRequest(this.selectedRequestId, {
+        requestStatus: requestStatusUrl,
+      })
+      .subscribe({
+        next: () => {
+          this.showLoader = false;
+          this.closeMarkAsSoldDialog();
+          this.fetchRequests();
+        },
+        error: (err) => {
+          this.showLoader = false;
+          console.error('Error accepting the request:', err);
+        },
+      });
   }
 
   submitDeclineRequest(): void {
@@ -112,21 +130,27 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
 
     const requestData = {
       buyerId: this.selectedBuyerId,
-      requestId: this.selectedRequestId
+      requestId: this.selectedRequestId,
     };
 
-    let requestStatusUrl: string = this.linkService.getLink(LinkKey.DECLINED_REQUEST_STATUS)
-    this.requestService.updateRequest(this.selectedRequestId, { requestStatus: requestStatusUrl }).subscribe({
-      next: () => {
-        this.showLoader = false;
-        this.closeMarkAsSoldDialog();
-        this.fetchRequests(); // Refresh the request list
-      },
-      error: (err) => {
-        this.showLoader = false;
-        console.error('Error declining the request:', err);
-      }
-    });
+    let requestStatusUrl: string = this.linkService.getLink(
+      LinkKey.DECLINED_REQUEST_STATUS
+    );
+    this.requestService
+      .updateRequest(this.selectedRequestId, {
+        requestStatus: requestStatusUrl,
+      })
+      .subscribe({
+        next: () => {
+          this.showLoader = false;
+          this.closeMarkAsSoldDialog();
+          this.fetchRequests(); // Refresh the request list
+        },
+        error: (err) => {
+          this.showLoader = false;
+          console.error('Error declining the request:', err);
+        },
+      });
   }
 
   // ============ Pagination ============

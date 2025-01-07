@@ -1,168 +1,207 @@
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
-import { Observable, forkJoin, of } from 'rxjs'
-import { Injectable } from '@angular/core'
-import { catchError, map, mergeMap } from 'rxjs/operators'
-import { LanguageDto, UserDto, UserRoleDto, User, parseLinkHeader, Roles, LinkKey } from '@shared/index'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { Observable, forkJoin, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { catchError, map, mergeMap } from 'rxjs/operators';
+import {
+  LanguageDto,
+  UserDto,
+  UserRoleDto,
+  User,
+  parseLinkHeader,
+  Roles,
+  LinkKey,
+} from '@shared/index';
 import { HateoasLinksService, ImageService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    constructor(
-        private http: HttpClient,
-        private linkService: HateoasLinksService,
-        private imageService: ImageService,
-    ) { }
+  constructor(
+    private http: HttpClient,
+    private linkService: HateoasLinksService,
+    private imageService: ImageService
+  ) {}
 
-    public getUser(userUrl: string): Observable<User> {
-        return this.http.get<UserDto>(userUrl).pipe(
-            mergeMap(userDto => mapUser(this.http, userDto))
-        );
-    }
+  public getUser(userUrl: string): Observable<User> {
+    return this.http
+      .get<UserDto>(userUrl)
+      .pipe(mergeMap((userDto) => mapUser(this.http, userDto)));
+  }
 
-    public getUsers(
-        queryParams: {
-            userRole?: string;
-            page?: number;
-            size?: number;
-        } = {}
-    ): Observable<{ users: User[]; totalPages: number; currentPage: number }> {
-        let userUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS);
+  public getUsers(
+    queryParams: {
+      userRole?: string;
+      page?: number;
+      size?: number;
+    } = {}
+  ): Observable<{ users: User[]; totalPages: number; currentPage: number }> {
+    let userUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS);
 
-        let params = new HttpParams();
+    let params = new HttpParams();
 
-        if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
-        if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
-        if (queryParams.userRole) params = params.set('withRole', queryParams.userRole);
+    if (queryParams.page !== undefined)
+      params = params.set('page', queryParams.page.toString());
+    if (queryParams.size !== undefined)
+      params = params.set('size', queryParams.size.toString());
+    if (queryParams.userRole)
+      params = params.set('withRole', queryParams.userRole);
 
-        return this.http
-            .get<UserDto[]>(userUrl, { params, observe: 'response' })
-            .pipe(
-                mergeMap((response) => {
-                    const usersDto = response.body || [];
-                    const linkHeader = response.headers.get('Link');
-                    const paginationInfo = parseLinkHeader(linkHeader);
+    return this.http
+      .get<UserDto[]>(userUrl, { params, observe: 'response' })
+      .pipe(
+        mergeMap((response) => {
+          const usersDto = response.body || [];
+          const linkHeader = response.headers.get('Link');
+          const paginationInfo = parseLinkHeader(linkHeader);
 
-                    const userObservables = usersDto.map((userDto) => mapUser(this.http, userDto));
+          const userObservables = usersDto.map((userDto) =>
+            mapUser(this.http, userDto)
+          );
 
-                    return forkJoin(userObservables).pipe(
-                        map((users) => ({
-                            users,
-                            totalPages: paginationInfo.totalPages,
-                            currentPage: paginationInfo.currentPage,
-                        }))
-                    );
-                })
-            );
-    }
-
-    // ! THERE IS AN ISSUE HERE, in sign up you dont have that endpoint yet, there should be a quick request in signup using the selected neighborhood or something
-    public createUser(
-        neighborhoodUrl: string,
-        name: string,
-        surname: string,
-        password: string,
-        mail: string,
-        language: string,
-        identification: number
-    ): Observable<(string | null)> {
-        let usersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS)
-
-        let body: UserDto = {
-            name: name,
-            surname: surname,
-            password: password,
-            mail: mail,
-            language: language,
-            identification: identification
-        }
-
-        return this.http.post(neighborhoodUrl + '/users', body, { observe: 'response' }).pipe(
-            map(response => {
-                const locationHeader = response.headers.get('Location');
-                if (locationHeader) {
-                    return locationHeader;
-                } else {
-                    console.error('Location header not found:');
-                    return null;
-                }
-            }),
-            catchError(error => {
-                console.error('Error creating User', error);
-                return of(null);
-            })
-        )
-    }
-
-    public toggleDarkMode(user: User): Observable<User> {
-        const updatedDarkMode = !user.darkMode;
-        const updateUrl = user.self;
-
-        return this.http.patch<UserDto>(updateUrl, { darkMode: updatedDarkMode }).pipe(
-            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
-        );
-    }
-
-    // ! WTF IS GOING ON HERE 'SPANISH'?? should use self and compare with that! or change the model so it has the whole object
-    public toggleLanguage(user: User): Observable<User> {
-        const newLanguage = user.language === 'SPANISH' ? this.linkService.getLink(LinkKey.ENGLISH_LANGUAGE) : this.linkService.getLink(LinkKey.SPANISH_LANGUAGE);
-        const updateUrl = user.self;
-
-        return this.http.patch<UserDto>(updateUrl, { language: newLanguage }).pipe(
-            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
-        );
-    }
-
-    public updatePhoneNumber(userUrl: string, phoneNumber: string): Observable<User> {
-        return this.http.patch<UserDto>(userUrl, { phoneNumber: phoneNumber }).pipe(
-            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
-        );
-    }
-
-    public uploadProfilePicture(user: User, file: File): Observable<User> {
-        return this.imageService.createImage(file).pipe(
-            mergeMap((imageUrl: string) => {
-                const updateUrl = user.self;
-                return this.http.patch<UserDto>(updateUrl, { profilePicture: imageUrl }).pipe(
-                    mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
-                );
-            })
-        );
-    }
-
-    public verifyUser(user: User): Observable<User> {
-        let neighborUserRoleUrl: string = this.linkService.getLink(LinkKey.NEIGHBOR_USER_ROLE)
-        return this.http.patch<UserDto>(user.self, { userRole: neighborUserRoleUrl }).pipe(
-            mergeMap((newUser) => mapUser(this.http, newUser))
-        );
-    }
-
-    public rejectUser(user: User): Observable<User> {
-        let rejectedUserRoleUrl: string = this.linkService.getLink(LinkKey.REJECTED_USER_ROLE)
-        return this.http.patch<UserDto>(user.self, { userRole: rejectedUserRoleUrl }).pipe(
-            mergeMap((newUser) => mapUser(this.http, newUser))
-        );
-    }
-}
-
-export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
-    return forkJoin([
-        http.get<LanguageDto>(userDto._links.language),
-        http.get<UserRoleDto>(userDto._links.userRole)
-    ]).pipe(
-        map(([language, userRole]) => {
-            return {
-                email: userDto.mail,
-                name: userDto.name,
-                surname: userDto.surname,
-                darkMode: userDto.darkMode,
-                phoneNumber: userDto.phoneNumber,
-                image: userDto._links.userImage,
-                identification: userDto.identification,
-                creationDate: userDto.creationDate,
-                language: language.name,
-                userRole: userRole.role,
-                self: userDto._links.self
-            } as User;
+          return forkJoin(userObservables).pipe(
+            map((users) => ({
+              users,
+              totalPages: paginationInfo.totalPages,
+              currentPage: paginationInfo.currentPage,
+            }))
+          );
         })
+      );
+  }
+
+  // ! THERE IS AN ISSUE HERE, in sign up you dont have that endpoint yet, there should be a quick request in signup using the selected neighborhood or something
+  public createUser(
+    neighborhoodUrl: string,
+    name: string,
+    surname: string,
+    password: string,
+    mail: string,
+    language: string,
+    identification: number
+  ): Observable<string | null> {
+    let usersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS);
+
+    let body: UserDto = {
+      name: name,
+      surname: surname,
+      password: password,
+      mail: mail,
+      language: language,
+      identification: identification,
+    };
+
+    return this.http
+      .post(neighborhoodUrl + '/users', body, { observe: 'response' })
+      .pipe(
+        map((response) => {
+          const locationHeader = response.headers.get('Location');
+          if (locationHeader) {
+            return locationHeader;
+          } else {
+            console.error('Location header not found:');
+            return null;
+          }
+        }),
+        catchError((error) => {
+          console.error('Error creating User', error);
+          return of(null);
+        })
+      );
+  }
+
+  public toggleDarkMode(user: User): Observable<User> {
+    const updatedDarkMode = !user.darkMode;
+    const updateUrl = user.self;
+
+    return this.http
+      .patch<UserDto>(updateUrl, { darkMode: updatedDarkMode })
+      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+  }
+
+  // ! WTF IS GOING ON HERE 'SPANISH'?? should use self and compare with that! or change the model so it has the whole object
+  public toggleLanguage(user: User): Observable<User> {
+    const newLanguage =
+      user.language === 'SPANISH'
+        ? this.linkService.getLink(LinkKey.ENGLISH_LANGUAGE)
+        : this.linkService.getLink(LinkKey.SPANISH_LANGUAGE);
+    const updateUrl = user.self;
+
+    return this.http
+      .patch<UserDto>(updateUrl, { language: newLanguage })
+      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+  }
+
+  public updatePhoneNumber(
+    userUrl: string,
+    phoneNumber: string
+  ): Observable<User> {
+    return this.http
+      .patch<UserDto>(userUrl, { phoneNumber: phoneNumber })
+      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+  }
+
+  public uploadProfilePicture(user: User, file: File): Observable<User> {
+    return this.imageService.createImage(file).pipe(
+      mergeMap((imageUrl: string) => {
+        const updateUrl = user.self;
+        return this.http
+          .patch<UserDto>(updateUrl, { profilePicture: imageUrl })
+          .pipe(
+            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
+          );
+      })
     );
+  }
+
+  public verifyUser(user: User): Observable<User> {
+    let neighborUserRoleUrl: string = this.linkService.getLink(
+      LinkKey.NEIGHBOR_USER_ROLE
+    );
+    return this.http
+      .patch<UserDto>(user.self, { userRole: neighborUserRoleUrl })
+      .pipe(mergeMap((newUser) => mapUser(this.http, newUser)));
+  }
+
+  public rejectUser(user: User): Observable<User> {
+    let rejectedUserRoleUrl: string = this.linkService.getLink(
+      LinkKey.REJECTED_USER_ROLE
+    );
+    return this.http
+      .patch<UserDto>(user.self, { userRole: rejectedUserRoleUrl })
+      .pipe(mergeMap((newUser) => mapUser(this.http, newUser)));
+  }
+}
+export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
+  const roleDisplayMapping = {
+    [Roles.ADMINISTRATOR]: 'Administrator',
+    [Roles.NEIGHBOR]: 'Neighbor',
+    [Roles.UNVERIFIED_NEIGHBOR]: 'Unverified Neighbor',
+    [Roles.WORKER]: 'Service Provider',
+    [Roles.UNVERIFIED_WORKER]: 'Unverified Service Provider',
+    [Roles.REJECTED]: 'Rejected',
+  };
+
+  return forkJoin([
+    http.get<LanguageDto>(userDto._links.language),
+    http.get<UserRoleDto>(userDto._links.userRole),
+  ]).pipe(
+    map(([language, userRole]) => {
+      const roleEnum = userRole.role as Roles;
+      console.log(roleEnum);
+      return {
+        email: userDto.mail,
+        name: userDto.name,
+        surname: userDto.surname,
+        darkMode: userDto.darkMode,
+        phoneNumber: userDto.phoneNumber,
+        image: userDto._links.userImage,
+        identification: userDto.identification,
+        creationDate: userDto.creationDate,
+        language: language.name,
+        userRole: userRole.role,
+        userRoleDisplay: roleDisplayMapping[roleEnum] || 'Unknown Role', // Map to display-friendly name
+        userRoleEnum: roleEnum, // Add enum
+        self: userDto._links.self,
+      } as User;
+    })
+  );
 }

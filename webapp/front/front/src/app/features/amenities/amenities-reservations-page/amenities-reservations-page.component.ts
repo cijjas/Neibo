@@ -16,8 +16,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './amenities-reservations-page.component.html',
 })
 export class AmenitiesReservationsPageComponent implements OnInit {
-  darkMode = false;
-
   amenities: Amenity[] = [];
   reservationsList: Booking[] = [];
   reservationForm!: FormGroup;
@@ -54,7 +52,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private shiftService: ShiftService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.reservationForm = this.fb.group({

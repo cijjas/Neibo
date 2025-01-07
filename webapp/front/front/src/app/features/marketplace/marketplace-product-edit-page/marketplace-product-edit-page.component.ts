@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { DepartmentService, ProductService, Department, Product, LinkKey } from '@shared/index';
+import {
+  DepartmentService,
+  ProductService,
+  Department,
+  Product,
+  LinkKey,
+} from '@shared/index';
 import { ImageService, ToastService, HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map, switchMap } from 'rxjs';
@@ -10,7 +16,6 @@ import { combineLatest, map, switchMap } from 'rxjs';
   templateUrl: './marketplace-product-edit-page.component.html',
 })
 export class MarketplaceProductEditPageComponent implements OnInit {
-  darkMode = false; // Could be set based on user preferences
   channel: string = 'Edit';
   departmentList: Department[] = [];
   product: Product | null = null;
@@ -23,11 +28,14 @@ export class MarketplaceProductEditPageComponent implements OnInit {
 
   listingForm = this.fb.group({
     title: ['', Validators.required],
-    price: ['', [Validators.required, Validators.pattern(/^\$?\d+(,\d{3})*(\.\d{2})?$/)]],
+    price: [
+      '',
+      [Validators.required, Validators.pattern(/^\$?\d+(,\d{3})*(\.\d{2})?$/)],
+    ],
     description: ['', Validators.required],
     departmentId: ['', Validators.required],
     used: [false, Validators.required],
-    quantity: [1, Validators.required]
+    quantity: [1, Validators.required],
   });
 
   formErrors: string | null = null;
@@ -44,14 +52,14 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     private imageService: ImageService,
     private toastService: ToastService,
     private linkService: HateoasLinksService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.departmentService.getDepartments().subscribe({
       next: (departments: Department[]) => {
         this.departmentList = departments;
       },
-      error: (err: any) => console.error(err)
+      error: (err: any) => console.error(err),
     });
 
     const productUrl = this.route.snapshot.paramMap.get('id')!;
@@ -61,7 +69,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
           this.product = prod;
           this.populateForm(prod);
         },
-        error: (err) => console.error(err)
+        error: (err) => console.error(err),
       });
     }
   }
@@ -74,7 +82,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       description: prod.description,
       departmentId: prod.department.self,
       used: prod.used,
-      quantity: prod.stock
+      quantity: prod.stock,
     });
 
     // Prefill department
@@ -86,13 +94,16 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     // Prefill images if URLs exist
     this.images = [];
 
-    const imageUrls = [prod.firstImage, prod.secondImage, prod.thirdImage].filter(url => url);
+    const imageUrls = [
+      prod.firstImage,
+      prod.secondImage,
+      prod.thirdImage,
+    ].filter((url) => url);
 
-    imageUrls.forEach(url => {
+    imageUrls.forEach((url) => {
       this.images.push({ file: null as unknown as File, preview: url });
     });
   }
-
 
   onFileChange(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -120,8 +131,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     input.value = '';
   }
 
-
-
   triggerImageInput(el: HTMLInputElement): void {
     el.click();
   }
@@ -131,9 +140,11 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     this.clearImageError(); // Clear error if there are still images left
   }
 
-
   clearImageError(): void {
-    if (this.images.length > 0 && this.formErrors === 'Please upload at least one image for the product.') {
+    if (
+      this.images.length > 0 &&
+      this.formErrors === 'Please upload at least one image for the product.'
+    ) {
       this.formErrors = null;
     }
   }
@@ -147,10 +158,15 @@ export class MarketplaceProductEditPageComponent implements OnInit {
 
     let floatVal = parseFloat(val);
     if (isNaN(floatVal)) {
-      floatVal = 0.00;
+      floatVal = 0.0;
     }
 
-    let formatted = '$' + floatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    let formatted =
+      '$' +
+      floatVal.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     this.listingForm.patchValue({ price: formatted }, { emitEvent: false });
   }
 
@@ -183,40 +199,49 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       department: rawValue.departmentId,
       remainingUnits: rawValue.quantity,
       user: userSelf,
-      images: [] // Collect image URLs here
+      images: [], // Collect image URLs here
     };
 
     // Separate new images (files) from preloaded images (URLs)
-    const newImageFiles = this.images.filter(img => img.file);
-    const existingImageUrls = this.images.filter(img => !img.file).map(img => img.preview);
+    const newImageFiles = this.images.filter((img) => img.file);
+    const existingImageUrls = this.images
+      .filter((img) => !img.file)
+      .map((img) => img.preview);
 
-    const imageUploadObservables = newImageFiles.map(img => this.imageService.createImage(img.file));
+    const imageUploadObservables = newImageFiles.map((img) =>
+      this.imageService.createImage(img.file)
+    );
 
     combineLatest(imageUploadObservables)
       .pipe(
-        map(newImageUrls => {
-          productData.images = [...existingImageUrls, ...newImageUrls.filter(url => url !== null)];
+        map((newImageUrls) => {
+          productData.images = [
+            ...existingImageUrls,
+            ...newImageUrls.filter((url) => url !== null),
+          ];
           return productData;
         }),
-        switchMap(updatedProductData =>
-          this.productService.updateProduct(this.product!.self, updatedProductData)
+        switchMap((updatedProductData) =>
+          this.productService.updateProduct(
+            this.product!.self,
+            updatedProductData
+          )
         )
       )
       .subscribe({
         next: () => {
-          this.toastService.showToast('Listing updated successfully', 'success');
+          this.toastService.showToast(
+            'Listing updated successfully',
+            'success'
+          );
           this.router.navigate(['/marketplace/products', this.product!.self]);
         },
-        error: err => {
+        error: (err) => {
           this.formErrors = 'There was a problem updating the listing.';
           console.error(err);
-        }
+        },
       });
   }
-
-
-
-
 
   goBack(): void {
     // Navigate back one step in the history or to a known route

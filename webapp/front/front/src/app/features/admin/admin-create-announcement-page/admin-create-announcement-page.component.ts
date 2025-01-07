@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ImageService, HateoasLinksService, UserSessionService, ToastService } from '@core/index'
+import {
+  ImageService,
+  HateoasLinksService,
+  UserSessionService,
+  ToastService,
+} from '@core/index';
 import { PostService, TagService, LinkKey } from '@shared/index';
 import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
 
@@ -9,25 +14,20 @@ import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
   templateUrl: './admin-create-announcement-page.component.html',
 })
 export class AdminCreateAnnouncementPageComponent implements OnInit {
-
   announcementForm!: FormGroup;
   previewImage: string | ArrayBuffer | null = null;
   fileUploadError: string | null = null;
 
   // Example tags
-  availableTags: string[] = [
-    'Event',
-    'Notice',
-    'Important',
-    'Urgent',
-  ];
+  availableTags: string[] = ['Event', 'Notice', 'Important', 'Urgent'];
   // The tags that the user has selected (optional)
   selectedTags: string[] = [];
 
-  channel: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL);
+  channel: string = this.linkService.getLink(
+    LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+  );
 
   // For demonstration purposes
-  loggedUser = { darkMode: false, role: 'ADMIN' };
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +37,7 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Build form with Angular
@@ -46,7 +46,7 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       subject: ['', Validators.required],
       message: ['', Validators.required],
       imageFile: [null], // We’ll store the file here after preview
-      tags: [[]]
+      tags: [[]],
     });
   }
 
@@ -86,7 +86,7 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
   }
 
   removeTag(tag: string) {
-    this.selectedTags = this.selectedTags.filter(t => t !== tag);
+    this.selectedTags = this.selectedTags.filter((t) => t !== tag);
   }
 
   // ----------------------- SUBMIT -----------------------
@@ -104,29 +104,30 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     const newPostDto: any = {
       title: formValue.subject,
       body: formValue.message,
-      channel: this.channel,     // or this.announcementsChannelUrl if using HATEOAS link
-      tags: [],                  // will be filled after we create them via TagService
+      channel: this.channel, // or this.announcementsChannelUrl if using HATEOAS link
+      tags: [], // will be filled after we create them via TagService
       imageFile: formValue.imageFile,
-      user: ''                   // will be filled with user.self after we fetch the user
+      user: '', // will be filled with user.self after we fetch the user
     };
 
     // Step 3: Create post logic - we replicate the pattern from FeedCreatePostPage
-    this.userSessionService.getCurrentUser()
+    this.userSessionService
+      .getCurrentUser()
       .pipe(
         take(1),
-        switchMap(user => {
+        switchMap((user) => {
           // set the user link from the user data
           newPostDto.user = user.self;
 
           // Create tags in backend if needed, then upload image
           return combineLatest([
             this.createTagsObservable(),
-            this.createImageObservable(newPostDto.imageFile)
+            this.createImageObservable(newPostDto.imageFile),
           ]);
         }),
         switchMap(([tagUrls, imageUrl]) => {
           // tagUrls is an array of the newly created (or existing) tag links
-          newPostDto.tags = tagUrls.filter(tag => tag !== null);
+          newPostDto.tags = tagUrls.filter((tag) => tag !== null);
           if (imageUrl) {
             newPostDto.image = imageUrl;
           }
@@ -136,10 +137,16 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       )
       .subscribe({
         next: (location) => {
-          this.toastService.showToast('Announcement created successully!', 'success');
+          this.toastService.showToast(
+            'Announcement created successully!',
+            'success'
+          );
         },
         error: (err) => {
-          this.toastService.showToast('The announcement could not be made, try again.', 'error');
+          this.toastService.showToast(
+            'The announcement could not be made, try again.',
+            'error'
+          );
         },
       });
   }
@@ -152,9 +159,9 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       return of([]);
     }
     return forkJoin(
-      this.selectedTags.map(tag =>
+      this.selectedTags.map((tag) =>
         this.tagService.createTag(tag).pipe(
-          catchError(error => {
+          catchError((error) => {
             console.error(`Error creating tag: ${tag}`, error);
             return of(null); // continue if one fails
           })
@@ -166,12 +173,12 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
   private createImageObservable(imageFile: File | null) {
     return imageFile
       ? this.imageService.createImage(imageFile).pipe(
-        catchError(error => {
-          console.error('Error uploading image:', error);
-          this.fileUploadError = 'Error uploading image';
-          return of(null); // continue if image fails
-        })
-      )
+          catchError((error) => {
+            console.error('Error uploading image:', error);
+            this.fileUploadError = 'Error uploading image';
+            return of(null); // continue if image fails
+          })
+        )
       : of(null);
   }
 }

@@ -1,238 +1,303 @@
-<div [class.dark-mode]="darkMode">
-    <!-- Navbar -->
-    <app-navbar></app-navbar>
+<!-- Navbar -->
+<app-navbar></app-navbar>
 
-    <div class="container">
-        <div class="row init">
-            <!-- Left Column -->
-            <div class="column-left">
-                <app-sidebar></app-sidebar>
-            </div>
-
-            <!-- Center Grid -->
-            <div id="center-grid" class="column-center ps-3">
-
-                <!-- Upper marketplace buttons -->
-                <app-marketplace-control-bar [channel]="'BuyerHub'"></app-marketplace-control-bar>
-
-
-                <div class="cool-static-container w-100 f-c-c-c g-05">
-                    <!-- Buttons row (matching JSP structure) -->
-                    <div class="f-c-s-s w-100">
-                        <div class="f-r-c-c pt-2 pb-2">
-                            <!-- "My requests" button -->
-                            <a [routerLink]="['/marketplace/buyer-hub', 'requests']"
-                                class="cool-feed-button rounded marketplace-button font-weight-bold"
-                                [class.active]="isRequests">
-                                <span class="font-size-12">
-                                    <i class="fa-solid fa-basket-shopping"></i>
-                                    <span class="hide-text">My requests</span>
-                                </span>
-                            </a>
-                            <!-- "My purchases" button -->
-                            <a [routerLink]="['/marketplace/buyer-hub', 'purchases']"
-                                class="cool-feed-button rounded marketplace-button font-weight-bold"
-                                [class.active]="isPurchases">
-                                <span class="font-size-12">
-                                    <i class="fa-solid fa-calendar-check"></i>
-                                    <span class="hide-text">My purchases</span>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="divider mb-3"></div>
-
-                    <!-- Purchases Section -->
-                    <ng-container *ngIf="isPurchases; else showRequests">
-
-                        <!-- If no purchases -->
-                        <div class="no-posts-found" *ngIf="purchaseList && purchaseList.length === 0">
-                            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-                            Purchases not found
-                        </div>
-
-                        <!-- Otherwise, show all purchases -->
-                        <div class="w-100 f-c-c-c g-1" *ngIf="purchaseList && purchaseList.length > 0">
-                            <div class="cool-static-container w-100 f-c-s-s g-0 p-0"
-                                *ngFor="let purchase of purchaseList">
-                                <!-- Top row: date/time -->
-                                <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2">
-                                    <div>{{ purchase.fulfilledAt | date: 'dd MMM yyyy' }}</div>
-                                    <div>{{ purchase.fulfilledAt | date: 'HH:mm' }}</div>
-                                </div>
-                                <div class="divider m-0"></div>
-
-                                <!-- Purchase details -->
-                                <div class="container">
-                                    <div class="f-r-c-c w-100 g-1">
-                                        <div class="ps-0">
-                                            <div class="purchased-product-image f-c-c-c placeholder-glow">
-                                                <img [src]="purchase.product.firstImage" class=""
-                                                    alt="purchased_product_image_{{ purchase.product.seller?.name }}" />
-                                            </div>
-                                        </div>
-
-                                        <div class="f-c-s-s g-05 w-100 p-4">
-                                            <div class="f-r-sb-c g-0 w-100">
-                                                <span class="font-weight-bold font-size-16">
-                                                    {{ purchase.product.name }}
-                                                </span>
-                                                <div class="f-r-c-c g-05">
-                                                    <div class="department-tag"
-                                                        (click)="goToDepartment(purchase.product.department)">
-                                                        {{ purchase.product.department?.name }}
-                                                    </div>
-                                                    <!-- Used / New -->
-                                                    <div *ngIf="purchase.product.used; else newPurchase"
-                                                        class="used-tag used font-weight-normal">
-                                                        Used
-                                                    </div>
-                                                    <ng-template #newPurchase>
-                                                        <div class="used-tag new font-weight-normal">
-                                                            New
-                                                        </div>
-                                                    </ng-template>
-                                                </div>
-                                            </div>
-
-                                            <div class="f-r-c-c font-weight-normal">
-                                                Quantity: {{ purchase.unitsRequested }}
-                                            </div>
-                                            <div class="f-r-c-c g-05">
-                                                <span class="font-weight-normal">Sold by</span>
-                                                <span style="color: var(--lila)">
-                                                    {{ purchase.product.seller?.name }}
-                                                </span>
-                                            </div>
-
-                                            <div class="f-r-c-c g-0 pt-2">
-                                                <span class="price font-size-20 font-weight-normal">
-                                                    {{ purchase.product?.price
-                                                    ? (purchase.product.price |
-                                                    currency:'ARS':'symbol':'1.0-2').split(',')[0]
-                                                    : ''
-                                                    }}
-                                                </span>
-                                                <div class="f-c-s-c ps-1" style="height: 20px">
-                                                    <span class="cents c-light-text font-size-12 font-weight-normal">
-                                                        {{ purchase.product?.price
-                                                        ? ',' + ((purchase.product.price |
-                                                        currency:'ARS':'symbol':'1.0-2')
-                                                        .split(',')[1] || '00')
-                                                        : ''
-                                                        }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Bottom paginator if totalPages > 1 -->
-                            <app-paginator [totalPages]="totalPages" [currentPage]="page"
-                                (pageChange)="onPageChange($event)" [isMarketplace]="true">
-                            </app-paginator>
-                        </div>
-                    </ng-container>
-
-                    <!-- Requests Section -->
-                    <ng-template #showRequests>
-                        <!-- If no requests -->
-                        <div class="no-posts-found" *ngIf="requestList && requestList.length === 0">
-                            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-                            No new requests
-                        </div>
-
-                        <!-- Otherwise, show all requests -->
-                        <div class="w-100 f-c-c-c g-1" *ngIf="requestList && requestList.length > 0">
-                            <div class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-2"
-                                *ngFor="let request of requestList">
-                                <!-- Top row with date/time -->
-                                <div class="f-r-sb-c w-100  pb-0 pt-2" style="padding-left: 1em; padding-right: 1em;">
-                                    <div>{{ request.createdAt | date: 'dd MMM yyyy' }}</div>
-                                    <div>{{ request.createdAt | date: 'HH:mm' }}</div>
-                                </div>
-                                <div class="divider"></div>
-
-                                <!-- Inner container for product details -->
-                                <div class="container">
-                                    <div class="f-r-c-c w-100 g-1">
-                                        <div class="ps-0">
-                                            <div class="purchased-product-image f-c-c-c placeholder-glow">
-                                                <img [src]="getProductImage(request.product)" class=""
-                                                    alt="purchased_product_image_{{ request.product.seller?.name }}" />
-                                            </div>
-                                        </div>
-
-                                        <div class="f-c-s-s w-100 p-4">
-                                            <div class="f-r-sb-c g-0 w-100">
-                                                <span class="font-weight-bold font-size-16">
-                                                    {{ request.product.name }}
-                                                </span>
-                                                <div class="f-r-c-c g-05">
-                                                    <!-- Department tag -->
-                                                    <div class="department-tag"
-                                                        (click)="goToDepartment(request.product.department)">
-                                                        {{ request.product.department?.name }}
-                                                    </div>
-                                                    <!-- Used/New condition -->
-                                                    <div *ngIf="request.product.used; else newTag"
-                                                        class="used-tag used font-weight-normal">
-                                                        Used
-                                                    </div>
-                                                    <ng-template #newTag>
-                                                        <div class="used-tag new font-weight-normal">
-                                                            New
-                                                        </div>
-                                                    </ng-template>
-                                                </div>
-                                            </div>
-
-                                            <div class="f-r-sb-c w-100">
-                                                <div class="f-r-c-c g-0">
-                                                    <span class="price font-size-20 font-weight-normal">
-                                                        {{ request.product?.price
-                                                        ? (request.product.price |
-                                                        currency:'ARS':'symbol':'1.0-2').split(',')[0]
-                                                        : ''
-                                                        }}
-                                                    </span>
-                                                    <div class="f-c-s-c ps-1" style="height: 20px">
-                                                        <span
-                                                            class="cents c-light-text font-size-12 font-weight-normal">
-                                                            {{ request.product?.price
-                                                            ? ',' + ((request.product.price |
-                                                            currency:'ARS':'symbol':'1.0-2')
-                                                            .split(',')[1] || '00')
-                                                            : ''
-                                                            }}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <a [routerLink]="['/marketplace/products',request.product.self]"
-                                                    class="cool-button small-a marketplace-button font-weight-bold">
-                                                    <i class="fa-solid fa-arrow-right-to-bracket pe-1"></i>
-                                                    View Product
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Page selector at bottom if totalPages > 1 -->
-                        <app-paginator [totalPages]="totalPages" [currentPage]="page"
-                            (pageChange)="onPageChange($event)" [isMarketplace]="true">
-                        </app-paginator>
-                    </ng-template>
-                </div>
-
-            </div>
-        </div>
+<div class="container">
+  <div class="row init">
+    <!-- Left Column -->
+    <div class="column-left">
+      <app-sidebar></app-sidebar>
     </div>
 
-    <!-- Footer -->
-    <app-wave-footer [isMarketplace]="true"></app-wave-footer>
+    <!-- Center Grid -->
+    <div id="center-grid" class="column-center ps-3">
+      <!-- Upper marketplace buttons -->
+      <app-marketplace-control-bar
+        [channel]="'BuyerHub'"
+      ></app-marketplace-control-bar>
+
+      <div class="cool-static-container w-100 f-c-c-c g-05">
+        <!-- Buttons row (matching JSP structure) -->
+        <div class="f-c-s-s w-100">
+          <div class="f-r-c-c pt-2 pb-2">
+            <!-- "My requests" button -->
+            <a
+              [routerLink]="['/marketplace/buyer-hub', 'requests']"
+              class="cool-feed-button rounded marketplace-button font-weight-bold"
+              [class.active]="isRequests"
+            >
+              <span class="font-size-12">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span class="hide-text">My requests</span>
+              </span>
+            </a>
+            <!-- "My purchases" button -->
+            <a
+              [routerLink]="['/marketplace/buyer-hub', 'purchases']"
+              class="cool-feed-button rounded marketplace-button font-weight-bold"
+              [class.active]="isPurchases"
+            >
+              <span class="font-size-12">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span class="hide-text">My purchases</span>
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="divider mb-3"></div>
+
+        <!-- Purchases Section -->
+        <ng-container *ngIf="isPurchases; else showRequests">
+          <!-- If no purchases -->
+          <div
+            class="no-posts-found"
+            *ngIf="purchaseList && purchaseList.length === 0"
+          >
+            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            Purchases not found
+          </div>
+
+          <!-- Otherwise, show all purchases -->
+          <div
+            class="w-100 f-c-c-c g-1"
+            *ngIf="purchaseList && purchaseList.length > 0"
+          >
+            <div
+              class="cool-static-container w-100 f-c-s-s g-0 p-0"
+              *ngFor="let purchase of purchaseList"
+            >
+              <!-- Top row: date/time -->
+              <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2">
+                <div>{{ purchase.fulfilledAt | date : "dd MMM yyyy" }}</div>
+                <div>{{ purchase.fulfilledAt | date : "HH:mm" }}</div>
+              </div>
+              <div class="divider m-0"></div>
+
+              <!-- Purchase details -->
+              <div class="container">
+                <div class="f-r-c-c w-100 g-1">
+                  <div class="ps-0">
+                    <div
+                      class="purchased-product-image f-c-c-c placeholder-glow"
+                    >
+                      <img
+                        [src]="purchase.product.firstImage"
+                        class=""
+                        alt="purchased_product_image_{{
+                          purchase.product.seller?.name
+                        }}"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="f-c-s-s g-05 w-100 p-4">
+                    <div class="f-r-sb-c g-0 w-100">
+                      <span class="font-weight-bold font-size-16">
+                        {{ purchase.product.name }}
+                      </span>
+                      <div class="f-r-c-c g-05">
+                        <div
+                          class="department-tag"
+                          (click)="goToDepartment(purchase.product.department)"
+                        >
+                          {{ purchase.product.department?.name }}
+                        </div>
+                        <!-- Used / New -->
+                        <div
+                          *ngIf="purchase.product.used; else newPurchase"
+                          class="used-tag used font-weight-normal"
+                        >
+                          Used
+                        </div>
+                        <ng-template #newPurchase>
+                          <div class="used-tag new font-weight-normal">New</div>
+                        </ng-template>
+                      </div>
+                    </div>
+
+                    <div class="f-r-c-c font-weight-normal">
+                      Quantity: {{ purchase.unitsRequested }}
+                    </div>
+                    <div class="f-r-c-c g-05">
+                      <span class="font-weight-normal">Sold by</span>
+                      <span style="color: var(--lila)">
+                        {{ purchase.product.seller?.name }}
+                      </span>
+                    </div>
+
+                    <div class="f-r-c-c g-0 pt-2">
+                      <span class="price font-size-20 font-weight-normal">
+                        {{
+                          purchase.product?.price
+                            ? (
+                                purchase.product.price
+                                | currency : "ARS" : "symbol" : "1.0-2"
+                              ).split(",")[0]
+                            : ""
+                        }}
+                      </span>
+                      <div class="f-c-s-c ps-1" style="height: 20px">
+                        <span
+                          class="cents c-light-text font-size-12 font-weight-normal"
+                        >
+                          {{
+                            purchase.product?.price
+                              ? "," +
+                                ((
+                                  purchase.product.price
+                                  | currency : "ARS" : "symbol" : "1.0-2"
+                                ).split(",")[1] || "00")
+                              : ""
+                          }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom paginator if totalPages > 1 -->
+            <app-paginator
+              [totalPages]="totalPages"
+              [currentPage]="page"
+              (pageChange)="onPageChange($event)"
+              [isMarketplace]="true"
+            >
+            </app-paginator>
+          </div>
+        </ng-container>
+
+        <!-- Requests Section -->
+        <ng-template #showRequests>
+          <!-- If no requests -->
+          <div
+            class="no-posts-found"
+            *ngIf="requestList && requestList.length === 0"
+          >
+            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            No new requests
+          </div>
+
+          <!-- Otherwise, show all requests -->
+          <div
+            class="w-100 f-c-c-c g-1"
+            *ngIf="requestList && requestList.length > 0"
+          >
+            <div
+              class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-2"
+              *ngFor="let request of requestList"
+            >
+              <!-- Top row with date/time -->
+              <div
+                class="f-r-sb-c w-100 pb-0 pt-2"
+                style="padding-left: 1em; padding-right: 1em"
+              >
+                <div>{{ request.createdAt | date : "dd MMM yyyy" }}</div>
+                <div>{{ request.createdAt | date : "HH:mm" }}</div>
+              </div>
+              <div class="divider"></div>
+
+              <!-- Inner container for product details -->
+              <div class="container">
+                <div class="f-r-c-c w-100 g-1">
+                  <div class="ps-0">
+                    <div
+                      class="purchased-product-image f-c-c-c placeholder-glow"
+                    >
+                      <img
+                        [src]="getProductImage(request.product)"
+                        class=""
+                        alt="purchased_product_image_{{
+                          request.product.seller?.name
+                        }}"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="f-c-s-s w-100 p-4">
+                    <div class="f-r-sb-c g-0 w-100">
+                      <span class="font-weight-bold font-size-16">
+                        {{ request.product.name }}
+                      </span>
+                      <div class="f-r-c-c g-05">
+                        <!-- Department tag -->
+                        <div
+                          class="department-tag"
+                          (click)="goToDepartment(request.product.department)"
+                        >
+                          {{ request.product.department?.name }}
+                        </div>
+                        <!-- Used/New condition -->
+                        <div
+                          *ngIf="request.product.used; else newTag"
+                          class="used-tag used font-weight-normal"
+                        >
+                          Used
+                        </div>
+                        <ng-template #newTag>
+                          <div class="used-tag new font-weight-normal">New</div>
+                        </ng-template>
+                      </div>
+                    </div>
+
+                    <div class="f-r-sb-c w-100">
+                      <div class="f-r-c-c g-0">
+                        <span class="price font-size-20 font-weight-normal">
+                          {{
+                            request.product?.price
+                              ? (
+                                  request.product.price
+                                  | currency : "ARS" : "symbol" : "1.0-2"
+                                ).split(",")[0]
+                              : ""
+                          }}
+                        </span>
+                        <div class="f-c-s-c ps-1" style="height: 20px">
+                          <span
+                            class="cents c-light-text font-size-12 font-weight-normal"
+                          >
+                            {{
+                              request.product?.price
+                                ? "," +
+                                  ((
+                                    request.product.price
+                                    | currency : "ARS" : "symbol" : "1.0-2"
+                                  ).split(",")[1] || "00")
+                                : ""
+                            }}
+                          </span>
+                        </div>
+                      </div>
+                      <a
+                        [routerLink]="[
+                          '/marketplace/products',
+                          request.product.self
+                        ]"
+                        class="cool-button small-a marketplace-button font-weight-bold"
+                      >
+                        <i class="fa-solid fa-arrow-right-to-bracket pe-1"></i>
+                        View Product
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page selector at bottom if totalPages > 1 -->
+          <app-paginator
+            [totalPages]="totalPages"
+            [currentPage]="page"
+            (pageChange)="onPageChange($event)"
+            [isMarketplace]="true"
+          >
+          </app-paginator>
+        </ng-template>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Footer -->
+<app-wave-footer [isMarketplace]="true"></app-wave-footer>

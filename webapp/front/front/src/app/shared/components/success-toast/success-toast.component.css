@@ -1,0 +1,53 @@
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  /* 
+      Flex column so each new toast stacks on top of the previous one. 
+      Reverse column so the newest appears at the bottom, if you prefer.
+    */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Spacing between toasts */
+  z-index: 1000;
+}
+
+.my-toast {
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  color: #155724;
+  opacity: 1;
+}
+
+/* success / error background colors */
+.my-toast.success {
+  background-color: #e6ffed;
+  color: #155724;
+}
+.my-toast.success .dot {
+  background-color: #28a745;
+}
+.my-toast.error {
+  background-color: #ffe6e6;
+  color: #721c24;
+}
+.my-toast.error .dot {
+  background-color: #dc3545;
+}
+
+/* Dot styling */
+.my-toast .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+  flex-shrink: 0;
+  background-color: #ccc;
+  display: inline-block;
+}
+.my-toast-content {
+  display: flex;
+  align-items: center;
+}

@@ -12,28 +12,25 @@ export class ServiceProvidersPageComponent implements OnInit {
   totalPages: number = 0;
   pageSize: number = 10;
   currentProfessions: string[] = [];
-  // If you want to respect the "darkMode" class logic
-  darkMode: boolean = false; // or load from user session, e.g. userSessionService
 
   constructor(
     private workerService: WorkerService,
     private route: ActivatedRoute,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     // Example of reading page from query parameters
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.currentPage = +params['page'] || 1;
       const professions: string[] = params['professions'];
-      this.currentProfessions = professions ? (Array.isArray(professions) ? professions : [professions]) : [];
+      this.currentProfessions = professions
+        ? Array.isArray(professions)
+          ? professions
+          : [professions]
+        : [];
       this.loadWorkers();
     });
-
-    // If you want to load darkMode from user data, do it here:
-    // this.userSessionService.getCurrentUser().subscribe(user => {
-    //   this.darkMode = user.darkMode;
-    // });
   }
 
   onPageChange(page: number): void {
@@ -46,18 +43,16 @@ export class ServiceProvidersPageComponent implements OnInit {
   }
 
   loadWorkers(): void {
-
     const workerParams = {
       page: this.currentPage,
       size: this.pageSize,
-      withProfessions: this.currentProfessions
-    }
+      withProfessions: this.currentProfessions,
+    };
 
-    this.workerService.getWorkers(workerParams)
-      .subscribe(result => {
-        this.workersList = result.workers;
-        this.totalPages = result.totalPages;
-        this.currentPage = result.currentPage;
-      });
+    this.workerService.getWorkers(workerParams).subscribe((result) => {
+      this.workersList = result.workers;
+      this.totalPages = result.totalPages;
+      this.currentPage = result.currentPage;
+    });
   }
 }

@@ -1,4 +1,8 @@
-<div class="dialog" id="loginDialog" [ngClass]="{ 'show-dialog': showLoginDialog }">
+<div
+  class="dialog"
+  id="loginDialog"
+  [ngClass]="{ 'show-dialog': showLoginDialog }"
+>
   <div class="dialog-content">
     <!-- Close Button -->
     <div class="close-button" (click)="closeLoginDialog()">
@@ -16,37 +20,68 @@
     <!-- Login Form -->
     <ng-template #loginFormTemplate>
       <div class=" ">
-        <div class="title">Welcome to Neibo</div>
+        <div class="title mb-2">Welcome to Neibo</div>
         <p>Log in to continue.</p>
       </div>
       <form (ngSubmit)="tryLogin()" [formGroup]="loginForm" class="login-form">
         <div class="centered-column">
           <!-- Email Field -->
           <label>
-            <input id="login-email" type="email" placeholder="Email" class="input" formControlName="email"
-              autocomplete="email">
-            <small class="form-error" *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched">
+            <input
+              id="login-email"
+              type="email"
+              placeholder="Email"
+              class="input"
+              formControlName="email"
+              autocomplete="email"
+            />
+            <small
+              class="form-error"
+              *ngIf="
+                loginForm.get('email').invalid && loginForm.get('email').touched
+              "
+            >
               *Entered email is not valid
             </small>
           </label>
           <!-- Password Field -->
           <label>
-            <input id="login-password" type="password" placeholder="Password" class="input" formControlName="password"
-              autocomplete="current-password">
-            <small class="form-error" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched">
+            <input
+              id="login-password"
+              type="password"
+              placeholder="Password"
+              class="input"
+              formControlName="password"
+              autocomplete="current-password"
+            />
+            <small
+              class="form-error"
+              *ngIf="
+                loginForm.get('password').invalid &&
+                loginForm.get('password').touched
+              "
+            >
               *Password is required
             </small>
           </label>
         </div>
         <!-- Remember Me -->
         <label class="centered-row">
-          <input type="checkbox" formControlName="rememberMe"> Remember me
+          <input type="checkbox" formControlName="rememberMe" /> Remember me
         </label>
         <!-- Errors and Submit Button -->
         <div class="centered-column">
-          <small class="form-error centered" *ngIf="loginFailed">*Invalid email or password</small>
-          <button type="submit" class="action-button font-weight-bolder" [disabled]="loginForm.invalid">Login</button>
-          <span class="light-text">
+          <small class="form-error centered" *ngIf="loginFailed"
+            >*Invalid email or password</small
+          >
+          <button
+            type="submit"
+            class="action-button font-weight-bolder"
+            [disabled]="loginForm.invalid"
+          >
+            Login
+          </button>
+          <span class="light-text mt-2">
             Not a member yet?
             <a (click)="openSignupDialog()" class="a-link">Sign up now</a>
           </span>

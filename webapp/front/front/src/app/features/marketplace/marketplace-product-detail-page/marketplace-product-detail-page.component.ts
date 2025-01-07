@@ -2,17 +2,26 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
-import { DepartmentService, InquiryService, LinkKey, ProductService, RequestService, UserService } from '@shared/index';
+import {
+  DepartmentService,
+  InquiryService,
+  LinkKey,
+  ProductService,
+  RequestService,
+  UserService,
+} from '@shared/index';
 import { Department, Inquiry, Product, User } from '@shared/index';
-import { ToastService, HateoasLinksService, UserSessionService } from '@core/index';
-
+import {
+  ToastService,
+  HateoasLinksService,
+  UserSessionService,
+} from '@core/index';
 
 @Component({
   selector: 'app-marketplace-product-detail-page',
   templateUrl: './marketplace-product-detail-page.component.html',
 })
 export class MarketplaceProductDetailPageComponent implements OnInit {
-  darkMode: boolean = false; // Dynamically set based on user (loggedUser.darkMode)
   departmentList: Department[] = [];
   departmentName: string = '';
   department: string;
@@ -60,7 +69,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private linkService: HateoasLinksService,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.productSelf = this.route.snapshot.paramMap.get('id')!;
@@ -79,14 +88,19 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     });
 
     // Get current user
-    this.userService.getUser(this.linkService.getLink(LinkKey.USER_SELF)).subscribe((user) => {
-      this.loggedUser = user;
-    });
+    this.userService
+      .getUser(this.linkService.getLink(LinkKey.USER_SELF))
+      .subscribe((user) => {
+        this.loggedUser = user;
+      });
   }
 
   private loadInquiries(): void {
     this.inquiryService
-      .getInquiries(this.product.inquiries, { page: this.page, size: this.size })
+      .getInquiries(this.product.inquiries, {
+        page: this.page,
+        size: this.size,
+      })
       .subscribe({
         next: (result) => {
           this.questions = result.inquiries;
@@ -97,7 +111,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
         },
       });
   }
-
 
   private loadProductImages(): void {
     this.productImages = [
@@ -128,9 +141,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     this.replyMessage = '';
   }
 
-
-
-
   // Create inquiry
   submitQuestionForm() {
     if (!this.loggedUser || !this.product) {
@@ -142,46 +152,60 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
       return; // Prevent submitting empty questions
     }
 
-    this.inquiryService.createInquiry(this.product.inquiries, this.questionMessage, this.loggedUser.self).subscribe({
-      next: (inquiryUrl) => {
-        if (inquiryUrl) {
-          this.inquiryService.getInquiry(inquiryUrl).subscribe({
-            next: (createdInquiry) => {
-              this.questions.unshift(createdInquiry);
-              this.questionMessage = '';
-            },
-            error: (err) => {
-              console.error('Error retrieving inquiry:', err);
-            },
-          });
-        } else {
-          console.error('Inquiry creation did not return a valid URL');
-        }
-      },
-      error: (err) => {
-        console.error('Error submitting inquiry:', err);
-      },
-    });
+    this.inquiryService
+      .createInquiry(
+        this.product.inquiries,
+        this.questionMessage,
+        this.loggedUser.self
+      )
+      .subscribe({
+        next: (inquiryUrl) => {
+          if (inquiryUrl) {
+            this.inquiryService.getInquiry(inquiryUrl).subscribe({
+              next: (createdInquiry) => {
+                this.questions.unshift(createdInquiry);
+                this.questionMessage = '';
+              },
+              error: (err) => {
+                console.error('Error retrieving inquiry:', err);
+              },
+            });
+          } else {
+            console.error('Inquiry creation did not return a valid URL');
+          }
+        },
+        error: (err) => {
+          console.error('Error submitting inquiry:', err);
+        },
+      });
   }
-
-
 
   submitRequestForm(requestForm: NgForm) {
     if (requestForm.invalid) return;
 
     const { message, amount } = requestForm.value;
 
-    this.requestService.createRequest(message, amount, this.product.self, this.linkService.getLink(LinkKey.USER_SELF)).subscribe({
-      next: () => {
-        this.toastService.showToast('Request sent successfully', 'success');
-        this.requestDialogVisible = false;
-        requestForm.resetForm();
-      },
-      error: (err) => {
-        this.toastService.showToast('Oops, an error ocurred try again later.', 'error');
-        this.requestError = true;
-      },
-    });
+    this.requestService
+      .createRequest(
+        message,
+        amount,
+        this.product.self,
+        this.linkService.getLink(LinkKey.USER_SELF)
+      )
+      .subscribe({
+        next: () => {
+          this.toastService.showToast('Request sent successfully', 'success');
+          this.requestDialogVisible = false;
+          requestForm.resetForm();
+        },
+        error: (err) => {
+          this.toastService.showToast(
+            'Oops, an error ocurred try again later.',
+            'error'
+          );
+          this.requestError = true;
+        },
+      });
     this.cdr.detectChanges();
   }
 
@@ -190,36 +214,52 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
 
     const { phoneNumber, message, amount } = phoneRequestForm.value;
 
-    this.userService.updatePhoneNumber(this.loggedUser.self, phoneNumber).subscribe({
-      next: () => {
-        this.requestService.createRequest(message, amount, this.product.self, this.loggedUser.self).subscribe({
-          next: () => {
-            this.toastService.showToast('Request sent successfully', 'success');
-            this.requestDialogVisible = false;
-            phoneRequestForm.resetForm();
-          },
-          error: (err) => {
-            console.error('Error sending request:', err);
-            this.toastService.showToast('Oops, an error ocurred try again later.', 'error');
-            this.requestError = true;
-          },
-        });
-      },
-      error: (err) => {
-        console.error('Error sending request:', err);
-        this.toastService.showToast('Oops, an error ocurred try again later.', 'error');
-        this.requestError = true;
-      },
-    });
+    this.userService
+      .updatePhoneNumber(this.loggedUser.self, phoneNumber)
+      .subscribe({
+        next: () => {
+          this.requestService
+            .createRequest(
+              message,
+              amount,
+              this.product.self,
+              this.loggedUser.self
+            )
+            .subscribe({
+              next: () => {
+                this.toastService.showToast(
+                  'Request sent successfully',
+                  'success'
+                );
+                this.requestDialogVisible = false;
+                phoneRequestForm.resetForm();
+              },
+              error: (err) => {
+                console.error('Error sending request:', err);
+                this.toastService.showToast(
+                  'Oops, an error ocurred try again later.',
+                  'error'
+                );
+                this.requestError = true;
+              },
+            });
+        },
+        error: (err) => {
+          console.error('Error sending request:', err);
+          this.toastService.showToast(
+            'Oops, an error ocurred try again later.',
+            'error'
+          );
+          this.requestError = true;
+        },
+      });
     this.cdr.detectChanges();
-
   }
 
   getAmountOptions(): number[] {
     const stock = this.product?.stock || 1; // Default to 1 if product.stock is undefined
     return Array.from({ length: stock }, (_, i) => i + 1);
   }
-
 
   submitReplyForm(): void {
     if (!this.questionForReply || !this.replyMessage.trim()) {
@@ -236,14 +276,17 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error replying to inquiry:', err);
-          this.toastService.showToast('Failed to send reply. Try again later.', 'error');
+          this.toastService.showToast(
+            'Failed to send reply. Try again later.',
+            'error'
+          );
         },
       });
   }
 
   goToDepartment(department: Department): void {
     this.router.navigate(['/marketplace'], {
-      queryParams: { inDepartment: department.self }
+      queryParams: { inDepartment: department.self },
     });
   }
 
@@ -256,7 +299,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     this.currentBigImage = image;
     this.selectedImageIndex = index;
   }
-
 
   onPageChange(page: number): void {
     this.page = page;
@@ -271,7 +313,4 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
       queryParamsHandling: 'merge', // Merge with other existing query params
     });
   }
-
-
-
 }

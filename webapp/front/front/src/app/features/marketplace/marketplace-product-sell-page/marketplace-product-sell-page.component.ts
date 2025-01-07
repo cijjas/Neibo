@@ -4,23 +4,19 @@ import { combineLatest, map, switchMap } from 'rxjs';
 import { Department, LinkKey } from '@shared/index';
 import { Router } from '@angular/router';
 import {
-  HateoasLinksService, ImageService,
+  HateoasLinksService,
+  ImageService,
   ToastService,
   UserSessionService,
 } from '@core/index';
 
-import {
-
-  DepartmentService,
-  ProductService,
-} from '@shared/index';
+import { DepartmentService, ProductService } from '@shared/index';
 
 @Component({
   selector: 'app-marketplace-product-sell-page',
   templateUrl: './marketplace-product-sell-page.component.html',
 })
 export class MarketplaceProductSellPageComponent implements OnInit {
-  darkMode = false; // This can be toggled based on user settings
   channel: string = 'Sell';
   departmentList: Department[] = [];
   departmentName: string = 'NONE';
@@ -29,11 +25,14 @@ export class MarketplaceProductSellPageComponent implements OnInit {
 
   listingForm = this.fb.group({
     title: ['', Validators.required],
-    price: ['', [Validators.required, Validators.pattern(/^\$?\d+(,\d{3})*(\.\d{2})?$/)]],
+    price: [
+      '',
+      [Validators.required, Validators.pattern(/^\$?\d+(,\d{3})*(\.\d{2})?$/)],
+    ],
     description: ['', Validators.required],
     departmentId: ['', Validators.required],
     used: [false, Validators.required],
-    quantity: [1, Validators.required]
+    quantity: [1, Validators.required],
   });
 
   formErrors: string | null = null;
@@ -48,14 +47,14 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private departmentService: DepartmentService,
     private toastService: ToastService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.departmentService.getDepartments().subscribe({
       next: (departments: Department[]) => {
         this.departmentList = departments;
       },
-      error: (err: any) => console.error(err)
+      error: (err: any) => console.error(err),
     });
   }
 
@@ -95,7 +94,10 @@ export class MarketplaceProductSellPageComponent implements OnInit {
   }
 
   clearImageError(): void {
-    if (this.images.length > 0 && this.formErrors === 'Please upload at least one image for the product.') {
+    if (
+      this.images.length > 0 &&
+      this.formErrors === 'Please upload at least one image for the product.'
+    ) {
       this.formErrors = null;
     }
   }
@@ -109,11 +111,16 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     // Parse value
     let floatVal = parseFloat(val);
     if (isNaN(floatVal)) {
-      floatVal = 0.00;
+      floatVal = 0.0;
     }
 
     // Format as currency
-    let formatted = '$' + floatVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    let formatted =
+      '$' +
+      floatVal.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     this.listingForm.patchValue({ price: formatted }, { emitEvent: false });
   }
 
@@ -144,29 +151,34 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       department: rawValue.departmentId,
       remainingUnits: rawValue.quantity,
       user: userSelf,
-      images: []
+      images: [],
     };
 
     // Upload images
-    const imageUploadObservables = this.images.map(img => this.imageService.createImage(img.file));
+    const imageUploadObservables = this.images.map((img) =>
+      this.imageService.createImage(img.file)
+    );
 
     combineLatest(imageUploadObservables)
       .pipe(
-        map(imageUrls => {
-          productData.images = imageUrls.filter(url => url !== null);
+        map((imageUrls) => {
+          productData.images = imageUrls.filter((url) => url !== null);
           return productData;
         }),
-        switchMap(data => this.productService.createProduct(data))
+        switchMap((data) => this.productService.createProduct(data))
       )
       .subscribe({
-        next: productUrl => {
+        next: (productUrl) => {
           this.router.navigate(['/marketplace/products', productUrl]);
-          this.toastService.showToast('Listing created successfully', 'success');
+          this.toastService.showToast(
+            'Listing created successfully',
+            'success'
+          );
         },
-        error: err => {
+        error: (err) => {
           this.formErrors = 'There was a problem creating the listing.';
           console.error(err);
-        }
+        },
       });
   }
 }

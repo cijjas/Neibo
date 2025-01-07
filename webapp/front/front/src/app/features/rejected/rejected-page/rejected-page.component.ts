@@ -10,9 +10,8 @@ import { Neighborhood, NeighborhoodService } from '@shared/index';
 })
 export class RejectedPageComponent implements OnInit {
   @ViewChild('neighborhoodSelect') neighborhoodSelect!: ElementRef; // Reference to the dropdown
-  darkMode = false; // Replace with a proper service or state for dark mode
   neighborhoodsList: Neighborhood[] = [];
-  currentPage = 0;
+  currentPage = 1;
   totalPages = 0;
   isLoading = false;
 

@@ -8,7 +8,6 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './admin-amenities-page.component.html',
 })
 export class AdminAmenitiesPageComponent implements OnInit {
-  darkMode = false;
   amenities: Amenity[] = [];
   currentPage = 1;
   totalPages = 1;

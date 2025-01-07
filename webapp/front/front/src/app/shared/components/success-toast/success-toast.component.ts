@@ -1,33 +1,68 @@
-import { Component } from '@angular/core';
-import { ToastService } from '@core/index';
+import {
+  animate,
+  query,
+  stagger,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import { Component, TrackByFunction } from '@angular/core';
+import { Toast, ToastService } from '@core/index';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-success-toast',
   templateUrl: './success-toast.component.html',
+  styleUrls: ['./success-toast.component.css'],
+  animations: [
+    // Container-level stagger for the toasts to appear one by one
+    trigger('listStagger', [
+      transition('* => *', [
+        // when new toast
+        query(
+          ':enter',
+          [
+            style({ transform: 'translateX(100%)', opacity: 0 }),
+            stagger(
+              '100ms',
+              animate(
+                '300ms ease-out',
+                style({
+                  transform: 'translateX(0)',
+                  opacity: 1,
+                })
+              )
+            ),
+          ],
+          { optional: true }
+        ),
+        // Animate removed toasts
+        query(
+          ':leave',
+          [
+            stagger('100ms', [
+              animate(
+                '300ms ease-in',
+                style({
+                  transform: 'translateY(100%)',
+                  opacity: 0,
+                })
+              ),
+            ]),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+  ],
 })
 export class SuccessToastComponent {
-  message: string = '';
-  visible: boolean = false;
-  type: 'success' | 'error' = 'success';
+  toasts$: Observable<Toast[]>;
+  trackById: TrackByFunction<Toast>;
 
   constructor(private toastService: ToastService) {
-    this.toastService.toast$.subscribe((toast) => {
-      this.message = toast.message;
-      this.type = toast.type;
-      this.visible = toast.visible;
-    });
-  }
-  get toastClasses() {
-    return {
-      show: this.visible,
-      [this.type]: true,
-    };
+    this.toasts$ = this.toastService.toasts$;
   }
 
-  hideToast() {
-    this.visible = false; // Trigger CSS transition
-    setTimeout(() => {
-      this.message = ''; // Clear the message after transition ends
-    }, 400); // Matches CSS transition duration (400ms)
-  }
+  ngOnInit(): void {}
 }

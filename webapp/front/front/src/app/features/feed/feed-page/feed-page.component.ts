@@ -31,7 +31,7 @@ export class FeedPageComponent implements OnInit {
 
   ngOnInit(): void {
     const defaultChannel = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
     );
     const defaultStatus = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
 

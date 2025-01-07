@@ -13,7 +13,6 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './marketplace-page.component.html',
 })
 export class MarketplacePageComponent implements OnInit {
-  darkMode: boolean = false;
   productList: Product[] = [];
   channel: string = 'Marketplace';
   selectedDepartment: string | null = null;

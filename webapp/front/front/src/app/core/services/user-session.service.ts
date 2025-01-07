@@ -86,11 +86,6 @@ export class UserSessionService {
     return this.currentUserSubject.asObservable();
   }
 
-  getCurrentUserRole(): string | null {
-    const currentUser = this.currentUserSubject.value;
-    return currentUser ? currentUser.userRole : null;
-  }
-
   getNeighborhood(): Observable<Neighborhood | null> {
     return this.neighborhoodSubject.asObservable();
   }

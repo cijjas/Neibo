@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 // Replace with your actual models and services
-import { ProductService, RequestService, Department, Product, Request, LinkKey } from '@shared/index';
+import {
+  ProductService,
+  RequestService,
+  Department,
+  Product,
+  Request,
+  LinkKey,
+} from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -9,8 +16,6 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './marketplace-dashboard-seller-page.component.html',
 })
 export class MarketplaceDashboardSellerPageComponent implements OnInit {
-  darkMode: boolean = false;
-
   // Pagination
   page: number = 1;
   totalPages: number = 1;
@@ -25,8 +30,8 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     private router: Router,
     private linkService: HateoasLinksService,
     private requestService: RequestService,
-    private productService: ProductService,
-  ) { }
+    private productService: ProductService
+  ) {}
 
   // Computed properties for toggling UI
   get isListings(): boolean {
@@ -72,14 +77,17 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
 
   loadListings(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
-    const productStatusUrl: string = this.linkService.getLink(LinkKey.SELLING_PRODUCT_STATUS);
+    const productStatusUrl: string = this.linkService.getLink(
+      LinkKey.SELLING_PRODUCT_STATUS
+    );
 
-    this.productService.getProducts({
-      forUser: userUrl,
-      withStatus: productStatusUrl,
-      page: this.page,
-      size: this.size,
-    })
+    this.productService
+      .getProducts({
+        forUser: userUrl,
+        withStatus: productStatusUrl,
+        page: this.page,
+        size: this.size,
+      })
       .subscribe({
         next: (data) => {
           this.listings = data.products;
@@ -91,8 +99,12 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
 
   loadSales(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
-    const requestStatusUrl: string = this.linkService.getLink(LinkKey.ACCEPTED_REQUEST_STATUS);
-    const transactionTypeUrl: string = this.linkService.getLink(LinkKey.SALE_TRANSACTION_TYPE);
+    const requestStatusUrl: string = this.linkService.getLink(
+      LinkKey.ACCEPTED_REQUEST_STATUS
+    );
+    const transactionTypeUrl: string = this.linkService.getLink(
+      LinkKey.SALE_TRANSACTION_TYPE
+    );
 
     this.requestService
       .getRequests({
@@ -133,7 +145,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
 
   goToDepartment(department: Department): void {
     this.router.navigate(['/marketplace'], {
-      queryParams: { inDepartment: department.self }
+      queryParams: { inDepartment: department.self },
     });
   }
 

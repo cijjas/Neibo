@@ -5,63 +5,68 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Import shared components and pipes
 import {
+  NavbarComponent,
+  SuccessToastComponent,
+  SidebarComponent,
+  WaveFooterComponent,
+  BackgroundCloudsComponent,
+  LandingPageNavbarComponent,
+  BackgroundDrawingComponent,
+  PaginatorComponent,
+  RightColumnComponent,
+  TagsFilterWidgetComponent,
+} from '@shared/index';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { TimeAgoPipe, AddHoursPipe } from '@shared/index';
+import {
+  CalendarWidgetComponent,
+  UserProfileWidgetComponent,
+} from '@features/index';
+
+@NgModule({
+  declarations: [
     NavbarComponent,
+    PaginatorComponent,
     SuccessToastComponent,
     SidebarComponent,
     WaveFooterComponent,
     BackgroundCloudsComponent,
     LandingPageNavbarComponent,
-    BackgroundDrawingComponent,
-    PaginatorComponent,
     RightColumnComponent,
-    TagsFilterWidgetComponent
-} from "@shared/index";
+    BackgroundDrawingComponent,
+    TagsFilterWidgetComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule, // Add this for routerLink and related directives
+    FormsModule,
+    ReactiveFormsModule,
+    TimeAgoPipe,
+    AddHoursPipe,
+    CalendarWidgetComponent,
+    UserProfileWidgetComponent,
+  ],
+  exports: [
+    CommonModule,
+    RouterModule, // Export this to make router directives available in other modules
+    FormsModule,
+    ReactiveFormsModule,
 
-import { TimeAgoPipe, AddHoursPipe } from "@shared/index";
-import { CalendarWidgetComponent, UserProfileWidgetComponent } from '@features/index';
+    NavbarComponent,
+    PaginatorComponent,
+    SuccessToastComponent,
+    SidebarComponent,
+    WaveFooterComponent,
+    BackgroundCloudsComponent,
+    LandingPageNavbarComponent,
+    RightColumnComponent,
+    BackgroundDrawingComponent,
+    TagsFilterWidgetComponent,
 
-@NgModule({
-    declarations: [
-        NavbarComponent,
-        PaginatorComponent,
-        SuccessToastComponent,
-        SidebarComponent,
-        WaveFooterComponent,
-        BackgroundCloudsComponent,
-        LandingPageNavbarComponent,
-        RightColumnComponent,
-        BackgroundDrawingComponent,
-        TagsFilterWidgetComponent,
-    ],
-    imports: [
-        CommonModule,
-        RouterModule, // Add this for routerLink and related directives
-        FormsModule,
-        ReactiveFormsModule,
-        TimeAgoPipe,
-        AddHoursPipe,
-        CalendarWidgetComponent,
-        UserProfileWidgetComponent
-    ],
-    exports: [
-        CommonModule,
-        RouterModule, // Export this to make router directives available in other modules
-        FormsModule,
-        ReactiveFormsModule,
-
-        NavbarComponent,
-        PaginatorComponent,
-        SuccessToastComponent,
-        SidebarComponent,
-        WaveFooterComponent,
-        BackgroundCloudsComponent,
-        LandingPageNavbarComponent,
-        RightColumnComponent,
-        BackgroundDrawingComponent,
-        TagsFilterWidgetComponent,
-
-        TimeAgoPipe,
-        AddHoursPipe,
-    ]
+    TimeAgoPipe,
+    AddHoursPipe,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}
