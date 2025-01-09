@@ -31,6 +31,7 @@
         <app-paginator
           [currentPage]="currentPage"
           [totalPages]="totalPages"
+          [theme]="'services'"
           (pageChange)="onPageChange($event)"
         >
         </app-paginator>
@@ -60,6 +61,7 @@
       >
         <!-- Replaces <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %> -->
         <app-calendar-widget></app-calendar-widget>
+        <app-tags-filter-widget [mode]="'professions'"></app-tags-filter-widget>
       </div>
     </div>
   </div>

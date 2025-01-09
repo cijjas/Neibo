@@ -37,6 +37,14 @@
   background-color: #dc3545;
 }
 
+.my-toast.warning {
+  background-color: #fff4d6; /* Light yellow */
+  color: #856404; /* Darker yellow/brown for text */
+}
+.my-toast.warning .dot {
+  background-color: #ffc107; /* Yellow dot */
+}
+
 /* Dot styling */
 .my-toast .dot {
   width: 10px;

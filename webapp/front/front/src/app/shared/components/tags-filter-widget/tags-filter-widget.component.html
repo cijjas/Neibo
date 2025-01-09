@@ -1,27 +1,39 @@
 <div class="grey-static-container">
   <div class="f-c-c-s g-0">
     <div class="f-r-sb-c w-100">
-      <h3 class="pt-1 pb-1 m-1">Filter by tags</h3>
+      <h3 class="pt-1 pb-1 m-1">
+        {{ mode === "tags" ? "Filter by Tags" : "Filter by Profession" }}
+      </h3>
     </div>
 
-    <!-- Display selected tags -->
-    <div *ngIf="appliedTags.length > 0" class="tags-row tags m-b-10 w-100">
-      <span class="selected-tag" *ngFor="let selTag of appliedTags">
-        {{ selTag.name }}
-        <i class="fa-solid fa-xmark" (click)="removeTag(selTag)"></i>
+    <div *ngIf="appliedItems.length > 0" class="tags-row tags m-b-10 w-100">
+      <span
+        [ngClass]="{
+          'tag-selected': mode === 'tags',
+          'profession-selected': mode === 'professions'
+        }"
+        *ngFor="let item of appliedItems"
+      >
+        {{ item.name }}
+        <i class="fa-solid fa-xmark" (click)="removeItem(item)"></i>
       </span>
     </div>
 
     <div class="m-b-10 w-100 tags-row tags">
-      <ng-container *ngFor="let tag of tagList">
-        <a class="tag-option" (click)="addTagToApply(tag)">
-          {{ tag.name }}
+      <ng-container *ngFor="let item of itemList">
+        <a
+          (click)="addItem(item)"
+          [ngClass]="{
+            'tag-style': mode === 'tags',
+            'profession-style': mode === 'professions'
+          }"
+        >
+          {{ item.name }}
         </a>
       </ng-container>
     </div>
 
-    <!-- Pagination Arrows -->
-    <div class="pagination-arrows mt-2 mb-2">
+    <div *ngIf="mode === 'tags'" class="pagination-arrows mt-2 mb-2">
       <span
         id="prev"
         class="c-accent"
@@ -39,24 +51,6 @@
       >
         <i class="fa-solid fa-angle-right"></i>
       </span>
-    </div>
-
-    <!-- We keep the hidden div for backward compatibility
-         or if you want to store the selected tags for init -->
-
-    <div class="w-100 mt-2">
-      <div class="f-r-sb-c g-1">
-        <a class="cool-button red" (click)="clearAllTags()">
-          Clear
-          <i class="fa-solid fa-xmark"></i>
-        </a>
-        <a
-          class="cool-button cool-small on-bg tag-button"
-          (click)="applyTagsAsFilter()"
-        >
-          Apply
-        </a>
-      </div>
     </div>
   </div>
 </div>

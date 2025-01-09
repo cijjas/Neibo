@@ -9,7 +9,7 @@ export class HateoasLinksService {
   private linksMap = new Map<LinkKey, string>();
 
   constructor() {
-    const stored = sessionStorage.getItem(this.STORAGE_KEY);
+    const stored = localStorage.getItem(this.STORAGE_KEY);
     if (stored) {
       const parsed: Record<string, string> = JSON.parse(stored);
       Object.entries(parsed).forEach(([k, v]) => {
@@ -20,7 +20,7 @@ export class HateoasLinksService {
 
   setLink(key: LinkKey, url: string): void {
     this.linksMap.set(key, url);
-    this.saveToSession();
+    this.saveToLocal();
   }
 
   getLink(key: LinkKey): string | undefined {
@@ -47,12 +47,12 @@ export class HateoasLinksService {
       this.linksMap.set(enumKey, href);
     }
 
-    this.saveToSession();
+    this.saveToLocal();
   }
 
   removeLink(key: LinkKey): void {
     this.linksMap.delete(key);
-    this.saveToSession();
+    this.saveToLocal();
   }
 
   clearLinks(): void {
@@ -67,19 +67,19 @@ export class HateoasLinksService {
     this.linksMap = rootLinks;
 
     // Save the updated links to session storage
-    this.saveToSession();
+    this.saveToLocal();
   }
 
   logLinks(): void {
     console.log('Current link registry:', this.linksMap);
   }
 
-  private saveToSession(): void {
+  private saveToLocal(): void {
     const obj: Record<string, string> = {};
     this.linksMap.forEach((value, key) => {
       obj[key] = value;
     });
-    sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify(obj));
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(obj));
   }
 
   private toEnumKey(raw: string): LinkKey | null {

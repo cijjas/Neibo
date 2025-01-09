@@ -8,9 +8,7 @@ import { ToastService } from './services/toast.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 
-export function initializeApp(
-  appInitService: AppInitService
-): () => Promise<void> {
+export function initApp(appInitService: AppInitService) {
   return () => appInitService.loadInitialLinks();
 }
 
@@ -33,7 +31,7 @@ export function initializeApp(
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeApp,
+      useFactory: initApp,
       deps: [AppInitService],
       multi: true,
     },

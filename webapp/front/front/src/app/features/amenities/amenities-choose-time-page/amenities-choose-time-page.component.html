@@ -84,11 +84,11 @@
               </div>
             </div>
             <div class="col-md-12">
-              <div class="d-flex justify-content-end m-t-40">
+              <div class="d-flex justify-content-center m-t-40">
                 <button
                   (click)="onReserve()"
                   type="submit"
-                  class="cool-button cool-small on-bg w-25 font-weight-bold"
+                  class="cool-button cool-small on-bg w-50 font-weight-bold m-2"
                   [disabled]="isReserveDisabled()"
                   style="height: 40px"
                 >
@@ -125,13 +125,13 @@
   [ngClass]="{ 'show-dialog': showReservationDialog }"
 >
   <div class="dialog-content success-dialog">
-    <div class="title mb-3 mt-4 f-c-c-c">
-      <div class="success-icon" style="font-size: 50px">
+    <div class="title mt-4 f-c-c-c">
+      <div class="success-icon mb-2" style="font-size: 50px">
         <i class="fas fa-check-circle"></i>
       </div>
       <span class="font-weight-bold">Reservation Confirmed!</span>
     </div>
-    <div class="details text-center">
+    <div class="details text-center c-text">
       <div class="divider mb-4"></div>
 
       <p>

@@ -38,7 +38,7 @@ export const RoleGuard = async (
     return router.createUrlTree(['/login']);
   }
 
-  const userRole = userSessionService.getCurrentRole();
+  const userRole = authService.getCurrentRole();
   // 4) Check if the user's role matches any required role
   if (requiredRoles.includes(userRole)) {
     // Authorized

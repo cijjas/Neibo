@@ -30,6 +30,7 @@
                   type="text"
                   formControlName="title"
                   class="cool-input"
+                  style="border-radius: var(--border-radius)"
                   placeholder="Title"
                 />
                 <div
@@ -40,7 +41,7 @@
                   "
                   class="form-row form-error"
                 >
-                  <p class="error">Title is required.</p>
+                  <p class="error">*Title is required.</p>
                 </div>
               </div>
             </div>
@@ -61,7 +62,7 @@
                 "
                 class="form-row form-error"
               >
-                <p class="error">Body is required.</p>
+                <p class="error">*Body is required.</p>
               </div>
             </div>
 
@@ -95,40 +96,81 @@
               />
             </div>
 
-            <!-- Tags Input (visible if user is not a WORKER) -->
-            <div *ngIf="notWorker" class="w-50">
-              <div class="tags-input w-100">
-                <!-- The hidden input holding the placeholder text -->
-                <input
-                  id="niakaniaka"
-                  type="hidden"
-                  [value]="placeholderText"
-                />
+            <!-- 
+              Tag Section (only visible if not a WORKER)
+              Allows: 
+                1) Creating a new tag
+                2) Selecting from existing tags (paginated)
+                3) Viewing and removing applied tags
+            -->
+            <div
+              *ngIf="notWorker"
+              class="mt-3 w-50"
+              style="border-top: 1px solid #ccc; padding-top: 1rem"
+            >
+              <label class="mb-2">Select or create new tags</label>
 
-                <!-- The actual input for the plugin -->
-                <label for="tag-input1" class="w-100">
-                  <input #tagInput1 type="text" id="tag-input1" />
-                </label>
-
-                <!-- If you're using a hidden form control, place it here: -->
-                <input
-                  type="hidden"
-                  formControlName="tags"
-                  id="tags-hidden-input"
-                />
+              <div
+                *ngIf="appliedTags.length > 0"
+                class="tags-row tags w-100 mb-2"
+              >
+                <span class="tag-selected" *ngFor="let selTag of appliedTags">
+                  {{ selTag.name }}
+                  <i class="fa-solid fa-xmark" (click)="removeTag(selTag)"></i>
+                </span>
               </div>
 
-              <!-- Suggested Tags (similar to JSP's tagList display) -->
-              <div class="m-b-10 tags-row tags">
-                <a
-                  *ngFor="let tag of tagList; let i = index"
-                  class="tag-option"
-                  (click)="addTagToApply(tag.name)"
-                  [style.display]="i < 20 ? 'block' : 'none'"
+              <!-- Create new tag input -->
+              <div class="f-r-sb-c g-1 mb-2 tags-input-wrapper">
+                <input
+                  #newTagInput
+                  type="text"
+                  placeholder="Create new tag"
+                  class=""
+                />
+                <button
+                  type="button"
+                  class="cool-button cool-small on-bg tag-button"
+                  style="width: 80px"
+                  (click)="
+                    createCustomTag(newTagInput.value); newTagInput.value = ''
+                  "
                 >
-                  {{ tag.name }}
-                </a>
+                  Add
+                </button>
               </div>
+
+              <!-- Paginated tags list for selection -->
+              <div class="tags-row tags w-100 mb-2">
+                <ng-container *ngFor="let tag of tagList">
+                  <a class="tag-option" (click)="addTagToApplied(tag)">
+                    {{ tag.name }}
+                  </a>
+                </ng-container>
+              </div>
+
+              <!-- Pagination Controls -->
+              <div class="pagination-arrows mt-3 mb-3">
+                <span
+                  id="prev"
+                  class="c-accent"
+                  [class.disabled]="currentPage <= 1"
+                  (click)="prevPage()"
+                >
+                  <i class="fa-solid fa-angle-left"></i>
+                </span>
+                <p>Page {{ currentPage }} of {{ totalPages }}</p>
+                <span
+                  id="next"
+                  class="c-accent"
+                  [class.disabled]="currentPage >= totalPages"
+                  (click)="nextPage()"
+                >
+                  <i class="fa-solid fa-angle-right"></i>
+                </span>
+              </div>
+
+              <!-- Display applied/selected tags -->
             </div>
           </div>
 
@@ -146,46 +188,11 @@
       </div>
     </div>
 
-    <!-- Success Message -->
-    <div
-      *ngIf="showSuccessMessage"
-      id="success-container"
-      class="success-container"
-    >
-      <div
-        class="cool-static-container small-size-container justify-content-around"
-      >
-        <div>
-          <!-- Success Icon SVG -->
-          <!-- Include your SVG here -->
-        </div>
-        <div
-          style="
-            text-align: center;
-            font-weight: bold;
-            font-size: 24px;
-            color: var(--old-primary);
-          "
-        >
-          Post created successfully
-        </div>
-      </div>
-    </div>
-
-    <!-- Include Calendar Widget Component if any -->
+    <!-- If you have a calendar widget -->
     <div class="column-info">
       <app-calendar-widget></app-calendar-widget>
     </div>
   </div>
 </div>
-
-<!-- Loader (optional) -->
-<!-- <div id="loader-container" class="loader-container ">
-        <div class="cool-static-container medium-size-container">
-            <app-placeholder-blogpost></app-placeholder-blogpost>
-            <div style="font-weight: bold; font-size: 16px">Creating your post...</div>
-            <div class="loader" style="margin-top: 20px"></div>
-        </div>
-    </div> -->
 
 <app-wave-footer></app-wave-footer>

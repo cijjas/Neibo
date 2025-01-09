@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import {
   ImageService,
   HateoasLinksService,
@@ -7,27 +13,50 @@ import {
   ToastService,
 } from '@core/index';
 import { PostService, TagService, LinkKey } from '@shared/index';
-import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
+import { catchError, forkJoin, of, switchMap, take } from 'rxjs';
+
+/** Minimal Tag interface. If you already have a Tag type, you can remove this. */
+interface Tag {
+  name: string;
+  self: string | null;
+}
+
+export function atLeastOneTagSelected(
+  control: AbstractControl
+): ValidationErrors | null {
+  const tags = control.value || [];
+  return tags.length > 0 ? null : { noTagsSelected: true };
+}
 
 @Component({
   selector: 'app-admin-create-announcement-page',
   templateUrl: './admin-create-announcement-page.component.html',
 })
 export class AdminCreateAnnouncementPageComponent implements OnInit {
+  /** Main announcement form. */
   announcementForm!: FormGroup;
-  previewImage: string | ArrayBuffer | null = null;
+
+  /** Image preview. */
+  imagePreviewUrl: string | ArrayBuffer | null = null;
   fileUploadError: string | null = null;
 
-  // Example tags
-  availableTags: string[] = ['Event', 'Notice', 'Important', 'Urgent'];
-  // The tags that the user has selected (optional)
-  selectedTags: string[] = [];
+  /**
+   * Hardcoded default tags. If you don’t know whether these exist in
+   * the backend, we set `self: null` by default. On submit,
+   * we create them if needed.
+   */
+  defaultTags: Tag[] = [
+    { name: 'Event', self: null },
+    { name: 'Notice', self: null },
+    { name: 'Important', self: null },
+    { name: 'Urgent', self: null },
+  ];
 
-  channel: string = this.linkService.getLink(
-    LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
-  );
+  /** Tags that the user has actually selected. */
+  appliedTags: Tag[] = [];
 
-  // For demonstration purposes
+  /** Link to the announcements channel. */
+  channel: string;
 
   constructor(
     private fb: FormBuilder,
@@ -37,19 +66,23 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
     private toastService: ToastService
-  ) {}
+  ) {
+    // Get the link to your announcements channel
+    this.channel = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+    );
+  }
 
   ngOnInit(): void {
-    // Build form with Angular
-    // Named them subject & message for the UI, but we will convert to title & body
     this.announcementForm = this.fb.group({
       subject: ['', Validators.required],
       message: ['', Validators.required],
-      imageFile: [null], // We’ll store the file here after preview
-      tags: [[]],
+      imageFile: [null],
+      tags: [[], atLeastOneTagSelected],
     });
   }
 
+  // --- Accessors for easy error checks ---
   get subjectControl() {
     return this.announcementForm.get('subject');
   }
@@ -57,128 +90,191 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     return this.announcementForm.get('message');
   }
 
-  // ----------------------- IMAGE PREVIEW -----------------------
-  preview(event: any) {
+  // --------------------------------------------------
+  // IMAGE HANDLING
+  // --------------------------------------------------
+  onFileChange(event: any) {
     const file = event.target.files[0];
     if (!file) {
-      this.previewImage = null;
+      this.imagePreviewUrl = null;
       this.announcementForm.patchValue({ imageFile: null });
       return;
     }
-    // Update the form with the selected file
+
+    // Update the form
     this.announcementForm.patchValue({ imageFile: file });
 
     // Create a preview
     const reader = new FileReader();
-    reader.onload = (e) => {
-      this.previewImage = e.target?.result;
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result;
     };
     reader.readAsDataURL(file);
   }
 
-  // ----------------------- TAGS -----------------------
-  addTagToApply(tag: string) {
-    if (!tag) return;
-    // In a real app, you might store these in an array formControl
-    if (!this.selectedTags.includes(tag)) {
-      this.selectedTags.push(tag);
+  // --------------------------------------------------
+  // TAGS: Only from default set
+  // --------------------------------------------------
+  addTagToApplied(tag: Tag) {
+    const exists = this.appliedTags.some((t) => t.name === tag.name);
+    if (exists) {
+      this.toastService.showToast(
+        `You've already selected the tag '${tag.name}'`,
+        'warning'
+      );
+      return;
     }
+    this.appliedTags.push(tag);
+
+    // Update the tags control value
+    this.announcementForm
+      .get('tags')
+      ?.setValue(this.appliedTags.map((t) => t.self));
   }
 
-  removeTag(tag: string) {
-    this.selectedTags = this.selectedTags.filter((t) => t !== tag);
+  removeTag(tag: Tag) {
+    this.appliedTags = this.appliedTags.filter((t) => t.name !== tag.name);
+
+    // Update the tags control value
+    this.announcementForm
+      .get('tags')
+      ?.setValue(this.appliedTags.map((t) => t.self));
   }
 
-  // ----------------------- SUBMIT -----------------------
+  // --------------------------------------------------
+  // SUBMIT
+  // --------------------------------------------------
   onSubmit() {
     if (this.announcementForm.invalid) {
       this.announcementForm.markAllAsTouched();
       return;
     }
 
-    // Step 1: Get the raw values from the form
+    // Separate new (no self link) from existing (already has self)
+    const newTags = this.appliedTags.filter((t) => t.self === null);
+    const existingTags = this.appliedTags.filter((t) => t.self !== null);
+
+    // Extract the existing tag `self` links
+    const existingTagUrls = existingTags.map((t) => t.self as string);
+
+    // 1. For new tags, call createTag(...)
+    const createTagsObservables = newTags.map((tag) =>
+      this.tagService.createTag(tag.name).pipe(
+        switchMap((location: string | null) => {
+          if (!location) {
+            console.error('Failed to create tag:', tag.name);
+            return of(null);
+          }
+          // After creation, get the full Tag to retrieve the `self` link
+          return this.tagService.getTag(location);
+        }),
+        catchError((err) => {
+          console.error('Error creating tag:', tag.name, err);
+          return of(null);
+        })
+      )
+    );
+
+    // 2. Wait for all new tags to be created
+    forkJoin(createTagsObservables).subscribe({
+      next: (createdTags) => {
+        // Extract `self` from newly created tags
+        const createdTagUrls = createdTags
+          .filter((t) => t !== null)
+          .map((t: any) => t.self);
+
+        // Combine existing + newly created
+        const allTagUrls = [...existingTagUrls, ...createdTagUrls];
+
+        // Patch them into the form
+        this.announcementForm.patchValue({ tags: allTagUrls });
+
+        // Final step: create the announcement post
+        this.createAnnouncement();
+      },
+      error: (err) => {
+        console.error('Error creating tags:', err);
+        this.toastService.showToast(
+          'Some tags could not be created. Please try again.',
+          'error'
+        );
+      },
+    });
+  }
+
+  /**
+   * Actually calls PostService to create the announcement.
+   */
+  private createAnnouncement() {
     const formValue = { ...this.announcementForm.value };
 
-    // Step 2: Convert them to match what PostService expects
-    // The PostDto typically expects 'title' and 'body'
-    const newPostDto: any = {
-      title: formValue.subject,
-      body: formValue.message,
-      channel: this.channel, // or this.announcementsChannelUrl if using HATEOAS link
-      tags: [], // will be filled after we create them via TagService
-      imageFile: formValue.imageFile,
-      user: '', // will be filled with user.self after we fetch the user
-    };
-
-    // Step 3: Create post logic - we replicate the pattern from FeedCreatePostPage
     this.userSessionService
       .getCurrentUser()
       .pipe(
         take(1),
         switchMap((user) => {
-          // set the user link from the user data
-          newPostDto.user = user.self;
+          // Map fields to match backend expectations
+          const payload = {
+            title: formValue.subject, // Map "subject" to "title"
+            body: formValue.message, // Map "message" to "body"
+            tags: formValue.tags.filter((url) => url !== null), // Ensure valid tag URLs
+            user: user.self, // User link
+            channel: this.channel, // Channel link
+            image: null, // Default to null unless an image is uploaded
+          };
 
-          // Create tags in backend if needed, then upload image
-          return combineLatest([
-            this.createTagsObservable(),
-            this.createImageObservable(newPostDto.imageFile),
-          ]);
-        }),
-        switchMap(([tagUrls, imageUrl]) => {
-          // tagUrls is an array of the newly created (or existing) tag links
-          newPostDto.tags = tagUrls.filter((tag) => tag !== null);
-          if (imageUrl) {
-            newPostDto.image = imageUrl;
-          }
-          // Finally, POST the new announcement
-          return this.postService.createPost(newPostDto);
+          // Handle image upload if present
+          return this.createImageObservable(formValue.imageFile).pipe(
+            switchMap((imageUrl) => {
+              if (imageUrl) {
+                payload.image = imageUrl;
+              }
+
+              console.log('Final Payload:', payload); // Debugging
+              return this.postService.createPost(payload);
+            })
+          );
         })
       )
       .subscribe({
-        next: (location) => {
+        next: () => {
           this.toastService.showToast(
-            'Announcement created successully!',
+            'Announcement created successfully!',
             'success'
           );
+          this.resetForm();
         },
         error: (err) => {
+          console.error('Error creating announcement:', err);
           this.toastService.showToast(
-            'The announcement could not be made, try again.',
+            'Error creating announcement. Please try again.',
             'error'
           );
         },
       });
   }
 
-  // ----------------------- SUPPORTING METHODS -----------------------
-  private createTagsObservable() {
-    // If you want to create the user-entered tags in the backend,
-    // replicate the logic from FeedCreatePostPage. Example:
-    if (this.selectedTags.length === 0) {
-      return of([]);
-    }
-    return forkJoin(
-      this.selectedTags.map((tag) =>
-        this.tagService.createTag(tag).pipe(
-          catchError((error) => {
-            console.error(`Error creating tag: ${tag}`, error);
-            return of(null); // continue if one fails
-          })
-        )
-      )
-    );
+  private resetForm() {
+    this.announcementForm.reset();
+    this.announcementForm.markAsPristine();
+    this.appliedTags = [];
+    this.imagePreviewUrl = null;
+    this.fileUploadError = null;
   }
 
+  /**
+   * Helper that uploads the image if present, returning an observable of the image URL or null.
+   */
   private createImageObservable(imageFile: File | null) {
-    return imageFile
-      ? this.imageService.createImage(imageFile).pipe(
-          catchError((error) => {
-            console.error('Error uploading image:', error);
-            this.fileUploadError = 'Error uploading image';
-            return of(null); // continue if image fails
-          })
-        )
-      : of(null);
+    if (!imageFile) {
+      return of(null);
+    }
+    return this.imageService.createImage(imageFile).pipe(
+      catchError((err) => {
+        console.error('Error uploading image:', err);
+        this.fileUploadError = 'Error uploading image';
+        return of(null);
+      })
+    );
   }
 }

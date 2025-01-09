@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  ElementRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -21,6 +15,7 @@ import {
   UserSessionService,
   ImageService,
   ToastService,
+  AuthService,
 } from '@core/index';
 import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
 
@@ -28,35 +23,34 @@ import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
   selector: 'app-create-post-page',
   templateUrl: './feed-create-post-page.component.html',
 })
-export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
-  @ViewChild('tagInput1', { static: true }) tagInput1Ref!: ElementRef;
-
+export class FeedCreatePostPageComponent implements OnInit {
   // Reactive form
   createPostForm: FormGroup;
 
-  // Channel data (replace with real)
+  // Channel data
   channelList: Channel[] = [];
-  // Tag suggestions
-  tagList: Tag[] = [];
+  channel: string;
+  title: string = '';
 
-  // The plugin instance
-  private tagInput1: any;
+  // Tag pagination data
+  tagList: Tag[] = []; // Fetched tags for the current page
+  appliedTags: Tag[] = []; // Tags the user has chosen
+
+  // Pagination
+  currentPage: number = 1;
+  pageSize: number = 20;
+  totalPages: number = 1;
 
   // For image preview, etc.
   imagePreviewUrl: string | ArrayBuffer;
   fileUploadError: string;
-  showSuccessMessage = false;
 
   // For channel logic
   feedChannelUrl: string;
   announcementsChannelUrl: string;
   complaintsChannelUrl: string;
-  channel: string;
-  title: string = '';
 
-  // Placeholder text used by the plugin
-  placeholderText: string = 'Enter a tag';
-
+  // Roles
   notWorker: boolean = true;
 
   constructor(
@@ -68,11 +62,12 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     private router: Router,
     private route: ActivatedRoute,
     private userSessionService: UserSessionService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    const userRole = this.userSessionService.getCurrentRole();
+    const userRole = this.authService.getCurrentRole();
     this.notWorker = userRole !== Roles.WORKER;
 
     // Build form
@@ -80,12 +75,12 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
       title: ['', Validators.required],
       body: ['', Validators.required],
       imageFile: [null],
-      tags: [[]], // We'll store final tags array here
+      tags: [[]], // Will store final tags array here
       channel: [''],
       user: [''],
     });
 
-    // Fetch channels & tags
+    // Fetch channels from links
     this.feedChannelUrl = this.linkService.getLink(
       LinkKey.NEIGHBORHOOD_FEED_CHANNEL
     );
@@ -96,32 +91,19 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
       LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL
     );
 
+    // Listen to route queryParams for channel
     this.route.queryParams.subscribe((params) => {
       this.channel = params['inChannel'];
       this.updateChannelTitle();
     });
 
-    if (this.notWorker) this.fetchTags();
-  }
-
-  ngAfterViewInit(): void {
+    // If user is not a worker, load tags
     if (this.notWorker) {
-      this.tagInput1 = new (window as any).TagsInput({
-        selector: 'tag-input1',
-        wrapperClass: 'tags-input-wrapper',
-        tagClass: 'tag',
-        duplicate: false,
-        max: 5,
-      });
+      this.fetchTags(this.currentPage);
     }
   }
 
-  addTagToApply(tagName: string): void {
-    if (this.tagInput1) {
-      this.tagInput1.addTag(tagName);
-    }
-  }
-
+  // Determine the title based on channel
   updateChannelTitle() {
     if (this.channel === this.feedChannelUrl) {
       this.title = 'Create Post';
@@ -129,27 +111,100 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
       this.title = 'Create Announcement';
     } else if (this.channel === this.complaintsChannelUrl) {
       this.title = 'Create Complaint';
+    } else {
+      this.title = 'Create Content';
     }
   }
 
-  fetchTags(): void {
+  // ---- TAGS & PAGINATION ----
+
+  /**
+   * Fetch tags from the backend for the specified page.
+   */
+  fetchTags(page: number) {
     const tagsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_TAGS);
-    this.tagService.getTags(tagsUrl).subscribe((tags: any) => {
-      this.tagList = tags; // e.g. [{ name: 'JavaScript', self: '...' }, ...]
+
+    // Typically, your TagService might accept queryParams for pagination
+    const queryParams = {
+      page,
+      size: this.pageSize,
+    };
+
+    this.tagService.getTags(tagsUrl, queryParams).subscribe({
+      next: (response: { tags: Tag[]; totalPages: number }) => {
+        this.tagList = response.tags || [];
+        this.totalPages = response.totalPages || 1;
+      },
+      error: (err) => {
+        console.error('Error fetching paginated tags:', err);
+      },
     });
   }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.goToPage(this.currentPage + 1);
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.goToPage(this.currentPage - 1);
+    }
+  }
+
+  goToPage(page: number): void {
+    // Basic bounds check
+    if (page < 1 || page > this.totalPages) return;
+
+    this.currentPage = page;
+    this.fetchTags(this.currentPage);
+  }
+
+  createCustomTag(tagName: string) {
+    console.log(tagName);
+    if (!tagName || !tagName.trim()) return;
+
+    const newTag: Tag = {
+      name: tagName.trim(),
+      self: null, // Mark as `null` since it hasn't been created yet
+    };
+
+    // Add it to applied tags
+    this.addTagToApplied(newTag);
+  }
+
+  addTagToApplied(tag: Tag) {
+    const exists = this.appliedTags.find((t) => t.name === tag.name);
+    if (exists) {
+      this.toastService.showToast(
+        `You've already selected the tag '${tag.name}'`,
+        'warning'
+      );
+      return;
+    }
+    this.appliedTags.push(tag);
+  }
+
+  removeTag(tag: Tag) {
+    this.appliedTags = this.appliedTags.filter((t) => t.name !== tag.name);
+  }
+
+  // ---- IMAGE HANDLING ----
 
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.createPostForm.patchValue({ imageFile: file });
 
-      // File Preview
+      // Preview
       const reader = new FileReader();
       reader.onload = (e) => (this.imagePreviewUrl = reader.result);
       reader.readAsDataURL(file);
     }
   }
+
+  // ---- FORM SUBMIT ----
 
   onSubmit(): void {
     if (this.createPostForm.invalid) {
@@ -157,58 +212,92 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    // 1) Get the final tags from the plugin
-    const selectedTags = this.tagInput1?.arr || [];
+    // Separate new tags from existing tags
+    const newTags = this.appliedTags.filter((tag) => !tag.self);
+    const existingTagUrls = this.appliedTags
+      .filter((tag) => tag.self)
+      .map((tag) => tag.self);
 
-    // 2) Patch them into the form so the backend can store them
-    this.createPostForm.patchValue({
-      tags: selectedTags,
-      channel: this.channel,
-    });
-
-    // Build final payload
-    const formValue = { ...this.createPostForm.value };
-
-    this.userSessionService
-      .getCurrentUser()
-      .pipe(
-        take(1),
-        switchMap((user) => {
-          formValue.user = user.self;
-
-          // Create tags + image, then post
-          return combineLatest([
-            this.createTagsObservable(selectedTags),
-            this.createImageObservable(formValue.imageFile),
-          ]);
+    // 1. Create new tags on the server
+    const createTagsObservables = newTags.map((tag) =>
+      this.tagService.createTag(tag.name).pipe(
+        switchMap((location: string | null) => {
+          if (!location) {
+            console.error('Failed to create tag:', tag.name);
+            return of(null);
+          }
+          return this.tagService.getTag(location); // Fetch full tag details
         }),
-        switchMap(([tagUrls, imageUrl]) => {
-          formValue.tags = tagUrls.filter((tag) => tag !== null);
-          if (imageUrl) formValue.image = imageUrl;
-
-          return this.postService.createPost(formValue);
+        catchError((err) => {
+          console.error('Error creating tag:', tag.name, err);
+          return of(null);
         })
       )
-      .subscribe({
-        next: () => {
-          const contentType = this.getContentType(); // Get the content type dynamically
-          this.toastService.showToast(
-            `Your ${contentType} was created successfully!`,
-            'success'
-          );
-          this.router.navigate(['/posts'], {
-            queryParams: { inChannel: this.channel },
+    );
+
+    forkJoin(createTagsObservables).subscribe({
+      next: (createdTags) => {
+        const createdTagUrls = createdTags
+          .filter((tag) => tag !== null)
+          .map((tag: Tag) => tag.self);
+
+        // Combine created tags and existing tags
+        const allTagUrls = [...existingTagUrls, ...createdTagUrls];
+
+        // 2. Patch tags into the form
+        this.createPostForm.patchValue({
+          tags: allTagUrls,
+          channel: this.channel,
+        });
+
+        // 3. Build the final payload
+        const formValue = { ...this.createPostForm.value };
+
+        // Get the current user and create the post
+        this.userSessionService
+          .getCurrentUser()
+          .pipe(
+            take(1),
+            switchMap((user) => {
+              formValue.user = user.self;
+
+              // Optionally handle image
+              return this.createImageObservable(formValue.imageFile).pipe(
+                switchMap((imageUrl) => {
+                  if (imageUrl) {
+                    formValue.image = imageUrl;
+                  }
+                  return this.postService.createPost(formValue);
+                })
+              );
+            })
+          )
+          .subscribe({
+            next: () => {
+              const contentType = this.getContentType();
+              this.toastService.showToast(
+                `Your ${contentType} was created successfully!`,
+                'success'
+              );
+              // Optionally navigate away
+              this.router.navigate(['/posts'], {
+                queryParams: { inChannel: this.channel },
+              });
+            },
+            error: (error) => {
+              const contentType = this.getContentType();
+              this.toastService.showToast(
+                `There was a problem creating your ${contentType}.`,
+                'error'
+              );
+              console.error('Error creating post:', error);
+            },
           });
-        },
-        error: (error) => {
-          const contentType = this.getContentType(); // Get the content type dynamically
-          this.toastService.showToast(
-            `There was a problem creating your ${contentType}.`,
-            'error'
-          );
-          console.error('Error creating post:', error);
-        },
-      });
+      },
+      error: (err) => {
+        console.error('Error creating tags:', err);
+      },
+    });
   }
 
   /**
@@ -222,32 +311,11 @@ export class FeedCreatePostPageComponent implements OnInit, AfterViewInit {
     } else if (this.channel === this.complaintsChannelUrl) {
       return 'complaint';
     }
-    return 'content'; // Fallback if channel doesn't match known types
+    return 'content'; // Fallback
   }
 
   /**
-   * Creates tags on the backend. If you create them individually,
-   * you can return their URLs or IDs to attach to the post.
-   */
-  private createTagsObservable(tags: string[]) {
-    if (!tags || tags.length === 0) {
-      return of([]);
-    }
-    // Create each tag in parallel
-    return forkJoin(
-      tags.map((tag) =>
-        this.tagService.createTag(tag).pipe(
-          catchError((err) => {
-            console.error(`Error creating tag: ${tag}`, err);
-            return of(null);
-          })
-        )
-      )
-    );
-  }
-
-  /**
-   * Upload image if present
+   * Upload image if present.
    */
   private createImageObservable(imageFile: File | null) {
     if (!imageFile) {

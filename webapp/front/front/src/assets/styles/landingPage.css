@@ -122,6 +122,7 @@
   justify-content: center;
 }
 
+textarea.ng-invalid.ng-touched,
 input.ng-invalid.ng-touched {
   border: 1px solid var(--error);
 
@@ -133,7 +134,7 @@ input.ng-invalid.ng-touched {
   }
 }
 
-input[type="text"],
+/* input[type="text"], TODO VER SI AFECTABA EN ALGUN LUGAR */
 input[type="number"],
 .input {
   width: 100%;

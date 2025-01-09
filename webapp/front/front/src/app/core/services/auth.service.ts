@@ -16,40 +16,54 @@ import {
   UserDto,
   mapNeighborhood,
   mapUser,
+  LinkKey,
+  Roles,
 } from '@shared/index';
 import { UserSessionService } from './user-session.service';
 import { HateoasLinksService } from './link.service';
-import { AppInitService } from './app-init.service';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly apiServerUrl = environment.apiBaseUrl;
-  private readonly rememberMeKey = 'rememberMe';
-  private readonly authTokenKey = 'authToken';
-  private readonly refreshTokenKey = 'refreshToken';
+
+  // Moved from UserSessionService:
+  private currentRole: Roles | null = null;
+
+  private roleMapping = {
+    [LinkKey.ADMINISTRATOR_USER_ROLE]: Roles.ADMINISTRATOR,
+    [LinkKey.NEIGHBOR_USER_ROLE]: Roles.NEIGHBOR,
+    [LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE]: Roles.UNVERIFIED_NEIGHBOR,
+    [LinkKey.REJECTED_USER_ROLE]: Roles.REJECTED,
+    [LinkKey.WORKER_USER_ROLE]: Roles.WORKER,
+    [LinkKey.UNVERIFIED_WORKER_ROLE]: Roles.UNVERIFIED_WORKER,
+  };
 
   constructor(
     private http: HttpClient,
     private linkRegistry: HateoasLinksService,
     private userSessionService: UserSessionService,
-    private appInitService: AppInitService
+    private tokenService: TokenService
   ) {}
 
-  // LOGIN
+  // ----------------------------------------------
+  //  LOGIN
+  // ----------------------------------------------
   login(
     mail: string,
     password: string,
     rememberMe: boolean
   ): Observable<boolean> {
+    // 1. Set the "rememberMe" choice
+    this.tokenService.setRememberMe(rememberMe);
+    // 2. Clear existing tokens
+    this.tokenService.clearTokens();
+
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + btoa(`${mail}:${password}`),
     });
-    const storage = rememberMe ? localStorage : sessionStorage;
-
-    localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
-    this.clearTokens();
 
     return this.http
       .get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
@@ -66,36 +80,34 @@ export class AuthService {
             response.headers.get('X-Workers-Neighborhood-URL')
           );
 
-          // Store tokens
+          // Store tokens using TokenService
           if (accessToken) {
-            storage.setItem(this.authTokenKey, accessToken);
-            this.userSessionService.setAccessToken(accessToken);
+            this.tokenService.setAccessToken(accessToken);
           }
           if (refreshToken) {
-            storage.setItem(this.refreshTokenKey, refreshToken);
+            this.tokenService.setRefreshToken(refreshToken);
           }
 
           // 1) Load user data (if present)
           const userObs = userUrl
             ? this.http.get<UserDto>(userUrl).pipe(
-                tap((userDto: UserDto) => {
+                tap((userDto) => {
                   // Register links from userDto
                   if (userDto._links) {
                     this.linkRegistry.registerLinks(userDto._links, 'user:');
                   }
+                  // Derive role from userDto link
                   const userRoleLink = userDto._links?.userRole;
                   if (userRoleLink) {
-                    const role =
-                      this.userSessionService.mapLinkToRole(userRoleLink);
+                    const role = this.mapLinkToRole(userRoleLink);
                     if (role) {
-                      this.userSessionService.setUserRole(role);
+                      this.setUserRole(role);
                     }
                   }
                   // Map user data
                   mapUser(this.http, userDto).subscribe({
-                    next: (user) => {
-                      this.userSessionService.setUserInformation(user);
-                    },
+                    next: (user) =>
+                      this.userSessionService.setUserInformation(user),
                   });
                 })
               )
@@ -138,15 +150,7 @@ export class AuthService {
 
           // Wait for user + neighborhood + workers neighborhood
           return forkJoin([userObs, neighObs, workersNeighObs]).pipe(
-            tap(() => {
-              // (Optional) If you want to auto-explore newly discovered links
-              // you could add a "discovery" step here, or just declare success.
-              // e.g. this.discoverAllCurrentlyRegisteredLinks();
-            }),
-            mergeMap(() => {
-              // If everything fetched without error, we’re good
-              return of(true);
-            })
+            mergeMap(() => of(true))
           );
         }),
         catchError((error) => {
@@ -156,31 +160,44 @@ export class AuthService {
       );
   }
 
+  // ----------------------------------------------
   // REFRESH TOKEN
+  // ----------------------------------------------
   refreshToken(): Observable<boolean> {
-    const refreshToken = this.getRefreshToken();
+    // TODO que funcione
+    console.log('refreshing token');
+    const refreshToken = this.tokenService.getRefreshToken();
+    const authToken = this.tokenService.getAccessToken();
+    console.log(`refresh: ref ${refreshToken}`);
+    console.log(`refresh: acc ${authToken}`);
+
     if (!refreshToken) {
+      console.log('no refresh token');
       return of(false);
     }
 
-    const url = `${this.apiServerUrl}/`; // your refresh URL
+    const url = `${this.apiServerUrl}/`;
     const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${refreshToken}`,
+      Authorization: `Bearer ${this.tokenService.getAccessToken()}`,
+      'X-Refresh-Token': this.tokenService.getRefreshToken(),
     });
-    const storage = this.getRememberMe() ? localStorage : sessionStorage;
 
     return this.http.get<any>(url, { headers, observe: 'response' }).pipe(
       tap((response) => {
-        const newAccessToken = response.headers.get('X-Access-Token');
+        console.log('Refresh response:', response);
+        const newAccessToken =
+          response.body?.accessToken || response.headers.get('X-Access-Token');
+        console.log('new' + newAccessToken);
         if (!newAccessToken) {
           throw new Error('No tokens returned in refresh response');
         }
-        storage.setItem(this.authTokenKey, newAccessToken);
-        this.userSessionService.setAccessToken(newAccessToken);
+        this.tokenService.setAccessToken(newAccessToken);
       }),
       catchError((error) => {
         console.error('Refresh token failed:', error);
+        if (error.status === 401) {
+          console.warn('Refresh token expired or invalid. Logging out...');
+        }
         this.logout();
         return throwError(() => error);
       }),
@@ -188,54 +205,80 @@ export class AuthService {
     );
   }
 
+  /**
+   * Convenient helper that checks if we need a refresh.
+   * (You might want to add logic to check token expiry.)
+   */
+  refreshTokenIfNeeded(): Observable<boolean> {
+    if (!this.isLoggedIn()) {
+      return of(false);
+    }
+
+    if (!this.tokenService.isAccessTokenExpiringSoon()) {
+      return of(true); // The token is still good enough
+    }
+
+    return this.refreshToken().pipe(catchError(() => of(false)));
+  }
+
+  // ----------------------------------------------
   // LOGOUT
+  // ----------------------------------------------
   logout(): void {
-    // Clear session and local storage
-    this.clearTokens();
+    // Clear tokens
+    this.tokenService.clearTokens();
+    // Clear entire storage
     sessionStorage.clear();
     localStorage.clear();
 
-    // Notify other services or components
+    // Notify other services
     this.userSessionService.logout();
     this.linkRegistry.clearLinks();
+    // (Optionally navigate to login route, etc.)
   }
 
-  getAccessToken(): string {
-    const storage = this.getRememberMe() ? localStorage : sessionStorage;
-    return storage.getItem(this.authTokenKey) || '';
-  }
-
-  getRefreshToken(): string {
-    const storage = this.getRememberMe() ? localStorage : sessionStorage;
-    return storage.getItem(this.refreshTokenKey) || '';
-  }
-
-  getRememberMe(): boolean {
-    return JSON.parse(localStorage.getItem(this.rememberMeKey) || 'false');
-  }
-
+  // ----------------------------------------------
+  // HELPER: Are we currently logged in?
+  // ----------------------------------------------
   isLoggedIn(): boolean {
-    return !!this.getAccessToken();
+    const token = this.tokenService.getAccessToken();
+    return !!token;
   }
 
-  clearTokens(): void {
-    sessionStorage.removeItem(this.authTokenKey);
-    localStorage.removeItem(this.authTokenKey);
-    sessionStorage.removeItem(this.refreshTokenKey);
-    localStorage.removeItem(this.refreshTokenKey);
+  // ----------------------------------------------
+  // ROLE HANDLING (moved from userSessionService)
+  // ----------------------------------------------
+  public setUserRole(role: Roles): void {
+    this.currentRole = role;
+    localStorage.setItem('currentUserRole', role);
   }
 
+  public getCurrentRole(): Roles | null {
+    if (!this.currentRole) {
+      const saved = localStorage.getItem('currentUserRole') as Roles;
+      if (saved) this.currentRole = saved;
+    }
+    return this.currentRole;
+  }
+
+  /**
+   * Map a userRole link from the server to our internal Roles enum
+   */
+  public mapLinkToRole(link: string | null | undefined): Roles | null {
+    if (!link) return null;
+    for (const [linkKey, role] of Object.entries(this.roleMapping)) {
+      const knownUrl = this.linkRegistry.getLink(linkKey as LinkKey);
+      if (knownUrl === link) {
+        return role;
+      }
+    }
+    return null;
+  }
+
+  // ----------------------------------------------
+  // PRIVATE
+  // ----------------------------------------------
   private extractUrl(headerValue: string | null): string | null {
     return headerValue?.split(';')[0].replace(/[<>]/g, '') ?? null;
   }
-
-  // Example: A BFS or DFS approach to further discover new links after you’ve registered them
-  /*
-        private discoverAllCurrentlyRegisteredLinks(): void {
-        // For advanced scenarios only:
-        // 1) gather all known link URLs
-        // 2) for each, if not visited, fetch and register
-        // 3) repeat until no new links discovered or a time limit is reached
-        }
-        */
 }

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
 export interface Toast {
   id: number;
   message: string;
-  type: 'success' | 'error';
+  type: 'success' | 'error' | 'warning'; // Added 'warning'
 }
 
 @Injectable({
@@ -14,10 +13,12 @@ export class ToastService {
   private toastsSubject = new BehaviorSubject<Toast[]>([]);
   public toasts$ = this.toastsSubject.asObservable();
 
-  // You can use a simple counter or a more robust ID generator
   private counter = 0;
 
-  showToast(message: string, type: 'success' | 'error' = 'success'): void {
+  showToast(
+    message: string,
+    type: 'success' | 'error' | 'warning' = 'success' // Added 'warning'
+  ): void {
     this.counter++;
     const newToast: Toast = {
       id: this.counter,

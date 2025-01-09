@@ -109,7 +109,7 @@
 
     <!-- Display comments if available -->
     <div *ngIf="comments && comments.length > 0; else noComments">
-      <div *ngFor="let comment of comments" class="cool-comment w-100 p-2">
+      <div *ngFor="let comment of comments" class="cool-comment w-100 p-3">
         <div class="comment-header f-r-sb-c mb-2">
           <div class="f-r-s-c">
             <img
@@ -138,7 +138,6 @@
       [totalPages]="totalPages"
       [currentPage]="currentPage"
       [pageSize]="pageSize"
-      [isMarketplace]="false"
       (pageChange)="onPageChange($event)"
     ></app-paginator>
   </div>

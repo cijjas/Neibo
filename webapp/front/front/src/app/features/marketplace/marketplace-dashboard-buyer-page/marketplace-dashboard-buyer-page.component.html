@@ -160,8 +160,8 @@
             <app-paginator
               [totalPages]="totalPages"
               [currentPage]="page"
+              [theme]="'marketplace'"
               (pageChange)="onPageChange($event)"
-              [isMarketplace]="true"
             >
             </app-paginator>
           </div>
@@ -289,8 +289,8 @@
           <app-paginator
             [totalPages]="totalPages"
             [currentPage]="page"
+            [theme]="'marketplace'"
             (pageChange)="onPageChange($event)"
-            [isMarketplace]="true"
           >
           </app-paginator>
         </ng-template>

@@ -1,21 +1,21 @@
 <!-- service-providers-control-bar.component.html -->
 <div class="w-100" style="position: relative; z-index: 2">
-    <div class="upper-feed-buttons-box">
-        <div class="f-r-e-c w-100">
-            <div class="custom-dropdown-alternative">
-                <!-- Example dropdown, ignoring translation for now -->
-                <div class="dropdown-toggle">
-                    {{ currentProfession.displayName || 'All' }}
-                </div>
-                <ul class="dropdown-options">
-                    <li><a (click)="setProfession(null)">All</a></li>
-                    <li *ngFor="let prof of professionList">
-                        <a (click)="setProfession(prof)">
-                            {{ prof.displayName }}
-                        </a>
-                    </li>
-                </ul>
-            </div>
+  <div class="upper-feed-buttons-box">
+    <div class="f-r-e-c w-100">
+      <div class="custom-dropdown-alternative">
+        <!-- Example dropdown, ignoring translation for now -->
+        <div class="dropdown-toggle services">
+          {{ currentProfession.displayName || "All" }}
         </div>
+        <ul class="dropdown-options services">
+          <li><a (click)="setProfession(null)">All</a></li>
+          <li *ngFor="let prof of professionList">
+            <a (click)="setProfession(prof)">
+              {{ prof.displayName }}
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
+  </div>
 </div>

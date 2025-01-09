@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HateoasLinksService, UserSessionService } from '@core/index';
+import {
+  AuthService,
+  HateoasLinksService,
+  UserSessionService,
+} from '@core/index';
 import { User, LinkKey, Roles } from '@shared/index';
 
 @Component({
@@ -31,7 +35,8 @@ export class FeedControlBarComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -39,8 +44,7 @@ export class FeedControlBarComponent implements OnInit {
       this.currentUser = user;
     });
 
-    this.isNotAdmin =
-      this.userSessionService.getCurrentRole() != Roles.ADMINISTRATOR;
+    this.isNotAdmin = this.authService.getCurrentRole() != Roles.ADMINISTRATOR;
 
     this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
     this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);

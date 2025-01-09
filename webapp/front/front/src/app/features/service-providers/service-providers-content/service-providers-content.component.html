@@ -16,13 +16,13 @@
     >
       <div class="inner f-c-c-c">
         <!-- businessName -->
-        <div style="font-size: 18px; margin-bottom: 10px" class="c-text">
-          {{ worker?.businessName }}
+        <div style="font-size: 18px; margin-bottom: 10px" class="c-services">
+          <strong>{{ worker?.businessName }}</strong>
         </div>
 
         <!-- Professions -->
         <div
-          class="f-r-c-c c-light-text c-primary"
+          class="f-r-c-c c-light-text c-services"
           style="font-size: 13px"
           *ngIf="worker?.professions?.length > 0"
         >
@@ -48,18 +48,19 @@
         <button
           *ngIf="isTheWorker"
           id="editProfileButton"
-          class="cool-button cool-small on-bg font-weight-bold"
+          class="cool-button cool-small profession-button on-bg font-weight-bold"
           style="width: 100px"
           (click)="openEditProfile.emit()"
         >
-          Edit
           <i class="fa-solid fa-user-pen ml-1"></i>
+
+          Edit Profile
         </button>
       </div>
     </div>
     <div class="card-footer m-3">
       <div class="inner">
-        <div class="c-primary">
+        <div class="c-services">
           <!-- rating with 2 decimals or '--' -->
           {{
             averageRating && averageRating > 0
@@ -70,11 +71,11 @@
         <div class="c-light-text">Rating</div>
       </div>
       <div class="inner">
-        <div class="c-primary">{{ reviewsCount || 0 }}</div>
+        <div class="c-services">{{ reviewsCount || 0 }}</div>
         <div class="c-light-text">Reviews</div>
       </div>
       <div class="inner">
-        <div class="c-primary">{{ postCount || 0 }}</div>
+        <div class="c-services">{{ postCount || 0 }}</div>
         <div class="c-light-text">Posts</div>
       </div>
     </div>

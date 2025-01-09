@@ -9,7 +9,7 @@
         <a
           id="profileButton"
           [routerLink]="['/services/profile', workerId]"
-          class="cool-left-button f-r-sb-c"
+          class="cool-left-button services-button f-r-sb-c"
           [ngClass]="{ active: channelClass === 'Profile' }"
         >
           <i class="fa-solid fa-address-card"></i>
@@ -18,7 +18,7 @@
         <a
           id="workerServicesButton"
           [routerLink]="['/services']"
-          class="cool-left-button f-r-sb-c"
+          class="cool-left-button services-button f-r-sb-c"
           [ngClass]="{ active: channelClass === 'Services' }"
         >
           <i class="fa-solid fa-handshake-angle"></i>
@@ -27,7 +27,7 @@
         <a
           id="neighborhoodsButton"
           [routerLink]="['/services', 'join-neighborhoods']"
-          class="cool-left-button f-r-sb-c"
+          class="cool-left-button services-button f-r-sb-c"
           [ngClass]="{ active: channelClass === 'Neighborhoods' }"
         >
           <i class="fa-solid fa-house"></i>
@@ -90,7 +90,7 @@
           <a
             id="servicesButton"
             routerLink="/services"
-            class="cool-left-button f-r-sb-c"
+            class="cool-left-button services-button f-r-sb-c"
             [ngClass]="{ active: channelClass === 'Services' }"
           >
             <i class="fa-solid fa-handshake-angle"></i>

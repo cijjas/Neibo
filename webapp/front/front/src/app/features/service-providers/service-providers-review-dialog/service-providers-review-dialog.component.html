@@ -1,35 +1,64 @@
-<div id="review-dialog" class="dialog" [ngClass]="{ 'show-dialog': reviewDialogVisible }">
-    <div class="dialog-content">
-        <div class="dialog-header">
-
-            <div class="review-dialog-text">
-                <h3 class="font-size-20 font-weight-bold" style="color: var(--primary)">Leave a Review</h3>
-                <p class="font-weight-normal font-size-14">Share your experience with <strong>{{ worker?.businessName
-                        }}</strong></p>
-            </div>
-        </div>
-        <a class="close-button" (click)="closeReviewDialog()">
-            <i class="fas fa-close"></i>
-        </a>
-        <form class="f-c-c-c w-100" (ngSubmit)="submitReviewForm()" #reviewForm="ngForm">
-            <div class="form-group w-75">
-                <!-- Star Selector -->
-                <div class="stars m-3">
-                    <i class="fa-solid fa-star" *ngFor="let star of stars; let i = index"
-                        [class.active]="rating >= star" (click)="setRating(star)"></i>
-                </div>
-
-                <textarea name="reviewMessage" [(ngModel)]="reviewMessage" class="cool-input textarea-min-max" rows="5"
-                    placeholder="Your review..." required minlength="10"></textarea>
-                <div *ngIf="reviewForm.invalid && reviewForm.touched" class="error-message c-red">
-                    <span *ngIf="reviewMessage?.length < 10">Review must be at least 10 characters.</span>
-                </div>
-            </div>
-            <button type="submit"
-                class="w-75 cool-button pure filled-interesting square-radius font-size-14 font-weight-bold"
-                [disabled]="reviewForm.invalid">
-                Submit Review
-            </button>
-        </form>
+<div
+  id="review-dialog"
+  class="dialog"
+  [ngClass]="{ 'show-dialog': reviewDialogVisible }"
+>
+  <div class="dialog-content services">
+    <div class="dialog-header">
+      <div class="review-dialog-text">
+        <h3 class="font-size-20 font-weight-bold c-services mb-3">
+          Leave a Review
+        </h3>
+        <p class="font-weight-normal font-size-14">
+          Share your experience with
+          <strong class="c-services">{{ worker?.businessName }}</strong>
+        </p>
+      </div>
     </div>
+    <a class="close-button" (click)="closeReviewDialog()">
+      <i class="fas fa-close"></i>
+    </a>
+    <form
+      class="f-c-c-c w-100"
+      (ngSubmit)="submitReviewForm()"
+      #reviewForm="ngForm"
+    >
+      <div class="form-group w-75">
+        <!-- Star Selector -->
+        <div class="stars m-3">
+          <i
+            class="fa-solid fa-star"
+            *ngFor="let star of stars; let i = index"
+            [class.active]="rating >= star"
+            (click)="setRating(star)"
+          ></i>
+        </div>
+
+        <textarea
+          name="reviewMessage"
+          [(ngModel)]="reviewMessage"
+          class="cool-input textarea-min-max"
+          rows="5"
+          placeholder="Your review..."
+          required
+          minlength="10"
+        ></textarea>
+        <div
+          *ngIf="reviewForm.invalid && reviewForm.touched"
+          class="error-message c-red"
+        >
+          <span *ngIf="reviewMessage?.length < 10"
+            >*Review must be at least 10 characters long.</span
+          >
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="w-75 cool-button pure filled-interesting square-radius font-size-14 font-weight-bold"
+        [disabled]="reviewForm.invalid"
+      >
+        Submit Review
+      </button>
+    </form>
+  </div>
 </div>

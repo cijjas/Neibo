@@ -207,7 +207,7 @@ export class SignupDialogComponent implements OnInit {
                 this.loading = false;
                 if (success) {
                   // Get the user's role from UserSessionService
-                  const userRole = this.userSessionService.getCurrentRole();
+                  const userRole = this.authService.getCurrentRole();
                   console.log('hola' + userRole);
                   switch (userRole) {
                     case Roles.WORKER:

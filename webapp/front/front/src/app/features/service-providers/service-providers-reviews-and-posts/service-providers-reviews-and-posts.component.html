@@ -23,13 +23,14 @@
     <div class="f-c-c-c g-0 w-100">
       <!-- Only show the "Create Review" button if user is not a WORKER -->
       <button
-        class="cool-button cool-small on-bg font-weight-bold mb-4"
+        class="cool-button cool-small profession-button on-bg font-weight-normal mb-4"
         style="width: 200px"
         *ngIf="!isWorker"
         (click)="openReviewDialog.emit()"
       >
-        Create Review
         <i class="fa-solid fa-star ml-1"></i>
+
+        Leave a review
       </button>
 
       <ng-container *ngIf="reviews && reviews.length > 0; else noReviewsFound">
@@ -70,6 +71,7 @@
         [totalPages]="reviewTotalPages"
         [currentPage]="reviewCurrentPage"
         [pageSize]="reviewPageSize"
+        [theme]="'services'"
         (pageChange)="onReviewPageChange($event)"
       ></app-paginator>
     </div>
@@ -77,9 +79,9 @@
 
   <!-- Posts Tab Content -->
   <section id="content2" *ngIf="selectedTab === 'posts'">
-    <div class="f-c-c-c w-100" style="gap: 10px">
+    <div class="f-c-c-c g-0 w-100">
       <a
-        class="cool-button cool-small on-bg font-weight-bold mb-2"
+        class="cool-button cool-small profession-button on-bg font-weight-bold mb-2"
         style="width: 200px"
         *ngIf="isTheWorker"
         (click)="goToServicePostCreation()"
@@ -109,6 +111,7 @@
         [totalPages]="postTotalPages"
         [currentPage]="postCurrentPage"
         [pageSize]="postPageSize"
+        [theme]="'services'"
         (pageChange)="onPostPageChange($event)"
       ></app-paginator>
     </div>

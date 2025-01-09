@@ -186,7 +186,6 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
   ]).pipe(
     map(([language, userRole]) => {
       const roleEnum = userRole.role as Roles;
-      console.log(roleEnum);
       return {
         email: userDto.mail,
         name: userDto.name,

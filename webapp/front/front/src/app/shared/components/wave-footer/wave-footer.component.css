@@ -16,6 +16,16 @@ footer div {
   color: var(--onprimary);
   text-align: center;
   opacity: 0.96;
+
+  &.lila {
+    background-color: var(--lila);
+  }
+  &.admin {
+    background-color: var(--admin-color);
+  }
+  &.worker {
+    background-color: var(--worker-color);
+  }
 }
 
 .wave-footer {
@@ -30,6 +40,10 @@ footer div {
 
 .wave-footer.admin {
   fill: var(--admin-color);
+}
+
+.wave-footer.worker {
+  fill: var(--worker-color);
 }
 
 #wave2 {

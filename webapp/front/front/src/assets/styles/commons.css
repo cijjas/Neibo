@@ -49,7 +49,7 @@ body {
   --lighttext: #83887f;
   --lightertext: #9ca194;
   --background: #faf6e8;
-  --onbackground: rgb(243, 243, 235);
+  --onbackground: rgb(249, 248, 244);
   --onbackgroundfaded: rgb(245, 245, 244, 0.2);
   --darkonbackground: rgb(235, 236, 233);
   --primary: #328d3d;
@@ -57,21 +57,24 @@ body {
   --onprimary: #fdfaf1;
   --old-primary: #9ad379;
   --secondary: #d8d8c5;
-  --accent: #6696e2;
   --error: #de6f6f;
   --scrollbarthumb: #004f2d;
   --bordercolor: #dadad0;
-  --admin-color: #578a66;
   --always-background: #faf6e8;
   --on-onbackground: rgb(238, 236, 231);
   --green: #328d3d;
   --light-green: #9ad379;
   --star-background: #dedad4;
   --star-active: #ff9c1a;
-  --lila: #7d7ae3;
   --to-lila: #dfdfea;
   --used: #5975d0;
   --new: #6cb945;
+  --user-profile: #aed794;
+
+  --lila: #8974a5;
+  --accent: #6696e2;
+  --profession: #5b9bd5;
+  --admin-color: #26a69a;
 
   --border-light: 5px;
   --border-radius: 10px;
@@ -84,8 +87,10 @@ body {
   --text: #ced3c1;
   --lighttext: #b1bbab;
   --lightertext: #878f82;
-  --background: #454c52;
-  --onbackground: rgb(59, 64, 70);
+
+  --background: #06131f;
+  --onbackground: rgb(17 21 26);
+
   --onbackgroundfaded: rgba(49, 58, 63, 0.1);
   --darkonbackground: #4b4f4f;
   --primary: #8fbd79;
@@ -93,19 +98,24 @@ body {
   --between-primary: #187736;
   --old-primary: #1ba446;
   --secondary: #595953;
-  --accent: #6696e2;
   --error: #de6f6f;
   --scrollbarthumb: #9a968c;
   --bordercolor: #646462;
-  --admin-color: #8bcb9d;
   --always-background: #faf6e8;
-  --on-onbackground: rgb(63, 68, 75);
+  --on-onbackground: rgb(22 30 40);
   --green: #1b6926;
   --light-green: #9ad379;
   --star-background: #4b4f4f;
   --star-active: #ff9c1a;
-  --lila: #7d7ae3;
+
+  --lila: #a98cd1;
   --to-lila: rgb(72, 78, 89);
+
+  --accent: #6696e2;
+  --profession: #77bdff;
+  --admin-color: #80cbc4;
+
+  --user-profile: #20252b;
 }
 
 html {

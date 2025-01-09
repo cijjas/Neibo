@@ -4,11 +4,11 @@
   display: flex;
   flex-direction: column;
   background-color: var(--onbackground);
-  border: var(--border);
+  border: 1px solid var(--lighttext);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
   transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 0 0 var(--primary);
+  box-shadow: 0 4px 0 0 var(--lighttext);
 
   & .card-header {
     margin: 0;
@@ -149,7 +149,7 @@
       flex-direction: row;
       justify-content: end;
       align-items: end;
-      color: var(--primary);
+      color: var(--profession);
       font-weight: bold;
       font-size: 12px;
     }
@@ -160,6 +160,7 @@
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 5;
+      line-clamp: 5;
       -webkit-box-orient: vertical;
       text-overflow: ellipsis;
       white-space: normal;
@@ -184,7 +185,7 @@
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 0 0 var(--primary);
+    box-shadow: -3px 5px 0 0 var(--profession);
   }
 
   & .background-cover {
@@ -206,13 +207,11 @@
     background-color: var(--onbackground);
     display: none;
     padding: 20px;
-    border-top: 1px solid var(--primary);
-    border-bottom: 1px solid var(--primary);
-    border-left: 1px solid var(--primary);
-    border-right: 1px solid var(--primary);
+    border: 1px solid var(--profession);
+    box-shadow: 0 4px 0 0 var(--profession);
+
     z-index: -1;
     transform: translateY(-4px);
-    box-shadow: 0 4px 0 0 var(--primary);
     border-radius: 0 var(--border-radius) var(--border-radius)
       var(--border-radius);
   }
@@ -224,7 +223,7 @@
   & label {
     position: relative;
     display: inline-block;
-    border: 1px solid var(--primary);
+    border: 1px solid var(--profession);
     padding: 15px 25px;
     font-weight: bolder;
     text-align: center;
@@ -242,17 +241,17 @@
     }
 
     &:hover {
-      color: var(--old-primary);
+      color: var(--profession);
       cursor: pointer;
     }
   }
 
   & input:checked + label {
-    color: var(--primary);
+    color: var(--profession);
     z-index: 2;
-    border-left: 1px solid var(--primary);
-    border-right: 1px solid var(--primary);
-    border-top: 3px solid var(--primary);
+    border-left: 1px solid var(--profession);
+    border-right: 1px solid var(--profession);
+    border-top: 3px solid var(--profession);
     border-bottom: 2px solid transparent;
   }
 

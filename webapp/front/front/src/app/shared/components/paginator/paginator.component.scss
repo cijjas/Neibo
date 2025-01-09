@@ -1,0 +1,118 @@
+/*-------------------PAGINATION SELECTOR -----------------------------------*/
+
+$pagination-categories: (
+  default: (
+    primary: var(--primary),
+    text: var(--text),
+    background: var(--onbackground),
+  ),
+  marketplace: (
+    primary: var(--lila),
+    text: var(--text),
+    background: var(--onbackground),
+  ),
+  services: (
+    primary: var(--profession),
+    text: var(--text),
+    background: var(--onbackground),
+  ),
+  admin: (
+    primary: var(--admin-color),
+    text: var(--text),
+    background: var(--onbackground),
+  ),
+);
+
+@mixin pagination-styles($name, $primary, $text, $background) {
+  .pagination-#{$name} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0;
+    color: $text;
+
+    /* Small button styles */
+    .small-a {
+      width: 30px;
+      height: 30px;
+      padding: 4px;
+    }
+
+    /* Pagination button styles */
+    .pagination-button-#{$name} {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background-color: $background;
+      color: $text;
+      margin: 5px;
+      position: relative;
+      transform: translateY(0);
+      transition: all 0.3s ease-in-out;
+
+      &.small-a {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        padding: 4px;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 110%;
+        bottom: -4px;
+        left: 0;
+        transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
+        pointer-events: none;
+      }
+
+      &:hover:not(.active) {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 0 0 $primary;
+        color: $primary;
+      }
+
+      &.active {
+        transform: translateY(-4px);
+        border: 1px solid $background;
+        box-shadow: 0 4px 0 0 $primary;
+        background-color: $primary;
+        color: $background;
+      }
+    }
+  }
+}
+
+/* Generate styles for all categories */
+@each $name, $colors in $pagination-categories {
+  @include pagination-styles(
+    $name,
+    map-get($colors, primary),
+    map-get($colors, text),
+    map-get($colors, background)
+  );
+}
+
+/* Ellipsis button styles (shared across all) */
+button.ellipsis {
+  cursor: default;
+  pointer-events: none;
+  background: transparent;
+  color: #888;
+  border: none;
+  padding: 0.5rem;
+
+  &:hover {
+    background: transparent;
+    color: #888;
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}

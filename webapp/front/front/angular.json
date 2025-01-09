@@ -39,10 +39,7 @@
               "src/assets/styles/calendarBox.css",
               "src/assets/styles/service.css"
             ],
-            "scripts": [
-              "src/assets/js/tagsWidgetHandler.js",
-              "src/assets/js/tagsPublishHandler.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {

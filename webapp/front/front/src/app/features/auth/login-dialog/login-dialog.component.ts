@@ -85,7 +85,7 @@ export class LoginDialogComponent implements OnInit {
 
           if (success) {
             // Get the user's role from UserSessionService
-            const userRole = this.userSessionService.getCurrentRole();
+            const userRole = this.authService.getCurrentRole();
 
             switch (userRole) {
               case Roles.WORKER:

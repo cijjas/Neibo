@@ -6,6 +6,7 @@ import {
   AuthService,
   UserSessionService,
   ToastService,
+  ThemeService,
 } from '@core/index';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -29,7 +30,8 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private authService: AuthService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
@@ -61,13 +63,9 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   }
 
   toggleDarkMode(): void {
-    if (this.currentUser) {
-      this.userService
-        .toggleDarkMode(this.currentUser)
-        .subscribe((updatedUser) => {
-          this.userSessionService.setUserInformation(updatedUser);
-        });
-    }
+    const currentDarkMode =
+      document.documentElement.classList.contains('dark-mode');
+    this.themeService.setDarkMode(!currentDarkMode);
   }
 
   toggleLanguage(): void {

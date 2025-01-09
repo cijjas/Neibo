@@ -1,71 +1,126 @@
 <div class="cool-static-container">
-    <h2 class="card-title">Create an Announcement</h2>
-    <div class="divider mb-3 mt-3"></div>
+  <h2 class="card-title">Create an Announcement</h2>
+  <div class="divider mb-3 mt-3"></div>
 
-    <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
-        <!-- Subject -->
-        <div class="form-column" style="margin-top:1rem;">
-            <div class="form-group">
-                <div class="form-row">
-                    <input formControlName="subject" class="cool-input" placeholder="Subject" type="text" />
-                    <div class="form-row form-error" *ngIf="subjectControl?.invalid && subjectControl?.touched">
-                        <p class="error">Subject is required</p>
-                    </div>
-                </div>
-            </div>
+  <!-- Announcement Form -->
+  <form
+    [formGroup]="announcementForm"
+    (ngSubmit)="onSubmit()"
+    enctype="multipart/form-data"
+  >
+    <!-- Subject -->
+    <div class="form-column" style="margin-top: 1rem">
+      <div class="col p-0">
+        <input
+          formControlName="subject"
+          class="cool-input"
+          placeholder="Subject"
+          type="text"
+        />
+        <div
+          class="form-row form-error"
+          *ngIf="subjectControl?.invalid && subjectControl?.touched"
+        >
+          <p class="error">*Subject is required</p>
+        </div>
+      </div>
 
-            <!-- Message -->
-            <div class="form-group">
-                <textarea formControlName="message" class="cool-input textarea-min-max" rows="5"
-                    placeholder="Message"></textarea>
-                <div class="form-row form-error" *ngIf="messageControl?.invalid && messageControl?.touched">
-                    <p class="error">Message is required</p>
-                </div>
-            </div>
+      <!-- Message -->
+      <div class="col p-0">
+        <textarea
+          formControlName="message"
+          class="cool-input textarea-min-max"
+          rows="5"
+          placeholder="Message"
+        ></textarea>
+        <div
+          class="form-row form-error"
+          *ngIf="messageControl?.invalid && messageControl?.touched"
+        >
+          <p class="error">*Message is required</p>
+        </div>
+      </div>
 
-            <!-- File input -->
-            <div class="form-group">
-                <label for="images" class="drop-container" id="dropcontainer">
-                    <span class="drop-title">Drop files</span>
-                    Or
-                    <input type="file" id="images" accept="image/*" (change)="preview($event)" />
-                </label>
-                <!-- Error message if any -->
-                <p class="error" *ngIf="fileUploadError">{{ fileUploadError }}</p>
-            </div>
+      <!-- File input -->
+      <div class="col p-0">
+        <label for="images" class="drop-container" id="dropcontainer">
+          <span class="drop-title">Drop files</span>
+          Or
+          <input
+            type="file"
+            id="images"
+            accept="image/*"
+            (change)="onFileChange($event)"
+          />
+        </label>
+        <!-- Error message if any -->
+        <p class="error" *ngIf="fileUploadError">{{ fileUploadError }}</p>
+      </div>
 
-            <!-- Image preview -->
-            <div>
-                <img id="frame" class="blogpost-image" [src]="previewImage" alt="uploading image"
-                    *ngIf="previewImage" />
-            </div>
+      <!-- Image preview -->
+      <div>
+        <img
+          id="frame"
+          class="blogpost-image"
+          [src]="imagePreviewUrl"
+          alt="uploading image"
+          *ngIf="imagePreviewUrl"
+        />
+      </div>
 
-            <!-- Tags Input (example) -->
-            <div class="tags-input mb-0" style="display:flex; flex-direction:column; align-items:center;">
-                <input #tagInput type="text" placeholder="Enter a tag"
-                    (keyup.enter)="addTagToApply(tagInput.value); tagInput.value='';" />
-            </div>
+      <!-- 
+          TAGS AREA
+          *No* input for creating custom tags. Just 4 hardcoded clickable tags:
+          Event, Notice, Important, Urgent
+  
+          1) Display the currently selected tags (with remove icon)
+          2) Show the 4 clickable tags for selection
+        -->
+      <!-- Tags Section -->
+      <div class="col p-0">
+        <label class="mb-2">Select from the available tags</label>
 
-            <!-- Available Tags (click to add) -->
-            <div class="m-b-10 tags-row tags">
-                <a class="tag-option" *ngFor="let tag of availableTags" (click)="addTagToApply(tag)">
-                    {{ tag }}
-                </a>
-            </div>
-
-            <!-- Display selected tags with a remove button -->
-            <div class="m-b-10 tags-row tags">
-                <span class="tag-option" *ngFor="let tag of selectedTags" (click)="removeTag(tag)">
-                    {{ tag }} &times;
-                </span>
-            </div>
+        <!-- Display selected tags -->
+        <div *ngIf="appliedTags.length > 0" class="tags-row tags w-100 mb-2">
+          <span class="tag-selected" *ngFor="let selTag of appliedTags">
+            {{ selTag.name }}
+            <i class="fa-solid fa-xmark" (click)="removeTag(selTag)"></i>
+          </span>
         </div>
 
-        <!-- Submit button -->
-        <div class="d-flex justify-content-end">
-            <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="height:40px;">
-                Post
-            </button>
+        <!-- Hardcoded tags -->
+        <div class="tags-row tags w-100 mb-2">
+          <a
+            class="tag-option"
+            *ngFor="let tag of defaultTags"
+            (click)="addTagToApplied(tag)"
+          >
+            {{ tag.name }}
+          </a>
         </div>
-    </form>
+
+        <!-- Error message -->
+        <div
+          class="form-row form-error"
+          *ngIf="
+            announcementForm.get('tags')?.invalid &&
+            announcementForm.get('tags')?.touched
+          "
+        >
+          <p class="error">*At least one tag must be selected.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit button -->
+    <div class="d-flex justify-content-end">
+      <button
+        type="submit"
+        class="cool-button cool-small on-bg w-25 font-weight-bolder"
+        style="height: 40px"
+      >
+        Post
+      </button>
+    </div>
+  </form>
 </div>

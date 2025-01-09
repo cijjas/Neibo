@@ -3,14 +3,20 @@
   class="dialog"
   [ngClass]="{ 'show-dialog': editDialogVisible }"
 >
-  <div class="dialog-content" style="background-color: var(--onbackground)">
+  <div
+    class="dialog-content services"
+    style="background-color: var(--onbackground)"
+  >
     <!-- Close Button -->
     <div class="close-button" (click)="closeEditDialog()">
       <i class="fas fa-close"></i>
     </div>
 
     <!-- Title -->
-    <div class="title mb-2 mt-3 f-c-c-c" style="font-size: 20px">
+    <div
+      class="mb-2 mt-3 f-c-c-c c-services font-weight-bold"
+      style="font-size: 20px"
+    >
       Edit Profile
     </div>
 
@@ -108,14 +114,14 @@
           name="imageFile"
           type="file"
           (change)="onFileSelected($event)"
-          class="cool-input"
+          class="cool-input services"
           accept="image/*"
         />
 
         <!-- Submit Button -->
         <button
           type="submit"
-          class="cool-button cool-small on-bg font-weight-bolder mb-4 mt-3"
+          class="cool-button cool-small profession-button on-bg font-weight-bolder mb-4 mt-3"
           style="width: 150px"
           [disabled]="editForm.invalid"
         >

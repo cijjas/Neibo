@@ -1,25 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment';
-import { HateoasLinksService } from '@core/index';
 import { firstValueFrom } from 'rxjs';
+import { AuthService, HateoasLinksService } from '@core/index';
+import { environment } from 'environments/environment';
+import { TokenService } from './token.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AppInitService {
   constructor(
     private http: HttpClient,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
+    private tokenService: TokenService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   private readonly apiServerUrl = environment.apiBaseUrl;
 
   async loadInitialLinks(): Promise<void> {
+    // 1) Load tokens from storage
+    this.tokenService.loadSavedTokens();
+
+    // 2) Fetch the root-level links and save them to local storage
     const response = await firstValueFrom(
       this.http.get<{ _links: Record<string, string> }>(this.apiServerUrl)
     );
-    const links = response._links;
+    this.linkService.registerLinks(response._links, 'root:');
 
-    // Register the root-level links
-    this.linkService.registerLinks(links, 'root:');
+    // 3) If we have a token, optionally check it:
+    if (this.authService.isLoggedIn()) {
+      const isValid = await firstValueFrom(
+        this.authService.refreshTokenIfNeeded() // Check if expires soon
+      );
+      if (!isValid) {
+        console.log('init: token invalid, logging out');
+        this.authService.logout();
+        this.router.navigate(['/login']);
+      }
+    }
   }
 }

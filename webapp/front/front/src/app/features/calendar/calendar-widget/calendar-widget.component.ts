@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EventService, LinkKey } from '@shared/index';
+import { CalendarService, EventService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -8,35 +8,48 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-calendar-widget',
   templateUrl: './calendar-widget.component.html',
   standalone: true,
-  imports: [CommonModule, RouterModule]
-
+  imports: [CommonModule, RouterModule],
 })
 export class CalendarWidgetComponent implements OnInit {
   isLoading = true;
   currentDate: string = '';
   weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  days: Array<{ date: number; month: number; year: number; inactive: boolean; today: boolean; event: boolean }> = [];
+
+  days: Array<{
+    date: number;
+    month: number;
+    year: number;
+    inactive: boolean;
+    today: boolean;
+    event: boolean;
+  }> = [];
+
   eventTimestamps: number[] = [];
   date = new Date();
   placeholders = Array(5).fill(0);
 
-  events: Event
-
   constructor(
     private eventService: EventService,
     private linkStorage: HateoasLinksService,
-    private router: Router
-
-  ) { }
+    private router: Router,
+    private calendarService: CalendarService
+  ) {}
 
   ngOnInit() {
-    this.renderCalendar();
-    this.loadEventTimestamps();
+    this.calendarService.calendarReload$.subscribe(() => {
+      this.loadEventTimestamps();
+
+      this.renderCalendar();
+    });
+    this.calendarService.triggerReload();
   }
 
   private loadEventTimestamps(): void {
     const eventUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_EVENTS);
-    const datesInMonth = this.getDatesInMonth(this.date.getFullYear(), this.date.getMonth());
+    const datesInMonth = this.getDatesInMonth(
+      this.date.getFullYear(),
+      this.date.getMonth()
+    );
 
     const dateStrings = datesInMonth.map((date) => {
       return date.toISOString().split('T')[0];
@@ -44,7 +57,9 @@ export class CalendarWidgetComponent implements OnInit {
 
     this.eventService.getEventsForDateRange(eventUrl, dateStrings).subscribe({
       next: (allEvents) => {
-        this.eventTimestamps = allEvents.map((e) => new Date(e.eventDate).getTime());
+        this.eventTimestamps = allEvents.map((e) =>
+          new Date(e.eventDate).getTime()
+        );
         this.updateEventDays();
       },
       error: (error) => {
@@ -86,17 +101,42 @@ export class CalendarWidgetComponent implements OnInit {
     });
   }
 
-
   renderCalendar(): void {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
-    const firstDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 1).getDay();
-    const lastDateOfMonth = new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0).getDate();
-    const lastDayOfMonth = new Date(this.date.getFullYear(), this.date.getMonth(), lastDateOfMonth).getDay();
-    const lastDateOfLastMonth = new Date(this.date.getFullYear(), this.date.getMonth(), 0).getDate();
+    const firstDayOfMonth = new Date(
+      this.date.getFullYear(),
+      this.date.getMonth(),
+      1
+    ).getDay();
+    const lastDateOfMonth = new Date(
+      this.date.getFullYear(),
+      this.date.getMonth() + 1,
+      0
+    ).getDate();
+    const lastDayOfMonth = new Date(
+      this.date.getFullYear(),
+      this.date.getMonth(),
+      lastDateOfMonth
+    ).getDay();
+    const lastDateOfLastMonth = new Date(
+      this.date.getFullYear(),
+      this.date.getMonth(),
+      0
+    ).getDate();
 
     this.days = [];
 
@@ -120,7 +160,11 @@ export class CalendarWidgetComponent implements OnInit {
 
     // Current month's days
     for (let i = 1; i <= lastDateOfMonth; i++) {
-      const currentDay = new Date(this.date.getFullYear(), this.date.getMonth(), i);
+      const currentDay = new Date(
+        this.date.getFullYear(),
+        this.date.getMonth(),
+        i
+      );
       const isToday = currentDay.toDateString() === new Date().toDateString();
       this.days.push({
         date: i,
@@ -150,7 +194,9 @@ export class CalendarWidgetComponent implements OnInit {
       });
     }
 
-    this.currentDate = `${months[this.date.getMonth()]} ${this.date.getFullYear()}`;
+    this.currentDate = `${
+      months[this.date.getMonth()]
+    } ${this.date.getFullYear()}`;
     this.isLoading = false;
   }
 
@@ -165,13 +211,19 @@ export class CalendarWidgetComponent implements OnInit {
     this.loadEventTimestamps();
   }
 
-
-  navigateToDay(day: { date: number; month: number; year: number; inactive: boolean }): void {
+  navigateToDay(day: {
+    date: number;
+    month: number;
+    year: number;
+    inactive: boolean;
+  }): void {
     const selectedDate = new Date(Date.UTC(day.year, day.month, day.date));
     const year = selectedDate.getUTCFullYear();
     const month = ('0' + (selectedDate.getUTCMonth() + 1)).slice(-2);
     const dayDate = ('0' + selectedDate.getUTCDate()).slice(-2);
 
-    this.router.navigate(['/calendar'], { queryParams: { date: `${year}-${month}-${dayDate}` } });
+    this.router.navigate(['/calendar'], {
+      queryParams: { date: `${year}-${month}-${dayDate}` },
+    });
   }
 }

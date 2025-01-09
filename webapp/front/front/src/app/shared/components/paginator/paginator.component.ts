@@ -1,14 +1,22 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'app-paginator',
-  templateUrl: './paginator.component.html'
+  templateUrl: './paginator.component.html',
+  styleUrl: './paginator.component.scss',
 })
 export class PaginatorComponent implements OnChanges {
   @Input() totalPages: number = 1;
   @Input() currentPage: number = 1;
   @Input() pageSize: number = 10;
-  @Input() isMarketplace: boolean = false;
+  @Input() theme: 'default' | 'marketplace' | 'services' | 'admin' = 'default';
 
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
   @Output() pageSizeChange: EventEmitter<number> = new EventEmitter<number>();
@@ -58,9 +66,6 @@ export class PaginatorComponent implements OnChanges {
     this.pageNumbers = pages;
   }
 
-
-
-
   goToPage(pageNumber: number): void {
     if (pageNumber !== this.currentPage) {
       this.currentPage = pageNumber;
@@ -87,6 +92,4 @@ export class PaginatorComponent implements OnChanges {
     this.pageSize = newSize;
     this.pageSizeChange.emit(this.pageSize);
   }
-
-
 }

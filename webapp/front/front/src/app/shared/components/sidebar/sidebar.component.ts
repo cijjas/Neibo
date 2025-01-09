@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { HateoasLinksService, UserSessionService } from '@core/index';
+import {
+  AuthService,
+  HateoasLinksService,
+  UserSessionService,
+} from '@core/index';
 import { LinkKey, Roles } from '@shared/models';
 
 @Component({
@@ -16,12 +20,12 @@ export class SidebarComponent implements OnInit {
 
   constructor(
     private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.userRole = this.userSessionService.getCurrentRole();
+    this.userRole = this.authService.getCurrentRole();
     this.workerId = this.linkService.getLink(LinkKey.USER_WORKER);
 
     // Listen for navigation changes to update the channel

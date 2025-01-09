@@ -164,12 +164,7 @@
                           (click)="goToRequests(product.self)"
                         >
                           <i class="fa-solid fa-bell pe-1"></i>
-                          Requests
-                          <!-- Example: if you want to display # of requests -->
-                          <span class="ms-1">
-                            ({{ product.totalPendingRequests }})
-                          </span>
-                          <!-- *ngIf="product.requestCount" -->
+                          Requests ({{ product.totalPendingRequests }})
                         </a>
                       </div>
                     </div>
@@ -184,6 +179,7 @@
             *ngIf="totalPages > 1"
             [totalPages]="totalPages"
             [currentPage]="page"
+            [theme]="'marketplace'"
             (pageChange)="onPageChange($event)"
           >
           </app-paginator>
@@ -305,10 +301,9 @@
 
             <!-- If totalPages > 1 then bottom paginator -->
             <app-paginator
-              *ngIf="totalPages > 1"
               [totalPages]="totalPages"
               [currentPage]="page"
-              [isMarketplace]="true"
+              [theme]="'marketplace'"
               (pageChange)="onPageChange($event)"
             >
             </app-paginator>
