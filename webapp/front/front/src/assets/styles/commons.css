@@ -78,8 +78,9 @@ body {
   --admin-color: #26a69a;
 
   --border-light: 5px;
-  --border-radius: 10px;
+  --border-radius: 0.8em;
   --border-hard: 50px;
+
   --border: 1px solid var(--primary);
   --input-height: 35px;
 }

@@ -65,6 +65,21 @@ $wave-footer-themes: (
       }
     }
 
+    .div-theme {
+      opacity: 0.95;
+      color: $text;
+      background-color: $primary;
+      &.lila {
+        background-color: $primary;
+      }
+      &.admin {
+        background-color: $primary;
+      }
+      &.worker {
+        background-color: $primary;
+      }
+    }
+
     #wave2 {
       animation-duration: 5s;
       animation-direction: reverse;

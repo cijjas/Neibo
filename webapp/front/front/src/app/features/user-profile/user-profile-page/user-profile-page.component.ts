@@ -20,7 +20,6 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   profileImageSafeUrl: SafeUrl | null = null;
   darkMode: boolean = false;
   language: string = 'en';
-  userRole: string = '';
 
   private subscriptions = new Subscription();
 
@@ -40,7 +39,6 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
       .subscribe((user: User | null) => {
         if (user) {
           this.currentUser = user;
-          this.userRole = user.userRoleDisplay;
           this.darkMode = !!user.darkMode;
           this.language = user.language === 'SPANISH' ? 'es' : 'en';
           this.loadProfileImage(user.image);

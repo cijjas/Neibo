@@ -201,7 +201,7 @@ export class SignupDialogComponent implements OnInit {
           );
           // Attempt auto-login
           this.authService
-            .login(signupValues.mail, signupValues.password, false)
+            .login(signupValues.mail, signupValues.password)
             .subscribe({
               next: (success) => {
                 this.loading = false;

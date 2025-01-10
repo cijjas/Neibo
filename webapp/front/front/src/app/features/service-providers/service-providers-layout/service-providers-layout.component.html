@@ -10,7 +10,13 @@
     </div>
 
     <div class="column-right">
-      <app-calendar-widget></app-calendar-widget>
+      <div class="f-c-c-c w100">
+        <app-calendar-widget></app-calendar-widget>
+        <app-tags-filter-widget
+          mode="professions"
+          *ngIf="isServicesRoute"
+        ></app-tags-filter-widget>
+      </div>
     </div>
   </div>
 </div>

@@ -73,20 +73,4 @@ export class UserSessionService {
   getAccessToken(): string | null {
     return this.authToken;
   }
-
-  // ----------------------------------------------
-  //  Clear / Logout
-  // ----------------------------------------------
-  clear(): void {
-    this.currentUserSubject.next(null);
-    this.neighborhoodSubject.next(null);
-    this.authToken = null;
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('neighborhood');
-  }
-
-  logout(): void {
-    this.clear();
-    // Additional logout logic if needed
-  }
 }

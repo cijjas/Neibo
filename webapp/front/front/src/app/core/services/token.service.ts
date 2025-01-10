@@ -7,19 +7,10 @@ import { jwtDecode } from 'jwt-decode';
   providedIn: 'root',
 })
 export class TokenService {
-  private readonly rememberMeKey = 'rememberMe';
   private readonly authTokenKey = 'authToken';
   private readonly refreshTokenKey = 'refreshToken';
 
   constructor(private userSessionService: UserSessionService) {}
-
-  public getRememberMe(): boolean {
-    return JSON.parse(localStorage.getItem(this.rememberMeKey) || 'false');
-  }
-
-  public setRememberMe(rememberMe: boolean): void {
-    localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
-  }
 
   public getAccessToken(): string {
     return localStorage.getItem(this.authTokenKey) || '';

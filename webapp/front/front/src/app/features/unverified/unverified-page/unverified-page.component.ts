@@ -11,6 +11,7 @@ export class UnverifiedPageComponent {
 
   goBackToMainPage(): void {
     // Example: log out and navigate to root or login
+
     this.authService.logout();
   }
 }

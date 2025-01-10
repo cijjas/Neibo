@@ -1083,6 +1083,23 @@
   }
 }
 
+.cool-static-container-profile {
+  overflow: hidden;
+  padding: 2em 2em;
+  width: 100%;
+  background-color: var(--onbackground);
+  color: var(--text);
+  border: 0px solid var(--lighttext);
+  border-radius: 20px;
+  transform: translateY(-4px);
+  box-shadow: 0 5px 0 0 var(--lighttext);
+
+  &.red {
+    border: 1px solid var(--error);
+    box-shadow: 0 5px 0 0 var(--error);
+  }
+}
+
 .cool-static-container {
   overflow: hidden;
   padding: 2em 2em;

@@ -37,14 +37,12 @@ export class LoginDialogComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private linkStorage: HateoasLinksService,
-    private userSessionService: UserSessionService,
-    private cdr: ChangeDetectorRef // Add this
+    private cdr: ChangeDetectorRef
   ) {}
   ngOnInit() {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', Validators.required),
-      rememberMe: new FormControl(false),
     });
   }
 
@@ -77,9 +75,9 @@ export class LoginDialogComponent implements OnInit {
     this.loading = true;
 
     if (this.loginForm.valid) {
-      const { email, password, rememberMe } = this.loginForm.value;
+      const { email, password } = this.loginForm.value;
 
-      this.authService.login(email, password, rememberMe).subscribe({
+      this.authService.login(email, password).subscribe({
         next: (success) => {
           this.loading = false;
 

@@ -20,9 +20,8 @@ export class AppInitService {
 
   async loadInitialLinks(): Promise<void> {
     // Load tokens only if "Remember Me" is selected or tokens exist
-    if (this.tokenService.getRememberMe() || this.tokenService.hasTokens()) {
-      this.tokenService.loadSavedTokens();
-    }
+
+    this.tokenService.loadSavedTokens();
 
     // Fetch the root-level links and save them to local storage
     const response = await firstValueFrom(

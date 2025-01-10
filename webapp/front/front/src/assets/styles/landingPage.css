@@ -140,8 +140,8 @@ input[type="number"],
   width: 100%;
   height: var(--input-height);
   border-radius: var(--border-hard);
-  border: 1px solid var(--primary);
-  background-color: var(--background);
+  border: 0px solid var(--primary);
+  background-color: var(--darkonbackground);
   font-size: 15px;
   font-weight: normal;
   color: var(--text);
@@ -173,7 +173,7 @@ input[type="number"],
   &:hover,
   &:focus-visible {
     transform: translateY(-4px);
-    box-shadow: 4px 4px var(--primary);
+    box-shadow: -4px 4px var(--primary);
   }
 }
 
@@ -235,8 +235,8 @@ input[type="number"],
   font-size: 15px;
   font-weight: bold;
   border-radius: var(--border-hard);
-  border: 1px solid var(--primary);
-  background-color: var(--background);
+  border: 0px solid var(--primary);
+  background-color: var(--darkonbackground);
   color: var(--text);
   width: 100%;
   padding: 5px 10px;
@@ -268,7 +268,7 @@ input[type="number"],
   &:focus-visible &:focus,
   &:focus-visible {
     transform: translateY(-4px);
-    box-shadow: 4px 4px var(--primary);
+    box-shadow: -4px 4px var(--primary);
   }
 }
 

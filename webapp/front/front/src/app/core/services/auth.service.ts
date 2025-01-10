@@ -53,12 +53,7 @@ export class AuthService {
   }
 
   // LOGIN
-  login(
-    mail: string,
-    password: string,
-    rememberMe: boolean
-  ): Observable<boolean> {
-    this.tokenService.setRememberMe(rememberMe);
+  login(mail: string, password: string): Observable<boolean> {
     this.tokenService.clearTokens();
 
     const headers = new HttpHeaders({
@@ -210,19 +205,15 @@ export class AuthService {
   }
 
   // LOGOUT
+  // In AuthService
   logout(): void {
-    // Clear tokens
     this.tokenService.clearTokens();
 
-    // Clear entire storage
     sessionStorage.clear();
     localStorage.clear();
 
-    // Notify other services
-    this.userSessionService.logout();
     this.linkRegistry.clearLinks();
-
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
   }
 
   // Helper Methods
