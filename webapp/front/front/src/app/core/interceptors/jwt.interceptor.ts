@@ -37,14 +37,12 @@ export class JwtInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           console.log('Got 401, attempting refresh...');
 
-          // Attempt to refresh
           return this.authService.refreshToken().pipe(
             switchMap((success) => {
               if (!success) {
                 this.authService.logout();
                 return throwError(() => error);
               }
-              // On success, retry the request
               const newToken = this.tokenService.getAccessToken();
               const newAuthReq = request.clone({
                 setHeaders: {

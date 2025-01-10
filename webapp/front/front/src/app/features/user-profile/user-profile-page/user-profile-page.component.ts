@@ -106,8 +106,6 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']).then(() => {
-      this.toastService.showToast('Successfully logged out.', 'success');
-    });
+    this.toastService.showToast('Successfully logged out.', 'success');
   }
 }

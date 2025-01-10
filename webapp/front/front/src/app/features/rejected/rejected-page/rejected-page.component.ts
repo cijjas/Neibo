@@ -83,6 +83,5 @@ export class RejectedPageComponent implements OnInit {
   goBackToMainPage(): void {
     // Example: log out and navigate to root or login
     this.authService.logout();
-    this.router.navigate(['/']);
   }
 }

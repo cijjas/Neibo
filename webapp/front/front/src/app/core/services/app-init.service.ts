@@ -19,24 +19,24 @@ export class AppInitService {
   private readonly apiServerUrl = environment.apiBaseUrl;
 
   async loadInitialLinks(): Promise<void> {
-    // 1) Load tokens from storage
-    this.tokenService.loadSavedTokens();
+    // Load tokens only if "Remember Me" is selected or tokens exist
+    if (this.tokenService.getRememberMe() || this.tokenService.hasTokens()) {
+      this.tokenService.loadSavedTokens();
+    }
 
-    // 2) Fetch the root-level links and save them to local storage
+    // Fetch the root-level links and save them to local storage
     const response = await firstValueFrom(
       this.http.get<{ _links: Record<string, string> }>(this.apiServerUrl)
     );
     this.linkService.registerLinks(response._links, 'root:');
 
-    // 3) If we have a token, optionally check it:
+    // If we have a token, optionally check it:
     if (this.authService.isLoggedIn()) {
       const isValid = await firstValueFrom(
-        this.authService.refreshTokenIfNeeded() // Check if expires soon
+        this.authService.refreshTokenIfNeeded()
       );
       if (!isValid) {
-        console.log('init: token invalid, logging out');
         this.authService.logout();
-        this.router.navigate(['/login']);
       }
     }
   }
