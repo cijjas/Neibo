@@ -1,0 +1,96 @@
+$wave-footer-themes: (
+  default: (
+    primary: var(--primary),
+    text: var(--onprimary),
+    background: var(--primary),
+  ),
+  marketplace: (
+    primary: var(--lila),
+    text: var(--onprimary),
+    background: var(--lila),
+  ),
+  services: (
+    primary: var(--profession),
+    text: var(--onprimary),
+    background: var(--profession),
+  ),
+  admin: (
+    primary: var(--admin-color),
+    text: var(--onprimary),
+    background: var(--admin-color),
+  ),
+  worker: (
+    primary: var(--worker-color),
+    text: var(--onprimary),
+    background: var(--worker-color),
+  ),
+);
+
+// wave-footer.component.scss
+
+@mixin wave-footer-styles($theme-name, $primary, $text, $background) {
+  .wave-footer-#{$theme-name} {
+    footer {
+      width: 100%;
+      position: relative;
+      bottom: 0;
+      background-color: $background;
+      color: $text;
+      text-align: center;
+      opacity: 0.96;
+
+      &.lila {
+        background-color: $background;
+      }
+      &.admin {
+        background-color: $background;
+      }
+      &.worker {
+        background-color: $background;
+      }
+    }
+
+    .wave-footer {
+      animation: wave-footer 3s linear infinite;
+      fill: $primary;
+
+      &.lila {
+        fill: $primary;
+      }
+      &.admin {
+        fill: $primary;
+      }
+      &.worker {
+        fill: $primary;
+      }
+    }
+
+    #wave2 {
+      animation-duration: 5s;
+      animation-direction: reverse;
+      opacity: 0.9;
+    }
+
+    #wave3 {
+      animation-duration: 7s;
+      opacity: 0.6;
+    }
+
+    @keyframes wave-footer {
+      to {
+        transform: translateX(-100%);
+      }
+    }
+  }
+}
+
+// wave-footer.component.scss
+
+@each $name, $colors in $wave-footer-themes {
+  @include wave-footer-styles(
+    $name,
+    map-get($colors, primary),
+    map-get($colors, text),
+    map-get($colors, background)
+  );
+}

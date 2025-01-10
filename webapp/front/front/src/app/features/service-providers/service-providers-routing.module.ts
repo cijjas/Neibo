@@ -9,21 +9,29 @@ import {
 } from '@features/index';
 
 import { Roles } from '@shared/models';
+import { ServiceProvidersLayoutComponent } from './service-providers-layout/service-providers-layout.component';
+import { ServiceProvidersCreatePostComponent } from './service-providers-create-post/service-providers-create-post.component';
 
 const routes: Routes = [
-  { path: '', component: ServiceProvidersPageComponent },
-  { path: 'profile/:id', component: ServiceProvidersDetailPageComponent },
   {
-    path: 'join-neighborhoods',
-    component: ServiceProvidersJoinNeighborhoodsComponent,
-    canActivate: [RoleGuard],
-    data: { roles: [Roles.WORKER] },
-  },
-  {
-    path: 'posts/new',
-    component: FeedCreatePostPageComponent,
-    canActivate: [RoleGuard],
-    data: { roles: [Roles.WORKER] },
+    path: '',
+    component: ServiceProvidersLayoutComponent,
+    children: [
+      { path: '', component: ServiceProvidersPageComponent },
+      { path: 'profile/:id', component: ServiceProvidersDetailPageComponent },
+      {
+        path: 'join-neighborhoods',
+        component: ServiceProvidersJoinNeighborhoodsComponent,
+        canActivate: [RoleGuard],
+        data: { roles: [Roles.WORKER] },
+      },
+      {
+        path: 'posts/new',
+        component: ServiceProvidersCreatePostComponent,
+        canActivate: [RoleGuard],
+        data: { roles: [Roles.WORKER] },
+      },
+    ],
   },
 ];
 

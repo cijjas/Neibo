@@ -130,7 +130,7 @@ input.ng-invalid.ng-touched {
   &:hover,
   &:focus-visible {
     transform: translateY(-4px);
-    box-shadow: 4px 4px var(--error);
+    box-shadow: -4px 4px var(--error);
   }
 }
 

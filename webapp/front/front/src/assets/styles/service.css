@@ -46,8 +46,8 @@
 
     & .inner {
       position: relative;
-      padding-top: 2em;
-      margin: 4em;
+      padding-top: 4em;
+      margin: 2em;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -271,7 +271,7 @@
     & .review-box {
       padding: 1rem;
       margin: 0 0 10px 0;
-      background-color: var(--darkonbackground);
+      background-color: var(--stripe);
       color: var(--text);
       border-radius: var(--border-radius);
       overflow: hidden;

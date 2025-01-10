@@ -1,120 +1,112 @@
-<div class="column-middle">
-  <!-- Contact Information -->
-  <div class="cool-static-container m-b-20" style="word-wrap: break-word">
-    <div class="f-r-sb-c mb-4">
-      <h3 class="mb-0">Contact Information</h3>
+<!-- Contact Information -->
+<div class="cool-static-container m-b-20" style="word-wrap: break-word">
+  <div class="f-r-sb-c mb-4">
+    <h3 class="mb-0">Contact Information</h3>
 
-      <!-- Add contact button -->
-      <button class="cool-feed-button" (click)="openCreateContactDialog()">
-        Add Contact Info <i class="fas fa-plus"></i>
-      </button>
-    </div>
-
-    <!-- If no phone numbers -->
-    <div class="no-posts-found" *ngIf="phoneNumbersList?.length === 0">
-      <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-      Information not found
-    </div>
-
-    <!-- Otherwise, show table -->
-    <div
-      class="d-flex flex-column justify-content-center align-items-center w-100"
-      *ngIf="phoneNumbersList?.length > 0"
-    >
-      <table class="table-striped w-100">
-        <tr>
-          <th class="day">Name</th>
-          <th>Address</th>
-          <th>Phone Number</th>
-          <th></th>
-        </tr>
-        <tr *ngFor="let contact of phoneNumbersList">
-          <td class="day">{{ contact.name }}</td>
-          <td>{{ contact.address }}</td>
-          <td>{{ contact.phoneNumber }}</td>
-          <td>
-            <!-- Example delete button -->
-            <button class="btn btn-link" (click)="deleteContact(contact.self)">
-              <i class="fas fa-trash" style="color: var(--error)"></i>
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- Paginator for contacts -->
-    <div
-      class="d-flex justify-content-center mt-3"
-      *ngIf="contactTotalPages > 1"
-    >
-      <!-- app-paginator is assumed to exist in your project -->
-      <app-paginator
-        [totalPages]="contactTotalPages"
-        [currentPage]="contactCurrentPage"
-        [pageSize]="contactPageSize"
-        [theme]="'admin'"
-        (pageChange)="onContactPageChange($event)"
-      ></app-paginator>
-    </div>
-  </div>
-
-  <!-- Add resource button -->
-  <div class="upper-feed-buttons-box m-b-20">
-    <h3 class="mb-0">Resources</h3>
-    <button class="cool-feed-button" (click)="openCreateResourceDialog()">
-      Add Resource <i class="fa-solid fa-plus"></i>
+    <!-- Add contact button -->
+    <button class="cool-feed-button" (click)="openCreateContactDialog()">
+      Add Contact Info <i class="fas fa-plus"></i>
     </button>
   </div>
 
-  <!-- Resources list -->
-  <div class="no-posts-found" *ngIf="resourceList?.length === 0">
+  <!-- If no phone numbers -->
+  <div class="no-posts-found" *ngIf="phoneNumbersList?.length === 0">
     <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-    Resources not found
+    Information not found
   </div>
 
+  <!-- Otherwise, show table -->
   <div
-    *ngFor="let resource of resourceList"
-    class="cool-static-container m-b-20"
-    style="word-wrap: break-word"
+    class="d-flex flex-column justify-content-center align-items-center w-100"
+    *ngIf="phoneNumbersList?.length > 0"
   >
-    <div class="f-r-sb-c">
-      <h3 class="mb-0">{{ resource.title }}</h3>
-      <div class="">
-        <button class="btn btn-link" (click)="deleteResource(resource.self)">
-          <i class="fas fa-trash" style="color: var(--error)"></i>
-        </button>
-      </div>
-    </div>
-    <div class="divider"></div>
-    <h3 style="font-weight: normal" class="mt-2 mb-2">
-      {{ resource.description }}
-    </h3>
-
-    <!-- If the resource has an image string -->
-    <div
-      class="d-flex flex-column justify-content-center align-items-center w-100"
-      *ngIf="resource.image"
-    >
-      <img
-        [src]="resource.image"
-        style="max-width: 100%; max-height: 100vh; border-radius: 5px"
-        [alt]="'resource_' + resource.self + '_img'"
-      />
-    </div>
+    <table class="table-striped w-100">
+      <tr>
+        <th class="day">Name</th>
+        <th>Address</th>
+        <th>Phone Number</th>
+        <th></th>
+      </tr>
+      <tr *ngFor="let contact of phoneNumbersList">
+        <td class="day">{{ contact.name }}</td>
+        <td>{{ contact.address }}</td>
+        <td>{{ contact.phoneNumber }}</td>
+        <td>
+          <!-- Example delete button -->
+          <button class="btn btn-link" (click)="deleteContact(contact.self)">
+            <i class="fas fa-trash" style="color: var(--error)"></i>
+          </button>
+        </td>
+      </tr>
+    </table>
   </div>
 
-  <!-- Paginator for resources -->
-  <div
-    class="d-flex justify-content-center mt-3"
-    *ngIf="resourceTotalPages > 1"
-  >
+  <!-- Paginator for contacts -->
+  <div class="d-flex justify-content-center mt-3" *ngIf="contactTotalPages > 1">
+    <!-- app-paginator is assumed to exist in your project -->
     <app-paginator
-      [totalPages]="resourceTotalPages"
-      [currentPage]="resourceCurrentPage"
-      [pageSize]="resourcePageSize"
-      (pageChange)="onResourcePageChange($event)"
+      [totalPages]="contactTotalPages"
+      [currentPage]="contactCurrentPage"
+      [pageSize]="contactPageSize"
+      [theme]="'admin'"
+      (pageChange)="onContactPageChange($event)"
     ></app-paginator>
   </div>
+</div>
+
+<!-- Add resource button -->
+<div class="upper-feed-buttons-box m-b-20">
+  <h3 class="mb-0">Resources</h3>
+  <button class="cool-feed-button" (click)="openCreateResourceDialog()">
+    Add Resource <i class="fa-solid fa-plus"></i>
+  </button>
+</div>
+
+<!-- Resources list -->
+<div class="no-posts-found" *ngIf="resourceList?.length === 0">
+  <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+  Resources not found
+</div>
+
+<div
+  *ngFor="let resource of resourceList"
+  class="cool-static-container m-b-20"
+  style="word-wrap: break-word"
+>
+  <div class="f-r-sb-c">
+    <h3 class="mb-0">{{ resource.title }}</h3>
+    <div class="">
+      <button class="btn btn-link" (click)="deleteResource(resource.self)">
+        <i class="fas fa-trash" style="color: var(--error)"></i>
+      </button>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <h3 style="font-weight: normal" class="mt-2 mb-2">
+    {{ resource.description }}
+  </h3>
+
+  <!-- If the resource has an image string -->
+  <div
+    class="d-flex flex-column justify-content-center align-items-center w-100"
+    *ngIf="resource.image"
+  >
+    <img
+      [src]="resource.image"
+      style="max-width: 100%; max-height: 100vh; border-radius: 5px"
+      [alt]="'resource_' + resource.self + '_img'"
+    />
+  </div>
+</div>
+
+<!-- Paginator for resources -->
+<div class="d-flex justify-content-center mt-3" *ngIf="resourceTotalPages > 1">
+  <app-paginator
+    [totalPages]="resourceTotalPages"
+    [currentPage]="resourceCurrentPage"
+    [pageSize]="resourcePageSize"
+    (pageChange)="onResourcePageChange($event)"
+  ></app-paginator>
 </div>
 
 <!-- DIALOG for Creating a Contact -->

@@ -1,70 +1,37 @@
-<!-- Replaces <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %> -->
-<app-navbar></app-navbar>
+<app-service-providers-control-bar></app-service-providers-control-bar>
 
-<div class="container">
-  <div class="row">
-    <!-- Left column -->
-    <div class="column-left">
-      <!-- Replaces <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %> -->
-      <app-sidebar></app-sidebar>
-    </div>
-
-    <!-- Middle column -->
-    <div class="column-middle">
-      <!-- Replaces <%@include file="/WEB-INF/jsp/serviceProvider/components/upperServiceButtons.jsp"%> -->
-      <app-service-providers-control-bar></app-service-providers-control-bar>
-
-      <!-- If workersList is empty, show "not found" -->
-      <ng-container
-        *ngIf="workersList && workersList.length > 0; else noWorkersFound"
-      >
-        <!-- The main service widgets -->
-        <div class="f-c-c-c w-100">
-          <div class="w-100" *ngFor="let worker of workersList">
-            <app-service-providers-preview
-              [worker]="worker"
-            ></app-service-providers-preview>
-          </div>
-        </div>
-
-        <!-- Another paginator at the bottom -->
-        <app-paginator
-          [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          [theme]="'services'"
-          (pageChange)="onPageChange($event)"
-        >
-        </app-paginator>
-      </ng-container>
-      <!-- Template shown when there are no workers -->
-      <ng-template #noWorkersFound>
-        <div
-          class="cool-static-container m-b-20"
-          style="word-wrap: break-word"
-          aria-hidden="true"
-        >
-          <div class="no-posts-found">
-            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            <span
-              >We could not find service provider in you neighborhood yet!</span
-            >
-          </div>
-        </div>
-      </ng-template>
-    </div>
-
-    <!-- Right column -->
-    <div class="column-right">
-      <div
-        class="column justify-content-center align-items-center"
-        style="gap: 1em"
-      >
-        <!-- Replaces <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %> -->
-        <app-calendar-widget></app-calendar-widget>
-        <app-tags-filter-widget [mode]="'professions'"></app-tags-filter-widget>
-      </div>
+<!-- If workersList is empty, show "not found" -->
+<ng-container
+  *ngIf="workersList && workersList.length > 0; else noWorkersFound"
+>
+  <!-- The main service widgets -->
+  <div class="f-c-c-c w-100">
+    <div class="w-100" *ngFor="let worker of workersList">
+      <app-service-providers-preview
+        [worker]="worker"
+      ></app-service-providers-preview>
     </div>
   </div>
-</div>
 
-<app-wave-footer></app-wave-footer>
+  <!-- Another paginator at the bottom -->
+  <app-paginator
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    [theme]="'services'"
+    (pageChange)="onPageChange($event)"
+  >
+  </app-paginator>
+</ng-container>
+<!-- Template shown when there are no workers -->
+<ng-template #noWorkersFound>
+  <div
+    class="cool-static-container m-b-20"
+    style="word-wrap: break-word"
+    aria-hidden="true"
+  >
+    <div class="no-posts-found">
+      <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+      <span>We could not find service provider in you neighborhood yet!</span>
+    </div>
+  </div>
+</ng-template>

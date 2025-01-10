@@ -2588,7 +2588,7 @@ input[type="time"] {
       }
 
       &.n-workers {
-        background-color: var(--onbackground);
+        background-color: var(--darkonbackground);
       }
 
       &:hover {
@@ -2650,15 +2650,6 @@ input[type="time"] {
 
     &.n-workers {
       background-color: var(--onbackground);
-    }
-
-    &::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background-color: var(--profession);
-      border-radius: 8px;
     }
 
     & .item {

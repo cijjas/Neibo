@@ -1,60 +1,29 @@
-<!-- service-providers-detail-page.component.html -->
-<div>
-  <!-- Replaces navbar.jsp -->
-  <app-navbar></app-navbar>
+<div class="f-c-c-c w-100">
+  <app-service-providers-content
+    class="w-100"
+    (openEditProfile)="openEditDialog()"
+  >
+  </app-service-providers-content>
 
-  <div class="container">
-    <div class="row">
-      <!-- Left Column -->
-      <div class="column-left">
-        <!-- Replaces leftColumn.jsp -->
-        <app-sidebar></app-sidebar>
-      </div>
-
-      <!-- Middle Column -->
-      <div class="column-middle">
-        <div class="f-c-c-c w-100">
-          <!-- Replaces serviceProfileCard.jsp -->
-          <!-- Provide [worker]="..." and other inputs as you see fit -->
-          <app-service-providers-content
-            class="w-100"
-            (openEditProfile)="openEditDialog()"
-          >
-          </app-service-providers-content>
-
-          <!-- Replaces tabbedBox.jsp -->
-          <app-service-providers-reviews-and-posts
-            class="w-100"
-            (openReviewDialog)="openReviewDialog()"
-          >
-          </app-service-providers-reviews-and-posts>
-        </div>
-      </div>
-
-      <!-- Right Column -->
-      <div class="column-right">
-        <!-- Replaces calendarWidget.jsp -->
-        <app-calendar-widget></app-calendar-widget>
-      </div>
-
-      <app-service-providers-review-dialog
-        [reviewDialogVisible]="reviewDialogVisible"
-        [worker]="worker"
-        (closeDialog)="reviewDialogVisible = false"
-        (submitReview)="onSubmitReview($event)"
-      ></app-service-providers-review-dialog>
-
-      <!-- Edit Dialog -->
-      <app-service-providers-edit-dialog
-        [editDialogVisible]="editDialogVisible"
-        [worker]="worker"
-        (closeDialog)="editDialogVisible = false"
-        (saveProfile)="onSaveProfile($event)"
-      ></app-service-providers-edit-dialog>
-    </div>
-  </div>
-
-  <!-- Replaces footer.jsp -->
+  <app-service-providers-reviews-and-posts
+    class="w-100"
+    (openReviewDialog)="openReviewDialog()"
+  >
+  </app-service-providers-reviews-and-posts>
 </div>
 
-<app-wave-footer></app-wave-footer>
+<!-- Review Dialog -->
+<app-service-providers-review-dialog
+  [reviewDialogVisible]="reviewDialogVisible"
+  [worker]="worker"
+  (closeDialog)="reviewDialogVisible = false"
+  (submitReview)="onSubmitReview($event)"
+></app-service-providers-review-dialog>
+
+<!-- Edit Dialog -->
+<app-service-providers-edit-dialog
+  [editDialogVisible]="editDialogVisible"
+  [worker]="worker"
+  (closeDialog)="editDialogVisible = false"
+  (saveProfile)="onSaveProfile($event)"
+></app-service-providers-edit-dialog>

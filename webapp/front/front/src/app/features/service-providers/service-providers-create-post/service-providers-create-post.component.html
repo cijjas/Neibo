@@ -1,0 +1,108 @@
+<div class="cool-static-container">
+  <h2 class="card-title">Create a Post</h2>
+  <div class="divider"></div>
+
+  <!-- Post Creation Form -->
+  <form
+    [formGroup]="createWrokerPostForm"
+    (ngSubmit)="onSubmit()"
+    enctype="multipart/form-data"
+  >
+    <div class="form-column" style="margin-top: 1rem">
+      <div class="form-group">
+        <!-- Hidden Channel Input -->
+        <input type="hidden" formControlName="channel" [value]="channel" />
+
+        <div class="form-row">
+          <!-- Subject Input -->
+          <input
+            type="text"
+            formControlName="title"
+            class="cool-input"
+            style="border-radius: var(--border-radius)"
+            placeholder="Title"
+          />
+          <div
+            *ngIf="
+              createWrokerPostForm.get('title').invalid &&
+              (createWrokerPostForm.get('title').dirty ||
+                createWrokerPostForm.get('title').touched)
+            "
+            class="form-row form-error"
+          >
+            <p class="error">*Title is required.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <!-- Message Textarea -->
+        <textarea
+          formControlName="body"
+          class="cool-input textarea-min-max"
+          rows="5"
+          placeholder="Body"
+        ></textarea>
+        <div
+          *ngIf="
+            createWrokerPostForm.get('body').invalid &&
+            (createWrokerPostForm.get('body').dirty ||
+              createWrokerPostForm.get('body').touched)
+          "
+          class="form-row form-error"
+        >
+          <p class="error">*Body is required.</p>
+        </div>
+      </div>
+
+      <div class="form-group w-50">
+        <!-- Image File Input -->
+        <label for="images" class="drop-container" id="dropcontainer">
+          <span class="drop-title"> Drop files </span>
+          Or
+          <input
+            type="file"
+            class="select-file-button"
+            id="images"
+            accept="image/*"
+            (change)="onFileChange($event)"
+          />
+        </label>
+        <div style="text-align: center">
+          <p class="error" *ngIf="fileUploadError">
+            {{ fileUploadError }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Image Preview -->
+      <div>
+        <img
+          *ngIf="imagePreviewUrl"
+          [src]="imagePreviewUrl"
+          class="blogpost-image"
+          alt="uploading image"
+        />
+      </div>
+
+      <!-- 
+          Tag Section (only visible if not a WORKER)
+          Allows: 
+            1) Creating a new tag
+            2) Selecting from existing tags (paginated)
+            3) Viewing and removing applied tags
+        -->
+    </div>
+
+    <!-- Submit Button -->
+    <div class="d-flex justify-content-end">
+      <button
+        type="submit"
+        class="cool-button cool-small on-bg w-25 font-weight-bolder"
+        style="height: 40px"
+      >
+        Post
+      </button>
+    </div>
+  </form>
+</div>

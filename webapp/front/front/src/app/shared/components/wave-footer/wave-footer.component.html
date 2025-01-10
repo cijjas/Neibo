@@ -1,4 +1,4 @@
-<footer>
+<footer [ngClass]="'wave-footer-' + theme">
   <svg viewBox="0 0 120 28">
     <defs>
       <path
@@ -10,7 +10,7 @@
     <use
       id="wave3"
       class="wave-footer"
-      [ngClass]="{ lila: isMarketplace }"
+      [ngClass]="theme"
       href="#wave"
       x="0"
       y="-2"
@@ -18,13 +18,13 @@
     <use
       id="wave2"
       class="wave-footer"
-      [ngClass]="{ lila: isMarketplace }"
+      [ngClass]="theme"
       href="#wave"
       x="0"
       y="0"
     ></use>
   </svg>
-  <div class="" style="height: 2em" [ngClass]="{ lila: isMarketplace }">
+  <div [ngClass]="theme" style="height: 2em">
     <span
       class="h-100 container f-r-sb-c w-80 p-2"
       style="color: var(--background) font-size-12"
