@@ -22,8 +22,6 @@ import { Affiliation, LinkKey, Neighborhood } from '@shared/models';
 export class ServiceProvidersJoinNeighborhoodsComponent
   implements OnInit, AfterViewInit
 {
-  darkMode = false;
-
   // Simulates the data from your JSP
   associatedNeighborhoods: Affiliation[] = [];
   otherNeighborhoods: Neighborhood[] = [];

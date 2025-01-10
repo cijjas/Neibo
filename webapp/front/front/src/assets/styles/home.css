@@ -1786,6 +1786,33 @@ app-background-clouds {
     }
   }
 
+  &.services-button {
+    padding: 7px 7px;
+    font-size: 12px;
+    color: var(--profession);
+    background-color: var(--background);
+    border: 1px solid var(--profession);
+    border-radius: var(--border-hard);
+    transition: all 0.3s ease-in-out;
+
+    &:hover,
+    &:active,
+    &:focus-visible,
+    &:hover {
+      border: 1px solid var(--profession);
+      transform: translateY(-4px);
+      box-shadow: 0 4px 0 0 var(--profession);
+      color: var(--profession);
+    }
+    &:disabled {
+      border: 1px solid var(--lighttext);
+      color: var(--lighttext);
+      box-shadow: 0 0 0 0 var(--profession);
+      transform: translateY(0);
+      cursor: not-allowed;
+    }
+  }
+
   &.active,
   &:hover,
   &:active,
@@ -1836,7 +1863,8 @@ app-background-clouds {
       color: var(--accent);
     }
   }
-  &.profession-button {
+
+  &.services-button {
     padding: 7px 7px;
     font-size: 12px;
     color: var(--profession);
@@ -1902,6 +1930,22 @@ app-background-clouds {
     &:focus-visible {
       transform: translateY(-3px);
       box-shadow: -1px 3px var(--lila);
+    }
+  }
+
+  &.services-input {
+    border: 0px solid var(--profession);
+    background-color: var(--darkonbackground);
+
+    &.quantity-input {
+      width: 70px;
+    }
+
+    &:active,
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-3px);
+      box-shadow: -1px 3px var(--profession);
     }
   }
 
@@ -2273,7 +2317,7 @@ h6 {
   }
 
   & tr:nth-child(odd) {
-    background-color: var(--background);
+    background-color: var(--stripe);
   }
 }
 
@@ -2468,7 +2512,7 @@ input[type="time"] {
   height: 1.5em;
   color: var(--text);
   background-color: var(--darkonbackground);
-  border: 1px solid var(--primary);
+  border: 0px solid var(--primary);
   border-radius: var(--border-radius);
   appearance: none;
   outline: 0;
@@ -2524,7 +2568,6 @@ input[type="time"] {
       justify-content: space-between;
       padding: 0 10px 0 10px;
       border-radius: var(--border-hard);
-      border: var(--border);
       cursor: pointer;
       transition: all 0.3s ease-in-out;
       background-color: var(--background);
@@ -2550,7 +2593,7 @@ input[type="time"] {
 
       &:hover {
         transform: translateY(-4px);
-        box-shadow: 4px 4px var(--primary);
+        box-shadow: -4px 4px var(--profession);
       }
 
       & .btn-text {
@@ -2558,7 +2601,7 @@ input[type="time"] {
         overflow: clip;
         text-overflow: ellipsis;
         font-size: 15px;
-        font-weight: bold;
+        font-weight: normal;
         color: var(--lightertext);
         max-width: 250px;
 
@@ -2574,7 +2617,7 @@ input[type="time"] {
         color: #fff;
         font-size: 14px;
         border-radius: 50%;
-        background: var(--primary);
+        background: var(--profession);
         align-items: center;
         justify-content: center;
         transition: 0.3s;
@@ -2597,10 +2640,10 @@ input[type="time"] {
     position: absolute;
     padding: 10px;
     background-color: var(--background);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: -7px -3px 20px 4px rgba(0, 0, 0, 0.1);
     display: none;
     border-radius: var(--border-radius);
-    border: var(--border);
+    border: 0px solid var(--profession);
     width: 320px;
     max-height: 200px;
     overflow-y: auto;
@@ -2614,7 +2657,7 @@ input[type="time"] {
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: var(--primary);
+      background-color: var(--profession);
       border-radius: 8px;
     }
 
@@ -2649,14 +2692,14 @@ input[type="time"] {
       &:hover {
         color: var(--background);
         border-color: var(--background);
-        background-color: var(--old-primary);
+        background-color: var(--profession);
       }
     }
   }
 
   & .item.checked .checkbox {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background-color: var(--profession);
+    border-color: var(--profession);
   }
 
   & .checkbox .check-icon {
@@ -3422,6 +3465,12 @@ input[type="time"] {
   &.marketplace {
     &:hover {
       color: var(--lila);
+    }
+  }
+
+  &.services {
+    &:hover {
+      color: var(--profession);
     }
   }
 }

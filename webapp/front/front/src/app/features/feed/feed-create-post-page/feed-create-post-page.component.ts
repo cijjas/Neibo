@@ -162,15 +162,29 @@ export class FeedCreatePostPageComponent implements OnInit {
   }
 
   createCustomTag(tagName: string) {
-    console.log(tagName);
     if (!tagName || !tagName.trim()) return;
 
+    // Convert to CamelCase
+    const formattedTag = this.convertToCamelCase(tagName);
+
+    if (!this.isValidTag(formattedTag)) {
+      this.toastService.showToast(
+        'Invalid tag format. Use letters only.',
+        'warning'
+      );
+      return;
+    }
+
+    if (this.appliedTags.length >= 5) {
+      this.toastService.showToast('You can only add up to 5 tags.', 'warning');
+      return;
+    }
+
     const newTag: Tag = {
-      name: tagName.trim(),
+      name: formattedTag,
       self: null, // Mark as `null` since it hasn't been created yet
     };
 
-    // Add it to applied tags
     this.addTagToApplied(newTag);
   }
 
@@ -183,7 +197,26 @@ export class FeedCreatePostPageComponent implements OnInit {
       );
       return;
     }
+
+    if (this.appliedTags.length >= 5) {
+      this.toastService.showToast('You can only add up to 5 tags.', 'warning');
+      return;
+    }
+
     this.appliedTags.push(tag);
+  }
+
+  private convertToCamelCase(input: string): string {
+    return input
+      .toLowerCase()
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('');
+  }
+
+  private isValidTag(tag: string): boolean {
+    // Allow only alphabetic characters in the tag
+    return /^[a-zA-Z]+$/.test(tag);
   }
 
   removeTag(tag: Tag) {
@@ -327,5 +360,13 @@ export class FeedCreatePostPageComponent implements OnInit {
         return of(null);
       })
     );
+  }
+
+  handleTagInputKeydown(event: KeyboardEvent, inputElement: HTMLInputElement) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission
+      this.createCustomTag(inputElement.value);
+      inputElement.value = ''; // Clear the input
+    }
   }
 }

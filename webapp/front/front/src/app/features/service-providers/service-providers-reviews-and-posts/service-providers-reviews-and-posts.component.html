@@ -23,7 +23,7 @@
     <div class="f-c-c-c g-0 w-100">
       <!-- Only show the "Create Review" button if user is not a WORKER -->
       <button
-        class="cool-button cool-small profession-button on-bg font-weight-normal mb-4"
+        class="cool-button cool-small services-button on-bg font-weight-normal mb-4"
         style="width: 200px"
         *ngIf="!isWorker"
         (click)="openReviewDialog.emit()"
@@ -81,7 +81,7 @@
   <section id="content2" *ngIf="selectedTab === 'posts'">
     <div class="f-c-c-c g-0 w-100">
       <a
-        class="cool-button cool-small profession-button on-bg font-weight-bold mb-2"
+        class="cool-button cool-small services-button on-bg font-weight-bold mb-2"
         style="width: 200px"
         *ngIf="isTheWorker"
         (click)="goToServicePostCreation()"

@@ -125,7 +125,8 @@
                 <input
                   #newTagInput
                   type="text"
-                  placeholder="Create new tag"
+                  placeholder="Create a tag (e.g., ThisIsATag)"
+                  (keydown)="handleTagInputKeydown($event, newTagInput)"
                   class=""
                 />
                 <button

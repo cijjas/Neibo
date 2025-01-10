@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Worker, WorkerService } from '@shared/index';
+import { switchMap } from 'rxjs';
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-service-providers-page',
@@ -11,7 +14,8 @@ export class ServiceProvidersPageComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   pageSize: number = 10;
-  currentProfessions: string[] = [];
+  professions: string[] = []; // Changed to handle `withProfession` query params
+  loading: boolean = true;
 
   constructor(
     private workerService: WorkerService,
@@ -20,39 +24,77 @@ export class ServiceProvidersPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Example of reading page from query parameters
-    this.route.queryParams.subscribe((params) => {
-      this.currentPage = +params['page'] || 1;
-      const professions: string[] = params['professions'];
-      this.currentProfessions = professions
-        ? Array.isArray(professions)
-          ? professions
-          : [professions]
-        : [];
-      this.loadWorkers();
-    });
+    this.route.queryParams
+      .pipe(
+        switchMap((params) => {
+          // Handle `page` and `size` query params
+          this.currentPage = +params['page'] || 1;
+          this.pageSize = +params['size'] || 10;
+
+          // Handle multiple `withProfession` params
+          const professionsParam = params['withProfession'];
+          this.professions = Array.isArray(professionsParam)
+            ? professionsParam
+            : professionsParam
+            ? [professionsParam]
+            : [];
+
+          return this.loadWorkers();
+        })
+      )
+      .subscribe();
+  }
+
+  loadWorkers() {
+    const queryParams = {
+      page: this.currentPage,
+      size: this.pageSize,
+      withProfession: this.professions,
+    };
+
+    return this.workerService.getWorkers(queryParams).pipe(
+      map((response) => {
+        if (response) {
+          this.workersList = response.workers;
+          this.totalPages = response.totalPages;
+          this.currentPage = response.currentPage;
+        } else {
+          this.workersList = [];
+          this.totalPages = 0;
+        }
+        this.loading = false;
+      }),
+      catchError((error) => {
+        console.error('Error loading workers:', error);
+        this.workersList = [];
+        this.totalPages = 0;
+        this.loading = false;
+        return of();
+      })
+    );
   }
 
   onPageChange(page: number): void {
-    // Handler when user clicks next page in your <app-paginator>
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { page },
-      queryParamsHandling: 'merge',
-    });
+    this.currentPage = page;
+    this.updateQueryParams();
+    this.loadWorkers().subscribe();
   }
 
-  loadWorkers(): void {
-    const workerParams = {
-      page: this.currentPage,
-      size: this.pageSize,
-      withProfessions: this.currentProfessions,
-    };
+  onProfessionChange(selectedProfessions: string[]): void {
+    this.professions = selectedProfessions;
+    this.updateQueryParams();
+    this.loadWorkers().subscribe();
+  }
 
-    this.workerService.getWorkers(workerParams).subscribe((result) => {
-      this.workersList = result.workers;
-      this.totalPages = result.totalPages;
-      this.currentPage = result.currentPage;
+  private updateQueryParams(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        page: this.currentPage,
+        size: this.pageSize,
+        withProfession: this.professions, // Update query params for professions
+      },
+      queryParamsHandling: 'merge',
     });
   }
 }

@@ -1,13 +1,11 @@
 <div class="column-middle">
-
   <!-- Contact Information -->
-  <div class="cool-static-container m-b-20" style="word-wrap: break-word;">
+  <div class="cool-static-container m-b-20" style="word-wrap: break-word">
     <div class="f-r-sb-c mb-4">
-      <h3 class="mb-0"> Contact Information</h3>
-
+      <h3 class="mb-0">Contact Information</h3>
 
       <!-- Add contact button -->
-      <button class="cool-feed-button " (click)="openCreateContactDialog()">
+      <button class="cool-feed-button" (click)="openCreateContactDialog()">
         Add Contact Info <i class="fas fa-plus"></i>
       </button>
     </div>
@@ -19,8 +17,10 @@
     </div>
 
     <!-- Otherwise, show table -->
-    <div class="d-flex flex-column justify-content-center align-items-center w-100"
-      *ngIf="phoneNumbersList?.length > 0">
+    <div
+      class="d-flex flex-column justify-content-center align-items-center w-100"
+      *ngIf="phoneNumbersList?.length > 0"
+    >
       <table class="table-striped w-100">
         <tr>
           <th class="day">Name</th>
@@ -35,7 +35,7 @@
           <td>
             <!-- Example delete button -->
             <button class="btn btn-link" (click)="deleteContact(contact.self)">
-              <i class="fas fa-trash" style="color: var(--error);"></i>
+              <i class="fas fa-trash" style="color: var(--error)"></i>
             </button>
           </td>
         </tr>
@@ -43,18 +43,24 @@
     </div>
 
     <!-- Paginator for contacts -->
-    <div class="d-flex justify-content-center mt-3" *ngIf="contactTotalPages > 1">
+    <div
+      class="d-flex justify-content-center mt-3"
+      *ngIf="contactTotalPages > 1"
+    >
       <!-- app-paginator is assumed to exist in your project -->
-      <app-paginator [totalPages]="contactTotalPages" [currentPage]="contactCurrentPage" [pageSize]="contactPageSize"
-        (pageChange)="onContactPageChange($event)"></app-paginator>
+      <app-paginator
+        [totalPages]="contactTotalPages"
+        [currentPage]="contactCurrentPage"
+        [pageSize]="contactPageSize"
+        [theme]="'admin'"
+        (pageChange)="onContactPageChange($event)"
+      ></app-paginator>
     </div>
-
-
   </div>
 
   <!-- Add resource button -->
   <div class="upper-feed-buttons-box m-b-20">
-    <h3 class="mb-0"> Resources</h3>
+    <h3 class="mb-0">Resources</h3>
     <button class="cool-feed-button" (click)="openCreateResourceDialog()">
       Add Resource <i class="fa-solid fa-plus"></i>
     </button>
@@ -66,33 +72,50 @@
     Resources not found
   </div>
 
-  <div *ngFor="let resource of resourceList" class="cool-static-container m-b-20" style="word-wrap: break-word;">
+  <div
+    *ngFor="let resource of resourceList"
+    class="cool-static-container m-b-20"
+    style="word-wrap: break-word"
+  >
     <div class="f-r-sb-c">
       <h3 class="mb-0">{{ resource.title }}</h3>
       <div class="">
         <button class="btn btn-link" (click)="deleteResource(resource.self)">
-          <i class="fas fa-trash" style="color: var(--error);"></i>
+          <i class="fas fa-trash" style="color: var(--error)"></i>
         </button>
       </div>
     </div>
-    <div class="divider "></div>
-    <h3 style="font-weight: normal " class="mt-2 mb-2">{{ resource.description }}</h3>
+    <div class="divider"></div>
+    <h3 style="font-weight: normal" class="mt-2 mb-2">
+      {{ resource.description }}
+    </h3>
 
     <!-- If the resource has an image string -->
-    <div class="d-flex flex-column justify-content-center align-items-center w-100" *ngIf="resource.image">
-      <img [src]="resource.image" style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
-        [alt]="'resource_' + resource.self + '_img'" />
+    <div
+      class="d-flex flex-column justify-content-center align-items-center w-100"
+      *ngIf="resource.image"
+    >
+      <img
+        [src]="resource.image"
+        style="max-width: 100%; max-height: 100vh; border-radius: 5px"
+        [alt]="'resource_' + resource.self + '_img'"
+      />
     </div>
   </div>
 
   <!-- Paginator for resources -->
-  <div class="d-flex justify-content-center mt-3" *ngIf="resourceTotalPages > 1">
-    <app-paginator [totalPages]="resourceTotalPages" [currentPage]="resourceCurrentPage" [pageSize]="resourcePageSize"
-      (pageChange)="onResourcePageChange($event)"></app-paginator>
+  <div
+    class="d-flex justify-content-center mt-3"
+    *ngIf="resourceTotalPages > 1"
+  >
+    <app-paginator
+      [totalPages]="resourceTotalPages"
+      [currentPage]="resourceCurrentPage"
+      [pageSize]="resourcePageSize"
+      (pageChange)="onResourcePageChange($event)"
+    ></app-paginator>
   </div>
-
 </div>
-
 
 <!-- DIALOG for Creating a Contact -->
 <div class="dialog" [ngClass]="{ 'show-dialog': showCreateContactDialog }">
@@ -109,11 +132,19 @@
     </a>
 
     <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
-      <div class="form-column" style="margin-top:1rem;">
+      <div class="form-column" style="margin-top: 1rem">
         <!-- Contact Name -->
         <div class="form-group">
-          <input formControlName="contactName" class="cool-input" placeholder="Contact Name" type="text" />
-          <div class="form-row form-error" *ngIf="contactNameControl?.invalid && contactNameControl?.touched">
+          <input
+            formControlName="contactName"
+            class="cool-input"
+            placeholder="Contact Name"
+            type="text"
+          />
+          <div
+            class="form-row form-error"
+            *ngIf="contactNameControl?.invalid && contactNameControl?.touched"
+          >
             <p class="error" *ngIf="contactNameControl?.hasError('required')">
               Name is required.
             </p>
@@ -125,8 +156,16 @@
 
         <!-- Contact Address -->
         <div class="form-group">
-          <input formControlName="contactAddress" class="cool-input" placeholder="Contact Address" type="text" />
-          <div class="form-row form-error" *ngIf="addressControl?.invalid && addressControl?.touched">
+          <input
+            formControlName="contactAddress"
+            class="cool-input"
+            placeholder="Contact Address"
+            type="text"
+          />
+          <div
+            class="form-row form-error"
+            *ngIf="addressControl?.invalid && addressControl?.touched"
+          >
             <p class="error" *ngIf="addressControl?.hasError('required')">
               Address is required.
             </p>
@@ -136,11 +175,18 @@
           </div>
         </div>
 
-
         <!-- Contact Phone -->
         <div class="form-group">
-          <input formControlName="contactPhone" class="cool-input" placeholder="Contact Phone" type="text" />
-          <div class="form-row form-error" *ngIf="phoneControl?.invalid && phoneControl?.touched">
+          <input
+            formControlName="contactPhone"
+            class="cool-input"
+            placeholder="Contact Phone"
+            type="text"
+          />
+          <div
+            class="form-row form-error"
+            *ngIf="phoneControl?.invalid && phoneControl?.touched"
+          >
             <p class="error">Phone is required</p>
           </div>
         </div>
@@ -148,16 +194,17 @@
 
       <!-- Submit Button -->
       <div class="d-flex justify-content-center mt-4">
-        <button type="submit" class="w-75 cool-button pure filled-interesting square-radius font-size-14 "
-          style="height:40px;">
+        <button
+          type="submit"
+          class="w-75 cool-button pure filled-interesting square-radius font-size-14"
+          style="height: 40px"
+        >
           Create
         </button>
       </div>
     </form>
   </div>
 </div>
-
-
 
 <!-- Create Resource DIALOG -->
 <div class="dialog" [ngClass]="{ 'show-dialog': showCreateResourceDialog }">
@@ -174,20 +221,41 @@
     </a>
 
     <!-- Resource Form -->
-    <form [formGroup]="resourceForm" (ngSubmit)="onSubmitResource()" enctype="multipart/form-data" novalidate>
-      <div class="form-column" style="margin-top:1rem;">
+    <form
+      [formGroup]="resourceForm"
+      (ngSubmit)="onSubmitResource()"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      <div class="form-column" style="margin-top: 1rem">
         <!-- Title -->
         <div class="form-group">
-          <input formControlName="title" class="cool-input" placeholder="Title" type="text" />
-          <div class="form-row form-error" *ngIf="titleControl?.invalid && titleControl?.touched">
+          <input
+            formControlName="title"
+            class="cool-input"
+            placeholder="Title"
+            type="text"
+          />
+          <div
+            class="form-row form-error"
+            *ngIf="titleControl?.invalid && titleControl?.touched"
+          >
             <p class="error">Title is required</p>
           </div>
         </div>
 
         <!-- Description -->
         <div class="form-group">
-          <input formControlName="description" class="cool-input" placeholder="Description" type="text" />
-          <div class="form-row form-error" *ngIf="descControl?.invalid && descControl?.touched">
+          <input
+            formControlName="description"
+            class="cool-input"
+            placeholder="Description"
+            type="text"
+          />
+          <div
+            class="form-row form-error"
+            *ngIf="descControl?.invalid && descControl?.touched"
+          >
             <p class="error">Description is required</p>
           </div>
         </div>
@@ -198,21 +266,37 @@
           <label class="drop-container">
             <span class="drop-title">Drop files</span>
             Or
-            <input type="file" accept="image/*" (change)="onFileChange($event)" />
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onFileChange($event)"
+            />
           </label>
         </div>
 
         <!-- Preview (optional) -->
         <div style="text-align: center">
-          <img *ngIf="previewSrc" [src]="previewSrc" class="blogpost-image"
-            style="max-width:90% !important; max-height: 30vh !important; object-fit: contain;" alt="uploading image" />
+          <img
+            *ngIf="previewSrc"
+            [src]="previewSrc"
+            class="blogpost-image"
+            style="
+              max-width: 90% !important;
+              max-height: 30vh !important;
+              object-fit: contain;
+            "
+            alt="uploading image"
+          />
         </div>
       </div>
 
       <!-- Submit button -->
       <div class="d-flex justify-content-center mt-4">
-        <button type="submit" class="w-75 cool-button pure filled-interesting square-radius font-size-14"
-          style="height:40px;">
+        <button
+          type="submit"
+          class="w-75 cool-button pure filled-interesting square-radius font-size-14"
+          style="height: 40px"
+        >
           Create
         </button>
       </div>

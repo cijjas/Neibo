@@ -8,7 +8,7 @@
     style="background-color: var(--onbackground)"
   >
     <!-- Close Button -->
-    <div class="close-button" (click)="closeEditDialog()">
+    <div class="close-button services" (click)="closeEditDialog()">
       <i class="fas fa-close"></i>
     </div>
 
@@ -35,7 +35,7 @@
             name="businessName"
             [(ngModel)]="businessName"
             type="text"
-            class="cool-input"
+            class="cool-input services-input"
             placeholder="Business Name"
             required
           />
@@ -54,7 +54,7 @@
             name="bio"
             [(ngModel)]="bio"
             type="text"
-            class="cool-input"
+            class="cool-input services-input"
             placeholder="Description"
             required
           />
@@ -73,7 +73,7 @@
             name="phoneNumber"
             [(ngModel)]="phoneNumber"
             type="tel"
-            class="cool-input"
+            class="cool-input services-input"
             placeholder="Phone Number"
             required
           />
@@ -92,7 +92,7 @@
             name="address"
             [(ngModel)]="address"
             type="text"
-            class="cool-input"
+            class="cool-input services-input"
             placeholder="Address"
             required
           />
@@ -114,14 +114,14 @@
           name="imageFile"
           type="file"
           (change)="onFileSelected($event)"
-          class="cool-input services"
+          class="cool-input services-input"
           accept="image/*"
         />
 
         <!-- Submit Button -->
         <button
           type="submit"
-          class="cool-button cool-small profession-button on-bg font-weight-bolder mb-4 mt-3"
+          class="cool-button cool-small services-button on-bg font-weight-bolder mb-4 mt-3"
           style="width: 150px"
           [disabled]="editForm.invalid"
         >

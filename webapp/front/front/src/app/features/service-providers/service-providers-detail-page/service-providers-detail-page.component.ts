@@ -20,7 +20,6 @@ import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
   templateUrl: './service-providers-detail-page.component.html',
 })
 export class ServiceProvidersDetailPageComponent implements OnInit {
-  darkMode = false;
   worker: Worker | null = null;
   reviewDialogVisible = false;
   editDialogVisible = false;

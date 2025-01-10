@@ -70,6 +70,7 @@ body {
   --used: #5975d0;
   --new: #6cb945;
   --user-profile: #aed794;
+  --stripe: #eef0f2;
 
   --lila: #8974a5;
   --accent: #6696e2;
@@ -107,6 +108,7 @@ body {
   --light-green: #9ad379;
   --star-background: #4b4f4f;
   --star-active: #ff9c1a;
+  --stripe: #181d25;
 
   --lila: #a98cd1;
   --to-lila: rgb(72, 78, 89);
