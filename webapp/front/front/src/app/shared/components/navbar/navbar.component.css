@@ -38,3 +38,18 @@
   transition-delay: 200ms;
   transform: scale(1) rotate(360deg);
 }
+
+.language-toggle {
+  background: none;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.language-toggle:hover {
+  background: var(--primary);
+  color: white;
+}

@@ -123,17 +123,27 @@ export class UserService {
       );
   }
 
-  // ! WTF IS GOING ON HERE 'SPANISH'?? should use self and compare with that! or change the model so it has the whole object
   public toggleLanguage(user: User): Observable<User> {
+    const languageLinks = {
+      SPANISH: this.linkService.getLink(LinkKey.SPANISH_LANGUAGE),
+      ENGLISH: this.linkService.getLink(LinkKey.ENGLISH_LANGUAGE),
+    };
+
+    const currentLanguage = user.language;
     const newLanguage =
-      user.language === 'SPANISH'
-        ? this.linkService.getLink(LinkKey.ENGLISH_LANGUAGE)
-        : this.linkService.getLink(LinkKey.SPANISH_LANGUAGE);
+      currentLanguage === languageLinks.SPANISH
+        ? languageLinks.ENGLISH
+        : languageLinks.SPANISH;
+
     const updateUrl = user.self;
 
-    return this.http
-      .patch<UserDto>(updateUrl, { language: newLanguage })
-      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+    return this.http.patch<UserDto>(updateUrl, { language: newLanguage }).pipe(
+      mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)),
+      catchError((error) => {
+        console.error('Failed to toggle language:', error);
+        return of(user);
+      })
+    );
   }
 
   public updatePhoneNumber(
@@ -201,7 +211,7 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
         image: userDto._links.userImage,
         identification: userDto.identification,
         creationDate: userDto.creationDate,
-        language: language.name,
+        language: language._links.self,
         userRole: userRole.role,
         userRoleDisplay: roleDisplayMapping[roleEnum] || 'Unknown Role', // Map to display-friendly name
         userRoleEnum: roleEnum, // Add enum

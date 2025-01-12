@@ -88,6 +88,12 @@
               </div>
             </label>
           </div>
+          <!-- Language Toggle Button -->
+          <button (click)="onLanguageToggle()" class="language-toggle">
+            {{
+              currentLanguage === englishLanguageLink ? "Español" : "English"
+            }}
+          </button>
         </div>
       </div>
     </div>
