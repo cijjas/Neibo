@@ -84,6 +84,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     ConfirmationDialogComponent,
     TimeAgoPipe,
     AddHoursPipe,
+    TranslateModule,
   ],
 })
 export class SharedModule {}

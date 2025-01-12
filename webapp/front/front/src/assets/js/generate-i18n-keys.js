@@ -1,13 +1,15 @@
 const fs = require("fs");
 const path = require("path");
+const cheerio = require("cheerio"); // npm install cheerio
 
 // Directory to scan
-const baseDir = "./src/app/shared/components"; // Adjust to your base directory
-const outputFile = "./src/assets/i18n/structure.json"; // Output JSON file
+const baseDir = "./src/app/features"; // Adjust as needed
+const outputFile = "./src/assets/i18n/structure.json";
 
-// Function to generate keys from filenames
-function generateTranslationKeys(dir) {
-  const keys = {};
+let keys = {};
+
+// Recursive function to extract keys from files
+function processDirectory(dir) {
   const files = fs.readdirSync(dir);
 
   files.forEach((file) => {
@@ -15,32 +17,39 @@ function generateTranslationKeys(dir) {
     const stat = fs.statSync(fullPath);
 
     if (stat.isDirectory()) {
-      // Recurse into subdirectories
-      keys[file.toUpperCase()] = generateTranslationKeys(fullPath);
-    } else if (
-      file.endsWith(".component.html") ||
-      file.endsWith(".component.ts")
-    ) {
-      // Generate key for each component
-      const name = file
-        .replace(/\.component\.(html|ts)/, "")
-        .toUpperCase()
-        .replace(/-/g, "_");
-      keys[name] = "PLACEHOLDER_TEXT";
+      processDirectory(fullPath);
+    } else if (file.endsWith(".html")) {
+      extractKeysFromHtml(fullPath);
     }
   });
-
-  return keys;
 }
 
-// Generate the translation structure
-const translationStructure = generateTranslationKeys(baseDir);
+// Extract static text from HTML
+function extractKeysFromHtml(filePath) {
+  const content = fs.readFileSync(filePath, "utf8");
+  const $ = cheerio.load(content);
+  const componentName = path
+    .basename(filePath)
+    .replace(".component.html", "")
+    .toUpperCase();
 
-// Save to file
-fs.writeFileSync(
-  outputFile,
-  JSON.stringify(translationStructure, null, 2),
-  "utf-8"
-);
+  keys[componentName] = {};
 
-console.log(`Translation structure generated in: ${outputFile}`);
+  $("*")
+    .contents()
+    .filter((_, el) => el.type === "text")
+    .each((_, el) => {
+      const text = el.nodeValue.trim();
+      if (text) {
+        const key = text.toUpperCase().replace(/\s+/g, "_");
+        keys[componentName][key] = "PLACEHOLDER_TEXT";
+      }
+    });
+}
+
+// Generate the keys
+processDirectory(baseDir);
+
+// Write the keys to a file
+fs.writeFileSync(outputFile, JSON.stringify(keys, null, 2), "utf-8");
+console.log(`Translation keys generated at: ${outputFile}`);
