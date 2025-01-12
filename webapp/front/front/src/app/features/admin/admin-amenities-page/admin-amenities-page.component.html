@@ -5,9 +5,12 @@
 >
   <div class="f-r-sb-c">
     <h2 class="mb-0">Amenities</h2>
-    <a [routerLink]="['/admin/amenities/new']" class="cool-feed-button">
-      Create Amenity
+    <a
+      [routerLink]="['/admin/amenities/new']"
+      class="cool-action-button admin-button"
+    >
       <i class="fa-solid fa-plus"></i>
+      Create Amenity
     </a>
   </div>
 
@@ -32,7 +35,7 @@
         <h2>{{ amenity.name }}</h2>
         <div class="f-r-sb-c">
           <a
-            class="btn"
+            class="cool-action-button rounded admin-button"
             [routerLink]="['/admin/amenities', amenity.self, 'edit']"
           >
             <i class="fa-solid fa-pen"></i>
@@ -42,7 +45,7 @@
             <i
               class="fas fa-trash"
               style="color: var(--error)"
-              (click)="deleteAmenity(amenity.self)"
+              (click)="deleteAmenity(amenity)"
             ></i>
           </a>
         </div>

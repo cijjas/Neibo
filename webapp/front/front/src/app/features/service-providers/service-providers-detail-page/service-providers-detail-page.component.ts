@@ -31,8 +31,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     private route: ActivatedRoute,
     private reviewService: ReviewService,
     private toastService: ToastService,
-    private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService
+    private linkService: HateoasLinksService
   ) {}
 
   ngOnInit(): void {
@@ -91,13 +90,16 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     });
   }
 
-  onSaveProfile(worker: WorkerDto): void {
-    this.workerService.updateWorker(worker).subscribe({
+  onSaveProfile(workerDto: WorkerDto): void {
+    this.workerService.updateWorker(workerDto).subscribe({
       next: () => {
         this.toastService.showToast(
           'New profile information saved successfully!',
           'success'
         );
+        if (this.worker?.self) {
+          this.loadWorker(this.worker.self); // Refresh the worker data
+        }
       },
       error: (err) => {
         this.toastService.showToast(
@@ -107,5 +109,9 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
         console.error('Error saving profile:', err);
       },
     });
+  }
+
+  isTheWorker() {
+    return this.linkService.getLink(LinkKey.USER_WORKER) === this.worker?.self;
   }
 }

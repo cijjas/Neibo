@@ -22,24 +22,20 @@
             <!-- "My requests" button -->
             <a
               [routerLink]="['/marketplace/buyer-hub', 'requests']"
-              class="cool-feed-button rounded marketplace-button font-weight-bold"
+              class="cool-action-button rounded marketplace-button font-weight-bold"
               [class.active]="isRequests"
             >
-              <span class="font-size-12">
-                <i class="fa-solid fa-basket-shopping"></i>
-                <span class="hide-text">My requests</span>
-              </span>
+              <i class="fa-solid fa-basket-shopping"></i>
+              <span class="hide-text">My requests</span>
             </a>
             <!-- "My purchases" button -->
             <a
               [routerLink]="['/marketplace/buyer-hub', 'purchases']"
-              class="cool-feed-button rounded marketplace-button font-weight-bold"
+              class="cool-action-button rounded marketplace-button font-weight-bold"
               [class.active]="isPurchases"
             >
-              <span class="font-size-12">
-                <i class="fa-solid fa-calendar-check"></i>
-                <span class="hide-text">My purchases</span>
-              </span>
+              <i class="fa-solid fa-calendar-check"></i>
+              <span class="hide-text">My purchases</span>
             </a>
           </div>
         </div>

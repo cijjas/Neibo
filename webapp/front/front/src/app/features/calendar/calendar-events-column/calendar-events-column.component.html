@@ -1,55 +1,67 @@
 <div class="w-100">
-    <!-- Placeholder for loading state -->
-    <div id="placeholder-events" *ngIf="isLoading">
-        <div *ngFor="let index of placeholders">
-            <div class="placeholder-blogpost p-3">
-                <div class="placeholder col-12 mb-2"></div>
-                <div class="placeholder col-8 mb-2"></div>
-                <div class="placeholder col-6"></div>
-            </div>
-        </div>
+  <!-- Placeholder for loading state -->
+  <div id="placeholder-events" *ngIf="isLoading">
+    <div *ngFor="let index of placeholders">
+      <div class="placeholder-blogpost p-3">
+        <div class="placeholder col-12 mb-2"></div>
+        <div class="placeholder col-8 mb-2"></div>
+        <div class="placeholder col-6"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actual events -->
+  <div id="actual-events" *ngIf="!isLoading">
+    <div *ngIf="events.length === 0" class="no-posts-found">
+      <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+      There are no events for this date.
     </div>
 
-    <!-- Actual events -->
-    <div id="actual-events" *ngIf="!isLoading">
-        <div *ngIf="events.length === 0" class="no-posts-found">
-            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            No Events Found
+    <div *ngFor="let event of events" class="blogpost p-3">
+      <div class="row w-100">
+        <div
+          class="col-{{ isAdmin ? '10' : '12' }}"
+          style="overflow: hidden; text-overflow: ellipsis"
+        >
+          <a [routerLink]="['/calendar/events', event.self]">
+            <div>{{ event.name }}</div>
+          </a>
         </div>
-
-        <div *ngFor="let event of events" class="blogpost p-3 ">
-
-            <div class="row w-100">
-                <div class="col-{{ isAdmin ? '10' : '12' }}" style="overflow: hidden; text-overflow: ellipsis;">
-                    <a [routerLink]="['/calendar/events', event.self]">
-                        <div>{{ event.name }}</div>
-                    </a>
-                </div>
-                <div class="col-2" *ngIf="isAdmin">
-                    <span class="admin-link">
-                        <a [routerLink]="['/admin/delete-event', event.self]"
-                            [queryParams]="{ date: (selectedDate | date:'yyyy-MM-dd') }" class="btn btn-link">
-                            <i class="fas fa-trash" style="color: var(--error);"></i>
-                        </a>
-                    </span>
-                </div>
-            </div>
-
-            <a [routerLink]="['/calendar/events', event.self]" class="f-c-c-s">
-                <p style="font-size: 12px; font-weight: normal">
-                    {{ event.startTime }} - {{ event.endTime }}
-                </p>
-                <p style="font-size: 12px; font-weight: normal">{{ event.duration }} Minutes</p>
-                <p style="font-size: 12px; font-weight: normal">{{ event.attendeesCount }} People will Attend</p>
-                <div class="divider"></div>
-                <div class="postcard-description m-t-40" style="overflow: clip">
-                    {{ event.description }}
-                </div>
+        <div class="col-2" *ngIf="isAdmin">
+          <span class="admin-link">
+            <a
+              [routerLink]="['/admin/delete-event', event.self]"
+              [queryParams]="{ date: (selectedDate | date : 'yyyy-MM-dd') }"
+              class="btn btn-link"
+            >
+              <i class="fas fa-trash" style="color: var(--error)"></i>
             </a>
-
+          </span>
         </div>
+      </div>
 
-        <app-paginator [totalPages]="totalPages" [currentPage]="currentPage" (pageChange)="onPageChange($event)">
-        </app-paginator>
+      <a [routerLink]="['/calendar/events', event.self]" class="f-c-c-s">
+        <p style="font-size: 12px; font-weight: normal">
+          {{ event.startTime }} - {{ event.endTime }}
+        </p>
+        <p style="font-size: 12px; font-weight: normal">
+          {{ event.duration }} Minutes
+        </p>
+        <p style="font-size: 12px; font-weight: normal">
+          {{ event.attendeesCount }} People will Attend
+        </p>
+        <div class="divider"></div>
+        <div class="postcard-description m-t-40" style="overflow: clip">
+          {{ event.description }}
+        </div>
+      </a>
     </div>
+
+    <app-paginator
+      [totalPages]="totalPages"
+      [currentPage]="currentPage"
+      (pageChange)="onPageChange($event)"
+    >
+    </app-paginator>
+  </div>
 </div>

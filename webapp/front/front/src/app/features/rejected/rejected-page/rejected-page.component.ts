@@ -1,22 +1,20 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+// rejected-page.component.ts
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, ToastService } from '@core/index';
 import { Neighborhood, NeighborhoodService } from '@shared/index';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rejected-page',
   templateUrl: './rejected-page.component.html',
 })
 export class RejectedPageComponent implements OnInit {
-  @ViewChild('neighborhoodSelect') neighborhoodSelect!: ElementRef; // Reference to the dropdown
-  neighborhoodsList: Neighborhood[] = [];
-  currentPage = 1;
-  totalPages = 0;
-  isLoading = false;
-
   neighborhoodForm: FormGroup;
-
+  isLoading = false;
+  submitted = false;
   constructor(
     private fb: FormBuilder,
     private neighborhoodService: NeighborhoodService,
@@ -25,63 +23,53 @@ export class RejectedPageComponent implements OnInit {
     private router: Router
   ) {
     this.neighborhoodForm = this.fb.group({
-      neighborhoodId: ['', Validators.required],
+      neighborhood: [null, Validators.required],
     });
   }
 
   ngOnInit(): void {
-    this.loadNeighborhoods();
+    // Initializations if needed
   }
 
-  loadNeighborhoods(): void {
-    if (this.isLoading || this.currentPage >= this.totalPages) return;
+  fetchNeighborhoods = (page: number, size: number): Observable<any> => {
+    return this.neighborhoodService.getNeighborhoods({ page, size }).pipe(
+      map((response) => ({
+        items: response.neighborhoods,
+        currentPage: response.currentPage,
+        totalPages: response.totalPages,
+      }))
+    );
+  };
 
-    this.isLoading = true;
-    this.neighborhoodService
-      .getNeighborhoods({ page: this.currentPage, size: 20 }) // Fetch 20 neighborhoods per page
-      .subscribe({
-        next: (response) => {
-          this.neighborhoodsList = [
-            ...this.neighborhoodsList,
-            ...response.neighborhoods,
-          ];
-          this.currentPage = response.currentPage + 1;
-          this.totalPages = response.totalPages;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error getting neighborhoods:', error);
-          this.toastService.showToast(
-            'There was a problem fetching the neighborhoods. Try again.',
-            'error'
-          );
-          this.isLoading = false;
-        },
-      });
-  }
+  displayNeighborhood = (neighborhood: Neighborhood): string => {
+    return neighborhood.name;
+  };
 
-  onDropdownScroll(): void {
-    const selectElement = this.neighborhoodSelect.nativeElement;
-    const threshold = 100; // Distance from the bottom to trigger loading
-
-    if (
-      selectElement.scrollTop + selectElement.clientHeight >=
-      selectElement.scrollHeight - threshold
-    ) {
-      this.loadNeighborhoods();
-    }
-  }
-
+  /**
+   * Handle form submission.
+   */
   onSubmit(): void {
+    this.submitted = true; // Mark form as submitted
+
     if (this.neighborhoodForm.valid) {
-      console.log('Form Submitted:', this.neighborhoodForm.value);
+      const selectedNeighborhood: Neighborhood =
+        this.neighborhoodForm.value.neighborhood;
+      console.log(
+        'Form Submitted:',
+        selectedNeighborhood.name,
+        selectedNeighborhood.self
+      );
       // Add service call logic here for form submission
     } else {
-      console.error('Form is invalid');
+      this.toastService.showToast('Please select a neighborhood.', 'error');
     }
   }
+
+  /**
+   * Navigate back to the main page or login.
+   */
   goBackToMainPage(): void {
-    // Example: log out and navigate to root or login
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

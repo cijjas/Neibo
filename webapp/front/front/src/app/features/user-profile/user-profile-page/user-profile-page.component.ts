@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService, User } from '@shared/index';
+import { UserService, User, Roles } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
 import {
   ImageService,
   AuthService,
   UserSessionService,
   ToastService,
-  ThemeService,
+  // ThemeService,
 } from '@core/index';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
@@ -20,7 +20,8 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   profileImageSafeUrl: SafeUrl | null = null;
   darkMode: boolean = false;
   language: string = 'en';
-
+  theme: 'default' | 'marketplace' | 'services' | 'admin' = 'default';
+  currentUserRole: Roles;
   private subscriptions = new Subscription();
 
   constructor(
@@ -29,9 +30,9 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private authService: AuthService,
     private toastService: ToastService,
-    private router: Router,
-    private themeService: ThemeService
-  ) {}
+    private router: Router
+  ) // private themeService: ThemeService
+  {}
 
   ngOnInit(): void {
     const userSub = this.userSessionService
@@ -45,6 +46,18 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
         }
       });
     this.subscriptions.add(userSub);
+    this.currentUserRole = this.authService.getCurrentRole();
+
+    switch (this.currentUserRole) {
+      case Roles.ADMINISTRATOR:
+        this.theme = 'admin';
+        break;
+      case Roles.WORKER:
+        this.theme = 'services';
+        break;
+      default:
+        this.theme = 'default';
+    }
   }
 
   ngOnDestroy(): void {
@@ -61,9 +74,9 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   }
 
   toggleDarkMode(): void {
-    const currentDarkMode =
-      document.documentElement.classList.contains('dark-mode');
-    this.themeService.setDarkMode(!currentDarkMode);
+    // const currentDarkMode =
+    //   document.documentElement.classList.contains('dark-mode');
+    // this.themeService.setDarkMode(!currentDarkMode);
   }
 
   toggleLanguage(): void {

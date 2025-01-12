@@ -1,0 +1,107 @@
+/*-------------------INFINITE SCROLL SELECTOR THEME-----------------------------------*/
+
+$infinite-scroll-categories: (
+  default: (
+    primary: var(--primary),
+    text: var(--text),
+    background: var(--darkonbackground),
+    hover-text: var(--primary),
+    hover-bg: var(--to-primary),
+  ),
+  marketplace: (
+    primary: var(--lila),
+    text: var(--text),
+    background: var(--background),
+    hover-text: var(--onprimary),
+    hover: var(--old-primary),
+  ),
+  services: (
+    primary: var(--profession),
+    text: var(--text),
+    background: var(--background),
+    hover-text: var(--onprimary),
+    hover: var(--old-primary),
+  ),
+  admin: (
+    primary: var(--admin),
+    text: var(--text),
+    background: var(--background),
+    hover-text: var(--onprimary),
+    hover: var(--old-primary),
+  ),
+);
+
+@mixin infinite-scroll-styles(
+  $name,
+  $primary,
+  $text,
+  $background,
+  $hover-text,
+  $hover-bg
+) {
+  .infinite-scroll-container-#{$name} {
+    background-color: $background;
+    color: $text;
+
+    border-radius: 15px;
+    padding: 5px;
+
+    overflow-y: auto;
+
+    /* Item Styles */
+    .item {
+      position: relative; /* Needed for the pseudo-element */
+      border-radius: 0.5em;
+      background-color: $background;
+      color: $text;
+      padding: 0.8em 0.8em 0.8em 3em; /* Increased right padding for the icon */
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      text-align: start;
+      &:hover {
+        background-color: $hover-bg;
+        color: $hover-text;
+      }
+
+      /* Always display the checkmark icon */
+      &::after {
+        content: "\f058"; /* Unicode for fa-check-circle */
+        font-family: "Font Awesome 5 Free"; /* Adjust if using a different version */
+        font-weight: 400; /* 400 for regular (outline) */
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--bordercolor);
+        font-size: 1.2em; /* Adjust size as needed */
+        pointer-events: none; /* Ensures the icon doesn't interfere with click events */
+      }
+
+      /* Modify the checkmark when active */
+      &.active::after {
+        font-weight: 900;
+        color: $primary;
+      }
+    }
+
+    /* Loading Indicator Styles */
+    .loading {
+      padding: 10px;
+      text-align: center;
+      font-style: italic;
+      color: $primary;
+    }
+  }
+}
+
+/* Generate styles for all categories */
+@each $name, $colors in $infinite-scroll-categories {
+  @include infinite-scroll-styles(
+    $name,
+    map-get($colors, primary),
+    map-get($colors, text),
+    map-get($colors, background),
+    map-get($colors, hover-text),
+    map-get($colors, hover-bg)
+  );
+}

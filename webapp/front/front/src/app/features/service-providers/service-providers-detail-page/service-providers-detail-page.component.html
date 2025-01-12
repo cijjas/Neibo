@@ -1,6 +1,11 @@
 <div class="f-c-c-c w-100">
   <app-service-providers-content
     class="w-100"
+    [worker]="worker"
+    [averageRating]="worker?.averageRating || 0"
+    [reviewsCount]="worker?.totalReviews || 0"
+    [postCount]="worker?.totalPosts || 0"
+    [isTheWorker]="isTheWorker()"
     (openEditProfile)="openEditDialog()"
   >
   </app-service-providers-content>

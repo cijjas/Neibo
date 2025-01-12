@@ -1,3 +1,4 @@
+<!-- rejected-page.component.html -->
 <app-background-drawing></app-background-drawing>
 <div class="container">
   <div class="d-flex flex-column justify-content-center align-items-center">
@@ -6,8 +7,11 @@
         class="d-flex flex-column justify-content-center align-items-center"
         style="text-align: center"
       >
+        <h3 class="c-primary" style="font-size: 4em; line-height: 1.5em">
+          Hey there!
+        </h3>
         <p style="color: var(--primary); font-size: 30px">
-          Hello, looks like you aren't associated with a neighborhood yet!
+          It looks like you aren't associated with a neighborhood yet!
         </p>
         <br />
         <p>Please select one of the following neighborhoods to continue.</p>
@@ -16,21 +20,20 @@
         <form [formGroup]="neighborhoodForm" (ngSubmit)="onSubmit()">
           <div class="centered-column">
             <div class="form-input">
-              <select
-                #neighborhoodSelect
-                formControlName="neighborhoodId"
-                class="cool-select"
-                (scroll)="onDropdownScroll()"
+              <app-infinite-scroll-select
+                [theme]="'default'"
+                [multiple]="false"
+                [fetchData]="fetchNeighborhoods"
+                [displayFn]="displayNeighborhood"
+                formControlName="neighborhood"
+                [uniqueKey]="'self'"
               >
-                <option
-                  *ngFor="let entry of neighborhoodsList"
-                  [value]="entry.self"
-                >
-                  {{ entry.name }}
-                </option>
-              </select>
+              </app-infinite-scroll-select>
               <div
-                *ngIf="neighborhoodForm.get('neighborhoodId')?.errors?.['required']"
+                *ngIf="
+                submitted &&
+                neighborhoodForm.get('neighborhoodId')?.errors?.['required']
+              "
                 class="error"
               >
                 Neighborhood is required
@@ -38,12 +41,14 @@
             </div>
           </div>
 
-          <button type="submit" class="action-button" [disabled]="isLoading">
-            Request
-          </button>
+          <a type="submit" class="cool-button"> Request </a>
         </form>
-
-        <a (click)="goBackToMainPage()" class="cool-button m-t-40">
+        <span class="mt-3" style="color: var(--lighttext)">or</span>
+        <a
+          (click)="goBackToMainPage()"
+          class="cool-button m-t-40"
+          style="cursor: pointer"
+        >
           Go Back to Login
         </a>
 

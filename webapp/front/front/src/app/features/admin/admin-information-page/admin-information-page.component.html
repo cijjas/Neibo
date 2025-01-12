@@ -4,8 +4,11 @@
     <h3 class="mb-0">Contact Information</h3>
 
     <!-- Add contact button -->
-    <button class="cool-feed-button" (click)="openCreateContactDialog()">
-      Add Contact Info <i class="fas fa-plus"></i>
+    <button
+      class="cool-action-button admin-button"
+      (click)="openCreateContactDialog()"
+    >
+      <i class="fas fa-plus"></i> Add Contact Info
     </button>
   </div>
 
@@ -57,9 +60,12 @@
 <!-- Add resource button -->
 <div class="upper-feed-buttons-box m-b-20">
   <h3 class="mb-0">Resources</h3>
-  <button class="cool-feed-button" (click)="openCreateResourceDialog()">
-    Add Resource <i class="fa-solid fa-plus"></i>
-  </button>
+  <a
+    class="cool-action-button admin-button"
+    (click)="openCreateResourceDialog()"
+  >
+    <i class="fa-solid fa-plus"></i> Add Resource
+  </a>
 </div>
 
 <!-- Resources list -->

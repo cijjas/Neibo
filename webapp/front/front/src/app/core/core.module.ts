@@ -7,6 +7,7 @@ import { AppInitService } from './services/app-init.service';
 import { ToastService } from './services/toast.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { ConfirmationService } from './services/confirmation.service';
 
 export function initApp(appInitService: AppInitService) {
   return () => appInitService.loadInitialLinks();
@@ -17,6 +18,7 @@ export function initApp(appInitService: AppInitService) {
   providers: [
     AuthService,
     ToastService,
+    ConfirmationService,
     AppInitService,
 
     {

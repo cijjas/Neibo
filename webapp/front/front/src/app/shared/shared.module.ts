@@ -15,9 +15,9 @@ import {
   PaginatorComponent,
   RightColumnComponent,
   TagsFilterWidgetComponent,
+  InfiniteScrollSelectComponent,
+  ConfirmationDialogComponent,
 } from '@shared/index';
-
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { TimeAgoPipe, AddHoursPipe } from '@shared/index';
 import {
@@ -37,6 +37,8 @@ import {
     RightColumnComponent,
     BackgroundDrawingComponent,
     TagsFilterWidgetComponent,
+    ConfirmationDialogComponent,
+    InfiniteScrollSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -64,7 +66,8 @@ import {
     RightColumnComponent,
     BackgroundDrawingComponent,
     TagsFilterWidgetComponent,
-
+    InfiniteScrollSelectComponent,
+    ConfirmationDialogComponent,
     TimeAgoPipe,
     AddHoursPipe,
   ],

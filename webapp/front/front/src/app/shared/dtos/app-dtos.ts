@@ -287,7 +287,7 @@ export interface WorkerDto {
   businessName?: string;
   address?: string;
   bio?: string;
-  backgroundImage?: Uint8Array;
+  backgroundImage?: string;
   _links?: Links;
 }
 

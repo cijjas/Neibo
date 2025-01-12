@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { LinkKey, Profession, Worker, WorkerService } from '@shared/index';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Worker, Profession } from '@shared/index';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -8,57 +8,28 @@ import { HateoasLinksService } from '@core/index';
   templateUrl: './service-providers-content.component.html',
 })
 export class ServiceProvidersContentComponent {
-  worker: Worker | null = null; // No longer an @Input()
-  averageRating: number = 0; // Optional: Could be fetched from worker data
-  reviewsCount: number = 0; // Optional: Could be fetched from worker data
-  postCount: number = 0; // Optional: Could be fetched from worker data
-  isTheWorker = false;
+  @Input() worker: Worker | null = null; // Input for worker data
+  @Input() averageRating: number = 0; // Input for average rating
+  @Input() reviewsCount: number = 0; // Input for reviews count
+  @Input() postCount: number = 0; // Input for post count
+  @Input() isTheWorker: boolean = false; // Input to indicate if logged user is the worker
 
-  @Output() openEditProfile = new EventEmitter<void>();
+  @Output() openEditProfile = new EventEmitter<void>(); // EventEmitter to notify parent
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private linkService: HateoasLinksService,
-    private workerService: WorkerService // Inject WorkerService to fetch worker
+    private linkService: HateoasLinksService
   ) {}
 
-  ngOnInit(): void {
-    const workerId = this.route.snapshot.paramMap.get('id');
-    if (workerId) {
-      this.fetchWorker(workerId);
-    }
-  }
-  fetchWorker(id: string): void {
-    this.workerService.getWorker(id).subscribe({
-      next: (worker) => {
-        this.worker = worker;
-        this.averageRating = worker.averageRating || 0;
-        this.reviewsCount = worker.totalReviews;
-        this.postCount = worker.totalPosts;
-
-        this.isTheWorker =
-          this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
-      },
-      error: (err) => {
-        console.error('Error fetching worker:', err);
-      },
-    });
-  }
-
   get backgroundImageUrl(): string {
-    if (this.worker && this.worker.backgroundImage) {
-      return this.worker.backgroundImage;
-    }
-    return 'assets/images/default-background.png';
+    return (
+      this.worker?.backgroundImage || 'assets/images/default-background.png'
+    );
   }
 
   get profileImageUrl(): string {
-    if (this.worker?.user?.image) {
-      return this.worker.user.image; // or however you store it
-    }
-    // fallback
-    return 'assets/images/default-profile.png';
+    return this.worker?.user?.image || 'assets/images/default-profile.png';
   }
 
   setProfession(prof: Profession | null): void {

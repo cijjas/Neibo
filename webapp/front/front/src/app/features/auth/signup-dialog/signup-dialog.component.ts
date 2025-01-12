@@ -28,6 +28,7 @@ import {
   UserSessionService,
 } from '@core/index';
 import { Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -54,13 +55,6 @@ export class SignupDialogComponent implements OnInit {
   // Professions available
   professionOptions: Profession[] = [];
 
-  // ----------- ADDED: Professions multi-select ----------
-  // Track selected profession IDs
-  selectedProfessionIds: string[] = [];
-
-  // Whether the drop-down is open
-  isProfessionSelectOpen = false;
-
   // For referencing the select-button element (so we can detect outside clicks)
   @ViewChild('professionSelectBtn') professionSelectBtnRef!: ElementRef;
   // -----------------------------------------------------
@@ -71,7 +65,6 @@ export class SignupDialogComponent implements OnInit {
     private toastService: ToastService,
     private userService: UserService,
     private languageService: LanguageService,
-    private userSessionService: UserSessionService,
     private authService: AuthService,
     private linkStorage: HateoasLinksService,
     private professionService: ProfessionService,
@@ -82,11 +75,10 @@ export class SignupDialogComponent implements OnInit {
     // 1) Load combos
     this.getNeighborhoods();
     this.getLanguages();
-    this.getProfessions();
 
     // ========== NEIGHBOR SIGNUP FORM ==========
     this.signupForm = this.fb.group({
-      neighborhoodId: ['', Validators.required],
+      neighborhood: ['', Validators.required],
       name: [
         '',
         [
@@ -109,10 +101,10 @@ export class SignupDialogComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(8),
+          // Validators.minLength(8),
           // Simple example pattern:
           // At least one uppercase, one lowercase, and a digit
-          Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
+          // Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
         ],
       ],
       identification: [
@@ -128,7 +120,7 @@ export class SignupDialogComponent implements OnInit {
     // ========== SERVICE SIGNUP FORM ==========
     this.serviceForm = this.fb.group({
       businessName: ['', Validators.required],
-      professionIds: [[], Validators.required],
+      professions: [[], Validators.required],
       w_name: [
         '',
         [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
@@ -142,8 +134,8 @@ export class SignupDialogComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.minLength(8),
-          Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
+          // Validators.minLength(8),
+          // Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
         ],
       ],
       w_address: ['', Validators.required],
@@ -185,7 +177,7 @@ export class SignupDialogComponent implements OnInit {
     // Example neighbor creation
     this.userService
       .createUser(
-        signupValues.neighborhoodId,
+        signupValues.neighborhood.self,
         signupValues.name,
         signupValues.surname,
         signupValues.password,
@@ -319,68 +311,6 @@ export class SignupDialogComponent implements OnInit {
   // = Profession Multi-Select Logic (mirroring your Neighborhoods approach)
   // =======================
 
-  /**
-   * A computed text to display in the select button
-   */
-  get professionDisplayText(): string {
-    if (this.selectedProfessionIds.length === 0) {
-      return 'Select profession';
-    }
-    // gather the displayNames for the chosen IDs
-    const selectedNames = this.professionOptions
-      .filter((p) => this.selectedProfessionIds.includes(p.self))
-      .map((p) => p.displayName);
-
-    if (selectedNames.length === 1) {
-      return selectedNames[0];
-    } else {
-      return `(${selectedNames.length}) ${selectedNames.join(', ')}`;
-    }
-  }
-
-  /**
-   * Toggle the open/close state of the multi-select
-   */
-  toggleProfessionSelect(): void {
-    this.isProfessionSelectOpen = !this.isProfessionSelectOpen;
-  }
-
-  /**
-   * Add/remove the clicked profession from the selected array
-   * and stop the click from also toggling the entire select.
-   */
-  toggleProfessionItem(professionId: string, event: MouseEvent): void {
-    event.stopPropagation(); // stops the select-btn toggling
-
-    if (this.selectedProfessionIds.includes(professionId)) {
-      // Remove
-      this.selectedProfessionIds = this.selectedProfessionIds.filter(
-        (id) => id !== professionId
-      );
-    } else {
-      // Add
-      this.selectedProfessionIds.push(professionId);
-    }
-
-    // Update the underlying form control
-    this.serviceForm.get('professionIds')?.setValue(this.selectedProfessionIds);
-  }
-
-  /**
-   * Clicking anywhere outside the .select-btn area will close the dropdown
-   * (mirroring the "document:click" logic from your original neighborhoods code).
-   */
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    if (
-      this.isProfessionSelectOpen &&
-      this.professionSelectBtnRef &&
-      !this.professionSelectBtnRef.nativeElement.contains(event.target)
-    ) {
-      this.isProfessionSelectOpen = false;
-    }
-  }
-
   // =========== Common Utility =============
   selectOption(option: 'neighbor' | 'service'): void {
     this.selectedOption = option;
@@ -436,18 +366,31 @@ export class SignupDialogComponent implements OnInit {
     });
   }
 
-  getProfessions(): void {
-    this.professionService.getProfessions().subscribe({
-      next: (professions) => {
-        this.professionOptions = professions;
-      },
-      error: (error) => {
-        console.error('Error getting professions:', error);
-        this.toastService.showToast(
-          'Could not retrieve professions. Try Again.',
-          'error'
-        );
-      },
-    });
-  }
+  fetchNeighborhoods = (page: number, size: number): Observable<any> => {
+    return this.neighborhoodService.getNeighborhoods({ page, size }).pipe(
+      map((response) => ({
+        items: response.neighborhoods,
+        currentPage: response.currentPage,
+        totalPages: response.totalPages,
+      }))
+    );
+  };
+
+  displayNeighborhood = (neighborhood: Neighborhood): string => {
+    return neighborhood.name;
+  };
+
+  fetchProfessions = (): Observable<any> => {
+    return this.professionService.getProfessions().pipe(
+      map((professions: Profession[]) => ({
+        items: professions,
+        currentPage: 1,
+        totalPages: 1,
+      }))
+    );
+  };
+
+  displayProfession = (profession: Profession): string => {
+    return profession.displayName;
+  };
 }

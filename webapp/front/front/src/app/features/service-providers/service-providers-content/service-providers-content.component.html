@@ -1,6 +1,16 @@
 <!-- service-providers-content.component.html -->
 <div class="container">
   <div class="service-card">
+    <button
+      *ngIf="isTheWorker"
+      id="editProfileButton"
+      class="cool-action-button rounded services-button edit-profile-button"
+      (click)="openEditProfile.emit()"
+    >
+      <i class="fa-solid fa-user-pen ml-1"></i>
+
+      Edit Profile
+    </button>
     <div class="card-header">
       <!-- Background image -->
       <img
@@ -45,17 +55,6 @@
         </p>
 
         <!-- Show "Edit" if loggedUser is the same user -->
-        <button
-          *ngIf="isTheWorker"
-          id="editProfileButton"
-          class="cool-button cool-small services-button on-bg font-weight-bold"
-          style="width: 100px"
-          (click)="openEditProfile.emit()"
-        >
-          <i class="fa-solid fa-user-pen ml-1"></i>
-
-          Edit Profile
-        </button>
       </div>
     </div>
     <div class="card-footer m-3">

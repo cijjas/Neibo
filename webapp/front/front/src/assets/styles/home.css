@@ -165,7 +165,7 @@
 .filters-marketplace {
   background-color: var(--on-onbackground);
   border-radius: var(--border-hard);
-  border: 1px solid var(--secondary);
+  border: 0px solid var(--secondary);
   padding-left: 10px;
 
   & .sub-filters {
@@ -175,15 +175,14 @@
   }
 }
 
-.cool-feed-button {
+.cool-action-button {
   text-align: center;
   overflow: hidden;
-  font-weight: bold;
   cursor: pointer;
   padding: 0.7em 1em;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--text);
+  border: 1px solid var(--lighttext);
   border-radius: var(--border-radius);
   position: relative;
   transform: translateY(0);
@@ -214,20 +213,53 @@
   }
 
   &.marketplace-button {
-    padding: 0.7em 1em;
-    font-size: 12px;
-
     color: var(--text);
     background-color: var(--onbackground);
     border: 1px solid var(--lighttext);
     transition: all 0.3s ease-in-out;
 
     &.active,
-    &:hover {
-      border: 1px solid var(--lila);
+    &:hover,
+    &:focus-visible {
       transform: translateY(-4px);
       box-shadow: 0 4px 0 0 var(--lila);
       color: var(--lila);
+      background-color: var(--to-lila);
+      border: 1px solid var(--lila);
+    }
+  }
+
+  &.admin-button {
+    color: var(--text);
+    background-color: var(--onbackground);
+    border: 1px solid var(--lighttext);
+    transition: all 0.3s ease-in-out;
+
+    &.active,
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 0 0 var(--admin);
+      color: var(--admin);
+      background-color: var(--to-admin);
+      border: 1px solid var(--admin);
+    }
+  }
+
+  &.services-button {
+    color: var(--text);
+    background-color: var(--onbackground);
+    border: 1px solid var(--lighttext);
+    transition: all 0.3s ease-in-out;
+
+    &.active,
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 0 0 var(--profession);
+      color: var(--profession);
+      background-color: var(--to-profession);
+      border: 1px solid var(--profession);
     }
   }
 
@@ -273,6 +305,8 @@
   box-shadow: -3px 4px 0 0 var(--lighttext);
 
   & .cool-feed-button {
+    gap: 0.2em;
+    display: flex;
     text-align: center;
     overflow: hidden;
     font-weight: bold;
@@ -280,61 +314,42 @@
     padding: 0.7em 1em;
     background-color: var(--onbackground);
     color: var(--text);
-    border: 1px solid var(--text);
+    border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
     position: relative;
     transform: translateY(0);
     /*transition: -webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7);*/
     transition: all 0.3s ease-in-out;
 
-    &::before {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 110%;
-      bottom: -5px;
-      left: 0;
-      -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-      -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-      transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    }
-
-    &.active {
-      transform: translateY(-4px);
-      box-shadow: 0 5px 0 0 var(--primary);
-      color: var(--primary);
-      border: var(--border);
-    }
-
     &.rounded {
       border-radius: var(--border-hard) !important;
     }
 
-    &.marketplace-button {
-      padding: 0.7em 1em;
-      font-size: 12px;
+    &:hover,
+    &.active,
+    &:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 0 0 var(--primary);
+      color: var(--primary);
+      background-color: var(--to-primary);
+      border: 1px solid var(--primary);
+    }
 
+    &.marketplace-button {
       color: var(--text);
       background-color: var(--onbackground);
       border: 1px solid var(--lighttext);
       transition: all 0.3s ease-in-out;
 
       &.active,
-      &:hover {
-        border: 1px solid var(--lila);
+      &:hover,
+      &:focus-visible {
         transform: translateY(-4px);
         box-shadow: 0 4px 0 0 var(--lila);
         color: var(--lila);
+        background-color: var(--to-lila);
+        border: 1px solid var(--lila);
       }
-    }
-
-    &:hover,
-    &:active,
-    &:focus-visible {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 0 0 var(--primary);
-      color: var(--primary);
-      border: var(--border);
     }
   }
 
@@ -347,7 +362,7 @@
     transition: all 0.3s;
     background-color: var(--onbackground);
     color: var(--text);
-    border: 1px solid var(--text);
+    border: 1px solid var(--lighttext);
     border-radius: var(--border-hard);
     position: relative;
     transform: translateY(0);
@@ -442,7 +457,7 @@
   padding: 0;
   width: 100%;
   background-color: var(--onbackground);
-  border: 1px solid var(--text);
+  border: 1px solid var(--lighttext);
   border-radius: var(--border-radius);
   transition: all 0.3s ease-in-out;
   overflow: hidden;
@@ -455,19 +470,6 @@
       box-shadow: -3px 5px 0 0 var(--lila);
       border: var(--border);
     }
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 110%;
-    bottom: -5px;
-    left: 0;
-    -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    pointer-events: none;
   }
 
   &:hover {
@@ -585,7 +587,7 @@
 .no-posts-found {
   width: 100%;
   height: 400px;
-  border: 2px solid var(--bordercolor);
+  border: 1px solid var(--bordercolor);
   padding: 20px;
   background-color: var(--onbackground);
   border-radius: 10px;
@@ -744,7 +746,7 @@
 .left-column-button {
   width: 100%;
   text-align: left;
-  border: 2px solid var(--bordercolor);
+  border: 1px solid var(--bordercolor);
   padding: 10px;
   margin: 5px auto;
   background-color: var(--onbackground);
@@ -774,93 +776,65 @@
   transition: all 0.3s ease-in-out;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--text);
+  border: 1px solid var(--lighttext);
   border-radius: var(--border-radius);
 
   position: relative;
   transform: translateY(0);
 
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 110%;
-    bottom: -5px;
-    left: 0;
-    -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    pointer-events: none;
-  }
-
   &:hover,
-  &:focus-visible {
-    border: var(--border);
-    transform: translateY(-5px);
+  &:focus-visible,
+  &.active {
+    transform: translateY(-4px);
+    border: 1px solid var(--primary);
     box-shadow: -2px 4px 0 0 var(--primary);
     color: var(--primary);
-  }
-
-  &.active {
-    transform: translateY(-5px);
-    box-shadow: -2px 5px 0 0 var(--primary);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    background-color: var(--onbackground);
+    background-color: var(--to-primary);
   }
 
   &.lila {
-    &:hover {
-      transform: translateY(-5px);
+    &:hover,
+    &.active {
+      transform: translateY(-4px);
       box-shadow: -2px 4px 0 0 var(--lila);
       color: var(--lila);
+      background-color: var(--to-lila);
       border: 1px solid var(--lila);
-    }
-
-    &.active {
-      transform: translateY(-5px);
-      box-shadow: -2px 5px 0 0 var(--lila);
-      color: var(--lila);
-      border: 1px solid var(--lila);
-      background-color: var(--onbackground);
     }
   }
 
   &.services-button {
-    &:hover {
-      transform: translateY(-5px);
+    &:hover,
+    &.active {
+      transform: translateY(-4px);
       box-shadow: -2px 4px 0 0 var(--profession);
       color: var(--profession);
+      background-color: var(--to-profession);
       border: 1px solid var(--profession);
-    }
-
-    &.active {
-      transform: translateY(-5px);
-      box-shadow: -2px 5px 0 0 var(--profession);
-      color: var(--profession);
-      border: 1px solid var(--profession);
-      background-color: var(--onbackground);
     }
   }
 
   &.admin-button {
-    color: var(--text);
-    border: 1px solid var(--text);
-
-    &:hover {
-      transform: translateY(-5px);
-      border: 1px solid var(--admin-color);
-
-      box-shadow: -2px 4px 0 0 var(--admin-color);
-      color: var(--admin-color);
+    &:hover,
+    &.active {
+      transform: translateY(-4px);
+      box-shadow: -2px 4px 0 0 var(--admin);
+      color: var(--admin);
+      background-color: var(--to-admin);
+      border: 1px solid var(--admin);
     }
 
-    &.active {
-      border: 1px solid var(--admin-color);
-      background-color: var(--onbackground);
-      transform: translateY(-5px);
-      box-shadow: -2px 4px 0 0 var(--admin-color);
-      color: var(--admin-color);
+    &.leave {
+      border: 0px;
+
+      &:hover,
+      &.active {
+        box-shadow: 0 var(--admin);
+        transform: translateY(0px);
+        color: var(--admin);
+        background-color: var(--onbackground);
+        border: 0 solid var(--admin);
+      }
     }
   }
 }
@@ -2032,8 +2006,16 @@ app-background-clouds {
   border-radius: 5px 0 0 5px;
 }
 
-.bg-c-lite-green {
+.bg-c-default {
   background: var(--user-profile);
+}
+
+.bg-c-admin {
+  background: var(--admin);
+}
+
+.bg-c-services {
+  background: var(--profession);
 }
 
 .user-profile {
@@ -2230,7 +2212,7 @@ h6 {
 .slider {
   box-sizing: border-box;
   border-radius: 5px;
-  border: 2px solid var(--main-color);
+  border: 1px solid var(--main-color);
   box-shadow: -2px 3px var(--main-color);
   position: absolute;
   cursor: pointer;
@@ -2247,7 +2229,7 @@ h6 {
     content: "";
     height: 20px;
     width: 20px;
-    border: 2px solid var(--main-color);
+    border: 1px solid var(--main-color);
     border-radius: 5px;
     left: -2px;
     bottom: 2px;
@@ -2264,7 +2246,7 @@ h6 {
   width: 100%;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--text);
+  border: 1px solid var(--lighttext);
   border-radius: var(--border-radius);
   transition: all 0.3s ease-in-out;
   position: relative;
@@ -2742,19 +2724,6 @@ input[type="time"] {
   transform: translateY(0);
   color: var(--text);
 
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 110%;
-    bottom: -5px;
-    left: 0;
-    -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    pointer-events: none;
-  }
-
   &:hover {
     cursor: pointer;
     transform: translateY(-5px);
@@ -2837,7 +2806,7 @@ input[type="time"] {
   &.active,
   &:hover {
     opacity: 1;
-    border: 2px solid var(--lila);
+    border: 1px solid var(--lila);
   }
 }
 
@@ -3028,7 +2997,7 @@ input[type="time"] {
   padding: 5px;
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 2px solid var(--lila);
+  border: 1px solid var(--lila);
   background-color: var(--lila);
   border-radius: 10px;
   line-height: 26px;
@@ -3435,18 +3404,18 @@ input[type="time"] {
   padding: 20px;
   background: var(--background);
   border-radius: var(--border-radius);
-  border: 2px solid var(--primary);
+  border: 1px solid var(--primary);
   box-shadow: -4px 4px var(--primary);
   transform: scale(0.95);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 
   &.marketplace {
-    border: 2px solid var(--lila);
+    border: 1px solid var(--lila);
     box-shadow: -4px 4px var(--lila);
   }
 
   &.services {
-    border: 2px solid var(--profession);
+    border: 1px solid var(--profession);
     box-shadow: -4px 4px var(--profession);
   }
 
@@ -3569,4 +3538,17 @@ td.selected .cell-wrapper {
   height: 130px; /* You can adjust the height if needed */
   background-color: transparent; /* Optional, to test if the space is occupied */
   visibility: hidden; /* Makes the div invisible while still occupying space */
+}
+
+.edit-profile-button {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+  z-index: 10; /* Ensure it appears above other elements */
+  background-color: #007bff; /* Customize as needed */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }

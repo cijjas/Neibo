@@ -10,6 +10,7 @@ import {
   ShiftService,
 } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
+import { catchError, map, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-amenities-reservations-page',
@@ -22,6 +23,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 
   currentPage = 1; // Current or highest loaded page
   totalPages = 1;
+  pageSize = 10;
   isLoading = false;
 
   // For dynamic day/time
@@ -56,13 +58,36 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.reservationForm = this.fb.group({
-      amenityUrl: ['', Validators.required],
+      amenity: ['', Validators.required],
       date: ['', Validators.required],
     });
 
     // Load the first page + shifts
-    this.loadAmenities(this.currentPage);
     this.loadShifts();
+
+    this.route.queryParams
+      .pipe(
+        switchMap((params) => {
+          this.currentPage = +params['page'] || 1;
+          this.pageSize = +params['size'] || 10;
+
+          // Update queryParams if defaults are missing
+          const missingParams: any = {};
+          if (!params['page']) missingParams['page'] = this.currentPage;
+          if (!params['size']) missingParams['size'] = this.pageSize;
+
+          if (Object.keys(missingParams).length > 0) {
+            this.router.navigate([], {
+              relativeTo: this.route,
+              queryParams: { ...missingParams },
+              queryParamsHandling: 'merge',
+            });
+          }
+
+          return this.loadAmenities();
+        })
+      )
+      .subscribe();
   }
 
   // Example shift-loading logic
@@ -88,85 +113,46 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   }
 
   // Unified loader
-  loadAmenities(page: number): void {
-    // If we’re already loading or page is invalid, do nothing
-    if (this.isLoading || page < 1 || page > this.totalPages) {
-      return;
-    }
+  private loadAmenities(): Observable<void> {
+    const queryParams = {
+      page: this.currentPage,
+      size: this.pageSize,
+    };
 
-    this.amenityService.getAmenities({ page }).subscribe({
-      next: (data) => {
-        /**
-         * If `page === 1`, we're refreshing from scratch.
-         * Or you might want to always push if you want to keep old pages.
-         */
-        if (page === 1) {
-          this.amenities = data.amenities;
+    return this.amenityService.getAmenities(queryParams).pipe(
+      map((response) => {
+        if (response) {
+          this.amenities = response.amenities;
+          this.totalPages = response.totalPages;
+          this.currentPage = response.currentPage;
         } else {
-          // Append new data
-          this.amenities = [...this.amenities, ...data.amenities];
+          this.amenities = [];
+          this.totalPages = 0;
         }
-
-        // Update page tracking
-        this.currentPage = data.currentPage;
-        this.totalPages = data.totalPages;
         this.isLoading = false;
-      },
-      error: (err) => {
-        console.error(err);
+      }),
+      catchError((error) => {
+        console.error('Error loading amenities:', error);
+        this.amenities = [];
+        this.totalPages = 0;
         this.isLoading = false;
-      },
-    });
+        return of();
+      })
+    );
   }
 
-  // When the user scrolls near the bottom in the Amenity selector
-  onScroll(event: Event): void {
-    // If already loading or on the last page, do nothing
-    if (this.isLoading || this.currentPage >= this.totalPages) return;
-
-    const target = event.target as HTMLElement;
-    const threshold = 100;
-
-    if (
-      target.scrollHeight - target.scrollTop - target.clientHeight <
-      threshold
-    ) {
-      // Load next page
-      this.loadAmenities(this.currentPage + 1);
-    }
-  }
-
-  // When the user selects a page from the paginator
-  onPageChange(pageNumber: number): void {
-    // If the user picks the same page or something invalid, skip
-    if (
-      pageNumber < 1 ||
-      pageNumber > this.totalPages ||
-      pageNumber === this.currentPage
-    ) {
+  onPageChange(page: number): void {
+    if (page < 1 || page > this.totalPages || page === this.currentPage) {
       return;
     }
+    this.currentPage = page;
+    this.updateQueryParams();
+  }
 
-    // Set the loading state
-    this.isLoading = true;
-
-    // Fetch the selected page and replace the amenities array
-    this.amenityService.getAmenities({ page: pageNumber }).subscribe({
-      next: (data) => {
-        this.amenities = data.amenities; // Replace the previous page's data
-        this.currentPage = pageNumber; // Update the current page
-        this.isLoading = false; // Reset the loading state
-      },
-      error: (err) => {
-        console.error('Error fetching amenities:', err);
-        this.isLoading = false; // Reset the loading state even on error
-      },
-    });
-
-    // Optionally, reflect the new page in the URL
+  private updateQueryParams(): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { page: pageNumber },
+      queryParams: { page: this.currentPage, size: this.pageSize },
       queryParamsHandling: 'merge',
     });
   }
@@ -174,7 +160,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   // Reservation form submission
   onSubmit(): void {
     if (this.reservationForm.valid) {
-      const amenityUrl = this.reservationForm.get('amenityUrl')?.value;
+      const amenityUrl = this.reservationForm.get('amenity')?.value.self;
       const date = this.reservationForm.get('date')?.value;
       this.router.navigate(['/amenities/choose-time'], {
         queryParams: { amenityUrl, date },
@@ -185,7 +171,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   }
 
   selectAmenity(amenitySelfLink: string) {
-    this.reservationForm.get('amenityUrl')?.setValue(amenitySelfLink);
+    this.reservationForm.get('amenity')?.setValue(amenitySelfLink);
   }
 
   deleteReservation(bookingUrl: string): void {
@@ -217,6 +203,20 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`;
   }
+
+  fetchAmenities = (page: number, size: number): Observable<any> => {
+    return this.amenityService.getAmenities({ page, size }).pipe(
+      map((response) => ({
+        items: response.amenities,
+        currentPage: response.currentPage,
+        totalPages: response.totalPages,
+      }))
+    );
+  };
+
+  displayAmenity = (amenity: Amenity): string => {
+    return amenity.name;
+  };
 }
 
 /** Utility sorting functions */

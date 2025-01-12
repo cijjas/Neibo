@@ -1,0 +1,78 @@
+.confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px); /* Apply blur to the background */
+  -webkit-backdrop-filter: blur(
+    8px
+  ); /* Ensure compatibility with WebKit browsers */
+}
+
+.confirmation-dialog {
+  width: 400px;
+  background-color: var(--background);
+  padding: 4em;
+  border-radius: 15px;
+  text-align: center;
+  z-index: 1001;
+  border: 1px solid var(--primary);
+  box-shadow: -4px 4px 0 0 var(--lighttext);
+}
+
+.confirmation-dialog h2 {
+  word-wrap: break-word; /* Break long words to fit in the container */
+  white-space: normal; /* Allow wrapping of text */
+  text-align: center; /* Optional: Center-align the title */
+  max-width: 100%; /* Ensure it doesn't overflow */
+}
+.confirmation-button {
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0.7em 1em;
+  background-color: var(--darkonbackground);
+  color: var(--text);
+  border: 1px solid var(--lighttext);
+  border-radius: var(--border-radius);
+  position: relative;
+  transform: translateY(0);
+  /*transition: -webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7);*/
+  transition: all 0.3s ease-in-out;
+  border: 1px solid var(--primary);
+  background-color: var(--to-primary);
+  &.rounded {
+    border-radius: var(--border-hard) !important;
+  }
+  color: var(--primary);
+
+  &:hover,
+  &:active,
+  &:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 0 0 var(--primary);
+    border: 1px solid var(--primary);
+    background-color: var(--to-primary);
+  }
+
+  &.deny {
+    border: 1px solid var(--error);
+    background-color: var(--to-error);
+    color: var(--error);
+    &:hover,
+    &:active,
+    &:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 0 0 var(--error);
+      color: var(--error);
+      border: 1px solid var(--error);
+      background-color: var(--to-error);
+    }
+  }
+}

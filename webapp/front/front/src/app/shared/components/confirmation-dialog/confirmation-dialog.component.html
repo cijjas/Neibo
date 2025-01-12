@@ -1,0 +1,16 @@
+<div class="confirmation-overlay" *ngIf="isVisible">
+  <div class="confirmation-dialog f-c-c-c">
+    <h2 class="c-text">{{ options.title }}</h2>
+    <p class="mb-2" style="line-height: 1.5em; color: var(--lighttext)">
+      {{ options.message }}
+    </p>
+    <div class="confirmation-buttons f-r-sb-c w-100">
+      <button (click)="confirm()" class="confirmation-button">
+        {{ options.confirmText }}
+      </button>
+      <button (click)="cancel()" class="confirmation-button deny">
+        {{ options.cancelText }}
+      </button>
+    </div>
+  </div>
+</div>

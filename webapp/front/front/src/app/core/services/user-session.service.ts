@@ -10,21 +10,23 @@ export class UserSessionService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private neighborhoodSubject = new BehaviorSubject<Neighborhood | null>(null);
 
-  // We still keep a *memory* copy of the token if we want quick access,
-  // but the full reading/writing is done in TokenService now.
-  private authToken: string | null = null;
-
-  constructor(private linkService: HateoasLinksService) {
-    // Restore user from localStorage if we want to persist them
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
+  constructor() {
+    try {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        this.currentUserSubject.next(JSON.parse(storedUser));
+      }
+    } catch (error) {
+      console.error('Error parsing storedUser:', error);
     }
 
-    // Restore neighborhood from localStorage if we want to persist it
-    const storedNeighborhood = localStorage.getItem('neighborhood');
-    if (storedNeighborhood) {
-      this.neighborhoodSubject.next(JSON.parse(storedNeighborhood));
+    try {
+      const storedNeighborhood = localStorage.getItem('neighborhood');
+      if (storedNeighborhood) {
+        this.neighborhoodSubject.next(JSON.parse(storedNeighborhood));
+      }
+    } catch (error) {
+      console.error('Error parsing storedNeighborhood:', error);
     }
   }
 
@@ -32,7 +34,7 @@ export class UserSessionService {
   //  User info
   // ----------------------------------------------
   setUserInformation(user: User): void {
-    this.currentUserSubject.next(user);
+    this.currentUserSubject.next({ ...user }); // Ensure immutability
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
@@ -48,29 +50,30 @@ export class UserSessionService {
   //  Neighborhood info
   // ----------------------------------------------
   setNeighborhoodInformation(neighborhood: Neighborhood): void {
-    this.neighborhoodSubject.next(neighborhood);
+    this.neighborhoodSubject.next({ ...neighborhood }); // Ensure immutability
     localStorage.setItem('neighborhood', JSON.stringify(neighborhood));
   }
 
   // ----------------------------------------------
   //  Observables to subscribe to
   // ----------------------------------------------
+
   getCurrentUser(): Observable<User | null> {
     return this.currentUserSubject.asObservable();
   }
 
-  getNeighborhood(): Observable<Neighborhood | null> {
+  getCurrentNeighborhood(): Observable<Neighborhood | null> {
     return this.neighborhoodSubject.asObservable();
   }
 
   // ----------------------------------------------
-  //  Token (optional to keep in memory)
+  //  Logout Method
   // ----------------------------------------------
-  setAccessToken(token: string): void {
-    this.authToken = token;
-  }
+  logout(): void {
+    this.currentUserSubject.next(null);
+    this.neighborhoodSubject.next(null);
 
-  getAccessToken(): string | null {
-    return this.authToken;
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('neighborhood');
   }
 }

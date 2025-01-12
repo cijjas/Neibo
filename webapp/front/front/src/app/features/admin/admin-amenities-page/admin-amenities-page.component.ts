@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Amenity, Shift, AmenityService, ShiftService } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HateoasLinksService } from '@core/index';
+import {
+  ConfirmationService,
+  HateoasLinksService,
+  ToastService,
+} from '@core/index';
 
 @Component({
   selector: 'app-admin-amenities-page',
@@ -39,6 +43,8 @@ export class AdminAmenitiesPageComponent implements OnInit {
     private shiftService: ShiftService, // 1) Inject shift service
     private router: Router,
     private route: ActivatedRoute,
+    private toastService: ToastService,
+    private confirmationService: ConfirmationService,
     private linkService: HateoasLinksService
   ) {}
 
@@ -102,17 +108,34 @@ export class AdminAmenitiesPageComponent implements OnInit {
       });
   }
 
-  deleteAmenity(amenityUrl: string) {
-    this.amenityService.deleteAmenity(amenityUrl).subscribe({
-      next: () => {
-        // handle success (e.g. show toast)
-        // Reload amenities or remove from local list
-        this.loadAmenities();
-      },
-      error: (err) => {
-        console.error('Error deleting amenities:', err);
-      },
-    });
+  deleteAmenity(amenity: Amenity) {
+    this.confirmationService
+      .askForConfirmation({
+        title: `Delete Amenity '${amenity.name}'`,
+        message: 'Are you sure you want to delete this amenity?',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.amenityService.deleteAmenity(amenity.self).subscribe({
+            next: () => {
+              this.toastService.showToast(
+                `Amenity '${amenity.name}' deleted successfully.`,
+                'success'
+              );
+              this.loadAmenities();
+            },
+            error: (err) => {
+              this.toastService.showToast(
+                `Could not remove '${amenity.name}'. Try Again.`,
+                'error'
+              );
+              console.error('Error deleting amenities:', err);
+            },
+          });
+        }
+      });
   }
 
   // Check if a given day/time slot is available for this amenity

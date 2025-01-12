@@ -18,7 +18,6 @@ export class TokenService {
 
   public setAccessToken(token: string): void {
     localStorage.setItem(this.authTokenKey, token);
-    this.userSessionService.setAccessToken(token);
   }
 
   public getRefreshToken(): string {
@@ -37,13 +36,6 @@ export class TokenService {
 
   public hasTokens(): boolean {
     return !!this.getAccessToken() && !!this.getRefreshToken();
-  }
-
-  public loadSavedTokens(): void {
-    const existingAccessToken = this.getAccessToken();
-    if (existingAccessToken) {
-      this.userSessionService.setAccessToken(existingAccessToken);
-    }
   }
 
   public isAccessTokenExpiringSoon(): boolean {

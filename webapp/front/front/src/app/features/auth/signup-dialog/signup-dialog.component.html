@@ -33,7 +33,7 @@
     </div>
 
     <!-- Toggle Options -->
-    <div class="f-c-c-c all">
+    <div class="f-c-c-c g-0 all">
       <div class="f-r-c-c g-1 w-100 toggle-buttons signup-width-control">
         <button
           class="cool-button"
@@ -73,21 +73,18 @@
             <!-- Neighborhood Selection -->
             <div class="f-r-sb-c w-100">
               <div class="col p-0">
-                <select
-                  id="neighborhood"
-                  formControlName="neighborhoodId"
-                  class="cool-select"
+                <app-infinite-scroll-select
+                  [theme]="'default'"
+                  [multiple]="false"
+                  [fetchData]="fetchNeighborhoods"
+                  [displayFn]="displayNeighborhood"
+                  formControlName="neighborhood"
+                  class="w-100"
+                  [height]="'150px'"
+                  [uniqueKey]="'self'"
                 >
-                  <option value="" disabled selected class="placeholder-option">
-                    Select Neighborhood
-                  </option>
-                  <option
-                    *ngFor="let neighborhood of neighborhoodsList"
-                    [value]="neighborhood.self"
-                  >
-                    {{ neighborhood.name }}
-                  </option>
-                </select>
+                </app-infinite-scroll-select>
+
                 <small
                   class="form-error"
                   *ngIf="
@@ -216,7 +213,7 @@
                 >
                   *Password is required.
                 </small>
-                <small
+                <!-- <small
                   class="form-error"
                   *ngIf="
                     signupForm.get('password')?.hasError('minlength') &&
@@ -225,8 +222,8 @@
                   "
                 >
                   *Password must be at least 8 characters.
-                </small>
-                <small
+                </small> -->
+                <!-- <small
                   class="form-error"
                   *ngIf="
                     signupForm.get('password')?.hasError('pattern') &&
@@ -236,7 +233,7 @@
                 >
                   *Password must contain at least 1 uppercase letter, 1
                   lowercase letter, and 1 digit.
-                </small>
+                </small> -->
               </div>
             </div>
 
@@ -359,8 +356,17 @@
               </div>
             </div>
 
-            <!-- Profession Multi-Select (already done in your code) -->
-            <!-- ... -->
+            <app-infinite-scroll-select
+              [theme]="'default'"
+              [multiple]="true"
+              [fetchData]="fetchProfessions"
+              [displayFn]="displayProfession"
+              formControlName="professions"
+              class="w-100"
+              [height]="'150px'"
+              [uniqueKey]="'self'"
+            >
+            </app-infinite-scroll-select>
 
             <!-- Name and Surname -->
             <div class="input-row">

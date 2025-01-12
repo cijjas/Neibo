@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ImageService, ToastService } from '@core/index';
+import { ConfirmationService, ImageService, ToastService } from '@core/index';
 import { ContactService, ResourceService } from '@shared/index';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 
@@ -36,8 +36,9 @@ export class AdminInformationPageComponent implements OnInit {
     private contactService: ContactService,
     private resourceService: ResourceService,
     private toastService: ToastService,
-    private imageService: ImageService
-  ) { }
+    private imageService: ImageService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   ngOnInit(): void {
     // ------------------ Contact Form ------------------
@@ -153,13 +154,16 @@ export class AdminInformationPageComponent implements OnInit {
           return this.resourceService.createResource(
             formValue.title,
             formValue.description,
-            imageUrl,
+            imageUrl
           );
         })
       )
       .subscribe({
         next: () => {
-          this.toastService.showToast('Resource created successfully!', 'success');
+          this.toastService.showToast(
+            'Resource created successfully!',
+            'success'
+          );
           this.closeCreateResourceDialog();
           this.fetchResources(); // Refresh the list of resources
         },
@@ -170,18 +174,18 @@ export class AdminInformationPageComponent implements OnInit {
       });
   }
 
-  private createImageObservable(imageFile: File | null): Observable<string | null> {
+  private createImageObservable(
+    imageFile: File | null
+  ): Observable<string | null> {
     return imageFile
       ? this.imageService.createImage(imageFile).pipe(
-        catchError((error) => {
-          console.error('Error uploading image:', error);
-          return of(null); // Return null if image upload fails
-        })
-      )
+          catchError((error) => {
+            console.error('Error uploading image:', error);
+            return of(null); // Return null if image upload fails
+          })
+        )
       : of(null);
   }
-
-
 
   // ------------------ IMAGE PREVIEW ------------------
   onFileChange(event: any) {
@@ -203,7 +207,10 @@ export class AdminInformationPageComponent implements OnInit {
   // ------------------ CONTACTS ------------------
   fetchContacts(): void {
     this.contactService
-      .getContacts({ page: this.contactCurrentPage, size: this.contactPageSize })
+      .getContacts({
+        page: this.contactCurrentPage,
+        size: this.contactPageSize,
+      })
       .subscribe({
         next: (data) => {
           this.phoneNumbersList = data.contacts;
@@ -230,17 +237,13 @@ export class AdminInformationPageComponent implements OnInit {
     this.fetchContacts();
   }
 
-  deleteContact(contactUrl: string) {
-    this.toastService.showToast('Contact deleted successfully.', 'success');
-    this.contactService.deleteContact(contactUrl).subscribe(() => {
-      this.fetchContacts();
-    });
-  }
-
   // ------------------ RESOURCES ------------------
   fetchResources(): void {
     this.resourceService
-      .getResources({ page: this.resourceCurrentPage, size: this.resourcePageSize })
+      .getResources({
+        page: this.resourceCurrentPage,
+        size: this.resourcePageSize,
+      })
       .subscribe({
         next: (data) => {
           this.resourceList = data.resources;
@@ -267,11 +270,64 @@ export class AdminInformationPageComponent implements OnInit {
     this.fetchResources();
   }
 
-  deleteResource(resourceUrl: string) {
-    this.toastService.showToast('Resource deleted successfully.', 'success');
-    this.resourceService.deleteResource(resourceUrl).subscribe(() => {
-      this.fetchResources();
-    });
+  // ------------------ DELETE CONTACT ------------------
+  deleteContact(contactUrl: string): void {
+    this.confirmationService
+      .askForConfirmation({
+        title: 'Delete Contact',
+        message:
+          'Are you sure you want to delete this contact? This action cannot be undone.',
+        confirmText: 'Yes, Delete',
+        cancelText: 'Cancel',
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.contactService.deleteContact(contactUrl).subscribe({
+            next: () => {
+              this.toastService.showToast(
+                'Contact deleted successfully.',
+                'success'
+              );
+              this.fetchContacts(); // Refresh contacts list
+            },
+            error: (err) => {
+              console.error('Error deleting contact:', err);
+              this.toastService.showToast('Failed to delete contact.', 'error');
+            },
+          });
+        }
+      });
   }
 
+  // ------------------ DELETE RESOURCE ------------------
+  deleteResource(resourceUrl: string): void {
+    this.confirmationService
+      .askForConfirmation({
+        title: 'Delete Resource',
+        message:
+          'Are you sure you want to delete this resource? This action cannot be undone.',
+        confirmText: 'Yes, Delete',
+        cancelText: 'Cancel',
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.resourceService.deleteResource(resourceUrl).subscribe({
+            next: () => {
+              this.toastService.showToast(
+                'Resource deleted successfully.',
+                'success'
+              );
+              this.fetchResources(); // Refresh resources list
+            },
+            error: (err) => {
+              console.error('Error deleting resource:', err);
+              this.toastService.showToast(
+                'Failed to delete resource.',
+                'error'
+              );
+            },
+          });
+        }
+      });
+  }
 }

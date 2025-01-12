@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HateoasLinksService, ToastService } from '@core/index';
+import {
+  ConfirmationService,
+  HateoasLinksService,
+  ToastService,
+} from '@core/index';
 import { User, UserService, LinkKey } from '@shared/index';
 
 @Component({
@@ -19,6 +23,7 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private toastService: ToastService,
     private route: ActivatedRoute,
+    private confirmationService: ConfirmationService,
     private router: Router
   ) {}
 
@@ -64,24 +69,48 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
       });
   }
 
-  rejectUser(user: User) {
-    this.userService.rejectUser(user).subscribe({
-      next: () => {
-        this.toastService.showToast(
-          `The request from user "${user.name}" has been successfully rejected.`,
-          'success'
-        );
-        this.loadUsers(
-          this.route.snapshot.url.map((segment) => segment.path).join('/')
-        );
-      },
-      error: () => {
-        this.toastService.showToast(
-          `Failed to reject the request from user "${user.name}". Please try again later.`,
-          'error'
-        );
-      },
-    });
+  rejectUser(user: User): void {
+    const actionDetails = this.neighbors
+      ? {
+          title: 'Remove Neighbor',
+          message: `Are you sure you want to remove "${user.name}" as a neighbor? This action cannot be undone, and the user will lose access to neighborhood features.`,
+          confirmText: 'Yes, Remove',
+          successMessage: `"${user.name}" has been successfully removed as a neighbor. They no longer have access to neighborhood features.`,
+          errorMessage: `We encountered an issue while trying to remove "${user.name}" as a neighbor. Please check your connection or try again later.`,
+        }
+      : {
+          title: 'Reject User Request',
+          message: `Are you sure you want to decline the request from "${user.name}"? This action cannot be undone.`,
+          confirmText: 'Yes, Reject',
+          successMessage: `The request from "${user.name}" has been successfully declined. The user will be notified accordingly.`,
+          errorMessage: `We encountered an issue while trying to decline the request from "${user.name}". Please check your connection or try again later.`,
+        };
+
+    this.confirmationService
+      .askForConfirmation({
+        title: actionDetails.title,
+        message: actionDetails.message,
+        confirmText: actionDetails.confirmText,
+        cancelText: 'Cancel',
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.userService.rejectUser(user).subscribe({
+            next: () => {
+              this.toastService.showToast(
+                actionDetails.successMessage,
+                'success'
+              );
+              this.loadUsers(
+                this.route.snapshot.url.map((segment) => segment.path).join('/')
+              );
+            },
+            error: () => {
+              this.toastService.showToast(actionDetails.errorMessage, 'error');
+            },
+          });
+        }
+      });
   }
 
   verifyUser(user: User) {

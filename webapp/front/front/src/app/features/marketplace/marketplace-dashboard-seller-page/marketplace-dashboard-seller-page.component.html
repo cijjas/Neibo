@@ -22,25 +22,21 @@
             <!-- My Listings button -->
             <a
               [routerLink]="['/marketplace/seller-hub', 'listings']"
-              class="cool-feed-button rounded marketplace-button font-weight-bold"
+              class="cool-action-button rounded marketplace-button font-weight-bold"
               [class.active]="isListings"
             >
-              <span class="font-size-12">
-                <i class="fa-regular fa-chart-bar"></i>
-                <span class="hide-text">My listings</span>
-              </span>
+              <i class="fa-regular fa-chart-bar"></i>
+              <span class="hide-text">My listings</span>
             </a>
 
             <!-- My Sales button -->
             <a
               [routerLink]="['/marketplace/seller-hub', 'sales']"
-              class="cool-feed-button rounded marketplace-button font-weight-bold"
+              class="cool-action-button rounded marketplace-button font-weight-bold"
               [class.active]="isSales"
             >
-              <span class="font-size-12">
-                <i class="fa-solid fa-box-open hide-icons"></i>
-                <span class="hide-text">My sales</span>
-              </span>
+              <i class="fa-solid fa-box-open hide-icons"></i>
+              <span class="hide-text">My sales</span>
             </a>
           </div>
         </div>

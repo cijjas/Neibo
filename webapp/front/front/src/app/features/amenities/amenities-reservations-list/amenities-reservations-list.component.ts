@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingService, Booking, LinkKey } from '@shared/index';
-import { HateoasLinksService, ToastService } from '@core/index';
+import {
+  ConfirmationService,
+  HateoasLinksService,
+  ToastService,
+} from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -21,6 +25,8 @@ export class AmenitiesReservationsListComponent implements OnInit {
     private linkService: HateoasLinksService,
     private route: ActivatedRoute,
     private toastService: ToastService,
+    private confirmationService: ConfirmationService,
+
     private router: Router
   ) {}
 
@@ -91,25 +97,38 @@ export class AmenitiesReservationsListComponent implements OnInit {
   deleteReservation(booking: Booking): void {
     this.isLoading = true;
 
-    this.bookingService.deleteBooking(booking.self).subscribe({
-      next: () => {
-        this.reservationsList = this.reservationsList.filter(
-          (reservation) => reservation.self !== booking.self
-        );
-        this.loadReservations(); // Reload reservations after deletion
-        this.toastService.showToast(
-          `Your reservation for '${booking.amenity.name}' on ${booking.shift.startTime} to ${booking.shift.endTime} has been successfully canceled.`,
-          'success'
-        );
-      },
-      error: (err) => {
-        console.error(err);
-        this.toastService.showToast(
-          `Unable to cancel your reservation for '${booking.amenity.name}' on ${booking.shift.startTime} to ${booking.shift.endTime}. Please check your connection or try again later.`,
-          'error'
-        );
-        this.isLoading = false;
-      },
-    });
+    this.confirmationService
+      .askForConfirmation({
+        title: `Cancel Reservation`,
+        message: `Are you sure you want to cancel your reservation for '${booking.amenity.name}' on ${booking.bookingDate}, starting at ${booking.shift.startTime}?`,
+        confirmText: 'Yes, Cancel',
+        cancelText: 'No, Keep',
+      })
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.bookingService.deleteBooking(booking.self).subscribe({
+            next: () => {
+              this.reservationsList = this.reservationsList.filter(
+                (reservation) => reservation.self !== booking.self
+              );
+              this.loadReservations(); // Reload reservations after deletion
+              this.toastService.showToast(
+                `Your reservation for '${booking.amenity.name}' on ${booking.bookingDate} from ${booking.shift.startTime} to ${booking.shift.endTime} has been successfully canceled.`,
+                'success'
+              );
+            },
+            error: (err) => {
+              console.error(err);
+              this.toastService.showToast(
+                `We couldn't cancel your reservation for '${booking.amenity.name}' on ${booking.bookingDate} from ${booking.shift.startTime} to ${booking.shift.endTime}. Please check your connection or try again later.`,
+                'error'
+              );
+            },
+            complete: () => {
+              this.isLoading = false;
+            },
+          });
+        }
+      });
   }
 }

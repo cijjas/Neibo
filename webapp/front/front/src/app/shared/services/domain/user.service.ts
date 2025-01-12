@@ -79,7 +79,7 @@ export class UserService {
     identification: number
   ): Observable<string | null> {
     let usersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS);
-
+    console.log(usersUrl);
     let body: UserDto = {
       name: name,
       surname: surname,

@@ -6,9 +6,11 @@ import {
   BehaviorSubject,
   catchError,
   forkJoin,
+  map,
   mergeMap,
   Observable,
   of,
+  switchMap,
   tap,
   throwError,
 } from 'rxjs';
@@ -63,7 +65,7 @@ export class AuthService {
     return this.http
       .get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
       .pipe(
-        mergeMap((response) => {
+        switchMap((response) => {
           const accessToken = response.headers.get('X-Access-Token');
           const refreshToken = response.headers.get('X-Refresh-Token');
           const userUrl = this.extractUrl(response.headers.get('X-User-URL'));
@@ -81,9 +83,10 @@ export class AuthService {
             this.tokenService.setRefreshToken(refreshToken);
           }
 
+          // Create observables for user, neighborhood, and workers neighborhood
           const userObs = userUrl
             ? this.http.get<UserDto>(userUrl).pipe(
-                tap((userDto) => {
+                switchMap((userDto) => {
                   if (userDto._links) {
                     this.linkRegistry.registerLinks(userDto._links, 'user:');
                   }
@@ -94,10 +97,14 @@ export class AuthService {
                       this.setUserRole(role);
                     }
                   }
-                  mapUser(this.http, userDto).subscribe({
-                    next: (user) =>
-                      this.userSessionService.setUserInformation(user),
-                  });
+                  return mapUser(this.http, userDto);
+                }),
+                tap((user) => {
+                  this.userSessionService.setUserInformation(user);
+                }),
+                catchError((error) => {
+                  console.error('Error fetching user data:', error);
+                  return of(null); // Continue even if user data fails
                 })
               )
             : of(null);
@@ -114,6 +121,10 @@ export class AuthService {
                   this.userSessionService.setNeighborhoodInformation(
                     mapNeighborhood(neighDto)
                   );
+                }),
+                catchError((error) => {
+                  console.error('Error fetching neighborhood data:', error);
+                  return of(null); // Continue even if neighborhood data fails
                 })
               )
             : of(null);
@@ -130,22 +141,23 @@ export class AuthService {
                 }),
                 catchError((error) => {
                   console.error('Error fetching workers neighborhood:', error);
-                  return of(null);
+                  return of(null); // Continue even if workers neighborhood data fails
                 })
               )
             : of(null);
 
+          // Use forkJoin to execute all observables in parallel
           return forkJoin([userObs, neighObs, workersNeighObs]).pipe(
             tap(() => {
               // Emit the 'login' event after successful login
               this.channel.postMessage({ type: 'login' });
             }),
-            mergeMap(() => of(true))
+            map(() => true) // Indicate successful login
           );
         }),
         catchError((error) => {
           console.error('Authentication error:', error);
-          return of(false);
+          return of(false); // Indicate failed login
         })
       );
   }

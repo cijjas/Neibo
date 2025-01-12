@@ -14,25 +14,24 @@ export class ServiceProvidersControlBarComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private professionService: ProfessionService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     // Fetch the profession list
-    this.professionService.getProfessions().subscribe(
-      (professions) => {
+    this.professionService.getProfessions().subscribe({
+      next: (professions) => {
         this.professionList = professions.map((prof) => prof); // If using display names
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching professions:', error);
-      }
-    );
+      },
+    });
 
     // Get the current profession from query params
     this.route.queryParams.subscribe((params) => {
       this.currentProfession = params['professions'] || '';
     });
   }
-
 
   setProfession(prof: Profession | null): void {
     if (prof === null) {
@@ -53,5 +52,4 @@ export class ServiceProvidersControlBarComponent implements OnInit {
       });
     }
   }
-
 }
