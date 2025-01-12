@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-// import { AuthService, ThemeService, UserSessionService } from './core';
+// import { AuthService, PreferencesService, UserSessionService } from './core';
 import { AuthService, UserSessionService } from './core';
 import { TokenService } from '@core/services/token.service';
 import { UserService } from './shared';
+import { PreferencesService } from '@core/services/preferences.service';
 
 @Component({
   selector: 'app-root',
@@ -15,21 +16,17 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private userSessionService: UserSessionService,
-    private userService: UserService // private themeService: ThemeService
+    private preferencesService: PreferencesService
   ) {
     this.channel = new BroadcastChannel('auth_channel');
   }
 
   ngOnInit(): void {
-    // this.themeService.initializeTheme();
-    // this.userSessionService.getCurrentUser().subscribe((user) => {
-    //   if (user) {
-    //     // Optionally, fetch the latest user data from the backend
-    //     this.userService.getUser(user.self).subscribe((updatedUser) => {
-    //       this.userSessionService.setUserInformation(updatedUser);
-    //     });
-    //   }
-    // });
+    this.userSessionService.getCurrentUser().subscribe((user) => {
+      if (user) {
+        this.preferencesService.applyDarkMode(user.darkMode); // Re-apply the theme
+      }
+    });
     this.channel.onmessage = (event) => {
       if (event.data.type === 'login') {
         console.log('Login event received. Refreshing page...');

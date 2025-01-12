@@ -6,9 +6,6 @@
   width: 100%;
 }
 
-
-
-
 .wrapper-widget {
   /* padding: 100px; TODO esto lo agranda bien pero hay que ver como hacer bien */
   padding: 15px;
@@ -21,7 +18,7 @@
   height: auto;
   background-color: var(--onbackground);
   color: var(--primary);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
   box-shadow: -3px 5px 0 0 var(--lighttext);
@@ -61,13 +58,9 @@
       /* Center the content horizontally and vertically */
       justify-content: center;
       align-items: center;
-
-
     }
-
   }
 }
-
 
 .calendar-widget {
   padding: 0;
@@ -83,7 +76,6 @@
     /* Center the weeks and days vertically */
     padding: 0;
     /* Remove any padding */
-
   }
 
   & li {
@@ -121,12 +113,10 @@
 
       &::before {
         background: var(--primary);
-
       }
 
       &:hover {
         transform: translateY(-2px);
-
       }
     }
 
@@ -135,10 +125,8 @@
       /* Set the text color to white */
 
       &::before {
-
         background: var(--old-primary);
       }
-
     }
 
     &.inactive {
@@ -171,6 +159,5 @@
       transform: translateY(-2px);
       cursor: pointer;
     }
-
   }
 }

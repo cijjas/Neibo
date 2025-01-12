@@ -26,6 +26,7 @@ import { UserSessionService } from './user-session.service';
 import { HateoasLinksService } from './link.service';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
+import { PreferencesService } from './preferences.service';
 
 @Injectable({
   providedIn: 'root',
@@ -49,7 +50,8 @@ export class AuthService {
     private linkRegistry: HateoasLinksService,
     private userSessionService: UserSessionService,
     private tokenService: TokenService,
-    private router: Router
+    private router: Router,
+    private preferencesService: PreferencesService
   ) {
     this.channel = new BroadcastChannel('auth_channel');
   }
@@ -101,6 +103,7 @@ export class AuthService {
                 }),
                 tap((user) => {
                   this.userSessionService.setUserInformation(user);
+                  this.preferencesService.applyDarkMode(user.darkMode);
                 }),
                 catchError((error) => {
                   console.error('Error fetching user data:', error);

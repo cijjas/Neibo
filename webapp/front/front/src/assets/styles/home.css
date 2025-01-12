@@ -182,24 +182,12 @@
   padding: 0.7em 1em;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   position: relative;
   transform: translateY(0);
   /*transition: -webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7);*/
   transition: all 0.3s ease-in-out;
-
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 110%;
-    bottom: -5px;
-    left: 0;
-    -webkit-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    -o-transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-    transition: bottom 0.3s cubic-bezier(0.5, 2.5, 0.7, 0.7);
-  }
 
   &.active {
     transform: translateY(-4px);
@@ -212,10 +200,44 @@
     border-radius: var(--border-hard) !important;
   }
 
+  &.comment-button {
+    color: var(--text);
+    background-color: var(--onbackground);
+    border: 1px solid var(--shadow);
+    transition: all 0.3s ease-in-out;
+
+    &.active,
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 0 0 var(--primary);
+      color: var(--primary);
+      background-color: var(--to-primary);
+      border: 1px solid var(--primary);
+    }
+  }
+
+  &.cancel-button {
+    color: var(--text);
+    background-color: var(--onbackground);
+    border: 1px solid var(--shadow);
+    transition: all 0.3s ease-in-out;
+
+    &.active,
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 0 0 var(--error);
+      color: var(--error);
+      background-color: var(--to-error);
+      border: 1px solid var(--error);
+    }
+  }
+
   &.marketplace-button {
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     transition: all 0.3s ease-in-out;
 
     &.active,
@@ -232,7 +254,7 @@
   &.admin-button {
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     transition: all 0.3s ease-in-out;
 
     &.active,
@@ -249,7 +271,7 @@
   &.services-button {
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     transition: all 0.3s ease-in-out;
 
     &.active,
@@ -299,7 +321,7 @@
   width: 100%;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transform: translateY(-3px);
   box-shadow: -3px 4px 0 0 var(--lighttext);
@@ -314,7 +336,7 @@
     padding: 0.7em 1em;
     background-color: var(--onbackground);
     color: var(--text);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     border-radius: var(--border-radius);
     position: relative;
     transform: translateY(0);
@@ -338,7 +360,7 @@
     &.marketplace-button {
       color: var(--text);
       background-color: var(--onbackground);
-      border: 1px solid var(--lighttext);
+      border: 1px solid var(--shadow);
       transition: all 0.3s ease-in-out;
 
       &.active,
@@ -362,7 +384,7 @@
     transition: all 0.3s;
     background-color: var(--onbackground);
     color: var(--text);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     border-radius: var(--border-hard);
     position: relative;
     transform: translateY(0);
@@ -457,7 +479,7 @@
   padding: 0;
   width: 100%;
   background-color: var(--onbackground);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transition: all 0.3s ease-in-out;
   overflow: hidden;
@@ -587,7 +609,7 @@
 .no-posts-found {
   width: 100%;
   height: 400px;
-  border: 1px solid var(--bordercolor);
+  border: 1px solid var(--shadow);
   padding: 20px;
   background-color: var(--onbackground);
   border-radius: 10px;
@@ -596,12 +618,13 @@
   align-items: center;
   flex-direction: column;
   text-align: center;
-  color: var(--lightertext);
+  color: var(--lighttext);
   gap: 10px;
+  box-shadow: -4px 4px 0 0 var(--lighttext);
 }
 
 .circle-icon {
-  border: var(--lightertext) 1px solid;
+  border: var(--lighttext) 1px solid;
   border-radius: 50px;
   width: 45px;
   height: 45px;
@@ -630,12 +653,12 @@
 .post-section {
   width: 100%;
   padding: 10px;
-  background-color: var(--darkonbackground);
+  background-color: var(--onbackground);
   border-radius: 10px;
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
 
   transform: translateY(-4px);
-  box-shadow: 0 5px 0 0 var(--lighttext);
+  box-shadow: 0 0px 0 0 var(--lighttext);
   margin-bottom: 20px;
 }
 
@@ -729,10 +752,10 @@
   width: 100%;
   height: 600px;
   background-color: var(--onbackground);
-  border: 1px solid var(--lighttext);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
-  box-shadow: -3px 5px 0 0 var(--lighttext);
+  box-shadow: -3px 5px 0 0 var(--shadow);
+  border: 1px solid var(--shadow);
 
   &.admin-box {
     height: auto;
@@ -776,7 +799,7 @@
   transition: all 0.3s ease-in-out;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
 
   position: relative;
@@ -1080,7 +1103,7 @@
   width: 100%;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
   box-shadow: 0 5px 0 0 var(--lighttext);
@@ -1640,7 +1663,7 @@ app-background-clouds {
     font-size: 12px;
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
 
@@ -1660,7 +1683,7 @@ app-background-clouds {
     font-size: 12px;
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
 
@@ -1680,7 +1703,7 @@ app-background-clouds {
     font-size: 12px;
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
 
@@ -1701,7 +1724,7 @@ app-background-clouds {
 
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     border-radius: var(--border-hard) 0 0 var(--border-hard);
     transition: all 0.3s ease-in-out;
     border-right: transparent;
@@ -1724,7 +1747,7 @@ app-background-clouds {
     font-size: 12px;
     color: var(--text);
     background-color: var(--onbackground);
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
 
     &.pure {
       color: var(--lila);
@@ -1796,7 +1819,7 @@ app-background-clouds {
       color: var(--profession);
     }
     &:disabled {
-      border: 1px solid var(--lighttext);
+      border: 1px solid var(--shadow);
       color: var(--lighttext);
       box-shadow: 0 0 0 0 var(--profession);
       transform: translateY(0);
@@ -1814,7 +1837,7 @@ app-background-clouds {
   }
 
   &:disabled {
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     color: var(--lighttext);
     box-shadow: 0 0 0 0 var(--primary);
     transform: translateY(0);
@@ -2090,7 +2113,7 @@ h6 {
 }
 
 .text-muted {
-  color: var(--lighttext) !important;
+  color: var(--lightertext) !important;
 }
 
 .f-w-600 {
@@ -2246,7 +2269,7 @@ h6 {
   width: 100%;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transition: all 0.3s ease-in-out;
   position: relative;
@@ -2267,7 +2290,7 @@ h6 {
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: -2px 4px 0 var(--text);
+    box-shadow: -2px 4px 0 var(--lighttext);
     cursor: pointer;
   }
 }
@@ -2278,7 +2301,7 @@ h6 {
   width: 100%;
   background-color: var(--onbackground);
   color: var(--text);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transition: all 0.3s ease-in-out;
   transform: translateY(-4px);
@@ -2444,7 +2467,7 @@ h6 {
     background-color: var(--onbackground);
     width: 100%;
     border-radius: 0;
-    border: 1px solid var(--lighttext);
+    border: 1px solid var(--shadow);
     overflow: hidden;
     float: left;
 
@@ -2675,7 +2698,7 @@ input[type="time"] {
         width: 16px;
         border-radius: var(--border-hard);
         margin-right: 12px;
-        border: 1px solid var(--lighttext);
+        border: 1px solid var(--shadow);
         transition: all 0.3s ease-in-out;
       }
 
@@ -3551,4 +3574,8 @@ td.selected .cell-wrapper {
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.c-lightertext {
+  color: var(--lightertext);
 }

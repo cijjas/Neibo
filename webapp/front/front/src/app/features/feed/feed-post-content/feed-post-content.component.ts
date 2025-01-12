@@ -20,6 +20,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class FeedPostContentComponent implements OnInit, OnDestroy {
   @Input() post!: Post;
+  isFocused: boolean = false;
 
   humanReadableDate!: string;
   postImageSafeUrl: SafeUrl | null = null;
@@ -52,7 +53,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     //
 
     this.commentForm = this.fb.group({
-      comment: ['', [Validators.required, Validators.minLength(3)]],
+      comment: ['', [Validators.required, Validators.minLength(1)]],
     });
 
     const tagLink = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_TAGS);
@@ -166,11 +167,12 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   /**
    * Comments
    */
-  addComment() {
+  onSubmit() {
     if (this.commentForm.invalid) {
       console.error('Comment form is invalid');
       return;
     }
+    const commentValue = this.commentForm.value.comment.trim();
 
     // Get the current user
     this.userSessionService.getCurrentUser().subscribe((user) => {
@@ -185,7 +187,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
           next: (createdComment) => {
             // Reset the form
             this.commentForm.reset();
-
+            this.isFocused = false;
             // Refresh the comments list
             this.getComments(this.currentPage, this.pageSize);
           },
@@ -194,6 +196,11 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
           },
         });
     });
+  }
+
+  onCancel(): void {
+    this.commentForm.reset();
+    this.isFocused = false;
   }
 
   getComments(page: number, size: number): void {

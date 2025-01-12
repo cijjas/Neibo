@@ -9,7 +9,7 @@ export * from './services/auth.service';
 export * from './services/image.service';
 export * from './services/link.service';
 export * from './services/pagination.service';
-// export * from './services/theme.service';
+export * from './services/preferences.service';
 export * from './services/toast.service';
 export * from './services/confirmation.service';
 export * from './services/user-session.service';

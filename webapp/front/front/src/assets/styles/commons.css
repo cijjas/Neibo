@@ -47,6 +47,8 @@ body {
 :root {
   --text: #4f5248;
   --lighttext: #83887f;
+  --shadow: #83887f;
+  /* #697683 */
   --lightertext: #9ca194;
   --background: #faf6e8;
   --onbackground: rgb(249, 248, 244);
@@ -94,14 +96,16 @@ body {
 
 .dark-mode {
   --text: #ced3c1;
-  --lighttext: #b1bbab;
+  --lighttext: #797f86;
+  --shadow: #4f5f6f;
+
   --lightertext: #878f82;
 
-  --background: #06131f;
-  --onbackground: rgb(17 21 26);
+  --background: #141e28;
+  --onbackground: rgb(23 28 35);
 
   --onbackgroundfaded: rgba(49, 58, 63, 0.1);
-  --darkonbackground: #4b4f4f;
+  --darkonbackground: #1d2229;
   --primary: #8fbd79;
   --onprimary: #29333a;
   --between-primary: #187736;
@@ -118,15 +122,16 @@ body {
   --star-active: #ff9c1a;
   --stripe: #181d25;
 
-  --to-primary: #c5e3b7;
-  --to-lila: rgb(72, 78, 89);
-  --to-profession: #deefff;
-  --to-admin: #26a69a;
+  --to-primary: #20271c;
+  --to-lila: #1d1825;
+  --to-profession: #192531;
+  --to-admin: #171c2d;
+  --to-error: #282020;
 
   --lila: #a98cd1;
   --accent: #6696e2;
   --profession: #77bdff;
-  --admin: #80cbc4;
+  --admin: #768ed4;
 
   --user-profile: #20252b;
 }

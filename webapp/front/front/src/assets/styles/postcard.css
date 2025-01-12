@@ -2,10 +2,10 @@
   width: 100%;
   padding: 20px;
   transform: translateY(-4px);
-  box-shadow: -3px 5px 0 0 var(--primary);
+  border: 1px solid var(--shadow);
+  box-shadow: -3px 5px 0 0 var(--shadow);
   background-color: var(--onbackground);
   color: var(--text);
-  border: var(--border);
   border-radius: var(--border-radius);
 }
 
@@ -28,7 +28,6 @@
 .comment .comment-header {
   font-weight: bold;
   color: var(--lighttext);
-
 }
 
 .comment .comment-body {
@@ -42,12 +41,10 @@
   position: relative;
   color: var(--text);
   white-space: normal; /* Allow text to wrap within the container */
-  &.grey{
+  &.grey {
     background-color: var(--lightertext);
   }
 }
-
-
 
 .cool-comment {
   margin-top: 5px;

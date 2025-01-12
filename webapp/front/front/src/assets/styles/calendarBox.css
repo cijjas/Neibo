@@ -8,7 +8,7 @@
   width: 100%;
   background-color: var(--onbackground);
   color: var(--primary);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
   box-shadow: -3px 5px 0 0 var(--lighttext);
@@ -40,9 +40,7 @@
     color: var(--text);
     cursor: default;
   }
-
 }
-
 
 .calendar {
   padding: 0;
@@ -70,7 +68,6 @@
       }
     }
 
-
     &.days {
       margin-bottom: 15px;
       width: 100%;
@@ -87,7 +84,6 @@
         &.inactive {
           &:hover {
             transform: translateY(0px) !important;
-
           }
 
           cursor: default;
@@ -144,7 +140,6 @@
             background: var(--old-primary);
             /* Use the --accent color for the circle */
           }
-
         }
 
         &.today {
@@ -196,7 +191,6 @@
         &:hover {
           transform: translateY(-4px);
         }
-
       }
     }
 

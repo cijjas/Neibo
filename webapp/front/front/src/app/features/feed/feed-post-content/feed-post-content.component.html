@@ -83,29 +83,42 @@
   <!-- Comments section -->
   <div class="comments-section">
     <div style="margin: 10px 0 10px 0">
-      <form [formGroup]="commentForm" (ngSubmit)="addComment()">
-        <textarea
-          formControlName="comment"
-          class="cool-input grey-input textarea-min-max"
-          rows="3"
-          placeholder="Add a comment"
-        ></textarea>
-        <div class="d-flex flex-column justify-content-center align-items-end">
-          <button
-            type="submit"
-            class="cool-button cool-small on-bg w-25 font-weight-bolder"
-            style="margin-top: 5px; font-size: 12px"
-            [disabled]="commentForm.invalid"
+      <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+        <div class="comment-input-container">
+          <textarea
+            formControlName="comment"
+            class="cool-input grey-input textarea-min-max"
+            rows="3"
+            placeholder="Add a comment"
+            (focus)="isFocused = true"
+          ></textarea>
+
+          <div
+            class="f-r-e-c pt-1 w-100 font-size-12 g-0"
+            [class.visible]="
+              isFocused &&
+              commentForm.controls['comment'].value.trim().length > 0
+            "
           >
-            Comment
-          </button>
+            <button
+              type="button"
+              class="cool-action-button rounded cancel-button p-2"
+              (click)="onCancel()"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              class="cool-action-button rounded comment-button ms-1"
+              [disabled]="commentForm.invalid"
+            >
+              Comment
+            </button>
+          </div>
         </div>
       </form>
     </div>
-
-    <h3>Comments</h3>
-
-    <!-- Pagination Controls -->
 
     <!-- Display comments if available -->
     <div *ngIf="comments && comments.length > 0; else noComments">

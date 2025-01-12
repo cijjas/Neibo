@@ -114,7 +114,13 @@ export class UserService {
 
     return this.http
       .patch<UserDto>(updateUrl, { darkMode: updatedDarkMode })
-      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+      .pipe(
+        mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)),
+        catchError((error) => {
+          console.error('Failed to toggle dark mode:', error);
+          return of(user);
+        })
+      );
   }
 
   // ! WTF IS GOING ON HERE 'SPANISH'?? should use self and compare with that! or change the model so it has the whole object

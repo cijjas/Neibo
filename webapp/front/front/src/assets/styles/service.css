@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--onbackground);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
   transition: all 0.3s ease-in-out;
@@ -87,7 +87,7 @@
   background: var(--onbackground);
   width: 100%;
   border-radius: var(--border-radius);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   transition: all 0.3s ease-in-out;
   overflow: hidden;
   white-space: normal;

@@ -23,7 +23,7 @@
   text-align: center;
   z-index: 1001;
   border: 1px solid var(--primary);
-  box-shadow: -4px 4px 0 0 var(--lighttext);
+  box-shadow: -3px 4px 0 0 var(--lighttext);
 }
 
 .confirmation-dialog h2 {
@@ -39,7 +39,7 @@
   padding: 0.7em 1em;
   background-color: var(--darkonbackground);
   color: var(--text);
-  border: 1px solid var(--lighttext);
+  border: 1px solid var(--shadow);
   border-radius: var(--border-radius);
   position: relative;
   transform: translateY(0);

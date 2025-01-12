@@ -1,6 +1,6 @@
 /* From Uiverse.io by Creatlydev */
 .dark-toggle {
-  background-color: var(--onprimary);
+  background-color: var(--background);
   color: var(--primary);
   width: 56px;
   height: 56px;

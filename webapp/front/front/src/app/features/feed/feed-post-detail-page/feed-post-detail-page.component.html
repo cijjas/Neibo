@@ -1,23 +1,19 @@
 <!-- feed-post-detail-page.component.html -->
-<div style="position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 0">
-  <app-background-clouds></app-background-clouds>
-  <app-navbar></app-navbar>
 
-  <div class="container">
-    <div class="row">
-      <div class="column column-left">
-        <app-sidebar></app-sidebar>
-      </div>
+<div class="container">
+  <div class="row">
+    <div class="column column-left">
+      <app-sidebar></app-sidebar>
+    </div>
 
-      <div class="column column-middle">
-        <app-feed-post-content *ngIf="post" [post]="post"></app-feed-post-content>
-      </div>
+    <div class="column column-middle">
+      <app-feed-post-content *ngIf="post" [post]="post"></app-feed-post-content>
+    </div>
 
-      <div class="column column-right">
-        <app-calendar-widget></app-calendar-widget>
-      </div>
+    <div class="column column-right">
+      <app-calendar-widget></app-calendar-widget>
     </div>
   </div>
-
-  <app-wave-footer></app-wave-footer>
 </div>
+
+<app-wave-footer></app-wave-footer>

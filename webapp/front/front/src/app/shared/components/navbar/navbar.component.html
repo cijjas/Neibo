@@ -44,7 +44,9 @@
           </div>
         </a>
 
-        <div class="f-r-c-c">
+        <div class="f-r-c-c g-0">
+          <app-user-profile-widget></app-user-profile-widget>
+
           <!-- DARKMODE TOGGLE -->
           <div class="container">
             <label class="dark-toggle" for="switch">
@@ -52,7 +54,7 @@
                 id="switch"
                 class="input"
                 type="checkbox"
-                [checked]="isDarkMode"
+                [(ngModel)]="isDarkMode"
                 (change)="onDarkModeToggle()"
               />
               <div class="icon icon--moon">
@@ -86,8 +88,6 @@
               </div>
             </label>
           </div>
-
-          <app-user-profile-widget></app-user-profile-widget>
         </div>
       </div>
     </div>
