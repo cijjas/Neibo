@@ -4,13 +4,13 @@
   aria-hidden="true"
 >
   <div class="f-r-sb-c">
-    <h2 class="mb-0">Amenities</h2>
+    <h2 class="mb-0">{{ "ADMIN-AMENITIES-PAGE.AMENITIES" | translate }}</h2>
     <a
       [routerLink]="['/admin/amenities/new']"
       class="cool-action-button admin-button"
     >
       <i class="fa-solid fa-plus"></i>
-      Create Amenity
+      {{ "ADMIN-AMENITIES-PAGE.CREATE_AMENITY" | translate }}
     </a>
   </div>
 
@@ -19,7 +19,7 @@
   <!-- If no amenities -->
   <div class="no-posts-found" *ngIf="amenities?.length === 0 && !isLoading">
     <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-    Amenities not found
+    {{ "ADMIN-AMENITIES-PAGE.AMENITIES_NOT_FOUND" | translate }}
   </div>
 
   <!-- If amenities are available -->
@@ -39,7 +39,7 @@
             [routerLink]="['/admin/amenities', amenity.self, 'edit']"
           >
             <i class="fa-solid fa-pen"></i>
-            Edit
+            {{ "ADMIN-AMENITIES-PAGE.EDIT" | translate }}
           </a>
           <a class="btn btn-link">
             <i
@@ -61,10 +61,10 @@
         <div class="cool-table w-100">
           <table class="table-striped w-100">
             <tr>
-              <th>Hours</th>
+              <th>{{ "ADMIN-AMENITIES-PAGE.HOURS" | translate }}</th>
               <!-- Use the abbreviations if you want them: getAbbreviatedDay(d) -->
               <th *ngFor="let d of uniqueDays">
-                {{ getAbbreviatedDay(d) }}
+                {{ getAbbreviatedDay(d) | translate }}
               </th>
             </tr>
             <tr *ngFor="let t of uniqueTimes">

@@ -92,6 +92,9 @@ body {
 
   --border: 1px solid var(--primary);
   --input-height: 35px;
+
+  --cloud1: #fdfcfb;
+  --cloud2: #fbfbfb;
 }
 
 .dark-mode {
@@ -134,6 +137,9 @@ body {
   --admin: #768ed4;
 
   --user-profile: #20252b;
+
+  --cloud1: #10171f;
+  --cloud2: #10171f;
 }
 
 html {

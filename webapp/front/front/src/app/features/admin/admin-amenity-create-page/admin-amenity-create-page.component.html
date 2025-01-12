@@ -1,5 +1,7 @@
 <div class="cool-static-container shifts-reservation">
-  <h2 class="card-title">Create New Amenity</h2>
+  <h2 class="card-title">
+    {{ "ADMIN-AMENITY-CREATE-PAGE.CREATE_NEW_AMENITY" | translate }}
+  </h2>
   <div class="divider"></div>
   <div>
     <form [formGroup]="amenityForm" (ngSubmit)="onSubmit()" novalidate>
@@ -11,14 +13,16 @@
           <input
             formControlName="name"
             class="cool-input"
-            placeholder="Name"
+            [placeholder]="'ADMIN-AMENITY-CREATE-PAGE.AMENITY_NAME' | translate"
             type="text"
           />
           <div
             class="form-row form-error"
             *ngIf="nameControl?.invalid && nameControl?.touched"
           >
-            <p class="error">Name is required</p>
+            <p class="error">
+              {{ "ADMIN-AMENITY-CREATE-PAGE.NAME_IS_REQUIRED" | translate }}
+            </p>
           </div>
         </div>
       </div>
@@ -31,46 +35,49 @@
           formControlName="description"
           class="cool-input textarea-min-max"
           rows="5"
-          placeholder="Description"
+          [placeholder]="'ADMIN-AMENITY-CREATE-PAGE.DESCRIPTION' | translate"
         ></textarea>
         <div
           class="form-row form-error"
           *ngIf="descControl?.invalid && descControl?.touched"
         >
-          <p class="error">Description is required</p>
+          <p class="error">
+            {{
+              "ADMIN-AMENITY-CREATE-PAGE.DESCRIPTION_IS_REQUIRED" | translate
+            }}
+          </p>
         </div>
       </div>
 
-      <p class="m-t-40">Amenity Hours</p>
-      <div class="divider"></div>
+      <p class="m-t-40">
+        {{ "ADMIN-AMENITY-CREATE-PAGE.AMENITY_HOURS" | translate }}
+      </p>
+      <div class="divider mt-2 mb-3"></div>
 
       <!-- Action buttons -->
       <div class="f-r-sb-c w-100 ps-3 pe-3">
-        <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg"
-          >9-17</a
-        >
-        <a (click)="uncheckWeekends()" class="w-100 cool-button red"
-          >Clear weekend</a
-        >
-        <a (click)="clearAllCheckedHours()" class="w-100 cool-button red"
-          >Clear all</a
-        >
+        <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">
+          {{ "ADMIN-AMENITY-CREATE-PAGE.917" | translate }}
+        </a>
+        <a (click)="uncheckWeekends()" class="w-100 cool-button red">
+          {{ "ADMIN-AMENITY-CREATE-PAGE.CLEAR_WEEKEND" | translate }}
+        </a>
+        <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">
+          {{ "ADMIN-AMENITY-CREATE-PAGE.CLEAR_ALL" | translate }}
+        </a>
       </div>
 
-      <!-- Time Table (Dynamic) -->
+      <!-- Time Table -->
       <div class="cool-table w-100 p-4">
         <table>
           <tr>
             <th *ngFor="let day of uniqueDays">
-              {{ getAbbreviatedDay(day) }}
+              {{ getAbbreviatedDay(day) | translate }}
             </th>
           </tr>
-
-          <!-- For each time as a row -->
           <tr *ngFor="let time of uniqueTimes; let rowIndex = index">
             <td>
               <label class="container">
-                <!-- Toggle entire row (time) -->
                 <input
                   type="checkbox"
                   [checked]="isRowSelected(time)"
@@ -78,8 +85,6 @@
                 />
               </label>
             </td>
-
-            <!-- For each day, show a cell you can toggle -->
             <td
               *ngFor="let day of uniqueDays"
               [class.selected]="isShiftSelectedByDayTime(day, time)"
@@ -95,18 +100,21 @@
         </table>
       </div>
 
-      <!-- Info text -->
+      <!-- Info Text -->
       <div class="f-c-c-c">
         <div class="f-r-c-c" style="gap: 5px">
-          Remember that
+          {{ "ADMIN-AMENITY-CREATE-PAGE.REMEMBER_THAT" | translate }}
           <span class="c-primary font-weight-bolder">
-            only selected shifts
+            {{ "ADMIN-AMENITY-CREATE-PAGE.ONLY_SELECTED_SHIFTS" | translate }}
           </span>
-          will be active for your amenity.
+          {{
+            "ADMIN-AMENITY-CREATE-PAGE.WILL_BE_ACTIVE_FOR_YOUR_AMENITY"
+              | translate
+          }}
         </div>
       </div>
 
-      <!-- Submit button -->
+      <!-- Submit Button -->
       <div class="d-flex justify-content-end m-t-40">
         <button
           id="submit-checks"
@@ -115,7 +123,7 @@
           style="height: 40px"
           [disabled]="!anyShiftChecked"
         >
-          Create
+          {{ "ADMIN-AMENITY-CREATE-PAGE.CREATE" | translate }}
         </button>
       </div>
     </form>

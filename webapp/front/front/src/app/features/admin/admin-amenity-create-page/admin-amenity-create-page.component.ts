@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
 import { ShiftService, Shift, AmenityService } from '@shared/index';
 
 @Component({
@@ -41,8 +42,9 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     private shiftService: ShiftService,
     private amenityService: AmenityService,
     private toastService: ToastService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.amenityForm = this.fb.group({
@@ -92,7 +94,6 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     }
     const formValue = { ...this.amenityForm.value };
 
-    // Assuming selectedShifts is an array of Shift objects
     const selectedShiftUrls: string[] = this.selectedShifts.map(
       (shift) => shift.self
     );
@@ -100,16 +101,26 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     this.amenityService
       .createAmenity(formValue.name, formValue.description, selectedShiftUrls)
       .subscribe({
-        next: (next) => {
+        next: () => {
           this.toastService.showToast(
-            `Amenity '${formValue.name}' created successfully!`,
+            this.translate.instant(
+              'ADMIN-AMENITY-CREATE-PAGE.AMENITY_FORM_VALUE_NAME_CREATED_SUCCESSFULLY',
+              {
+                formValueName: formValue.name,
+              }
+            ),
             'success'
           );
           this.router.navigate(['admin/amenities']);
         },
-        error: (err) => {
+        error: () => {
           this.toastService.showToast(
-            `Error creating amenity '${formValue.name}' , try again later.`,
+            this.translate.instant(
+              'ADMIN-AMENITY-CREATE-PAGE.ERROR_CREATING_AMENITY_FORM_VALUE_NAME_TRY_AGAIN_LA',
+              {
+                formValueName: formValue.name,
+              }
+            ),
             'error'
           );
         },
@@ -274,7 +285,6 @@ function sortDays(a: string, b: string) {
  * Example sort for times as strings "HH:mm:ss".
  */
 function sortTimes(a: string, b: string) {
-  // "08:00:00" -> [8,0,0]
   const aH = parseInt(a.split(':')[0], 10);
   const bH = parseInt(b.split(':')[0], 10);
   return aH - bH;

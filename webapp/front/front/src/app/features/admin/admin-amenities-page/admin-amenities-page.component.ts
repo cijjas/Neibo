@@ -6,6 +6,7 @@ import {
   HateoasLinksService,
   ToastService,
 } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-amenities-page',
@@ -26,13 +27,13 @@ export class AdminAmenitiesPageComponent implements OnInit {
 
   // Optional day abbreviations if you want them
   private dayAbbreviations: Record<string, string> = {
-    Monday: 'Mon',
-    Tuesday: 'Tue',
-    Wednesday: 'Wed',
-    Thursday: 'Thu',
-    Friday: 'Fri',
-    Saturday: 'Sat',
-    Sunday: 'Sun',
+    Monday: this.translate.instant('ADMIN-AMENITIES-PAGE.MON'),
+    Tuesday: this.translate.instant('ADMIN-AMENITIES-PAGE.TUE'),
+    Wednesday: this.translate.instant('ADMIN-AMENITIES-PAGE.WED'),
+    Thursday: this.translate.instant('ADMIN-AMENITIES-PAGE.THU'),
+    Friday: this.translate.instant('ADMIN-AMENITIES-PAGE.FRI'),
+    Saturday: this.translate.instant('ADMIN-AMENITIES-PAGE.SAT'),
+    Sunday: this.translate.instant('ADMIN-AMENITIES-PAGE.SUN'),
   };
   getAbbreviatedDay(day: string): string {
     return this.dayAbbreviations[day] || day;
@@ -45,7 +46,7 @@ export class AdminAmenitiesPageComponent implements OnInit {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private confirmationService: ConfirmationService,
-    private linkService: HateoasLinksService
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -109,26 +110,37 @@ export class AdminAmenitiesPageComponent implements OnInit {
   }
 
   deleteAmenity(amenity: Amenity) {
+    const title = this.translate.instant(
+      'ADMIN-AMENITIES-PAGE.DELETE_AMENITY_AMENITYNAME',
+      { amenityName: amenity.name }
+    );
+
     this.confirmationService
       .askForConfirmation({
-        title: `Delete Amenity '${amenity.name}'`,
-        message: 'Are you sure you want to delete this amenity?',
-        confirmText: 'Delete',
-        cancelText: 'Cancel',
+        title: title,
+        message: this.translate.instant(
+          'ADMIN-AMENITIES-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AMENITY'
+        ),
+        confirmText: this.translate.instant('ADMIN-AMENITIES-PAGE.DELETE'),
+        cancelText: this.translate.instant('ADMIN-AMENITIES-PAGE.CANCEL'),
       })
       .subscribe((confirmed) => {
         if (confirmed) {
           this.amenityService.deleteAmenity(amenity.self).subscribe({
             next: () => {
               this.toastService.showToast(
-                `Amenity '${amenity.name}' deleted successfully.`,
+                this.translate.instant(
+                  'ADMIN-AMENITIES-PAGE.AMENITY_AMENITYNAME_DELETED_SUCCESSFULLY'
+                ),
                 'success'
               );
               this.loadAmenities();
             },
             error: (err) => {
               this.toastService.showToast(
-                `Could not remove '${amenity.name}'. Try Again.`,
+                this.translate.instant(
+                  'ADMIN-AMENITIES-PAGE.COULD_NOT_REMOVE_AMENITYNAME_TRY_AGAIN'
+                ),
                 'error'
               );
               console.error('Error deleting amenities:', err);

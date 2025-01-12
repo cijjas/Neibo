@@ -1,5 +1,7 @@
 <div class="cool-static-container shifts-reservation">
-  <h2 class="card-title">Edit New Amenity</h2>
+  <h2 class="card-title">
+    {{ "ADMIN-AMENITY-EDIT-PAGE.EDIT_AMENITY" | translate }}
+  </h2>
   <div class="divider"></div>
   <div>
     <form [formGroup]="amenityForm" (ngSubmit)="onSubmit()" novalidate>
@@ -11,14 +13,16 @@
           <input
             formControlName="name"
             class="cool-input"
-            placeholder="Name"
+            [placeholder]="'ADMIN-AMENITY-EDIT-PAGE.NAME' | translate"
             type="text"
           />
           <div
             class="form-row form-error"
             *ngIf="nameControl?.invalid && nameControl?.touched"
           >
-            <p class="error">Name is required</p>
+            <p class="error">
+              {{ "ADMIN-AMENITY-EDIT-PAGE.NAME_IS_REQUIRED" | translate }}
+            </p>
           </div>
         </div>
       </div>
@@ -31,37 +35,41 @@
           formControlName="description"
           class="cool-input textarea-min-max"
           rows="5"
-          placeholder="Description"
+          [placeholder]="'ADMIN-AMENITY-EDIT-PAGE.DESCRIPTION' | translate"
         ></textarea>
         <div
           class="form-row form-error"
           *ngIf="descControl?.invalid && descControl?.touched"
         >
-          <p class="error">Description is required</p>
+          <p class="error">
+            {{ "ADMIN-AMENITY-EDIT-PAGE.DESCRIPTION_IS_REQUIRED" | translate }}
+          </p>
         </div>
       </div>
 
-      <p class="m-t-40">Amenity Hours</p>
+      <p class="m-t-40">
+        {{ "ADMIN-AMENITY-EDIT-PAGE.AMENITY_HOURS" | translate }}
+      </p>
       <div class="divider"></div>
 
       <!-- Action buttons -->
       <div class="f-r-sb-c w-100 ps-3 p-3">
-        <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg"
-          >9-17</a
-        >
-        <a (click)="uncheckWeekends()" class="w-100 cool-button red"
-          >Clear weekend</a
-        >
-        <a (click)="clearAllCheckedHours()" class="w-100 cool-button red"
-          >Clear all</a
-        >
+        <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">
+          {{ "ADMIN-AMENITY-EDIT-PAGE.917" | translate }}
+        </a>
+        <a (click)="uncheckWeekends()" class="w-100 cool-button red">
+          {{ "ADMIN-AMENITY-EDIT-PAGE.CLEAR_WEEKEND" | translate }}
+        </a>
+        <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">
+          {{ "ADMIN-AMENITY-EDIT-PAGE.CLEAR_ALL" | translate }}
+        </a>
       </div>
 
       <!-- Time Table (Dynamic) -->
       <div class="cool-table w-100 p-4">
         <table>
           <tr>
-            <th>Row</th>
+            <th>{{ "ADMIN-AMENITY-EDIT-PAGE.ROW" | translate }}</th>
             <!-- Header columns for unique days -->
             <th *ngFor="let day of uniqueDays">
               {{ getAbbreviatedDay(day) }}
@@ -100,11 +108,14 @@
       <!-- Info text -->
       <div class="f-c-c-c">
         <div class="f-r-c-c" style="gap: 5px">
-          Remember that
+          {{ "ADMIN-AMENITY-EDIT-PAGE.REMEMBER_THAT" | translate }}
           <span class="c-primary font-weight-bolder">
-            only selected shifts
+            {{ "ADMIN-AMENITY-EDIT-PAGE.ONLY_SELECTED_SHIFTS" | translate }}
           </span>
-          will be active for your amenity.
+          {{
+            "ADMIN-AMENITY-EDIT-PAGE.WILL_BE_ACTIVE_FOR_YOUR_AMENITY"
+              | translate
+          }}
         </div>
       </div>
 
@@ -117,7 +128,7 @@
           style="height: 40px"
           [disabled]="!anyShiftChecked"
         >
-          Save changes
+          {{ "ADMIN-AMENITY-EDIT-PAGE.SAVE_CHANGES" | translate }}
         </button>
       </div>
     </form>

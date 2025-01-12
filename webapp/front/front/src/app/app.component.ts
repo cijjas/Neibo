@@ -1,22 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-// import { AuthService, PreferencesService, UserSessionService } from './core';
 import { AuthService, UserSessionService } from './core';
-import { TokenService } from '@core/services/token.service';
-import { UserService } from './shared';
 import { PreferencesService } from '@core/services/preferences.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private tabId: string | null = null;
   private channel: BroadcastChannel;
 
   constructor(
     private authService: AuthService,
     private userSessionService: UserSessionService,
-    private preferencesService: PreferencesService
+    private preferencesService: PreferencesService,
+    private router: Router
   ) {
     this.channel = new BroadcastChannel('auth_channel');
   }
@@ -53,5 +51,10 @@ export class AppComponent implements OnInit, OnDestroy {
       this.authService.logout();
       this.channel.postMessage({ type: 'logout' });
     }
+  }
+
+  shouldShowNavbar(): boolean {
+    const excludedRoutes = ['/login', '/signup', '/unverified', '/rejected']; // Add routes where navbar shouldn't appear
+    return !excludedRoutes.includes(this.router.url);
   }
 }

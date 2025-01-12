@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
 import { ShiftService, Shift, AmenityService } from '@shared/index';
 
 @Component({
@@ -41,7 +42,8 @@ export class AdminAmenityEditPageComponent implements OnInit {
     private shiftService: ShiftService,
     private amenityService: AmenityService,
     private toastService: ToastService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -128,14 +130,24 @@ export class AdminAmenityEditPageComponent implements OnInit {
       .subscribe({
         next: (updatedAmenity) => {
           this.toastService.showToast(
-            `Amenity '${this.amenityName}' updated successfully!`,
+            this.translate.instant(
+              'ADMIN-AMENITY-EDIT-PAGE.AMENITY_THISAMENITYNAME_UPDATED_SUCCESSFULLY',
+              {
+                amenityName: this.amenityName,
+              }
+            ),
             'success'
           );
           this.router.navigate(['admin/amenities']);
         },
         error: (err) => {
           this.toastService.showToast(
-            `Error updating amenity '${this.amenityName}', try again later.`,
+            this.translate.instant(
+              'ADMIN-AMENITY-EDIT-PAGE.ERROR_UPDATING_AMENITY_THISAMENITYNAME_TRY_AGAIN_L',
+              {
+                amenityName: this.amenityName,
+              }
+            ),
             'error'
           );
         },

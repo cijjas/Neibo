@@ -69,7 +69,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     RouterModule, // Export this to make router directives available in other modules
     FormsModule,
     ReactiveFormsModule,
-
     NavbarComponent,
     PaginatorComponent,
     SuccessToastComponent,

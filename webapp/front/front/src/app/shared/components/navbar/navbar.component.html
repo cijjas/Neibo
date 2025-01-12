@@ -1,4 +1,4 @@
-<div class="nav-container m-b-20">
+<div class="navbar-container m-b-20">
   <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container-xl">
       <div class="d-flex justify-content-between align-items-center w-100">
@@ -89,11 +89,9 @@
             </label>
           </div>
           <!-- Language Toggle Button -->
-          <button (click)="onLanguageToggle()" class="language-toggle">
-            {{
-              currentLanguage === englishLanguageLink ? "Español" : "English"
-            }}
-          </button>
+          <a (click)="onLanguageToggle()" class="language-toggle">
+            {{ currentLanguage === englishLanguageLink ? "ES" : "EN " }}
+          </a>
         </div>
       </div>
     </div>

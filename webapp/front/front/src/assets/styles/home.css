@@ -1446,10 +1446,14 @@ app-background-clouds {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: -10000;
   /* Ensures it doesn't overlap other components */
   pointer-events: none;
   /* Prevents it from capturing clicks or interactions */
+}
+
+app-navbar {
+  z-index: -1;
 }
 
 .background-container {
@@ -1458,7 +1462,6 @@ app-background-clouds {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
   /* Ensures it stays in the background */
   overflow: hidden;
   /* Prevents any overflow issues */
