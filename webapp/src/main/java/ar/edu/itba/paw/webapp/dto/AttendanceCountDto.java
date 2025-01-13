@@ -21,18 +21,12 @@ public class AttendanceCountDto {
 
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        UriBuilder attendanceCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.ATTENDANCE.toString()).path(Endpoint.COUNT.toString());
-        UriBuilder self;
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.ATTENDANCE.toString()).path(Endpoint.COUNT.toString());
 
-        if (eventURI != null && userURI != null) {
-            self = attendanceCountUri.clone().queryParam(QueryParameters.FOR_USER, userURI).queryParam(QueryParameters.FOR_EVENT, eventURI);
-        } else if (eventURI != null) {
-            self = attendanceCountUri.clone().queryParam(QueryParameters.FOR_EVENT, eventURI);
-        } else if (userURI != null) {
-            self = attendanceCountUri.clone().queryParam(QueryParameters.FOR_USER, userURI);
-        } else {
-            self = attendanceCountUri;
-        }
+        if (eventURI != null)
+           self.queryParam(QueryParameters.FOR_EVENT, eventURI);
+        if (userURI != null)
+            self.queryParam(QueryParameters.FOR_USER, userURI);
 
         links.setSelf(self.build());
 

@@ -130,7 +130,7 @@ public class RequestController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestForm.getNeighborhoodId(),  uriInfo);
+        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestForm.getNeighborhoodId(), requestForm.getRequestedBy(), requestForm.getForProduct(), requestForm.getWithStatus(), requestForm.getWithType(),  uriInfo);
 
         return Response.ok(new GenericEntity<RequestsCountDto>(dto) {
                 })

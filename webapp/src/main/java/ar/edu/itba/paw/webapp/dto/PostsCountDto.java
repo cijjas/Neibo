@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.Endpoint;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -12,7 +13,7 @@ public class PostsCountDto {
 
     private Links _links;
 
-    public static PostsCountDto fromPostsCount(int postCount, long neighborhoodIdLong, String userURI, String channelUri, List<String> tagUriList, String postStatusUri, UriInfo uriInfo) {
+    public static PostsCountDto fromPostsCount(int postCount, long neighborhoodIdLong, String userURI, String channelURI, List<String> tagURIList, String postStatusURI, UriInfo uriInfo) {
         final PostsCountDto dto = new PostsCountDto();
 
         dto.count = postCount;
@@ -21,19 +22,19 @@ public class PostsCountDto {
 
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        /*
-        * This should be receiving the 4 query params that the original method is receiving
-        * is .queryParam smart enough to not put the null, gotta check that out, would save some conditionals
-        * Como se handlea la lista, please no me digas que tengo que hacer un for!
-        * */
-        // UriBuilder postsCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.POSTS.toString()).path(Endpoint.COUNT);
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.POSTS.toString()).path(Endpoint.COUNT.toString());
 
-        links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhoodId))
-                .path("posts")
-                .path("count")
-                .build());
+        if (userURI != null)
+            self.queryParam(QueryParameters.POSTED_BY, userURI);
+        if (channelURI != null)
+            self.queryParam(QueryParameters.IN_CHANNEL, channelURI);
+        if (tagURIList != null && !tagURIList.isEmpty())
+            for (String tag : tagURIList)
+                self.queryParam(QueryParameters.WITH_TAG, tag);
+        if (postStatusURI != null)
+            self.queryParam(QueryParameters.WITH_STATUS, postStatusURI);
+
+        links.setSelf(self.build());
 
         dto.set_links(links);
         return dto;

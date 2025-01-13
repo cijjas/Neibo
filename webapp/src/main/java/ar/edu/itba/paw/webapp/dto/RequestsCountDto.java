@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.Endpoint;
+import ar.edu.itba.paw.webapp.controller.QueryParameters;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -11,27 +12,27 @@ public class RequestsCountDto {
 
     private Links _links;
 
-    public static RequestsCountDto fromRequestsCount(int requestsCount, long neighborhoodIdLong, UriInfo uriInfo) {
+    public static RequestsCountDto fromRequestsCount(int requestsCount, long neighborhoodIdLong, String userURI, String productURI, String requestStatusURI, String  requestTypeURI, UriInfo uriInfo) {
         final RequestsCountDto dto = new RequestsCountDto();
 
         dto.count = requestsCount;
 
         Links links = new Links();
-/*
-* Also missing the many query params needed to define a count
-*
-* */
+
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.REQUESTS.toString()).path(Endpoint.COUNT.toString());
 
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhoodId))
-                .path("requests")
-                .path("count");
+        if (userURI != null)
+            self.queryParam(QueryParameters.REQUESTED_BY, userURI);
+        if (productURI != null)
+            self.queryParam(QueryParameters.FOR_PRODUCT, productURI);
+        if (requestStatusURI != null)
+            self.queryParam(QueryParameters.WITH_STATUS, requestStatusURI);
+        if (requestTypeURI != null)
+            self.queryParam(QueryParameters.WITH_TYPE, requestTypeURI);
 
-        links.setSelf(uriBuilder.build());
+        links.setSelf(self.build());
 
         dto.set_links(links);
         return dto;

@@ -15,6 +15,7 @@ public class QueryParameters {
     public static final String FOR_EVENT = "forEvent";
     public static final String FOR_PRODUCT= "forProduct";
     public static final String FOR_USER = "forUser";
+    public static final String REQUESTED_BY = "requestedBy";
     public static final String ON_POST = "onPost";
     public static final String POSTED_BY = "postedBy";
     public static final String LIKED_BY = "likedBy";

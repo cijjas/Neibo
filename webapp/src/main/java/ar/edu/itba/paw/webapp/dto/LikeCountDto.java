@@ -19,18 +19,12 @@ public class LikeCountDto {
 
         Links links = new Links();
 
-        UriBuilder likesCountsUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).path(Endpoint.COUNT.toString());
-        UriBuilder self;
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).path(Endpoint.COUNT.toString());
 
-        if (postURN != null && userURN != null) {
-            self = likesCountsUri.clone().queryParam(QueryParameters.LIKED_BY, userURN).queryParam(QueryParameters.ON_POST, postURN);
-        } else if (postURN != null) {
-            self = likesCountsUri.clone().queryParam(QueryParameters.ON_POST, postURN);
-        } else if (userURN != null) {
-            self = likesCountsUri.clone().queryParam(QueryParameters.LIKED_BY, userURN);
-        } else {
-            self = likesCountsUri;
-        }
+        if (postURN != null)
+            self.queryParam(QueryParameters.ON_POST, postURN);
+        if (userURN != null)
+            self.queryParam(QueryParameters.LIKED_BY, userURN);
 
         links.setSelf(self.build());
 
