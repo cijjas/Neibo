@@ -130,7 +130,10 @@ export class AdminAmenitiesPageComponent implements OnInit {
             next: () => {
               this.toastService.showToast(
                 this.translate.instant(
-                  'ADMIN-AMENITIES-PAGE.AMENITY_AMENITYNAME_DELETED_SUCCESSFULLY'
+                  'ADMIN-AMENITIES-PAGE.AMENITY_AMENITYNAME_DELETED_SUCCESSFULLY',
+                  {
+                    amenityName: amenity.name,
+                  }
                 ),
                 'success'
               );
@@ -139,7 +142,10 @@ export class AdminAmenitiesPageComponent implements OnInit {
             error: (err) => {
               this.toastService.showToast(
                 this.translate.instant(
-                  'ADMIN-AMENITIES-PAGE.COULD_NOT_REMOVE_AMENITYNAME_TRY_AGAIN'
+                  'ADMIN-AMENITIES-PAGE.COULD_NOT_REMOVE_AMENITYNAME_TRY_AGAIN',
+                  {
+                    amenityName: amenity.name,
+                  }
                 ),
                 'error'
               );

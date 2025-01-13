@@ -13,7 +13,7 @@ export class ServiceProvidersLayoutComponent {
   ngOnInit() {
     // Update `isServicesRoute` whenever the route changes
     this.router.events.subscribe(() => {
-      this.isServicesRoute = this.router.url === '/services';
+      this.isServicesRoute = this.router.url.startsWith('/services');
     });
   }
 }
