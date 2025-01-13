@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService, ImageService, ToastService } from '@core/index';
-import { ContactService, ResourceService } from '@shared/index';
+import { ConfirmationService, ToastService } from '@core/index';
+import { ContactService, ResourceService, ImageService } from '@shared/index';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 
 @Component({

@@ -1,10 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {
-  HateoasLinksService,
-  UserSessionService,
-  ImageService,
-} from '@core/index';
-import { LinkKey, User } from '@shared/index';
+import { HateoasLinksService, UserSessionService } from '@core/index';
+import { LinkKey, User, ImageService } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';

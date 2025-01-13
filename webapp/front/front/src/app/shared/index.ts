@@ -64,4 +64,5 @@ export * from './services/domain/user.service';
 export * from './services/domain/utils';
 export * from './services/domain/worker.service';
 export * from './services/utils/calendar.service';
+export * from './services/utils/image.service';
 export * from './shared.module';

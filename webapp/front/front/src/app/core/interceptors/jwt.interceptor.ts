@@ -13,6 +13,8 @@ import { TokenService } from '@core/services/token.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
+  private isRefreshing = false; // Track the refresh token state
+
   constructor(
     private tokenService: TokenService,
     private authService: AuthService
@@ -22,7 +24,6 @@ export class JwtInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // Attach access token if available
     const token = this.tokenService.getAccessToken();
 
     let authReq = request;
@@ -34,22 +35,36 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((error) => {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === 401 &&
+          !this.isRefreshing &&
+          !request.headers.has('X-Retry')
+        ) {
+          this.isRefreshing = true; // Prevent multiple refresh attempts
           console.log('Got 401, attempting refresh...');
 
           return this.authService.refreshToken().pipe(
             switchMap((success) => {
+              this.isRefreshing = false; // Reset the flag
               if (!success) {
                 this.authService.logout();
                 return throwError(() => error);
               }
+
               const newToken = this.tokenService.getAccessToken();
               const newAuthReq = request.clone({
                 setHeaders: {
                   Authorization: `Bearer ${newToken}`,
+                  'X-Retry': 'true', // Add custom header to prevent infinite retries
                 },
               });
               return next.handle(newAuthReq);
+            }),
+            catchError((refreshError) => {
+              this.isRefreshing = false; // Reset the flag on failure
+              this.authService.logout();
+              return throwError(() => refreshError);
             })
           );
         }

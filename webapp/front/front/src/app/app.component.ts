@@ -54,7 +54,17 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   shouldShowNavbar(): boolean {
-    const excludedRoutes = ['/login', '/signup', '/unverified', '/rejected']; // Add routes where navbar shouldn't appear
-    return !excludedRoutes.includes(this.router.url);
+    const excludedRoutes = [
+      '/login',
+      '/signup',
+      '/unverified',
+      '/rejected',
+      '/not-found',
+    ]; // Add routes where navbar shouldn't appear
+
+    // Extract the path without query parameters
+    const currentRoute = this.router.url.split('?')[0];
+
+    return !excludedRoutes.includes(currentRoute);
   }
 }
