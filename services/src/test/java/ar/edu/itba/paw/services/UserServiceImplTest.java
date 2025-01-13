@@ -35,7 +35,7 @@ public class UserServiceImplTest {
     private UserServiceImpl userService;
 
     @Test
-    public void create_language() {
+    public void create() {
         // Pre Conditions
         String email = "neighbor1@example.com";
         String password = "password";
@@ -43,24 +43,26 @@ public class UserServiceImplTest {
         String surname = "Doe";
         long neighborhoodId = 1L;
         long languageId = 2L;
+        long userRoleId = 1L;
         Integer identification = 123;
 
         Language expectedLanguage = Language.fromId(languageId);
+        UserRole expectedUserRole = UserRole.fromId(userRoleId);
         User mockUser = mock(User.class);
 
         when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(expectedLanguage),
-                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR)))
+                eq(false), eq(expectedUserRole)))
                 .thenReturn(mockUser);
 
         when(userDao.findUser(email)).thenReturn(Optional.empty());
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId, userRoleId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
-                eq(identification), eq(expectedLanguage), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR));
+                eq(identification), eq(expectedLanguage), eq(false), eq(expectedUserRole));
         verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR));
         assertNotNull(result);
         assertEquals(mockUser, result);
@@ -74,56 +76,96 @@ public class UserServiceImplTest {
         String name = "John";
         String surname = "Doe";
         long neighborhoodId = 1L;
+        long userRoleId = 1L;
         Long languageId = null;
         Integer identification = 1234;
 
         Language defaultLanguage = Language.ENGLISH;
+        UserRole expectedUserRole = UserRole.fromId(userRoleId);
         User mockUser = mock(User.class);
 
         when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(defaultLanguage),
-                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR)))
+                eq(false), eq(expectedUserRole)))
                 .thenReturn(mockUser);
 
         when(userDao.findUser(email)).thenReturn(Optional.empty());
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId, userRoleId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
-                eq(identification), eq(defaultLanguage), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR));
+                eq(identification), eq(defaultLanguage), eq(false), eq(expectedUserRole));
         verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR));
         assertNotNull(result);
         assertEquals(mockUser, result);
     }
 
     @Test
-    public void create_newUser() {
+    public void create_noRole() {
         // Pre Conditions
-        String email = "neighbor3@example.com";
+        String email = "neighbor2@example.com";
         String password = "password";
         String name = "John";
         String surname = "Doe";
         long neighborhoodId = 1L;
-        Long languageId = null;
-        Integer identification = 123;
+        Long userRoleId = null;
+        long languageId = 1L;
+        Integer identification = 1234;
 
+        Language expectedLanguage = Language.fromId(languageId);
+        UserRole defaultUserRole = UserRole.UNVERIFIED_NEIGHBOR;
         User mockUser = mock(User.class);
 
-        when(userDao.findUser(email)).thenReturn(Optional.empty());
-        when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(Language.ENGLISH),
-                eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR)))
+        when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(expectedLanguage),
+                eq(false), eq(defaultUserRole)))
                 .thenReturn(mockUser);
+
+        when(userDao.findUser(email)).thenReturn(Optional.empty());
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId, userRoleId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
-                eq(identification), eq(Language.ENGLISH), eq(false), eq(UserRole.UNVERIFIED_NEIGHBOR));
-        verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR)); // sendNewUserMail is called
+                eq(identification), eq(expectedLanguage), eq(false), eq(defaultUserRole));
+        verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR));
+        assertNotNull(result);
+        assertEquals(mockUser, result);
+    }
+
+    @Test
+    public void create_noLanguage_noRole() {
+        // Pre Conditions
+        String email = "neighbor2@example.com";
+        String password = "password";
+        String name = "John";
+        String surname = "Doe";
+        long neighborhoodId = 1L;
+        Long userRoleId = null;
+        Long languageId = null;
+        Integer identification = 1234;
+
+        Language defaultLanguage = Language.ENGLISH;
+        UserRole defaultUserRole = UserRole.UNVERIFIED_NEIGHBOR;
+        User mockUser = mock(User.class);
+
+        when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(defaultLanguage),
+                eq(false), eq(defaultUserRole)))
+                .thenReturn(mockUser);
+
+        when(userDao.findUser(email)).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(password)).thenReturn(anyString());
+
+        // Exercise
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId, userRoleId);
+
+        // Validation & Post Conditions
+        verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
+                eq(identification), eq(defaultLanguage), eq(false), eq(defaultUserRole));
+        verify(emailService, times(1)).sendNewUserMail(eq(neighborhoodId), eq(name), eq(UserRole.NEIGHBOR));
         assertNotNull(result);
         assertEquals(mockUser, result);
     }
@@ -137,6 +179,7 @@ public class UserServiceImplTest {
         String surname = "Doe";
         long neighborhoodId = 0L; // Worker Neighborhood so no mail is sent
         Long languageId = null;
+        Long userRoleId = null;
         Integer identification = 123;
 
         User mockUser = mock(User.class);
@@ -148,7 +191,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn(anyString());
 
         // Exercise
-        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId);
+        User result = userService.createUser(neighborhoodId, email, name, surname, password, identification, languageId, userRoleId);
 
         // Validation & Post Conditions
         verify(userDao, times(1)).createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(),
@@ -168,6 +211,7 @@ public class UserServiceImplTest {
         String surname = "Doe";
         long neighborhoodId = 123L;
         long languageId = Language.ENGLISH.getId();
+        long userRoleId = UserRole.UNVERIFIED_NEIGHBOR.getId();
         Integer identification = 456;
 
         User existingUser = new User.Builder().build();
@@ -178,7 +222,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
 
         // Exercise
-        User result = userService.createUser(neighborhoodId, mail, name, surname, password, identification, languageId);
+        User result = userService.createUser(neighborhoodId, mail, name, surname, password, identification, languageId, userRoleId);
 
         // Validation & Post Conditions
         assertNotNull(result);

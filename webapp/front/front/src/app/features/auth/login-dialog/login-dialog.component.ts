@@ -38,7 +38,7 @@ export class LoginDialogComponent implements OnInit {
     private router: Router,
     private linkStorage: HateoasLinksService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
   ngOnInit() {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -112,7 +112,6 @@ export class LoginDialogComponent implements OnInit {
                 break;
 
               case Roles.UNVERIFIED_NEIGHBOR:
-              case Roles.UNVERIFIED_WORKER:
                 this.router
                   .navigate(['unverified'])
                   .then(() => this.closeLoginDialog());

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, ToastService } from '@core/index';
-import { Neighborhood, NeighborhoodService } from '@shared/index';
+import { Neighborhood, NeighborhoodService, UserService } from '@shared/index';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -20,7 +20,8 @@ export class RejectedPageComponent implements OnInit {
     private neighborhoodService: NeighborhoodService,
     private toastService: ToastService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private userService: UserService,
   ) {
     this.neighborhoodForm = this.fb.group({
       neighborhood: [null, Validators.required],
@@ -59,6 +60,8 @@ export class RejectedPageComponent implements OnInit {
         selectedNeighborhood.name,
         selectedNeighborhood.self
       );
+
+      //this.userService.update
       // Add service call logic here for form submission
     } else {
       this.toastService.showToast('Please select a neighborhood.', 'error');

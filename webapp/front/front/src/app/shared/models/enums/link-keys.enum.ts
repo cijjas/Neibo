@@ -37,6 +37,7 @@ export enum LinkKey {
     SPANISH_LANGUAGE = 'root:spanishLanguage',
     TRENDING_POST_STATUS = 'root:trendingPostStatus',
     WORKERS = 'root:workers',
+    WORKERS_NEIGHBORHOOD = 'root:workersNeighborhood',
 
     // -----------------------------------------------------------------
     // Neighborhood links

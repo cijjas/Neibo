@@ -15,10 +15,13 @@ public class RootDto {
 
         RootLinks links = new RootLinks();
 
+        String workersNeighborhoodId =  String.valueOf(BaseNeighborhood.WORKERS.getId());
+
         UriBuilder rootUri = uriInfo.getBaseUriBuilder();
         UriBuilder affiliationsUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS.toString());
         UriBuilder userRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES.toString());
         UriBuilder neighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString());
+        UriBuilder workersNeighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(workersNeighborhoodId);
         UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString());
         UriBuilder imagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString());
 
@@ -34,6 +37,8 @@ public class RootDto {
         UriBuilder workerRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES.toString());
 
         links.setSelf(rootUri.build());
+
+        links.setWorkersNeighborhood(workersNeighborhoodUri.build());
 
         links.setAffiliations(affiliationsUri.build());
         links.setNeighborhoods(neighborhoodsUri.build());

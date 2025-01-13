@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import {
   Worker,
   WorkerDto,
@@ -27,7 +27,7 @@ export class WorkerService {
     private http: HttpClient,
     private linkService: HateoasLinksService,
     private userService: UserService
-  ) {}
+  ) { }
 
   public getWorker(url: string): Observable<Worker> {
     return this.http
@@ -41,7 +41,7 @@ export class WorkerService {
     queryParams: {
       page?: number;
       size?: number;
-      withProfessions?: string[];
+      withProfession?: string[]; // Array of professions
       inNeighborhoods?: string[];
       withRole?: string;
       withStatus?: string;
@@ -51,9 +51,7 @@ export class WorkerService {
     totalPages: number;
     currentPage: number;
   }> {
-    let workersUrl: string = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_WORKERS
-    );
+    let workersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_WORKERS);
 
     let params = new HttpParams();
 
@@ -61,20 +59,20 @@ export class WorkerService {
       params = params.set('page', queryParams.page.toString());
     if (queryParams.size !== undefined)
       params = params.set('size', queryParams.size.toString());
-    if (queryParams.withProfessions && queryParams.withProfessions.length > 0)
-      params = params.set(
-        'withProfessions',
-        queryParams.withProfessions.join(',')
-      );
     if (queryParams.inNeighborhoods && queryParams.inNeighborhoods.length > 0)
       params = params.set(
         'inNeighborhoods',
         queryParams.inNeighborhoods.join(',')
       );
-    if (queryParams.withRole)
-      params = params.set('withRole', queryParams.withRole);
-    if (queryParams.withStatus)
-      params = params.set('withStatus', queryParams.withStatus);
+    if (queryParams.withRole) params = params.set('withRole', queryParams.withRole);
+    if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
+
+    // Add each profession as a separate query parameter
+    if (queryParams.withProfession && queryParams.withProfession.length > 0) {
+      queryParams.withProfession.forEach((profession) => {
+        params = params.append('withProfession', profession);
+      });
+    }
 
     return this.http
       .get<WorkerDto[]>(workersUrl, { params, observe: 'response' })
@@ -100,16 +98,23 @@ export class WorkerService {
           return forkJoin(workerObservables).pipe(
             map((workers) => ({
               workers,
-              totalPages: paginationInfo.totalPages,
-              currentPage: paginationInfo.currentPage,
+              totalPages: paginationInfo.totalPages || 0,
+              currentPage: paginationInfo.currentPage || 0,
             }))
           );
+        }),
+        catchError((error) => {
+          console.error('Error fetching workers:', error);
+          return of({
+            workers: [],
+            totalPages: 0,
+            currentPage: 0,
+          });
         })
       );
   }
 
   public createWorker(
-    neighborhoodUrl: string,
     name: string,
     surname: string,
     password: string,
@@ -119,15 +124,12 @@ export class WorkerService {
     professions: string[],
     phoneNumber: string,
     businessName: string,
-    address: string,
-    bio: string
+    address: string
   ): Observable<string | null> {
-    let workersUrl: string = this.linkService.getLink(LinkKey.WORKERS);
+    const workersUrl: string = this.linkService.getLink(LinkKey.WORKERS);
 
-    let createdUserUrl: string;
-    this.userService
-      .createUser(
-        neighborhoodUrl,
+    return this.userService
+      .createWorkerUser(
         name,
         surname,
         password,
@@ -135,34 +137,42 @@ export class WorkerService {
         language,
         identification
       )
-      .subscribe({
-        next: (createdUserLocation) => (createdUserUrl = createdUserLocation),
-      });
+      .pipe(
+        switchMap((createdUserUrl) => {
+          if (!createdUserUrl) {
+            console.error('User creation failed.');
+            return of(null); // Exit early if user creation fails
+          }
 
-    let body: WorkerDto = {
-      user: createdUserUrl,
-      professions: professions,
-      phoneNumber: phoneNumber,
-      businessName: businessName,
-      address: address,
-      bio: bio,
-    };
+          const body: WorkerDto = {
+            user: createdUserUrl,
+            professions: professions,
+            phoneNumber: phoneNumber,
+            businessName: businessName,
+            address: address,
+          };
 
-    return this.http.post(LinkKey.WORKERS, body, { observe: 'response' }).pipe(
-      map((response) => {
-        const locationHeader = response.headers.get('Location');
-        if (locationHeader) {
-          return locationHeader;
-        } else {
-          console.error('Location header not found:');
-          return null;
-        }
-      }),
-      catchError((error) => {
-        console.error('Error creating Worker', error);
-        return of(null);
-      })
-    );
+          return this.http.post(workersUrl, body, { observe: 'response' }).pipe(
+            map((response) => {
+              const locationHeader = response.headers.get('Location');
+              if (locationHeader) {
+                return locationHeader;
+              } else {
+                console.error('Location header not found:');
+                return null;
+              }
+            }),
+            catchError((error) => {
+              console.error('Error creating Worker', error);
+              return of(null);
+            })
+          );
+        }),
+        catchError((error) => {
+          console.error('Error creating User', error);
+          return of(null);
+        })
+      );
   }
 
   public updateWorker(worker: WorkerDto): Observable<void> {

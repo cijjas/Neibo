@@ -28,10 +28,8 @@ export const AuthGuard = () => {
         break;
 
       case Roles.UNVERIFIED_NEIGHBOR:
-      case Roles.UNVERIFIED_WORKER:
         router.navigate(['/unverified']);
         break;
-
       case Roles.REJECTED:
         router.navigate(['/rejected']);
         break;

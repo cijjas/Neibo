@@ -21,7 +21,7 @@ export class ServiceProvidersPageComponent implements OnInit {
     private workerService: WorkerService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams
@@ -36,8 +36,8 @@ export class ServiceProvidersPageComponent implements OnInit {
           this.professions = Array.isArray(professionsParam)
             ? professionsParam
             : professionsParam
-            ? [professionsParam]
-            : [];
+              ? [professionsParam]
+              : [];
 
           return this.loadWorkers();
         })
@@ -51,7 +51,7 @@ export class ServiceProvidersPageComponent implements OnInit {
       size: this.pageSize,
       withProfession: this.professions,
     };
-
+    console.log(this.professions)
     return this.workerService.getWorkers(queryParams).pipe(
       map((response) => {
         if (response) {

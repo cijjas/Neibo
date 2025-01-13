@@ -24,8 +24,6 @@ export class PostService {
             page?: number;
             size?: number;
             inChannel?: string;
-            withTag?: string[];
-            withStatus?: string;
             postedBy?: string;
         } = {}
     ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
@@ -36,8 +34,6 @@ export class PostService {
         if (queryParams.page !== undefined) params = params.set('page', queryParams.page.toString());
         if (queryParams.size !== undefined) params = params.set('size', queryParams.size.toString());
         if (queryParams.inChannel) params = params.set('inChannel', queryParams.inChannel);
-        if (queryParams.withTag && queryParams.withTag.length > 0) params = params.set('withTag', queryParams.withTag.join(','));
-        if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
         if (queryParams.postedBy) params = params.set('postedBy', queryParams.postedBy);
 
         return this.http

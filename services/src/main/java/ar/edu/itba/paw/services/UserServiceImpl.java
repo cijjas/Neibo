@@ -41,16 +41,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(long neighborhoodId, String mail, String name, String surname, String password,
-                           Integer identification, Long languageId) {
+                           Integer identification, Long languageId, Long userRoleId) {
         LOGGER.info("Creating Neighbor with mail {}, name {}, surname {}, identification {}, Language {} in Neighborhood {}", mail, name, surname, identification, languageId, neighborhoodId);
 
+        UserRole userRole = UserRole.UNVERIFIED_NEIGHBOR;
+        if (userRoleId != null)
+            userRole = UserRole.fromId(userRoleId);
         Language language = Language.ENGLISH;
         if (languageId != null)
             language = Language.fromId(languageId);
 
         Optional<User> n = userDao.findUser(mail);
         if (!n.isPresent()) {
-            User createdUser = userDao.createUser(neighborhoodId, mail, name, surname, passwordEncoder.encode(password), identification, language, false, UserRole.UNVERIFIED_NEIGHBOR);
+            User createdUser = userDao.createUser(neighborhoodId, mail, name, surname, passwordEncoder.encode(password), identification, language, false, userRole);
 
             // If user created is a neighbor (not worker), send admin email notifying new neighbor
             if (neighborhoodId != 0) {
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService {
             // n is a user from an early version where signing up was not a requirement
             earlyAccessUser.setPassword(passwordEncoder.encode(password));
             earlyAccessUser.setLanguage(language);
-            earlyAccessUser.setRole(UserRole.UNVERIFIED_NEIGHBOR);
+            earlyAccessUser.setRole(userRole);
             earlyAccessUser.setIdentification(identification);
             earlyAccessUser.setDarkMode(false);
             earlyAccessUser.setName(name);

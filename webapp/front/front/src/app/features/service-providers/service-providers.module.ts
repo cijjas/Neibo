@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ServiceProvidersContentComponent,
-  ServiceProvidersControlBarComponent,
   ServiceProvidersDetailPageComponent,
   ServiceProvidersEditDialogComponent,
   ServiceProvidersPageComponent,
@@ -24,7 +23,6 @@ import { ServiceProvidersCreatePostComponent } from './service-providers-create-
   declarations: [
     ServiceProvidersLayoutComponent,
     ServiceProvidersContentComponent,
-    ServiceProvidersControlBarComponent,
     ServiceProvidersDetailPageComponent,
     ServiceProvidersEditDialogComponent,
     ServiceProvidersPageComponent,
@@ -43,4 +41,4 @@ import { ServiceProvidersCreatePostComponent } from './service-providers-create-
   ],
   exports: [],
 })
-export class ServiceProvidersModule {}
+export class ServiceProvidersModule { }

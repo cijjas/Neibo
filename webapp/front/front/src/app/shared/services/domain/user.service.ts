@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable, forkJoin, of } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import {
   LanguageDto,
   UserDto,
@@ -19,7 +19,7 @@ export class UserService {
     private http: HttpClient,
     private linkService: HateoasLinksService,
     private imageService: ImageService
-  ) {}
+  ) { }
 
   public getUser(userUrl: string): Observable<User> {
     return this.http
@@ -68,7 +68,7 @@ export class UserService {
       );
   }
 
-  // ! THERE IS AN ISSUE HERE, in sign up you dont have that endpoint yet, there should be a quick request in signup using the selected neighborhood or something
+  // ? Prequest is kinda sus, waiting for users refactoring
   public createUser(
     neighborhoodUrl: string,
     name: string,
@@ -78,9 +78,8 @@ export class UserService {
     language: string,
     identification: number
   ): Observable<string | null> {
-    let usersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS);
-    console.log(usersUrl);
-    let body: UserDto = {
+
+    const body: UserDto = {
       name: name,
       surname: surname,
       password: password,
@@ -89,23 +88,86 @@ export class UserService {
       identification: identification,
     };
 
-    return this.http
-      .post(neighborhoodUrl + '/users', body, { observe: 'response' })
-      .pipe(
-        map((response) => {
-          const locationHeader = response.headers.get('Location');
-          if (locationHeader) {
-            return locationHeader;
-          } else {
-            console.error('Location header not found:');
-            return null;
-          }
-        }),
-        catchError((error) => {
-          console.error('Error creating User', error);
-          return of(null);
-        })
-      );
+    // First, GET the neighborhood URL to fetch the `_links`
+    return this.http.get<{ _links: { users: string } }>(neighborhoodUrl).pipe(
+      switchMap((neighborhoodDto) => {
+        // Extract the `users` link from the `_links` field
+        const usersUrl = neighborhoodDto._links?.users;
+
+        // POST to the `users` link to create the user
+        return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
+          map((response) => {
+            const locationHeader = response.headers.get('Location');
+            if (locationHeader) {
+              return locationHeader;
+            } else {
+              console.error('Location header not found');
+              return null;
+            }
+          }),
+          catchError((error) => {
+            console.error('Error creating User', error);
+            return of(null);
+          })
+        );
+      }),
+      catchError((error) => {
+        console.error('Error fetching neighborhood links', error);
+        return of(null);
+      })
+    );
+  }
+
+  public createWorkerUser(
+    name: string,
+    surname: string,
+    password: string,
+    mail: string,
+    language: string,
+    identification: number
+  ): Observable<string | null> {
+
+    let workerUserRole: string = this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
+    let neighborhoodUrl: string = this.linkService.getLink(LinkKey.WORKERS_NEIGHBORHOOD);
+
+    const body: UserDto = {
+      name: name,
+      surname: surname,
+      password: password,
+      mail: mail,
+      userRole: workerUserRole,
+      language: language,
+      identification: identification,
+    };
+
+    // First, GET the neighborhood URL to fetch the `_links`
+    return this.http.get<{ _links: { users: string } }>(neighborhoodUrl).pipe(
+      switchMap((neighborhoodDto) => {
+        // Extract the `users` link from the `_links` field
+        const usersUrl = neighborhoodDto._links?.users;
+
+        // POST to the `users` link to create the user
+        return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
+          map((response) => {
+            const locationHeader = response.headers.get('Location');
+            if (locationHeader) {
+              return locationHeader;
+            } else {
+              console.error('Location header not found');
+              return null;
+            }
+          }),
+          catchError((error) => {
+            console.error('Error creating User', error);
+            return of(null);
+          })
+        );
+      }),
+      catchError((error) => {
+        console.error('Error fetching neighborhood links', error);
+        return of(null);
+      })
+    );
   }
 
   public toggleDarkMode(user: User): Observable<User> {
@@ -155,6 +217,16 @@ export class UserService {
       .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
   }
 
+  public requestNeighborhood(
+    userUrl: string,
+    phoneNumber: string
+  ): Observable<User> {
+    // requires api changes
+    return this.http
+      .patch<UserDto>(userUrl, { phoneNumber: phoneNumber })
+      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+  }
+
   public uploadProfilePicture(user: User, file: File): Observable<User> {
     return this.imageService.createImage(file).pipe(
       mergeMap((imageUrl: string) => {
@@ -192,7 +264,6 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
     [Roles.NEIGHBOR]: 'Neighbor',
     [Roles.UNVERIFIED_NEIGHBOR]: 'Unverified Neighbor',
     [Roles.WORKER]: 'Service Provider',
-    [Roles.UNVERIFIED_WORKER]: 'Unverified Service Provider',
     [Roles.REJECTED]: 'Rejected',
   };
 

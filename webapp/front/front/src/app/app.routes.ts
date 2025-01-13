@@ -105,7 +105,7 @@ export const appRoutes: Routes = [
         (m) => m.UnverifiedModule
       ),
     canActivate: [RoleGuard],
-    data: { roles: [Roles.UNVERIFIED_NEIGHBOR, Roles.UNVERIFIED_WORKER] },
+    data: { roles: [Roles.UNVERIFIED_NEIGHBOR] },
   },
 
   // Unverified

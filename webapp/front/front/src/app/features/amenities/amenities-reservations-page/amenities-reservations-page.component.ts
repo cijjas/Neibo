@@ -54,7 +54,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private shiftService: ShiftService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.reservationForm = this.fb.group({
@@ -174,21 +174,6 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     this.reservationForm.get('amenity')?.setValue(amenitySelfLink);
   }
 
-  deleteReservation(bookingUrl: string): void {
-    this.isLoading = true;
-    this.bookingService.deleteBooking(bookingUrl).subscribe({
-      next: () => {
-        this.reservationsList = this.reservationsList.filter(
-          (reservation) => reservation.self !== bookingUrl
-        );
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.isLoading = false;
-      },
-    });
-  }
 
   // Check if day/time is available
   checkAvailability(shifts: Shift[], dayKey: string, timeKey: string): boolean {

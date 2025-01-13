@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class ProfessionDto {
     @NotNull(groups = Null.class)
@@ -29,7 +28,7 @@ public class ProfessionDto {
         String professionId = String.valueOf(profession.getProfessionId());
 
         UriBuilder professionUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS.toString()).path(professionId);
-        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).queryParam(QueryParameters.WITH_PROFESSIONS, professionUri.build());
+        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).queryParam(QueryParameters.WITH_PROFESSION, professionUri.build());
 
         links.setSelf(professionUri.build());
         links.setWorkers(workersUri.build());

@@ -6,7 +6,7 @@ public class QueryParameters {
     public static final String WITH_WORKER = "withWorker";
     public static final String WITH_STATUS = "withStatus";
     public static final String WITH_TAG = "withTag";
-    public static final String WITH_PROFESSIONS = "withProfessions";
+    public static final String WITH_PROFESSION = "withProfession";
     public static final String WITHOUT_WORKER = "withoutWorker";
     public static final String IN_NEIGHBORHOOD = "inNeighborhood";
     public static final String IN_CHANNEL = "inChannel";

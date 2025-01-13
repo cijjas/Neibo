@@ -42,7 +42,6 @@ export class AuthService {
     [LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE]: Roles.UNVERIFIED_NEIGHBOR,
     [LinkKey.REJECTED_USER_ROLE]: Roles.REJECTED,
     [LinkKey.WORKER_USER_ROLE]: Roles.WORKER,
-    [LinkKey.UNVERIFIED_WORKER_ROLE]: Roles.UNVERIFIED_WORKER,
   };
 
   constructor(
@@ -88,65 +87,65 @@ export class AuthService {
           // Create observables for user, neighborhood, and workers neighborhood
           const userObs = userUrl
             ? this.http.get<UserDto>(userUrl).pipe(
-                switchMap((userDto) => {
-                  if (userDto._links) {
-                    this.linkRegistry.registerLinks(userDto._links, 'user:');
+              switchMap((userDto) => {
+                if (userDto._links) {
+                  this.linkRegistry.registerLinks(userDto._links, 'user:');
+                }
+                const userRoleLink = userDto._links?.userRole;
+                if (userRoleLink) {
+                  const role = this.mapLinkToRole(userRoleLink);
+                  if (role) {
+                    this.setUserRole(role);
                   }
-                  const userRoleLink = userDto._links?.userRole;
-                  if (userRoleLink) {
-                    const role = this.mapLinkToRole(userRoleLink);
-                    if (role) {
-                      this.setUserRole(role);
-                    }
-                  }
-                  return mapUser(this.http, userDto);
-                }),
-                tap((user) => {
-                  this.userSessionService.setUserInformation(user);
-                  this.preferencesService.applyDarkMode(user.darkMode);
-                }),
-                catchError((error) => {
-                  console.error('Error fetching user data:', error);
-                  return of(null); // Continue even if user data fails
-                })
-              )
+                }
+                return mapUser(this.http, userDto);
+              }),
+              tap((user) => {
+                this.userSessionService.setUserInformation(user);
+                this.preferencesService.applyDarkMode(user.darkMode);
+              }),
+              catchError((error) => {
+                console.error('Error fetching user data:', error);
+                return of(null); // Continue even if user data fails
+              })
+            )
             : of(null);
 
           const neighObs = neighUrl
             ? this.http.get<NeighborhoodDto>(neighUrl).pipe(
-                tap((neighDto) => {
-                  if (neighDto._links) {
-                    this.linkRegistry.registerLinks(
-                      neighDto._links,
-                      'neighborhood:'
-                    );
-                  }
-                  this.userSessionService.setNeighborhoodInformation(
-                    mapNeighborhood(neighDto)
+              tap((neighDto) => {
+                if (neighDto._links) {
+                  this.linkRegistry.registerLinks(
+                    neighDto._links,
+                    'neighborhood:'
                   );
-                }),
-                catchError((error) => {
-                  console.error('Error fetching neighborhood data:', error);
-                  return of(null); // Continue even if neighborhood data fails
-                })
-              )
+                }
+                this.userSessionService.setNeighborhoodInformation(
+                  mapNeighborhood(neighDto)
+                );
+              }),
+              catchError((error) => {
+                console.error('Error fetching neighborhood data:', error);
+                return of(null); // Continue even if neighborhood data fails
+              })
+            )
             : of(null);
 
           const workersNeighObs = workersNeighUrl
             ? this.http.get<NeighborhoodDto>(workersNeighUrl).pipe(
-                tap((workersNeighDto) => {
-                  if (workersNeighDto._links) {
-                    this.linkRegistry.registerLinks(
-                      workersNeighDto._links,
-                      'workerNeighborhood:'
-                    );
-                  }
-                }),
-                catchError((error) => {
-                  console.error('Error fetching workers neighborhood:', error);
-                  return of(null); // Continue even if workers neighborhood data fails
-                })
-              )
+              tap((workersNeighDto) => {
+                if (workersNeighDto._links) {
+                  this.linkRegistry.registerLinks(
+                    workersNeighDto._links,
+                    'workerNeighborhood:'
+                  );
+                }
+              }),
+              catchError((error) => {
+                console.error('Error fetching workers neighborhood:', error);
+                return of(null); // Continue even if workers neighborhood data fails
+              })
+            )
             : of(null);
 
           // Use forkJoin to execute all observables in parallel

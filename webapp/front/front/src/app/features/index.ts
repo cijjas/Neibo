@@ -43,7 +43,6 @@ export * from './not-found/not-found-page/not-found-page.component';
 export * from './not-found/not-found-routing.module';
 export * from './not-found/not-found.module';
 export * from './service-providers/service-providers-content/service-providers-content.component';
-export * from './service-providers/service-providers-control-bar/service-providers-control-bar.component';
 export * from './service-providers/service-providers-detail-page/service-providers-detail-page.component';
 export * from './service-providers/service-providers-edit-dialog/service-providers-edit-dialog.component';
 export * from './service-providers/service-providers-join-neighborhoods-page/service-providers-join-neighborhoods-page.component';

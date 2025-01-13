@@ -9,6 +9,7 @@ public class RootLinks {
     // ------- Dynamic Endpoints
     // Neighborhoods
     private URI neighborhoods;
+    private URI workersNeighborhood;
     // Affiliations
     private URI affiliations;
     // Images
@@ -348,5 +349,13 @@ public class RootLinks {
 
     public void setSaleTransactionType(URI saleTransactionType) {
         this.saleTransactionType = saleTransactionType;
+    }
+
+    public URI getWorkersNeighborhood() {
+        return workersNeighborhood;
+    }
+
+    public void setWorkersNeighborhood(URI workersNeighborhood) {
+        this.workersNeighborhood = workersNeighborhood;
     }
 }

@@ -28,7 +28,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
     private confirmationService: ConfirmationService,
 
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {

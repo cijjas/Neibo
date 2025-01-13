@@ -19,6 +19,7 @@ import {
   Profession,
   Roles,
   LinkKey,
+  WorkerService,
 } from '@shared/index';
 
 import {
@@ -68,8 +69,9 @@ export class SignupDialogComponent implements OnInit {
     private authService: AuthService,
     private linkStorage: HateoasLinksService,
     private professionService: ProfessionService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private workerService: WorkerService
+  ) { }
 
   ngOnInit(): void {
     // 1) Load combos
@@ -200,7 +202,6 @@ export class SignupDialogComponent implements OnInit {
                 if (success) {
                   // Get the user's role from UserSessionService
                   const userRole = this.authService.getCurrentRole();
-                  console.log('hola' + userRole);
                   switch (userRole) {
                     case Roles.WORKER:
                       const workerUrl = this.linkStorage.getLink(
@@ -230,12 +231,12 @@ export class SignupDialogComponent implements OnInit {
                       break;
 
                     case Roles.UNVERIFIED_NEIGHBOR:
-                    case Roles.UNVERIFIED_WORKER:
                       this.router
-                        .navigate(['unverified'])
+                        .navigate(['services'])
                         .then(() => this.closeSignupDialog());
 
                       break;
+
                     case Roles.REJECTED:
                       this.router
                         .navigate(['rejected'])
@@ -293,18 +294,87 @@ export class SignupDialogComponent implements OnInit {
     this.loading = true;
 
     const workerValues = this.serviceForm.value;
-
-    // Example call; adapt to your actual worker endpoint
-    // this.userService.createWorker(...).subscribe({
-    //   next: () => {
-    //     this.toastService.showToast('Service provider signup successful!', 'success');
-    //     this.closeSignupDialog();
-    //   },
-    //   error: (error) => {
-    //     console.error('Error during service signup:', error);
-    //     this.toastService.showToast('Signup failed. Please try again.', 'error');
-    //   }
-    // });
+    // businessName:
+    // professions:
+    // w_name:
+    // w_surname:
+    // w_mail:
+    // w_password:
+    // w_address:
+    // w_identification:
+    // w_language:
+    // phoneNumber:
+    console.log(workerValues)
+    this.workerService.createWorker(
+      workerValues.w_name,
+      workerValues.w_surname,
+      workerValues.w_password,
+      workerValues.w_mail,
+      workerValues.w_language,
+      workerValues.w_identification,
+      workerValues.professions.map((p: Profession) => p.self),
+      workerValues.phoneNumber,
+      workerValues.businessName,
+      workerValues.w_address,
+    ).subscribe({
+      next: () => {
+        this.toastService.showToast(
+          'Neighbor signup successful! Logging you in...',
+          'success'
+        );
+        // Attempt auto-login
+        this.authService
+          .login(workerValues.w_mail, workerValues.w_password)
+          .subscribe({
+            next: (success) => {
+              this.loading = false;
+              if (success) {
+                // Get the user's role from UserSessionService
+                const userRole = this.authService.getCurrentRole();
+                switch (userRole) {
+                  case Roles.WORKER:
+                    const workerUrl = this.linkStorage.getLink(
+                      LinkKey.USER_WORKER
+                    );
+                    this.router
+                      .navigate(['services', 'profile', workerUrl])
+                      .then(() => this.closeSignupDialog());
+                    break;
+                  default:
+                    // Fallback for unexpected or null roles
+                    this.router
+                      .navigate(['not-found'])
+                      .then(() => this.closeSignupDialog());
+                    break;
+                }
+              } else {
+                this.toastService.showToast(
+                  'Login failed after signup, please try manually.',
+                  'error'
+                );
+                this.closeSignupDialog();
+              }
+            },
+            error: (err) => {
+              console.error('Automatic login error:', err);
+              this.loading = false;
+              this.toastService.showToast(
+                'Login failed after signup, please try manually.',
+                'error'
+              );
+              this.closeSignupDialog();
+            },
+          });
+      },
+      error: (error) => {
+        console.error('Error during neighbor signup:', error);
+        this.loading = false;
+        this.toastService.showToast(
+          'Signup failed. Please try again.',
+          'error'
+        );
+      },
+    });
   }
 
   // =======================

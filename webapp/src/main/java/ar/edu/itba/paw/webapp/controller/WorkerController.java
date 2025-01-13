@@ -63,7 +63,7 @@ public class WorkerController {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     public Response listWorkers(
             @QueryParam("inNeighborhoods") @NeighborhoodsURNConstraint List<String> neighborhoods,
-            @QueryParam("withProfessions") @ProfessionsURNConstraint List<String> professions,
+            @QueryParam("withProfession") @ProfessionsURNConstraint List<String> professions,
             @QueryParam("withRole") @WorkerRoleURNConstraint String workerRole,
             @QueryParam("withStatus") @WorkerStatusURNConstraint String workerStatus,
             @QueryParam("page") @DefaultValue("1") int page,
@@ -110,7 +110,6 @@ public class WorkerController {
                 .tag(workersHashCode)
                 .build();
     }
-
 
     @GET
     @Path("/{workerId}")

@@ -22,30 +22,26 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private linkService: HateoasLinksService,
     private router: Router // Inject Router to handle navigation
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const userSub = this.userSessionService
       .getCurrentUser()
       .subscribe((user: User | null) => {
         this.currentUser = user;
+        this.loadProfileImage(user.image);
 
-        if (user?.image) {
-          // Check if user and image exist
-          const imageSub = this.imageService.fetchImage(user.image).subscribe({
-            next: ({ safeUrl }) => {
-              this.profileImageSafeUrl = safeUrl;
-            },
-            error: (error) => {
-              console.error('Error fetching profile image:', error);
-            },
-          });
-          this.subscriptions.add(imageSub);
-        } else {
-          this.profileImageSafeUrl = null; // Reset if no image
-        }
       });
     this.subscriptions.add(userSub);
+  }
+
+  loadProfileImage(imageUrl: string): void {
+    const imageSub = this.imageService
+      .fetchImage(imageUrl)
+      .subscribe(({ safeUrl }) => {
+        this.profileImageSafeUrl = safeUrl;
+      });
+    this.subscriptions.add(imageSub);
   }
 
   ngOnDestroy(): void {

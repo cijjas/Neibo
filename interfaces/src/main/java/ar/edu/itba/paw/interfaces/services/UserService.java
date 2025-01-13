@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    User createUser(long neighborhoodId, String mail, String name, String surname, String password, Integer identification, Long languageId);
+    User createUser(long neighborhoodId, String mail, String name, String surname, String password, Integer identification, Long languageId, Long userRoleId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

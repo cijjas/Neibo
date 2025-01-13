@@ -8,12 +8,13 @@ import { Router } from '@angular/router';
 export class ServiceProvidersLayoutComponent {
   isServicesRoute: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   ngOnInit() {
     // Update `isServicesRoute` whenever the route changes
     this.router.events.subscribe(() => {
-      this.isServicesRoute = this.router.url.startsWith('/services');
+      const url = this.router.url;
+      this.isServicesRoute = url === '/services' || url.startsWith('/services?');
     });
   }
 }

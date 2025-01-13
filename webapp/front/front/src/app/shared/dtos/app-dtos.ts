@@ -267,6 +267,7 @@ export interface UserDto {
   name: string;
   surname: string;
   password?: string;
+  userRole?: string;
   darkMode?: boolean;
   phoneNumber?: string;
   language: string;
