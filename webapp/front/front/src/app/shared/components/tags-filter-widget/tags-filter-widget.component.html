@@ -1,5 +1,5 @@
-<div class="grey-static-container">
-  <div class="f-c-c-s g-0">
+<div class="grey-static-container w-100">
+  <div class="f-c-c-s g-0 w-100">
     <div class="f-r-sb-c w-100">
       <h3 class="pt-1 pb-1 m-1 mb-2">
         {{ mode === "tags" ? "Filter by Tags" : "Filter by Profession" }}
@@ -7,13 +7,10 @@
     </div>
 
     <div *ngIf="appliedItems.length > 0" class="tags-row tags m-b-10 w-100">
-      <span
-        [ngClass]="{
+      <span [ngClass]="{
           'tag-selected': mode === 'tags',
           'profession-selected': mode === 'professions'
-        }"
-        *ngFor="let item of appliedItems"
-      >
+        }" *ngFor="let item of appliedItems">
         {{ item.name }}
         <i class="fa-solid fa-xmark" (click)="removeItem(item)"></i>
       </span>
@@ -21,34 +18,21 @@
 
     <div class="m-b-10 w-100 tags-row tags">
       <ng-container *ngFor="let item of itemList">
-        <a
-          (click)="addItem(item)"
-          [ngClass]="{
+        <a (click)="addItem(item)" [ngClass]="{
             'tag-style': mode === 'tags',
             'profession-style': mode === 'professions'
-          }"
-        >
+          }">
           {{ item.name }}
         </a>
       </ng-container>
     </div>
 
     <div *ngIf="mode === 'tags'" class="pagination-arrows mt-2 mb-2">
-      <span
-        id="prev"
-        class="c-accent"
-        [class.disabled]="currentPage <= 1"
-        (click)="prevPage()"
-      >
+      <span id="prev" class="c-accent" [class.disabled]="currentPage <= 1" (click)="prevPage()">
         <i class="fa-solid fa-angle-left"></i>
       </span>
       <p>Page {{ currentPage }} of {{ totalPages }}</p>
-      <span
-        id="next"
-        class="c-accent"
-        [class.disabled]="currentPage >= totalPages"
-        (click)="nextPage()"
-      >
+      <span id="next" class="c-accent" [class.disabled]="currentPage >= totalPages" (click)="nextPage()">
         <i class="fa-solid fa-angle-right"></i>
       </span>
     </div>

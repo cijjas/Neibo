@@ -232,7 +232,7 @@ export class SignupDialogComponent implements OnInit {
 
                     case Roles.UNVERIFIED_NEIGHBOR:
                       this.router
-                        .navigate(['services'])
+                        .navigate(['unverified'])
                         .then(() => this.closeSignupDialog());
 
                       break;
