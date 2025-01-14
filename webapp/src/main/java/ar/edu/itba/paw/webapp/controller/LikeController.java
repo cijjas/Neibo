@@ -21,7 +21,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,14 +44,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Produces(MediaType.APPLICATION_JSON)
 public class LikeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
-
+    private final LikeService ls;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final LikeService ls;
 
     @Autowired
     public LikeController(LikeService ls) {

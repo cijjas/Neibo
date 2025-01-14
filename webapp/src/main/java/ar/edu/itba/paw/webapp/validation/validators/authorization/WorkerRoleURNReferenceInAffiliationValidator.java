@@ -20,7 +20,7 @@ public class WorkerRoleURNReferenceInAffiliationValidator implements ConstraintV
     public boolean isValid(String workerRole, ConstraintValidatorContext constraintValidatorContext) {
         if (workerRole == null)
             return true;
-        if (!formAccessControlHelper.canReferenceWorkerRoleInAffiliation(workerRole)){
+        if (!formAccessControlHelper.canReferenceWorkerRoleInAffiliation(workerRole)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
                     .addConstraintViolation();

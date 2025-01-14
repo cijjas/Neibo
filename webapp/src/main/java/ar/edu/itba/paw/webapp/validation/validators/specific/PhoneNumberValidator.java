@@ -4,13 +4,11 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.PhoneNumberConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
 import java.util.Optional;
 
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;

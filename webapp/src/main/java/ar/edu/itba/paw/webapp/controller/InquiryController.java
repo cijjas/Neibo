@@ -42,21 +42,18 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - A User/Admin can list the Inquiries that a certain Product has
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.PRODUCTS  + "/{" + PathParameter.PRODUCT_ID + "}/" + Endpoint.INQUIRIES)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS + "/{" + PathParameter.PRODUCT_ID + "}/" + Endpoint.INQUIRIES)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class InquiryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryController.class);
-
-    @Context
-    private UriInfo uriInfo;
-
-    @Context
-    private Request request;
-
     private final InquiryService is;
     private final ProductService ps;
+    @Context
+    private UriInfo uriInfo;
+    @Context
+    private Request request;
 
     @Autowired
     public InquiryController(InquiryService is, ProductService ps) {

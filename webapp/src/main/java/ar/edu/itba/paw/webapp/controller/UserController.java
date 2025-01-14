@@ -8,9 +8,9 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -48,14 +48,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class UserController {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-
+    private final UserService us;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final UserService us;
 
     @Autowired
     public UserController(UserService us) {

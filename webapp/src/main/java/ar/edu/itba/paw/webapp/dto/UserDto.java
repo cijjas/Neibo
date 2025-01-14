@@ -6,10 +6,10 @@ import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.LanguageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.Specific;
@@ -104,11 +104,11 @@ public class UserDto {
 
         // Worker Specific Links
         if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()) {
-           links.setWorker(uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(String.valueOf(user.getUserId())).build());
+            links.setWorker(uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(String.valueOf(user.getUserId())).build());
         }
 
         // Neighbor Specific Link
-        if (!BaseNeighborhood.isABaseNeighborhood(neighborhoodIdLong)){
+        if (!BaseNeighborhood.isABaseNeighborhood(neighborhoodIdLong)) {
             String purchaseTransactionTypeId = String.valueOf(TransactionType.PURCHASE.getId());
             String saleTransactionTypeId = String.valueOf(TransactionType.SALE.getId());
             String acceptedRequestStatusId = String.valueOf(RequestStatus.ACCEPTED.getId());

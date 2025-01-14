@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
-import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -35,14 +33,11 @@ import java.net.URI;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class ImageController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
-
+    private final ImageService is;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final ImageService is;
 
     @Autowired
     public ImageController(ImageService is) {

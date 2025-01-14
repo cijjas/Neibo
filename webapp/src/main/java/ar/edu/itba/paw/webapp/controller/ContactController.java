@@ -37,20 +37,17 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  *   - Contacts may have to be paginated, they currently are not
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.CONTACTS)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CONTACTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class ContactController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactController.class);
-
+    private final ContactService cs;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final ContactService cs;
 
     @Autowired
     public ContactController(ContactService cs) {

@@ -4,8 +4,8 @@ import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +41,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class NeighborhoodController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodController.class);
-
+    private final NeighborhoodService ns;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final NeighborhoodService ns;
 
     @Autowired
     public NeighborhoodController(NeighborhoodService ns) {

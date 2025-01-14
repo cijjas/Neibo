@@ -1,12 +1,9 @@
 package ar.edu.itba.paw.webapp.validation.validators.specific;
 
 import ar.edu.itba.paw.webapp.validation.constraints.specific.TagsConstraint;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Locale;
 
 public class TagsValidator implements ConstraintValidator<TagsConstraint, String> {
     private static final String TAG_PATTERN = "^[A-Za-z0-9_]+$";

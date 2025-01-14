@@ -7,8 +7,8 @@ import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.ProfessionDto;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,14 +45,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Produces(MediaType.APPLICATION_JSON)
 public class ProfessionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionController.class);
-
+    private final ProfessionService ps;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final ProfessionService ps;
 
     @Autowired
     public ProfessionController(ProfessionService ps) {

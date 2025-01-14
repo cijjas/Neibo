@@ -43,14 +43,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class ReviewController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
-
+    private final ReviewService rs;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final ReviewService rs;
 
     @Autowired
     public ReviewController(ReviewService rs) {
@@ -116,7 +113,7 @@ public class ReviewController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        ReviewsCountDto dto = ReviewsCountDto.fromReviewsCount(count, workerId,  uriInfo);
+        ReviewsCountDto dto = ReviewsCountDto.fromReviewsCount(count, workerId, uriInfo);
 
         return Response.ok(new GenericEntity<ReviewsCountDto>(dto) {
                 })
@@ -142,7 +139,7 @@ public class ReviewController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        ReviewsAverageDto dto = ReviewsAverageDto.fromReviewAverage(average, workerId,  uriInfo);
+        ReviewsAverageDto dto = ReviewsAverageDto.fromReviewAverage(average, workerId, uriInfo);
 
         return Response.ok(new GenericEntity<ReviewsAverageDto>(dto) {
                 })

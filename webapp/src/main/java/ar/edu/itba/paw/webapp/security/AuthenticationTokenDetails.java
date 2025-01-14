@@ -11,12 +11,12 @@ import java.util.Set;
 
 public final class AuthenticationTokenDetails {
 
-    private TokenType tokenType;
     private final String id;
     private final String username;
     private final Set<Authority> authorities;
     private final ZonedDateTime issuedDate;
     private final ZonedDateTime expirationDate;
+    private TokenType tokenType;
 
     private AuthenticationTokenDetails(String id, String username, Set<Authority> authorities, ZonedDateTime issuedDate, ZonedDateTime expirationDate, TokenType tokenType) {
         this.id = id;
@@ -92,7 +92,7 @@ public final class AuthenticationTokenDetails {
             return this;
         }
 
-        public Builder withTokenType(TokenType tokenType){
+        public Builder withTokenType(TokenType tokenType) {
             this.tokenType = tokenType;
             return this;
         }

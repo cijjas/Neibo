@@ -5,7 +5,6 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class RootDto {
     private RootLinks _links;
@@ -16,7 +15,7 @@ public class RootDto {
 
         RootLinks links = new RootLinks();
 
-        String workersNeighborhoodId =  String.valueOf(BaseNeighborhood.WORKERS.getId());
+        String workersNeighborhoodId = String.valueOf(BaseNeighborhood.WORKERS.getId());
 
         UriBuilder rootUri = uriInfo.getBaseUriBuilder();
         UriBuilder affiliationsUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS);

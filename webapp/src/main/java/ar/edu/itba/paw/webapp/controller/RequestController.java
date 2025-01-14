@@ -45,14 +45,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class RequestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
-
+    private final RequestService rs;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private javax.ws.rs.core.Request request;
-
-    private final RequestService rs;
 
     @Autowired
     public RequestController(RequestService rs) {
@@ -102,7 +99,8 @@ public class RequestController {
                 requestForm.getSize()
         );
 
-        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {})
+        return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {
+                })
                 .links(links)
                 .tag(requestsHashCode)
                 .cacheControl(cacheControl)
@@ -132,7 +130,7 @@ public class RequestController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestForm.getNeighborhoodId(), requestForm.getRequestedBy(), requestForm.getForProduct(), requestForm.getWithStatus(), requestForm.getWithType(),  uriInfo);
+        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestForm.getNeighborhoodId(), requestForm.getRequestedBy(), requestForm.getForProduct(), requestForm.getWithStatus(), requestForm.getWithType(), uriInfo);
 
         return Response.ok(new GenericEntity<RequestsCountDto>(dto) {
                 })

@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.security.jwt;
 
 import ar.edu.itba.paw.enums.Authority;
-import ar.edu.itba.paw.webapp.security.UserAuth;
 import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
+import ar.edu.itba.paw.webapp.security.UserAuth;
 import ar.edu.itba.paw.webapp.security.enums.TokenType;
 import ar.edu.itba.paw.webapp.security.exception.ExpiredTokenException;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
@@ -56,8 +56,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             if (authorizationHeader.startsWith("Bearer ")) {
                 if (!handleJwtAuthentication(authorizationHeader, request, response))
                     return;
-            }
-            else if (authorizationHeader.startsWith("Basic ")) {
+            } else if (authorizationHeader.startsWith("Basic ")) {
                 if (!handleBasicAuthentication(authorizationHeader, request, response))
                     return;
             }
@@ -67,7 +66,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     }
 
     private boolean handleBasicAuthentication(String authorizationHeader, HttpServletRequest request,
-                                           HttpServletResponse response) throws IOException, ServletException {
+                                              HttpServletResponse response) throws IOException, ServletException {
         try {
             // Decode the credentials from the Authorization header
             String credentialsBase64 = authorizationHeader.substring(6);
@@ -160,10 +159,10 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     }
 
     /*
-    * If persistence is implemented as well as the Refreshing strategy, this method should verify this info with the DB
-    * */
+     * If persistence is implemented as well as the Refreshing strategy, this method should verify this info with the DB
+     * */
     private boolean handleRefreshToken(String refreshHeader, HttpServletRequest request,
-                                         HttpServletResponse response) throws IOException, ServletException {
+                                       HttpServletResponse response) throws IOException, ServletException {
         try {
             String refreshToken = refreshHeader.substring(7);
             AuthenticationTokenDetails tokenDetails = authenticationTokenService.parseToken(refreshToken);

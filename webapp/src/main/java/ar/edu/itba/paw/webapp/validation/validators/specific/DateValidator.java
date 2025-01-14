@@ -6,7 +6,6 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class DateValidator implements ConstraintValidator<DateConstraint, String> {
 
@@ -21,7 +20,7 @@ public class DateValidator implements ConstraintValidator<DateConstraint, String
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-           dateFormat.parse(date);
+            dateFormat.parse(date);
         } catch (ParseException e) {
             return false;
         }

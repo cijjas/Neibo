@@ -7,10 +7,10 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,20 +44,17 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - Deletion Form could also take a list instead of unique values
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.BOOKINGS)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.BOOKINGS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class BookingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingController.class);
-
+    private final BookingService bs;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final BookingService bs;
 
     @Autowired
     public BookingController(BookingService bs) {

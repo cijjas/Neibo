@@ -8,12 +8,12 @@ import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.dto.PostsCountDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostStatusURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,14 +51,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class PostController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
-
+    private final PostService ps;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final PostService ps;
 
     @Autowired
     public PostController(PostService ps) {
@@ -144,7 +141,7 @@ public class PostController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        PostsCountDto dto = PostsCountDto.fromPostsCount(count, neighborhoodId, user, channel, tags, postStatus,  uriInfo);
+        PostsCountDto dto = PostsCountDto.fromPostsCount(count, neighborhoodId, user, channel, tags, postStatus, uriInfo);
 
         return Response.ok(new GenericEntity<PostsCountDto>(dto) {
                 })

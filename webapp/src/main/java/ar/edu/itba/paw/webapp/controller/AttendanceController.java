@@ -23,7 +23,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +40,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - A User/Admin can confirm his attendance to a certain event
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.ATTENDANCE)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.ATTENDANCE)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})

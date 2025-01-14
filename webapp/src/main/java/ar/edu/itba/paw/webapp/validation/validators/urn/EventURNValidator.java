@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.EventURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;

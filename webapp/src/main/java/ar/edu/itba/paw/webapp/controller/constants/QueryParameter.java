@@ -5,7 +5,7 @@ public class QueryParameter {
     public static final String WITH_TYPE = "withType";
     public static final String WITH_WORKER = "withWorker";
     public static final String WITH_STATUS = "withStatus";
-    public static final String WITH_ROLE= "withRole";
+    public static final String WITH_ROLE = "withRole";
     public static final String WITH_TAG = "withTag";
     public static final String WITH_PROFESSION = "withProfession";
     public static final String WITHOUT_WORKER = "withoutWorker";
@@ -15,7 +15,7 @@ public class QueryParameter {
     public static final String FOR_WORKER = "forWorker";
     public static final String FOR_AMENITY = "forAmenity";
     public static final String FOR_EVENT = "forEvent";
-    public static final String FOR_PRODUCT= "forProduct";
+    public static final String FOR_PRODUCT = "forProduct";
     public static final String FOR_USER = "forUser";
     public static final String FOR_DATE = "forDate";
     public static final String REQUESTED_BY = "requestedBy";

@@ -43,20 +43,17 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalD
  *   - A User/Admin can attend an Event (maybe an Admin should not be able to, though it currently helps int testing)
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.EVENTS)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.EVENTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class EventController {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
-
+    private final EventService es;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final EventService es;
 
     @Autowired
     public EventController(EventService es) {

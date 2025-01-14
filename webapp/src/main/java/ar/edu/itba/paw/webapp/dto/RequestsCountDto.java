@@ -12,7 +12,7 @@ public class RequestsCountDto {
 
     private Links _links;
 
-    public static RequestsCountDto fromRequestsCount(int requestsCount, long neighborhoodIdLong, String userURI, String productURI, String requestStatusURI, String  requestTypeURI, UriInfo uriInfo) {
+    public static RequestsCountDto fromRequestsCount(int requestsCount, long neighborhoodIdLong, String userURI, String productURI, String requestStatusURI, String requestTypeURI, UriInfo uriInfo) {
         final RequestsCountDto dto = new RequestsCountDto();
 
         dto.count = requestsCount;

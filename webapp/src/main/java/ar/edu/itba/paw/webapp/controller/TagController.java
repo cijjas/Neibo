@@ -4,9 +4,9 @@ import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.TagDto;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +41,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class TagController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagController.class);
-
+    private final TagService ts;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final TagService ts;
 
     @Autowired
     public TagController(TagService ts) {

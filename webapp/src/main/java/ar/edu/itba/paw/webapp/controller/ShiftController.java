@@ -6,9 +6,9 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalDate;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
 
 /*
  * # Summary
@@ -36,14 +37,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Produces(MediaType.APPLICATION_JSON)
 public class ShiftController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiftController.class);
-
+    private final ShiftService ss;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final ShiftService ss;
 
     @Autowired
     public ShiftController(ShiftService ss) {

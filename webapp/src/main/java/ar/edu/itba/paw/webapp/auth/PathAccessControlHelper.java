@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;

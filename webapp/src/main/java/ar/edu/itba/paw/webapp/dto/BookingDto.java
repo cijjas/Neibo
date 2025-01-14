@@ -3,11 +3,11 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.BookingDateConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.BookingDateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.Specific;
@@ -74,6 +74,7 @@ public class BookingDto {
     public void set_links(Links _links) {
         this._links = _links;
     }
+
     public String getAmenity() {
         return amenity;
     }

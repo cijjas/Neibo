@@ -24,7 +24,7 @@ public class AttendanceCountDto {
         UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.ATTENDANCE).path(Endpoint.COUNT);
 
         if (eventURI != null)
-           self.queryParam(QueryParameter.FOR_EVENT, eventURI);
+            self.queryParam(QueryParameter.FOR_EVENT, eventURI);
         if (userURI != null)
             self.queryParam(QueryParameter.FOR_USER, userURI);
 

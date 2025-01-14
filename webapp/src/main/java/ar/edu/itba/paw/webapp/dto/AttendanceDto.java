@@ -32,7 +32,7 @@ public class AttendanceDto {
 
         Links links = new Links();
 
-        String neighborhoodId = String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()) ;
+        String neighborhoodId = String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId());
         String eventId = String.valueOf(attendance.getEvent().getEventId());
         String userId = String.valueOf(attendance.getUser().getUserId());
 

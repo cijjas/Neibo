@@ -39,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - An Admin deletes a Comment
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.POSTS  + "/{" + PathParameter.POST_ID+ "}/" + Endpoint.COMMENTS)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.POSTS + "/{" + PathParameter.POST_ID + "}/" + Endpoint.COMMENTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})

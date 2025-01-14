@@ -21,7 +21,7 @@ public class ProductURNInRequestValidator implements ConstraintValidator<Product
     public boolean isValid(String productURN, ConstraintValidatorContext constraintValidatorContext) {
         if (productURN == null)
             return true;
-        if (!formAccessControlHelper.canReferenceProductInRequest(productURN)){
+        if (!formAccessControlHelper.canReferenceProductInRequest(productURN)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
                     .addConstraintViolation();

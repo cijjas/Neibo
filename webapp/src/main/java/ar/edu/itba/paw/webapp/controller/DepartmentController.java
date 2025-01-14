@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.DepartmentService;
 import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;

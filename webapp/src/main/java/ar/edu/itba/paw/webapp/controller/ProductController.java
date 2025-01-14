@@ -7,11 +7,11 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.DepartmentURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductStatusURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -42,20 +42,17 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A User/Admin can list the Products in its Neighborhood
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.PRODUCTS)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class ProductController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
-
+    private final ProductService ps;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final ProductService ps;
 
     @Autowired
     public ProductController(ProductService ps) {

@@ -4,11 +4,11 @@ import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
 import org.slf4j.Logger;
@@ -46,14 +46,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class WorkerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
-
+    private final WorkerService ws;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final WorkerService ws;
 
     @Autowired
     public WorkerController(WorkerService ws) {

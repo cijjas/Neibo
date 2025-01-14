@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.*;
+import ar.edu.itba.paw.enums.BaseChannel;
+import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;

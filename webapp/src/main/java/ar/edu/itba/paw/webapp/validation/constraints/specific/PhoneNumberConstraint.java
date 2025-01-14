@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.constraints.specific;
 
 
-import ar.edu.itba.paw.webapp.validation.validators.specific.GenericIdValidator;
 import ar.edu.itba.paw.webapp.validation.validators.specific.PhoneNumberValidator;
 
 import javax.validation.Constraint;

@@ -36,20 +36,17 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  *   - This part has to be restructured, there is more information in the notion, but basically there is a mix between the base channels, the channels and the menu options
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.CHANNELS)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CHANNELS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class ChannelController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelController.class);
-
+    private final ChannelService cs;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final ChannelService cs;
 
     @Autowired
     public ChannelController(ChannelService cs) {

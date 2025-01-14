@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.constraints.urn;
 
 import ar.edu.itba.paw.webapp.validation.validators.urn.EventURNValidator;
-import ar.edu.itba.paw.webapp.validation.validators.urn.UserURNValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

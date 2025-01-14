@@ -21,7 +21,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,14 +59,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
-
+    private final AffiliationService nws;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final AffiliationService nws;
 
     @Autowired
     public AffiliationController(AffiliationService nws) {

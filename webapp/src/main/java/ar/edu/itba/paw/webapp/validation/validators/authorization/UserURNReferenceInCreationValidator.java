@@ -20,7 +20,7 @@ public class UserURNReferenceInCreationValidator implements ConstraintValidator<
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
         if (userURN == null)
             return true;
-        if (!formAccessControlHelper.canReferenceUserInCreation(userURN)){
+        if (!formAccessControlHelper.canReferenceUserInCreation(userURN)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
                     .addConstraintViolation();

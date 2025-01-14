@@ -37,20 +37,17 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstIds;
  *   - An Admin can create, delete and update an Amenity for their Neighborhood
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.AMENITIES)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.AMENITIES)
 @Validated
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class AmenityController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);
-
+    private final AmenityService as;
     @Context
     private UriInfo uriInfo;
-
     @Context
     private Request request;
-
-    private final AmenityService as;
 
     @Autowired
     public AmenityController(AmenityService as) {

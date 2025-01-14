@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.validation.constraints.specific;
 
-import ar.edu.itba.paw.webapp.validation.validators.specific.TagsValidator;
 import ar.edu.itba.paw.webapp.validation.validators.specific.TimeValidator;
 
 import javax.validation.Constraint;
