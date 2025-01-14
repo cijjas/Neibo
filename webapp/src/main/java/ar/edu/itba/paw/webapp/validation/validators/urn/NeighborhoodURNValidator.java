@@ -25,6 +25,7 @@ public class NeighborhoodURNValidator implements ConstraintValidator<Neighborhoo
             return true;
         if (!URNValidator.validateURN(neighborhoodURN, "neighborhood"))
             return false;
+        long id = extractFirstId(neighborhoodURN);
         return neighborhoodService.findNeighborhood(extractFirstId(neighborhoodURN)).isPresent();
     }
 }

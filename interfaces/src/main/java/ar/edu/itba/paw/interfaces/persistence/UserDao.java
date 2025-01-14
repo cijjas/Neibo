@@ -15,15 +15,13 @@ public interface UserDao {
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
-    Optional<User> findUser(long neighborhoodId, long userId);
-
     Optional<User> findUser(long userId);
 
     Optional<User> findUser(String mail);
 
-    List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size);
+    List<User> getUsers(Long neighborhoodId, Long userRoleId, int page, int size);
 
-    int countUsers(long neighborhoodId, Long userRoleId);
+    int countUsers(Long neighborhoodId, Long userRoleId);
 
     List<User> getEventUsers(long eventId);
 }

@@ -4,9 +4,11 @@ import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
 import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -38,7 +40,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - No, it can be tempting but the whole creation plus filtering plus potentially showing liked posts or people that liked the post ruins the idea
  */
 
-@Path(Endpoint.LIKES)
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.LIKES)
 @Component
 @Validated
 @Produces(MediaType.APPLICATION_JSON)
@@ -56,21 +58,21 @@ public class LikeController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canListLikes(#post, #user)")
     public Response listLikes(
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam(QueryParameter.LIKED_BY) @UserURNConstraint String user,
             @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/likes'");
+        LOGGER.info("GET request arrived at '/neighborhood/{}/likes'", neighborhoodId);
 
         // ID Extraction
         Long userId = extractOptionalSecondId(user);
         Long postId = extractOptionalSecondId(post);
 
         // Content
-        final List<Like> likes = ls.getLikes(userId, postId, page, size);
+        final List<Like> likes = ls.getLikes(neighborhoodId, userId, postId, page, size);
         String likesHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -98,7 +100,7 @@ public class LikeController {
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.LIKES),
-                ls.calculateLikePages(userId, postId, size),
+                ls.calculateLikePages(neighborhoodId, userId, postId, size),
                 page,
                 size);
 
@@ -113,13 +115,14 @@ public class LikeController {
     @GET
     @Path(Endpoint.COUNT)
     public Response countLikes(
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam(QueryParameter.LIKED_BY) @UserURNConstraint String user,
             @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post
     ) {
-        LOGGER.info("GET request arrived at '/likes/count'");
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
 
         // Content
-        int count = ls.countLikes(extractOptionalSecondId(user), extractOptionalSecondId(post));
+        int count = ls.countLikes(neighborhoodId, extractOptionalSecondId(user), extractOptionalSecondId(post));
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -128,7 +131,7 @@ public class LikeController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        LikeCountDto dto = LikeCountDto.fromLikeCount(count, post, user, uriInfo);
+        LikeCountDto dto = LikeCountDto.fromLikeCount(count, neighborhoodId, post, user, uriInfo);
 
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {
                 })
@@ -140,9 +143,10 @@ public class LikeController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createLike(
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull LikeDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/likes'");
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
         // Creation & HashCode Generation
         final Like like = ls.createLike(extractSecondId(createForm.getUser()), extractSecondId(createForm.getPost()));
@@ -159,10 +163,11 @@ public class LikeController {
     @DELETE
     @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
     public Response deleteLike(
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURNConstraint String user,
             @QueryParam(QueryParameter.ON_POST) @NotNull @PostURNConstraint String post
     ) {
-        LOGGER.info("DELETE request arrived at '/likes'");
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
         if (ls.deleteLike(extractOptionalSecondId(user), extractOptionalSecondId(post)))
             return Response.noContent()

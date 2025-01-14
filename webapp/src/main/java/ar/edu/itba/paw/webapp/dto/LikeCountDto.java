@@ -12,14 +12,16 @@ public class LikeCountDto {
 
     private Links _links;
 
-    public static LikeCountDto fromLikeCount(int likeCount, String postURN, String userURN, UriInfo uriInfo) {
+    public static LikeCountDto fromLikeCount(int likeCount, long neighborhoodIdLong, String postURN, String userURN, UriInfo uriInfo) {
         final LikeCountDto dto = new LikeCountDto();
 
         dto.count = likeCount;
 
         Links links = new Links();
 
-        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).path(Endpoint.COUNT);
+        String neighborhoodId = String.valueOf(neighborhoodIdLong);
+
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES).path(Endpoint.COUNT);
 
         if (postURN != null)
             self.queryParam(QueryParameter.ON_POST, postURN);

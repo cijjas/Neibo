@@ -116,60 +116,6 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void find_neighborhoodId_userId_valid() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
-
-        // Exercise
-        Optional<User> optionalUser = userDaoImpl.findUser(nhKey1, uKey1);
-
-        // Validations
-        assertTrue(optionalUser.isPresent());
-        assertEquals(uKey1, optionalUser.get().getUserId().longValue());
-    }
-
-    @Test
-    public void find_neighborhoodId_userId_invalid_userId() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
-
-        // Exercise
-        Optional<User> optionalUser = userDaoImpl.findUser(nhKey1, INVALID_ID);
-
-        // Validations
-        assertFalse(optionalUser.isPresent());
-    }
-
-    @Test
-    public void find_neighborhoodId_userId_invalid_neighborhoodId() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
-
-        // Exercise
-        Optional<User> optionalUser = userDaoImpl.findUser(INVALID_ID, uKey1);
-
-        // Validations
-        assertFalse(optionalUser.isPresent());
-    }
-
-    @Test
-    public void find_neighborhoodId_userId_invalid_userId_neighborhoodId() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER, DATE_1);
-
-        // Exercise
-        Optional<User> optionalUser = userDaoImpl.findUser(INVALID_ID, INVALID_ID);
-
-        // Validations
-        assertFalse(optionalUser.isPresent());
-    }
-
-
-    @Test
     public void find_email_valid() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);

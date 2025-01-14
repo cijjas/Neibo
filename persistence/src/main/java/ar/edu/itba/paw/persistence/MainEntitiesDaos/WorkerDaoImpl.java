@@ -96,7 +96,6 @@ public class WorkerDaoImpl implements WorkerDao {
         }
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
-            System.out.println(neighborhoodIds);
             nativeQuery.setParameter("neighborhoodIds", neighborhoodIds);
         }
 

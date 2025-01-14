@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 /*
@@ -42,7 +44,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - A User can see the profile of a particular User
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.USERS)
+@Path( Endpoint.USERS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -60,17 +62,18 @@ public class UserController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhoodId)")
+    @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhood)")
     public Response listUsers(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURNConstraint String neighborhood,
             @QueryParam(QueryParameter.WITH_ROLE) @UserRoleURNConstraint String userRole,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
+        LOGGER.info("GET request arrived at '/users'");
 
         // ID Extraction
         Long userRoleId = extractOptionalFirstId(userRole);
+        Long neighborhoodId = extractOptionalFirstId(neighborhood);
 
         // Content
         final List<User> users = us.getUsers(neighborhoodId, userRoleId, page, size);
@@ -89,7 +92,7 @@ public class UserController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.USERS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.USERS),
                 us.calculateUserPages(neighborhoodId, userRoleId, size),
                 page,
                 size
@@ -107,16 +110,14 @@ public class UserController {
 
     @GET
     @Path("{" + PathParameter.USER_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canFindUser(#neighborhoodId, #userId)")
+    @PreAuthorize("@pathAccessControlHelper.canFindUser(#userId)")
     public Response findUser(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId
-
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
+        LOGGER.info("GET request arrived at '/users/{}'", userId);
 
         // Content
-        User user = us.findUser(neighborhoodId, userId).orElseThrow(NotFoundException::new);
+        User user = us.findUser(userId).orElseThrow(NotFoundException::new);
         String userHashCode = String.valueOf(user.hashCode());
 
         // Cache Control
@@ -134,13 +135,12 @@ public class UserController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createUser(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull UserDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
+        LOGGER.info("POST request arrived at '/users'");
 
         // Creation & ETag Generation
-        final User user = us.createUser(neighborhoodId, createForm.getMail(), createForm.getName(), createForm.getSurname(), createForm.getPassword(), createForm.getIdentification(), extractOptionalFirstId(createForm.getLanguage()), extractOptionalFirstId(createForm.getUserRole()));
+        final User user = us.createUser(extractFirstId(createForm.getNeighborhood()), createForm.getMail(), createForm.getName(), createForm.getSurname(), createForm.getPassword(), createForm.getIdentification(), extractOptionalFirstId(createForm.getLanguage()), extractOptionalFirstId(createForm.getUserRole()));
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN
@@ -153,17 +153,16 @@ public class UserController {
 
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId, #neighborhoodId)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUser(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,
             @Valid @NotNull UserDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
+        LOGGER.info("PATCH request arrived at '/users/{}'", userId);
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(neighborhoodId, userId, updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
+        final User updatedUser = us.updateUser(extractOptionalFirstId(updateForm.getNeighborhood()), userId, updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

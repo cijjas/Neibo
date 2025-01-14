@@ -36,26 +36,26 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Like> getLikes(Long userId, Long postId, int page, int size) {
-        LOGGER.info("Getting Likes for Post {} by User {}", postId, userId);
+    public List<Like> getLikes(long neighborhoodId, Long userId, Long postId, int page, int size) {
+        LOGGER.info("Getting Likes for Post {} by User {} in Neighborhood {}", postId, userId, neighborhoodId);
 
-        return likeDao.getLikes(userId, postId, page, size);
+        return likeDao.getLikes(neighborhoodId, userId, postId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateLikePages(Long userId, Long postId, int size) {
-        LOGGER.info("Calculating Like Pages for Post {} by User {}", userId, postId);
+    public int calculateLikePages(long neighborhoodId, Long userId, Long postId, int size) {
+        LOGGER.info("Calculating Like Pages for Post {} by User {} in Neighborhood {}", userId, postId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(likeDao.countLikes(userId, postId), size);
+        return PaginationUtils.calculatePages(likeDao.countLikes(neighborhoodId, userId, postId), size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int countLikes(Long userId, Long postId) {
+    public int countLikes(long neighborhoodId, Long userId, Long postId) {
         LOGGER.info("Counting Likes for Post {} by User {}", userId, postId);
 
-        return likeDao.countLikes(userId, postId);
+        return likeDao.countLikes(neighborhoodId, userId, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

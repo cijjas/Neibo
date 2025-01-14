@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.LanguageURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -24,6 +25,10 @@ import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
 public class UserDto {
+    @NotNull(groups = Null.class)
+    @NeighborhoodURNConstraint(groups = URN.class)
+    private String neighborhood;
+
     @NotNull(groups = Null.class)
     @Size(min = 1, max = 64, groups = Basic.class)
     @Pattern(regexp = "^[a-zA-Z ]*", groups = Basic.class)
@@ -119,7 +124,7 @@ public class UserDto {
             UriBuilder acceptedRequestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(acceptedRequestStatusId);
             UriBuilder requestedRequestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(requestedRequestStatusId);
             UriBuilder bookingsUri = neighborhoodUri.clone().path(Endpoint.BOOKINGS).queryParam(QueryParameter.BOOKED_BY, userUri.build());
-            UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).queryParam(QueryParameter.LIKED_BY, userUri.build());
+            UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES).queryParam(QueryParameter.LIKED_BY, userUri.build());
             UriBuilder purchasesUri = neighborhoodUri.clone().path(Endpoint.REQUESTS)
                     .queryParam(QueryParameter.WITH_TYPE, purchaseTransactionTypeUri.build()).queryParam(QueryParameter.WITH_STATUS, acceptedRequestStatusUri.build());
             UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS)
@@ -237,5 +242,13 @@ public class UserDto {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
     }
 }

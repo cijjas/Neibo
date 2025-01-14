@@ -256,7 +256,7 @@ public class UserServiceImplTest {
 
         User user = new User.Builder().build();
         Image profilePicture = new Image.Builder().build();
-        when(userDao.findUser(neighborhoodId, userId)).thenReturn(Optional.of(user));
+        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
         when(imageService.findImage(profilePictureId)).thenReturn(Optional.of(profilePicture));
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
@@ -275,7 +275,7 @@ public class UserServiceImplTest {
         assertEquals(Language.fromId(languageId), user.getLanguage());
         assertEquals(UserRole.fromId(userRoleId), user.getRole());
 
-        verify(userDao, times(1)).findUser(neighborhoodId, userId);
+        verify(userDao, times(1)).findUser(userId);
         verify(imageService, times(1)).findImage(profilePictureId);
         verify(passwordEncoder, times(1)).encode(password);
     }
@@ -289,7 +289,7 @@ public class UserServiceImplTest {
         Boolean darkMode = false;
 
         User user = new User.Builder().build();
-        when(userDao.findUser(neighborhoodId, userId)).thenReturn(Optional.of(user));
+        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
 
         // Exercise
         userService.updateUser(neighborhoodId, userId, mail, null, null, null, null, null, null, darkMode, null, null);
@@ -303,7 +303,7 @@ public class UserServiceImplTest {
         assertNull(user.getProfilePicture());
         assertNull(user.getPassword());
 
-        verify(userDao, times(1)).findUser(neighborhoodId, userId);
+        verify(userDao, times(1)).findUser(userId);
         verify(imageService, never()).findImage(anyLong());
         verify(passwordEncoder, never()).encode(anyString());
     }
@@ -316,7 +316,7 @@ public class UserServiceImplTest {
         String password = "newpassword";
 
         User user = new User.Builder().build();
-        when(userDao.findUser(neighborhoodId, userId)).thenReturn(Optional.of(user));
+        when(userDao.findUser(userId)).thenReturn(Optional.of(user));
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
@@ -325,7 +325,7 @@ public class UserServiceImplTest {
         // Validation & Post Conditions
         assertEquals("encodedPassword", user.getPassword());
 
-        verify(userDao, times(1)).findUser(neighborhoodId, userId);
+        verify(userDao, times(1)).findUser(userId);
         verify(passwordEncoder, times(1)).encode(password);
     }
 }

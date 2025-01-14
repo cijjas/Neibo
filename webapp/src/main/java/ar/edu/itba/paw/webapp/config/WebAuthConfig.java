@@ -135,13 +135,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/images", "/images/*",
                         // User and Worker Creation can be accessed by anyone
                         // User and Worker List share the same endpoint so they have additional authentication
-                        "/neighborhoods/*/users",
+                        "/users",
                         "/workers"
                 ).permitAll()
 
                 // Registered Users Endpoints
                 .antMatchers(
-                        "/neighborhoods/*/users/*",
+                        "/users/*",
                         "/workers/*",
 
                         "/affiliations", "/affiliations/*",
@@ -156,13 +156,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 )
 
                 // Neighborhood Specific Endpoints
-                .antMatchers(
-                        "/likes", "/likes/**"
-                ).hasAnyRole(
-                        UserRole.NEIGHBOR.name(),
-                        UserRole.ADMINISTRATOR.name(),
-                        UserRole.SUPER_ADMINISTRATOR.name()
-                )
                 .antMatchers(
                         "/neighborhoods/*/posts", "/neighborhoods/*/posts/**",
                         "/neighborhoods/*/events", "/neighborhoods/*/events/*"
@@ -182,6 +175,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/neighborhoods/*/bookings", "/neighborhoods/*/bookings/*",
                         "/neighborhoods/*/resources", "/neighborhoods/*/resources/*",
                         "/neighborhoods/*/contacts", "/neighborhoods/*/contacts/*",
+                        "/neighborhoods/*/likes", "/neighborhoods/*/likes/**",
                         "/neighborhoods/*/attendance", "/neighborhoods/*/attendance/**"
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +

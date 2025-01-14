@@ -28,10 +28,11 @@ public class PathAccessControlHelper {
     private final CommentService cs;
     private final BookingService bs;
     private final ReviewService rvs;
+    private final UserService us;
     private final AuthHelper authHelper;
 
     @Autowired
-    public PathAccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs, ReviewService rvs) {
+    public PathAccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs, ReviewService rvs, UserService us) {
         this.prs = prs;
         this.ps = ps;
         this.is = is;
@@ -39,6 +40,7 @@ public class PathAccessControlHelper {
         this.cs = cs;
         this.bs = bs;
         this.rvs = rvs;
+        this.us = us;
         this.authHelper = new AuthHelper();
     }
 
@@ -82,9 +84,6 @@ public class PathAccessControlHelper {
 
         Authentication authentication = authHelper.getAuthentication();
 
-        System.out.println(withWorker);
-        System.out.println(withoutWorker);
-
         if (withWorker == null && withoutWorker == null)
             return true;
 
@@ -95,7 +94,7 @@ public class PathAccessControlHelper {
 
     // Usage of List Users is limited to the Neighbors and the Administrators (they can only list for the neighborhood they belong to)
     // * Workers Neighborhood ('/neighborhoods/0') can be accessed by the Users from other Neighborhoods (except Rejected Neighborhood)
-    public boolean canListUsers(long neighborhoodId) {
+    public boolean canListUsers(String neighborhood) {
         LOGGER.info("Verifying User List Accessibility");
 
         Authentication authentication = authHelper.getAuthentication();
@@ -106,6 +105,11 @@ public class PathAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
+        if (neighborhood == null)
+            return false;
+
+        long neighborhoodId = extractFirstId(neighborhood);
+
         return neighborhoodId == 0 || neighborhoodId == authHelper.getRequestingUserNeighborhoodId(authentication);
     }
 
@@ -113,7 +117,7 @@ public class PathAccessControlHelper {
     // Rejected and Unverified Users can access their User (self find)
     // Neighbors and Administrators can access the find for all the Users in their Neighborhood
     // Find in Worker Neighborhoods can be executed by all the registered users
-    public boolean canFindUser(long neighborhoodId, long userId) {
+    public boolean canFindUser(long userId) {
         LOGGER.info("Verifying Detail User Accessibility");
 
         Authentication authentication = authHelper.getAuthentication();
@@ -127,13 +131,15 @@ public class PathAccessControlHelper {
         if (authHelper.isUnverifiedOrRejected(authentication))
             return authHelper.getRequestingUserId(authentication) == userId;
 
+        long neighborhoodId = us.findUser(userId).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
+
         return neighborhoodId == 0 || neighborhoodId == authHelper.getRequestingUser(authentication).getNeighborhoodId();
     }
 
     // Restricted from Anonymous Users
     // Rejected, Unverified, Workers and Neighbors can update their own profile
     // Administrators can update the profiles of the Neighbors in their Neighborhood
-    public boolean canUpdateUser(long userId, long neighborhoodId) {
+    public boolean canUpdateUser(long userId) {
         LOGGER.info("Verifying Update User Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -142,6 +148,8 @@ public class PathAccessControlHelper {
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
+
+        long neighborhoodId = us.findUser(userId).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
 
         if (authHelper.getRequestingUser(authentication).getNeighborhoodId() != neighborhoodId)
             return false;
@@ -180,32 +188,6 @@ public class PathAccessControlHelper {
     }
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
-
-    // Restricted from Anonymous, Unverified and Rejected
-    // Neighbors and Administrator can use it when specifying at least one of the Query Params
-    public boolean canListLikes(String postURN, String userURN) {
-        LOGGER.info("Verifying Get Likes Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        // In this case all likes in the application are returned (only Super Admin allowed)
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        if (postURN == null && userURN == null)
-            return false;
-
-        if (userURN != null && postURN == null)
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
-
-        if (extractFirstId(postURN) == 0)
-            return true;
-
-        if (userURN == null)
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN);
-
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(postURN)
-                && authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
-    }
 
     // Restricted from Anonymous, Unverified and Rejected
     // Neighbors can delete their own Likes

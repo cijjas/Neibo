@@ -53,8 +53,7 @@ public class NeighborhoodDto {
             UriBuilder attendanceUri = self.clone().path(Endpoint.ATTENDANCE);
             UriBuilder contactsUri = self.clone().path(Endpoint.CONTACTS);
             UriBuilder bookingsUri = self.clone().path(Endpoint.BOOKINGS);
-            UriBuilder likesUri = self.clone().path(Endpoint.LIKES); // THIS SHOULD BE USED INSTEAD, this includes neighborhoods!
-            UriBuilder wrongLikesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES); // THIS SHOULD BE USED INSTEAD
+            UriBuilder likesUri = self.clone().path(Endpoint.LIKES);
             UriBuilder productsUri = self.clone().path(Endpoint.PRODUCTS);
             UriBuilder requestsUri = self.clone().path(Endpoint.REQUESTS);
             UriBuilder resourcesUri = self.clone().path(Endpoint.RESOURCES);
@@ -69,7 +68,7 @@ public class NeighborhoodDto {
             links.setAttendance(attendanceUri.build());
             links.setContacts(contactsUri.build());
             links.setBookings(bookingsUri.build());
-            links.setLikes(wrongLikesUri.build());
+            links.setLikes(likesUri.build());
             links.setProducts(productsUri.build());
             links.setRequests(requestsUri.build());
             links.setResources(resourcesUri.build());

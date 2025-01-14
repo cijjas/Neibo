@@ -30,11 +30,14 @@ import static org.junit.Assert.*;
 @Rollback
 public class LikeDaoImplTest {
 
-    private static long nhKey;
+    private static long nhKey1;
+    private static long nhKey2;
     private static long uKey1;
     private static long uKey2;
+    private static long uKey3;
     private static long pKey1;
     private static long pKey2;
+    private static long pKey3;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -80,7 +83,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(nhKey1, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, likeList.size());
@@ -92,7 +95,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(nhKey1, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, likeList.size());
@@ -104,7 +107,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(nhKey1, EMPTY_FIELD, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, likeList.size());
@@ -116,7 +119,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(uKey1, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(nhKey1, uKey1, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, likeList.size());
@@ -134,7 +137,7 @@ public class LikeDaoImplTest {
         long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(uKey1, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(nhKey, uKey1, pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(likeList.isEmpty());
@@ -148,7 +151,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(nhKey1, EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, likeList.size());
@@ -162,7 +165,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, EMPTY_FIELD);
+        int countLikes = likeDaoImpl.countLikes(nhKey1, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countLikes);
@@ -174,7 +177,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(uKey1, EMPTY_FIELD);
+        int countLikes = likeDaoImpl.countLikes(nhKey1, uKey1, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countLikes);
@@ -186,7 +189,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, pKey1);
+        int countLikes = likeDaoImpl.countLikes(nhKey1, EMPTY_FIELD, pKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countLikes);
@@ -198,7 +201,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(uKey1, pKey1);
+        int countLikes = likeDaoImpl.countLikes(nhKey1, uKey1, pKey1);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countLikes);
@@ -216,7 +219,7 @@ public class LikeDaoImplTest {
         long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(uKey1, pKey1);
+        int countLikes = likeDaoImpl.countLikes(nhKey, uKey1, pKey1);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countLikes);
@@ -300,15 +303,22 @@ public class LikeDaoImplTest {
     // ----------------------------------------------- POPULATION ------------------------------------------------------
 
     private void populateLikes() {
-        nhKey = testInserter.createNeighborhood();
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        uKey2 = testInserter.createUser(USER_MAIL_2, nhKey1);
+        uKey3 = testInserter.createUser(USER_MAIL_3, nhKey2);
         long chKey = testInserter.createChannel();
+        testInserter.createChannelMapping(nhKey1, chKey);
+        testInserter.createChannelMapping(nhKey2, chKey);
         long iKey = testInserter.createImage();
         pKey1 = testInserter.createPost(uKey1, chKey, iKey);
         pKey2 = testInserter.createPost(uKey2, chKey, iKey);
+        pKey3 = testInserter.createPost(uKey3, chKey, iKey);
         testInserter.createLike(pKey1, uKey1);
         testInserter.createLike(pKey2, uKey1);
         testInserter.createLike(pKey1, uKey2);
+        testInserter.createLike(pKey3, uKey3);
+
     }
 }

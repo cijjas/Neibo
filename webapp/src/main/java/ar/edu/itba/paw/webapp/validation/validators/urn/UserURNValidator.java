@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractTwoId;
 
 public class UserURNValidator implements ConstraintValidator<UserURNConstraint, String> {
@@ -30,9 +31,6 @@ public class UserURNValidator implements ConstraintValidator<UserURNConstraint, 
             return true;
         if (!URNValidator.validateURN(userURN, "users"))
             return false;
-        TwoId twoId = extractTwoId(userURN);
-        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
-            return false;
-        return userService.findUser(twoId.getFirstId(), twoId.getSecondId()).isPresent();
+        return userService.findUser(extractFirstId(userURN)).isPresent();
     }
 }

@@ -13,9 +13,9 @@ public interface LikeDao {
 
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
-    List<Like> getLikes(Long userId, Long postId, int page, int size);
+    List<Like> getLikes(long neighborhoodId, Long userId, Long postId, int page, int size);
 
-    int countLikes(Long userId, Long postId);
+    int countLikes(long neighborhoodId, Long userId, Long postId);
 
     // -------------------------------------------------- LIKES DELETE -------------------------------------------------
 

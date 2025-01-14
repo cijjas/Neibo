@@ -68,8 +68,8 @@ public class PostDto {
         UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
         UriBuilder channelUri = neighborhoodUri.clone().path(Endpoint.CHANNELS).path(channelId);
         UriBuilder tagsUri = neighborhoodUri.clone().path(Endpoint.TAGS).queryParam(QueryParameter.ON_POST, postUri.build());
-        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).queryParam(QueryParameter.ON_POST, postUri.build());
-        UriBuilder likesCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).path(Endpoint.COUNT).queryParam(QueryParameter.ON_POST, postUri.build());
+        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES).queryParam(QueryParameter.ON_POST, postUri.build());
+        UriBuilder likesCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES).path(Endpoint.COUNT).queryParam(QueryParameter.ON_POST, postUri.build());
 
         links.setSelf(postUri.build());
         links.setPostUser(userUri.build());

@@ -11,16 +11,16 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<User> findUser(long neighborhoodId, long userId);
+    Optional<User> findUser(long userId);
 
     Optional<User> findUser(String mail);
 
-    List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size);
+    List<User> getUsers(Long neighborhoodId, Long userRoleId, int page, int size);
 
-    int calculateUserPages(long neighborhoodId, Long userRoleId, int size);
+    int calculateUserPages(Long neighborhoodId, Long userRoleId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    User updateUser(long neighborhoodId, long userId, String mail, String name, String surname, String password, Integer identification, Long languageId,
+    User updateUser(Long neighborhoodId, long userId, String mail, String name, String surname, String password, Integer identification, Long languageId,
                     Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId);
 }

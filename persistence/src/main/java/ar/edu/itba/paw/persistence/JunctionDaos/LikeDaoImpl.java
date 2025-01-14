@@ -37,42 +37,69 @@ public class LikeDaoImpl implements LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     @Override
-    public List<Like> getLikes(Long userId, Long postId, int page, int size) {
-        LOGGER.debug("Selecting Likes with User Id {} and Post Id {}", userId, postId);
+    public List<Like> getLikes(long neighborhoodId, Long userId, Long postId, int page, int size) {
+        LOGGER.debug("Selecting Likes for Neighborhood Id {}, User Id {}, and Post Id {}", neighborhoodId, userId, postId);
 
-        // Create a TypedQuery for LikeKey based on the provided criteria
         TypedQuery<LikeKey> query;
 
         if (userId != null && postId != null) {
             // Both userId and postId are provided
-            query = em.createQuery("SELECT l.id FROM Like l WHERE l.user.userId = :userId AND l.post.postId = :postId ORDER BY l.likeDate", LikeKey.class)
+            query = em.createQuery(
+                            "SELECT l.id FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                                    "AND l.user.userId = :userId " +
+                                    "AND l.post.postId = :postId " +
+                                    "ORDER BY l.likeDate",
+                            LikeKey.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId)
                     .setParameter("userId", userId)
                     .setParameter("postId", postId);
         } else if (userId != null) {
             // Only userId is provided
-            query = em.createQuery("SELECT l.id FROM Like l WHERE l.user.userId = :userId ORDER BY l.likeDate", LikeKey.class)
+            query = em.createQuery(
+                            "SELECT l.id FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                                    "AND l.user.userId = :userId " +
+                                    "ORDER BY l.likeDate",
+                            LikeKey.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId)
                     .setParameter("userId", userId);
         } else if (postId != null) {
             // Only postId is provided
-            query = em.createQuery("SELECT l.id FROM Like l WHERE l.post.postId = :postId ORDER BY l.likeDate", LikeKey.class)
+            query = em.createQuery(
+                            "SELECT l.id FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                                    "AND l.post.postId = :postId " +
+                                    "ORDER BY l.likeDate",
+                            LikeKey.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId)
                     .setParameter("postId", postId);
         } else {
             // No specific condition provided, get all likes within a neighborhood
-            query = em.createQuery("SELECT l.id FROM Like l ORDER BY l.likeDate", LikeKey.class);
+            query = em.createQuery(
+                            "SELECT l.id FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                                    "ORDER BY l.likeDate",
+                            LikeKey.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId);
         }
 
-        // Set pagination parameters
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
 
-        // Get the list of LikeKeys
         List<LikeKey> likeKeys = query.getResultList();
 
-        // Check if the list is empty
         if (!likeKeys.isEmpty()) {
-            // Create a TypedQuery for Like based on the LikeKeys and order by likeDate
             TypedQuery<Like> likeQuery = em.createQuery(
-                    "SELECT l FROM Like l WHERE l.id IN :likeKeys ORDER BY l.likeDate", Like.class);
+                    "SELECT l FROM Like l " +
+                            "WHERE l.id IN :likeKeys " +
+                            "ORDER BY l.likeDate",
+                    Like.class
+            );
             likeQuery.setParameter("likeKeys", likeKeys);
             return likeQuery.getResultList();
         }
@@ -81,23 +108,49 @@ public class LikeDaoImpl implements LikeDao {
     }
 
     @Override
-    public int countLikes(Long userId, Long postId) {
-        LOGGER.debug("Counting Likes with User Id {} and Post Id {}", userId, postId);
+    public int countLikes(long neighborhoodId, Long userId, Long postId) {
+        LOGGER.debug("Counting Likes for Neighborhood Id {}, User Id {}, and Post Id {}", neighborhoodId, userId, postId);
 
-        TypedQuery<Long> query = null;
-        if(userId != null && postId != null) {
-            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId AND l.post.postId = :postId", Long.class)
+        TypedQuery<Long> query;
+
+        if (userId != null && postId != null) {
+            query = em.createQuery(
+                            "SELECT COUNT(l) FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                                    "AND l.user.userId = :userId " +
+                                    "AND l.post.postId = :postId",
+                            Long.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId)
                     .setParameter("userId", userId)
                     .setParameter("postId", postId);
         } else if (userId != null) {
-            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId", Long.class)
+            query = em.createQuery(
+                            "SELECT COUNT(l) FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                                    "AND l.user.userId = :userId",
+                            Long.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId)
                     .setParameter("userId", userId);
         } else if (postId != null) {
-            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId", Long.class)
+            query = em.createQuery(
+                            "SELECT COUNT(l) FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId " +
+                                    "AND l.post.postId = :postId",
+                            Long.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId)
                     .setParameter("postId", postId);
         } else {
-            query = em.createQuery("SELECT COUNT(l) FROM Like l", Long.class);
+            query = em.createQuery(
+                            "SELECT COUNT(l) FROM Like l " +
+                                    "WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId",
+                            Long.class
+                    )
+                    .setParameter("neighborhoodId", neighborhoodId);
         }
+
         Long count = query.getSingleResult();
         return count != null ? count.intValue() : 0;
     }

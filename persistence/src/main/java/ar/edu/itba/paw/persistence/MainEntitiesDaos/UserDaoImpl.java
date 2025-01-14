@@ -47,22 +47,6 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
-    public Optional<User> findUser(long neighborhoodId, long userId) {
-        LOGGER.debug("Selecting User with Neighborhood Id {} and User Id {}", neighborhoodId, userId);
-
-        TypedQuery<User> query = em.createQuery(
-                "SELECT u FROM User u WHERE u.userId = :userId AND u.neighborhood.id = :neighborhoodId",
-                User.class
-        );
-
-        query.setParameter("userId", userId);
-        query.setParameter("neighborhoodId", neighborhoodId);
-
-        List<User> result = query.getResultList();
-        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
-    }
-
-    @Override
     public Optional<User> findUser(long userId) {
         LOGGER.debug("Selecting User with User Id {}", userId);
 
@@ -78,7 +62,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size) {
+    public List<User> getUsers(Long neighborhoodId, Long userRoleId, int page, int size) {
         LOGGER.debug("Selecting Users with Neighborhood Id {} and User Role Id {}", neighborhoodId, userRoleId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -92,7 +76,7 @@ public class UserDaoImpl implements UserDao {
         if (userRoleId != null) {
             predicates.add(cb.equal(idRoot.get("role"), UserRole.fromId(userRoleId)));
         }
-        if (neighborhoodId >= 0) {
+        if (neighborhoodId != null) {
             Join<User, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
             predicates.add(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
         }
@@ -115,7 +99,7 @@ public class UserDaoImpl implements UserDao {
         CriteriaQuery<User> dataQuery = cb.createQuery(User.class);
         Root<User> dataRoot = dataQuery.from(User.class);
         dataQuery.where(dataRoot.get("userId").in(userIds));
-        dataQuery.orderBy(cb.asc(dataRoot.get("creationDate"))); // Order by creationDate
+        dataQuery.orderBy(cb.asc(dataRoot.get("creationDate")));
         TypedQuery<User> dataTypedQuery = em.createQuery(dataQuery);
 
         return dataTypedQuery.getResultList();
@@ -134,19 +118,23 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int countUsers(long neighborhoodId, Long userRoleId) {
+    public int countUsers(Long neighborhoodId, Long userRoleId) {
         LOGGER.debug("Counting Users with Neighborhood Id {} and User Role Id {}", neighborhoodId, userRoleId);
 
         StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");
-        if (userRoleId != null)
+        if (userRoleId != null) {
             jpqlConditions.append(" AND u.role = :role");
-        if (neighborhoodId > 0)
+        }
+        if (neighborhoodId != null) {
             jpqlConditions.append(" AND u.neighborhood.id = :neighborhoodId");
+        }
         TypedQuery<Long> query = em.createQuery(jpqlConditions.toString(), Long.class);
-        if (userRoleId != null)
+        if (userRoleId != null) {
             query.setParameter("role", UserRole.fromId(userRoleId));
-        if (neighborhoodId > 0)
+        }
+        if (neighborhoodId != null) {
             query.setParameter("neighborhoodId", neighborhoodId);
+        }
         return query.getSingleResult().intValue();
     }
 }

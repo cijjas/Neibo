@@ -8,13 +8,13 @@ public class URNValidator {
     private static final Map<String, Pattern> patternMap = new HashMap<>();
 
     private static final String CHANNEL_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/channels/\\d+$";
-    private static final String NEIGHBORHOOD_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+$";
+    private static final String NEIGHBORHOOD_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/-?\\d+$";
     private static final String AMENITY_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/amenities/\\d+$";
     private static final String SHIFT_URN_REGEX = "^(https?://[^/]+)?/shifts/\\d+$";
     private static final String POST_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/posts/\\d+$";
     private static final String EVENT_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/events/\\d+$";
     private static final String REQUEST_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/products/\\d+/requests/\\d+$";
-    private static final String USER_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/users/\\d+$";
+    private static final String USER_URN_REGEX = "^(https?://[^/]+)?/users/\\d+$";
     private static final String DEPARTMENT_URN_REGEX = "^(https?://[^/]+)?/departments/\\d+$";
     private static final String WORKERS_URN_REGEX = "^(https?://[^/]+)?/workers/\\d+$";
     private static final String INQUIRY_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/products/\\d+/inquiries/\\d+$";

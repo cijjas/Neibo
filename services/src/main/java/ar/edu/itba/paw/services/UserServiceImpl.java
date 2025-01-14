@@ -3,11 +3,14 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.persistence.ImageDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,15 +28,17 @@ public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserDao userDao;
-    private final ImageService imageService;
+    private final ImageDao imageDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, ImageService imageService, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public UserServiceImpl(UserDao userDao, ImageDao imageDao, NeighborhoodDao neighborhoodDao, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.emailService = emailService;
-        this.imageService = imageService;
+        this.imageDao = imageDao;
         this.userDao = userDao;
+        this.neighborhoodDao = neighborhoodDao;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -81,10 +86,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findUser(long neighborhoodId, long userId) {
-        LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
+    public Optional<User> findUser(long userId) {
+        LOGGER.info("Finding User {}", userId);
 
-        return userDao.findUser(neighborhoodId, userId);
+        return userDao.findUser(userId);
     }
 
     @Override
@@ -97,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsers(long neighborhoodId, Long userRoleId, int page, int size) {
+    public List<User> getUsers(Long neighborhoodId, Long userRoleId, int page, int size) {
         LOGGER.info("Getting Users with Role {} from Neighborhood {} ", userRoleId, neighborhoodId);
 
         return userDao.getUsers(neighborhoodId, userRoleId, page, size);
@@ -105,7 +110,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateUserPages(long neighborhoodId, Long userRoleId, int size) {
+    public int calculateUserPages(Long neighborhoodId, Long userRoleId, int size) {
         LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", userRoleId, neighborhoodId);
 
         return PaginationUtils.calculatePages(userDao.countUsers(neighborhoodId, userRoleId), size);
@@ -114,11 +119,15 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User updateUser(long neighborhoodId, long userId, String mail, String name, String surname, String password, Integer identification, Long languageId, Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId) {
+    public User updateUser(Long neighborhoodId, long userId, String mail, String name, String surname, String password, Integer identification, Long languageId, Long profilePictureId, Boolean darkMode, String phoneNumber, Long userRoleId) {
         LOGGER.info("Updating User {} from Neighborhood {}", userId, neighborhoodId);
 
-        User user = userDao.findUser(neighborhoodId, userId).orElseThrow(NotFoundException::new);
+        User user = userDao.findUser(userId).orElseThrow(NotFoundException::new);
 
+        if (neighborhoodId != null){
+            Neighborhood n = neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+            user.setNeighborhood(n);
+        }
         if (mail != null && !mail.isEmpty())
             user.setMail(mail);
         if (name != null && !name.isEmpty())
@@ -132,7 +141,7 @@ public class UserServiceImpl implements UserService {
         if (phoneNumber != null && !phoneNumber.isEmpty())
             user.setPhoneNumber(phoneNumber);
         if (profilePictureId != null) {
-            Image i = imageService.findImage(profilePictureId).orElseThrow(NotFoundException::new);
+            Image i = imageDao.findImage(profilePictureId).orElseThrow(NotFoundException::new);
             user.setProfilePicture(i);
         }
         if (identification != null)
