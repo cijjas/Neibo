@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.dto.PostsCountDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
@@ -41,7 +45,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - An Admin can delete a Post
  */
 
-@Path("neighborhoods/{neighborhoodId}/posts")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.POSTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -63,13 +67,13 @@ public class PostController {
 
     @GET
     public Response listPosts(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam("postedBy") @UserURNConstraint String user,
-            @QueryParam("inChannel") @ChannelURNConstraint String channel,
-            @QueryParam("withTag") @TagsURNConstraint List<String> tags,
-            @QueryParam("withStatus") @PostStatusURNConstraint String postStatus,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam(QueryParameter.POSTED_BY) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURNConstraint String channel,
+            @QueryParam(QueryParameter.WITH_TAG) @TagsURNConstraint List<String> tags,
+            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURNConstraint String postStatus,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
@@ -99,7 +103,7 @@ public class PostController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS),
                 ps.calculatePostPages(neighborhoodId, userId, channelId, tagIds, postStatusId, size),
                 page,
                 size
@@ -114,13 +118,13 @@ public class PostController {
     }
 
     @GET
-    @Path("/count")
+    @Path(Endpoint.COUNT)
     public Response countPosts(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam("postedBy") @UserURNConstraint String user,
-            @QueryParam("inChannel") @ChannelURNConstraint String channel,
-            @QueryParam("withTag") @TagsURNConstraint List<String> tags,
-            @QueryParam("withStatus") @PostStatusURNConstraint String postStatus
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.POSTED_BY) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURNConstraint String channel,
+            @QueryParam(QueryParameter.WITH_TAG) @TagsURNConstraint List<String> tags,
+            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURNConstraint String postStatus
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/count'", neighborhoodId);
 
@@ -150,10 +154,10 @@ public class PostController {
     }
 
     @GET
-    @Path("/{postId}")
+    @Path("{" + PathParameter.POST_ID + "}")
     public Response findPost(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint long postId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) @GenericIdConstraint long postId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
@@ -176,7 +180,7 @@ public class PostController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createPost(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull PostDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
@@ -199,11 +203,11 @@ public class PostController {
     }
 
     @DELETE
-    @Path("/{postId}")
+    @Path("{" + PathParameter.POST_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeletePost(#postId)")
     public Response deletePost(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint long postId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) @GenericIdConstraint long postId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 

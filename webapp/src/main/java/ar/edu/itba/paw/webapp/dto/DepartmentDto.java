@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Department;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 
@@ -29,7 +29,7 @@ public class DepartmentDto {
 
         String departmentId = String.valueOf(department.getDepartmentId());
 
-        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS.toString()).path(departmentId);
+        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS).path(departmentId);
 
         links.setSelf(departmentUri.build());
 

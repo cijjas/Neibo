@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
+import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.dto.ReviewsAverageDto;
 import ar.edu.itba.paw.webapp.dto.ReviewsCountDto;
@@ -36,7 +37,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - A User/Admin/Worker can list the Reviews of the Workers and their overall score
  */
 
-@Path("workers/{workerId}/reviews")
+@Path(Endpoint.WORKERS + "/{" + PathParameter.WORKER_ID + "}/" + Endpoint.REVIEWS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -58,9 +59,9 @@ public class ReviewController {
 
     @GET
     public Response listReviews(
-            @PathParam("workerId") @WorkerIdConstraint long workerId,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
 
@@ -84,7 +85,7 @@ public class ReviewController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "workers/" + workerId + "/reviews",
+                uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(String.valueOf(workerId)).path(Endpoint.REVIEWS),
                 rs.calculateReviewPages(workerId, size),
                 page,
                 size
@@ -99,9 +100,9 @@ public class ReviewController {
     }
 
     @GET
-    @Path("/count")
+    @Path(Endpoint.COUNT)
     public Response countReviews(
-            @PathParam("workerId") @WorkerIdConstraint long workerId
+            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/count'", workerId);
 
@@ -125,9 +126,9 @@ public class ReviewController {
     }
 
     @GET
-    @Path("/average")
+    @Path(Endpoint.AVERAGE)
     public Response averageReviews(
-            @PathParam("workerId") @WorkerIdConstraint long workerId
+            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/average'", workerId);
 
@@ -151,10 +152,10 @@ public class ReviewController {
     }
 
     @GET
-    @Path("/{reviewId}")
+    @Path("{" + PathParameter.REVIEW_ID + "}")
     public Response findReview(
-            @PathParam("workerId") @WorkerIdConstraint long workerId,
-            @PathParam("reviewId") @GenericIdConstraint long reviewId
+            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
+            @PathParam(PathParameter.REVIEW_ID) @GenericIdConstraint long reviewId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 
@@ -175,11 +176,11 @@ public class ReviewController {
     }
 
     @POST
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Secured({UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateValidationSequence.class)
     @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #createForm.user)")
     public Response createReview(
-            @PathParam("workerId") @WorkerIdConstraint long workerId,
+            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
             @Valid @NotNull ReviewDto createForm
     ) {
         /*
@@ -213,11 +214,11 @@ public class ReviewController {
     }
 
     @DELETE
-    @Path("/{reviewId}")
-    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    @Path("{" + PathParameter.REVIEW_ID + "}")
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteReview(
-            @PathParam("workerId") @WorkerIdConstraint long workerId,
-            @PathParam("reviewId") @GenericIdConstraint long reviewId
+            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
+            @PathParam(PathParameter.REVIEW_ID) @GenericIdConstraint long reviewId
     ) {
         LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 

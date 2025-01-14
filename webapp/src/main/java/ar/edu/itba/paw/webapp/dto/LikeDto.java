@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInLikeConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -41,11 +41,11 @@ public class LikeDto {
         String userId = String.valueOf(like.getUser().getUserId());
         String postId = String.valueOf(like.getPost().getPostId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString());
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
-        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(postId);
-        UriBuilder likeUri = likesUri.clone().queryParam(QueryParameters.LIKED_BY, userUri).queryParam(QueryParameters.ON_POST, postUri);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(postId);
+        UriBuilder likeUri = likesUri.clone().queryParam(QueryParameter.LIKED_BY, userUri).queryParam(QueryParameter.ON_POST, postUri);
 
         links.setSelf(likeUri.build());
         links.setPost(postUri.build());

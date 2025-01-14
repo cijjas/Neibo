@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Profession;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 
@@ -27,8 +27,8 @@ public class ProfessionDto {
 
         String professionId = String.valueOf(profession.getProfessionId());
 
-        UriBuilder professionUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS.toString()).path(professionId);
-        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).queryParam(QueryParameters.WITH_PROFESSION, professionUri.build());
+        UriBuilder professionUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS).path(professionId);
+        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).queryParam(QueryParameter.WITH_PROFESSION, professionUri.build());
 
         links.setSelf(professionUri.build());
         links.setWorkers(workersUri.build());

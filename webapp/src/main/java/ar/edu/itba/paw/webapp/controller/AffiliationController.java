@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
@@ -51,7 +54,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *       Use cases cant be satisfied!
  */
 
-@Path("/affiliations")
+@Path(Endpoint.AFFILIATIONS)
 @Validated
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -73,10 +76,10 @@ public class AffiliationController {
 
     @GET
     public Response listAffiliations(
-            @QueryParam("inNeighborhood") @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam("forWorker") @WorkerURNConstraint String worker,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURNConstraint String neighborhood,
+            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURNConstraint String worker,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
@@ -88,7 +91,7 @@ public class AffiliationController {
         List<Affiliation> affiliations = nws.getAffiliations(neighborhoodId, workerId, page, size);
         String affiliationsHashCode;
 
-        // This is required to keep a consistent hash code across creates and this endpoint used as a find
+        // This is required to keep a consistent hash code across creates and this endpoint used as a "find"
         if (affiliations.size() == 1) {
             Affiliation singleAffiliation = affiliations.get(0);
             affiliationsHashCode = String.valueOf(singleAffiliation.hashCode());
@@ -111,7 +114,7 @@ public class AffiliationController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "affiliations/",
+                uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS),
                 nws.calculateAffiliationPages(neighborhoodId, workerId, size),
                 page,
                 size
@@ -137,19 +140,9 @@ public class AffiliationController {
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URN
-        URI uri = uriInfo.getBaseUriBuilder()
-                .path("affiliations")
-                .queryParam("inNeighborhood", uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(affiliation.getNeighborhood().getNeighborhoodId()))
-                        .build())
-                .queryParam("forWorker", uriInfo.getBaseUriBuilder()
-                        .path("workers")
-                        .path(String.valueOf(affiliation.getWorker().getWorkerId()))
-                        .build())
-                .build();
+        AffiliationDto affiliationDto = AffiliationDto.fromAffiliation(affiliation, uriInfo);
 
-        return Response.created(uri)
+        return Response.created(affiliationDto.get_links().getSelf())
                 .tag(affiliationHashCode)
                 .build();
     }
@@ -158,8 +151,8 @@ public class AffiliationController {
     @PreAuthorize("@pathAccessControlHelper.canUpdateAffiliation(#neighborhood)")
     @Validated(UpdateValidationSequence.class)
     public Response updateAffiliation(
-            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker,
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURNConstraint String neighborhood,
+            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURNConstraint String worker,
             @Valid @NotNull AffiliationDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
@@ -176,8 +169,8 @@ public class AffiliationController {
     @DELETE
     @PreAuthorize("@pathAccessControlHelper.canDeleteAffiliation(#worker)")
     public Response deleteAffiliation(
-            @QueryParam("inNeighborhood") @NotNull @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam("forWorker") @NotNull @WorkerURNConstraint String worker
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURNConstraint String neighborhood,
+            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURNConstraint String worker
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 

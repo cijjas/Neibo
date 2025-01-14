@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -63,14 +62,14 @@ public class PostDto {
         String userId = String.valueOf(post.getUser().getUserId());
         String channelId = String.valueOf((post.getChannel().getChannelId()));
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(postId);
-        UriBuilder commentsUri = postUri.clone().path(Endpoint.COMMENTS.toString());
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
-        UriBuilder channelUri = neighborhoodUri.clone().path(Endpoint.CHANNELS.toString()).path(channelId);
-        UriBuilder tagsUri = neighborhoodUri.clone().path(Endpoint.TAGS.toString()).queryParam(QueryParameters.ON_POST, postUri.build());
-        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).queryParam(QueryParameters.ON_POST, postUri.build());
-        UriBuilder likesCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).path(Endpoint.COUNT.toString()).queryParam(QueryParameters.ON_POST, postUri.build());
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(postId);
+        UriBuilder commentsUri = postUri.clone().path(Endpoint.COMMENTS);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder channelUri = neighborhoodUri.clone().path(Endpoint.CHANNELS).path(channelId);
+        UriBuilder tagsUri = neighborhoodUri.clone().path(Endpoint.TAGS).queryParam(QueryParameter.ON_POST, postUri.build());
+        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).queryParam(QueryParameter.ON_POST, postUri.build());
+        UriBuilder likesCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).path(Endpoint.COUNT).queryParam(QueryParameter.ON_POST, postUri.build());
 
         links.setSelf(postUri.build());
         links.setPostUser(userUri.build());
@@ -81,7 +80,7 @@ public class PostDto {
         links.setLikeCount(likesCountUri.build());
         if (post.getPostPicture() != null) {
             String imageId = String.valueOf(post.getPostPicture().getImageId());
-            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(imageId);
+            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(imageId);
             links.setPostImage(imageUri.build());
         }
 

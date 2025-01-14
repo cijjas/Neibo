@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftURNConstraint;
@@ -52,11 +52,11 @@ public class BookingDto {
         String userId = String.valueOf(booking.getUser().getUserId());
         String bookingId = String.valueOf(booking.getBookingId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS.toString()).path(shiftId);
-        UriBuilder bookingUri = neighborhoodUri.clone().path(Endpoint.BOOKINGS.toString()).path(bookingId);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
-        UriBuilder amenityUri = neighborhoodUri.clone().path(Endpoint.AMENITIES.toString()).path(amenityId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS).path(shiftId);
+        UriBuilder bookingUri = neighborhoodUri.clone().path(Endpoint.BOOKINGS).path(bookingId);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder amenityUri = neighborhoodUri.clone().path(Endpoint.AMENITIES).path(amenityId);
 
         links.setSelf(bookingUri.build());
         links.setBookingUser(userUri.build());

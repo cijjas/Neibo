@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.TransactionType;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.TransactionTypeDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
@@ -16,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
 
 /*
@@ -27,7 +29,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
  *   - A User/Admin filters the Purchases/Transactions through the Transaction Types
  */
 
-@Path("transaction-types")
+@Path(Endpoint.TRANSACTION_TYPES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class TransactionTypeController {
@@ -67,9 +69,9 @@ public class TransactionTypeController {
     }
 
     @GET
-    @Path("/{transactionTypeId}")
+    @Path("{" + PathParameter.TRANSACTION_TYPE_ID + "}")
     public Response findTransactionType(
-            @PathParam("transactionTypeId") @GenericIdConstraint Long transactionTypeId
+            @PathParam(PathParameter.TRANSACTION_TYPE_ID) @GenericIdConstraint Long transactionTypeId
     ) {
         LOGGER.info("GET request arrived at '/transaction-type/{}'", transactionTypeId);
 

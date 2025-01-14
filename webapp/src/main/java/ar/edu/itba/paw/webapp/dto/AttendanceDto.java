@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Attendance;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.EventURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -36,12 +36,12 @@ public class AttendanceDto {
         String eventId = String.valueOf(attendance.getEvent().getEventId());
         String userId = String.valueOf(attendance.getUser().getUserId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder eventUri = neighborhoodUri.clone().path(Endpoint.EVENTS.toString()).path(eventId);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
-        UriBuilder attendanceUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE.toString())
-                .queryParam(QueryParameters.FOR_EVENT, eventUri.build())
-                .queryParam(QueryParameters.FOR_USER, userUri.build());
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder eventUri = neighborhoodUri.clone().path(Endpoint.EVENTS).path(eventId);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder attendanceUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE)
+                .queryParam(QueryParameter.FOR_EVENT, eventUri.build())
+                .queryParam(QueryParameter.FOR_USER, userUri.build());
 
         links.setSelf(attendanceUri.build());
         links.setAttendanceUser(userUri.build());

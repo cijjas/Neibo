@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.LanguageDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
@@ -16,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
 
 /*
@@ -32,7 +34,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
  */
 
 
-@Path("languages")
+@Path(Endpoint.LANGUAGES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class LanguageController {
@@ -71,9 +73,9 @@ public class LanguageController {
     }
 
     @GET
-    @Path("/{languageId}")
+    @Path("{" + PathParameter.LANGUAGE_ID + "}")
     public Response findLanguage(
-            @PathParam("languageId") @GenericIdConstraint long languageId
+            @PathParam(PathParameter.LANGUAGE_ID) @GenericIdConstraint long languageId
     ) {
         LOGGER.info("GET request arrived at '/languages/{}'", languageId);
 

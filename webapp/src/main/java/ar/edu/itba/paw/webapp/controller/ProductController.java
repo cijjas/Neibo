@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.DepartmentURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductStatusURNConstraint;
@@ -38,7 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A User/Admin can list the Products in its Neighborhood
  */
 
-@Path("neighborhoods/{neighborhoodId}/products")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.PRODUCTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -60,12 +64,12 @@ public class ProductController {
 
     @GET
     public Response listProducts(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam("forUser") @UserURNConstraint String user,
-            @QueryParam("inDepartment") @DepartmentURNConstraint String department,
-            @QueryParam("withStatus") @ProductStatusURNConstraint String productStatus,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.IN_DEPARTMENT) @DepartmentURNConstraint String department,
+            @QueryParam(QueryParameter.WITH_STATUS) @ProductStatusURNConstraint String productStatus,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
@@ -94,7 +98,7 @@ public class ProductController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.PRODUCTS),
                 ps.calculateProductPages(neighborhoodId, userId, departmentId, productStatusId, size),
                 page,
                 size
@@ -109,10 +113,10 @@ public class ProductController {
     }
 
     @GET
-    @Path("/{productId}")
+    @Path("{" + PathParameter.PRODUCT_ID + "}")
     public Response findProduct(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint long productId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId
     ) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
@@ -135,7 +139,7 @@ public class ProductController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createProduct(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull ProductDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
@@ -153,13 +157,13 @@ public class ProductController {
     }
 
     @PATCH
-    @Path("/{productId}")
+    @Path("{" + PathParameter.PRODUCT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#productId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateProduct(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId,
             @Valid @NotNull ProductDto updateForm
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
@@ -183,11 +187,11 @@ public class ProductController {
     }
 
     @DELETE
-    @Path("/{productId}")
+    @Path("{" + PathParameter.PRODUCT_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
     public Response deleteProduct(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint long productId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 

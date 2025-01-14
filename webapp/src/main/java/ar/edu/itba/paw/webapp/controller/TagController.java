@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
+import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
@@ -34,7 +35,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
  *   - A User/Admin filters the Posts through a Tag
  */
 
-@Path("neighborhoods/{neighborhoodId}/tags")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.TAGS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -56,10 +57,10 @@ public class TagController {
 
     @GET
     public Response listTags(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam("onPost") @PostURNConstraint String post,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
 
@@ -86,7 +87,7 @@ public class TagController {
 
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.TAGS),
                 ts.calculateTagPages(neighborhoodId, postId, size),
                 page,
                 size
@@ -101,10 +102,10 @@ public class TagController {
     }
 
     @GET
-    @Path("/{tagId}")
+    @Path("{" + PathParameter.TAG_ID + "}")
     public Response findTag(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("tagId") @GenericIdConstraint long tagId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.TAG_ID) @GenericIdConstraint long tagId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
@@ -127,7 +128,7 @@ public class TagController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createTag(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull TagDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
@@ -149,11 +150,11 @@ public class TagController {
     }
 
     @DELETE
-    @Path("/{tagId}")
-    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    @Path("{" + PathParameter.TAG_ID + "}")
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteTag(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("tagId") @GenericIdConstraint long tagId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.TAG_ID) @GenericIdConstraint long tagId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 

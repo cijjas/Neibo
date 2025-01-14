@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -27,7 +30,7 @@ import java.net.URI;
  *   - All Images are public and can be retrieved by any User
  */
 
-@Path("images")
+@Path(Endpoint.IMAGES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class ImageController {
@@ -47,9 +50,9 @@ public class ImageController {
     }
 
     @GET
-    @Path("/{imageId}")
+    @Path("{" + PathParameter.IMAGE_ID + "}")
     public Response findImage(
-            @PathParam("imageId") @GenericIdConstraint long imageId
+            @PathParam(PathParameter.IMAGE_ID) @GenericIdConstraint long imageId
     ) {
         LOGGER.info("GET request arrived at '/images/{}'", imageId);
 
@@ -72,7 +75,7 @@ public class ImageController {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Secured({"ROLE_REJECTED", "ROLE_UNVERIFIED_NEIGHBOR", "ROLE_WORKER", "ROLE_NEIGHBOR", "ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Secured({UserRole.REJECTED, UserRole.UNVERIFIED, UserRole.WORKER, UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response storeImage(
             @FormDataParam("imageFile") InputStream fileInputStream,
             @FormDataParam("imageFile") FormDataContentDisposition fileDetail
@@ -97,10 +100,10 @@ public class ImageController {
     }
 
     @DELETE
-    @Path("/{imageId}")
-    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    @Path("{" + PathParameter.IMAGE_ID + "}")
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteImage(
-            @PathParam("imageId") @GenericIdConstraint long imageId
+            @PathParam(PathParameter.IMAGE_ID) @GenericIdConstraint long imageId
     ) {
         LOGGER.info("DELETE request arrived at '/images/{}'", imageId);
 

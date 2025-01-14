@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.DepartmentService;
 import ar.edu.itba.paw.models.Entities.Department;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
+import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
@@ -34,7 +38,7 @@ import java.util.stream.Collectors;
  */
 
 
-@Path("departments")
+@Path(Endpoint.DEPARTMENTS)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class DepartmentController {
@@ -83,9 +87,9 @@ public class DepartmentController {
     }
 
     @GET
-    @Path("/{departmentId}")
+    @Path("{" + PathParameter.DEPARTMENT_ID + "}")
     public Response findDepartment(
-            @PathParam("departmentId") @GenericIdConstraint Long departmentId
+            @PathParam(PathParameter.DEPARTMENT_ID) @GenericIdConstraint Long departmentId
     ) {
         LOGGER.info("GET request arrived at '/departments/{}'", departmentId);
 
@@ -106,7 +110,7 @@ public class DepartmentController {
     }
 
     @POST
-    @Secured({"ROLE_SUPER_ADMINISTRATOR"})
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     @Validated(CreateValidationSequence.class)
     public Response createDepartment(
             @Valid @NotNull DepartmentDto createForm
@@ -130,10 +134,10 @@ public class DepartmentController {
     }
 
     @DELETE
-    @Path("/{departmentId}")
-    @Secured({"ROLE_SUPER_ADMINISTRATOR"})
+    @Path("{" + PathParameter.DEPARTMENT_ID + "}")
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteDepartment(
-            @PathParam("departmentId") @GenericIdConstraint long departmentId
+            @PathParam(PathParameter.DEPARTMENT_ID) @GenericIdConstraint long departmentId
     ) {
         LOGGER.info("DELETE request arrived at '/departments/{}'", departmentId);
 

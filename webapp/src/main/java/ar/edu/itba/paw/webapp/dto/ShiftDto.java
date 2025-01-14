@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Shift;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -28,7 +28,7 @@ public class ShiftDto {
 
         String shiftId = String.valueOf(shift.getShiftId());
 
-        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS.toString()).path(shiftId);
+        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS).path(shiftId);
 
         links.setSelf(shiftUri.build());
 

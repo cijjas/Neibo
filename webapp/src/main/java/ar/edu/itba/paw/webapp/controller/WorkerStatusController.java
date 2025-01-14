@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.WorkerStatus;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.WorkerStatusDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
@@ -16,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
 /*
  * # Summary
@@ -26,7 +28,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
  *   - A User/Admin/Worker can filter the workers through this criteria
  */
 
-@Path("worker-statuses")
+@Path(Endpoint.WORKER_STATUSES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class WorkerStatusController {
@@ -66,9 +68,9 @@ public class WorkerStatusController {
     }
 
     @GET
-    @Path("/{workerStatusId}")
+    @Path("{" + PathParameter.WORKER_STATUS_ID + "}")
     public Response findWorkerStatus(
-            @PathParam("workerStatusId") @GenericIdConstraint Long workerStatusId
+            @PathParam(PathParameter.WORKER_STATUS_ID) @GenericIdConstraint Long workerStatusId
     ) {
         LOGGER.info("GET request arrived at '/worker-statuses/{}'", workerStatusId);
 

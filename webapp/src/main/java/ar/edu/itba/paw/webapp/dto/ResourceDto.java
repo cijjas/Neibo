@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Resource;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
@@ -37,14 +37,14 @@ public class ResourceDto {
         String neighborhoodId = String.valueOf(resource.getNeighborhood().getNeighborhoodId());
         String resourceId = String.valueOf(resource.getResourceId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder resourceUri = uriInfo.getBaseUriBuilder().path(Endpoint.RESOURCES.toString()).path(resourceId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder resourceUri = uriInfo.getBaseUriBuilder().path(Endpoint.RESOURCES).path(resourceId);
 
         links.setSelf(resourceUri.build());
         links.setNeighborhood(neighborhoodUri.build());
         if (resource.getImage() != null) {
             String imageId = String.valueOf(resource.getImage().getImageId());
-            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(imageId);
+            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(imageId);
             links.setResourceImage(imageUri.build());
         }
 

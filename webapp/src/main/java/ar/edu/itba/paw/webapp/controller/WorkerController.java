@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
@@ -39,7 +40,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A User/Admin/Worker can list the Workers in a Neighborhood
  */
 
-@Path("/workers")
+@Path(Endpoint.WORKERS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -60,14 +61,14 @@ public class WorkerController {
     }
 
     @GET
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
+    @Secured({UserRole.WORKER, UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response listWorkers(
-            @QueryParam("inNeighborhoods") @NeighborhoodsURNConstraint List<String> neighborhoods,
-            @QueryParam("withProfession") @ProfessionsURNConstraint List<String> professions,
-            @QueryParam("withRole") @WorkerRoleURNConstraint String workerRole,
-            @QueryParam("withStatus") @WorkerStatusURNConstraint String workerStatus,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodsURNConstraint List<String> neighborhoods,
+            @QueryParam(QueryParameter.WITH_PROFESSION) @ProfessionsURNConstraint List<String> professions,
+            @QueryParam(QueryParameter.WITH_ROLE) @WorkerRoleURNConstraint String workerRole,
+            @QueryParam(QueryParameter.WITH_STATUS) @WorkerStatusURNConstraint String workerStatus,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
@@ -97,7 +98,7 @@ public class WorkerController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "/workers",
+                uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS),
                 ws.calculateWorkerPages(neighborhoodIds, professionIds, workerRoleId, workerStatusId, size),
                 page,
                 size
@@ -112,10 +113,10 @@ public class WorkerController {
     }
 
     @GET
-    @Path("/{workerId}")
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
+    @Path("{" + PathParameter.WORKER_ID + "}")
+    @Secured({UserRole.WORKER, UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response findWorker(
-            @PathParam("workerId") @GenericIdConstraint long workerId
+            @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
@@ -155,11 +156,11 @@ public class WorkerController {
     }
 
     @PATCH
-    @Path("/{workerId}")
+    @Path("{" + PathParameter.WORKER_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canUpdateWorker(#workerId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateWorker(
-            @PathParam("workerId") @GenericIdConstraint long workerId,
+            @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId,
             @Valid @NotNull WorkerDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);

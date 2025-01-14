@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.PhoneNumberConstraint;
@@ -63,11 +63,11 @@ public class RequestDto {
         String productId = String.valueOf(request.getProduct().getProductId());
         String requestUserId = String.valueOf(request.getUser().getUserId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString()).path(requestStatusId);
-        UriBuilder requestUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString()).path(requestId);
-        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS.toString()).path(productId);
-        UriBuilder requestUserUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(requestUserId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
+        UriBuilder requestUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).path(requestId);
+        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
+        UriBuilder requestUserUri = neighborhoodUri.clone().path(Endpoint.USERS).path(requestUserId);
 
         links.setSelf(requestUri.build());
         links.setProduct(productUri.build());

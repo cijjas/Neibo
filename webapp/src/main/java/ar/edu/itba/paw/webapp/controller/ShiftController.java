@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
@@ -16,7 +19,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -28,7 +31,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - I think we can embed it, it would heavily reduce the amount of requests at certain points, Availabilities makes it hard
  */
 
-@Path("shifts")
+@Path(Endpoint.SHIFTS)
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 public class ShiftController {
@@ -49,8 +52,8 @@ public class ShiftController {
 
     @GET
     public Response getShifts(
-            @QueryParam("forAmenity") @AmenityURNConstraint String amenity,
-            @QueryParam("forDate") @DateConstraint String date
+            @QueryParam(QueryParameter.FOR_AMENITY) @AmenityURNConstraint String amenity,
+            @QueryParam(QueryParameter.FOR_DATE) @DateConstraint String date
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
@@ -82,9 +85,9 @@ public class ShiftController {
     }
 
     @GET
-    @Path("/{shiftId}")
+    @Path("{" + PathParameter.SHIFT_ID + "}")
     public Response findShift(
-            @PathParam("shiftId") @GenericIdConstraint long shiftId
+            @PathParam(PathParameter.SHIFT_ID) @GenericIdConstraint long shiftId
     ) {
         LOGGER.info("GET request arrived at '/shifts/{}'", shiftId);
 

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
+import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -34,7 +35,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - A User/Admin can list the Resources of their Neighborhood
  */
 
-@Path("neighborhoods/{neighborhoodId}/resources")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.RESOURCES)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -56,9 +57,9 @@ public class ResourceController {
 
     @GET
     public Response listResources(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
@@ -82,7 +83,7 @@ public class ResourceController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/resources",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.RESOURCES),
                 rs.calculateResourcePages(neighborhoodId, size),
                 page,
                 size
@@ -97,10 +98,10 @@ public class ResourceController {
     }
 
     @GET
-    @Path("/{resourceId}")
+    @Path("{" + PathParameter.RESOURCE_ID + "}")
     public Response findResource(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("resourceId") @GenericIdConstraint long resourceId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.RESOURCE_ID) @GenericIdConstraint long resourceId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
@@ -121,10 +122,10 @@ public class ResourceController {
     }
 
     @POST
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateValidationSequence.class)
     public Response createResource(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull ResourceDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
@@ -142,12 +143,12 @@ public class ResourceController {
     }
 
     @PATCH
-    @Path("/{resourceId}")
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Path("{" + PathParameter.RESOURCE_ID + "}")
+    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(UpdateValidationSequence.class)
     public Response updateResource(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("resourceId") @GenericIdConstraint long resourceId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.RESOURCE_ID) @GenericIdConstraint long resourceId,
             @Valid @NotNull ResourceDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
@@ -162,11 +163,11 @@ public class ResourceController {
     }
 
     @DELETE
-    @Path("/{resourceId}")
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Path("{" + PathParameter.RESOURCE_ID + "}")
+    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response deleteResource(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("resourceId") @GenericIdConstraint long resourceId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.RESOURCE_ID) @GenericIdConstraint long resourceId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 

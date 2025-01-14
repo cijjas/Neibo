@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -34,7 +35,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  * # Use cases
  *   - When registering all Neighborhoods have to be displayed
  */
-@Path("neighborhoods")
+@Path(Endpoint.NEIGHBORHOODS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -57,10 +58,10 @@ public class NeighborhoodController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#withWorker, #withoutWorker)")
     public Response listNeighborhoods(
-            @QueryParam(QueryParameters.WITH_WORKER) @WorkerURNConstraint String withWorker,
-            @QueryParam("withoutWorker") @WorkerURNConstraint String withoutWorker,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @QueryParam(QueryParameter.WITH_WORKER) @WorkerURNConstraint String withWorker,
+            @QueryParam(QueryParameter.WITHOUT_WORKER) @WorkerURNConstraint String withoutWorker,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
@@ -88,7 +89,7 @@ public class NeighborhoodController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "/neighborhoods",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS),
                 ns.calculateNeighborhoodPages(withWorkerId, withoutWorkerId, size),
                 page,
                 size
@@ -103,9 +104,9 @@ public class NeighborhoodController {
     }
 
     @GET
-    @Path("/{neighborhoodId}")
+    @Path("{" + PathParameter.NEIGHBORHOOD_ID + "}")
     public Response findNeighborhood(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", neighborhoodId);
 
@@ -126,7 +127,7 @@ public class NeighborhoodController {
     }
 
     @POST
-    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     @Validated(CreateValidationSequence.class)
     public Response createNeighborhood(
             @Valid @NotNull NeighborhoodDto createForm
@@ -150,10 +151,10 @@ public class NeighborhoodController {
     }
 
     @DELETE
-    @Path("/{neighborhoodId}")
-    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    @Path("{" + PathParameter.NEIGHBORHOOD_ID + "}")
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteNeighborhood(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}'", neighborhoodId);
 

@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ProfessionService;
 import ar.edu.itba.paw.models.Entities.Profession;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
+import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.ProfessionDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
@@ -35,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *
  */
 
-@Path("professions")
+@Path(Endpoint.PROFESSIONS)
 @Component
 @Validated
 @Produces(MediaType.APPLICATION_JSON)
@@ -58,7 +62,7 @@ public class ProfessionController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInProfessions(#worker)")
     public Response listProfessions(
-            @QueryParam("forWorker") @WorkerURNConstraint String worker
+            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURNConstraint String worker
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
@@ -88,9 +92,9 @@ public class ProfessionController {
     }
 
     @GET
-    @Path("/{professionId}")
+    @Path("{" + PathParameter.PROFESSION_ID + "}")
     public Response findProfession(
-            @PathParam("professionId") @GenericIdConstraint long professionId
+            @PathParam(PathParameter.PROFESSION_ID) @GenericIdConstraint long professionId
     ) {
         LOGGER.info("GET request arrived at '/professions/{}'", professionId);
 
@@ -111,7 +115,7 @@ public class ProfessionController {
     }
 
     @POST
-    @Secured({"ROLE_SUPER_ADMINISTRATOR"})
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     @Validated(CreateValidationSequence.class)
     public Response createProfession(
             @Valid @NotNull ProfessionDto createForm
@@ -135,10 +139,10 @@ public class ProfessionController {
     }
 
     @DELETE
-    @Path("/{professionId}")
-    @Secured({"ROLE_SUPER_ADMINISTRATOR"})
+    @Path("{" + PathParameter.PROFESSION_ID + "}")
+    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteProfession(
-            @PathParam("professionId") @GenericIdConstraint long professionId
+            @PathParam(PathParameter.PROFESSION_ID) @GenericIdConstraint long professionId
     ) {
         LOGGER.info("DELETE request arrived at '/professions/{}'", professionId);
 

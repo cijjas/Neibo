@@ -3,6 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -38,7 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - A User/Admin can list the Inquiries that a certain Product has
  */
 
-@Path("neighborhoods/{neighborhoodId}/products/{productId}/inquiries")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.PRODUCTS  + "/{" + PathParameter.PRODUCT_ID + "}/" + Endpoint.INQUIRIES)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -62,10 +66,10 @@ public class InquiryController {
 
     @GET
     public Response listInquiries(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint Long productId,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
@@ -92,7 +96,7 @@ public class InquiryController {
 
         // Pagination Link
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "/inquiries",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.INQUIRIES),
                 is.calculateInquiryPages(productId, size),
                 page,
                 size
@@ -107,11 +111,11 @@ public class InquiryController {
     }
 
     @GET
-    @Path("/{inquiryId}")
+    @Path("{" + PathParameter.INQUIRY_ID + "}")
     public Response findInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint Long productId,
-            @PathParam("inquiryId") @GenericIdConstraint long inquiryId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
+            @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
@@ -135,8 +139,8 @@ public class InquiryController {
     @PreAuthorize("@pathAccessControlHelper.canCreateInquiry(#productId)")
     @Validated(CreateValidationSequence.class)
     public Response createInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint Long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
             @Valid @NotNull InquiryDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
@@ -158,14 +162,14 @@ public class InquiryController {
     }
 
     @PATCH
-    @Path("/{inquiryId}")
+    @Path("{" + PathParameter.INQUIRY_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canAnswerInquiry(#inquiryId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint Long productId,
-            @PathParam("inquiryId") @GenericIdConstraint long inquiryId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
+            @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId,
             @Valid @NotNull InquiryDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
@@ -183,12 +187,12 @@ public class InquiryController {
     }
 
     @DELETE
-    @Path("/{inquiryId}")
+    @Path("{" + PathParameter.INQUIRY_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteInquiry(#inquiryId)")
     public Response deleteInquiry(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("productId") @GenericIdConstraint Long productId,
-            @PathParam("inquiryId") @GenericIdConstraint long inquiryId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
+            @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 

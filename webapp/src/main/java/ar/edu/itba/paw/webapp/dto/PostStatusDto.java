@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -21,7 +21,7 @@ public class PostStatusDto {
 
         String postStatusId = String.valueOf(postStatus.getId());
 
-        UriBuilder postStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.POST_STATUSES.toString()).path(postStatusId);
+        UriBuilder postStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.POST_STATUSES).path(postStatusId);
 
         links.setSelf(postStatusUri.build());
 

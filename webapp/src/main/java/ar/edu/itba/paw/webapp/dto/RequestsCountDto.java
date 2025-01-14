@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -21,16 +21,16 @@ public class RequestsCountDto {
 
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.REQUESTS.toString()).path(Endpoint.COUNT.toString());
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.REQUESTS).path(Endpoint.COUNT);
 
         if (userURI != null)
-            self.queryParam(QueryParameters.REQUESTED_BY, userURI);
+            self.queryParam(QueryParameter.REQUESTED_BY, userURI);
         if (productURI != null)
-            self.queryParam(QueryParameters.FOR_PRODUCT, productURI);
+            self.queryParam(QueryParameter.FOR_PRODUCT, productURI);
         if (requestStatusURI != null)
-            self.queryParam(QueryParameters.WITH_STATUS, requestStatusURI);
+            self.queryParam(QueryParameter.WITH_STATUS, requestStatusURI);
         if (requestTypeURI != null)
-            self.queryParam(QueryParameters.WITH_TYPE, requestTypeURI);
+            self.queryParam(QueryParameter.WITH_TYPE, requestTypeURI);
 
         links.setSelf(self.build());
 

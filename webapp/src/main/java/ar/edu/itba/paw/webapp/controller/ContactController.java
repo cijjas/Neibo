@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
+import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -24,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
-
 /*
  * # Summary
  *   - A Neighborhood has many Contacts
@@ -37,7 +37,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  *   - Contacts may have to be paginated, they currently are not
  */
 
-@Path("neighborhoods/{neighborhoodId}/contacts")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.CONTACTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -59,9 +59,9 @@ public class ContactController {
 
     @GET
     public Response listContacts(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
@@ -85,7 +85,7 @@ public class ContactController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/contacts",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CONTACTS),
                 cs.calculateContactPages(neighborhoodId, size),
                 page,
                 size
@@ -100,10 +100,10 @@ public class ContactController {
     }
 
     @GET
-    @Path("/{contactId}")
+    @Path("{" + PathParameter.CONTACT_ID + "}")
     public Response findContact(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("contactId") @GenericIdConstraint long contactId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
@@ -124,10 +124,10 @@ public class ContactController {
     }
 
     @POST
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateValidationSequence.class)
     public Response createContact(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull ContactDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
@@ -145,13 +145,13 @@ public class ContactController {
     }
 
     @PATCH
-    @Path("/{contactId}")
+    @Path("{" + PathParameter.CONTACT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(UpdateValidationSequence.class)
     public Response updateContact(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("contactId") @GenericIdConstraint long contactId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId,
             @Valid @NotNull ContactDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
@@ -166,11 +166,11 @@ public class ContactController {
     }
 
     @DELETE
-    @Path("/{contactId}")
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
+    @Path("{" + PathParameter.CONTACT_ID + "}")
+    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response deleteContact(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("contactId") @GenericIdConstraint long contactId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 

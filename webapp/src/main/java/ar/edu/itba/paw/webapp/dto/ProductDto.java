@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.DepartmentURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImagesURNConstraint;
@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
@@ -75,16 +74,16 @@ public class ProductDto {
         String departmentId = String.valueOf(product.getDepartment().getDepartmentId());
         String requestStatusId = String.valueOf(RequestStatus.REQUESTED.getId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS.toString()).path(departmentId);
-        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString()).path(requestStatusId);
-        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS.toString()).path(productId);
-        UriBuilder inquiriesUri = productUri.clone().path(Endpoint.INQUIRIES.toString());
-        UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString()).queryParam(QueryParameters.FOR_PRODUCT, productUri.build());
-        UriBuilder pendingRequestsCountUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString()).path(Endpoint.COUNT.toString())
-                .queryParam(QueryParameters.FOR_PRODUCT, productUri.build())
-                .queryParam(QueryParameters.WITH_STATUS, requestStatusUri.build());
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS).path(departmentId);
+        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
+        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
+        UriBuilder inquiriesUri = productUri.clone().path(Endpoint.INQUIRIES);
+        UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).queryParam(QueryParameter.FOR_PRODUCT, productUri.build());
+        UriBuilder pendingRequestsCountUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).path(Endpoint.COUNT)
+                .queryParam(QueryParameter.FOR_PRODUCT, productUri.build())
+                .queryParam(QueryParameter.WITH_STATUS, requestStatusUri.build());
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
 
         links.setSelf(productUri.build());
         links.setProductUser(userUri.build());
@@ -95,17 +94,17 @@ public class ProductDto {
 
         if (product.getPrimaryPicture() != null) {
             String primaryPictureId = String.valueOf(product.getPrimaryPicture().getImageId());
-            UriBuilder primaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(primaryPictureId);
+            UriBuilder primaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(primaryPictureId);
             links.setFirstProductImage(primaryPictureUri.build());
         }
         if (product.getSecondaryPicture() != null) {
             String secondaryPictureId = String.valueOf(product.getSecondaryPicture().getImageId());
-            UriBuilder secondaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(secondaryPictureId);
+            UriBuilder secondaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(secondaryPictureId);
             links.setSecondProductImage(secondaryPictureUri.build());
         }
         if (product.getTertiaryPicture() != null) {
             String tertiaryPictureId = String.valueOf(product.getTertiaryPicture().getImageId());
-            UriBuilder tertiaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(tertiaryPictureId);
+            UriBuilder tertiaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(tertiaryPictureId);
             links.setThirdProductImage(tertiaryPictureUri.build());
         }
 

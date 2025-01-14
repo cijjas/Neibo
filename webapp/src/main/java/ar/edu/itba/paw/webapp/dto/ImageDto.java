@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.ImageConstraint;
 
 import javax.ws.rs.core.UriBuilder;
@@ -23,7 +23,7 @@ public class ImageDto {
 
         String imageId = String.valueOf(image.getImageId());
 
-        UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(imageId);
+        UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(imageId);
 
         links.setSelf(imageUri.build());
 

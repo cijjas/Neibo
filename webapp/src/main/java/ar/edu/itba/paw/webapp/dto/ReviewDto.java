@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Review;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
@@ -46,8 +46,8 @@ public class ReviewDto {
         String workerId = String.valueOf(review.getWorker().getWorkerId());
         String reviewId = String.valueOf(review.getReviewId());
 
-        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(workerId);
-        UriBuilder reviewUri = workerUri.clone().path(Endpoint.REVIEWS.toString()).path(reviewId);
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId);
+        UriBuilder reviewUri = workerUri.clone().path(Endpoint.REVIEWS).path(reviewId);
 
         links.setSelf(reviewUri.build());
         links.setWorker(workerUri.build());

@@ -3,6 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
@@ -25,7 +29,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
 
 /*
@@ -39,7 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - A User can see the profile of a particular User
  */
 
-@Path("neighborhoods/{neighborhoodId}/users")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.USERS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -62,10 +65,10 @@ public class UserController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhoodId)")
     public Response listUsers(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam("withRole") @UserRoleURNConstraint String userRole,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @QueryParam(QueryParameter.WITH_ROLE) @UserRoleURNConstraint String userRole,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
@@ -89,7 +92,7 @@ public class UserController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.USERS),
                 us.calculateUserPages(neighborhoodId, userRoleId, size),
                 page,
                 size
@@ -106,11 +109,11 @@ public class UserController {
     }
 
     @GET
-    @Path("/{userId}")
+    @Path("{" + PathParameter.USER_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canFindUser(#neighborhoodId, #userId)")
     public Response findUser(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("userId") @GenericIdConstraint long userId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId
 
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
@@ -134,7 +137,7 @@ public class UserController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createUser(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull UserDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
@@ -152,12 +155,12 @@ public class UserController {
     }
 
     @PATCH
-    @Path("/{userId}")
+    @Path("{" + PathParameter.USER_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId, #neighborhoodId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUser(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("userId") @GenericIdConstraint long userId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,
             @Valid @NotNull UserDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);

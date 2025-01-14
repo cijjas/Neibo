@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.PostStatusDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
@@ -17,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
 
 /*
@@ -29,7 +31,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
  *   - A User/Admin can filter the Posts over this criteria
  */
 
-@Path("post-statuses")
+@Path(Endpoint.POST_STATUSES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class PostStatusController {
@@ -68,9 +70,9 @@ public class PostStatusController {
     }
 
     @GET
-    @Path("/{postStatusId}")
+    @Path("{" + PathParameter.POST_STATUS_ID + "}")
     public Response findPostStatus(
-            @PathParam("postStatusId") @GenericIdConstraint Long postStatusId
+            @PathParam(PathParameter.POST_STATUS_ID) @GenericIdConstraint Long postStatusId
     ) {
         LOGGER.info("GET request arrived at '/post-statuses/{}'", postStatusId);
 

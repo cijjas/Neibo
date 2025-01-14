@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.AttendanceCountDto;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -37,7 +41,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - A User/Admin can confirm his attendance to a certain event
  */
 
-@Path("neighborhoods/{neighborhoodId}/attendance")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.ATTENDANCE)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -59,11 +63,11 @@ public class AttendanceController {
 
     @GET
     public Response listAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam("forEvent") @EventURNConstraint String event,
-            @QueryParam("forUser") @UserURNConstraint String user,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
+            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
@@ -99,7 +103,7 @@ public class AttendanceController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events/" + eventId + "/attendance",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.EVENTS).path(String.valueOf(eventId)).path(Endpoint.ATTENDANCE),
                 as.calculateAttendancePages(neighborhoodId, userId, eventId, size),
                 page,
                 size
@@ -114,11 +118,11 @@ public class AttendanceController {
     }
 
     @GET
-    @Path("/count")
+    @Path(Endpoint.COUNT)
     public Response countAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam("forEvent") @EventURNConstraint String event,
-            @QueryParam("forUser") @UserURNConstraint String user
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
+            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/attendance/count'", neighborhoodId);
 
@@ -148,7 +152,7 @@ public class AttendanceController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull AttendanceDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
@@ -157,27 +161,9 @@ public class AttendanceController {
         final Attendance attendance = as.createAttendance(extractSecondId(createForm.getEvent()), extractSecondId(createForm.getUser()));
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
-        final URI uri = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhoodId))
-                .path("attendance")
-                .queryParam("forEvent",
-                        uriInfo.getBaseUriBuilder()
-                                .path("neighborhoods")
-                                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
-                                .path("events")
-                                .path(String.valueOf(attendance.getEvent().getEventId()))
-                                .build())
-                .queryParam("forUser",
-                        uriInfo.getBaseUriBuilder()
-                                .path("neighborhoods")
-                                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
-                                .path("users")
-                                .path(String.valueOf(attendance.getUser().getUserId()))
-                                .build())
-                .build();
+        AttendanceDto attendanceDto = AttendanceDto.fromAttendance(attendance, uriInfo);
 
-        return Response.created(uri)
+        return Response.created(attendanceDto.get_links().getSelf())
                 .tag(attendanceHashCode)
                 .build();
     }
@@ -185,9 +171,9 @@ public class AttendanceController {
     @DELETE
     @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#user)")
     public Response deleteAttendance(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam("forEvent") @EventURNConstraint String event,
-            @QueryParam("forUser") @UserURNConstraint String user
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
+            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 

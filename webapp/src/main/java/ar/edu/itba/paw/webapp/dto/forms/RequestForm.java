@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto.forms;
 
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.RequestStatusURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.TransactionTypeURNConstraint;
@@ -18,30 +19,30 @@ public class RequestForm {
     @PathParam("neighborhoodId")
     @NeighborhoodIdConstraint
     private long neighborhoodId;
-    @QueryParam("page")
 
+    @QueryParam(QueryParameter.PAGE)
     @DefaultValue("1")
     @Min(1)
     private int page;
 
-    @QueryParam("size")
+    @QueryParam(QueryParameter.SIZE)
     @DefaultValue("10")
     @Min(1)
     private int size;
 
-    @QueryParam("requestedBy")
+    @QueryParam(QueryParameter.REQUESTED_BY)
     @UserURNConstraint
     private String requestedBy;
 
-    @QueryParam("forProduct")
+    @QueryParam(QueryParameter.FOR_PRODUCT)
     @ProductURNConstraint
     private String forProduct;
 
-    @QueryParam("withType")
+    @QueryParam(QueryParameter.WITH_TYPE)
     @TransactionTypeURNConstraint
     private String withType;
 
-    @QueryParam("withStatus")
+    @QueryParam(QueryParameter.WITH_STATUS)
     @RequestStatusURNConstraint
     private String withStatus;
 

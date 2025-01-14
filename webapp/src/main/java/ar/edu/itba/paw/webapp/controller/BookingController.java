@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
@@ -40,7 +44,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - Deletion Form could also take a list instead of unique values
  */
 
-@Path("neighborhoods/{neighborhoodId}/bookings")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.BOOKINGS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -62,11 +66,11 @@ public class BookingController {
 
     @GET
     public Response listBookings(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam("bookedBy") @UserURNConstraint String user,
-            @QueryParam("forAmenity") @AmenityURNConstraint String amenity,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.BOOKED_BY) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.FOR_AMENITY) @AmenityURNConstraint String amenity,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
@@ -94,7 +98,7 @@ public class BookingController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/bookings",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.BOOKINGS),
                 bs.calculateBookingPages(neighborhoodId, amenityId, userId, size),
                 page,
                 size
@@ -109,10 +113,10 @@ public class BookingController {
     }
 
     @GET
-    @Path("/{bookingId}")
+    @Path("{" + PathParameter.BOOKING_ID + "}")
     public Response findBooking(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("bookingId") @GenericIdConstraint long bookingId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.BOOKING_ID) @GenericIdConstraint long bookingId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
@@ -137,7 +141,7 @@ public class BookingController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createBooking(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull BookingDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
@@ -155,11 +159,11 @@ public class BookingController {
     }
 
     @DELETE
-    @Path("/{bookingId}")
+    @Path("{" + PathParameter.BOOKING_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteBooking(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("bookingId") @GenericIdConstraint long bookingId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.BOOKING_ID) @GenericIdConstraint long bookingId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 

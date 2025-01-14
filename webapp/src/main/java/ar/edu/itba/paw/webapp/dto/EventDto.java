@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.TimeConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.TimeRangeConstraint;
@@ -57,10 +57,10 @@ public class EventDto {
         String neighborhoodId = String.valueOf(event.getNeighborhood().getNeighborhoodId());
         String eventId = String.valueOf(event.getEventId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder eventUri = neighborhoodUri.clone().path(Endpoint.EVENTS.toString()).path(eventId);
-        UriBuilder attendanceUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE.toString()).queryParam(QueryParameters.FOR_EVENT, eventUri);
-        UriBuilder attendanceCountUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE.toString()).path(Endpoint.COUNT.toString()).queryParam(QueryParameters.FOR_EVENT, eventUri);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder eventUri = neighborhoodUri.clone().path(Endpoint.EVENTS).path(eventId);
+        UriBuilder attendanceUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE).queryParam(QueryParameter.FOR_EVENT, eventUri);
+        UriBuilder attendanceCountUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE).path(Endpoint.COUNT).queryParam(QueryParameter.FOR_EVENT, eventUri);
 
         links.setSelf(eventUri.build());
         links.setNeighborhood((neighborhoodUri.build()));

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Contact;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 
@@ -38,8 +38,8 @@ public class ContactDto {
         String neighborhoodId = String.valueOf(contact.getNeighborhood().getNeighborhoodId());
         String contactId = String.valueOf(contact.getContactId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder contactUri = neighborhoodUri.clone().path(Endpoint.CONTACTS.toString()).path(contactId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder contactUri = neighborhoodUri.clone().path(Endpoint.CONTACTS).path(contactId);
 
         links.setSelf(contactUri.build());
         links.setNeighborhood(neighborhoodUri.build());

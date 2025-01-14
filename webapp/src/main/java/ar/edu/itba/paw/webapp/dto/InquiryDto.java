@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
@@ -48,11 +48,11 @@ public class InquiryDto {
         String replyUserId = String.valueOf(inquiry.getProduct().getSeller().getUserId());
         String inquiryId = String.valueOf(inquiry.getInquiryId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS.toString()).path(productId);
-        UriBuilder inquiryUserUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(inquiryUserId);
-        UriBuilder replyUserUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(replyUserId);
-        UriBuilder inquiryUri = productUri.clone().path(Endpoint.INQUIRIES.toString()).path(inquiryId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
+        UriBuilder inquiryUserUri = neighborhoodUri.clone().path(Endpoint.USERS).path(inquiryUserId);
+        UriBuilder replyUserUri = neighborhoodUri.clone().path(Endpoint.USERS).path(replyUserId);
+        UriBuilder inquiryUri = productUri.clone().path(Endpoint.INQUIRIES).path(inquiryId);
 
         links.setSelf(inquiryUri.build());
         links.setProduct(productUri.build());

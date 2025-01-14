@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
@@ -36,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - No, it can be tempting but the whole creation plus filtering plus potentially showing liked posts or people that liked the post ruins the idea
  */
 
-@Path("likes")
+@Path(Endpoint.LIKES)
 @Component
 @Validated
 @Produces(MediaType.APPLICATION_JSON)
@@ -59,10 +62,10 @@ public class LikeController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canListLikes(#post, #user)")
     public Response listLikes(
-            @QueryParam("likedBy") @UserURNConstraint String user,
-            @QueryParam("onPost") @PostURNConstraint String post,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @QueryParam(QueryParameter.LIKED_BY) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/likes'");
 
@@ -98,7 +101,7 @@ public class LikeController {
 
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "/likes",
+                uriInfo.getBaseUriBuilder().path(Endpoint.LIKES),
                 ls.calculateLikePages(userId, postId, size),
                 page,
                 size);
@@ -112,10 +115,10 @@ public class LikeController {
     }
 
     @GET
-    @Path("/count")
+    @Path(Endpoint.COUNT)
     public Response countLikes(
-            @QueryParam("likedBy") @UserURNConstraint String user,
-            @QueryParam("onPost") @PostURNConstraint String post
+            @QueryParam(QueryParameter.LIKED_BY) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post
     ) {
         LOGGER.info("GET request arrived at '/likes/count'");
 
@@ -150,23 +153,9 @@ public class LikeController {
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
-        final URI uri = uriInfo.getBaseUriBuilder()
-                .path("likes")
-                .queryParam("likedBy", uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
-                        .path("users")
-                        .path(String.valueOf(like.getUser().getUserId()))
-                        .build())
-                .queryParam("onPost", uriInfo.getBaseUriBuilder()
-                        .path("neighborhoods")
-                        .path(String.valueOf(like.getPost().getUser().getNeighborhood().getNeighborhoodId()))
-                        .path("posts")
-                        .path(String.valueOf(like.getPost().getPostId()))
-                        .build())
-                .build();
+        LikeDto likeDto = LikeDto.fromLike(like, uriInfo);
 
-        return Response.created(uri)
+        return Response.created(likeDto.get_links().getSelf())
                 .tag(likeHashCode)
                 .build();
     }
@@ -174,8 +163,8 @@ public class LikeController {
     @DELETE
     @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
     public Response deleteLike(
-            @QueryParam("likedBy") @NotNull @UserURNConstraint String user,
-            @QueryParam("onPost") @NotNull @PostURNConstraint String post
+            @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURNConstraint String user,
+            @QueryParam(QueryParameter.ON_POST) @NotNull @PostURNConstraint String post
     ) {
         LOGGER.info("DELETE request arrived at '/likes'");
 

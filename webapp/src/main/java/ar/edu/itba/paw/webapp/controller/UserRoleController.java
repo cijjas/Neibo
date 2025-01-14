@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.UserRoleDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
@@ -17,9 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
-@Path("user-roles")
+@Path(Endpoint.USER_ROLES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class UserRoleController {
@@ -59,9 +61,9 @@ public class UserRoleController {
     }
 
     @GET
-    @Path("/{userRoleId}")
+    @Path("{" + PathParameter.USER_ROLE_ID + "}")
     public Response findUserRole(
-            @PathParam("userRoleId") @GenericIdConstraint Long userRoleId
+            @PathParam(PathParameter.USER_ROLE_ID) @GenericIdConstraint Long userRoleId
     ) {
         LOGGER.info("GET request arrived at '/user-roles/{}'", userRoleId);
 

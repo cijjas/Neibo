@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
 import ar.edu.itba.paw.webapp.dto.RequestsCountDto;
 import ar.edu.itba.paw.webapp.dto.forms.RequestForm;
@@ -37,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A User can list the Requests he has made for certain Products
  */
 
-@Path("neighborhoods/{neighborhoodId}/requests")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.REQUESTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -93,7 +95,7 @@ public class RequestController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + requestForm.getNeighborhoodId() + "/requests",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(requestForm.getNeighborhoodId())).path(Endpoint.REQUESTS),
                 rs.calculateRequestPages(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId,
                         requestForm.getSize()),
                 requestForm.getPage(),
@@ -108,7 +110,7 @@ public class RequestController {
     }
 
     @GET
-    @Path("/count")
+    @Path(Endpoint.COUNT)
     public Response countRequests(
             @Valid @BeanParam RequestForm requestForm
     ) {
@@ -140,11 +142,11 @@ public class RequestController {
     }
 
     @GET
-    @Path("/{requestId}")
+    @Path("{" + PathParameter.REQUEST_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("requestId") long requestId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.REQUEST_ID) long requestId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
@@ -167,7 +169,7 @@ public class RequestController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull RequestDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
@@ -185,13 +187,13 @@ public class RequestController {
     }
 
     @PATCH
-    @Path("/{requestId}")
+    @Path("{" + PathParameter.REQUEST_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateRequest(#requestId)")
     @Validated(UpdateValidationSequence.class)
     public Response updateRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("requestId") @GenericIdConstraint long requestId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId,
             @Valid @NotNull RequestDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
@@ -206,11 +208,11 @@ public class RequestController {
     }
 
     @DELETE
-    @Path("/{requestId}")
+    @Path("{" + PathParameter.REQUEST_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteRequest(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam("requestId") @GenericIdConstraint long requestId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 

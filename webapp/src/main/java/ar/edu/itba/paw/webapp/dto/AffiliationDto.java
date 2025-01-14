@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Affiliation;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerRoleURNReferenceInAffiliationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURNReferenceInAffiliationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
@@ -13,7 +13,6 @@ import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.URN;
 
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -44,12 +43,12 @@ public class AffiliationDto {
         String workerId = String.valueOf(affiliation.getWorker().getWorkerId());
         String workerRoleId = String.valueOf(affiliation.getRole().getId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(workerId);
-        UriBuilder affiliationUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS.toString())
-                .queryParam(QueryParameters.IN_NEIGHBORHOOD, neighborhoodUri.build())
-                .queryParam(QueryParameters.FOR_WORKER, workerUri.build());
-        UriBuilder workerRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES.toString()).path(workerRoleId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId);
+        UriBuilder affiliationUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS)
+                .queryParam(QueryParameter.IN_NEIGHBORHOOD, neighborhoodUri.build())
+                .queryParam(QueryParameter.FOR_WORKER, workerUri.build());
+        UriBuilder workerRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES).path(workerRoleId);
 
         links.setSelf(affiliationUri.build());
         links.setWorker(workerUri.build());

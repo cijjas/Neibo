@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.WorkerStatus;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -21,7 +21,7 @@ public class WorkerStatusDto {
 
         String workerStatusId = String.valueOf(workerStatus.getId());
 
-        UriBuilder workerStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_STATUSES.toString()).path(workerStatusId);
+        UriBuilder workerStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_STATUSES).path(workerStatusId);
 
         links.setSelf(workerStatusUri.build());
 

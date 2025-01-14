@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -22,17 +22,17 @@ public class PostsCountDto {
 
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.POSTS.toString()).path(Endpoint.COUNT.toString());
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.POSTS).path(Endpoint.COUNT);
 
         if (userURI != null)
-            self.queryParam(QueryParameters.POSTED_BY, userURI);
+            self.queryParam(QueryParameter.POSTED_BY, userURI);
         if (channelURI != null)
-            self.queryParam(QueryParameters.IN_CHANNEL, channelURI);
+            self.queryParam(QueryParameter.IN_CHANNEL, channelURI);
         if (tagURIList != null && !tagURIList.isEmpty())
             for (String tag : tagURIList)
-                self.queryParam(QueryParameters.WITH_TAG, tag);
+                self.queryParam(QueryParameter.WITH_TAG, tag);
         if (postStatusURI != null)
-            self.queryParam(QueryParameters.WITH_STATUS, postStatusURI);
+            self.queryParam(QueryParameter.WITH_STATUS, postStatusURI);
 
         links.setSelf(self.build());
 

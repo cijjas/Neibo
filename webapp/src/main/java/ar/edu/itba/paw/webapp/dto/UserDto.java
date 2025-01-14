@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.BaseNeighborhood;
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.LanguageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
@@ -21,7 +21,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Date;
 
 public class UserDto {
@@ -86,11 +85,11 @@ public class UserDto {
         String languageId = String.valueOf(user.getLanguage().getId());
         String userRoleId = String.valueOf(user.getRole().getId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
-        UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).queryParam(QueryParameters.POSTED_BY, userUri.build());
-        UriBuilder languageUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES.toString()).path(languageId);
-        UriBuilder userRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES.toString()).path(userRoleId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.POSTED_BY, userUri.build());
+        UriBuilder languageUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES).path(languageId);
+        UriBuilder userRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES).path(userRoleId);
 
         links.setSelf(userUri.build());
         links.setNeighborhood(neighborhoodUri.build());
@@ -99,13 +98,13 @@ public class UserDto {
         links.setPosts(postsUri.build());
         if (user.getProfilePicture() != null) {
             String imageId = String.valueOf(user.getProfilePicture().getImageId());
-            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(imageId);
+            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(imageId);
             links.setUserImage(imageUri.build());
         }
 
         // Worker Specific Links
         if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()) {
-           links.setWorker(uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(String.valueOf(user.getUserId())).build());
+           links.setWorker(uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(String.valueOf(user.getUserId())).build());
         }
 
         // Neighbor Specific Link
@@ -115,18 +114,18 @@ public class UserDto {
             String acceptedRequestStatusId = String.valueOf(RequestStatus.ACCEPTED.getId());
             String requestedRequestStatusId = String.valueOf(RequestStatus.REQUESTED.getId());
 
-            UriBuilder purchaseTransactionTypeUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES.toString()).path(purchaseTransactionTypeId);
-            UriBuilder saleTransactionTypeUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES.toString()).path(saleTransactionTypeId);
-            UriBuilder acceptedRequestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString()).path(acceptedRequestStatusId);
-            UriBuilder requestedRequestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString()).path(requestedRequestStatusId);
-            UriBuilder bookingsUri = neighborhoodUri.clone().path(Endpoint.BOOKINGS.toString()).queryParam(QueryParameters.BOOKED_BY, userUri.build());
-            UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).queryParam(QueryParameters.LIKED_BY, userUri.build());
-            UriBuilder purchasesUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString())
-                    .queryParam(QueryParameters.WITH_TYPE, purchaseTransactionTypeUri.build()).queryParam(QueryParameters.WITH_STATUS, acceptedRequestStatusUri.build());
-            UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString())
-                    .queryParam(QueryParameters.WITH_TYPE, purchaseTransactionTypeUri.build()).queryParam(QueryParameters.WITH_STATUS, requestedRequestStatusUri.build());
-            UriBuilder salesUri = neighborhoodUri.clone().path(Endpoint.REQUESTS.toString())
-                    .queryParam(QueryParameters.WITH_TYPE, saleTransactionTypeUri.build()).queryParam(QueryParameters.WITH_STATUS, acceptedRequestStatusUri.build());
+            UriBuilder purchaseTransactionTypeUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES).path(purchaseTransactionTypeId);
+            UriBuilder saleTransactionTypeUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES).path(saleTransactionTypeId);
+            UriBuilder acceptedRequestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(acceptedRequestStatusId);
+            UriBuilder requestedRequestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(requestedRequestStatusId);
+            UriBuilder bookingsUri = neighborhoodUri.clone().path(Endpoint.BOOKINGS).queryParam(QueryParameter.BOOKED_BY, userUri.build());
+            UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).queryParam(QueryParameter.LIKED_BY, userUri.build());
+            UriBuilder purchasesUri = neighborhoodUri.clone().path(Endpoint.REQUESTS)
+                    .queryParam(QueryParameter.WITH_TYPE, purchaseTransactionTypeUri.build()).queryParam(QueryParameter.WITH_STATUS, acceptedRequestStatusUri.build());
+            UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS)
+                    .queryParam(QueryParameter.WITH_TYPE, purchaseTransactionTypeUri.build()).queryParam(QueryParameter.WITH_STATUS, requestedRequestStatusUri.build());
+            UriBuilder salesUri = neighborhoodUri.clone().path(Endpoint.REQUESTS)
+                    .queryParam(QueryParameter.WITH_TYPE, saleTransactionTypeUri.build()).queryParam(QueryParameter.WITH_STATUS, acceptedRequestStatusUri.build());
 
             links.setBookings(bookingsUri.build());
             links.setLikedPosts(likesUri.build());

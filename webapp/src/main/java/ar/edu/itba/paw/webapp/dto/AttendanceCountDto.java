@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -21,12 +21,12 @@ public class AttendanceCountDto {
 
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId).path(Endpoint.ATTENDANCE.toString()).path(Endpoint.COUNT.toString());
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.ATTENDANCE).path(Endpoint.COUNT);
 
         if (eventURI != null)
-           self.queryParam(QueryParameters.FOR_EVENT, eventURI);
+           self.queryParam(QueryParameter.FOR_EVENT, eventURI);
         if (userURI != null)
-            self.queryParam(QueryParameters.FOR_USER, userURI);
+            self.queryParam(QueryParameter.FOR_USER, userURI);
 
         links.setSelf(self.build());
 

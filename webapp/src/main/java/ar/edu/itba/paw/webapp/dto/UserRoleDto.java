@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -21,7 +21,7 @@ public class UserRoleDto {
 
         String userRoleId = String.valueOf(userRole.getId());
 
-        UriBuilder userRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES.toString()).path(userRoleId);
+        UriBuilder userRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES).path(userRoleId);
 
         links.setSelf(userRoleUri.build());
 

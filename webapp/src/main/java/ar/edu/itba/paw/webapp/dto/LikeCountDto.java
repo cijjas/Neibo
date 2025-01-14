@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -19,12 +19,12 @@ public class LikeCountDto {
 
         Links links = new Links();
 
-        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES.toString()).path(Endpoint.COUNT.toString());
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.LIKES).path(Endpoint.COUNT);
 
         if (postURN != null)
-            self.queryParam(QueryParameters.ON_POST, postURN);
+            self.queryParam(QueryParameter.ON_POST, postURN);
         if (userURN != null)
-            self.queryParam(QueryParameters.LIKED_BY, userURN);
+            self.queryParam(QueryParameter.LIKED_BY, userURN);
 
         links.setSelf(self.build());
 

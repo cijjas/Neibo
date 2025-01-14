@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.WorkerRoleDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
@@ -17,9 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
-@Path("worker-roles")
+@Path(Endpoint.WORKER_ROLES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class WorkerRoleController {
@@ -59,9 +61,9 @@ public class WorkerRoleController {
     }
 
     @GET
-    @Path("/{workerRoleId}")
+    @Path("{" + PathParameter.WORKER_ROLE_ID + "}")
     public Response findWorkerRole(
-            @PathParam("workerRoleId") @GenericIdConstraint Long workerRoleId
+            @PathParam(PathParameter.WORKER_ROLE_ID) @GenericIdConstraint Long workerRoleId
     ) {
         LOGGER.info("GET request arrived at '/worker-roles/{}'", workerRoleId);
 

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -20,7 +20,7 @@ public class ReviewsAverageDto {
 
         String workerId = String.valueOf(workerIdLong);
 
-        UriBuilder workerReviewAverageUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(workerId).path(Endpoint.REVIEWS.toString()).path(Endpoint.AVERAGE.toString());
+        UriBuilder workerReviewAverageUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId).path(Endpoint.REVIEWS).path(Endpoint.AVERAGE);
 
         links.setSelf(workerReviewAverageUri.build());
 

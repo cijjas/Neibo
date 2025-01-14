@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.*;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -18,23 +19,23 @@ public class RootDto {
         String workersNeighborhoodId =  String.valueOf(BaseNeighborhood.WORKERS.getId());
 
         UriBuilder rootUri = uriInfo.getBaseUriBuilder();
-        UriBuilder affiliationsUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS.toString());
-        UriBuilder userRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES.toString());
-        UriBuilder neighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString());
-        UriBuilder workersNeighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(workersNeighborhoodId);
-        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString());
-        UriBuilder imagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString());
+        UriBuilder affiliationsUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS);
+        UriBuilder userRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES);
+        UriBuilder neighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS);
+        UriBuilder workersNeighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(workersNeighborhoodId);
+        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS);
+        UriBuilder imagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES);
 
-        UriBuilder departmentsUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS.toString());
-        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS.toString());
-        UriBuilder shiftsUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS.toString());
+        UriBuilder departmentsUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS);
+        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS);
+        UriBuilder shiftsUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS);
 
-        UriBuilder languagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES.toString());
-        UriBuilder postStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.POST_STATUSES.toString());
-        UriBuilder productStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.PRODUCT_STATUSES.toString());
-        UriBuilder requestStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES.toString());
-        UriBuilder transactionTypesUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES.toString());
-        UriBuilder workerRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES.toString());
+        UriBuilder languagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES);
+        UriBuilder postStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.POST_STATUSES);
+        UriBuilder productStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.PRODUCT_STATUSES);
+        UriBuilder requestStatusesUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES);
+        UriBuilder transactionTypesUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES);
+        UriBuilder workerRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES);
 
         links.setSelf(rootUri.build());
 

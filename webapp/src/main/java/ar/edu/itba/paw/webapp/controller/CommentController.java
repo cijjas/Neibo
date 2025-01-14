@@ -3,6 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Comment;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
@@ -35,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
  *   - An Admin deletes a Comment
  */
 
-@Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
+@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID+ "}/" + Endpoint.POSTS  + "/{" + PathParameter.POST_ID+ "}/" + Endpoint.COMMENTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -60,10 +64,10 @@ public class CommentController {
 
     @GET
     public Response listComments(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint Long postId,
-            @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
+            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
+            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
@@ -89,7 +93,7 @@ public class CommentController {
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts" + postId + "/comments",
+                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS).path(String.valueOf(postId)).path(Endpoint.COMMENTS),
                 cs.calculateCommentPages(neighborhoodId, postId, size),
                 page,
                 size
@@ -104,11 +108,11 @@ public class CommentController {
     }
 
     @GET
-    @Path("/{commentId}")
+    @Path("{" + PathParameter.COMMENT_ID + "}")
     public Response findComment(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint Long postId,
-            @PathParam("commentId") @GenericIdConstraint long commentId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
+            @PathParam(PathParameter.COMMENT_ID) @GenericIdConstraint long commentId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
@@ -131,8 +135,8 @@ public class CommentController {
     @POST
     @Validated(CreateValidationSequence.class)
     public Response createComment(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint Long postId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
             @Valid @NotNull CommentDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
@@ -157,12 +161,12 @@ public class CommentController {
     }
 
     @DELETE
-    @Path("/{commentId}")
+    @Path("{" + PathParameter.COMMENT_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteComment(#commentId)")
     public Response deleteComment(
-            @PathParam("neighborhoodId") @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam("postId") @GenericIdConstraint Long postId,
-            @PathParam("commentId") @GenericIdConstraint long commentId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
+            @PathParam(PathParameter.COMMENT_ID) @GenericIdConstraint long commentId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 

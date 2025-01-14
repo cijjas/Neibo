@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.controller.QueryParameters;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
@@ -14,7 +14,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.List;
 
 public class WorkerDto {
@@ -62,16 +61,16 @@ public class WorkerDto {
         String workerId = String.valueOf(worker.getWorkerId());
         String userId = String.valueOf(worker.getUser().getUserId());
 
-        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS.toString()).path(workerId);
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS.toString()).queryParam(QueryParameters.FOR_WORKER, workerUri.build());
-        UriBuilder workerNeighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).queryParam(QueryParameters.WITH_WORKER, workerUri.build());
-        UriBuilder reviewsUri = workerUri.clone().path(Endpoint.REVIEWS.toString());
-        UriBuilder reviewsAverageUri = reviewsUri.clone().path(Endpoint.AVERAGE.toString());
-        UriBuilder reviewsCountUri = reviewsUri.clone().path(Endpoint.COUNT.toString());
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
-        UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).queryParam(QueryParameters.POSTED_BY, userUri.build());
-        UriBuilder postsCountUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(Endpoint.COUNT.toString()).queryParam(QueryParameters.POSTED_BY, userUri.build());
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS).queryParam(QueryParameter.FOR_WORKER, workerUri.build());
+        UriBuilder workerNeighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).queryParam(QueryParameter.WITH_WORKER, workerUri.build());
+        UriBuilder reviewsUri = workerUri.clone().path(Endpoint.REVIEWS);
+        UriBuilder reviewsAverageUri = reviewsUri.clone().path(Endpoint.AVERAGE);
+        UriBuilder reviewsCountUri = reviewsUri.clone().path(Endpoint.COUNT);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.POSTED_BY, userUri.build());
+        UriBuilder postsCountUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(Endpoint.COUNT).queryParam(QueryParameter.POSTED_BY, userUri.build());
 
         links.setSelf(workerUri.build());
         links.setUser(userUri.build());
@@ -84,7 +83,7 @@ public class WorkerDto {
         links.setPostsCount(postsCountUri.build());
         if (worker.getBackgroundPictureId() != null) {
             String backgroundPictureId = String.valueOf(worker.getBackgroundPictureId());
-            UriBuilder backgroundPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES.toString()).path(backgroundPictureId);
+            UriBuilder backgroundPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(backgroundPictureId);
             links.setBackgroundImage(backgroundPictureUri.build());
         }
 

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Endpoint;
 import ar.edu.itba.paw.models.Entities.Comment;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
@@ -42,10 +42,10 @@ public class CommentDto {
         String userId = String.valueOf((comment.getUser().getUserId()));
         String commentId = String.valueOf(comment.getCommentId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS.toString()).path(neighborhoodId);
-        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS.toString()).path(postId);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS.toString()).path(userId);
-        UriBuilder commentUri = postUri.clone().path(Endpoint.COMMENTS.toString()).path(commentId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(postId);
+        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder commentUri = postUri.clone().path(Endpoint.COMMENTS).path(commentId);
 
         links.setSelf(commentUri.build());
         links.setPost(postUri.build());
