@@ -7,7 +7,6 @@ import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.NeighborhoodUserRoleConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
@@ -64,6 +63,7 @@ public class UserDto {
     @LanguageURNConstraint(groups = URN.class)
     private String language;
 
+    @NotNull(groups = Null.class)
     @UserRoleURNConstraint(groups = URN.class)
     private String userRole;
 
@@ -267,5 +267,25 @@ public class UserDto {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "userId=" + userId +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", mail='" + mail + '\'' +
+                ", password='" + password + '\'' +
+                ", identification=" + identification +
+                ", language='" + language + '\'' +
+                ", userRole='" + userRole + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", darkMode=" + darkMode +
+                ", creationDate=" + creationDate +
+                ", _links=" + _links +
+                '}';
     }
 }

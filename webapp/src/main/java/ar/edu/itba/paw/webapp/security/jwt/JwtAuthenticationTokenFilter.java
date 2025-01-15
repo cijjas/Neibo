@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.security.jwt;
 
 import ar.edu.itba.paw.enums.Authority;
+import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
 import ar.edu.itba.paw.webapp.security.UserAuth;
 import ar.edu.itba.paw.webapp.security.enums.TokenType;
@@ -98,9 +99,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
             // Construct a full URL for the User URL, Workers' Neighborhood and User's Neighborhood URL and add them to the response headers
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (userAuth.getNeighborhoodId() != 0) {
+            if (userAuth.getNeighborhoodId() != BaseNeighborhood.WORKERS.getId()) {
                 String workersNeighborhoodURL = String.format("%s://%s:%d%s/neighborhoods/%d",
-                        request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), 0);
+                        request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), BaseNeighborhood.WORKERS.getId());
                 response.addHeader("X-Workers-Neighborhood-URL", Link.fromUri(workersNeighborhoodURL).rel("workers-neighborhood-url").build().toString());
             }
             String neighborhoodURL = String.format("%s://%s:%d%s/neighborhoods/%d",

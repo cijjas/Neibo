@@ -21,8 +21,6 @@ public class NeighborhoodURNValidator implements ConstraintValidator<Neighborhoo
 
     @Override
     public boolean isValid(String neighborhoodURN, ConstraintValidatorContext context) {
-        System.out.println("getting here!!!!");
-        System.out.println(neighborhoodURN);
         if (neighborhoodURN == null)
             return true;
         if (!URNValidator.validateURN(neighborhoodURN, "neighborhood"))

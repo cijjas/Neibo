@@ -29,6 +29,14 @@ public class AuthHelper {
         return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_SUPER_ADMINISTRATOR.name()));
     }
 
+    boolean isNeighbor(Authentication authentication) {
+        return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_NEIGHBOR.name()));
+    }
+
+    boolean isWorker(Authentication authentication) {
+        return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_WORKER.name()));
+    }
+
     long getRequestingUserId(Authentication authentication) {
         return getRequestingUser(authentication).getUserId();
     }

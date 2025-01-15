@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
@@ -45,7 +46,7 @@ public class FormAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == 0;
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == BaseNeighborhood.WORKERS.getId();
     }
 
     // ----------------------------------------------- USER REFS -------------------------------------------------------
@@ -75,53 +76,6 @@ public class FormAccessControlHelper {
         return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
-    public boolean canReferenceNeighborhoodUserRole(long userId, String neighborhood, String userRole){
-        LOGGER.info("Verifying update reference to the User's entities");
-
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        User userBeingUpdated = us.findUser(userId).orElseThrow(NotFoundException::new);
-
-        // Idempotent cases
-        long userRoleId;
-        long neighborhoodId;
-        if (neighborhood != null && userRole != null) {
-            neighborhoodId = extractFirstId(neighborhood);
-            userRoleId = extractFirstId(userRole);
-
-            if (authHelper.isAdministrator(authentication)){
-                // Admins can't change their neighborhood nor their role
-                if (authHelper.getRequestingUserId(authentication) == userId)
-                    return false;
-                // They can change the roles of their neighbors
-
-                if (authHelper.getRequestingUserNeighborhoodId(authentication) == userBeingUpdated.getNeighborhood().getNeighborhoodId()
-                        && neighborhood == null) {
-
-                }
-
-            }
-        }
-        return true;
-        // If neighborhood is specified but is the same
-        // If userRole is specified but is the same
-        // If both are specified but both are the same
-        // if none of them is specified
-
-
-
-
-        // Admin
-        // Can change privileges within his neighborhood, cant change his own privileges
-        // Neighbor
-        // if same neighborhood is specified, then same user role has to be specified as well
-        // if different neighborhood then he HAS to put his userRole to unverified
-
-
-    }
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
 

@@ -133,6 +133,7 @@ public class UserController {
 
     @POST
     @Validated(CreateValidationSequence.class)
+    @PreAuthorize("@pathAccessControlHelper.canCreateUser(#createForm.neighborhood, #createForm.userRole)")
     public Response createUser(
             @Valid @NotNull UserDto createForm
     ) {
@@ -152,7 +153,7 @@ public class UserController {
 
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId, #updateForm.neighborhood, #updateForm.userRole)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUser(
             @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,

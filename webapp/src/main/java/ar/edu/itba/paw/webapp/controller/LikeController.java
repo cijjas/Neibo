@@ -168,9 +168,6 @@ public class LikeController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
-        System.out.println(user);
-        System.out.println(post);
-
         if (ls.deleteLike(extractOptionalFirstId(user), extractOptionalSecondId(post)))
             return Response.noContent()
                     .build();
