@@ -51,18 +51,20 @@ export class RejectedPageComponent implements OnInit {
    */
   onSubmit(): void {
     this.submitted = true; // Mark form as submitted
-
     if (this.neighborhoodForm.valid) {
       const selectedNeighborhood: Neighborhood =
         this.neighborhoodForm.value.neighborhood;
-      console.log(
-        'Form Submitted:',
-        selectedNeighborhood.name,
-        selectedNeighborhood.self
-      );
 
-      //this.userService.update
-      // Add service call logic here for form submission
+      this.userService.requestNeighborhood(selectedNeighborhood.self).subscribe({
+        next: (next) => {
+          this.toastService.showToast('Successfully requested neighborhood to join!', 'success')
+        },
+        error: (error) => {
+          this.toastService.showToast('There was an error sending your requested neighborhood to join!', 'success')
+
+        }
+      })
+
     } else {
       this.toastService.showToast('Please select a neighborhood.', 'error');
     }

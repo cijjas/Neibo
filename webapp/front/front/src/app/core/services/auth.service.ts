@@ -58,6 +58,7 @@ export class AuthService {
   // LOGIN
   login(mail: string, password: string): Observable<boolean> {
     this.tokenService.clearTokens();
+    console.log('?????HOLAAAS', mail, password)
 
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + btoa(`${mail}:${password}`),
@@ -84,6 +85,7 @@ export class AuthService {
             this.tokenService.setRefreshToken(refreshToken);
           }
 
+          console.log('HOLAAAS')
           // Create observables for user, neighborhood, and workers neighborhood
           const userObs = userUrl
             ? this.http.get<UserDto>(userUrl).pipe(
@@ -102,6 +104,9 @@ export class AuthService {
               }),
               tap((user) => {
                 this.userSessionService.setUserInformation(user);
+                console.log('user: ', user)
+                console.log('1. user role 2', this.userSessionService.getCurrentUser())
+                console.log('2. user role 2', this.getCurrentRole())
                 this.preferencesService.applyDarkMode(user.darkMode);
               }),
               catchError((error) => {
@@ -179,8 +184,7 @@ export class AuthService {
 
     const url = `${this.apiServerUrl}/`;
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${authToken}`,
-      'X-Refresh-Token': refreshToken,
+      Authorization: `Bearer ${refreshToken}`
     });
 
     return this.http.get<any>(url, { headers, observe: 'response' }).pipe(

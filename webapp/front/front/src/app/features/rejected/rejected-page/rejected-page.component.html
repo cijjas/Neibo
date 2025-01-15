@@ -3,10 +3,7 @@
 <div class="container">
   <div class="d-flex flex-column justify-content-center align-items-center">
     <div class="cool-static-container" style="width: 500px; margin-top: 100px">
-      <div
-        class="d-flex flex-column justify-content-center align-items-center"
-        style="text-align: center"
-      >
+      <div class="d-flex flex-column justify-content-center align-items-center" style="text-align: center">
         <h3 class="c-primary" style="font-size: 4em; line-height: 1.5em">
           Hey there!
         </h3>
@@ -20,43 +17,26 @@
         <form [formGroup]="neighborhoodForm" (ngSubmit)="onSubmit()">
           <div class="centered-column">
             <div class="form-input">
-              <app-infinite-scroll-select
-                [theme]="'default'"
-                [multiple]="false"
-                [fetchData]="fetchNeighborhoods"
-                [displayFn]="displayNeighborhood"
-                formControlName="neighborhood"
-                [uniqueKey]="'self'"
-              >
-              </app-infinite-scroll-select>
-              <div
-                *ngIf="
-                submitted &&
-                neighborhoodForm.get('neighborhoodId')?.errors?.['required']
-              "
-                class="error"
-              >
+              <app-infinite-scroll-select [theme]="'default'" [multiple]="false" [fetchData]="fetchNeighborhoods"
+                [displayFn]="displayNeighborhood" formControlName="neighborhood"
+                [uniqueKey]="'self'"></app-infinite-scroll-select>
+              <div *ngIf="submitted && neighborhoodForm.get('neighborhood')?.errors?.['required']" class="error">
                 Neighborhood is required
               </div>
             </div>
           </div>
 
-          <a type="submit" class="cool-button"> Request </a>
+          <!-- Use a button for form submission -->
+          <button type="submit" class="cool-button">Request</button>
         </form>
+
+
         <span class="mt-3" style="color: var(--lighttext)">or</span>
-        <a
-          (click)="goBackToMainPage()"
-          class="cool-button m-t-40"
-          style="cursor: pointer"
-        >
+        <a (click)="goBackToMainPage()" class="cool-button m-t-40" style="cursor: pointer">
           Go Back to Login
         </a>
 
-        <div
-          *ngIf="isLoading"
-          class="spinner-border text-primary mt-3"
-          role="status"
-        >
+        <div *ngIf="isLoading" class="spinner-border text-primary mt-3" role="status">
           <span class="sr-only">Loading...</span>
         </div>
       </div>

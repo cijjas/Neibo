@@ -24,6 +24,8 @@ public class RootLinks {
     private URI professions;
     // Shifts
     private URI shifts;
+    // Users
+    private URI users;
 
     // ------- Static Endpoints
     // Languages
@@ -357,5 +359,13 @@ public class RootLinks {
 
     public void setWorkersNeighborhood(URI workersNeighborhood) {
         this.workersNeighborhood = workersNeighborhood;
+    }
+
+    public URI getUsers() {
+        return users;
+    }
+
+    public void setUsers(URI users) {
+        this.users = users;
     }
 }

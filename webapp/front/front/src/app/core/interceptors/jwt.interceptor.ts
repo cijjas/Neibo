@@ -18,7 +18,7 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(
     private tokenService: TokenService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   intercept(
     request: HttpRequest<any>,
@@ -38,8 +38,7 @@ export class JwtInterceptor implements HttpInterceptor {
         if (
           error instanceof HttpErrorResponse &&
           error.status === 401 &&
-          !this.isRefreshing &&
-          !request.headers.has('X-Retry')
+          !this.isRefreshing
         ) {
           this.isRefreshing = true; // Prevent multiple refresh attempts
           console.log('Got 401, attempting refresh...');
@@ -55,8 +54,7 @@ export class JwtInterceptor implements HttpInterceptor {
               const newToken = this.tokenService.getAccessToken();
               const newAuthReq = request.clone({
                 setHeaders: {
-                  Authorization: `Bearer ${newToken}`,
-                  'X-Retry': 'true', // Add custom header to prevent infinite retries
+                  Authorization: `Bearer ${newToken}`
                 },
               });
               return next.handle(newAuthReq);

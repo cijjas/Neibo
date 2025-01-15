@@ -24,6 +24,7 @@ public class RootDto {
         UriBuilder workersNeighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(workersNeighborhoodId);
         UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS);
         UriBuilder imagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES);
+        UriBuilder usersUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS);
 
         UriBuilder departmentsUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS);
         UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS);
@@ -44,6 +45,7 @@ public class RootDto {
         links.setNeighborhoods(neighborhoodsUri.build());
         links.setWorkers(workersUri.build());
         links.setImages(imagesUri.build());
+        links.setUsers(usersUri.build());
 
         links.setDepartments(departmentsUri.build());
         links.setProfessions(professionsUri.build());

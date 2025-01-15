@@ -31,12 +31,14 @@ export const RoleGuard = async (
     return true;
   }
 
+
   // 3) Get current user role from UserSessionService (asynchronously)
   const currentUser = userSessionService.getCurrentUser();
   if (!currentUser) {
     // No user in session, redirect to login
     return router.createUrlTree(['/login']);
   }
+
 
   const userRole = authService.getCurrentRole();
   // 4) Check if the user's role matches any required role

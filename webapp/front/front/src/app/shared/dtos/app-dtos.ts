@@ -263,16 +263,17 @@ export interface TransactionTypeDto {
 }
 
 export interface UserDto {
-  mail: string;
-  name: string;
-  surname: string;
+  mail?: string;
+  name?: string;
+  surname?: string;
   password?: string;
   userRole?: string;
   darkMode?: boolean;
   phoneNumber?: string;
-  language: string;
-  identification: number;
+  language?: string;
+  identification?: number;
   creationDate?: Date;
+  neighborhood?: string;
   _links?: Links;
 }
 

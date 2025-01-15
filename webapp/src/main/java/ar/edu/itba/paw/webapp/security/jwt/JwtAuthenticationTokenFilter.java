@@ -108,8 +108,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     userAuth.getNeighborhoodId());
             response.addHeader("X-Neighborhood-URL", Link.fromUri(neighborhoodURL).rel("neighborhood-url").build().toString());
             String userURL = String.format("%s://%s:%d%s/users/%d",
-                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
-                    userAuth.getNeighborhoodId(), userAuth.getUserId());
+                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), userAuth.getUserId());
             response.addHeader("X-User-URL", Link.fromUri(userURL).rel("user-url").build().toString());
         } catch (AuthenticationException e) {
             LOGGER.debug("Invalid Basic Authentication provided");

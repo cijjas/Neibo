@@ -36,6 +36,7 @@ export enum LinkKey {
     SOLD_PRODUCT_STATUS = 'root:soldProductStatus',
     SPANISH_LANGUAGE = 'root:spanishLanguage',
     TRENDING_POST_STATUS = 'root:trendingPostStatus',
+    USERS = 'root:users',
     WORKERS = 'root:workers',
     WORKERS_NEIGHBORHOOD = 'root:workersNeighborhood',
 

@@ -79,40 +79,32 @@ export class UserService {
     identification: number
   ): Observable<string | null> {
 
+    let usersUrl: string = this.linkService.getLink(LinkKey.USERS);
+    let unverifiedUserRole: string = this.linkService.getLink(LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE)
+
     const body: UserDto = {
       name: name,
       surname: surname,
       password: password,
       mail: mail,
+      userRole: unverifiedUserRole,
       language: language,
       identification: identification,
+      neighborhood: neighborhoodUrl,
     };
 
-    // First, GET the neighborhood URL to fetch the `_links`
-    return this.http.get<{ _links: { users: string } }>(neighborhoodUrl).pipe(
-      switchMap((neighborhoodDto) => {
-        // Extract the `users` link from the `_links` field
-        const usersUrl = neighborhoodDto._links?.users;
-
-        // POST to the `users` link to create the user
-        return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
-          map((response) => {
-            const locationHeader = response.headers.get('Location');
-            if (locationHeader) {
-              return locationHeader;
-            } else {
-              console.error('Location header not found');
-              return null;
-            }
-          }),
-          catchError((error) => {
-            console.error('Error creating User', error);
-            return of(null);
-          })
-        );
+    return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
+      map((response) => {
+        const locationHeader = response.headers.get('Location');
+        if (locationHeader) {
+          return locationHeader;
+        } else {
+          console.error('Location header not found');
+          return null;
+        }
       }),
       catchError((error) => {
-        console.error('Error fetching neighborhood links', error);
+        console.error('Error creating User', error);
         return of(null);
       })
     );
@@ -127,8 +119,9 @@ export class UserService {
     identification: number
   ): Observable<string | null> {
 
+    let usersUrl: string = this.linkService.getLink(LinkKey.USERS);
     let workerUserRole: string = this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
-    let neighborhoodUrl: string = this.linkService.getLink(LinkKey.WORKERS_NEIGHBORHOOD);
+    let workersNeighborhoodUrl: string = this.linkService.getLink(LinkKey.WORKERS_NEIGHBORHOOD);
 
     const body: UserDto = {
       name: name,
@@ -138,33 +131,21 @@ export class UserService {
       userRole: workerUserRole,
       language: language,
       identification: identification,
+      neighborhood: workersNeighborhoodUrl
     };
 
-    // First, GET the neighborhood URL to fetch the `_links`
-    return this.http.get<{ _links: { users: string } }>(neighborhoodUrl).pipe(
-      switchMap((neighborhoodDto) => {
-        // Extract the `users` link from the `_links` field
-        const usersUrl = neighborhoodDto._links?.users;
-
-        // POST to the `users` link to create the user
-        return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
-          map((response) => {
-            const locationHeader = response.headers.get('Location');
-            if (locationHeader) {
-              return locationHeader;
-            } else {
-              console.error('Location header not found');
-              return null;
-            }
-          }),
-          catchError((error) => {
-            console.error('Error creating User', error);
-            return of(null);
-          })
-        );
+    return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
+      map((response) => {
+        const locationHeader = response.headers.get('Location');
+        if (locationHeader) {
+          return locationHeader;
+        } else {
+          console.error('Location header not found');
+          return null;
+        }
       }),
       catchError((error) => {
-        console.error('Error fetching neighborhood links', error);
+        console.error('Error creating User', error);
         return of(null);
       })
     );
@@ -218,12 +199,20 @@ export class UserService {
   }
 
   public requestNeighborhood(
-    userUrl: string,
-    phoneNumber: string
+    newNeighborhoodUrl: string
   ): Observable<User> {
-    // requires api changes
+    console.log("getti n h here");
+
+    let userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
+    let unverifiedUserRole: string = this.linkService.getLink(LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE)
+
+    let body: UserDto = {
+      neighborhood: newNeighborhoodUrl,
+      userRole: unverifiedUserRole
+    }
+
     return this.http
-      .patch<UserDto>(userUrl, { phoneNumber: phoneNumber })
+      .patch<UserDto>(userUrl, body)
       .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
   }
 
@@ -258,6 +247,7 @@ export class UserService {
       .pipe(mergeMap((newUser) => mapUser(this.http, newUser)));
   }
 }
+
 export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
   const roleDisplayMapping = {
     [Roles.ADMINISTRATOR]: 'Administrator',
