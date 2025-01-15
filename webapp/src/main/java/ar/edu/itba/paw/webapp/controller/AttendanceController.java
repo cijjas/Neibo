@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
  * # Summary
@@ -72,7 +71,7 @@ public class AttendanceController {
 
         // ID Extraction
         Long eventId = extractOptionalSecondId(event);
-        Long userId = extractOptionalSecondId(user);
+        Long userId = extractOptionalFirstId(user);
 
         // Content
         final List<Attendance> attendance = as.getAttendance(neighborhoodId, eventId, userId, size, page);
@@ -127,7 +126,7 @@ public class AttendanceController {
 
         // ID Extraction
         Long eventId = extractOptionalSecondId(event);
-        Long userId = extractOptionalSecondId(user);
+        Long userId = extractOptionalFirstId(user);
 
         // Content
         int count = as.countAttendance(neighborhoodId, eventId, userId);
@@ -157,7 +156,7 @@ public class AttendanceController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Attendance attendance = as.createAttendance(extractSecondId(createForm.getEvent()), extractSecondId(createForm.getUser()));
+        final Attendance attendance = as.createAttendance(extractSecondId(createForm.getEvent()), extractFirstId(createForm.getUser()));
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         AttendanceDto attendanceDto = AttendanceDto.fromAttendance(attendance, uriInfo);
@@ -168,7 +167,7 @@ public class AttendanceController {
     }
 
     @DELETE
-    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#user)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#neighborhoodId, #user)")
     public Response deleteAttendance(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
@@ -177,7 +176,7 @@ public class AttendanceController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 
         // Deletion Attempt
-        if (as.deleteAttendance(extractOptionalSecondId(event), extractSecondId(user)))
+        if (as.deleteAttendance(extractOptionalSecondId(event), extractFirstId(user)))
             return Response.noContent()
                     .build();
 

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
@@ -146,7 +147,7 @@ public class InquiryController {
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
 
         // Creation & HashCode Generation
-        final Inquiry inquiry = is.createInquiry(extractSecondId(createForm.getUser()), productId, createForm.getMessage());
+        final Inquiry inquiry = is.createInquiry(extractFirstId(createForm.getUser()), productId, createForm.getMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Resource URN

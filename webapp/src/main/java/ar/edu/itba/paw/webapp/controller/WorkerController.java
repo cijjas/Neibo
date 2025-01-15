@@ -141,7 +141,7 @@ public class WorkerController {
         LOGGER.info("POST request arrived at '/workers'");
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(extractSecondId(createForm.getUser()), extractFirstIds(createForm.getProfessions()), createForm.getBusinessName(), createForm.getAddress(), createForm.getPhoneNumber());
+        final Worker worker = ws.createWorker(extractFirstId(createForm.getUser()), extractFirstIds(createForm.getProfessions()), createForm.getBusinessName(), createForm.getAddress(), createForm.getPhoneNumber());
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN

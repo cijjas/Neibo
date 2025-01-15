@@ -44,7 +44,7 @@ public class CommentDto {
 
         UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(postId);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
         UriBuilder commentUri = postUri.clone().path(Endpoint.COMMENTS).path(commentId);
 
         links.setSelf(commentUri.build());

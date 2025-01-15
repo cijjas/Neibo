@@ -38,7 +38,7 @@ public class AttendanceDto {
 
         UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder eventUri = neighborhoodUri.clone().path(Endpoint.EVENTS).path(eventId);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
         UriBuilder attendanceUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE)
                 .queryParam(QueryParameter.FOR_EVENT, eventUri.build())
                 .queryParam(QueryParameter.FOR_USER, userUri.build());

@@ -75,7 +75,7 @@ public class PostController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(user);
+        Long userId = extractOptionalFirstId(user);
         Long channelId = extractOptionalSecondId(channel);
         List<Long> tagIds = extractSecondIds(tags);
         Long postStatusId = extractOptionalFirstId(postStatus);
@@ -126,7 +126,7 @@ public class PostController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/count'", neighborhoodId);
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(user);
+        Long userId = extractOptionalFirstId(user);
         Long channelId = extractOptionalSecondId(channel);
         List<Long> tagIds = extractSecondIds(tags);
         Long postStatusId = extractOptionalFirstId(postStatus);
@@ -183,7 +183,7 @@ public class PostController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(neighborhoodId, extractSecondId(createForm.getUser()), createForm.getTitle(), createForm.getBody(), extractSecondId(createForm.getChannel()), extractSecondIds(createForm.getTags()), extractOptionalFirstId(createForm.getImage()));
+        final Post post = ps.createPost(neighborhoodId, extractFirstId(createForm.getUser()), createForm.getTitle(), createForm.getBody(), extractSecondId(createForm.getChannel()), extractSecondIds(createForm.getTags()), extractOptionalFirstId(createForm.getImage()));
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN

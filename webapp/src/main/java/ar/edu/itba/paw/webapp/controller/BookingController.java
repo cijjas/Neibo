@@ -72,7 +72,7 @@ public class BookingController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(user);
+        Long userId = extractOptionalFirstId(user);
         Long amenityId = extractOptionalSecondId(amenity);
 
         // Content
@@ -144,7 +144,7 @@ public class BookingController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Booking booking = bs.createBooking(extractFirstId(createForm.getShift()), extractSecondId(createForm.getUser()), extractSecondId(createForm.getAmenity()), extractDate(createForm.getBookingDate()));
+        final Booking booking = bs.createBooking(extractFirstId(createForm.getShift()), extractFirstId(createForm.getUser()), extractSecondId(createForm.getAmenity()), extractDate(createForm.getBookingDate()));
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN

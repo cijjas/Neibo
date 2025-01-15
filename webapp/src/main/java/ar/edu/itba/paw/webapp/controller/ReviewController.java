@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
@@ -199,7 +200,7 @@ public class ReviewController {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
         // Creation & HashCode Generation
-        final Review review = rs.createReview(workerId, extractSecondId(createForm.getUser()), createForm.getRating(), createForm.getMessage());
+        final Review review = rs.createReview(workerId, extractFirstId(createForm.getUser()), createForm.getRating(), createForm.getMessage());
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Resource URN

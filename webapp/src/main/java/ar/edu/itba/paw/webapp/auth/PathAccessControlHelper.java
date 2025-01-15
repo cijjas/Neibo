@@ -192,7 +192,7 @@ public class PathAccessControlHelper {
     // Restricted from Anonymous, Unverified and Rejected
     // Neighbors can delete their own Likes
     // Administrators can delete the Likes of the Neighbors they monitor
-    public boolean canDeleteLike(String userURN) {
+    public boolean canDeleteLike(long neighborhoodId, String userURN) {
         LOGGER.info("Verifying Delete Like accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -203,10 +203,10 @@ public class PathAccessControlHelper {
             return true;
 
         if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
 
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN)
-                && authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId
+                && authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -242,7 +242,7 @@ public class PathAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        Optional<Review> latestReview = rvs.findLatestReview(workerId, extractSecondId(user));
+        Optional<Review> latestReview = rvs.findLatestReview(workerId, extractFirstId(user));
 
         return latestReview.map(review -> ChronoUnit.HOURS.between(review.getDate().toInstant(), Instant.now()) >= 24).orElse(true);
 
@@ -257,7 +257,7 @@ public class PathAccessControlHelper {
     // Restricted from Anonymous, Unverified and Rejected
     // Neighbors can delete their own Attendance
     // Administrators can delete the Attendance of the Neighbors they monitor
-    public boolean canDeleteAttendance(String userURN) {
+    public boolean canDeleteAttendance(long neighborhoodId, String userURN) {
         LOGGER.info("Verifying Delete Attendance Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -268,10 +268,10 @@ public class PathAccessControlHelper {
             return true;
 
         if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
 
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN)
-                && authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId
+                && authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
     // ------------------------------------------------ COMMENTS -------------------------------------------------------
@@ -394,7 +394,7 @@ public class PathAccessControlHelper {
             return authHelper.isAdministrator(authentication);
 
         if (userURN != null) {
-            return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
+            return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
         }
 
         Product product = prs.findProduct(extractSecondId(productURN)).orElseThrow(NotFoundException::new);

@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.ProductService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +21,13 @@ public class FormAccessControlHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(FormAccessControlHelper.class);
 
     private final ProductService prs;
+    private final UserService us;
     private final AuthHelper authHelper;
 
     @Autowired
-    public FormAccessControlHelper(ProductService prs) {
+    public FormAccessControlHelper(ProductService prs, UserService us) {
         this.prs = prs;
+        this.us = us;
         this.authHelper = new AuthHelper();
     }
 
@@ -56,7 +61,7 @@ public class FormAccessControlHelper {
         if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
     public boolean canReferenceUserInUpdate(String userURN) {
@@ -67,7 +72,55 @@ public class FormAccessControlHelper {
         if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+    }
+
+    public boolean canReferenceNeighborhoodUserRole(long userId, String neighborhood, String userRole){
+        LOGGER.info("Verifying update reference to the User's entities");
+
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        User userBeingUpdated = us.findUser(userId).orElseThrow(NotFoundException::new);
+
+        // Idempotent cases
+        long userRoleId;
+        long neighborhoodId;
+        if (neighborhood != null && userRole != null) {
+            neighborhoodId = extractFirstId(neighborhood);
+            userRoleId = extractFirstId(userRole);
+
+            if (authHelper.isAdministrator(authentication)){
+                // Admins can't change their neighborhood nor their role
+                if (authHelper.getRequestingUserId(authentication) == userId)
+                    return false;
+                // They can change the roles of their neighbors
+
+                if (authHelper.getRequestingUserNeighborhoodId(authentication) == userBeingUpdated.getNeighborhood().getNeighborhoodId()
+                        && neighborhood == null) {
+
+                }
+
+            }
+        }
+        return true;
+        // If neighborhood is specified but is the same
+        // If userRole is specified but is the same
+        // If both are specified but both are the same
+        // if none of them is specified
+
+
+
+
+        // Admin
+        // Can change privileges within his neighborhood, cant change his own privileges
+        // Neighbor
+        // if same neighborhood is specified, then same user role has to be specified as well
+        // if different neighborhood then he HAS to put his userRole to unverified
+
+
     }
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
@@ -85,10 +138,12 @@ public class FormAccessControlHelper {
         if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
             return false;
 
-        if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(userURN);
+        long neighborhoodId = us.findUser(extractFirstId(userURN)).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
 
-        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
+        if (authHelper.isAdministrator(authentication))
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
+
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -125,7 +180,7 @@ public class FormAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractSecondId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
     // ---------------------------------------------- REQUESTS ---------------------------------------------------------

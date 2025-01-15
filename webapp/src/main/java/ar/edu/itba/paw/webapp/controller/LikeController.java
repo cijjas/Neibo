@@ -26,8 +26,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
  * # Summary
@@ -68,7 +67,7 @@ public class LikeController {
         LOGGER.info("GET request arrived at '/neighborhood/{}/likes'", neighborhoodId);
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(user);
+        Long userId = extractOptionalFirstId(user);
         Long postId = extractOptionalSecondId(post);
 
         // Content
@@ -122,7 +121,7 @@ public class LikeController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
 
         // Content
-        int count = ls.countLikes(neighborhoodId, extractOptionalSecondId(user), extractOptionalSecondId(post));
+        int count = ls.countLikes(neighborhoodId, extractOptionalFirstId(user), extractOptionalSecondId(post));
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -149,7 +148,7 @@ public class LikeController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Like like = ls.createLike(extractSecondId(createForm.getUser()), extractSecondId(createForm.getPost()));
+        final Like like = ls.createLike(extractFirstId(createForm.getUser()), extractSecondId(createForm.getPost()));
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
@@ -161,7 +160,7 @@ public class LikeController {
     }
 
     @DELETE
-    @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#neighborhoodId, #user)")
     public Response deleteLike(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURNConstraint String user,
@@ -169,7 +168,7 @@ public class LikeController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
-        if (ls.deleteLike(extractOptionalSecondId(user), extractOptionalSecondId(post)))
+        if (ls.deleteLike(extractOptionalFirstId(user), extractOptionalSecondId(post)))
             return Response.noContent()
                     .build();
 

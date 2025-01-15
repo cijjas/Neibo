@@ -31,6 +31,8 @@ public class UserURNValidator implements ConstraintValidator<UserURNConstraint, 
             return true;
         if (!URNValidator.validateURN(userURN, "users"))
             return false;
+        System.out.println(userService.findUser(extractFirstId(userURN)).isPresent());
+        System.out.println("getting here");
         return userService.findUser(extractFirstId(userURN)).isPresent();
     }
 }

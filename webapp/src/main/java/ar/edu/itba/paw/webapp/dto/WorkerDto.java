@@ -68,7 +68,7 @@ public class WorkerDto {
         UriBuilder reviewsUri = workerUri.clone().path(Endpoint.REVIEWS);
         UriBuilder reviewsAverageUri = reviewsUri.clone().path(Endpoint.AVERAGE);
         UriBuilder reviewsCountUri = reviewsUri.clone().path(Endpoint.COUNT);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
         UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.POSTED_BY, userUri.build());
         UriBuilder postsCountUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(Endpoint.COUNT).queryParam(QueryParameter.POSTED_BY, userUri.build());
 

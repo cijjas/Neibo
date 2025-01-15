@@ -107,7 +107,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
                     userAuth.getNeighborhoodId());
             response.addHeader("X-Neighborhood-URL", Link.fromUri(neighborhoodURL).rel("neighborhood-url").build().toString());
-            String userURL = String.format("%s://%s:%d%s/neighborhoods/%d/users/%d",
+            String userURL = String.format("%s://%s:%d%s/users/%d",
                     request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
                     userAuth.getNeighborhoodId(), userAuth.getUserId());
             response.addHeader("X-User-URL", Link.fromUri(userURL).rel("user-url").build().toString());

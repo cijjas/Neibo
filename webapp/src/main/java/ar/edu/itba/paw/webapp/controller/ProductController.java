@@ -71,7 +71,7 @@ public class ProductController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(user);
+        Long userId = extractOptionalFirstId(user);
         Long departmentId = extractOptionalFirstId(department);
         Long productStatusId = extractOptionalFirstId(productStatus);
 
@@ -142,7 +142,7 @@ public class ProductController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(extractSecondId(createForm.getUser()), createForm.getName(), createForm.getDescription(), createForm.getPrice(), createForm.getRemainingUnits(), createForm.getUsed(), extractFirstId(createForm.getDepartment()), extractFirstIds(createForm.getImages()));
+        final Product product = ps.createProduct(extractFirstId(createForm.getUser()), createForm.getName(), createForm.getDescription(), createForm.getPrice(), createForm.getRemainingUnits(), createForm.getUsed(), extractFirstId(createForm.getDepartment()), extractFirstIds(createForm.getImages()));
         String productHashCode = String.valueOf(product.hashCode());
 
         // Resource URN

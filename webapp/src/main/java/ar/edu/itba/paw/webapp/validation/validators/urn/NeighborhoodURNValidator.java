@@ -21,11 +21,12 @@ public class NeighborhoodURNValidator implements ConstraintValidator<Neighborhoo
 
     @Override
     public boolean isValid(String neighborhoodURN, ConstraintValidatorContext context) {
+        System.out.println("getting here!!!!");
+        System.out.println(neighborhoodURN);
         if (neighborhoodURN == null)
             return true;
         if (!URNValidator.validateURN(neighborhoodURN, "neighborhood"))
             return false;
-        long id = extractFirstId(neighborhoodURN);
         return neighborhoodService.findNeighborhood(extractFirstId(neighborhoodURN)).isPresent();
     }
 }

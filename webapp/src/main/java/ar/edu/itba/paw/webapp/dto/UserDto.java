@@ -5,8 +5,11 @@ import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.NeighborhoodUserRoleConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.LanguageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
@@ -20,11 +23,17 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
+//@NeighborhoodUserRoleConstraint
 public class UserDto {
+    @PathParam(PathParameter.USER_ID)
+    @GenericIdConstraint
+    long userId;
+
     @NotNull(groups = Null.class)
     @NeighborhoodURNConstraint(groups = URN.class)
     private String neighborhood;
@@ -91,7 +100,7 @@ public class UserDto {
         String userRoleId = String.valueOf(user.getRole().getId());
 
         UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder userUri = neighborhoodUri.clone().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
         UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.POSTED_BY, userUri.build());
         UriBuilder languageUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES).path(languageId);
         UriBuilder userRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.USER_ROLES).path(userRoleId);
@@ -250,5 +259,13 @@ public class UserDto {
 
     public void setNeighborhood(String neighborhood) {
         this.neighborhood = neighborhood;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }
