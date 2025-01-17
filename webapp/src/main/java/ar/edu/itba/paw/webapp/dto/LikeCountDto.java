@@ -23,9 +23,9 @@ public class LikeCountDto {
 
         UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES).path(Endpoint.COUNT);
 
-        if (postURN != null)
+        if (postURN != null && !postURN.isEmpty())
             self.queryParam(QueryParameter.ON_POST, postURN);
-        if (userURN != null)
+        if (userURN != null && !userURN.isEmpty())
             self.queryParam(QueryParameter.LIKED_BY, userURN);
 
         links.setSelf(self.build());

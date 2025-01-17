@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.EventURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class EventURNValidator implements ConstraintValidator<EventURNConstraint
     public boolean isValid(String eventURN, ConstraintValidatorContext context) {
         if (eventURN == null)
             return true;
-        if (!URNValidator.validateURN(eventURN, "event"))
+        if (!URNValidator.validateURN(eventURN, Endpoint.EVENTS))
             return false;
         TwoId twoId = extractTwoId(eventURN);
         if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))

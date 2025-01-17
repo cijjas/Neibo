@@ -23,7 +23,7 @@ public enum WorkerRole {
         return Arrays.stream(values())
                 .filter(wr -> wr.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Worker Role Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }
 

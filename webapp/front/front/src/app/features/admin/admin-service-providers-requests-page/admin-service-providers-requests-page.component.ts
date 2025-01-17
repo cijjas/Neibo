@@ -31,7 +31,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
     private route: ActivatedRoute,
     private confirmationService: ConfirmationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.url.subscribe((urlSegments) => {
@@ -61,7 +61,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
 
     this.workerService
       .getWorkers({
-        inNeighborhoods: [neighborhoodUrl],
+        inNeighborhood: [neighborhoodUrl],
         withRole: roleUrl,
         page: this.currentPage,
         size: this.pageSize,
@@ -81,19 +81,19 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
   rejectWorker(worker: Worker): void {
     const actionDetails = this.serviceProviders
       ? {
-          title: 'Remove Service Provider',
-          message: `Are you sure you want to remove "${worker.user.name}" as a service provider? This action cannot be undone.`,
-          confirmText: 'Yes, Remove',
-          successMessage: `"${worker.user.name}" has been successfully removed as a service provider.`,
-          errorMessage: `We encountered an issue while trying to remove "${worker.user.name}" as a service provider. Please check your connection or try again later.`,
-        }
+        title: 'Remove Service Provider',
+        message: `Are you sure you want to remove "${worker.user.name}" as a service provider? This action cannot be undone.`,
+        confirmText: 'Yes, Remove',
+        successMessage: `"${worker.user.name}" has been successfully removed as a service provider.`,
+        errorMessage: `We encountered an issue while trying to remove "${worker.user.name}" as a service provider. Please check your connection or try again later.`,
+      }
       : {
-          title: 'Reject Service Provider Request',
-          message: `Are you sure you want to decline the request from "${worker.user.name}"? This action cannot be undone.`,
-          confirmText: 'Yes, Reject',
-          successMessage: `The request from "${worker.user.name}" has been successfully declined.`,
-          errorMessage: `We encountered an issue while trying to decline the request from "${worker.user.name}". Please check your connection or try again later.`,
-        };
+        title: 'Reject Service Provider Request',
+        message: `Are you sure you want to decline the request from "${worker.user.name}"? This action cannot be undone.`,
+        confirmText: 'Yes, Reject',
+        successMessage: `The request from "${worker.user.name}" has been successfully declined.`,
+        errorMessage: `We encountered an issue while trying to decline the request from "${worker.user.name}". Please check your connection or try again later.`,
+      };
 
     this.confirmationService
       .askForConfirmation({
@@ -136,8 +136,8 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
       error: () => {
         this.toastService.showToast(
           'Something went wrong, worker ' +
-            worker.user.name +
-            ' could not be verified.',
+          worker.user.name +
+          ' could not be verified.',
           'error'
         );
       },

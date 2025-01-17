@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
 
@@ -21,7 +22,7 @@ public class UserRoleURNValidator implements ConstraintValidator<UserRoleURNCons
     public boolean isValid(String userRoleURN, ConstraintValidatorContext constraintValidatorContext) {
         if (userRoleURN == null)
             return true;
-        if (!URNValidator.validateURN(userRoleURN, "userRole"))
+        if (!URNValidator.validateURN(userRoleURN, Endpoint.USER_ROLES))
             return false;
         try {
             UserRole.fromId(extractFirstId(userRoleURN));

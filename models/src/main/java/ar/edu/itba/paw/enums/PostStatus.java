@@ -23,6 +23,6 @@ public enum PostStatus {
         return Arrays.stream(values())
                 .filter(ps -> ps.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Post Status Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }

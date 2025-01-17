@@ -87,16 +87,4 @@ public class AmenityDto {
     public void set_links(Links _links) {
         this._links = _links;
     }
-
-    // Additional methods
-
-    @Override
-    public String toString() {
-        return "AmenityForm{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", selectedShifts=" + selectedShifts +
-                ", _links=" + _links +
-                '}';
-    }
 }

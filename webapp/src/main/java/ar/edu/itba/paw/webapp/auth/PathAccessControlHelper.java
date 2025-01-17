@@ -5,6 +5,7 @@ import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class PathAccessControlHelper {
         // Only place where the URI does not have a fixed size
         String requestURI = request.getRequestURI();
         String[] uriParts = requestURI.split("/");
-        if (uriParts.length >= 3 && uriParts[1].equals("neighborhoods")) {
+        if (uriParts.length >= 3 && uriParts[1].equals(Endpoint.NEIGHBORHOODS)) {
             try {
                 long neighborhoodId = Long.parseLong(uriParts[2]);
                 return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == BaseNeighborhood.WORKERS.getId();
@@ -80,7 +81,7 @@ public class PathAccessControlHelper {
 
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
 
-    // Usage of optional Worker Query Params in '/neighborhoods' is restricted for anonymous Users
+    // Usage of optional Worker Query Params in '/neighborhoods' is restricted for Anonymous, Unverified and Rejected Users in line with the listing of Workers
     public boolean canUseWorkerQPInNeighborhoods(String withWorker, String withoutWorker) {
         LOGGER.info("Verifying Query Params Accessibility");
 
@@ -89,7 +90,7 @@ public class PathAccessControlHelper {
         if (withWorker == null && withoutWorker == null)
             return true;
 
-        return !authHelper.isAnonymous(authentication);
+        return !authHelper.isAnonymous(authentication) && !authHelper.isUnverifiedOrRejected(authentication);
     }
 
     // -------------------------------------------------- USERS --------------------------------------------------------

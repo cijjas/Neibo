@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.ShiftService;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftsURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class ShiftsURNValidator implements ConstraintValidator<ShiftsURNConstrai
         if (shiftsURN == null)
             return true;
         for (String shiftURN : shiftsURN) {
-            if (!URNValidator.validateURN(shiftURN, "shifts"))
+            if (!URNValidator.validateURN(shiftURN, Endpoint.SHIFTS))
                 return false;
             if (!shiftService.findShift(extractFirstId(shiftURN)).isPresent())
                 return false;

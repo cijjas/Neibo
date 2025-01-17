@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.security.UserDetailsService;
 import ar.edu.itba.paw.webapp.security.jwt.JwtAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.security.jwt.JwtAuthenticationProvider;
@@ -118,34 +119,31 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Public endpoints
                 .antMatchers(
                         // Root
-                        "/",
-                        "/departments", "/departments/*",
-                        "/languages", "/languages/*",
-                        "/post-statuses", "/post-statuses/*",
-                        "/product-statuses", "/product-statuses/*",
-                        "/professions", "/professions/*",
-                        "/request-statuses", "/request-statuses/*",
-                        "/shifts", "/shifts/*",
-                        "/shift-statuses", "/shift-statuses/*",
-                        "/transaction-types", "/transaction-types/*",
-                        "/user-roles", "/user-roles/*",
-                        "/worker-roles", "/worker-roles/*",
-                        "/worker-statuses", "/worker-statuses/*",
-                        "/neighborhoods", "/neighborhoods/*",
-                        "/images", "/images/*",
-                        // User and Worker Creation can be accessed by anyone
-                        // User and Worker List share the same endpoint so they have additional authentication
-                        "/users",
-                        "/workers"
+                        "/" + Endpoint.ROOT,
+                        "/" + Endpoint.DEPARTMENTS, "/" + Endpoint.DEPARTMENTS + "/*",
+                        "/" + Endpoint.LANGUAGES, "/" + Endpoint.LANGUAGES + "/*",
+                        "/" + Endpoint.POST_STATUSES, "/" + Endpoint.POST_STATUSES + "/*",
+                        "/" + Endpoint.PRODUCT_STATUSES, "/" + Endpoint.PRODUCT_STATUSES + "/*",
+                        "/" + Endpoint.PROFESSIONS, "/" + Endpoint.PROFESSIONS + "/*",
+                        "/" + Endpoint.REQUEST_STATUSES, "/" + Endpoint.REQUEST_STATUSES + "/*",
+                        "/" + Endpoint.SHIFTS, "/" + Endpoint.SHIFTS + "/*",
+                        "/" + Endpoint.TRANSACTION_TYPES, "/" + Endpoint.TRANSACTION_TYPES + "/*",
+                        "/" + Endpoint.USER_ROLES, "/" + Endpoint.USER_ROLES + "/*",
+                        "/" + Endpoint.WORKER_ROLES, "/" + Endpoint.WORKER_ROLES + "/*",
+                        "/" + Endpoint.WORKER_STATUSES, "/" + Endpoint.WORKER_STATUSES + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS, "/" + Endpoint.NEIGHBORHOODS + "/*",
+                        "/" + Endpoint.IMAGES, "/" + Endpoint.IMAGES + "/*",
+                        "/" + Endpoint.USERS,
+                        "/" + Endpoint.WORKERS
                 ).permitAll()
 
                 // Registered Users Endpoints
                 .antMatchers(
-                        "/users/*",
-                        "/workers/*",
-
-                        "/affiliations", "/affiliations/*",
-                        "/workers/*/reviews", "/workers/*/reviews/*"
+                        "/" + Endpoint.USERS + "/*",
+                        "/" + Endpoint.WORKERS + "/*",
+                        "/" + Endpoint.AFFILIATIONS, "/" + Endpoint.AFFILIATIONS + "/*",
+                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
+                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
                 ).hasAnyRole(
                         UserRole.REJECTED.name(),
                         UserRole.UNVERIFIED_NEIGHBOR.name(),
@@ -157,26 +155,40 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 // Neighborhood Specific Endpoints
                 .antMatchers(
-                        "/neighborhoods/*/posts", "/neighborhoods/*/posts/**",
-                        "/neighborhoods/*/events", "/neighborhoods/*/events/*"
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/**",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*"
                 ).access(
                         "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
                                 "@pathAccessControlHelper.isNeighborhoodMember(request)"
                 )
                 .antMatchers(
-                        "/neighborhoods/*/posts/*/comments", "/neighborhoods/*/posts/*/comments/*",
-                        "/neighborhoods/*/products", "/neighborhoods/*/products/*",
-                        "/neighborhoods/*/products/*/inquiries", "/neighborhoods/*/products/*/inquiries/*",
-                        "/neighborhoods/*/requests", "/neighborhoods/*/requests/*",
-                        "/neighborhoods/*/tags", "/neighborhoods/*/tags/*",
-                        "/neighborhoods/*/channels", "/neighborhoods/*/channels/*",
-                        "/neighborhoods/*/amenities", "/neighborhoods/*/amenities/*",
-                        "/neighborhoods/*/bookings", "/neighborhoods/*/bookings/*",
-                        "/neighborhoods/*/resources", "/neighborhoods/*/resources/*",
-                        "/neighborhoods/*/contacts", "/neighborhoods/*/contacts/*",
-                        "/neighborhoods/*/likes", "/neighborhoods/*/likes/**",
-                        "/neighborhoods/*/attendance", "/neighborhoods/*/attendance/**"
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS + "/*",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES + "/**",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE + "/**"
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
@@ -185,6 +197,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .anyRequest().denyAll();
     }
+
 
     // WORKING VERSION
     @Bean

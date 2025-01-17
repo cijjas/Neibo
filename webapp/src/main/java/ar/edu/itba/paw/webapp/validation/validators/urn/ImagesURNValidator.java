@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImagesURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class ImagesURNValidator implements ConstraintValidator<ImagesURNConstrai
         if (imagesURNs == null)
             return true;
         for (String imageURN : imagesURNs) {
-            if (!URNValidator.validateURN(imageURN, "images"))
+            if (!URNValidator.validateURN(imageURN, Endpoint.IMAGES))
                 return false;
             if (!imageService.findImage(extractFirstId(imageURN)).isPresent())
                 return false;

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodsURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class NeighborhoodsURNValidator implements ConstraintValidator<Neighborho
         if (neighborhoodURNs == null)
             return true;
         for (String neighborhoodURN : neighborhoodURNs) {
-            if (!URNValidator.validateURN(neighborhoodURN, "neighborhood"))
+            if (!URNValidator.validateURN(neighborhoodURN, Endpoint.NEIGHBORHOODS))
                 return false;
             if (!neighborhoodService.findNeighborhood(extractFirstId(neighborhoodURN)).isPresent())
                 return false;

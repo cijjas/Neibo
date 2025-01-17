@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.DepartmentService;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.DepartmentURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class DepartmentURNValidator implements ConstraintValidator<DepartmentURN
     public boolean isValid(String departmentURN, ConstraintValidatorContext constraintValidatorContext) {
         if (departmentURN == null)
             return true;
-        if (!URNValidator.validateURN(departmentURN, "departments"))
+        if (!URNValidator.validateURN(departmentURN, Endpoint.DEPARTMENTS))
             return false;
         return departmentService.findDepartment(extractFirstId(departmentURN)).isPresent();
     }

@@ -42,7 +42,7 @@ export class WorkerService {
       page?: number;
       size?: number;
       withProfession?: string[]; // Array of professions
-      inNeighborhoods?: string[];
+      inNeighborhood?: string[];
       withRole?: string;
       withStatus?: string;
     } = {}
@@ -59,10 +59,10 @@ export class WorkerService {
       params = params.set('page', queryParams.page.toString());
     if (queryParams.size !== undefined)
       params = params.set('size', queryParams.size.toString());
-    if (queryParams.inNeighborhoods && queryParams.inNeighborhoods.length > 0)
+    if (queryParams.inNeighborhood && queryParams.inNeighborhood.length > 0)
       params = params.set(
-        'inNeighborhoods',
-        queryParams.inNeighborhoods.join(',')
+        'inNeighborhood',
+        queryParams.inNeighborhood.join(',')
       );
     if (queryParams.withRole) params = params.set('withRole', queryParams.withRole);
     if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);

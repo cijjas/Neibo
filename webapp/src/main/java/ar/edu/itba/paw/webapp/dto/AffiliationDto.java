@@ -90,13 +90,4 @@ public class AffiliationDto {
     public void setNeighborhood(String neighborhood) {
         this.neighborhood = neighborhood;
     }
-
-    @Override
-    public String toString() {
-        return "CreateAffiliationForm{" +
-                "worker='" + worker + '\'' +
-                ", neighborhood='" + neighborhood + '\'' +
-                ", workerRole='" + workerRole + '\'' +
-                '}';
-    }
 }

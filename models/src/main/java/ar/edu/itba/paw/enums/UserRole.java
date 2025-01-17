@@ -26,6 +26,6 @@ public enum UserRole {
         return Arrays.stream(values())
                 .filter(ur -> ur.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("User Role Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }

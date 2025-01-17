@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerRoleURNConstraint;
 
@@ -21,7 +22,7 @@ public class WorkerRoleURNValidator implements ConstraintValidator<WorkerRoleURN
     public boolean isValid(String workerRoleURN, ConstraintValidatorContext constraintValidatorContext) {
         if (workerRoleURN == null)
             return true;
-        if (!URNValidator.validateURN(workerRoleURN, "workerRole"))
+        if (!URNValidator.validateURN(workerRoleURN, Endpoint.WORKER_ROLES))
             return false;
         try {
             WorkerRole.fromId(extractFirstId(workerRoleURN));

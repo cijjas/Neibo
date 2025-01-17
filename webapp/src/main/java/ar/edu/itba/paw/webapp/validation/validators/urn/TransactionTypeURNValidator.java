@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.TransactionTypeURNConstraint;
 
@@ -20,7 +21,7 @@ public class TransactionTypeURNValidator implements ConstraintValidator<Transact
     public boolean isValid(String transactionTypeURN, ConstraintValidatorContext context) {
         if (transactionTypeURN == null)
             return true;
-        if (!URNValidator.validateURN(transactionTypeURN, "transaction-type"))
+        if (!URNValidator.validateURN(transactionTypeURN, Endpoint.TRANSACTION_TYPES))
             return false;
         try {
             TransactionType.fromId(extractFirstId(transactionTypeURN));

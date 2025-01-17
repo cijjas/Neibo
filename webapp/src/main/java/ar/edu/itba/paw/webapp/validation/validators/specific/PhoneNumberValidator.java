@@ -4,6 +4,7 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.TwoId;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.PhoneNumberConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class PhoneNumberValidator implements ConstraintValidator<PhoneNumberCons
     public boolean isValid(String userURN, ConstraintValidatorContext context) {
         if (userURN == null)
             return true;
-        if (!URNValidator.validateURN(userURN, "users"))
+        if (!URNValidator.validateURN(userURN, Endpoint.USERS))
             return false;
         return userService.findUser(extractFirstId(userURN)).orElseThrow(NotFoundException::new).getPhoneNumber() != null;
     }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.security.jwt;
 
 import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.enums.BaseNeighborhood;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.security.AuthenticationTokenDetails;
 import ar.edu.itba.paw.webapp.security.UserAuth;
 import ar.edu.itba.paw.webapp.security.enums.TokenType;
@@ -97,19 +98,18 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             response.addHeader("X-Access-Token", jwtToken);
             response.addHeader("X-Refresh-Token", refreshToken);
 
-            // Construct a full URL for the User URL, Workers' Neighborhood and User's Neighborhood URL and add them to the response headers
+            // Construct a full URL for the User URL, Workers' Neighborhood, and User's Neighborhood URL and add them to the response headers
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (userAuth.getNeighborhoodId() != BaseNeighborhood.WORKERS.getId()) {
-                String workersNeighborhoodURL = String.format("%s://%s:%d%s/neighborhoods/%d",
-                        request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), BaseNeighborhood.WORKERS.getId());
+                String workersNeighborhoodURL = String.format("%s://%s:%d%s/%s/%d",
+                        request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.NEIGHBORHOODS, BaseNeighborhood.WORKERS.getId());
                 response.addHeader("X-Workers-Neighborhood-URL", Link.fromUri(workersNeighborhoodURL).rel("workers-neighborhood-url").build().toString());
             }
-            String neighborhoodURL = String.format("%s://%s:%d%s/neighborhoods/%d",
-                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(),
-                    userAuth.getNeighborhoodId());
+            String neighborhoodURL = String.format("%s://%s:%d%s/%s/%d",
+                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.NEIGHBORHOODS, userAuth.getNeighborhoodId());
             response.addHeader("X-Neighborhood-URL", Link.fromUri(neighborhoodURL).rel("neighborhood-url").build().toString());
-            String userURL = String.format("%s://%s:%d%s/users/%d",
-                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), userAuth.getUserId());
+            String userURL = String.format("%s://%s:%d%s/%s/%d",
+                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.USERS, userAuth.getUserId());
             response.addHeader("X-User-URL", Link.fromUri(userURL).rel("user-url").build().toString());
         } catch (AuthenticationException e) {
             LOGGER.debug("Invalid Basic Authentication provided");

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.dto.forms;
 
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.UserTransactionPairConstraint;
@@ -16,17 +18,17 @@ import javax.ws.rs.QueryParam;
 @UserTransactionPairConstraint
 public class RequestForm {
 
-    @PathParam("neighborhoodId")
+    @PathParam(PathParameter.NEIGHBORHOOD_ID)
     @NeighborhoodIdConstraint
     private long neighborhoodId;
 
     @QueryParam(QueryParameter.PAGE)
-    @DefaultValue("1")
+    @DefaultValue(Constant.DEFAULT_PAGE)
     @Min(1)
     private int page;
 
     @QueryParam(QueryParameter.SIZE)
-    @DefaultValue("10")
+    @DefaultValue(Constant.DEFAULT_SIZE)
     @Min(1)
     private int size;
 
@@ -100,18 +102,5 @@ public class RequestForm {
 
     public void setWithStatus(String withStatus) {
         this.withStatus = withStatus;
-    }
-
-    @Override
-    public String toString() {
-        return "RequestForm{" +
-                "page=" + page +
-                ", size=" + size +
-                ", neighborhoodId=" + neighborhoodId +
-                ", requestedBy='" + requestedBy + '\'' +
-                ", forProduct='" + forProduct + '\'' +
-                ", withType='" + withType + '\'' +
-                ", withStatus='" + withStatus + '\'' +
-                '}';
     }
 }

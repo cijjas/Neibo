@@ -268,24 +268,4 @@ public class UserDto {
     public void setUserId(long userId) {
         this.userId = userId;
     }
-
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "userId=" + userId +
-                ", neighborhood='" + neighborhood + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", mail='" + mail + '\'' +
-                ", password='" + password + '\'' +
-                ", identification=" + identification +
-                ", language='" + language + '\'' +
-                ", userRole='" + userRole + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", profilePicture='" + profilePicture + '\'' +
-                ", darkMode=" + darkMode +
-                ", creationDate=" + creationDate +
-                ", _links=" + _links +
-                '}';
-    }
 }

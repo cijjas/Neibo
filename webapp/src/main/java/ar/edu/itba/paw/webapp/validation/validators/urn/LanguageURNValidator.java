@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.LanguageURNConstraint;
 
@@ -20,7 +21,7 @@ public class LanguageURNValidator implements ConstraintValidator<LanguageURNCons
     public boolean isValid(String languageURN, ConstraintValidatorContext constraintValidatorContext) {
         if (languageURN == null)
             return true;
-        if (!URNValidator.validateURN(languageURN, "language"))
+        if (!URNValidator.validateURN(languageURN, Endpoint.LANGUAGES))
             return false;
         try {
             Language.fromId(extractFirstId(languageURN));

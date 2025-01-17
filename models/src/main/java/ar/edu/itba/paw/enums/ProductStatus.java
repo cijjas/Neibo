@@ -23,6 +23,6 @@ public enum ProductStatus {
         return Arrays.stream(values())
                 .filter(ps -> ps.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Product Status Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }

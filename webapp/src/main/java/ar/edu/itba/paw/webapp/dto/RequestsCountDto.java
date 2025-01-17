@@ -23,13 +23,13 @@ public class RequestsCountDto {
 
         UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.REQUESTS).path(Endpoint.COUNT);
 
-        if (userURI != null)
+        if (userURI != null && !userURI.isEmpty())
             self.queryParam(QueryParameter.REQUESTED_BY, userURI);
-        if (productURI != null)
+        if (productURI != null && !productURI.isEmpty())
             self.queryParam(QueryParameter.FOR_PRODUCT, productURI);
-        if (requestStatusURI != null)
+        if (requestStatusURI != null && !requestStatusURI.isEmpty())
             self.queryParam(QueryParameter.WITH_STATUS, requestStatusURI);
-        if (requestTypeURI != null)
+        if (requestTypeURI != null && !requestTypeURI.isEmpty())
             self.queryParam(QueryParameter.WITH_TYPE, requestTypeURI);
 
         links.setSelf(self.build());

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ProductURNValidator implements ConstraintValidator<ProductURNConstr
     public boolean isValid(String productURN, ConstraintValidatorContext context) {
         if (productURN == null)
             return true;
-        if (!URNValidator.validateURN(productURN, "product"))
+        if (!URNValidator.validateURN(productURN, Endpoint.PRODUCTS))
             return false;
         TwoId twoId = extractTwoId(productURN);
         if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostStatusURNConstraint;
 
@@ -20,7 +21,7 @@ public class PostStatusURNValidator implements ConstraintValidator<PostStatusURN
     public boolean isValid(String postStatusURN, ConstraintValidatorContext context) {
         if (postStatusURN == null)
             return true;
-        if (!URNValidator.validateURN(postStatusURN, "post-status"))
+        if (!URNValidator.validateURN(postStatusURN, Endpoint.POST_STATUSES))
             return false;
         try {
             PostStatus.fromId(extractFirstId(postStatusURN));

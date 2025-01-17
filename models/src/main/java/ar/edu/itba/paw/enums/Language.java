@@ -22,6 +22,6 @@ public enum Language {
         return Arrays.stream(values())
                 .filter(l -> l.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Language Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ChannelURNValidator implements ConstraintValidator<ChannelURNConstr
     public boolean isValid(String channelURN, ConstraintValidatorContext constraintValidatorContext) {
         if (channelURN == null)
             return true;
-        if (!URNValidator.validateURN(channelURN, "channel"))
+        if (!URNValidator.validateURN(channelURN, Endpoint.CHANNELS))
             return false;
         TwoId twoId = extractTwoId(channelURN);
         if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))

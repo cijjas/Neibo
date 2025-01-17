@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.WorkerService;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class WorkerURNValidator implements ConstraintValidator<WorkerURNConstrai
     public boolean isValid(String workerURN, ConstraintValidatorContext context) {
         if (workerURN == null)
             return true;
-        if (!URNValidator.validateURN(workerURN, "workers"))
+        if (!URNValidator.validateURN(workerURN, Endpoint.WORKERS))
             return false;
         return workerService.findWorker(extractFirstId(workerURN)).isPresent();
     }

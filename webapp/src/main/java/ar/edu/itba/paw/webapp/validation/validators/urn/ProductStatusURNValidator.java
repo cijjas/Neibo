@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductStatusURNConstraint;
 
@@ -20,7 +21,7 @@ public class ProductStatusURNValidator implements ConstraintValidator<ProductSta
     public boolean isValid(String productStatusURN, ConstraintValidatorContext context) {
         if (productStatusURN == null)
             return true;
-        if (!URNValidator.validateURN(productStatusURN, "product-status"))
+        if (!URNValidator.validateURN(productStatusURN, Endpoint.PRODUCT_STATUSES))
             return false;
         try {
             ProductStatus.fromId(extractFirstId(productStatusURN));

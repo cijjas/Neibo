@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerStatusURNConstraint;
 
@@ -19,7 +20,7 @@ public class WorkerStatusURNValidator implements ConstraintValidator<WorkerStatu
     public boolean isValid(String workerStatusURN, ConstraintValidatorContext context) {
         if (workerStatusURN == null)
             return true;
-        if (!URNValidator.validateURN(workerStatusURN, "worker-status"))
+        if (!URNValidator.validateURN(workerStatusURN, Endpoint.WORKER_STATUSES))
             return false;
         try {
             WorkerStatus.fromId(extractFirstId(workerStatusURN));

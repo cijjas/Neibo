@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.validation.validators.urn;
 
 import ar.edu.itba.paw.interfaces.services.ProfessionService;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class ProfessionsURNValidator implements ConstraintValidator<ProfessionsU
         if (professionURNs == null)
             return true;
         for (String professionURN : professionURNs) {
-            if (!URNValidator.validateURN(professionURN, "professions"))
+            if (!URNValidator.validateURN(professionURN, Endpoint.PROFESSIONS))
                 return false;
             if (!professionService.findProfession(extractFirstId(professionURN)).isPresent())
                 return false;

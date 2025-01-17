@@ -23,6 +23,6 @@ public enum RequestStatus {
         return Arrays.stream(values())
                 .filter(rs -> rs.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Request Status Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }

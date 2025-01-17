@@ -24,14 +24,14 @@ public class PostsCountDto {
 
         UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.POSTS).path(Endpoint.COUNT);
 
-        if (userURI != null)
+        if (userURI != null && !userURI.isEmpty())
             self.queryParam(QueryParameter.POSTED_BY, userURI);
-        if (channelURI != null)
+        if (channelURI != null && !channelURI.isEmpty())
             self.queryParam(QueryParameter.IN_CHANNEL, channelURI);
         if (tagURIList != null && !tagURIList.isEmpty())
             for (String tag : tagURIList)
                 self.queryParam(QueryParameter.WITH_TAG, tag);
-        if (postStatusURI != null)
+        if (postStatusURI != null && !postStatusURI.isEmpty())
             self.queryParam(QueryParameter.WITH_STATUS, postStatusURI);
 
         links.setSelf(self.build());

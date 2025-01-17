@@ -22,6 +22,6 @@ public enum WorkerStatus {
         return Arrays.stream(values())
                 .filter(ws -> ws.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Worker Status Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }

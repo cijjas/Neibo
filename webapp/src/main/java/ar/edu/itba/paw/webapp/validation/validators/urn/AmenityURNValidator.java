@@ -4,6 +4,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class AmenityURNValidator implements ConstraintValidator<AmenityURNConstr
     public boolean isValid(String amenityURN, ConstraintValidatorContext constraintValidatorContext) {
         if (amenityURN == null)
             return true;
-        if (!URNValidator.validateURN(amenityURN, "amenity"))
+        if (!URNValidator.validateURN(amenityURN, Endpoint.AMENITIES))
             return false;
         TwoId twoId = extractTwoId(amenityURN);
         if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))

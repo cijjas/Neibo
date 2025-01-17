@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.urn;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class PostURNValidator implements ConstraintValidator<PostURNConstraint, 
     public boolean isValid(String postURN, ConstraintValidatorContext context) {
         if (postURN == null)
             return true;
-        if (!URNValidator.validateURN(postURN, "posts"))
+        if (!URNValidator.validateURN(postURN, Endpoint.POSTS))
             return false;
         TwoId twoId = extractTwoId(postURN);
         if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))

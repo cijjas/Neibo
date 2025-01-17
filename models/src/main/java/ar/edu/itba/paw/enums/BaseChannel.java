@@ -17,12 +17,10 @@ public enum BaseChannel {
     }
 
     public static BaseChannel fromId(long id) {
-        if (id <= 0)
-            throw new IllegalArgumentException("Invalid value (" + id + ") for the Base Channel ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(bc -> bc.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Base Channel Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 
     @Override

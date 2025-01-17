@@ -22,6 +22,6 @@ public enum TransactionType {
         return Arrays.stream(values())
                 .filter(tt -> tt.getId() == id)
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException("Transaction Type Not Found"));
+                .orElseThrow(NotFoundException::new);
     }
 }
