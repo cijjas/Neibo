@@ -26,14 +26,17 @@ public class EventURNValidator implements ConstraintValidator<EventURNConstraint
     }
 
     @Override
-    public boolean isValid(String eventURN, ConstraintValidatorContext context) {
+    public boolean isValid(String eventURN, ConstraintValidatorContext constraintValidatorContext) {
         if (eventURN == null)
             return true;
         if (!URNValidator.validateURN(eventURN, Endpoint.EVENTS))
             return false;
         TwoId twoId = extractTwoId(eventURN);
-        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
+        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId())){
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
+        }
         return eventService.findEvent(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

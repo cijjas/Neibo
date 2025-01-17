@@ -22,8 +22,7 @@ public class WorkerURNInAffiliationFormValidator implements ConstraintValidator<
             return true;
         if (!formAccessControlHelper.canReferenceWorkerInAffiliation(workerURN)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
-                    .addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
         }
         return true;

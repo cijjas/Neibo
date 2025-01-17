@@ -47,10 +47,34 @@ public class PathAccessControlHelper {
         this.authHelper = new AuthHelper();
     }
 
-    // The Super Admin can perform all the actions
-    // A Neighborhood Administrator can perform all the actions that correspond to that specific Neighborhood
+    // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
 
-    // ------------------------------------------ GENERIC RESTRICTIONS -------------------------------------------------
+    // Workers can delete Affiliations with Neighborhoods if it involves them
+    public boolean canDeleteAffiliation(String workerURN) {
+        LOGGER.info("Verifying Delete Affiliation Accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(workerURN);
+    }
+
+    // Admins can update the affiliation if it involves their neighborhood
+    public boolean canUpdateAffiliation(String neighborhoodURN) {
+        LOGGER.info("Verifying Update Affiliation Accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        if (authHelper.isAdministrator(authentication))
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(neighborhoodURN);
+
+        return false;
+    }
+
+    // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
 
     // This method isolates each Neighborhood from each other, prohibiting cross neighborhood operations
     // It also grants the Neighborhood Administrator the ability to perform all actions within its Neighborhood
@@ -79,8 +103,6 @@ public class PathAccessControlHelper {
         return false;
     }
 
-    // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
-
     // Usage of optional Worker Query Params in '/neighborhoods' is restricted for Anonymous, Unverified and Rejected Users in line with the listing of Workers
     public boolean canUseWorkerQPInNeighborhoods(String withWorker, String withoutWorker) {
         LOGGER.info("Verifying Query Params Accessibility");
@@ -93,6 +115,37 @@ public class PathAccessControlHelper {
         return !authHelper.isAnonymous(authentication) && !authHelper.isUnverifiedOrRejected(authentication);
     }
 
+    // --------------------------------------------- PROFESSION --------------------------------------------------------
+
+    // Worker Query Param in '/professions' can only be used by Neighbors, Workers and Administrators
+    public boolean canUseWorkerQPInProfessions(String workerURN) {
+        LOGGER.info("Verifying Query Params Accessibility");
+
+        if (workerURN == null)
+            return true;
+
+        Authentication authentication = authHelper.getAuthentication();
+
+        return !authHelper.isAnonymous(authentication) && !authHelper.isUnverifiedOrRejected(authentication);
+    }
+
+
+    // ----------------------------------------------- REVIEWS ---------------------------------------------------------
+
+    // This method restricts Neighbors and Administrators from Review spamming a worker
+    public boolean canCreateReview(long workerId, String user) {
+        LOGGER.info("Verifying Review Creation Accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        Optional<Review> latestReview = rvs.findLatestReview(workerId, extractFirstId(user));
+
+        return latestReview.map(review -> ChronoUnit.HOURS.between(review.getDate().toInstant(), Instant.now()) >= 24).orElse(true);
+
+    }
+
     // -------------------------------------------------- USERS --------------------------------------------------------
 
     // Usage of List Users is limited to the Neighbors and the Administrators (they can only list for the neighborhood they belong to)
@@ -102,24 +155,24 @@ public class PathAccessControlHelper {
 
         Authentication authentication = authHelper.getAuthentication();
 
+        if (neighborhood == null)
+            return true;
+
         if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
             return false;
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        if (neighborhood == null)
-            return false;
-
+        // Workers, Neighbors & Administrators
         long neighborhoodId = extractFirstId(neighborhood);
-
         return neighborhoodId == BaseNeighborhood.WORKERS.getId() || neighborhoodId == authHelper.getRequestingUserNeighborhoodId(authentication);
     }
 
     // Restricted from Anonymous Users
     // Rejected and Unverified Users can access their User (self find)
     // Neighbors and Administrators can access the find for all the Users in their Neighborhood
-    // Find in Worker Neighborhoods can be executed by all the registered users
+    // Find in Worker Neighborhoods can be executed Neighbors Workers Admins and Super Admin
     public boolean canFindUser(long userId) {
         LOGGER.info("Verifying Detail User Accessibility");
 
@@ -134,14 +187,20 @@ public class PathAccessControlHelper {
         if (authHelper.isUnverifiedOrRejected(authentication))
             return authHelper.getRequestingUserId(authentication) == userId;
 
+        // Workers, Neighbors & Admins
         long neighborhoodId = us.findUser(userId).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
-
         return neighborhoodId == BaseNeighborhood.WORKERS.getId() || neighborhoodId == authHelper.getRequestingUser(authentication).getNeighborhoodId();
     }
 
-
+    // Only two combinations of neighborhood and role are allowed in creation
+    // Worker Neighborhood & Worker Role
+    // Non-Special Neighborhood & Unverified Role
     public boolean canCreateUser(String neighborhood, String userRole) {
         LOGGER.info("Verifying combination of Neighborhood and User Role");
+
+        /*
+        * This is dealing with null neighborhood and user role, when it should not be a possibility...
+        * */
 
         Authentication authentication = authHelper.getAuthentication();
 
@@ -153,23 +212,18 @@ public class PathAccessControlHelper {
 
         return (neighborhoodId == BaseNeighborhood.WORKERS.getId() && userRoleId == UserRole.WORKER.getId()) || (!BaseNeighborhood.isABaseNeighborhood(neighborhoodId) && userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId());
     }
+
     // Quite complex
     public boolean canUpdateUser(long userId, String neighborhood, String userRole){
         LOGGER.info("Verifying combination of Neighborhood and User Role");
 
         Authentication authentication = authHelper.getAuthentication();
 
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        // Anonymous users obviously cant perform updates
         if (authHelper.isAnonymous(authentication))
             return false;
 
-        // Workers can't change their role or neighborhood under any circumstances
-        if (authHelper.isWorker(authentication)){
-            return false;
-        }
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
 
         long userRoleId;
         long neighborhoodId;
@@ -177,7 +231,15 @@ public class PathAccessControlHelper {
 
         // Nothing was specified
         if (neighborhood == null && userRole == null){
-            return true;
+            neighborhoodId = us.findUser(userId).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
+
+            if (authHelper.getRequestingUser(authentication).getNeighborhoodId() != neighborhoodId)
+                return false;
+
+            if (authHelper.isAdministrator(authentication))
+                return true;
+
+            return authHelper.getRequestingUserId(authentication) == userId;
         }
 
         // Both attributes where specified
@@ -199,9 +261,8 @@ public class PathAccessControlHelper {
             }
             if (authHelper.isNeighbor(authentication) || authHelper.isUnverifiedOrRejected(authentication)){
                 // Neighbors and Unverified Neighbors, can't alter other Users
-                if (authHelper.getRequestingUserId(authentication) != userId) {
+                if (authHelper.getRequestingUserId(authentication) != userId)
                     return false;
-                }
                 // They can change their Neighborhood but downgrading their privileges
                 return userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId() && neighborhoodId != authHelper.getRequestingUserNeighborhoodId(authentication) && !BaseNeighborhood.isABaseNeighborhood(neighborhoodId);
             }
@@ -262,105 +323,26 @@ public class PathAccessControlHelper {
         return workerId == authHelper.getRequestingUserId(authentication);
     }
 
-    // --------------------------------------------- PROFESSION --------------------------------------------------------
-
-    // Worker Query Param in '/professions' can only be used by Neighbors, Workers and Administrators
-    public boolean canUseWorkerQPInProfessions(String workerURN) {
-        LOGGER.info("Verifying Query Params Accessibility");
-
-        if (workerURN == null)
-            return true;
-
-        Authentication authentication = authHelper.getAuthentication();
-
-        return !authHelper.isAnonymous(authentication) && !authHelper.isUnverifiedOrRejected(authentication);
-    }
-
-    // ------------------------------------------------- LIKES ---------------------------------------------------------
-
-    // Restricted from Anonymous, Unverified and Rejected
-    // Neighbors can delete their own Likes
-    // Administrators can delete the Likes of the Neighbors they monitor
-    public boolean canDeleteLike(long neighborhoodId, String userURN) {
-        LOGGER.info("Verifying Delete Like accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
-            return false;
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
-
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId
-                && authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
-    }
-
-    // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
-
-    // Workers can delete Affiliations with Neighborhoods if it includes them
-    public boolean canDeleteAffiliation(String workerURN) {
-        LOGGER.info("Verifying Delete Affiliation Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(workerURN);
-    }
-
-    // Workers can update Affiliations with Neighborhoods if it includes them
-    public boolean canUpdateAffiliation(String neighborhoodURN) {
-        LOGGER.info("Verifying Update Affiliation Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(neighborhoodURN);
-    }
-
-    // ----------------------------------------------- REVIEWS ---------------------------------------------------------
-
-    public boolean canCreateReview(long workerId, String user) {
-        LOGGER.info("Verifying Review Creation Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        Optional<Review> latestReview = rvs.findLatestReview(workerId, extractFirstId(user));
-
-        return latestReview.map(review -> ChronoUnit.HOURS.between(review.getDate().toInstant(), Instant.now()) >= 24).orElse(true);
-
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // --------------------------------------- NEIGHBORHOOD NESTED ENTITIES --------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
 
+    /// In neighborhood nested entities the neighborhood biding ensures the requesting user belongs to that neighborhood
+    /// so if the user has role Administrator we can be sure that its that neighborhood's Administrator.
+    /// Same applies for Users, we can always be sure that the requesting user belongs to the correct Neighborhood.
+
     // ---------------------------------------------- ATTENDANCES ------------------------------------------------------
 
-    // Restricted from Anonymous, Unverified and Rejected
     // Neighbors can delete their own Attendance
     // Administrators can delete the Attendance of the Neighbors they monitor
     public boolean canDeleteAttendance(long neighborhoodId, String userURN) {
         LOGGER.info("Verifying Delete Attendance Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
-        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
-            return false;
-
-        if (authHelper.isSuperAdministrator(authentication))
+        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
-
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId
-                && authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
     // ------------------------------------------------ COMMENTS -------------------------------------------------------
@@ -391,46 +373,6 @@ public class PathAccessControlHelper {
         return authHelper.getRequestingUserId(authentication) == b.getUser().getUserId();
     }
 
-    // ------------------------------------------------ PRODUCTS ----------------------------------------------------------
-
-    // Sellers can delete their own Product
-    public boolean canDeleteProduct(long productId) {
-        LOGGER.info("Verifying Product Delete Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
-            return true;
-
-        Product p = prs.findProduct(productId).orElseThrow(NotFoundException::new);
-        return p.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
-    }
-
-    // Sellers can Update their own Product
-    public boolean canUpdateProduct(long productId) {
-        LOGGER.info("Verifying Product Update Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
-            return true;
-
-        Product p = prs.findProduct(productId).orElseThrow(NotFoundException::new);
-        return p.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
-    }
-
-    // ------------------------------------------------ POSTS ----------------------------------------------------------
-
-    // Neighbors can delete their own Post
-    public boolean canDeletePost(long postId) {
-        LOGGER.info("Verifying Post Delete Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
-            return true;
-
-        Post p = ps.findPost(postId).orElseThrow(NotFoundException::new);
-        return p.getUser().getUserId() == authHelper.getRequestingUserId(authentication);
-    }
-
     // ---------------------------------------------- INQUIRIES --------------------------------------------------------
 
     // Sellers can not create an Inquiry for their own Product
@@ -457,7 +399,7 @@ public class PathAccessControlHelper {
         return i.getUser().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
-    // Sellers can answer the Inquiries for their own Product
+    // Only Sellers (and admins) can answer the Inquiries for their own Product
     public boolean canAnswerInquiry(long inquiryId) {
         LOGGER.info("Verifying Inquiry Answering Accessibility");
         Authentication authentication = authHelper.getAuthentication();
@@ -467,6 +409,64 @@ public class PathAccessControlHelper {
 
         Inquiry i = is.findInquiry(inquiryId).orElseThrow(NotFoundException::new);
         return i.getProduct().getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
+    }
+
+    // ------------------------------------------------- LIKES ---------------------------------------------------------
+
+    // Restricted from Anonymous, Unverified and Rejected
+    // Neighbors can delete their own Likes
+    // Administrators can delete the Likes of the Neighbors they monitor
+    public boolean canDeleteLike(String userURN) {
+        LOGGER.info("Verifying Delete Like accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
+            return false;
+
+        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
+            return true;
+
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+    }
+
+    // ------------------------------------------------ POSTS ----------------------------------------------------------
+
+    // Neighbors can delete their own Post
+    public boolean canDeletePost(long postId) {
+        LOGGER.info("Verifying Post Delete Accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
+            return true;
+
+        Post p = ps.findPost(postId).orElseThrow(NotFoundException::new);
+        return p.getUser().getUserId() == authHelper.getRequestingUserId(authentication);
+    }
+
+    // ------------------------------------------------ PRODUCTS ----------------------------------------------------------
+
+    // Sellers can delete their own Product
+    public boolean canDeleteProduct(long productId) {
+        LOGGER.info("Verifying Product Delete Accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
+            return true;
+
+        Product p = prs.findProduct(productId).orElseThrow(NotFoundException::new);
+        return p.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
+    }
+
+    // Sellers can Update their own Product
+    public boolean canUpdateProduct(long productId) {
+        LOGGER.info("Verifying Product Update Accessibility");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
+            return true;
+
+        Product p = prs.findProduct(productId).orElseThrow(NotFoundException::new);
+        return p.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
     // ---------------------------------------------- REQUESTS ---------------------------------------------------------
@@ -482,9 +482,8 @@ public class PathAccessControlHelper {
         if (userURN == null && productURN == null)
             return authHelper.isAdministrator(authentication);
 
-        if (userURN != null) {
+        if (userURN != null)
             return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
-        }
 
         Product product = prs.findProduct(extractSecondId(productURN)).orElseThrow(NotFoundException::new);
         return product.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);

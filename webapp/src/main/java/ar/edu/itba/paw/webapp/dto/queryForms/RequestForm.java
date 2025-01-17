@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.webapp.dto.forms;
+package ar.edu.itba.paw.webapp.dto.queryForms;
 
 import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;

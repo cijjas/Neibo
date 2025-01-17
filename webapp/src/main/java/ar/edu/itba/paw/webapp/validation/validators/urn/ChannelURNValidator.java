@@ -32,8 +32,11 @@ public class ChannelURNValidator implements ConstraintValidator<ChannelURNConstr
         if (!URNValidator.validateURN(channelURN, Endpoint.CHANNELS))
             return false;
         TwoId twoId = extractTwoId(channelURN);
-        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
+        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId())) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
+        }
         return channelService.findChannel(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

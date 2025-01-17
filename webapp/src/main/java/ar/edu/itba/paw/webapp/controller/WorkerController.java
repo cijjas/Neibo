@@ -111,7 +111,6 @@ public class WorkerController {
 
     @GET
     @Path("{" + PathParameter.WORKER_ID + "}")
-    @Secured({UserRole.WORKER, UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response findWorker(
             @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId
     ) {

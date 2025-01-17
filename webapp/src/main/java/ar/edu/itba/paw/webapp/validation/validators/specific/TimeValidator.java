@@ -13,7 +13,7 @@ public class TimeValidator implements ConstraintValidator<TimeConstraint, String
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     @Override
-    public void initialize(TimeConstraint tagsConstraint) {
+    public void initialize(TimeConstraint constraint) {
     }
 
     @Override

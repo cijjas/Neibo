@@ -26,14 +26,17 @@ public class ProductURNValidator implements ConstraintValidator<ProductURNConstr
     }
 
     @Override
-    public boolean isValid(String productURN, ConstraintValidatorContext context) {
+    public boolean isValid(String productURN, ConstraintValidatorContext constraintValidatorContext) {
         if (productURN == null)
             return true;
         if (!URNValidator.validateURN(productURN, Endpoint.PRODUCTS))
             return false;
         TwoId twoId = extractTwoId(productURN);
-        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
+        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId())) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
+        }
         return productService.findProduct(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

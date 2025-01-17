@@ -22,8 +22,7 @@ public class UserURNReferenceInReviewValidator implements ConstraintValidator<Us
             return true;
         if (!formAccessControlHelper.canReferenceUserInAttendance(userURN)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
-                    .addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
         }
         return true;

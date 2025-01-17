@@ -22,8 +22,7 @@ public class UserURNReferenceInLikeValidator implements ConstraintValidator<User
             return true;
         if (!formAccessControlHelper.canReferenceUserInLike(userURN)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
-                    .addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
         }
         return true;

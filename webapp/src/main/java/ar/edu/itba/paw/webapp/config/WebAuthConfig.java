@@ -131,19 +131,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/" + Endpoint.USER_ROLES, "/" + Endpoint.USER_ROLES + "/*",
                         "/" + Endpoint.WORKER_ROLES, "/" + Endpoint.WORKER_ROLES + "/*",
                         "/" + Endpoint.WORKER_STATUSES, "/" + Endpoint.WORKER_STATUSES + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS, "/" + Endpoint.NEIGHBORHOODS + "/*",
-                        "/" + Endpoint.IMAGES, "/" + Endpoint.IMAGES + "/*",
-                        "/" + Endpoint.USERS,
-                        "/" + Endpoint.WORKERS
+
+                        "/" + Endpoint.IMAGES, "/" + Endpoint.IMAGES + "/*", // debatable, could be public
+                        "/" + Endpoint.NEIGHBORHOODS, "/" + Endpoint.NEIGHBORHOODS + "/*", // for signup
+                        "/" + Endpoint.USERS, // for signup
+                        "/" + Endpoint.WORKERS // for signup
                 ).permitAll()
 
                 // Registered Users Endpoints
                 .antMatchers(
-                        "/" + Endpoint.USERS + "/*",
-                        "/" + Endpoint.WORKERS + "/*",
-                        "/" + Endpoint.AFFILIATIONS, "/" + Endpoint.AFFILIATIONS + "/*",
-                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
-                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
+                        "/" + Endpoint.USERS + "/*" // All users with an account can change their profile
                 ).hasAnyRole(
                         UserRole.REJECTED.name(),
                         UserRole.UNVERIFIED_NEIGHBOR.name(),
@@ -153,10 +150,25 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
 
-                // Neighborhood Specific Endpoints
+                // Worker Related Endpoints
+                .antMatchers(
+                        "/" + Endpoint.AFFILIATIONS, "/" + Endpoint.AFFILIATIONS + "/*",
+                        "/" + Endpoint.WORKERS + "/*",
+                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
+                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
+                ).hasAnyRole(
+                        UserRole.WORKER.name(),
+                        UserRole.NEIGHBOR.name(),
+                        UserRole.ADMINISTRATOR.name(),
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+
+                // Endpoints used in Neighborhoods and Workers Neighborhood
                 .antMatchers(
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS,
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/**",
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
+                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS + "/*",
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS,
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*"
                 ).access(
@@ -164,6 +176,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                                 "and " +
                                 "@pathAccessControlHelper.isNeighborhoodMember(request)"
                 )
+
+                // Endpoints used in Neighborhoods only
                 .antMatchers(
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS + "/*",
@@ -175,8 +189,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*",
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS,
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS + "/*",
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES,
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*",
                         "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,

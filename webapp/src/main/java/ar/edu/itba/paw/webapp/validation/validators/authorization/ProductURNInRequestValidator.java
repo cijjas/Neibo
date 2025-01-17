@@ -23,8 +23,7 @@ public class ProductURNInRequestValidator implements ConstraintValidator<Product
             return true;
         if (!formAccessControlHelper.canReferenceProductInRequest(productURN)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
-                    .addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
         }
         return true;

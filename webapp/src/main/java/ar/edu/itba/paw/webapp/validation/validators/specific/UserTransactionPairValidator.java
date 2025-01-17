@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.specific;
 
-import ar.edu.itba.paw.webapp.dto.forms.RequestForm;
+import ar.edu.itba.paw.webapp.dto.queryForms.RequestForm;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.UserTransactionPairConstraint;
 
 import javax.validation.ConstraintValidator;
@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 public class UserTransactionPairValidator implements ConstraintValidator<UserTransactionPairConstraint, RequestForm> {
 
     @Override
-    public void initialize(UserTransactionPairConstraint tagsConstraint) {
+    public void initialize(UserTransactionPairConstraint constraint) {
     }
 
     @Override

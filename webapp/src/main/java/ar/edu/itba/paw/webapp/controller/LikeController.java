@@ -160,7 +160,7 @@ public class LikeController {
     }
 
     @DELETE
-    @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#neighborhoodId, #user)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
     public Response deleteLike(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURNConstraint String user,

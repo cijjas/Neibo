@@ -22,82 +22,12 @@ public class FormAccessControlHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(FormAccessControlHelper.class);
 
     private final ProductService prs;
-    private final UserService us;
     private final AuthHelper authHelper;
 
     @Autowired
-    public FormAccessControlHelper(ProductService prs, UserService us) {
+    public FormAccessControlHelper(ProductService prs) {
         this.prs = prs;
-        this.us = us;
         this.authHelper = new AuthHelper();
-    }
-
-    // --------------------------------------- NEIGHBORHOOD ENTITIES REFS ----------------------------------------------
-
-    // Verifies that the referenced entity belongs to the same Neighborhood as the User that made the request
-    public boolean canReferenceNeighborhoodEntity(Long neighborhoodId) {
-        LOGGER.info("Verifying entity reference");
-
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
-            return false;
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == BaseNeighborhood.WORKERS.getId();
-    }
-
-    // ----------------------------------------------- USER REFS -------------------------------------------------------
-
-    // Verifies that the User URN received matches the authenticated User
-    // Commonly used by forms that require an author
-    // Neighbors can only reference themselves whilst Administrators and the Super Admin can reference all Users
-    public boolean canReferenceUserInCreation(String userURN) {
-        LOGGER.info("Verifying create reference to the User's entities");
-
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
-    }
-
-    public boolean canReferenceUserInUpdate(String userURN) {
-        LOGGER.info("Verifying update reference to the User's entities");
-
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
-    }
-
-
-    // ------------------------------------------------- LIKES ---------------------------------------------------------
-
-    // Restricted from Anonymous, Unverified and Rejected
-    // Neighbors can reference themselves
-    // Administrators can reference any User that belongs to their neighborhood
-    public boolean canReferenceUserInLike(String userURN) {
-        LOGGER.info("Verifying User Reference In Like Form");
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
-            return false;
-
-        long neighborhoodId = us.findUser(extractFirstId(userURN)).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
-
-        if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId;
-
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -124,6 +54,25 @@ public class FormAccessControlHelper {
         return extractFirstId(workerRoleURN) == WorkerRole.UNVERIFIED_WORKER.getId();
     }
 
+    // ---------------------------------------------- NEIGHBORHOODS ----------------------------------------------------
+
+    // This method places a similar role to the isNeighborhoodMember() method, instead of verifying the request
+    // we check the references made with the same idea of isolation.
+    // Verifies that the referenced entity belongs to the same Neighborhood as the User that made the request
+    public boolean canReferenceNeighborhoodEntity(Long neighborhoodId) {
+        LOGGER.info("Verifying entity reference");
+
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
+            return false;
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == BaseNeighborhood.WORKERS.getId();
+    }
+
     // ------------------------------------------------ REVIEWS --------------------------------------------------------
 
     // Neighbors can create an Attendance for themselves
@@ -133,6 +82,48 @@ public class FormAccessControlHelper {
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
+
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+    }
+
+    // ------------------------------------------------- USERS  --------------------------------------------------------
+
+    // Verifies that the User URN received matches the authenticated User
+    // Commonly used by forms that require an author
+    // Neighbors can only reference themselves whilst Administrators and the Super Admin can reference all Users
+    public boolean canReferenceUserInCreation(String userURN) {
+        LOGGER.info("Verifying create reference to the User's entities");
+
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------- NEIGHBORHOOD NESTED ENTITIES --------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
+    /// In neighborhood nested entities the neighborhood biding ensures the requesting user belongs to that neighborhood
+    /// so if the user has role Administrator we can be sure that its that neighborhood's Administrator.
+    /// Same applies for Users, we can always be sure that the requesting user belongs to the correct Neighborhood.
+
+    // ------------------------------------------------- LIKES ---------------------------------------------------------
+
+    // Restricted from Anonymous, Unverified and Rejected
+    // Neighbors can reference themselves
+    // Administrators can reference any User that belongs to their neighborhood
+    public boolean canReferenceUserInLike(String userURN) {
+        LOGGER.info("Verifying User Reference In Like Form");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
+            return true;
+
+        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
+            return false;
 
         return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
     }

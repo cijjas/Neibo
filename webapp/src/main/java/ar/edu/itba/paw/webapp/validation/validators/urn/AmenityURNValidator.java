@@ -33,8 +33,11 @@ public class AmenityURNValidator implements ConstraintValidator<AmenityURNConstr
         if (!URNValidator.validateURN(amenityURN, Endpoint.AMENITIES))
             return false;
         TwoId twoId = extractTwoId(amenityURN);
-        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
+        if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId())) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
+        }
         return amenityService.findAmenity(twoId.getFirstId(), twoId.getSecondId()).isPresent();
     }
 }

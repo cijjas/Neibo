@@ -22,8 +22,7 @@ public class WorkerRoleURNReferenceInAffiliationValidator implements ConstraintV
             return true;
         if (!formAccessControlHelper.canReferenceWorkerRoleInAffiliation(workerRole)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN")
-                    .addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
             return false;
         }
         return true;

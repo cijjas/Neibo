@@ -27,7 +27,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
-//@NeighborhoodUserRoleConstraint
 public class UserDto {
     @PathParam(PathParameter.USER_ID)
     @GenericIdConstraint

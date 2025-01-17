@@ -6,6 +6,7 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
+import ar.edu.itba.paw.webapp.dto.queryForms.ShiftForm;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -50,13 +52,12 @@ public class ShiftController {
 
     @GET
     public Response getShifts(
-            @QueryParam(QueryParameter.FOR_AMENITY) @AmenityURNConstraint String amenity,
-            @QueryParam(QueryParameter.FOR_DATE) @DateConstraint String date
+            @Valid @BeanParam ShiftForm shiftForm
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Content
-        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(amenity), extractOptionalDate(date));
+        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(shiftForm.getAmenity()), extractOptionalDate(shiftForm.getDate()));
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control

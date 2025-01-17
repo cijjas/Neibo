@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
+import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
@@ -13,6 +14,7 @@ import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequen
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -126,6 +128,7 @@ public class AffiliationController {
 
     @POST
     @Validated(CreateValidationSequence.class)
+    @Secured({UserRole.WORKER, UserRole.SUPER_ADMINISTRATOR})
     public Response createAffiliation(
             @Valid @NotNull AffiliationDto createForm
     ) {

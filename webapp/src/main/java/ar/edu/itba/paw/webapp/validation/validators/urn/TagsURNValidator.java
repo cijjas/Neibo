@@ -36,8 +36,11 @@ public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, 
             TwoId twoId = extractTwoId(urn);
             if (!tagService.findTag(twoId.getFirstId(), twoId.getSecondId()).isPresent())
                 return false;
-            if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId()))
+            if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId())) {
+                constraintValidatorContext.disableDefaultConstraintViolation();
+                constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
                 return false;
+            }
         }
         return true;
     }
