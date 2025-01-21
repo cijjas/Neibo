@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-@TimeRangeConstraint
+@TimeRangeConstraint(groups = Specific.class)
 public class EventDto {
 
     @NotNull(groups = Null.class)

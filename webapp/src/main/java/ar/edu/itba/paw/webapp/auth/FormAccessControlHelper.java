@@ -23,11 +23,13 @@ public class FormAccessControlHelper {
 
     private final ProductService prs;
     private final AuthHelper authHelper;
+    private final UserService us;
 
     @Autowired
-    public FormAccessControlHelper(ProductService prs) {
+    public FormAccessControlHelper(ProductService prs, UserService us) {
         this.prs = prs;
         this.authHelper = new AuthHelper();
+        this.us = us;
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -100,6 +102,121 @@ public class FormAccessControlHelper {
             return true;
 
         return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+    }
+
+    // Only two combinations of neighborhood and role are allowed in creation
+    // Worker Neighborhood & Worker Role
+    // Non-Special Neighborhood & Unverified Role
+    public boolean canCreateUser(String neighborhood, String userRole) {
+        LOGGER.info("Verifying combination of Neighborhood and User Role");
+
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        long neighborhoodId = extractFirstId(neighborhood);
+        long userRoleId = extractFirstId(userRole);
+
+        return (neighborhoodId == BaseNeighborhood.WORKERS.getId() && userRoleId == UserRole.WORKER.getId()) || (!BaseNeighborhood.isABaseNeighborhood(neighborhoodId) && userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId());
+    }
+
+    // Quite complex
+    public boolean canUpdateUser(long userId, String neighborhood, String userRole){
+        LOGGER.info("Verifying combination of Neighborhood and User Role");
+
+        System.out.println("USER UPDATE AUTHENTICATION");
+        Authentication authentication = authHelper.getAuthentication();
+
+        if (authHelper.isAnonymous(authentication))
+            return false;
+
+        if (authHelper.isSuperAdministrator(authentication))
+            return true;
+
+        long userRoleId;
+        long neighborhoodId;
+        User userBeingUpdated = us.findUser(userId).orElseThrow(NotFoundException::new);
+
+        // Nothing was specified
+        if (neighborhood == null && userRole == null){
+            neighborhoodId = us.findUser(userId).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
+
+            if (authHelper.getRequestingUser(authentication).getNeighborhoodId() != neighborhoodId)
+                return false;
+
+            if (authHelper.isAdministrator(authentication))
+                return true;
+
+            return authHelper.getRequestingUserId(authentication) == userId;
+        }
+
+        // Both attributes where specified
+        if (neighborhood != null && userRole != null) {
+            neighborhoodId = extractFirstId(neighborhood);
+            userRoleId = extractFirstId(userRole);
+
+            if (authHelper.isAdministrator(authentication)){
+                // Admins can't change their own Neighborhood nor their role
+                if (authHelper.getRequestingUserId(authentication) == userId)
+                    return false;
+                // If they are changing another Users Neighborhood and User Role:
+                // The User has to belong to the Neighborhood monitored by the Admin
+                // The Neighborhood specified has to be the same, as the Admin cant migrate Users, or it can be the Rejected Neighborhood
+                // The Role specified has to be Neighbor, Unverified or Rejected
+                return authHelper.getRequestingUserNeighborhoodId(authentication) == userBeingUpdated.getNeighborhood().getNeighborhoodId()
+                        && (neighborhoodId == userBeingUpdated.getNeighborhood().getNeighborhoodId() || neighborhoodId == BaseNeighborhood.REJECTED.getId())
+                        && (userRoleId == UserRole.REJECTED.getId() || userRoleId == UserRole.NEIGHBOR.getId() || userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId());
+            }
+            if (authHelper.isNeighbor(authentication) || authHelper.isUnverifiedOrRejected(authentication)){
+                // Neighbors and Unverified Neighbors, can't alter other Users
+                if (authHelper.getRequestingUserId(authentication) != userId)
+                    return false;
+                // They can change their Neighborhood but downgrading their privileges
+                return userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId() && neighborhoodId != authHelper.getRequestingUserNeighborhoodId(authentication) && !BaseNeighborhood.isABaseNeighborhood(neighborhoodId);
+            }
+        }
+
+        // Only User Role was specified
+        if (neighborhood == null) {
+            userRoleId = extractFirstId(userRole);
+            if (authHelper.isAdministrator(authentication)){
+                // Admins can't change their own role
+                if (authHelper.getRequestingUserId(authentication) == userId)
+                    return false;
+                // If they are changing another Users User Role:
+                // The User has to belong to the Neighborhood monitored by the Admin
+                // The Role specified has to be Neighbor, Unverified or Rejected
+                return authHelper.getRequestingUserNeighborhoodId(authentication) == userBeingUpdated.getNeighborhood().getNeighborhoodId()
+                        && (userRoleId == UserRole.REJECTED.getId() || userRoleId == UserRole.NEIGHBOR.getId() || userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId());
+            }
+            if (authHelper.isNeighbor(authentication) || authHelper.isUnverifiedOrRejected(authentication)) {
+                // Neighbors, Unverified Neighbors and Rejected, can't alter other users
+                if (authHelper.getRequestingUserId(authentication) != userId) {
+                    return false;
+                }
+                // They can change their Role but downgrading their privileges
+                return userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId();
+            }
+        }
+
+        // Only Neighborhood was specified
+        if (userRole == null){
+            neighborhoodId = extractFirstId(neighborhood);
+            // Admins can't change their Neighborhood, and Neighbors can only if they also downgrade their role (first case)
+            if (authHelper.isAdministrator(authentication) || authHelper.isNeighbor(authentication)){
+                return false;
+            }
+            if (authHelper.isUnverifiedOrRejected(authentication)) {
+                // Unverified and Rejected Users cant alter other users
+                if (authHelper.getRequestingUserId(authentication) != userId) {
+                    return false;
+                }
+                // They can change their Neighborhood as they would not be achieving any privilege escalation in the new neighborhood
+                return neighborhoodId != authHelper.getRequestingUserNeighborhoodId(authentication) && !BaseNeighborhood.isABaseNeighborhood(neighborhoodId);
+            }
+        }
+        return false;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

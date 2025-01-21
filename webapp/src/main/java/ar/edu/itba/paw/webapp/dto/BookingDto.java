@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-@BookingDateConstraint
+@BookingDateConstraint(groups = Specific.class)
 public class BookingDto {
 
     @NotNull(groups = Null.class)

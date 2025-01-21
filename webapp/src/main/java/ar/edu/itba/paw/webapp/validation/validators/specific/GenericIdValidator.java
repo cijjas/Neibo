@@ -15,9 +15,6 @@ public class GenericIdValidator implements ConstraintValidator<GenericIdConstrai
     public boolean isValid(Long genericId, ConstraintValidatorContext context) {
         if (genericId == null)
             return false;
-        // 0 is the Worker Neighborhood
-        // -1 is the Banned Neighborhood
-        // -2 is the SuperAdmin Neighborhood
         return genericId >= 0;
     }
 }

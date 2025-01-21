@@ -133,7 +133,6 @@ public class UserController {
 
     @POST
     @Validated(CreateValidationSequence.class)
-    @PreAuthorize("@pathAccessControlHelper.canCreateUser(#createForm.neighborhood, #createForm.userRole)")
     public Response createUser(
             @Valid @NotNull UserDto createForm
     ) {
@@ -153,7 +152,7 @@ public class UserController {
 
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(#userId, #updateForm.neighborhood, #updateForm.userRole)")
+    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(uriInfo, #updateForm.neighborhood, #updateForm.userRole)")
     @Validated(UpdateValidationSequence.class)
     public Response updateUser(
             @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,
@@ -162,7 +161,7 @@ public class UserController {
         LOGGER.info("PATCH request arrived at '/users/{}'", userId);
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(extractOptionalFirstId(updateForm.getNeighborhood()), userId, updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
+        final User updatedUser = us.updateUser(userId, extractOptionalFirstId(updateForm.getNeighborhood()), updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.validation.validators.specific;
 
+import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,7 @@ public class NeighborhoodIdValidator implements ConstraintValidator<Neighborhood
     public boolean isValid(Long neighborhoodId, ConstraintValidatorContext context) {
         if (neighborhoodId == null)
             return false;
-        // 0 is the Worker Neighborhood
-        // -1 is the Banned Neighborhood
-        // -2 is the SuperAdmin Neighborhood
-        if (neighborhoodId < -2)
+        if (BaseNeighborhood.isABaseNeighborhood(neighborhoodId))
             return false;
         return neighborhoodService.findNeighborhood(neighborhoodId).isPresent();
     }

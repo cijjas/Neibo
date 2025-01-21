@@ -7,8 +7,10 @@ import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.UserCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.specific.UserUpdateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.LanguageURNConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
@@ -27,10 +29,13 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
+@UserCreationConstraint(groups = Specific.class)
+//@UserUpdateConstraint(groups = Specific.class)
 public class UserDto {
-    @PathParam(PathParameter.USER_ID)
-    @GenericIdConstraint
-    long userId;
+
+//    @PathParam(PathParameter.USER_ID)
+//    @GenericIdConstraint
+//    long userId;
 
     @NotNull(groups = Null.class)
     @NeighborhoodURNConstraint(groups = URN.class)
@@ -258,13 +263,5 @@ public class UserDto {
 
     public void setNeighborhood(String neighborhood) {
         this.neighborhood = neighborhood;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 }

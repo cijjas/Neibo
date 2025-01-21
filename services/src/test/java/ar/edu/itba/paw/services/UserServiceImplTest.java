@@ -261,7 +261,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
-        userService.updateUser(neighborhoodId, userId, mail, name, surname, password, identification, languageId, profilePictureId, darkMode, phoneNumber, userRoleId);
+        userService.updateUser(userId, neighborhoodId, mail, name, surname, password, identification, languageId, profilePictureId, darkMode, phoneNumber, userRoleId);
 
         // Validation & Post Conditions
         assertEquals(mail, user.getMail());
@@ -292,7 +292,7 @@ public class UserServiceImplTest {
         when(userDao.findUser(userId)).thenReturn(Optional.of(user));
 
         // Exercise
-        userService.updateUser(neighborhoodId, userId, mail, null, null, null, null, null, null, darkMode, null, null);
+        userService.updateUser(userId, neighborhoodId, mail, null, null, null, null, null, null, darkMode, null, null);
 
         // Validation & Post Conditions
         assertEquals(mail, user.getMail());
@@ -320,7 +320,7 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
-        userService.updateUser(neighborhoodId, userId, null, null, null, password, null, null, null, null, null, null);
+        userService.updateUser(userId, neighborhoodId, null, null, null, password, null, null, null, null, null, null);
 
         // Validation & Post Conditions
         assertEquals("encodedPassword", user.getPassword());

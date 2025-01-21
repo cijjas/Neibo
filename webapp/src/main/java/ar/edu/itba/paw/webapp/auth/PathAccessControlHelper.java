@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -152,17 +154,16 @@ public class PathAccessControlHelper {
     // * Workers Neighborhood ('/neighborhoods/0') can be accessed by the Users from other Neighborhoods (except Rejected Neighborhood)
     public boolean canListUsers(String neighborhood) {
         LOGGER.info("Verifying User List Accessibility");
-
         Authentication authentication = authHelper.getAuthentication();
-
-        if (neighborhood == null)
-            return true;
-
-        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
-            return false;
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
+
+        if (neighborhood == null)
+            return false;
+
+        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
+            return false;
 
         // Workers, Neighbors & Administrators
         long neighborhoodId = extractFirstId(neighborhood);
@@ -191,31 +192,14 @@ public class PathAccessControlHelper {
         long neighborhoodId = us.findUser(userId).orElseThrow(NotFoundException::new).getNeighborhood().getNeighborhoodId();
         return neighborhoodId == BaseNeighborhood.WORKERS.getId() || neighborhoodId == authHelper.getRequestingUser(authentication).getNeighborhoodId();
     }
-
-    // Only two combinations of neighborhood and role are allowed in creation
-    // Worker Neighborhood & Worker Role
-    // Non-Special Neighborhood & Unverified Role
-    public boolean canCreateUser(String neighborhood, String userRole) {
-        LOGGER.info("Verifying combination of Neighborhood and User Role");
-
-        /*
-        * This is dealing with null neighborhood and user role, when it should not be a possibility...
-        * */
-
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication))
-            return true;
-
-        long neighborhoodId = extractFirstId(neighborhood);
-        long userRoleId = extractFirstId(userRole);
-
-        return (neighborhoodId == BaseNeighborhood.WORKERS.getId() && userRoleId == UserRole.WORKER.getId()) || (!BaseNeighborhood.isABaseNeighborhood(neighborhoodId) && userRoleId == UserRole.UNVERIFIED_NEIGHBOR.getId());
-    }
-
     // Quite complex
-    public boolean canUpdateUser(long userId, String neighborhood, String userRole){
+    public boolean canUpdateUser(UriInfo uriInfo, String neighborhood, String userRole){
         LOGGER.info("Verifying combination of Neighborhood and User Role");
+
+        System.out.println("USER UPDATE AUTHENTICATION");
+        System.out.println(uriInfo.getAbsolutePath());
+
+        long userId = 4;
 
         Authentication authentication = authHelper.getAuthentication();
 
@@ -335,7 +319,7 @@ public class PathAccessControlHelper {
 
     // Neighbors can delete their own Attendance
     // Administrators can delete the Attendance of the Neighbors they monitor
-    public boolean canDeleteAttendance(long neighborhoodId, String userURN) {
+    public boolean canDeleteAttendance(String userURN) {
         LOGGER.info("Verifying Delete Attendance Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 

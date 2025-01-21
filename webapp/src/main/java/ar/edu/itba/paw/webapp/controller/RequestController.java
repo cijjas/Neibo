@@ -109,6 +109,7 @@ public class RequestController {
 
     @GET
     @Path(Endpoint.COUNT)
+    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#requestForm.requestedBy, #requestForm.forProduct)")
     public Response countRequests(
             @Valid @BeanParam RequestForm requestForm
     ) {
@@ -144,7 +145,7 @@ public class RequestController {
     @PreAuthorize("@pathAccessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.REQUEST_ID) long requestId
+            @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 

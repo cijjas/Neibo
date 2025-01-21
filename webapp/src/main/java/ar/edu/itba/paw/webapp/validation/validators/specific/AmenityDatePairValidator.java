@@ -19,7 +19,7 @@ public class AmenityDatePairValidator implements ConstraintValidator<AmenityDate
         boolean hasAmenity = form.getAmenity() != null && !form.getAmenity().isEmpty();
         boolean hasDate = form.getDate() != null && !form.getDate().isEmpty();
 
-        return (hasAmenity && hasDate) || (!hasAmenity && !hasDate);
+        return (hasAmenity || !hasDate);
     }
 }
 

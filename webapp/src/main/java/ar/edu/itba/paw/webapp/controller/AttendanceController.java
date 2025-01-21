@@ -167,7 +167,7 @@ public class AttendanceController {
     }
 
     @DELETE
-    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#neighborhoodId, #user)")
+    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#user)")
     public Response deleteAttendance(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
