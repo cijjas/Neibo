@@ -7,7 +7,7 @@ import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +110,7 @@ public class DepartmentController {
 
     @POST
     @Secured(UserRole.SUPER_ADMINISTRATOR)
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createDepartment(
             @Valid @NotNull DepartmentDto createForm
     ) {
@@ -120,7 +120,7 @@ public class DepartmentController {
         final Department department = ds.createDepartment(createForm.getName());
         String departmentHashCode = String.valueOf(department.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(department.getDepartmentId())).build();
 
         // Cache Control

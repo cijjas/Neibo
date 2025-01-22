@@ -5,8 +5,8 @@ import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +55,8 @@ public class NeighborhoodController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#withWorker, #withoutWorker)")
     public Response listNeighborhoods(
-            @QueryParam(QueryParameter.WITH_WORKER) @WorkerURNConstraint String withWorker,
-            @QueryParam(QueryParameter.WITHOUT_WORKER) @WorkerURNConstraint String withoutWorker,
+            @QueryParam(QueryParameter.WITH_WORKER) @WorkerURIConstraint String withWorker,
+            @QueryParam(QueryParameter.WITHOUT_WORKER) @WorkerURIConstraint String withoutWorker,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -125,7 +125,7 @@ public class NeighborhoodController {
 
     @POST
     @Secured(UserRole.SUPER_ADMINISTRATOR)
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createNeighborhood(
             @Valid @NotNull NeighborhoodDto createForm
     ) {
@@ -135,7 +135,7 @@ public class NeighborhoodController {
         final Neighborhood neighborhood = ns.createNeighborhood(createForm.getName());
         String neighborhoodHashCode = String.valueOf(neighborhood.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(neighborhood.getNeighborhoodId())).build();
 
         // Cache Control

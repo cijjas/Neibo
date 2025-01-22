@@ -15,7 +15,7 @@ public class UserCreationValidator implements ConstraintValidator<UserCreationCo
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(UserCreationConstraint userURNInReviewFormConstraint) {
+    public void initialize(UserCreationConstraint userURIInReviewForm) {
     }
 
     @Override

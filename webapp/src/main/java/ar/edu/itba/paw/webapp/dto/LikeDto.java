@@ -3,12 +3,12 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Like;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInLikeConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInLikeConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.PostURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriBuilder;
@@ -18,12 +18,12 @@ import java.util.Date;
 public class LikeDto {
 
     @NotNull(groups = Null.class)
-    @PostURNConstraint(groups = URN.class)
+    @PostURIConstraint(groups = URI.class)
     private String post;
 
     @NotNull(groups = Null.class)
-    @UserURNConstraint(groups = URN.class)
-    @UserURNReferenceInLikeConstraint(groups = Authorization.class)
+    @UserURIConstraint(groups = URI.class)
+    @UserURIReferenceInLikeConstraint(groups = Authorization.class)
     private String user;
 
     private Date likeDate;

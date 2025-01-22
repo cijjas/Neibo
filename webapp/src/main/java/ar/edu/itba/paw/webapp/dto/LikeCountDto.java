@@ -12,7 +12,7 @@ public class LikeCountDto {
 
     private Links _links;
 
-    public static LikeCountDto fromLikeCount(int likeCount, long neighborhoodIdLong, String postURN, String userURN, UriInfo uriInfo) {
+    public static LikeCountDto fromLikeCount(int likeCount, long neighborhoodIdLong, String postURI, String userURI, UriInfo uriInfo) {
         final LikeCountDto dto = new LikeCountDto();
 
         dto.count = likeCount;
@@ -23,10 +23,10 @@ public class LikeCountDto {
 
         UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES).path(Endpoint.COUNT);
 
-        if (postURN != null && !postURN.isEmpty())
-            self.queryParam(QueryParameter.ON_POST, postURN);
-        if (userURN != null && !userURN.isEmpty())
-            self.queryParam(QueryParameter.LIKED_BY, userURN);
+        if (postURI != null && !postURI.isEmpty())
+            self.queryParam(QueryParameter.ON_POST, postURI);
+        if (userURI != null && !userURI.isEmpty())
+            self.queryParam(QueryParameter.LIKED_BY, userURI);
 
         links.setSelf(self.build());
 

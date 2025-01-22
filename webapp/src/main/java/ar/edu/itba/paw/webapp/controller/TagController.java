@@ -6,8 +6,8 @@ import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.PostURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class TagController {
     @GET
     public Response listTags(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post,
+            @QueryParam(QueryParameter.ON_POST) @PostURIConstraint String post,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -123,7 +123,7 @@ public class TagController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createTag(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull TagDto createForm
@@ -134,7 +134,7 @@ public class TagController {
         final Tag tag = ts.createTag(neighborhoodId, createForm.getName());
         String tagHashCode = String.valueOf(tag.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(tag.getTagId())).build();
 
         // Cache Control

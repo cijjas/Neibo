@@ -9,9 +9,9 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.PostURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.PostURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +59,8 @@ public class LikeController {
     @GET
     public Response listLikes(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.LIKED_BY) @UserURNConstraint String user,
-            @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post,
+            @QueryParam(QueryParameter.LIKED_BY) @UserURIConstraint String user,
+            @QueryParam(QueryParameter.ON_POST) @PostURIConstraint String post,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -115,8 +115,8 @@ public class LikeController {
     @Path(Endpoint.COUNT)
     public Response countLikes(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.LIKED_BY) @UserURNConstraint String user,
-            @QueryParam(QueryParameter.ON_POST) @PostURNConstraint String post
+            @QueryParam(QueryParameter.LIKED_BY) @UserURIConstraint String user,
+            @QueryParam(QueryParameter.ON_POST) @PostURIConstraint String post
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
 
@@ -140,7 +140,7 @@ public class LikeController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createLike(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull LikeDto createForm
@@ -151,7 +151,7 @@ public class LikeController {
         final Like like = ls.createLike(extractFirstId(createForm.getUser()), extractSecondId(createForm.getPost()));
         String likeHashCode = String.valueOf(like.hashCode());
 
-        // Resource URN
+        // Resource URI
         LikeDto likeDto = LikeDto.fromLike(like, uriInfo);
 
         return Response.created(likeDto.get_links().getSelf())
@@ -163,8 +163,8 @@ public class LikeController {
     @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
     public Response deleteLike(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURNConstraint String user,
-            @QueryParam(QueryParameter.ON_POST) @NotNull @PostURNConstraint String post
+            @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURIConstraint String user,
+            @QueryParam(QueryParameter.ON_POST) @NotNull @PostURIConstraint String post
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 

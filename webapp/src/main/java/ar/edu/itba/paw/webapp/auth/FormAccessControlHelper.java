@@ -35,25 +35,25 @@ public class FormAccessControlHelper {
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
 
     // Workers can create Affiliations with Neighborhoods if it includes them
-    public boolean canReferenceWorkerInAffiliation(String workerURN) {
+    public boolean canReferenceWorkerInAffiliation(String workerURI) {
         LOGGER.info("Verifying Create Affiliation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(workerURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(workerURI);
     }
 
     // Admins can change the status of the affiliation, workers can only use the unverified status
-    public boolean canReferenceWorkerRoleInAffiliation(String workerRoleURN) {
+    public boolean canReferenceWorkerRoleInAffiliation(String workerRoleURI) {
         LOGGER.info("Verifying Worker Reference in Affiliation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        return extractFirstId(workerRoleURN) == WorkerRole.UNVERIFIED_WORKER.getId();
+        return extractFirstId(workerRoleURI) == WorkerRole.UNVERIFIED_WORKER.getId();
     }
 
     // ---------------------------------------------- NEIGHBORHOODS ----------------------------------------------------
@@ -78,22 +78,22 @@ public class FormAccessControlHelper {
     // ------------------------------------------------ REVIEWS --------------------------------------------------------
 
     // Neighbors can create an Attendance for themselves
-    public boolean canReferenceUserInAttendance(String userURN) {
+    public boolean canReferenceUserInAttendance(String userURI) {
         LOGGER.info("Verifying Review Creation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURI);
     }
 
     // ------------------------------------------------- USERS  --------------------------------------------------------
 
-    // Verifies that the User URN received matches the authenticated User
+    // Verifies that the User URI received matches the authenticated User
     // Commonly used by forms that require an author
     // Neighbors can only reference themselves whilst Administrators and the Super Admin can reference all Users
-    public boolean canReferenceUserInCreation(String userURN) {
+    public boolean canReferenceUserInCreation(String userURI) {
         LOGGER.info("Verifying create reference to the User's entities");
 
         Authentication authentication = authHelper.getAuthentication();
@@ -101,7 +101,7 @@ public class FormAccessControlHelper {
         if (authHelper.isAdministrator(authentication) || authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURI);
     }
 
     // Only two combinations of neighborhood and role are allowed in creation
@@ -232,7 +232,7 @@ public class FormAccessControlHelper {
     // Restricted from Anonymous, Unverified and Rejected
     // Neighbors can reference themselves
     // Administrators can reference any User that belongs to their neighborhood
-    public boolean canReferenceUserInLike(String userURN) {
+    public boolean canReferenceUserInLike(String userURI) {
         LOGGER.info("Verifying User Reference In Like Form");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -242,20 +242,20 @@ public class FormAccessControlHelper {
         if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
             return false;
 
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURI);
     }
 
     // ---------------------------------------------- REQUESTS ---------------------------------------------------------
 
     // Sellers can not put a Request for his own Product
-    public boolean canReferenceProductInRequest(String productURN) {
+    public boolean canReferenceProductInRequest(String productURI) {
         LOGGER.info("Verifying Product Reference in Request Form");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        Product p = prs.findProduct(extractSecondId(productURN)).orElseThrow(NotFoundException::new);
+        Product p = prs.findProduct(extractSecondId(productURI)).orElseThrow(NotFoundException::new);
         return p.getSeller().getUserId() != authHelper.getRequestingUserId(authentication);
     }
 }

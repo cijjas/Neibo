@@ -10,65 +10,65 @@ import java.util.Date;
 import java.util.List;
 
 public class ExtractionUtils {
-    public static long extractFirstId(String URN) {
-        String[] URNParts = URN.split("/");
-        if (URNParts.length < 5) { // Check if there are enough parts for an ID
-            throw new IllegalArgumentException("Invalid URN format.");
+    public static long extractFirstId(String URI) {
+        String[] URIParts = URI.split("/");
+        if (URIParts.length < 5) { // Check if there are enough parts for an ID
+            throw new IllegalArgumentException("Invalid URI format.");
         }
-        return Long.parseLong(URNParts[4]);
+        return Long.parseLong(URIParts[4]);
     }
 
-    public static Long extractOptionalFirstId(String URN) {
-        if (URN == null)
+    public static Long extractOptionalFirstId(String URI) {
+        if (URI == null)
             return null;
-        String[] URNParts = URN.split("/");
-        if (URNParts.length < 5)
+        String[] URIParts = URI.split("/");
+        if (URIParts.length < 5)
             return null;
-        return Long.parseLong(URNParts[4]);
+        return Long.parseLong(URIParts[4]);
     }
 
-    public static TwoId extractTwoId(String URN) {
-        String[] URNParts = URN.split("/");
-        if (URNParts.length < 7)
-            throw new IllegalArgumentException("Invalid URN format.");
+    public static TwoId extractTwoId(String URI) {
+        String[] URIParts = URI.split("/");
+        if (URIParts.length < 7)
+            throw new IllegalArgumentException("Invalid URI format.");
 
-        long firstId = Long.parseLong(URNParts[4]);
-        long secondId = Long.parseLong(URNParts[6]);
+        long firstId = Long.parseLong(URIParts[4]);
+        long secondId = Long.parseLong(URIParts[6]);
 
         return new TwoId(firstId, secondId);
     }
 
-    public static Long extractOptionalSecondId(String URN) {
-        if (URN == null)
+    public static Long extractOptionalSecondId(String URI) {
+        if (URI == null)
             return null;
-        String[] URNParts = URN.split("/");
-        if (URNParts.length < 7)
+        String[] URIParts = URI.split("/");
+        if (URIParts.length < 7)
             return null;
-        return Long.parseLong(URNParts[6]);
+        return Long.parseLong(URIParts[6]);
     }
 
-    public static long extractSecondId(String URN) {
-        String[] URNParts = URN.split("/");
-        if (URNParts.length < 7)
-            throw new IllegalArgumentException("Invalid URN format.");
-        return Long.parseLong(URNParts[6]);
+    public static long extractSecondId(String URI) {
+        String[] URIParts = URI.split("/");
+        if (URIParts.length < 7)
+            throw new IllegalArgumentException("Invalid URI format.");
+        return Long.parseLong(URIParts[6]);
     }
 
-    public static List<Long> extractFirstIds(List<String> URNs) {
+    public static List<Long> extractFirstIds(List<String> URIs) {
         List<Long> ids = new ArrayList<>();
-        if (URNs == null || URNs.isEmpty())
+        if (URIs == null || URIs.isEmpty())
             return Collections.emptyList();
-        for (String URN : URNs)
-            ids.add(ExtractionUtils.extractFirstId(URN));
+        for (String URI : URIs)
+            ids.add(ExtractionUtils.extractFirstId(URI));
         return ids;
     }
 
-    public static List<Long> extractSecondIds(List<String> URNs) {
+    public static List<Long> extractSecondIds(List<String> URIs) {
         List<Long> ids = new ArrayList<>();
-        if (URNs == null || URNs.isEmpty())
+        if (URIs == null || URIs.isEmpty())
             return Collections.emptyList();
-        for (String URN : URNs)
-            ids.add(ExtractionUtils.extractSecondId(URN));
+        for (String URI : URIs)
+            ids.add(ExtractionUtils.extractSecondId(URI));
         return ids;
     }
 

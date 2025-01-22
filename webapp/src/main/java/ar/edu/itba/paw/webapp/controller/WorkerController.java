@@ -5,12 +5,12 @@ import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerRoleURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodsURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ProfessionsURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerRoleURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerStatusURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +60,10 @@ public class WorkerController {
     @GET
     @Secured({UserRole.WORKER, UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response listWorkers(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodsURNConstraint List<String> neighborhoods,
-            @QueryParam(QueryParameter.WITH_PROFESSION) @ProfessionsURNConstraint List<String> professions,
-            @QueryParam(QueryParameter.WITH_ROLE) @WorkerRoleURNConstraint String workerRole,
-            @QueryParam(QueryParameter.WITH_STATUS) @WorkerStatusURNConstraint String workerStatus,
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodsURIConstraint List<String> neighborhoods,
+            @QueryParam(QueryParameter.WITH_PROFESSION) @ProfessionsURIConstraint List<String> professions,
+            @QueryParam(QueryParameter.WITH_ROLE) @WorkerRoleURIConstraint String workerRole,
+            @QueryParam(QueryParameter.WITH_STATUS) @WorkerStatusURIConstraint String workerStatus,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -133,7 +133,7 @@ public class WorkerController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createWorker(
             @Valid @NotNull WorkerDto createForm
     ) {
@@ -143,7 +143,7 @@ public class WorkerController {
         final Worker worker = ws.createWorker(extractFirstId(createForm.getUser()), extractFirstIds(createForm.getProfessions()), createForm.getBusinessName(), createForm.getAddress(), createForm.getPhoneNumber());
         String workerHashCode = String.valueOf(worker.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(worker.getWorkerId())).build();
 
         return Response.created(uri)
@@ -154,7 +154,7 @@ public class WorkerController {
     @PATCH
     @Path("{" + PathParameter.WORKER_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canUpdateWorker(#workerId)")
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateWorker(
             @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId,
             @Valid @NotNull WorkerDto updateForm

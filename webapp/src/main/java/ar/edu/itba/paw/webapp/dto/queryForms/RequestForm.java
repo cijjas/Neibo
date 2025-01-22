@@ -5,10 +5,10 @@ import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.UserTransactionPairConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.RequestStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.TransactionTypeURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ProductURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.RequestStatusURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.TransactionTypeURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
 
 import javax.validation.constraints.Min;
 import javax.ws.rs.DefaultValue;
@@ -33,19 +33,19 @@ public class RequestForm {
     private int size;
 
     @QueryParam(QueryParameter.REQUESTED_BY)
-    @UserURNConstraint
+    @UserURIConstraint
     private String requestedBy;
 
     @QueryParam(QueryParameter.FOR_PRODUCT)
-    @ProductURNConstraint
+    @ProductURIConstraint
     private String forProduct;
 
     @QueryParam(QueryParameter.WITH_TYPE)
-    @TransactionTypeURNConstraint
+    @TransactionTypeURIConstraint
     private String withType;
 
     @QueryParam(QueryParameter.WITH_STATUS)
-    @RequestStatusURNConstraint
+    @RequestStatusURIConstraint
     private String withStatus;
 
     public int getPage() {

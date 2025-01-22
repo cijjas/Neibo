@@ -9,9 +9,9 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.AmenityURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A User/Admin can list his Bookings
  *
  * # Issues
- *   - The form is taking Shifts URNs, I think it should be taking Availability URNs
+ *   - The form is taking Shifts URIs, I think it should be taking Availability URIs
  *   - Before the Shifts had to be dynamically created, not anymore, so I think the logic is simplified
  *   - Deletion Form could also take a list instead of unique values
  */
@@ -64,8 +64,8 @@ public class BookingController {
     @GET
     public Response listBookings(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.BOOKED_BY) @UserURNConstraint String user,
-            @QueryParam(QueryParameter.FOR_AMENITY) @AmenityURNConstraint String amenity,
+            @QueryParam(QueryParameter.BOOKED_BY) @UserURIConstraint String user,
+            @QueryParam(QueryParameter.FOR_AMENITY) @AmenityURIConstraint String amenity,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -136,7 +136,7 @@ public class BookingController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createBooking(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull BookingDto createForm
@@ -147,7 +147,7 @@ public class BookingController {
         final Booking booking = bs.createBooking(extractFirstId(createForm.getShift()), extractFirstId(createForm.getUser()), extractSecondId(createForm.getAmenity()), extractDate(createForm.getBookingDate()));
         String bookingHashCode = String.valueOf(booking.hashCode());
 
-        // Resource URN
+        // Resource URI
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(booking.getBookingId())).build();
 
         return Response.created(uri)

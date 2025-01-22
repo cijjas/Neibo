@@ -7,8 +7,8 @@ import ar.edu.itba.paw.webapp.dto.EventDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +132,7 @@ public class EventController {
 
     @POST
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createEvent(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull EventDto createForm
@@ -143,7 +143,7 @@ public class EventController {
         final Event event = es.createEvent(neighborhoodId, createForm.getName(), createForm.getDescription(), extractDate(createForm.getEventDate()), createForm.getStartTime(), createForm.getEndTime());
         String eventHashCode = String.valueOf(event.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(event.getEventId())).build();
 
         return Response.created(uri)
@@ -155,7 +155,7 @@ public class EventController {
     @Path("{" + PathParameter.EVENT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateEvent(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.EVENT_ID) @GenericIdConstraint long eventId,

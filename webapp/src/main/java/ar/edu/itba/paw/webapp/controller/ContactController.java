@@ -6,8 +6,8 @@ import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +122,7 @@ public class ContactController {
 
     @POST
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createContact(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull ContactDto createForm
@@ -133,7 +133,7 @@ public class ContactController {
         final Contact contact = cs.createContact(neighborhoodId, createForm.getName(), createForm.getAddress(), createForm.getPhone());
         String contactHashCode = String.valueOf(contact.hashCode());
 
-        // Resource URN
+        // Resource URI
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(contact.getContactId())).build();
 
         return Response.created(uri)
@@ -145,7 +145,7 @@ public class ContactController {
     @Path("{" + PathParameter.CONTACT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateContact(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId,

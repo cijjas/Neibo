@@ -86,7 +86,7 @@ public class ImageController {
         final Image image = is.storeImage(fileInputStream);
         String imageHashCode = String.valueOf(image.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(image.getImageId())).build();
 
         return Response.created(uri)

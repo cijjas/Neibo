@@ -9,10 +9,10 @@ import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserRoleURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +63,8 @@ public class UserController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhood)")
     public Response listUsers(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam(QueryParameter.WITH_ROLE) @UserRoleURNConstraint String userRole,
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURIConstraint String neighborhood,
+            @QueryParam(QueryParameter.WITH_ROLE) @UserRoleURIConstraint String userRole,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -132,7 +132,7 @@ public class UserController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createUser(
             @Valid @NotNull UserDto createForm
     ) {
@@ -142,7 +142,7 @@ public class UserController {
         final User user = us.createUser(extractFirstId(createForm.getNeighborhood()), createForm.getMail(), createForm.getName(), createForm.getSurname(), createForm.getPassword(), createForm.getIdentification(), extractOptionalFirstId(createForm.getLanguage()), extractOptionalFirstId(createForm.getUserRole()));
         String userHashCode = String.valueOf(user.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build();
 
         return Response.created(uri)
@@ -153,7 +153,7 @@ public class UserController {
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canUpdateUser(uriInfo, #updateForm.neighborhood, #updateForm.userRole)")
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateUser(
             @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,
             @Valid @NotNull UserDto updateForm

@@ -2,12 +2,12 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInReviewConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -26,8 +26,8 @@ public class ReviewDto {
     private String message;
 
     @NotNull(groups = Null.class)
-    @UserURNConstraint(groups = URN.class)
-    @UserURNReferenceInReviewConstraint(groups = Authorization.class)
+    @UserURIConstraint(groups = URI.class)
+    @UserURIReferenceInReviewConstraint(groups = Authorization.class)
     private String user;
 
     private Date creationDate;

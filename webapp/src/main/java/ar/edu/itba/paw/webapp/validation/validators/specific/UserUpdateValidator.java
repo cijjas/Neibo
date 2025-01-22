@@ -15,7 +15,7 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateConstr
     private FormAccessControlHelper formAccessControlHelper;
 
     @Override
-    public void initialize(UserUpdateConstraint userURNInReviewFormConstraint) {
+    public void initialize(UserUpdateConstraint userUpdateConstraint) {
     }
 
     @Override

@@ -7,10 +7,10 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,8 +74,8 @@ public class AffiliationController {
 
     @GET
     public Response listAffiliations(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURNConstraint String worker,
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURIConstraint String neighborhood,
+            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURIConstraint String worker,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -127,7 +127,7 @@ public class AffiliationController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     @Secured({UserRole.WORKER, UserRole.SUPER_ADMINISTRATOR})
     public Response createAffiliation(
             @Valid @NotNull AffiliationDto createForm
@@ -138,7 +138,7 @@ public class AffiliationController {
         Affiliation affiliation = nws.createAffiliation(extractFirstId(createForm.getNeighborhood()), extractFirstId(createForm.getWorker()), extractFirstId(createForm.getWorkerRole()));
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
-        // Resource URN
+        // Resource URI
         AffiliationDto affiliationDto = AffiliationDto.fromAffiliation(affiliation, uriInfo);
 
         return Response.created(affiliationDto.get_links().getSelf())
@@ -148,10 +148,10 @@ public class AffiliationController {
 
     @PATCH
     @PreAuthorize("@pathAccessControlHelper.canUpdateAffiliation(#neighborhood)")
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateAffiliation(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURNConstraint String worker,
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURIConstraint String neighborhood,
+            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURIConstraint String worker,
             @Valid @NotNull AffiliationDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
@@ -168,8 +168,8 @@ public class AffiliationController {
     @DELETE
     @PreAuthorize("@pathAccessControlHelper.canDeleteAffiliation(#worker)")
     public Response deleteAffiliation(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURNConstraint String neighborhood,
-            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURNConstraint String worker
+            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURIConstraint String neighborhood,
+            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURIConstraint String worker
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 

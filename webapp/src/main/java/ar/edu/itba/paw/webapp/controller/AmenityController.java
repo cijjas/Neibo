@@ -7,8 +7,8 @@ import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,7 +121,7 @@ public class AmenityController {
 
     @POST
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createAmenity(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull AmenityDto createForm
@@ -132,7 +132,7 @@ public class AmenityController {
         Amenity amenity = as.createAmenity(neighborhoodId, createForm.getName(), createForm.getDescription(), extractFirstIds(createForm.getSelectedShifts()));
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
-        // Resource URN
+        // Resource URI
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build();
 
         return Response.created(uri)
@@ -144,7 +144,7 @@ public class AmenityController {
     @Path("{" + PathParameter.AMENITY_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateAmenity(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.AMENITY_ID) @GenericIdConstraint Long amenityId,

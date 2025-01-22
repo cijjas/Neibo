@@ -8,8 +8,8 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.ProfessionDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class ProfessionController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInProfessions(#worker)")
     public Response listProfessions(
-            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURNConstraint String worker
+            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURIConstraint String worker
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
@@ -113,7 +113,7 @@ public class ProfessionController {
 
     @POST
     @Secured(UserRole.SUPER_ADMINISTRATOR)
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createProfession(
             @Valid @NotNull ProfessionDto createForm
     ) {
@@ -123,7 +123,7 @@ public class ProfessionController {
         final Profession profession = ps.createProfession(createForm.getName());
         String professionHashCode = String.valueOf(profession.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(profession.getProfessionId())).build();
 
         // Cache Control

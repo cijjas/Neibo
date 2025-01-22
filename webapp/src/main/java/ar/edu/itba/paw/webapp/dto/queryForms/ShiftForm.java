@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.dto.queryForms;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.AmenityDatePairConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.AmenityURIConstraint;
 
 import javax.ws.rs.QueryParam;
 
@@ -11,7 +11,7 @@ import javax.ws.rs.QueryParam;
 public class ShiftForm {
 
     @QueryParam(QueryParameter.FOR_AMENITY)
-    @AmenityURNConstraint
+    @AmenityURIConstraint
     String amenity;
 
     @QueryParam(QueryParameter.FOR_DATE)

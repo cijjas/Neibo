@@ -2,12 +2,12 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURNInRequestConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURIInRequestConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.PhoneNumberConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.RequestStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ProductURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.RequestStatusURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.*;
 import org.hibernate.validator.constraints.Range;
 
@@ -24,8 +24,8 @@ public class RequestDto {
     private String message;
 
     @NotNull(groups = Null.class)
-    @ProductURNConstraint(groups = URN.class)
-    @ProductURNInRequestConstraint(groups = Authorization.class)
+    @ProductURIConstraint(groups = URI.class)
+    @ProductURIInRequestConstraint(groups = Authorization.class)
     private String product;
 
     @NotNull(groups = Null.class)
@@ -33,12 +33,12 @@ public class RequestDto {
     private Integer unitsRequested;
 
     @NotNull(groups = Null.class)
-    @UserURNConstraint(groups = URN.class)
-    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
+    @UserURIConstraint(groups = URI.class)
+    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
     @PhoneNumberConstraint(groups = Specific.class)
     private String user;
 
-    @RequestStatusURNConstraint(groups = URN.class)
+    @RequestStatusURIConstraint(groups = URI.class)
     private String requestStatus;
 
     private Date requestDate;

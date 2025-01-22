@@ -5,26 +5,22 @@ import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.UserCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.UserUpdateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.LanguageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserRoleURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ImageURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.LanguageURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserRoleURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.Specific;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
@@ -38,7 +34,7 @@ public class UserDto {
 //    long userId;
 
     @NotNull(groups = Null.class)
-    @NeighborhoodURNConstraint(groups = URN.class)
+    @NeighborhoodURIConstraint(groups = URI.class)
     private String neighborhood;
 
     @NotNull(groups = Null.class)
@@ -64,18 +60,18 @@ public class UserDto {
     @NotNull(groups = Null.class)
     private Integer identification;
 
-    @LanguageURNConstraint(groups = URN.class)
+    @LanguageURIConstraint(groups = URI.class)
     private String language;
 
     @NotNull(groups = Null.class)
-    @UserRoleURNConstraint(groups = URN.class)
+    @UserRoleURIConstraint(groups = URI.class)
     private String userRole;
 
     @Size(min = 1, max = 50, groups = Basic.class)
     @Pattern(regexp = "^[0-9]*", groups = Basic.class)
     private String phoneNumber;
 
-    @ImageURNConstraint(groups = URN.class)
+    @ImageURIConstraint(groups = URI.class)
     private String profilePicture;
 
     private Boolean darkMode;

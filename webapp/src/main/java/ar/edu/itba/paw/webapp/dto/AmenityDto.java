@@ -3,10 +3,10 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ShiftsURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -27,7 +27,7 @@ public class AmenityDto {
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
     private String description;
 
-    @ShiftsURNConstraint(groups = URN.class)
+    @ShiftsURIConstraint(groups = URI.class)
     private List<String> selectedShifts;
 
     private Links _links;

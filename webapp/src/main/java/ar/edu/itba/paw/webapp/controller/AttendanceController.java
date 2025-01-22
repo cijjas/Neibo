@@ -9,9 +9,9 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.AttendanceCountDto;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.EventURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.EventURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +62,8 @@ public class AttendanceController {
     @GET
     public Response listAttendance(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
-            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user,
+            @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
+            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -119,8 +119,8 @@ public class AttendanceController {
     @Path(Endpoint.COUNT)
     public Response countAttendance(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
-            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user
+            @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
+            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/attendance/count'", neighborhoodId);
 
@@ -148,7 +148,7 @@ public class AttendanceController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createAttendance(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull AttendanceDto createForm
@@ -170,8 +170,8 @@ public class AttendanceController {
     @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#user)")
     public Response deleteAttendance(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_EVENT) @EventURNConstraint String event,
-            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user
+            @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
+            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
 

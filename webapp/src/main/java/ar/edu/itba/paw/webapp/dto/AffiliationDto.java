@@ -3,14 +3,14 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerRoleURNReferenceInAffiliationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURNReferenceInAffiliationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.NeighborhoodURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerRoleURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.WorkerURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerRoleURIReferenceInAffiliationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURIReferenceInAffiliationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerRoleURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriBuilder;
@@ -19,17 +19,17 @@ import javax.ws.rs.core.UriInfo;
 public class AffiliationDto {
 
     @NotNull(groups = Null.class)
-    @WorkerRoleURNConstraint(groups = URN.class)
-    @WorkerRoleURNReferenceInAffiliationConstraint(groups = Authorization.class)
+    @WorkerRoleURIConstraint(groups = URI.class)
+    @WorkerRoleURIReferenceInAffiliationConstraint(groups = Authorization.class)
     private String workerRole;
 
     @NotNull(groups = Null.class)
-    @WorkerURNConstraint(groups = URN.class)
-    @WorkerURNReferenceInAffiliationConstraint(groups = Authorization.class)
+    @WorkerURIConstraint(groups = URI.class)
+    @WorkerURIReferenceInAffiliationConstraint(groups = Authorization.class)
     private String worker;
 
     @NotNull(groups = Null.class)
-    @NeighborhoodURNConstraint(groups = URN.class)
+    @NeighborhoodURIConstraint(groups = URI.class)
     private String neighborhood;
 
     private Links _links;

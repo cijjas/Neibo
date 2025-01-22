@@ -2,16 +2,16 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.BookingDateConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.AmenityURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ShiftURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.AmenityURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ShiftURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
 import ar.edu.itba.paw.webapp.validation.groups.Specific;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.UriBuilder;
@@ -21,11 +21,11 @@ import javax.ws.rs.core.UriInfo;
 public class BookingDto {
 
     @NotNull(groups = Null.class)
-    @AmenityURNConstraint(groups = URN.class)
+    @AmenityURIConstraint(groups = URI.class)
     private String amenity;
 
     @NotNull(groups = Null.class)
-    @ShiftURNConstraint(groups = URN.class)
+    @ShiftURIConstraint(groups = URI.class)
     private String shift;
 
     @NotNull(groups = Null.class)
@@ -33,8 +33,8 @@ public class BookingDto {
     private String bookingDate;
 
     @NotNull(groups = Null.class)
-    @UserURNConstraint(groups = URN.class)
-    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
+    @UserURIConstraint(groups = URI.class)
+    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
     private String user;
 
     private Links _links;

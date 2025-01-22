@@ -6,8 +6,8 @@ import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +120,7 @@ public class ResourceController {
 
     @POST
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createResource(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull ResourceDto createForm
@@ -131,7 +131,7 @@ public class ResourceController {
         final Resource resource = rs.createResource(neighborhoodId, createForm.getTitle(), createForm.getDescription(), extractOptionalFirstId(createForm.getImage()));
         String resourceHashCode = String.valueOf(resource.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(resource.getResourceId())).build();
 
         return Response.created(uri)
@@ -142,7 +142,7 @@ public class ResourceController {
     @PATCH
     @Path("{" + PathParameter.RESOURCE_ID + "}")
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateResource(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.RESOURCE_ID) @GenericIdConstraint long resourceId,

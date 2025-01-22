@@ -3,11 +3,11 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ProfessionsURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ImageURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ProfessionsURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -21,7 +21,7 @@ public class WorkerDto {
     private String user;
 
     @NotNull(groups = Null.class)
-    @ProfessionsURNConstraint(groups = URN.class)
+    @ProfessionsURIConstraint(groups = URI.class)
     private List<String> professions;
 
     @NotNull(groups = Null.class)
@@ -42,7 +42,7 @@ public class WorkerDto {
     @Size(max = 1000, groups = Basic.class)
     private String bio;
 
-    @ImageURNConstraint(groups = URN.class)
+    @ImageURIConstraint(groups = URI.class)
     private String backgroundPicture;
 
     private Links _links;

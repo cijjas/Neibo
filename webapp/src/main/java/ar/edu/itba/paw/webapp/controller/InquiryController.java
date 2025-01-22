@@ -10,8 +10,8 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
  * # Summary
@@ -135,7 +134,7 @@ public class InquiryController {
 
     @POST
     @PreAuthorize("@pathAccessControlHelper.canCreateInquiry(#productId)")
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createInquiry(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
@@ -150,7 +149,7 @@ public class InquiryController {
         final Inquiry inquiry = is.createInquiry(extractFirstId(createForm.getUser()), productId, createForm.getMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(inquiry.getInquiryId())).build();
 
@@ -163,7 +162,7 @@ public class InquiryController {
     @Path("{" + PathParameter.INQUIRY_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canAnswerInquiry(#inquiryId)")
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateInquiry(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,

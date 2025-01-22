@@ -2,12 +2,12 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.Authorization;
 import ar.edu.itba.paw.webapp.validation.groups.Basic;
 import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URN;
+import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,8 +22,8 @@ public class InquiryDto {
     private String message;
 
     @NotNull(groups = Null.class)
-    @UserURNConstraint(groups = URN.class)
-    @UserURNReferenceInCreationConstraint(groups = Authorization.class)
+    @UserURIConstraint(groups = URI.class)
+    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
     private String user;
 
     @Size(max = 500, groups = Basic.class)

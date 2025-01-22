@@ -9,11 +9,11 @@ import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.DepartmentURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.DepartmentURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ProductStatusURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +62,9 @@ public class ProductController {
     @GET
     public Response listProducts(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_USER) @UserURNConstraint String user,
-            @QueryParam(QueryParameter.IN_DEPARTMENT) @DepartmentURNConstraint String department,
-            @QueryParam(QueryParameter.WITH_STATUS) @ProductStatusURNConstraint String productStatus,
+            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user,
+            @QueryParam(QueryParameter.IN_DEPARTMENT) @DepartmentURIConstraint String department,
+            @QueryParam(QueryParameter.WITH_STATUS) @ProductStatusURIConstraint String productStatus,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -134,7 +134,7 @@ public class ProductController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createProduct(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull ProductDto createForm
@@ -145,7 +145,7 @@ public class ProductController {
         final Product product = ps.createProduct(extractFirstId(createForm.getUser()), createForm.getName(), createForm.getDescription(), createForm.getPrice(), createForm.getRemainingUnits(), createForm.getUsed(), extractFirstId(createForm.getDepartment()), extractFirstIds(createForm.getImages()));
         String productHashCode = String.valueOf(product.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();
 
         return Response.created(uri)
@@ -157,7 +157,7 @@ public class ProductController {
     @Path("{" + PathParameter.PRODUCT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#productId)")
-    @Validated(UpdateValidationSequence.class)
+    @Validated(UpdateSequence.class)
     public Response updateProduct(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId,

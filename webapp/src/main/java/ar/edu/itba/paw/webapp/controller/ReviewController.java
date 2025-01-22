@@ -8,7 +8,7 @@ import ar.edu.itba.paw.webapp.dto.ReviewsAverageDto;
 import ar.edu.itba.paw.webapp.dto.ReviewsCountDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.WorkerIdConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractSecondId;
 
 /*
  * # Summary
@@ -175,7 +174,7 @@ public class ReviewController {
 
     @POST
     @Secured({UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #createForm.user)")
     public Response createReview(
             @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
@@ -203,7 +202,7 @@ public class ReviewController {
         final Review review = rs.createReview(workerId, extractFirstId(createForm.getUser()), createForm.getRating(), createForm.getMessage());
         String reviewHashCode = String.valueOf(review.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(review.getReviewId())).build();
 
         return Response.created(uri)

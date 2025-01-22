@@ -10,11 +10,11 @@ import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.dto.PostsCountDto;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.ChannelURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.PostStatusURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.urn.UserURNConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateValidationSequence;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.ChannelURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.PostStatusURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.TagsURIConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +65,10 @@ public class PostController {
     @GET
     public Response listPosts(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam(QueryParameter.POSTED_BY) @UserURNConstraint String user,
-            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURNConstraint String channel,
-            @QueryParam(QueryParameter.WITH_TAG) @TagsURNConstraint List<String> tags,
-            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURNConstraint String postStatus,
+            @QueryParam(QueryParameter.POSTED_BY) @UserURIConstraint String user,
+            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURIConstraint String channel,
+            @QueryParam(QueryParameter.WITH_TAG) @TagsURIConstraint List<String> tags,
+            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURIConstraint String postStatus,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -118,10 +118,10 @@ public class PostController {
     @Path(Endpoint.COUNT)
     public Response countPosts(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.POSTED_BY) @UserURNConstraint String user,
-            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURNConstraint String channel,
-            @QueryParam(QueryParameter.WITH_TAG) @TagsURNConstraint List<String> tags,
-            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURNConstraint String postStatus
+            @QueryParam(QueryParameter.POSTED_BY) @UserURIConstraint String user,
+            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURIConstraint String channel,
+            @QueryParam(QueryParameter.WITH_TAG) @TagsURIConstraint List<String> tags,
+            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURIConstraint String postStatus
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/count'", neighborhoodId);
 
@@ -175,7 +175,7 @@ public class PostController {
     }
 
     @POST
-    @Validated(CreateValidationSequence.class)
+    @Validated(CreateSequence.class)
     public Response createPost(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull PostDto createForm
@@ -186,7 +186,7 @@ public class PostController {
         final Post post = ps.createPost(neighborhoodId, extractFirstId(createForm.getUser()), createForm.getTitle(), createForm.getBody(), extractSecondId(createForm.getChannel()), extractSecondIds(createForm.getTags()), extractOptionalFirstId(createForm.getImage()));
         String postHashCode = String.valueOf(post.hashCode());
 
-        // Resource URN
+        // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(post.getPostId())).build();
 

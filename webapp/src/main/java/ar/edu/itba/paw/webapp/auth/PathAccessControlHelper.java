@@ -52,18 +52,18 @@ public class PathAccessControlHelper {
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
 
     // Workers can delete Affiliations with Neighborhoods if it involves them
-    public boolean canDeleteAffiliation(String workerURN) {
+    public boolean canDeleteAffiliation(String workerURI) {
         LOGGER.info("Verifying Delete Affiliation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(workerURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(workerURI);
     }
 
     // Admins can update the affiliation if it involves their neighborhood
-    public boolean canUpdateAffiliation(String neighborhoodURN) {
+    public boolean canUpdateAffiliation(String neighborhoodURI) {
         LOGGER.info("Verifying Update Affiliation Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -71,7 +71,7 @@ public class PathAccessControlHelper {
             return true;
 
         if (authHelper.isAdministrator(authentication))
-            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(neighborhoodURN);
+            return authHelper.getRequestingUserNeighborhoodId(authentication) == extractFirstId(neighborhoodURI);
 
         return false;
     }
@@ -120,10 +120,10 @@ public class PathAccessControlHelper {
     // --------------------------------------------- PROFESSION --------------------------------------------------------
 
     // Worker Query Param in '/professions' can only be used by Neighbors, Workers and Administrators
-    public boolean canUseWorkerQPInProfessions(String workerURN) {
+    public boolean canUseWorkerQPInProfessions(String workerURI) {
         LOGGER.info("Verifying Query Params Accessibility");
 
-        if (workerURN == null)
+        if (workerURI == null)
             return true;
 
         Authentication authentication = authHelper.getAuthentication();
@@ -319,14 +319,14 @@ public class PathAccessControlHelper {
 
     // Neighbors can delete their own Attendance
     // Administrators can delete the Attendance of the Neighbors they monitor
-    public boolean canDeleteAttendance(String userURN) {
+    public boolean canDeleteAttendance(String userURI) {
         LOGGER.info("Verifying Delete Attendance Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURI);
     }
 
     // ------------------------------------------------ COMMENTS -------------------------------------------------------
@@ -400,7 +400,7 @@ public class PathAccessControlHelper {
     // Restricted from Anonymous, Unverified and Rejected
     // Neighbors can delete their own Likes
     // Administrators can delete the Likes of the Neighbors they monitor
-    public boolean canDeleteLike(String userURN) {
+    public boolean canDeleteLike(String userURI) {
         LOGGER.info("Verifying Delete Like accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
@@ -410,7 +410,7 @@ public class PathAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication) || authHelper.isAdministrator(authentication))
             return true;
 
-        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+        return authHelper.getRequestingUserId(authentication) == extractFirstId(userURI);
     }
 
     // ------------------------------------------------ POSTS ----------------------------------------------------------
@@ -456,20 +456,20 @@ public class PathAccessControlHelper {
     // ---------------------------------------------- REQUESTS ---------------------------------------------------------
 
     // Sellers can view the Requests for their Products and their Requests overall
-    public boolean canAccessRequests(String userURN, String productURN) {
+    public boolean canAccessRequests(String userURI, String productURI) {
         LOGGER.info("Verifying Requests Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        if (userURN == null && productURN == null)
+        if (userURI == null && productURI == null)
             return authHelper.isAdministrator(authentication);
 
-        if (userURN != null)
-            return authHelper.getRequestingUserId(authentication) == extractFirstId(userURN);
+        if (userURI != null)
+            return authHelper.getRequestingUserId(authentication) == extractFirstId(userURI);
 
-        Product product = prs.findProduct(extractSecondId(productURN)).orElseThrow(NotFoundException::new);
+        Product product = prs.findProduct(extractSecondId(productURI)).orElseThrow(NotFoundException::new);
         return product.getSeller().getUserId() == authHelper.getRequestingUserId(authentication);
     }
 
