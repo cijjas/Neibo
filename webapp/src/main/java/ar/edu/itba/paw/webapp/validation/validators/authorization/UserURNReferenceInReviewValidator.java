@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.validation.validators.authorization;
 import ar.edu.itba.paw.webapp.auth.FormAccessControlHelper;
 import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURNReferenceInReviewConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -22,7 +23,7 @@ public class UserURNReferenceInReviewValidator implements ConstraintValidator<Us
             return true;
         if (!formAccessControlHelper.canReferenceUserInAttendance(userURN)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate(HttpStatus.FORBIDDEN.toString()).addConstraintViolation();
             return false;
         }
         return true;

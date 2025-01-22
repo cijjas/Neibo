@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.mappers;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import ar.edu.itba.paw.models.ErrorDetail;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -25,7 +26,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
     public Response toResponse(ConstraintViolationException exception) {
         // Check if there is a FORBIDDEN violation
         boolean containsForbidden = exception.getConstraintViolations().stream()
-                .anyMatch(violation -> "FORBIDDEN".equals(violation.getMessage()));
+                .anyMatch(violation -> HttpStatus.FORBIDDEN.toString().equals(violation.getMessage()));
 
         if (containsForbidden) {
             // Build a 403 FORBIDDEN response

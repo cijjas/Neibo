@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.TagsURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -38,7 +39,7 @@ public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, 
                 return false;
             if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId())) {
                 constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
+                constraintValidatorContext.buildConstraintViolationWithTemplate(HttpStatus.FORBIDDEN.toString()).addConstraintViolation();
                 return false;
             }
         }

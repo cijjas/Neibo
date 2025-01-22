@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URNValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.urn.ProductURNConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -34,7 +35,7 @@ public class ProductURNValidator implements ConstraintValidator<ProductURNConstr
         TwoId twoId = extractTwoId(productURN);
         if (!formAccessControlHelper.canReferenceNeighborhoodEntity(twoId.getFirstId())) {
             constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext.buildConstraintViolationWithTemplate("FORBIDDEN").addConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate(HttpStatus.FORBIDDEN.toString()).addConstraintViolation();
             return false;
         }
         return productService.findProduct(twoId.getFirstId(), twoId.getSecondId()).isPresent();
