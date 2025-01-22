@@ -2,10 +2,13 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.interfaces.persistence.ImageDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +26,11 @@ import static org.mockito.Mockito.*;
 public class UserServiceImplTest {
 
     @Mock
+    private ImageDao imageDao;
+    @Mock
     private UserDao userDao;
+    @Mock
+    private NeighborhoodDao neighborhoodDao;
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
@@ -257,7 +264,8 @@ public class UserServiceImplTest {
         User user = new User.Builder().build();
         Image profilePicture = new Image.Builder().build();
         when(userDao.findUser(userId)).thenReturn(Optional.of(user));
-        when(imageService.findImage(profilePictureId)).thenReturn(Optional.of(profilePicture));
+        when(neighborhoodDao.findNeighborhood(neighborhoodId)).thenReturn(Optional.ofNullable(new Neighborhood.Builder().build()));
+        when(imageDao.findImage(profilePictureId)).thenReturn(Optional.of(new Image.Builder().build()));
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
@@ -276,7 +284,8 @@ public class UserServiceImplTest {
         assertEquals(UserRole.fromId(userRoleId), user.getRole());
 
         verify(userDao, times(1)).findUser(userId);
-        verify(imageService, times(1)).findImage(profilePictureId);
+        verify(imageDao, times(1)).findImage(profilePictureId);
+        verify(neighborhoodDao, times(1)).findNeighborhood(neighborhoodId);
         verify(passwordEncoder, times(1)).encode(password);
     }
 
@@ -290,6 +299,7 @@ public class UserServiceImplTest {
 
         User user = new User.Builder().build();
         when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+        when(neighborhoodDao.findNeighborhood(neighborhoodId)).thenReturn(Optional.ofNullable(new Neighborhood.Builder().build()));
 
         // Exercise
         userService.updateUser(userId, neighborhoodId, mail, null, null, null, null, null, null, darkMode, null, null);
@@ -306,6 +316,7 @@ public class UserServiceImplTest {
         verify(userDao, times(1)).findUser(userId);
         verify(imageService, never()).findImage(anyLong());
         verify(passwordEncoder, never()).encode(anyString());
+        verify(neighborhoodDao, times(1)).findNeighborhood(neighborhoodId);
     }
 
     @Test
@@ -317,6 +328,7 @@ public class UserServiceImplTest {
 
         User user = new User.Builder().build();
         when(userDao.findUser(userId)).thenReturn(Optional.of(user));
+        when(neighborhoodDao.findNeighborhood(neighborhoodId)).thenReturn(Optional.ofNullable(new Neighborhood.Builder().build()));
         when(passwordEncoder.encode(password)).thenReturn("encodedPassword");
 
         // Exercise
@@ -326,6 +338,7 @@ public class UserServiceImplTest {
         assertEquals("encodedPassword", user.getPassword());
 
         verify(userDao, times(1)).findUser(userId);
+        verify(neighborhoodDao, times(1)).findNeighborhood(neighborhoodId);
         verify(passwordEncoder, times(1)).encode(password);
     }
 }
