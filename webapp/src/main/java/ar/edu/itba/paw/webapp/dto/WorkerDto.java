@@ -81,8 +81,8 @@ public class WorkerDto {
         links.setWorkerNeighborhoods(workerNeighborhoodsUri.build());
         links.setPosts(postsUri.build());
         links.setPostsCount(postsCountUri.build());
-        if (worker.getBackgroundPictureId() != null) {
-            String backgroundPictureId = String.valueOf(worker.getBackgroundPictureId());
+        if (worker.getBackgroundPicture() != null) {
+            String backgroundPictureId = String.valueOf(worker.getBackgroundPicture().getImageId());
             UriBuilder backgroundPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(backgroundPictureId);
             links.setBackgroundImage(backgroundPictureUri.build());
         }

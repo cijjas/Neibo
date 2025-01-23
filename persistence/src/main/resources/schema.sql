@@ -76,9 +76,7 @@ create table if not exists users
     neighborhoodid bigint not null
         constraint users_neighborhoodid_fkey
             references neighborhoods
-            on delete cascade
-        constraint fkic88b519i3tqt5e0q3vkf3y5t
-            references neighborhoods,
+            on delete cascade,
     password varchar(128),
     darkmode boolean,
     language varchar(32),
@@ -86,11 +84,9 @@ create table if not exists users
     profilepictureid bigint
         constraint fk_users_images
             references images
-            on delete set null
-        constraint fk1eepsnt7x3dn9bcluxeecrg34
-            references images,
+            on delete set null,
     identification integer,
-    phonenumber varchar(64)
+    phonenumber varchar(255)
 );
 
 create table if not exists posts
@@ -104,21 +100,15 @@ create table if not exists posts
     userid bigint not null
         constraint fk_posts_users
             references users
-            on delete cascade
-        constraint fktc10cvjiaj3p7ldl526coc36a
-            references users,
+            on delete cascade,
     channelid bigint not null
         constraint posts_channelid_fkey
             references channels
-            on delete cascade
-        constraint fkqn2vwdbbedu2lmm3mi5n4vjnq
-            references channels,
+            on delete cascade,
     postpictureid bigint
         constraint fk_posts_images
             references images
             on delete set null
-        constraint fk9oso7y3hmscxyahy12fspfvyx
-            references images
 );
 
 create table if not exists comments
@@ -131,15 +121,11 @@ create table if not exists comments
     userid bigint not null
         constraint fk_comments_users
             references users
-            on delete cascade
-        constraint fkjxggc60wwwlf4xl065fjrx68y
-            references users,
+            on delete cascade,
     postid bigint not null
         constraint comments_postid_fkey
             references posts
             on delete cascade
-        constraint fkqt8anaen7vlhry2a766wkvv41
-            references posts
 );
 
 create table if not exists posts_tags
@@ -147,15 +133,11 @@ create table if not exists posts_tags
     postid bigint not null
         constraint posts_tags_postid_fkey
             references posts
-            on delete cascade
-        constraint fk9d2rjjmbiureptqp0hn4wfd93
-            references posts,
+            on delete cascade,
     tagid bigint not null
         constraint posts_tags_tagid_fkey
             references tags
-            on delete cascade
-        constraint fkp7fqkfledrnb5vph2cumrgwg4
-            references tags,
+            on delete cascade,
     constraint posts_tags_pkey
         primary key (postid, tagid)
 );
@@ -165,15 +147,11 @@ create table if not exists neighborhoods_channels
     neighborhoodid bigint not null
         constraint neighborhoods_channels_neighborhoodid_fkey
             references neighborhoods
-            on delete cascade
-        constraint fkhtu9bmy29n0d43wc59dt6jvr5
-            references neighborhoods,
+            on delete cascade,
     channelid bigint not null
         constraint neighborhoods_channels_channelid_fkey
             references channels
-            on delete cascade
-        constraint fk5v7ohayjrcs4l9xfvulc1id3g
-            references channels,
+            on delete cascade,
     constraint neighborhoods_channels_pkey
         primary key (neighborhoodid, channelid)
 );
@@ -187,13 +165,9 @@ create table if not exists resources
     resourcedescription varchar(255),
     resourceimageid bigint
         constraint resources_resourceimageid_fkey
-            references images
-        constraint fk8u7gju00jdbcp3ejyrab6uud5
-            references images,
+            references images on delete set null,
     neighborhoodid bigint not null
         constraint resources_neighborhoodid_fkey
-            references neighborhoods
-        constraint fkm326w3rerctvghpu8yct39glk
             references neighborhoods
 );
 
@@ -208,8 +182,6 @@ create table if not exists contacts
     neighborhoodid bigint not null
         constraint contacts_neighborhoodid_fkey
             references neighborhoods
-        constraint fklux0wry30t2vlbwyv6nwm4pv6
-            references neighborhoods
 );
 
 create table if not exists amenities
@@ -223,8 +195,6 @@ create table if not exists amenities
         constraint amenities_neighborhoodid_fkey
             references neighborhoods
             on delete cascade
-        constraint fks3gyc5psipkyoeidl506ypor
-            references neighborhoods
 );
 
 create table if not exists posts_users_likes
@@ -232,15 +202,11 @@ create table if not exists posts_users_likes
     postid bigint not null
         constraint posts_users_likes_postid_fkey
             references posts
-            on delete cascade
-        constraint fk2v3c2g4kqvmjbyva0y9n261ps
-            references posts,
+            on delete cascade,
     userid bigint not null
         constraint posts_users_likes_userid_fkey
             references users
-            on delete cascade
-        constraint fk1phwqt3hh8wcip5hcoxct3ax5
-            references users,
+            on delete cascade,
     likedate timestamp default CURRENT_TIMESTAMP,
     constraint posts_users_likes_pkey
         primary key (postid, userid)
@@ -257,7 +223,11 @@ create table if not exists workers_info
     phonenumber varchar(64) not null,
     businessname varchar(128),
     address varchar(128) not null,
-    backgroundpictureid bigint,
+
+    backgroundpictureid bigint
+        constraint fk_users_images
+            references images
+            on delete set null,
     bio varchar(255)
 );
 
@@ -276,15 +246,11 @@ create table if not exists workers_neighborhoods
     workerid bigint not null
         constraint workers_neighborhoods_workerid_fkey
             references users
-            on delete cascade
-        constraint fkop2knb49048w039sru9wl7m4v
-            references workers_info,
+            on delete cascade,
     neighborhoodid bigint not null
         constraint workers_neighborhoods_neighborhoodid_fkey
             references neighborhoods
-            on delete cascade
-        constraint fklyb81uy312pcm3bqlygtudqac
-            references neighborhoods,
+            on delete cascade,
     role varchar(255),
     constraint workers_neighborhoods_pkey
         primary key (workerid, neighborhoodid)
@@ -295,15 +261,11 @@ create table if not exists workers_professions
     workerid bigint not null
         constraint workers_professions_workerid_fkey
             references users
-            on delete cascade
-        constraint fkf1a7cka14k4ty63gra57x2vwe
-            references workers_info,
+            on delete cascade,
     professionid bigint not null
         constraint workers_professions_professionid_fkey
             references professions
-            on delete cascade
-        constraint fkhihhwwcf8km97mlf13r0vqn
-            references professions,
+            on delete cascade,
     constraint workers_professions_pkey
         primary key (workerid, professionid)
 );
@@ -316,15 +278,11 @@ create table if not exists reviews
     workerid bigint
         constraint reviews_workerid_fkey
             references users
-            on delete cascade
-        constraint fkd87kbnxrdtjriixleh5wxy3xi
-            references workers_info,
+            on delete cascade,
     userid bigint
         constraint reviews_userid_fkey
             references users
-            on delete cascade
-        constraint fke0hlob2fbf7wug4lgi2boiyxf
-            references users,
+            on delete cascade,
     rating real,
     review varchar(255),
     date timestamp not null
@@ -351,21 +309,15 @@ create table if not exists events
     neighborhoodid bigint not null
         constraint events_neighborhoodid_fkey
             references neighborhoods
-            on delete cascade
-        constraint fk37hdki702o2bv4r3t41i7yk4o
-            references neighborhoods,
+            on delete cascade,
     starttimeid bigint
         constraint fk_starttime
             references times
-            on delete cascade
-        constraint fkab8xrhqn8m4poq2xvqt6l5v72
-            references times,
+            on delete cascade,
     endtimeid bigint
         constraint fk_endtime
             references times
             on delete cascade
-        constraint fk4y7lfu97tj38vccdl00uwpn6t
-            references times
 );
 
 create table if not exists events_users
@@ -373,15 +325,11 @@ create table if not exists events_users
     userid bigint not null
         constraint events_users_userid_fkey
             references users
-            on delete cascade
-        constraint fk84k1rf46d33arjqggmbj0lyjy
-            references users,
+            on delete cascade,
     eventid bigint not null
         constraint events_users_eventid_fkey
             references events
-            on delete cascade
-        constraint fkll2jkxq61gb2cn8c0wgw1lkfq
-            references events,
+            on delete cascade,
     constraint events_users_pkey
         primary key (eventid, userid)
 );
@@ -403,13 +351,9 @@ create table if not exists shifts
             primary key,
     dayid bigint
         constraint shifts_dayid_fkey
-            references days
-        constraint fkrgr216xwoagaxrpo0v757c881
             references days,
     starttime bigint
         constraint shifts_starttime_fkey
-            references times
-        constraint fk5nflqno4eofi5n2onehgbu6tt
             references times,
     constraint shifts_starttime_dayid_key
         unique (starttime, dayid)
@@ -423,15 +367,11 @@ create table if not exists amenities_shifts_availability
     amenityid bigint
         constraint amenities_shifts_availability_amenityid_fkey
             references amenities
-            on delete cascade
-        constraint fks3qffu9r6rxbo6ffxt3wy679l
-            references amenities,
+            on delete cascade,
     shiftid bigint
         constraint amenities_shifts_availability_shiftid_fkey
             references shifts
-            on delete cascade
-        constraint fk3mdnowlxv760ced06okgsy8rh
-            references shifts,
+            on delete cascade,
     constraint amenities_shifts_availability_amenityid_shiftid_key
         unique (amenityid, shiftid)
 );
@@ -444,15 +384,11 @@ create table if not exists users_availability
     amenityavailabilityid bigint
         constraint users_availability_amenityavailabilityid_fkey
             references amenities_shifts_availability
-            on delete cascade
-        constraint fks9a957rfgy3db1dben7xnj0u1
-            references amenities_shifts_availability,
+            on delete cascade,
     userid bigint
         constraint users_availability_userid_fkey
             references users
-            on delete cascade
-        constraint fk2fygq11yidgx548rnvmb3kp9e
-            references users,
+            on delete cascade,
     date date,
     constraint users_availability_amenityavailabilityid_date_key
         unique (amenityavailabilityid, date)
@@ -480,33 +416,23 @@ create table if not exists products
     primarypictureid bigint
         constraint products_primarypictureid_fkey
             references images
-            on delete cascade
-        constraint fkes5pp3fnwoaewjtkpkh8mayxd
-            references images,
+            on delete cascade,
     secondarypictureid bigint
         constraint products_secondarypictureid_fkey
             references images
-            on delete cascade
-        constraint fkjh0vklu17y1qmlifr3ckbnsn7
-            references images,
+            on delete cascade,
     tertiarypictureid bigint
         constraint products_tertiarypictureid_fkey
             references images
-            on delete cascade
-        constraint fkcj69ibo77igk2yxx9yyarn609
-            references images,
+            on delete cascade,
     sellerid bigint not null
         constraint products_sellerid_fkey
             references users
-            on delete cascade
-        constraint fk7ghqa830fextpfnt6qw4dvly1
-            references users,
+            on delete cascade,
     departmentid bigint
         constraint products_departmentid_fkey
             references departments
-            on delete cascade
-        constraint fk8iyjjwe05ysnrnwemuwlk8nqr
-            references departments,
+            on delete cascade,
     creationdate timestamp,
     remainingunits bigint default 1,
     purchasedate date
@@ -520,15 +446,11 @@ create table if not exists products_users_inquiries
     productid bigint
         constraint products_users_inquiries_productid_fkey
             references products
-            on delete cascade
-        constraint fkqxpb7oab9phj2hsbiw4trel5l
-            references products,
+            on delete cascade,
     userid bigint
         constraint products_users_inquiries_userid_fkey
             references users
-            on delete cascade
-        constraint fk6ptiod8ihfdhv07m04jhcvb3e
-            references users,
+            on delete cascade,
     message varchar(512) not null,
     reply varchar(512),
     inquirydate timestamp
@@ -542,15 +464,11 @@ create table if not exists products_users_requests
     productid bigint
         constraint products_users_requests_productid_fkey
             references products
-            on delete cascade
-        constraint fk3rojkgclaljwd3vr0qa8qbsmc
-            references products,
+            on delete cascade,
     userid bigint
         constraint products_users_requests_userid_fkey
             references users
-            on delete cascade
-        constraint fkt3dd1mkdokg6anp41w64y397t
-            references users,
+            on delete cascade,
     message varchar(512) not null,
     requestdate timestamp,
     purchasedate timestamp,
@@ -847,175 +765,174 @@ INSERT INTO workers_info (workerid, address, backgroundpictureid, bio, businessn
 VALUES (6, 'Wherever I Wanna Be', null, 'Second Best in Town', 'Fix it Almost All', '43243847')
 ON CONFLICT DO NOTHING;
 
-insert into shifts (shiftid, dayid, starttime) values (1, 1, 1) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (2, 1, 2) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (3, 1, 3) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (4, 1, 4) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (5, 1, 5) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (6, 1, 6) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (7, 1, 7) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (8, 1, 8) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (9, 1, 9) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (10, 1, 10) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (11, 1, 11) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (12, 1, 12) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (13, 1, 13) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (14, 1, 14) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (15, 1, 15) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (16, 1, 16) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (17, 1, 17) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (18, 1, 18) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (19, 1, 19) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (20, 1, 20) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (21, 1, 21) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (22, 1, 22) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (23, 1, 23) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (24, 1, 24) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (25, 2, 1) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (26, 2, 2) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (27, 2, 3) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (28, 2, 4) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (29, 2, 5) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (30, 2, 6) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (31, 2, 7) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (32, 2, 8) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (33, 2, 9) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (34, 2, 10) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (35, 2, 11) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (36, 2, 12) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (37, 2, 13) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (38, 2, 14) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (39, 2, 15) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (40, 2, 16) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (41, 2, 17) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (42, 2, 18) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (43, 2, 19) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (44, 2, 20) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (45, 2, 21) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (46, 2, 22) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (47, 2, 23) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (48, 2, 24) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (49, 3, 1) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (50, 3, 2) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (51, 3, 3) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (52, 3, 4) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (53, 3, 5) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (54, 3, 6) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (55, 3, 7) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (56, 3, 8) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (57, 3, 9) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (58, 3, 10) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (59, 3, 11) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (60, 3, 12) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (61, 3, 13) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (62, 3, 14) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (63, 3, 15) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (64, 3, 16) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (65, 3, 17) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (66, 3, 18) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (67, 3, 19) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (68, 3, 20) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (69, 3, 21) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (70, 3, 22) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (71, 3, 23) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (72, 3, 24) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (73, 4, 1) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (74, 4, 2) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (75, 4, 3) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (76, 4, 4) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (77, 4, 5) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (78, 4, 6) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (79, 4, 7) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (80, 4, 8) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (81, 4, 9) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (82, 4, 10) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (83, 4, 11) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (84, 4, 12) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (85, 4, 13) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (86, 4, 14) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (87, 4, 15) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (88, 4, 16) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (89, 4, 17) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (90, 4, 18) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (91, 4, 19) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (92, 4, 20) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (93, 4, 21) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (94, 4, 22) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (95, 4, 23) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (96, 4, 24) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (97, 5, 1) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (98, 5, 2) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (99, 5, 3) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (100, 5, 4) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (101, 5, 5) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (102, 5, 6) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (103, 5, 7) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (104, 5, 8) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (105, 5, 9) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (106, 5, 10) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (107, 5, 11) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (108, 5, 12) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (109, 5, 13) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (110, 5, 14) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (111, 5, 15) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (112, 5, 16) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (113, 5, 17) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (114, 5, 18) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (115, 5, 19) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (116, 5, 20) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (117, 5, 21) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (118, 5, 22) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (119, 5, 23) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (120, 5, 24) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (121, 6, 1) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (122, 6, 2) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (123, 6, 3) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (124, 6, 4) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (125, 6, 5) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (126, 6, 6) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (127, 6, 7) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (128, 6, 8) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (129, 6, 9) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (130, 6, 10) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (131, 6, 11) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (132, 6, 12) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (133, 6, 13) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (134, 6, 14) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (135, 6, 15) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (136, 6, 16) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (137, 6, 17) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (138, 6, 18) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (139, 6, 19) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (140, 6, 20) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (141, 6, 21) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (142, 6, 22) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (143, 6, 23) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (144, 6, 24) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (145, 7, 1) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (146, 7, 2) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (147, 7, 3) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (148, 7, 4) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (149, 7, 5) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (150, 7, 6) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (151, 7, 7) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (152, 7, 8) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (153, 7, 9) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (154, 7, 10) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (155, 7, 11) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (156, 7, 12) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (157, 7, 13) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (158, 7, 14) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (159, 7, 15) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (160, 7, 16) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (161, 7, 17) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (162, 7, 18) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (163, 7, 19) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (164, 7, 20) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (165, 7, 21) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (166, 7, 22) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (167, 7, 23) ON CONFLICT DO NOTHING;
-insert into shifts (shiftid, dayid, starttime) values (168, 7, 24) ON CONFLICT DO NOTHING;
-
+insert into shifts (dayid, starttime) values (1, 1) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 2) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 3) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 4) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 5) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 6) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 7) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 8) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 9) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 10) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 11) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 12) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 13) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 14) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 15) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 16) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 17) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 18) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 19) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 20) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 21) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 22) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 23) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (1, 24) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 1) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 2) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 3) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 4) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 5) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 6) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 7) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 8) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 9) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 10) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 11) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 12) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 13) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 14) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 15) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 16) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 17) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 18) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 19) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 20) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 21) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 22) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 23) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (2, 24) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 1) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 2) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 3) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 4) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 5) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 6) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 7) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 8) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 9) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 10) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 11) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 12) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 13) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 14) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 15) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 16) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 17) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 18) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 19) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 20) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 21) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 22) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 23) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (3, 24) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 1) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 2) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 3) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 4) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 5) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 6) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 7) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 8) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 9) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 10) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 11) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 12) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 13) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 14) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 15) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 16) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 17) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 18) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 19) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 20) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 21) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 22) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 23) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (4, 24) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 1) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 2) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 3) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 4) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 5) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 6) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 7) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 8) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 9) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 10) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 11) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 12) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 13) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 14) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 15) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 16) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 17) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 18) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 19) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 20) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 21) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 22) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 23) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (5, 24) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 1) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 2) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 3) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 4) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 5) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 6) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 7) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 8) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 9) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 10) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 11) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 12) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 13) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 14) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 15) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 16) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 17) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 18) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 19) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 20) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 21) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 22) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 23) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (6, 24) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 1) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 2) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 3) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 4) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 5) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 6) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 7) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 8) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 9) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 10) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 11) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 12) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 13) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 14) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 15) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 16) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 17) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 18) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 19) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 20) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 21) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 22) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 23) ON CONFLICT DO NOTHING;
+insert into shifts (dayid, starttime) values (7, 24) ON CONFLICT DO NOTHING;
 
 -- Adjusting sequences for neighborhoods
 SELECT setval('neighborhoods_neighborhoodid_seq', (SELECT MAX(neighborhoodid) FROM neighborhoods));

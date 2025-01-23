@@ -89,7 +89,7 @@ public class WorkerServiceImpl implements WorkerService {
             worker.setBio(bio);
         if (backgroundPictureId != null) {
             Image i = imageService.findImage(backgroundPictureId).orElseThrow(NotFoundException::new);
-            worker.setBackgroundPictureId(i.getImageId());
+            worker.setBackgroundPictureId(i);
         }
 
         return worker;

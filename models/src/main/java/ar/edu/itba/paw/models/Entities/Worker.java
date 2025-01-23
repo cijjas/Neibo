@@ -31,8 +31,9 @@ public class Worker {
     @Column(name = "bio", length = 255)
     private String bio;
 
-    @Column(name = "backgroundpictureid")
-    private Long backgroundPictureId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "backgroundpictureid", referencedColumnName = "imageId")
+    private Image backgroundPicture;
 
     @ManyToMany
     @JoinTable(name = "reviews", joinColumns = @JoinColumn(name = "workerid"), inverseJoinColumns = @JoinColumn(name = "userid"))
@@ -56,7 +57,7 @@ public class Worker {
         this.businessName = builder.businessName;
         this.address = builder.address;
         this.bio = builder.bio;
-        this.backgroundPictureId = builder.backgroundPictureId;
+        this.backgroundPicture = builder.backgroundPicture;
     }
 
     public String getPhoneNumber() {
@@ -91,12 +92,12 @@ public class Worker {
         this.bio = bio;
     }
 
-    public Long getBackgroundPictureId() {
-        return backgroundPictureId;
+    public Image getBackgroundPicture() {
+        return backgroundPicture;
     }
 
-    public void setBackgroundPictureId(Long backgroundPictureId) {
-        this.backgroundPictureId = backgroundPictureId;
+    public void setBackgroundPictureId(Image backgroundPicture) {
+        this.backgroundPicture = backgroundPicture;
     }
 
     public Set<User> getReviewedByUsers() {
@@ -168,7 +169,7 @@ public class Worker {
 
     @Override
     public int hashCode() {
-        return Objects.hash(workerId, phoneNumber, address, businessName, backgroundPictureId, bio);
+        return Objects.hash(workerId, phoneNumber, address, businessName, backgroundPicture, bio);
     }
 
     public static class Builder {
@@ -178,7 +179,7 @@ public class Worker {
         private String businessName;
         private String address;
         private String bio;
-        private Long backgroundPictureId;
+        private Image backgroundPicture;
 
         public Builder phoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
@@ -195,8 +196,8 @@ public class Worker {
             return this;
         }
 
-        public Builder backgroundPictureId(Long backgroundPictureId) {
-            this.backgroundPictureId = backgroundPictureId;
+        public Builder backgroundPicture(Image backgroundPicture) {
+            this.backgroundPicture = backgroundPicture;
             return this;
         }
 

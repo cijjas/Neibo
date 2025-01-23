@@ -53,7 +53,7 @@ public class WorkerServiceImplTest {
         assertEquals(address, worker.getAddress());
         assertEquals(businessName, worker.getBusinessName());
         assertEquals(bio, worker.getBio());
-        assertEquals(backgroundPictureId, worker.getBackgroundPictureId().longValue());
+        assertEquals(backgroundPictureId, worker.getBackgroundPicture());
 
         verify(workerDao, times(1)).findWorker(workerId);
         verify(imageService, times(1)).findImage(backgroundPictureId);
@@ -75,7 +75,7 @@ public class WorkerServiceImplTest {
         assertEquals(phoneNumber, worker.getPhoneNumber());
         assertNull(worker.getBusinessName());
         assertNull(worker.getBio());
-        assertNull(worker.getBackgroundPictureId());
+        assertNull(worker.getBackgroundPicture());
         assertNull(worker.getAddress());
 
         verify(workerDao, times(1)).findWorker(workerId);
@@ -97,7 +97,7 @@ public class WorkerServiceImplTest {
         assertNull(worker.getPhoneNumber());
         assertNull(worker.getBusinessName());
         assertNull(worker.getBio());
-        assertNull(worker.getBackgroundPictureId());
+        assertNull(worker.getBackgroundPicture());
         assertNull(worker.getAddress());
 
         verify(workerDao, times(1)).findWorker(workerId);
