@@ -20,7 +20,7 @@ public class UserUpdateValidator implements ConstraintValidator<UserUpdateConstr
 
     @Override
     public boolean isValid(UserDto userDto, ConstraintValidatorContext constraintValidatorContext) {
-        System.out.println("USER UPDATE VALIDATOR");
+//        System.out.println("USER UPDATE VALIDATOR");
 //        System.out.println("User Id " + userDto.getUserId());
 //        System.out.println("User Role" + userDto.getUserRole());
 //        System.out.println("Neighborhood" + userDto.getNeighborhood());

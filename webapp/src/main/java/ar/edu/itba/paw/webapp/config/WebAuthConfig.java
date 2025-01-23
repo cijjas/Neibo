@@ -88,7 +88,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     public LocalValidatorFactoryBean validatorFactoryBean(AutowireCapableBeanFactory beanFactory) {
         LocalValidatorFactoryBean factoryBean = new LocalValidatorFactoryBean();
         factoryBean.setConstraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory));
-        // This is required so the Group Sequences fail instantly instead of executing the whole sequence
+        // This is required so the Group Sequences fail instantly instead of executing the whole sequence (causing exceptions)
         factoryBean.getValidationPropertyMap().put("hibernate.validator.fail_fast", "true");
         return factoryBean;
     }
@@ -232,14 +232,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.setAllowedOrigins(Collections.singletonList(ALL));
         corsConfiguration.setAllowedHeaders(Arrays.asList(
                 "Origin",
-                "Access-Control-Allow-Origin",
                 "Content-Type",
                 "Accept",
                 "Authorization",
-                "Origin, Accept",
-                "X-Requested-With",
-                "Access-Control-RequestForm-Method",
-                "Access-Control-RequestForm-Headers",
+                "X-Requested-With", // sus
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers",
                 "X-User-URL",
                 "X-Neighborhood-URL",
                 "X-Workers-Neighborhood-URL",
@@ -250,14 +248,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         ));
         corsConfiguration.setExposedHeaders(Arrays.asList(
                 "Origin",
-                "Access-Control-Allow-Origin",
                 "Content-Type",
                 "Accept",
                 "Authorization",
-                "Origin, Accept",
                 "X-Requested-With",
-                "Access-Control-RequestForm-Method",
-                "Access-Control-RequestForm-Headers",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers",
                 "X-User-URL",
                 "X-Neighborhood-URL",
                 "X-Workers-Neighborhood-URL",

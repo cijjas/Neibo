@@ -125,7 +125,6 @@ public class FormAccessControlHelper {
     public boolean canUpdateUser(long userId, String neighborhood, String userRole){
         LOGGER.info("Verifying combination of Neighborhood and User Role");
 
-        System.out.println("USER UPDATE AUTHENTICATION");
         Authentication authentication = authHelper.getAuthentication();
 
         if (authHelper.isAnonymous(authentication))

@@ -193,13 +193,8 @@ public class PathAccessControlHelper {
         return neighborhoodId == BaseNeighborhood.WORKERS.getId() || neighborhoodId == authHelper.getRequestingUser(authentication).getNeighborhoodId();
     }
     // Quite complex
-    public boolean canUpdateUser(UriInfo uriInfo, String neighborhood, String userRole){
+    public boolean canUpdateUser(long userId, String neighborhood, String userRole){
         LOGGER.info("Verifying combination of Neighborhood and User Role");
-
-        System.out.println("USER UPDATE AUTHENTICATION");
-        System.out.println(uriInfo.getAbsolutePath());
-
-        long userId = 4;
 
         Authentication authentication = authHelper.getAuthentication();
 

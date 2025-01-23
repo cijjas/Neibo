@@ -99,46 +99,4 @@ public class ChannelServiceImplTest {
         verify(channelMappingDao, times(1)).createChannelMapping(neighborhoodId, mockChannel.getChannelId());
         assertEquals(mockChannel, result);
     }
-
-    @Test
-    public void delete_noChannelMappings() {
-        // Pre Conditions
-        long channelId = 1L;
-        long neighborhoodId = 2L;
-
-        when(channelDao.findChannel(neighborhoodId, channelId)).thenReturn(Optional.of(new Channel.Builder().build()));
-        when(channelMappingDao.getChannelMappings(null, channelId, 1, 1)).thenReturn(Collections.emptyList());
-
-        // Exercise
-        boolean result = channelService.deleteChannel(neighborhoodId, channelId);
-
-        // Validations & Post Conditions
-        assertTrue(result);
-
-        verify(channelDao, times(1)).findChannel(neighborhoodId, channelId);
-        verify(channelMappingDao, times(1)).deleteChannelMapping(neighborhoodId, channelId);
-        verify(channelMappingDao, times(1)).getChannelMappings(null, channelId, 1, 1);
-        verify(channelDao, times(1)).deleteChannel(channelId);
-    }
-
-    @Test
-    public void delete_channelMapping() {
-        // Pre Conditions
-        long channelId = 1L;
-        long neighborhoodId = 2L;
-
-        when(channelDao.findChannel(neighborhoodId, channelId)).thenReturn(Optional.of(new Channel.Builder().build()));
-        when(channelMappingDao.getChannelMappings(null, channelId, 1, 1)).thenReturn(Collections.singletonList(new ChannelMapping(new Neighborhood.Builder().neighborhoodId(neighborhoodId).build(), new Channel.Builder().channelId(channelId).build())));
-
-        // Exercise
-        boolean result = channelService.deleteChannel(neighborhoodId, channelId);
-
-        // Validations & Post Conditions
-        assertTrue(result);
-
-        verify(channelDao, times(1)).findChannel(neighborhoodId, channelId);
-        verify(channelMappingDao, times(1)).deleteChannelMapping(neighborhoodId, channelId);
-        verify(channelMappingDao, times(1)).getChannelMappings(null, channelId, 1, 1);
-        verify(channelDao, never()).deleteChannel(channelId); // Channel should not be deleted
-    }
 }

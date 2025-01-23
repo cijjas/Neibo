@@ -152,7 +152,8 @@ public class UserController {
 
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canUpdateUser(uriInfo, #updateForm.neighborhood, #updateForm.userRole)")
+    // until we get an answer...
+    // @PreAuthorize("@pathAccessControlHelper.canUpdateUser(userId, #updateForm.neighborhood, #updateForm.userRole)")
     @Validated(UpdateSequence.class)
     public Response updateUser(
             @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,

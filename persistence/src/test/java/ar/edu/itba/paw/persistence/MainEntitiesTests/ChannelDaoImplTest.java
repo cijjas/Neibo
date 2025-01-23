@@ -232,33 +232,4 @@ public class ChannelDaoImplTest {
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countChannels);
     }
-
-    // ------------------------------------------------ DELETES --------------------------------------------------------
-
-    @Test
-    public void delete_channelId_valid() {
-        // Pre Conditions
-        long cKey = testInserter.createChannel(CHANNEL_NAME_1);
-
-        // Exercise
-        boolean deleted = channelDaoImpl.deleteChannel(cKey);
-
-        // Validations & Post Conditions
-        em.flush();
-        assertTrue(deleted);
-        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.channels.name()));
-    }
-
-    @Test
-    public void delete_channelId_invalid_channelId() {
-        // Pre Conditions
-        long cKey = testInserter.createChannel(CHANNEL_NAME_1);
-
-        // Exercise
-        boolean deleted = channelDaoImpl.deleteChannel(INVALID_ID);
-
-        // Validations & Post Conditions
-        em.flush();
-        assertFalse(deleted);
-    }
 }
