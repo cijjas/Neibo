@@ -156,13 +156,16 @@ public class PathAccessControlHelper {
         LOGGER.info("Verifying User List Accessibility");
         Authentication authentication = authHelper.getAuthentication();
 
+        if (authHelper.isAnonymous(authentication))
+            return false;
+
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
         if (neighborhood == null)
             return false;
 
-        if (authHelper.isAnonymous(authentication) || authHelper.isUnverifiedOrRejected(authentication))
+        if (authHelper.isUnverifiedOrRejected(authentication))
             return false;
 
         // Workers, Neighbors & Administrators

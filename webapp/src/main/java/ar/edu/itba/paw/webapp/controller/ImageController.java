@@ -62,7 +62,7 @@ public class ImageController {
             return builder.cacheControl(cacheControl).build();
 
         // Return image bytes directly
-        return Response.ok(image.getImage(), MediaType.APPLICATION_OCTET_STREAM)
+        return Response.ok((StreamingOutput) output -> output.write((image.getImage())), MediaType.APPLICATION_OCTET_STREAM)
                 .cacheControl(cacheControl)
                 .tag(imageHashCode)
                 .build();

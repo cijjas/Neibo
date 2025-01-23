@@ -39,7 +39,7 @@ public class NeighborhoodDto {
         UriBuilder eventsUri = self.clone().path(Endpoint.EVENTS);
         UriBuilder postsUri = self.clone().path(Endpoint.POSTS);
         UriBuilder postsCountUri = self.clone().path(Endpoint.POSTS).path(Endpoint.COUNT);
-        UriBuilder usersUri = self.clone().path(Endpoint.USERS);
+        UriBuilder usersUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).queryParam(QueryParameter.IN_NEIGHBORHOOD, self.build());
 
         links.setSelf(self.build());
         links.setChannels(channelsUri.build());
