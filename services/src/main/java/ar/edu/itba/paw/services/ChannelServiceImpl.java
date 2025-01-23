@@ -65,20 +65,4 @@ public class ChannelServiceImpl implements ChannelService {
 
         return PaginationUtils.calculatePages(channelDao.countChannels(neighborhoodId), size);
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean deleteChannel(long neighborhoodId, long channelId) {
-        LOGGER.info("Deleting Channel {} in Neighborhood {}", channelId, neighborhoodId);
-
-        channelDao.findChannel(neighborhoodId, channelId).orElseThrow(NotFoundException::new);
-        channelMappingDao.deleteChannelMapping(neighborhoodId, channelId); // What happens to the posts here?
-
-        // If this channel was only used in one Neighborhood then it an be safely deleted
-        if(channelMappingDao.getChannelMappings(null, channelId, 1, 1).isEmpty())
-            channelDao.deleteChannel(channelId); // Does this cause the posts to be deleted? and so do the likes and comments? test this?
-
-        return true;
-    }
 }

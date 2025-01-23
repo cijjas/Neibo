@@ -93,19 +93,4 @@ public class ChannelDaoImpl implements ChannelDao {
 
         return query.getSingleResult().intValue();
     }
-
-    // -------------------------------------------- CHANNELS DELETE ----------------------------------------------------
-
-    @Override
-    public boolean deleteChannel(long channelId) {
-        LOGGER.info("Deleting Channel with Channel Id {}", channelId);
-
-        Channel channel = em.find(Channel.class, channelId);
-        if (channel == null) {
-            return false;
-        }
-
-        em.remove(channel);
-        return true;
-    }
 }

@@ -143,23 +143,5 @@ public class ChannelController {
                 .tag(channelHashCode)
                 .build();
     }
-
-    @DELETE
-    @Path("{" + PathParameter.CHANNEL_ID + "}")
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
-    public Response deleteChannel(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.CHANNEL_ID) @GenericIdConstraint long channelId
-    ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
-
-        // Deletion Attempt
-        if (cs.deleteChannel(neighborhoodId, channelId))
-            return Response.noContent()
-                    .build();
-
-        return Response.status(Response.Status.NOT_FOUND)
-                .build();
-    }
 }
 

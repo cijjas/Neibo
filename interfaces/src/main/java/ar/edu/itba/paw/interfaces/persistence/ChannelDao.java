@@ -20,8 +20,4 @@ public interface ChannelDao {
     List<Channel> getChannels(long neighborhoodId, int page, int size);
 
     int countChannels(long neighborhoodId);
-
-    // -------------------------------------------- CHANNELS DELETE ----------------------------------------------------
-
-    boolean deleteChannel(long channelId);
 }
