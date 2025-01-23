@@ -112,7 +112,7 @@ public class FormAccessControlHelper {
 
         Authentication authentication = authHelper.getAuthentication();
 
-        if (authHelper.isSuperAdministrator(authentication))
+        if (!authHelper.isAnonymous(authentication) && authHelper.isSuperAdministrator(authentication))
             return true;
 
         long neighborhoodId = extractFirstId(neighborhood);
