@@ -613,9 +613,6 @@ ON CONFLICT (departmentid) DO NOTHING;
 INSERT INTO departments (departmentid, department)
 VALUES (21, 'OTHER')
 ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department)
-VALUES (22, 'NONE')
-ON CONFLICT (departmentid) DO NOTHING;
 
 -- Inserting Professions if not exists
 INSERT INTO professions (professionid, profession)
