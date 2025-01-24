@@ -140,10 +140,13 @@ public class ProductController {
             @Valid @NotNull ProductDto createForm
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
+        System.out.println(createForm);
 
         // Creation & ETag Generation
         final Product product = ps.createProduct(extractFirstId(createForm.getUser()), createForm.getName(), createForm.getDescription(), createForm.getPrice(), createForm.getRemainingUnits(), createForm.getUsed(), extractFirstId(createForm.getDepartment()), extractFirstIds(createForm.getImages()));
         String productHashCode = String.valueOf(product.hashCode());
+
+        System.out.println("getting here");
 
         // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();

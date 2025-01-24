@@ -109,7 +109,6 @@ public class RequestController {
 
     @GET
     @Path(Endpoint.COUNT)
-    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#requestForm.requestedBy, #requestForm.forProduct)")
     public Response countRequests(
             @Valid @BeanParam RequestForm requestForm
     ) {
