@@ -38,7 +38,7 @@ public class ResourceDto {
         String resourceId = String.valueOf(resource.getResourceId());
 
         UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder resourceUri = uriInfo.getBaseUriBuilder().path(Endpoint.RESOURCES).path(resourceId);
+        UriBuilder resourceUri = neighborhoodUri.clone().path(Endpoint.RESOURCES).path(resourceId);
 
         links.setSelf(resourceUri.build());
         links.setNeighborhood(neighborhoodUri.build());
