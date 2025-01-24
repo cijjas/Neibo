@@ -53,7 +53,7 @@ public class WorkerServiceImplTest {
         assertEquals(address, worker.getAddress());
         assertEquals(businessName, worker.getBusinessName());
         assertEquals(bio, worker.getBio());
-        assertEquals(backgroundPictureId, worker.getBackgroundPicture());
+        assertEquals((Long) backgroundPictureId, worker.getBackgroundPicture().getImageId());
 
         verify(workerDao, times(1)).findWorker(workerId);
         verify(imageService, times(1)).findImage(backgroundPictureId);
