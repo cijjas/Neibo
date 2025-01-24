@@ -36,7 +36,9 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
 
   ngOnInit(): void {
     const workerId = this.route.snapshot.paramMap.get('id');
-    if (workerId) this.loadWorker(workerId);
+    if (workerId) {
+      this.loadWorker(workerId);
+    }
   }
 
   loadWorker(id: string): void {
@@ -44,7 +46,9 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
       next: (worker) => {
         this.worker = worker;
       },
-      error: (err) => console.error('Error loading worker:', err),
+      error: (err) => {
+        console.error('Error loading worker:', err);
+      },
     });
   }
 

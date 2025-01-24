@@ -77,7 +77,6 @@ export class ServiceProvidersEditDialogComponent implements OnChanges {
     // Otherwise, upload the image first to get the URL
     this.imageService.createImage(this.imageFile).subscribe({
       next: (uploadedImageUrl) => {
-        console.log(uploadedImageUrl);
         // Construct the WorkerDto
         const updatedWorkerDto = {
           businessName: this.businessName,

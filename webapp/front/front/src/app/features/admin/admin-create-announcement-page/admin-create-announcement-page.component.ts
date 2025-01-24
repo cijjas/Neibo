@@ -196,8 +196,14 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     );
 
     // 2. Wait for all new tags to be created
-    forkJoin(createTagsObservables).subscribe({
+    const newTags$ = createTagsObservables.length
+      ? forkJoin(createTagsObservables)
+      : of([]); // <-- if no new tags, just emit [] immediately
+
+    newTags$.subscribe({
       next: (createdTags) => {
+        // Now this always fires
+
         // Extract `self` from newly created tags
         const createdTagUrls = createdTags
           .filter((t) => t !== null)
@@ -249,8 +255,6 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
               if (imageUrl) {
                 payload.image = imageUrl;
               }
-
-              console.log('Final Payload:', payload); // Debugging
               return this.postService.createPost(payload);
             })
           );

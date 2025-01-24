@@ -58,7 +58,6 @@ export class AuthService {
   // LOGIN
   login(mail: string, password: string): Observable<boolean> {
     this.tokenService.clearTokens();
-    console.log('?????HOLAAAS', mail, password)
 
     const headers = new HttpHeaders({
       Authorization: 'Basic ' + btoa(`${mail}:${password}`),
@@ -85,72 +84,68 @@ export class AuthService {
             this.tokenService.setRefreshToken(refreshToken);
           }
 
-          console.log('HOLAAAS')
           // Create observables for user, neighborhood, and workers neighborhood
           const userObs = userUrl
             ? this.http.get<UserDto>(userUrl).pipe(
-              switchMap((userDto) => {
-                if (userDto._links) {
-                  this.linkRegistry.registerLinks(userDto._links, 'user:');
-                }
-                const userRoleLink = userDto._links?.userRole;
-                if (userRoleLink) {
-                  const role = this.mapLinkToRole(userRoleLink);
-                  if (role) {
-                    this.setUserRole(role);
+                switchMap((userDto) => {
+                  if (userDto._links) {
+                    this.linkRegistry.registerLinks(userDto._links, 'user:');
                   }
-                }
-                return mapUser(this.http, userDto);
-              }),
-              tap((user) => {
-                this.userSessionService.setUserInformation(user);
-                console.log('user: ', user)
-                console.log('1. user role 2', this.userSessionService.getCurrentUser())
-                console.log('2. user role 2', this.getCurrentRole())
-                this.preferencesService.applyDarkMode(user.darkMode);
-              }),
-              catchError((error) => {
-                console.error('Error fetching user data:', error);
-                return of(null); // Continue even if user data fails
-              })
-            )
+                  const userRoleLink = userDto._links?.userRole;
+                  if (userRoleLink) {
+                    const role = this.mapLinkToRole(userRoleLink);
+                    if (role) {
+                      this.setUserRole(role);
+                    }
+                  }
+                  return mapUser(this.http, userDto);
+                }),
+                tap((user) => {
+                  this.userSessionService.setUserInformation(user);
+                  this.preferencesService.applyDarkMode(user.darkMode);
+                }),
+                catchError((error) => {
+                  console.error('Error fetching user data:', error);
+                  return of(null); // Continue even if user data fails
+                })
+              )
             : of(null);
 
           const neighObs = neighUrl
             ? this.http.get<NeighborhoodDto>(neighUrl).pipe(
-              tap((neighDto) => {
-                if (neighDto._links) {
-                  this.linkRegistry.registerLinks(
-                    neighDto._links,
-                    'neighborhood:'
+                tap((neighDto) => {
+                  if (neighDto._links) {
+                    this.linkRegistry.registerLinks(
+                      neighDto._links,
+                      'neighborhood:'
+                    );
+                  }
+                  this.userSessionService.setNeighborhoodInformation(
+                    mapNeighborhood(neighDto)
                   );
-                }
-                this.userSessionService.setNeighborhoodInformation(
-                  mapNeighborhood(neighDto)
-                );
-              }),
-              catchError((error) => {
-                console.error('Error fetching neighborhood data:', error);
-                return of(null); // Continue even if neighborhood data fails
-              })
-            )
+                }),
+                catchError((error) => {
+                  console.error('Error fetching neighborhood data:', error);
+                  return of(null); // Continue even if neighborhood data fails
+                })
+              )
             : of(null);
 
           const workersNeighObs = workersNeighUrl
             ? this.http.get<NeighborhoodDto>(workersNeighUrl).pipe(
-              tap((workersNeighDto) => {
-                if (workersNeighDto._links) {
-                  this.linkRegistry.registerLinks(
-                    workersNeighDto._links,
-                    'workerNeighborhood:'
-                  );
-                }
-              }),
-              catchError((error) => {
-                console.error('Error fetching workers neighborhood:', error);
-                return of(null); // Continue even if workers neighborhood data fails
-              })
-            )
+                tap((workersNeighDto) => {
+                  if (workersNeighDto._links) {
+                    this.linkRegistry.registerLinks(
+                      workersNeighDto._links,
+                      'workerNeighborhood:'
+                    );
+                  }
+                }),
+                catchError((error) => {
+                  console.error('Error fetching workers neighborhood:', error);
+                  return of(null); // Continue even if workers neighborhood data fails
+                })
+              )
             : of(null);
 
           // Use forkJoin to execute all observables in parallel
@@ -171,28 +166,22 @@ export class AuthService {
 
   // REFRESH TOKEN
   refreshToken(): Observable<boolean> {
-    console.log('refreshing token');
     const refreshToken = this.tokenService.getRefreshToken();
     const authToken = this.tokenService.getAccessToken();
-    console.log(`refresh: ref ${refreshToken}`);
-    console.log(`refresh: acc ${authToken}`);
 
     if (!refreshToken) {
-      console.log('no refresh token');
       return of(false);
     }
 
     const url = `${this.apiServerUrl}/`;
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${refreshToken}`
+      Authorization: `Bearer ${refreshToken}`,
     });
 
     return this.http.get<any>(url, { headers, observe: 'response' }).pipe(
       tap((response) => {
-        console.log('Refresh response:', response);
         const newAccessToken =
           response.body?.accessToken || response.headers.get('X-Access-Token');
-        console.log('new' + newAccessToken);
         if (!newAccessToken) {
           throw new Error('No tokens returned in refresh response');
         }

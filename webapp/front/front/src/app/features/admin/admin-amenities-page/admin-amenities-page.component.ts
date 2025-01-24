@@ -6,6 +6,7 @@ import {
   HateoasLinksService,
   ToastService,
 } from '@core/index';
+
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

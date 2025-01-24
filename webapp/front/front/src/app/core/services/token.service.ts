@@ -31,7 +31,6 @@ export class TokenService {
   public clearTokens(): void {
     localStorage.removeItem(this.authTokenKey);
     localStorage.removeItem(this.refreshTokenKey);
-    console.log('Tokens have been cleared from localStorage.');
   }
 
   public hasTokens(): boolean {
@@ -41,7 +40,6 @@ export class TokenService {
   public isAccessTokenExpiringSoon(): boolean {
     const token = this.getAccessToken();
     if (!token) {
-      console.log('No access token found.');
       return false;
     }
 

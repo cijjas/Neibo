@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class TagDaoImpl implements TagDao {
@@ -63,27 +64,56 @@ public class TagDaoImpl implements TagDao {
     public List<Tag> getTags(long neighborhoodId, Long postId, int page, int size) {
         LOGGER.debug("Selecting Tags with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
-        TypedQuery<Long> query = null;
+        // 1) Build the SELECT DISTINCT query for IDs + the 'tag' field (for ordering).
+        String queryStr;
+        TypedQuery<Object[]> idQuery;
+
         if (postId != null) {
-            query = em.createQuery("SELECT t.tagId FROM Tag t JOIN t.posts p WHERE p.postId = :postId ORDER BY t.tagId", Long.class)
+            queryStr =
+                    "SELECT DISTINCT t.tagId, t.tag " +
+                            "FROM Tag t " +
+                            "JOIN t.posts p " +
+                            "WHERE p.postId = :postId " +
+                            "ORDER BY t.tag";    // alphabetical
+            idQuery = em.createQuery(queryStr, Object[].class)
                     .setParameter("postId", postId);
         } else {
-            query = em.createQuery(
-                            "SELECT DISTINCT t.tagId FROM Tag t JOIN t.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId ORDER BY t.tagId", Long.class)
+            queryStr =
+                    "SELECT DISTINCT t.tagId, t.tag " +
+                            "FROM Tag t " +
+                            "JOIN t.neighborhoods n " +
+                            "WHERE n.neighborhoodId = :neighborhoodId " +
+                            "ORDER BY t.tag";    // alphabetical
+            idQuery = em.createQuery(queryStr, Object[].class)
                     .setParameter("neighborhoodId", neighborhoodId);
         }
-        query.setFirstResult((page - 1) * size)
-                .setMaxResults(size);
-        List<Long> tagIds = query.getResultList();
 
-        if (!tagIds.isEmpty()) {
-            TypedQuery<Tag> tagQuery = em.createQuery(
-                    "SELECT t FROM Tag t WHERE t.tagId IN :tagIds ORDER BY t.tagId", Tag.class);
-            tagQuery.setParameter("tagIds", tagIds);
-            return tagQuery.getResultList();
+        // Apply pagination on the ID+tag query
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+
+        List<Object[]> results = idQuery.getResultList();
+        if (results.isEmpty()) {
+            return Collections.emptyList();
         }
 
-        return Collections.emptyList();
+        // 2) Extract just the IDs. (We don’t need the 'tag' column itself here,
+        //    but we had to select it so we could ORDER BY it.)
+        List<Long> tagIds = results.stream()
+                .map(obj -> (Long) obj[0])
+                .collect(Collectors.toList());
+
+        // 3) Fetch the Tag entities by those IDs,
+        //    re-ordering them alphabetically by t.tag
+        TypedQuery<Tag> tagQuery = em.createQuery(
+                "SELECT t FROM Tag t " +
+                        "WHERE t.tagId IN :tagIds " +
+                        "ORDER BY t.tag",  // alphabetical again
+                Tag.class
+        );
+        tagQuery.setParameter("tagIds", tagIds);
+
+        return tagQuery.getResultList();
     }
 
 
@@ -91,26 +121,26 @@ public class TagDaoImpl implements TagDao {
     public int countTags(long neighborhoodId, Long postId) {
         LOGGER.debug("Counting Tags with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
-        TypedQuery<Long> query = null;
+        String queryStr;
+        TypedQuery<Long> query;
+
         if (postId != null) {
-            query = em.createQuery("SELECT t.tagId FROM Tag t JOIN t.posts p WHERE p.postId = :postId ORDER BY t.tagId", Long.class)
+            queryStr = "SELECT COUNT(DISTINCT t.tagId) " +
+                    "FROM Tag t " +
+                    "JOIN t.posts p " +
+                    "WHERE p.postId = :postId";
+            query = em.createQuery(queryStr, Long.class)
                     .setParameter("postId", postId);
         } else {
-            query = em.createQuery(
-                            "SELECT DISTINCT t.tagId FROM Tag t JOIN t.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId ORDER BY t.tagId", Long.class)
+            queryStr = "SELECT COUNT(DISTINCT t.tagId) " +
+                    "FROM Tag t " +
+                    "JOIN t.neighborhoods n " +
+                    "WHERE n.neighborhoodId = :neighborhoodId";
+            query = em.createQuery(queryStr, Long.class)
                     .setParameter("neighborhoodId", neighborhoodId);
         }
 
-        List<Long> tagIds = query.getResultList();
-
-        if (!tagIds.isEmpty()) {
-            TypedQuery<Tag> tagQuery = em.createQuery(
-                    "SELECT t FROM Tag t WHERE t.tagId IN :tagIds ORDER BY t.tagId", Tag.class);
-            tagQuery.setParameter("tagIds", tagIds);
-            return tagQuery.getResultList().size();
-        }
-
-        return 0;
+        return query.getSingleResult().intValue();
     }
 
     // ---------------------------------------------- TAGS DELETE ------------------------------------------------------

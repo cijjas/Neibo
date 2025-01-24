@@ -79,12 +79,10 @@ export class ServiceProvidersJoinNeighborhoodsComponent
 
   ngAfterViewChecked(): void {
     if (!this.listItemsRef || !this.listItemsRef.nativeElement) {
-      // console.log('ListItemsRef not yet defined');
       return;
     }
 
     if (!this.isListenerAttached) {
-      console.log('Attaching scroll listener to listItemsRef');
       this.listItemsRef.nativeElement.addEventListener(
         'scroll',
         this.onListScroll.bind(this)
@@ -307,12 +305,10 @@ export class ServiceProvidersJoinNeighborhoodsComponent
   reinitializeScrollListener(): void {
     setTimeout(() => {
       if (!this.listItemsRef || !this.listItemsRef.nativeElement) {
-        // console.log('ListItemsRef not yet defined for reinitialization');
         return;
       }
 
       if (!this.isListenerAttached) {
-        // console.log('Reattaching scroll listener to listItemsRef');
         this.listItemsRef.nativeElement.addEventListener(
           'scroll',
           this.onListScroll.bind(this)

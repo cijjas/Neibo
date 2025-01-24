@@ -251,7 +251,7 @@ export class FeedCreatePostPageComponent implements OnInit {
       .filter((tag) => tag.self)
       .map((tag) => tag.self);
 
-    // 1. Create new tags on the server
+    // 1. Create new tags on the server only for newTags
     const createTagsObservables = newTags.map((tag) =>
       this.tagService.createTag(tag.name).pipe(
         switchMap((location: string | null) => {
@@ -259,7 +259,8 @@ export class FeedCreatePostPageComponent implements OnInit {
             console.error('Failed to create tag:', tag.name);
             return of(null);
           }
-          return this.tagService.getTag(location); // Fetch full tag details
+          // Fetch the newly created Tag resource to get its full details
+          return this.tagService.getTag(location);
         }),
         catchError((err) => {
           console.error('Error creating tag:', tag.name, err);
@@ -268,13 +269,21 @@ export class FeedCreatePostPageComponent implements OnInit {
       )
     );
 
-    forkJoin(createTagsObservables).subscribe({
-      next: (createdTags) => {
-        const createdTagUrls = createdTags
-          .filter((tag) => tag !== null)
-          .map((tag: Tag) => tag.self);
+    // IMPORTANT: If createTagsObservables is empty, forkJoin([]) completes without emitting
+    // so we replace it with `of([])` so the `next` block always fires.
+    const tagsForkJoin$ = createTagsObservables.length
+      ? forkJoin(createTagsObservables)
+      : of([]);
 
-        // Combine created tags and existing tags
+    tagsForkJoin$.subscribe({
+      next: (createdTags) => {
+        // 'createdTags' will be an array of Tag objects (or nulls), or [] if none were created
+
+        const createdTagUrls = createdTags
+          .filter((tag): tag is Tag => !!tag)
+          .map((tag) => tag.self);
+
+        // Combine any newly created Tag URLs + existing Tag URLs
         const allTagUrls = [...existingTagUrls, ...createdTagUrls];
 
         // 2. Patch tags into the form
@@ -285,15 +294,12 @@ export class FeedCreatePostPageComponent implements OnInit {
 
         // 3. Build the final payload
         const formValue = { ...this.createPostForm.value };
-
-        // Get the current user and create the post
         this.userSessionService
           .getCurrentUser()
           .pipe(
             take(1),
             switchMap((user) => {
               formValue.user = user.self;
-
               // Optionally handle image
               return this.createImageObservable(formValue.imageFile).pipe(
                 switchMap((imageUrl) => {
@@ -312,7 +318,7 @@ export class FeedCreatePostPageComponent implements OnInit {
                 `Your ${contentType} was created successfully!`,
                 'success'
               );
-              // Optionally navigate away
+              // Navigate away if needed
               this.router.navigate(['/posts'], {
                 queryParams: { inChannel: this.channel },
               });
@@ -328,7 +334,7 @@ export class FeedCreatePostPageComponent implements OnInit {
           });
       },
       error: (err) => {
-        console.error('Error creating tags:', err);
+        console.error('Error creating tags in forkJoin:', err);
       },
     });
   }

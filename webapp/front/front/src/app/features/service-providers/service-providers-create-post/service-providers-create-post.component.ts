@@ -23,6 +23,7 @@ export class ServiceProvidersCreatePostComponent {
   // Channel data
   channelList: Channel[] = [];
   channel: string;
+  workerId: string;
 
   // For image preview, etc.
   imagePreviewUrl: string | ArrayBuffer;
@@ -51,6 +52,7 @@ export class ServiceProvidersCreatePostComponent {
     // Listen to route queryParams for channel
     this.route.queryParams.subscribe((params) => {
       this.channel = params['inChannel'];
+      this.workerId = params['forWorker'];
     });
   }
 
@@ -85,8 +87,7 @@ export class ServiceProvidersCreatePostComponent {
         take(1),
         switchMap((user) => {
           formValue.user = user.self;
-          console.log('user' + formValue.user);
-          // Optionally handle image
+          formValue.channel = this.channel;
           return this.createImageObservable(formValue.imageFile).pipe(
             switchMap((imageUrl) => {
               if (imageUrl) {
@@ -98,14 +99,14 @@ export class ServiceProvidersCreatePostComponent {
         })
       )
       .subscribe({
-        next: () => {
+        next: (response) => {
           this.toastService.showToast(
             `Your post was created successfully!`,
             'success'
           );
-          // Optionally navigate away
-          this.router.navigate(['/posts'], {
-            queryParams: { inChannel: this.channel },
+          // Navigate the workerrs posts
+          this.router.navigate(['/services', 'profile', this.workerId], {
+            queryParams: { tab: 'posts' },
           });
         },
         error: (error) => {
