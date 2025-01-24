@@ -28,7 +28,8 @@ public class NeighborhoodDto {
 
         Links links = new Links();
 
-        String neighborhoodId = String.valueOf(neighborhood.getNeighborhoodId());
+        Long neighborhoodIdLong = neighborhood.getNeighborhoodId();
+        String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
         // Templating Test
         links.setPosts2("http://localhost:8080/neighborhoods/1/posts{?postedBy,inChannel,withTags*,withStatus,page,size}");
@@ -48,7 +49,7 @@ public class NeighborhoodDto {
         links.setPostsCount(postsCountUri.build());
         links.setUsers(usersUri.build());
 
-        if (!BaseNeighborhood.isABaseNeighborhood(neighborhood.getNeighborhoodId())) {
+        if (!BaseNeighborhood.isABaseNeighborhood(neighborhoodIdLong)) {
             UriBuilder amenitiesUri = self.clone().path(Endpoint.AMENITIES);
             UriBuilder attendanceUri = self.clone().path(Endpoint.ATTENDANCE);
             UriBuilder contactsUri = self.clone().path(Endpoint.CONTACTS);
@@ -83,6 +84,10 @@ public class NeighborhoodDto {
             links.setAnnouncements(postsUri.clone().queryParam(QueryParameter.IN_CHANNEL, announcementsChannelUri.clone().build()).build());
 
             links.setWorkers(workersUri.queryParam(QueryParameter.IN_NEIGHBORHOOD, links.getSelf()).build());
+        } else if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()){
+            UriBuilder workersChannelUri = channelsUri.clone().path(String.valueOf(BaseChannel.WORKERS.getId()));
+            links.setWorkerChannel(workersChannelUri.build());
+
         }
 
         dto.set_links(links);

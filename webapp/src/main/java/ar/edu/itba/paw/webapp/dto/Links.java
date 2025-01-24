@@ -68,6 +68,7 @@ public class Links {
     private URI announcementsChannel;
     private URI complaintsChannel;
     private URI feedChannel;
+    private URI workerChannel;
     private URI hotPostStatus;
     private URI trendingPostStatus;
     private URI nonePostStatus;
@@ -884,5 +885,13 @@ public class Links {
 
     public void setAffiliations(URI affiliations) {
         this.affiliations = affiliations;
+    }
+
+    public URI getWorkerChannel() {
+        return workerChannel;
+    }
+
+    public void setWorkerChannel(URI workerChannel) {
+        this.workerChannel = workerChannel;
     }
 }
