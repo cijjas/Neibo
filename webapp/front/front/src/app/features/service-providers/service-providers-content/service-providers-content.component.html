@@ -26,23 +26,25 @@
     >
       <div class="inner f-c-c-c">
         <!-- businessName -->
-        <div style="font-size: 18px; margin-bottom: 10px" class="c-services">
+        <div style="font-size: 2em; margin-bottom: 10px" class="c-services">
           <strong>{{ worker?.businessName }}</strong>
         </div>
 
-        <!-- Professions -->
+        <!-- Professions Section -->
         <div
-          class="f-r-c-c c-light-text c-services"
-          style="font-size: 13px"
+          class="f-r-c-c w-75"
+          style="gap: 0.5em; flex-wrap: wrap"
           *ngIf="worker?.professions?.length > 0"
         >
-          <a
-            class="profession-option"
-            *ngFor="let profession of worker?.professions"
-            (click)="setProfession(profession)"
-          >
-            {{ profession.displayName }}
-          </a>
+          <ng-container *ngFor="let profession of worker?.professions">
+            <span
+              class="profession-style"
+              (click)="setProfession(profession)"
+              title="Click to learn more"
+            >
+              {{ profession.displayName }}
+            </span>
+          </ng-container>
         </div>
 
         <!-- phone & address -->

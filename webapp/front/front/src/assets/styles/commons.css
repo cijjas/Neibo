@@ -331,6 +331,29 @@ p {
   align-items: center;
   gap: 1rem;
 }
+.f-c-c-e {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  gap: 1rem;
+}
+
+.f-c-e-e {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: end;
+  gap: 1rem;
+}
+
+.f-c-e-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  gap: 1rem;
+}
 
 .f-c-c-s {
   display: flex;

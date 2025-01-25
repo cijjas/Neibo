@@ -76,6 +76,7 @@ export class FeedPageComponent implements OnInit {
         error: (err) => console.error(err),
       });
   }
+  x;
 
   loadPosts(feedParams: {
     page: number;

@@ -36,12 +36,12 @@ export class ServiceProvidersContentComponent {
     if (prof === null) {
       this.router.navigate(['/services'], {
         relativeTo: this.route,
-        queryParams: { professions: null },
+        queryParams: { withProfession: null },
       });
     } else {
       this.router.navigate(['/services'], {
         relativeTo: this.route,
-        queryParams: { professions: prof.self },
+        queryParams: { withProfession: prof.self },
       });
     }
   }
