@@ -19,7 +19,7 @@ export class UserService {
     private http: HttpClient,
     private linkService: HateoasLinksService,
     private imageService: ImageService
-  ) { }
+  ) {}
 
   public getUser(userUrl: string): Observable<User> {
     return this.http
@@ -78,9 +78,10 @@ export class UserService {
     language: string,
     identification: number
   ): Observable<string | null> {
-
     let usersUrl: string = this.linkService.getLink(LinkKey.USERS);
-    let unverifiedUserRole: string = this.linkService.getLink(LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE)
+    let unverifiedUserRole: string = this.linkService.getLink(
+      LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE
+    );
 
     const body: UserDto = {
       name: name,
@@ -118,10 +119,13 @@ export class UserService {
     language: string,
     identification: number
   ): Observable<string | null> {
-
     let usersUrl: string = this.linkService.getLink(LinkKey.USERS);
-    let workerUserRole: string = this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
-    let workersNeighborhoodUrl: string = this.linkService.getLink(LinkKey.WORKERS_NEIGHBORHOOD);
+    let workerUserRole: string = this.linkService.getLink(
+      LinkKey.WORKER_USER_ROLE
+    );
+    let workersNeighborhoodUrl: string = this.linkService.getLink(
+      LinkKey.WORKERS_NEIGHBORHOOD
+    );
 
     const body: UserDto = {
       name: name,
@@ -131,7 +135,7 @@ export class UserService {
       userRole: workerUserRole,
       language: language,
       identification: identification,
-      neighborhood: workersNeighborhoodUrl
+      neighborhood: workersNeighborhoodUrl,
     };
 
     return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
@@ -198,18 +202,16 @@ export class UserService {
       .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
   }
 
-  public requestNeighborhood(
-    newNeighborhoodUrl: string
-  ): Observable<User> {
-    console.log("getti n h here");
-
+  public requestNeighborhood(newNeighborhoodUrl: string): Observable<User> {
     let userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
-    let unverifiedUserRole: string = this.linkService.getLink(LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE)
+    let unverifiedUserRole: string = this.linkService.getLink(
+      LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE
+    );
 
     let body: UserDto = {
       neighborhood: newNeighborhoodUrl,
-      userRole: unverifiedUserRole
-    }
+      userRole: unverifiedUserRole,
+    };
 
     return this.http
       .patch<UserDto>(userUrl, body)

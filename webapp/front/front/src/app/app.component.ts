@@ -27,10 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
     });
     this.channel.onmessage = (event) => {
       if (event.data.type === 'login') {
-        console.log('Login event received. Refreshing page...');
         window.location.reload();
       } else if (event.data.type === 'logout') {
-        console.log('Logout event received. Logging out...');
         this.authService.logout();
       }
     };

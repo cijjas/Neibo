@@ -130,23 +130,30 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       return;
     }
 
-    // Check if at least one image exists
+    // Ensure at least one image exists
     if (this.images.length === 0) {
       this.formErrors = 'Please upload at least one image for the product.';
       return;
     }
 
-    this.formatCurrency();
-
     // Extract and clean form data
     const rawValue = this.listingForm.value;
     const userSelf = this.linkService.getLink(LinkKey.USER_SELF);
+
+    // Clean the price value by removing currency formatting
+    const priceString = rawValue.price.replace(/[^0-9.]/g, ''); // Remove all non-numeric characters except `.`.
+    const price = parseFloat(priceString);
+
+    if (isNaN(price)) {
+      this.formErrors = 'Invalid price format.';
+      return;
+    }
 
     // Prepare product data
     const productData: any = {
       name: rawValue.title,
       description: rawValue.description,
-      price: rawValue.price.replace('$', ''), // Remove the $ sign before sending
+      price: price, // Send the price as a double
       used: rawValue.used,
       department: rawValue.departmentId,
       remainingUnits: rawValue.quantity,
@@ -154,6 +161,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       images: [],
     };
 
+    console.log(productData.price);
     // Upload images
     const imageUploadObservables = this.images.map((img) =>
       this.imageService.createImage(img.file)

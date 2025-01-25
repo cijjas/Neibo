@@ -86,8 +86,8 @@
                       product?.price
                         ? (
                             product.price
-                            | currency : "ARS" : "symbol" : "1.0-2"
-                          ).split(",")[0]
+                            | currency : "USD" : "symbol-narrow" : "1.0-2"
+                          ).split(".")[0]
                         : ""
                     }}
                   </span>
@@ -100,8 +100,8 @@
                           ? "," +
                             ((
                               product.price
-                              | currency : "ARS" : "symbol" : "1.0-2"
-                            ).split(",")[1] || "00")
+                              | currency : "USD" : "symbol-narrow" : "1.0-2"
+                            ).split(".")[1] || "00")
                           : ""
                       }}
                     </span>

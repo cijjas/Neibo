@@ -211,7 +211,10 @@ export class ServiceProvidersReviewsAndPostsComponent
   goToServicePostCreation() {
     this.router.navigate(['/services', 'posts', 'new'], {
       queryParams: {
-        inChannel: 'Give me the CHanneeeeel',
+        inChannel: this.linkService.getLink(
+          LinkKey.NEIGHBORHOOD_WORKER_CHANNEL
+        ),
+        forWorker: this.worker.self,
       },
     });
   }

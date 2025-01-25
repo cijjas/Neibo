@@ -252,7 +252,6 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   filterByTag(tagName: string): void {
     // Get the current query parameters
     const currentQueryParams = { ...this.route.snapshot.queryParams };
-    console.log(currentQueryParams['inChannel']);
 
     currentQueryParams['withTag'] = tagName;
 

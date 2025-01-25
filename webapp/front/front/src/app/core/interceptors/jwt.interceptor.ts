@@ -18,7 +18,7 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(
     private tokenService: TokenService,
     private authService: AuthService
-  ) { }
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -41,7 +41,6 @@ export class JwtInterceptor implements HttpInterceptor {
           !this.isRefreshing
         ) {
           this.isRefreshing = true; // Prevent multiple refresh attempts
-          console.log('Got 401, attempting refresh...');
 
           return this.authService.refreshToken().pipe(
             switchMap((success) => {
@@ -54,7 +53,7 @@ export class JwtInterceptor implements HttpInterceptor {
               const newToken = this.tokenService.getAccessToken();
               const newAuthReq = request.clone({
                 setHeaders: {
-                  Authorization: `Bearer ${newToken}`
+                  Authorization: `Bearer ${newToken}`,
                 },
               });
               return next.handle(newAuthReq);

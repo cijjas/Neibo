@@ -13,7 +13,7 @@
     "FRI": "Fri",
     "SAT": "Sat",
     "SUN": "Sun",
-    "DELETE_AMENITY_AMENITYNAME": "Delete Amenity '{{formValue}}'",
+    "DELETE_AMENITY_AMENITYNAME": "Delete Amenity '{{amenityName}}'",
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AMENITY": "Are you sure you want to delete this amenity?",
     "DELETE": "Delete",
     "CANCEL": "Cancel",

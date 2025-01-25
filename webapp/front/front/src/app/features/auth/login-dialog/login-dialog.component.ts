@@ -38,7 +38,7 @@ export class LoginDialogComponent implements OnInit {
     private router: Router,
     private linkStorage: HateoasLinksService,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
   ngOnInit() {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -76,7 +76,6 @@ export class LoginDialogComponent implements OnInit {
 
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-
       this.authService.login(email, password).subscribe({
         next: (success) => {
           this.loading = false;
