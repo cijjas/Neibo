@@ -45,7 +45,7 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
         }
       });
     this.subscriptions.add(userSub);
-    this.currentUserRole = this.authService.getCurrentRole();
+    this.currentUserRole = this.userSessionService.getCurrentRole();
 
     switch (this.currentUserRole) {
       case Roles.ADMINISTRATOR:

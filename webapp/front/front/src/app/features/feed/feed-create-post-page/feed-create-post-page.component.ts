@@ -67,7 +67,7 @@ export class FeedCreatePostPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userRole = this.authService.getCurrentRole();
+    const userRole = this.userSessionService.getCurrentRole();
     this.notWorker = userRole !== Roles.WORKER;
 
     // Build form

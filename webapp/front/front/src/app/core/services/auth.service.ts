@@ -33,7 +33,6 @@ import { PreferencesService } from './preferences.service';
 })
 export class AuthService {
   private readonly apiServerUrl = environment.apiBaseUrl;
-  private currentRole: Roles | null = null;
   private channel: BroadcastChannel;
 
   private roleMapping = {
@@ -95,7 +94,7 @@ export class AuthService {
                   if (userRoleLink) {
                     const role = this.mapLinkToRole(userRoleLink);
                     if (role) {
-                      this.setUserRole(role);
+                      this.userSessionService.setUserRole(role);
                     }
                   }
                   return mapUser(this.http, userDto);
@@ -227,19 +226,6 @@ export class AuthService {
   isLoggedIn(): boolean {
     const token = this.tokenService.getAccessToken();
     return !!token;
-  }
-
-  public setUserRole(role: Roles): void {
-    this.currentRole = role;
-    localStorage.setItem('currentUserRole', role);
-  }
-
-  public getCurrentRole(): Roles | null {
-    if (!this.currentRole) {
-      const saved = localStorage.getItem('currentUserRole') as Roles;
-      if (saved) this.currentRole = saved;
-    }
-    return this.currentRole;
   }
 
   public mapLinkToRole(link: string | null | undefined): Roles | null {

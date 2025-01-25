@@ -44,7 +44,8 @@ export class FeedControlBarComponent implements OnInit {
       this.currentUser = user;
     });
 
-    this.isNotAdmin = this.authService.getCurrentRole() != Roles.ADMINISTRATOR;
+    this.isNotAdmin =
+      this.userSessionService.getCurrentRole() != Roles.ADMINISTRATOR;
 
     this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
     this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);

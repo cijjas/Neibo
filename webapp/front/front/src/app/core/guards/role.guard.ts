@@ -31,7 +31,6 @@ export const RoleGuard = async (
     return true;
   }
 
-
   // 3) Get current user role from UserSessionService (asynchronously)
   const currentUser = userSessionService.getCurrentUser();
   if (!currentUser) {
@@ -39,8 +38,7 @@ export const RoleGuard = async (
     return router.createUrlTree(['/login']);
   }
 
-
-  const userRole = authService.getCurrentRole();
+  const userRole = userSessionService.getCurrentRole();
   // 4) Check if the user's role matches any required role
   if (requiredRoles.includes(userRole)) {
     // Authorized
