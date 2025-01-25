@@ -43,20 +43,29 @@ export class TagsFilterWidgetComponent implements OnInit {
 
         // Handle tags from query params
         const tagUrls = params['withTag'];
+
         if (tagUrls) {
+          // If there's a 'withTag' param, fetch those tags
           const tagUrlArray = Array.isArray(tagUrls) ? tagUrls : [tagUrls];
           this.fetchAndApplyTags(tagUrlArray);
+        } else {
+          // If there's no 'withTag' param, clear the applied items
+          this.appliedItems = [];
         }
 
         this.loadTagsFromApi();
       } else if (this.mode === 'professions') {
         // Handle professions from query params
         const professionUrls = params['withProfession'];
+
         if (professionUrls) {
           const professionUrlArray = Array.isArray(professionUrls)
             ? professionUrls
             : [professionUrls];
           this.fetchAndApplyProfessions(professionUrlArray);
+        } else {
+          // If there's no 'withProfession' param, clear the applied items
+          this.appliedItems = [];
         }
 
         this.loadProfessions();
@@ -125,6 +134,7 @@ export class TagsFilterWidgetComponent implements OnInit {
   }
 
   addItem(item: { name: string; self: string }): void {
+    // Only add if it's not already in the appliedItems array
     if (!this.appliedItems.find((t) => t.self === item.self)) {
       this.appliedItems.push(item);
 
@@ -135,6 +145,7 @@ export class TagsFilterWidgetComponent implements OnInit {
         queryParams[key] = [];
       }
 
+      // Ensure queryParams[key] is an array, then push the new self link
       queryParams[key] = Array.isArray(queryParams[key])
         ? [...queryParams[key], item.self]
         : [queryParams[key], item.self];
@@ -153,10 +164,16 @@ export class TagsFilterWidgetComponent implements OnInit {
     const key = this.mode === 'tags' ? 'withTag' : 'withProfession';
 
     if (Array.isArray(queryParams[key])) {
+      // Remove the item from the array
       queryParams[key] = queryParams[key].filter(
         (value: string) => value !== item.self
       );
+      // If array is now empty, remove the param altogether
+      if (queryParams[key].length === 0) {
+        delete queryParams[key];
+      }
     } else if (queryParams[key] === item.self) {
+      // Single string case
       delete queryParams[key];
     }
 
