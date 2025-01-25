@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.validation.validators.specific;
 import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;

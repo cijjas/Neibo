@@ -182,12 +182,6 @@
                 <artifactId>hibernate-java8</artifactId>
                 <version>${org.hibernate.version}</version>
             </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons.io.version}</version>
-                <scope>compile</scope>
-            </dependency>
 
             <!-- Testing -->
             <dependency>
@@ -320,6 +314,7 @@
                 <artifactId>jersey-media-multipart</artifactId>
                 <version>${jersey.version}</version>
             </dependency>
+
             <!-- For PATCH support -->
             <dependency>
                 <groupId>javax.ws.rs</groupId>
@@ -333,28 +328,6 @@
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-xml</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
-            </dependency>
-
-
 
             <!--ADD DEPENDENCIES HERE-->
         </dependencies>

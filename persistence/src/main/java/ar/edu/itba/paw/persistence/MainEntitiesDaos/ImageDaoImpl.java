@@ -3,13 +3,13 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Entities.Image;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
@@ -29,8 +29,7 @@ public class ImageDaoImpl implements ImageDao {
 
         byte[] imageBytes;
         try {
-            // Read the input stream into a byte array
-            imageBytes = IOUtils.toByteArray(imageStream);
+            imageBytes = readInputStreamToByteArray(imageStream);
         } catch (IOException e) {
             throw new UnexpectedException("An error occurred while storing the image");
         }
@@ -64,4 +63,17 @@ public class ImageDaoImpl implements ImageDao {
         }
         return false;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private byte[] readInputStreamToByteArray(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] data = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, bytesRead);
+        }
+        return buffer.toByteArray();
+    }
+
 }

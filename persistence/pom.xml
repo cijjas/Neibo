@@ -73,10 +73,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-java8</artifactId>
         </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
 
     </dependencies>
 

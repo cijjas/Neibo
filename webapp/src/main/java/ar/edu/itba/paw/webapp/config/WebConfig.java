@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,13 +64,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public XmlMapper xmlMapper() {
-        XmlMapper xmlMapper = new XmlMapper();
-        xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        return xmlMapper;
-    }
-
-    @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         ds.setDriverClass(org.postgresql.Driver.class);
@@ -92,7 +84,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         factoryBean.setJpaVendorAdapter(vendorAdapter);
         final Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "none");
+//        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
 
         factoryBean.setJpaProperties(properties);
