@@ -161,6 +161,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       images: [],
     };
 
+    console.log(productData.price);
     // Upload images
     const imageUploadObservables = this.images.map((img) =>
       this.imageService.createImage(img.file)

@@ -125,8 +125,8 @@
                           purchase.product?.price
                             ? (
                                 purchase.product.price
-                                | currency : "ARS" : "symbol" : "1.0-2"
-                              ).split(",")[0]
+                                | currency : "USD" : "symbol-narrow" : "1.0-2"
+                              ).split(".")[0]
                             : ""
                         }}
                       </span>
@@ -139,8 +139,8 @@
                               ? "," +
                                 ((
                                   purchase.product.price
-                                  | currency : "ARS" : "symbol" : "1.0-2"
-                                ).split(",")[1] || "00")
+                                  | currency : "USD" : "symbol-narrow" : "1.0-2"
+                                ).split(".")[1] || "00")
                               : ""
                           }}
                         </span>
@@ -242,8 +242,8 @@
                             request.product?.price
                               ? (
                                   request.product.price
-                                  | currency : "ARS" : "symbol" : "1.0-2"
-                                ).split(",")[0]
+                                  | currency : "USD" : "symbol-narrow" : "1.0-2"
+                                ).split(".")[0]
                               : ""
                           }}
                         </span>
@@ -256,8 +256,11 @@
                                 ? "," +
                                   ((
                                     request.product.price
-                                    | currency : "ARS" : "symbol" : "1.0-2"
-                                  ).split(",")[1] || "00")
+                                    | currency
+                                      : "USD"
+                                      : "symbol-narrow"
+                                      : "1.0-2"
+                                  ).split(".")[1] || "00")
                                 : ""
                             }}
                           </span>
