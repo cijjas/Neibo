@@ -580,3 +580,7 @@ p {
 }
 
 /* ...................... */
+
+.hidden {
+  display: none !important;
+}

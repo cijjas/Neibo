@@ -1,7 +1,7 @@
 // @index('./**/*.ts', f => `export * from '${f.path}'`)
 export * from './components/background-clouds/background-clouds.component';
 export * from './components/background-drawing/background-drawing.component';
-export * from './components/index';
+export * from './components/tags-filter-widget/tags-filter-widget.component';
 export * from './components/landing-page-navbar/landing-page-navbar.component';
 export * from '@shared/components/sidebar/sidebar.component';
 export * from './components/navbar/navbar.component';
@@ -11,6 +11,8 @@ export * from './components/right-column/right-column.component';
 export * from './components/confirmation-dialog/confirmation-dialog.component';
 export * from './components/success-toast/success-toast.component';
 export * from './components/wave-footer/wave-footer.component';
+export * from './layouts/main-layout/main-layout.component';
+export * from './layouts/public-layout/public-layout.component';
 export * from './dtos/app-dtos';
 export * from './models/affiliation.model';
 export * from './models/amenity.model';
