@@ -55,6 +55,7 @@ public class TestConstants {
     public static final int NINETEEN_ELEMENTS = 19;
 
     public static final Long EMPTY_FIELD = null;
+    public static final Boolean EMPTY_BOOLEAN_FIELD = null;
 
     private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     public static Date DATE_1;

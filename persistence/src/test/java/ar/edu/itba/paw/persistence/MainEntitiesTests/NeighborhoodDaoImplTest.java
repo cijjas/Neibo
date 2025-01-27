@@ -149,10 +149,30 @@ public class NeighborhoodDaoImplTest {
         testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_BOOLEAN_FIELD, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, neighborhoodList.size());
+    }
+
+    @Test
+    public void get_isBase() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.FALSE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.TRUE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(Boolean.FALSE, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, neighborhoodList.size());
     }
 
     @Test
@@ -169,7 +189,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_BOOLEAN_FIELD, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, neighborhoodList.size());
@@ -189,7 +209,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_FIELD, uKey2, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_BOOLEAN_FIELD, EMPTY_FIELD, uKey2, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, neighborhoodList.size());
@@ -209,10 +229,70 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(uKey1, uKey2, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_BOOLEAN_FIELD, uKey1, uKey2, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, neighborhoodList.size());
+    }
+
+    @Test
+    public void get_isBase_withWorker() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.TRUE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.FALSE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(Boolean.FALSE, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, neighborhoodList.size());
+    }
+
+    @Test
+    public void get_isBase_withoutWorker() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.TRUE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.FALSE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(Boolean.FALSE, EMPTY_FIELD, uKey2, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, neighborhoodList.size());
+    }
+
+    @Test
+    public void get_isBase_withWorker_withoutWorkerId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.FALSE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.FALSE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(Boolean.TRUE, uKey1, uKey2, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, neighborhoodList.size());
     }
 
     @Test
@@ -226,7 +306,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createWorker(uKey2);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_BOOLEAN_FIELD, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(neighborhoodList.isEmpty());
@@ -242,7 +322,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createNeighborhood(NEIGHBORHOOD_NAME_3);
 
         // Exercise
-        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(EMPTY_BOOLEAN_FIELD, EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, neighborhoodList.size());
@@ -257,10 +337,30 @@ public class NeighborhoodDaoImplTest {
         testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
         // Exercise
-        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(EMPTY_FIELD, EMPTY_FIELD);
+        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(EMPTY_BOOLEAN_FIELD, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countNeighborhoods);
+    }
+
+    @Test
+    public void count_isBase() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.FALSE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.TRUE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        int neighborhoodCount = neighborhoodDaoImpl.countNeighborhoods(Boolean.FALSE, uKey1, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, neighborhoodCount);
     }
 
     @Test
@@ -277,7 +377,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(uKey1, EMPTY_FIELD);
+        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(EMPTY_BOOLEAN_FIELD, uKey1, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countNeighborhoods);
@@ -297,7 +397,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(EMPTY_FIELD, uKey2);
+        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(EMPTY_BOOLEAN_FIELD, EMPTY_FIELD, uKey2);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countNeighborhoods);
@@ -317,11 +417,72 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(uKey1, uKey2);
+        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(EMPTY_BOOLEAN_FIELD, uKey1, uKey2);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countNeighborhoods);
     }
+
+    @Test
+    public void count_isBase_withWorker() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.TRUE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.FALSE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        int neighborhoodCount = neighborhoodDaoImpl.countNeighborhoods(Boolean.FALSE, uKey1, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, neighborhoodCount);
+    }
+
+    @Test
+    public void count_isBase_withoutWorker() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.TRUE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.FALSE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        int neighborhoodCount = neighborhoodDaoImpl.countNeighborhoods(Boolean.FALSE, EMPTY_FIELD, uKey2);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, neighborhoodCount);
+    }
+
+    @Test
+    public void count_isBase_withWorker_withoutWorkerId() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1, Boolean.FALSE);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2, Boolean.FALSE);
+        long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey1, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey1);
+
+        // Exercise
+        int neighborhoodCount = neighborhoodDaoImpl.countNeighborhoods(Boolean.TRUE, uKey1, uKey2);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, neighborhoodCount);
+    }
+
 
     @Test
     public void count_empty() {
@@ -334,7 +495,7 @@ public class NeighborhoodDaoImplTest {
         testInserter.createWorker(uKey2);
 
         // Exercise
-        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(uKey1, EMPTY_FIELD);
+        int countNeighborhoods = neighborhoodDaoImpl.countNeighborhoods(EMPTY_BOOLEAN_FIELD, uKey1, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countNeighborhoods);

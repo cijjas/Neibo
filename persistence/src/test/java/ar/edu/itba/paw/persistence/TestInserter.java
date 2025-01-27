@@ -45,9 +45,29 @@ public class TestInserter {
         return channel.getChannelId();
     }
 
+    public long createChannel(String channelName, boolean isBase) {
+        final Channel channel = new Channel.Builder()
+                .channel(channelName)
+                .isBase(isBase)
+                .build();
+        em.persist(channel);
+        em.flush();
+        return channel.getChannelId();
+    }
+
     public long createNeighborhood(String neighborhoodName) {
         Neighborhood neighborhood = new Neighborhood.Builder()
                 .name(neighborhoodName)
+                .build();
+        em.persist(neighborhood);
+        em.flush();
+        return neighborhood.getNeighborhoodId();
+    }
+
+    public long createNeighborhood(String neighborhoodName, boolean isBase) {
+        Neighborhood neighborhood = new Neighborhood.Builder()
+                .name(neighborhoodName)
+                .isBase(isBase)
                 .build();
         em.persist(neighborhood);
         em.flush();
@@ -218,7 +238,7 @@ public class TestInserter {
     }
 
     public void createAffiliation(long workerId, long neighborhoodId, WorkerRole workerRole) {
-        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId), workerRole);
+        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId), workerRole, DATE_1);
         em.persist(affiliation);
         em.flush();
     }

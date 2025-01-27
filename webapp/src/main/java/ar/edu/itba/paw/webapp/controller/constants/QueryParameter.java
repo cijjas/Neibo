@@ -12,6 +12,7 @@ public class QueryParameter {
     public static final String IN_NEIGHBORHOOD = "inNeighborhood";
     public static final String IN_CHANNEL = "inChannel";
     public static final String IN_DEPARTMENT = "inDepartment";
+    public static final String IS_BASE = "isBase";
     public static final String FOR_WORKER = "forWorker";
     public static final String FOR_AMENITY = "forAmenity";
     public static final String FOR_EVENT = "forEvent";

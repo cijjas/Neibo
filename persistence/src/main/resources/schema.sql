@@ -15,7 +15,6 @@ create sequence if not exists neighborhoods_neighborhoodid_seq;
 create sequence if not exists posts_postid_seq;
 create sequence if not exists products_productid_seq;
 create sequence if not exists products_users_inquiries_inquiryid_seq;
-create sequence if not exists products_users_purchases_purchaseid_seq;
 create sequence if not exists products_users_requests_requestid_seq;
 create sequence if not exists professions_professionid_seq;
 create sequence if not exists reviews_reviewid_seq;
@@ -31,7 +30,8 @@ create table if not exists neighborhoods
     neighborhoodid bigint default nextval('neighborhoods_neighborhoodid_seq'::regclass) not null
         constraint neighborhoods_pkey
             primary key,
-    neighborhoodname varchar(128)
+    neighborhoodname varchar(128),
+    isbase boolean default false not null
 );
 
 create table if not exists tags
@@ -51,7 +51,8 @@ create table if not exists channels
             primary key,
     channel varchar(64) not null
         constraint channels_channel_key
-            unique
+            unique,
+    isbase boolean default false not null
 );
 
 create table if not exists images
@@ -252,6 +253,7 @@ create table if not exists workers_neighborhoods
             references neighborhoods
             on delete cascade,
     role varchar(255),
+    requestDate timestamp not null,
     constraint workers_neighborhoods_pkey
         primary key (workerid, neighborhoodid)
 );
@@ -492,37 +494,37 @@ create table if not exists neighborhoods_tags
 
 
 -- Insert neighborhoods
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
-VALUES (-2, 'Super Admin Neighborhood')
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname, isbase)
+VALUES (-2, 'Super Admin Neighborhood', true)
 ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
-VALUES (-1, 'Rejected')
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname, isbase)
+VALUES (-1, 'Rejected', true)
 ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
-VALUES (0, 'Worker Neighborhood')
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname, isbase)
+VALUES (0, 'Worker Neighborhood', true)
 ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
-VALUES (1, 'Olivos Golf Club')
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname, isbase)
+VALUES (1, 'Olivos Golf Club', false)
 ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
-VALUES (2, 'Pacheco Golf')
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname, isbase)
+VALUES (2, 'Pacheco Golf', false)
 ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
-VALUES (3, 'Martindale')
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname, isbase)
+VALUES (3, 'Martindale', false)
 ON CONFLICT DO NOTHING;
 
 -- Insert channels
-INSERT INTO channels (channelid, channel)
-VALUES (1, 'Announcements')
+INSERT INTO channels (channelid, channel, isbase)
+VALUES (1, 'Announcements', true)
 ON CONFLICT DO NOTHING;
-INSERT INTO channels (channelid, channel)
-VALUES (2, 'Complaints')
+INSERT INTO channels (channelid, channel, isbase)
+VALUES (2, 'Complaints', true)
 ON CONFLICT DO NOTHING;
-INSERT INTO channels (channelid, channel)
-VALUES (3, 'Feed')
+INSERT INTO channels (channelid, channel, isbase)
+VALUES (3, 'Feed', true)
 ON CONFLICT DO NOTHING;
-INSERT INTO channels (channelid, channel)
-VALUES (4, 'Workers')
+INSERT INTO channels (channelid, channel, isbase)
+VALUES (4, 'Workers', true)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO neighborhoods_channels(neighborhoodid, channelid)

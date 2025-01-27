@@ -17,7 +17,7 @@ public interface ChannelDao {
 
     Optional<Channel> findChannel(String name);
 
-    List<Channel> getChannels(long neighborhoodId, int page, int size);
+    List<Channel> getChannels(long neighborhoodId, Boolean isBase, int page, int size);
 
-    int countChannels(long neighborhoodId);
+    int countChannels(long neighborhoodId, Boolean isBase);
 }

@@ -9,7 +9,7 @@ public interface AffiliationDao {
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ----------------------------------------
 
-    Affiliation createAffiliation(long neighborhoodId, long workerId, Long workerRoleId);
+    Affiliation createAffiliation(long neighborhoodId, long workerId, long workerRoleId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
 

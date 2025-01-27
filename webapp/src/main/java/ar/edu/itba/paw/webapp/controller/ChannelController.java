@@ -56,13 +56,14 @@ public class ChannelController {
     @GET
     public Response listChannels(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.IS_BASE) Boolean isBase,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
         // Content
-        List<Channel> channels = cs.getChannels(neighborhoodId, page, size);
+        List<Channel> channels = cs.getChannels(neighborhoodId, isBase, page, size);
         String channelsHashCode = String.valueOf(channels.hashCode());
 
         // Cache Control
@@ -82,7 +83,7 @@ public class ChannelController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CHANNELS),
-                cs.calculateChannelPages(neighborhoodId, size),
+                cs.calculateChannelPages(neighborhoodId, isBase, size),
                 page,
                 size
         );
