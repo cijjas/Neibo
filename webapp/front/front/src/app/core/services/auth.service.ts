@@ -163,54 +163,6 @@ export class AuthService {
       );
   }
 
-  // REFRESH TOKEN
-  refreshToken(): Observable<boolean> {
-    const refreshToken = this.tokenService.getRefreshToken();
-    const authToken = this.tokenService.getAccessToken();
-
-    if (!refreshToken) {
-      return of(false);
-    }
-
-    const url = `${this.apiServerUrl}/`;
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${refreshToken}`,
-    });
-
-    return this.http.get<any>(url, { headers, observe: 'response' }).pipe(
-      tap((response) => {
-        const newAccessToken =
-          response.body?.accessToken || response.headers.get('X-Access-Token');
-        if (!newAccessToken) {
-          throw new Error('No tokens returned in refresh response');
-        }
-        this.tokenService.setAccessToken(newAccessToken);
-      }),
-      catchError((error) => {
-        console.error('Refresh token failed:', error);
-        if (error.status === 401) {
-          console.warn('Refresh token expired or invalid. Logging out...');
-        }
-        this.logout();
-        return throwError(() => error);
-      }),
-      mergeMap(() => of(true))
-    );
-  }
-
-  refreshTokenIfNeeded(): Observable<boolean> {
-    if (!this.isLoggedIn()) {
-      return of(false);
-    }
-
-    if (!this.tokenService.isAccessTokenExpiringSoon()) {
-      return of(true);
-    }
-
-    return this.refreshToken().pipe(catchError(() => of(false)));
-  }
-
-  // LOGOUT
   // In AuthService
   logout(): void {
     this.tokenService.clearTokens();
