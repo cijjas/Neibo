@@ -33,7 +33,6 @@ import { PreferencesService } from './preferences.service';
 })
 export class AuthService {
   private readonly apiServerUrl = environment.apiBaseUrl;
-  private currentRole: Roles | null = null;
   private channel: BroadcastChannel;
 
   private roleMapping = {
@@ -95,7 +94,7 @@ export class AuthService {
                   if (userRoleLink) {
                     const role = this.mapLinkToRole(userRoleLink);
                     if (role) {
-                      this.setUserRole(role);
+                      this.userSessionService.setUserRole(role);
                     }
                   }
                   return mapUser(this.http, userDto);
@@ -164,54 +163,6 @@ export class AuthService {
       );
   }
 
-  // REFRESH TOKEN
-  refreshToken(): Observable<boolean> {
-    const refreshToken = this.tokenService.getRefreshToken();
-    const authToken = this.tokenService.getAccessToken();
-
-    if (!refreshToken) {
-      return of(false);
-    }
-
-    const url = `${this.apiServerUrl}/`;
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${refreshToken}`,
-    });
-
-    return this.http.get<any>(url, { headers, observe: 'response' }).pipe(
-      tap((response) => {
-        const newAccessToken =
-          response.body?.accessToken || response.headers.get('X-Access-Token');
-        if (!newAccessToken) {
-          throw new Error('No tokens returned in refresh response');
-        }
-        this.tokenService.setAccessToken(newAccessToken);
-      }),
-      catchError((error) => {
-        console.error('Refresh token failed:', error);
-        if (error.status === 401) {
-          console.warn('Refresh token expired or invalid. Logging out...');
-        }
-        this.logout();
-        return throwError(() => error);
-      }),
-      mergeMap(() => of(true))
-    );
-  }
-
-  refreshTokenIfNeeded(): Observable<boolean> {
-    if (!this.isLoggedIn()) {
-      return of(false);
-    }
-
-    if (!this.tokenService.isAccessTokenExpiringSoon()) {
-      return of(true);
-    }
-
-    return this.refreshToken().pipe(catchError(() => of(false)));
-  }
-
-  // LOGOUT
   // In AuthService
   logout(): void {
     this.tokenService.clearTokens();
@@ -227,19 +178,6 @@ export class AuthService {
   isLoggedIn(): boolean {
     const token = this.tokenService.getAccessToken();
     return !!token;
-  }
-
-  public setUserRole(role: Roles): void {
-    this.currentRole = role;
-    localStorage.setItem('currentUserRole', role);
-  }
-
-  public getCurrentRole(): Roles | null {
-    if (!this.currentRole) {
-      const saved = localStorage.getItem('currentUserRole') as Roles;
-      if (saved) this.currentRole = saved;
-    }
-    return this.currentRole;
   }
 
   public mapLinkToRole(link: string | null | undefined): Roles | null {

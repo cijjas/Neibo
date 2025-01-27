@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 
 import { PostService, Post, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
@@ -37,60 +37,61 @@ export class FeedPageComponent implements OnInit {
 
     this.route.queryParams
       .pipe(
-        switchMap((params) => {
-          this.currentPage = +params['page'] || 1;
-          this.pageSize = +params['size'] || 10;
-          this.channel = params['inChannel'] || defaultChannel;
-          this.postStatus = params['withStatus'] || defaultStatus;
+        // 1. Map the full queryParams to an object with only feed-related params:
+        map((params) => {
+          return {
+            page: +params['page'] || 1,
+            size: +params['size'] || 10,
+            inChannel: params['inChannel'] || defaultChannel,
+            withStatus: params['withStatus'] || defaultStatus,
+            // Ensure tags is always an array
+            withTag: Array.isArray(params['withTag'])
+              ? params['withTag']
+              : params['withTag']
+              ? [params['withTag']]
+              : [],
+          };
+        }),
 
-          // ---------------------------
-          // Handle multiple withTag params
-          // Angular automatically parses repeated param keys
-          // as an array. If it's a single string, convert it to array manually.
-          // If no tags are present, this.tags should become [].
-          // ---------------------------
-          const tagsParam = params['withTag'];
-          this.tags = Array.isArray(tagsParam)
-            ? tagsParam
-            : tagsParam
-            ? [tagsParam]
-            : [];
+        // 2. Use distinctUntilChanged to ignore changes that do NOT affect feed parameters:
+        distinctUntilChanged((prev, curr) => {
+          return (
+            prev.page === curr.page &&
+            prev.size === curr.size &&
+            prev.inChannel === curr.inChannel &&
+            prev.withStatus === curr.withStatus &&
+            JSON.stringify(prev.withTag) === JSON.stringify(curr.withTag)
+          );
+        }),
 
-          // Provide default params if missing
-          const missingParams: any = {};
-          if (!params['inChannel']) {
-            missingParams['inChannel'] = defaultChannel;
-          }
-          if (!params['withStatus']) {
-            missingParams['withStatus'] = defaultStatus;
-          }
-
-          // Navigate to default parameters if any are missing
-          if (Object.keys(missingParams).length > 0) {
-            this.router.navigate([], {
-              relativeTo: this.route,
-              queryParams: { ...missingParams },
-              queryParamsHandling: 'merge',
-            });
-          }
-
-          return this.loadPosts();
+        // 3. Load posts only when the relevant feed parameters have actually changed
+        switchMap((feedParams) => {
+          return this.loadPosts(feedParams);
         })
       )
-      .subscribe();
+      .subscribe({
+        next: () => {
+          // feedParams changed => new posts loaded
+        },
+        error: (err) => console.error(err),
+      });
   }
+  x;
 
-  loadPosts(): Observable<void> {
-    // This array can be ["tag1", "tag2", ...]
-    const queryParams = {
-      page: this.currentPage,
-      size: this.pageSize,
-      inChannel: this.channel,
-      withStatus: this.postStatus,
-      withTag: this.tags,
-    };
+  loadPosts(feedParams: {
+    page: number;
+    size: number;
+    inChannel: string;
+    withStatus: string;
+    withTag: string[];
+  }): Observable<void> {
+    this.currentPage = feedParams.page;
+    this.pageSize = feedParams.size;
+    this.channel = feedParams.inChannel;
+    this.postStatus = feedParams.withStatus;
+    this.tags = feedParams.withTag;
 
-    return this.postService.getPosts(queryParams).pipe(
+    return this.postService.getPosts(feedParams).pipe(
       map((response) => {
         if (response) {
           this.postList = response.posts;
@@ -100,7 +101,6 @@ export class FeedPageComponent implements OnInit {
           this.postList = [];
           this.totalPages = 0;
         }
-
         this.loading = false;
       }),
       catchError((error) => {
@@ -116,7 +116,15 @@ export class FeedPageComponent implements OnInit {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.updateQueryParams();
-    this.loadPosts().subscribe();
+
+    const feedParams = {
+      page: this.currentPage,
+      size: this.pageSize,
+      inChannel: this.channel,
+      withStatus: this.postStatus,
+      withTag: this.tags,
+    };
+    this.loadPosts(feedParams).subscribe();
   }
 
   private updateQueryParams(): void {
@@ -125,7 +133,8 @@ export class FeedPageComponent implements OnInit {
       queryParams: {
         page: this.currentPage,
         size: this.pageSize,
-        // Add the tags to keep them in the URL
+        inChannel: this.channel,
+        withStatus: this.postStatus,
         withTag: this.tags,
       },
       queryParamsHandling: 'merge',

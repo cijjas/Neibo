@@ -43,7 +43,7 @@ public class WorkerDto {
     private String bio;
 
     @ImageURIConstraint(groups = URI.class)
-    private String backgroundPicture;
+    private String backgroundImage;
 
     private Links _links;
 
@@ -147,11 +147,11 @@ public class WorkerDto {
         this.professions = professions;
     }
 
-    public String getBackgroundPicture() {
-        return backgroundPicture;
+    public String getBackgroundImage() {
+        return backgroundImage;
     }
 
-    public void setBackgroundPicture(String backgroundPicture) {
-        this.backgroundPicture = backgroundPicture;
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 }

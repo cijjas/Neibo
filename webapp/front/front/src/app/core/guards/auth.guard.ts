@@ -7,11 +7,13 @@ import { LinkKey, Roles } from '@shared/index';
 
 export const AuthGuard = () => {
   const authService = inject(AuthService);
+  const userSessionService = inject(UserSessionService);
+
   const router = inject(Router);
   const linkStorage = inject(HateoasLinksService);
 
   if (authService.isLoggedIn()) {
-    const userRole: Roles = authService.getCurrentRole();
+    const userRole: Roles = userSessionService.getCurrentRole();
 
     switch (userRole) {
       case Roles.ADMINISTRATOR:

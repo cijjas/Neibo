@@ -2,8 +2,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService, ToastService } from '@core/index';
-import { Neighborhood, NeighborhoodService, UserService } from '@shared/index';
+import { AuthService, ToastService, UserSessionService } from '@core/index';
+import {
+  Neighborhood,
+  NeighborhoodService,
+  Roles,
+  UserService,
+} from '@shared/index';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -15,6 +20,7 @@ export class RejectedPageComponent implements OnInit {
   neighborhoodForm: FormGroup;
   isLoading = false;
   submitted = false;
+
   constructor(
     private fb: FormBuilder,
     private neighborhoodService: NeighborhoodService,
@@ -22,6 +28,7 @@ export class RejectedPageComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private userService: UserService,
+    private userSessionService: UserSessionService
   ) {
     this.neighborhoodForm = this.fb.group({
       neighborhood: [null, Validators.required],
@@ -50,21 +57,49 @@ export class RejectedPageComponent implements OnInit {
    * Handle form submission.
    */
   onSubmit(): void {
-    this.submitted = true; // Mark form as submitted
+    this.submitted = true;
+
     if (this.neighborhoodForm.valid) {
       const selectedNeighborhood: Neighborhood =
         this.neighborhoodForm.value.neighborhood;
 
-      this.userService.requestNeighborhood(selectedNeighborhood.self).subscribe({
-        next: (next) => {
-          this.toastService.showToast('Successfully requested neighborhood to join!', 'success')
-        },
-        error: (error) => {
-          this.toastService.showToast('There was an error sending your requested neighborhood to join!', 'success')
+      this.userService
+        .requestNeighborhood(selectedNeighborhood.self)
+        .subscribe({
+          next: () => {
+            // Update the user role to "UNVERIFIED"
+            this.userSessionService.updateUserProperty(
+              'userRole',
+              Roles.UNVERIFIED_NEIGHBOR
+            );
+            this.userSessionService.updateUserProperty(
+              'userRoleEnum',
+              Roles.UNVERIFIED_NEIGHBOR
+            );
+            this.userSessionService.updateUserProperty(
+              'userRoleDisplay',
+              'Unverified'
+            );
 
-        }
-      })
+            // Update standalone currentUserRole in local storage
+            this.userSessionService.setUserRole(Roles.UNVERIFIED_NEIGHBOR);
 
+            // Show success message
+            this.toastService.showToast(
+              'Successfully requested neighborhood to join! Wait until an administrator approves your request.',
+              'success'
+            );
+
+            // Optional: Reload or navigate as needed
+            this.router.navigate(['/unverified']);
+          },
+          error: () => {
+            this.toastService.showToast(
+              'There was an error sending your requested neighborhood to join!',
+              'error'
+            );
+          },
+        });
     } else {
       this.toastService.showToast('Please select a neighborhood.', 'error');
     }

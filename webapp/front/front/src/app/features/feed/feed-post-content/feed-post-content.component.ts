@@ -92,20 +92,24 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
    * Likes
    */
   private loadLikeStatus(): void {
-    if (this.likesUrl) {
+    if (!this.likesUrl) return;
+
+    this.userSessionService.getCurrentUser().subscribe((user) => {
       this.likeService
-        .getLikes(this.likesUrl, { onPost: this.post.self })
+        .getLikes(this.likesUrl, {
+          onPost: this.post.self,
+          likedBy: user.self,
+        })
         .subscribe({
           next: (response) => {
-            this.isLiked = response.likes.some(
-              (like) => like.post.self === this.post.self
-            );
+            // If the array is non-empty, the current user liked this post
+            this.isLiked = response.likes.length > 0;
           },
           error: (err) => {
             console.error('Error fetching like status:', err);
           },
         });
-    }
+    });
   }
 
   toggleLike(): void {

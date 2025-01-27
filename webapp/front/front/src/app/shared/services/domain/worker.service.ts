@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import {
   Worker,
   WorkerDto,
@@ -27,14 +27,13 @@ export class WorkerService {
     private http: HttpClient,
     private linkService: HateoasLinksService,
     private userService: UserService
-  ) { }
+  ) {}
 
   public getWorker(url: string): Observable<Worker> {
-    return this.http
-      .get<WorkerDto>(url)
-      .pipe(
-        mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto))
-      );
+    return this.http.get<WorkerDto>(url).pipe(
+      tap((workerDto: WorkerDto) => console.log('Response:', workerDto)),
+      mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto))
+    );
   }
 
   public getWorkers(
@@ -51,7 +50,9 @@ export class WorkerService {
     totalPages: number;
     currentPage: number;
   }> {
-    let workersUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_WORKERS);
+    let workersUrl: string = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_WORKERS
+    );
 
     let params = new HttpParams();
 
@@ -64,8 +65,10 @@ export class WorkerService {
         'inNeighborhood',
         queryParams.inNeighborhood.join(',')
       );
-    if (queryParams.withRole) params = params.set('withRole', queryParams.withRole);
-    if (queryParams.withStatus) params = params.set('withStatus', queryParams.withStatus);
+    if (queryParams.withRole)
+      params = params.set('withRole', queryParams.withRole);
+    if (queryParams.withStatus)
+      params = params.set('withStatus', queryParams.withStatus);
 
     // Add each profession as a separate query parameter
     if (queryParams.withProfession && queryParams.withProfession.length > 0) {
@@ -129,14 +132,7 @@ export class WorkerService {
     const workersUrl: string = this.linkService.getLink(LinkKey.WORKERS);
 
     return this.userService
-      .createWorkerUser(
-        name,
-        surname,
-        password,
-        mail,
-        language,
-        identification
-      )
+      .createWorkerUser(name, surname, password, mail, language, identification)
       .pipe(
         switchMap((createdUserUrl) => {
           if (!createdUserUrl) {
@@ -177,6 +173,7 @@ export class WorkerService {
 
   public updateWorker(worker: WorkerDto): Observable<void> {
     let workerUrl: string = this.linkService.getLink(LinkKey.USER_WORKER);
+    console.log(worker);
     return this.http.patch<void>(workerUrl, worker).pipe(
       catchError((error) => {
         console.error('Error updating product:', error);

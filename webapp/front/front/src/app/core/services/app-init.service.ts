@@ -27,14 +27,6 @@ export class AppInitService {
     );
     this.linkService.registerLinks(response._links, 'root:');
 
-    // If we have a token, optionally check it:
-    if (this.authService.isLoggedIn()) {
-      const isValid = await firstValueFrom(
-        this.authService.refreshTokenIfNeeded()
-      );
-      if (!isValid) {
-        this.authService.logout();
-      }
-    }
+    // TODO HACER LOGOUT SI NO REFRESH
   }
 }

@@ -35,47 +35,6 @@
             <span i18n>Posts not found</span>
           </div>
         </ng-template>
-        <!-- <c:choose>
-              <c:when test="${empty postList}">
-                <div class="no-posts-found">
-                  <i class="circle-icon fa-solid fa-magnifying-glass" style="color:var(&#45;&#45;text)"></i>
-                  <spring:message code="Posts.notFound"/>
-                </div>
-              </c:when>
-              <c:otherwise>
-                &lt;!&ndash; Include the page selector &ndash;&gt;
-                <c:if test="${totalPages >  1}">
-                  <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                    <jsp:param name="page" value="${page}"/>
-                    <jsp:param name="totalPages" value="${totalPages}"/>
-                  </jsp:include>
-                </c:if>
-
-                <c:forEach var="post" items="${postList}">
-                  <c:set var="postTags" value="${post.tags}" scope="request"/>
-                  <jsp:include page="/WEB-INF/jsp/components/widgets/blogpost.jsp">
-                    <jsp:param name="postID" value="${post.postId}"/>
-                    <jsp:param name="postNeighborMail" value="${post.user.mail}"/>
-                    <jsp:param name="postDate" value="${post.date}"/>
-                    <jsp:param name="postTitle" value="${post.title}"/>
-                    <jsp:param name="postDescription" value="${post.description}"/>
-                    <jsp:param name="postImage" value="${post.postPicture.imageId}"/>
-                    <jsp:param name="postLikes" value="${post.likedByUsers.size()}"/>
-                    <jsp:param name="postUserProfilePictureId" value="${post.user.profilePicture.imageId}"/>
-                    <jsp:param name="contextPath" value="${contextPath}"/>
-
-                  </jsp:include>
-                </c:forEach>
-
-
-                <c:if test="${totalPages >  1}">
-                  <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                    <jsp:param name="page" value="${page}"/>
-                    <jsp:param name="totalPages" value="${totalPages}"/>
-                  </jsp:include>
-                </c:if>
-              </c:otherwise>
-            </c:choose>-->
       </div>
       <script>
         function showPostsAfterDelay() {

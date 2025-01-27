@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private channel: BroadcastChannel;
+  isInitialized = false;
 
   constructor(
     private authService: AuthService,
@@ -24,7 +25,10 @@ export class AppComponent implements OnInit, OnDestroy {
       if (user) {
         this.preferencesService.applyDarkMode(user.darkMode); // Re-apply the theme
       }
+      // Mark as initialized after user session check is complete
+      this.isInitialized = true;
     });
+
     this.channel.onmessage = (event) => {
       if (event.data.type === 'login') {
         window.location.reload();
@@ -43,8 +47,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private handleStorageEvent(event: StorageEvent): void {
-    // monitor changes on storage
-    // If 'authToken' was removed, broadcast logout
     if (event.key === 'authToken' && event.newValue === null) {
       this.authService.logout();
       this.channel.postMessage({ type: 'logout' });
@@ -58,11 +60,9 @@ export class AppComponent implements OnInit, OnDestroy {
       '/unverified',
       '/rejected',
       '/not-found',
-    ]; // Add routes where navbar shouldn't appear
+    ];
 
-    // Extract the path without query parameters
     const currentRoute = this.router.url.split('?')[0];
-
     return !excludedRoutes.includes(currentRoute);
   }
 }

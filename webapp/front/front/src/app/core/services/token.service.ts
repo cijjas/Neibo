@@ -36,24 +36,4 @@ export class TokenService {
   public hasTokens(): boolean {
     return !!this.getAccessToken() && !!this.getRefreshToken();
   }
-
-  public isAccessTokenExpiringSoon(): boolean {
-    const token = this.getAccessToken();
-    if (!token) {
-      return false;
-    }
-
-    try {
-      const decoded: { exp: number } = jwtDecode(token);
-      const now = Math.floor(Date.now() / 1000);
-      const timeRemaining = decoded.exp - now;
-
-      console.log(`Access token expires in ${timeRemaining} seconds.`);
-
-      return timeRemaining < 60;
-    } catch (error) {
-      console.error('Failed to decode access token:', error);
-      return false;
-    }
-  }
 }

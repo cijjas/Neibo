@@ -85,6 +85,7 @@ export class ServiceProvidersEditDialogComponent implements OnChanges {
           address: this.address,
           backgroundImage: uploadedImageUrl, // <--- set the new image URL
         };
+
         // Emit it to the parent
         this.saveProfile.emit(updatedWorkerDto);
         this.closeEditDialog();

@@ -269,7 +269,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Affiliations created successfully!',
+            'Request to join the neighborhood as a service provider sent!',
             'success'
           );
 
@@ -288,7 +288,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
         },
         error: () => {
           this.toastService.showToast(
-            'Affiliations to neighborhoods could not be done, try again later.',
+            'Request to join the neighborhood as a service provider sent failed, try again later.',
             'error'
           );
         },

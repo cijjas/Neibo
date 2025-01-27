@@ -37,7 +37,8 @@ export class LoginDialogComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private linkStorage: HateoasLinksService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private userSessionService: UserSessionService
   ) {}
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -82,7 +83,7 @@ export class LoginDialogComponent implements OnInit {
 
           if (success) {
             // Get the user's role from UserSessionService
-            const userRole = this.authService.getCurrentRole();
+            const userRole = this.userSessionService.getCurrentRole();
 
             switch (userRole) {
               case Roles.WORKER:

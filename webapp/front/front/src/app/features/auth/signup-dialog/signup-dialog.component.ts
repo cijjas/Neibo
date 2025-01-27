@@ -70,7 +70,8 @@ export class SignupDialogComponent implements OnInit {
     private linkStorage: HateoasLinksService,
     private professionService: ProfessionService,
     private router: Router,
-    private workerService: WorkerService
+    private workerService: WorkerService,
+    private userSessionService: UserSessionService
   ) {}
 
   ngOnInit(): void {
@@ -201,7 +202,7 @@ export class SignupDialogComponent implements OnInit {
                 this.loading = false;
                 if (success) {
                   // Get the user's role from UserSessionService
-                  const userRole = this.authService.getCurrentRole();
+                  const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
                     case Roles.WORKER:
                       const workerUrl = this.linkStorage.getLink(
@@ -322,7 +323,7 @@ export class SignupDialogComponent implements OnInit {
                 this.loading = false;
                 if (success) {
                   // Get the user's role from UserSessionService
-                  const userRole = this.authService.getCurrentRole();
+                  const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
                     case Roles.WORKER:
                       const workerUrl = this.linkStorage.getLink(

@@ -105,10 +105,11 @@
   & .card-text {
     display: grid;
     grid-template-columns: 1fr 3fr;
+    position: relative; /* Ensure relative positioning for child elements */
 
     & .img-avatar {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       position: absolute;
       border-radius: 50%;
       border: 6px solid var(--onbackground);
@@ -117,8 +118,16 @@
         var(--old-primary) 0%,
         var(--primary) 100%
       );
+
+      /* Center exactly between the columns */
       top: 15px;
-      left: 100px;
+      left: calc(25%); /* The division between 1fr (25%) and 3fr (75%) */
+
+      /* For perfect alignment */
+      transform: translate(
+        -50%,
+        0
+      ); /* Adjust horizontally to center the element */
     }
   }
 
@@ -127,7 +136,7 @@
     flex-direction: column;
     justify-content: start;
     align-items: start;
-    padding: 1.5em 1.5em 1.5em 50px;
+    padding: 1.5em 1.5em 1.5em 4rem;
     gap: 10px;
 
     & .title {
@@ -161,7 +170,7 @@
     }
   }
 
-  & .portada {
+  & .back-image {
     width: 100%;
     height: 100%;
     border-top-left-radius: var(--border-radius);

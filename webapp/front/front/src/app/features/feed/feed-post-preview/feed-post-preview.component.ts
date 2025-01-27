@@ -87,18 +87,23 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
 
   private loadLikeStatus(): void {
     if (this.likesUrl) {
-      this.likeService
-        .getLikes(this.likesUrl, { onPost: this.post.self })
-        .subscribe({
-          next: (response) => {
-            this.hasLiked = response.likes.some(
-              (like) => like.post.self === this.post.self
-            );
-          },
-          error: (err) => {
-            console.error('Error fetching like status:', err);
-          },
-        });
+      this.userSessionService.getCurrentUser().subscribe((user) => {
+        this.likeService
+          .getLikes(this.likesUrl, {
+            onPost: this.post.self,
+            likedBy: user.self,
+          })
+          .subscribe({
+            next: (response) => {
+              this.hasLiked = response.likes.some(
+                (like) => like.post.self === this.post.self
+              );
+            },
+            error: (err) => {
+              console.error('Error fetching like status:', err);
+            },
+          });
+      });
     }
   }
 
