@@ -32,7 +32,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *
  * # Use cases
  *   - An Admin can create Resources in their Neighborhood
- *   - A User/Admin can list the Resources of their Neighborhood
+ *   - A Neighbor/Admin can list the Resources of their Neighborhood
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.RESOURCES)

@@ -33,8 +33,10 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - Has relationships with Users, Posts, Channels, Products and many more
  *
  * # Use cases
- *   - When registering all Neighborhoods have to be displayed
+ *   - Anyone can register as UNVERIFIED to any Non Base Neighborhood
+ *   - Registered Users can migrate Neighborhood but becoming UNVERIFIED in the process
  */
+
 @Path(Endpoint.NEIGHBORHOODS)
 @Component
 @Validated

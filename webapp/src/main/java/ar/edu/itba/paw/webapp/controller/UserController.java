@@ -37,10 +37,10 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - Self descriptive
  *
  * # Use cases
- *   - A Client can register as a User
- *   - A User can update his profile
- *   - An Admin can list the Users in his Neighborhood
- *   - A User can see the profile of a particular User
+ *   - Anyone can register as a User
+ *   - A Registered User can update his profile
+ *   - A Neighbor/Admin can list the Users in his Neighborhood
+ *   - An Admin can update the profiles of the Neighbors it moderates
  */
 
 @Path( Endpoint.USERS)

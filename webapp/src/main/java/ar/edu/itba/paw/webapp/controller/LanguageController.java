@@ -20,19 +20,14 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
-
 /*
  * # Summary
  *   - A User has a certain Language selected
  *
  * # Use Cases
- *   - A User/Admin/Worker can list the available languages
- *   - A User/Admin/Worker can change his language preference
- *
- * # Embeddable?
- *   - Cant be embedded as it has to be shown at some point, when selecting the language, that would mean to list the Languages
+ *   - Anyone can list the available languages
+ *   - A Registered User can change his language preference
  */
-
 
 @Path(Endpoint.LANGUAGES)
 @Component

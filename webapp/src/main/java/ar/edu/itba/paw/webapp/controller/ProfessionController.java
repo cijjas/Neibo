@@ -35,8 +35,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *
  * # Use cases
  *   - The Workers can choose which Professions they have
- *   - A User/Admin can filter the Workers through certain Profession
- *
+ *   - A Neighbor/Admin can filter the Workers through certain Profession
  */
 
 @Path(Endpoint.PROFESSIONS)

@@ -35,13 +35,8 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A Booking is the relationship between a User and an Availability, it also adds a date attribute to the relationship
  *
  * # Use cases
- *   - A User/Admin can create/delete a Booking
- *   - A User/Admin can list his Bookings
- *
- * # Issues
- *   - The form is taking Shifts URIs, I think it should be taking Availability URIs
- *   - Before the Shifts had to be dynamically created, not anymore, so I think the logic is simplified
- *   - Deletion Form could also take a list instead of unique values
+ *   - A Neighbor/Admin can create/delete a Booking
+ *   - A Neighbor/Admin can list his Bookings
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.BOOKINGS)

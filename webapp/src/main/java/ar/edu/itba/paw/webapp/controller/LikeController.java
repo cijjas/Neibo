@@ -33,10 +33,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - Junction Table between Users and Posts, representing when a User likes the Post
  *
  * # Use cases
- *   - A User/Admin can like and remove the like from a Post
- *
- * # Embeddable?
- *   - No, it can be tempting but the whole creation plus filtering plus potentially showing liked posts or people that liked the post ruins the idea
+ *   - A Neighbor/Admin can like and remove the like from a Post
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.LIKES)

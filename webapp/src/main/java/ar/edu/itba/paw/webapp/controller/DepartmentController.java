@@ -23,19 +23,13 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-
 /*
  * # Summary
  *   - Product Criteria, many Products belong to the same Department
  *
  * # Use cases
- *   - A User/Admin can filter the products according to their department
- *
- * # Embeddable?
- *   - Not embeddable as it is used as a filter
+ *   - A Neighbor/Admin can filter the Products according to their Department
  */
-
 
 @Path(Endpoint.DEPARTMENTS)
 @Component

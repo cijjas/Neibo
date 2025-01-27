@@ -37,9 +37,9 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
  *   - The Product Seller is the only User that can respond the Inquiry
  *
  * # Use cases
- *   - A User/Admin can create an Inquiry for a Product
+ *   - A Neighbor/Admin can create an Inquiry for a Product
  *   - The Seller can respond an Inquiry
- *   - A User/Admin can list the Inquiries that a certain Product has
+ *   - A Neighbor/Admin can list the Inquiries that a certain Product has
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS + "/{" + PathParameter.PRODUCT_ID + "}/" + Endpoint.INQUIRIES)

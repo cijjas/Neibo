@@ -34,9 +34,9 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
  *   - A Post has many Comments and a User has many Comments
  *
  * # Use cases
- *   - A User/Admin Comments on a Post
- *   - A User/Admin can list the Comments for a specific Post
- *   - An Admin deletes a Comment
+ *   - A Neighbor/Admin Comments on a Post
+ *   - A Neighbor/Admin can list the Comments for a specific Post
+ *   - An Admin can delete a Comment
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.POSTS + "/{" + PathParameter.POST_ID + "}/" + Endpoint.COMMENTS)

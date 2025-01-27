@@ -25,7 +25,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Worker Criteria, a Worker can be HOT if he received many positive reviews in the last couple of days
  *
  * # Use cases
- *   - A User/Admin/Worker can filter the workers through this criteria
+ *   - A Neighbor/Admin/Worker can filter the workers through this criteria
  */
 
 @Path(Endpoint.WORKER_STATUSES)
