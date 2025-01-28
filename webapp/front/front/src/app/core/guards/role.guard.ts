@@ -5,11 +5,12 @@ import { UserSessionService } from '@core/services/user-session.service';
 import { Roles } from '@shared/index';
 
 export const RoleGuard = async (
-  route: ActivatedRouteSnapshot,
-  router: Router,
-  authService: AuthService,
-  userSessionService: UserSessionService
+  route: ActivatedRouteSnapshot
 ): Promise<boolean | UrlTree> => {
+  const router = inject(Router);
+  const authService = inject(AuthService);
+  const userSessionService = inject(UserSessionService);
+
   // 1) Check if user is logged in
   if (!authService.isLoggedIn()) {
     // Not logged in, redirect to login

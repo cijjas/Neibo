@@ -10,7 +10,17 @@ export class TokenService {
   private readonly authTokenKey = 'authToken';
   private readonly refreshTokenKey = 'refreshToken';
 
+  private refreshingToken = false;
+
   constructor(private userSessionService: UserSessionService) {}
+
+  setRefreshingTokenState(isRefreshing: boolean): void {
+    this.refreshingToken = isRefreshing;
+  }
+
+  isRefreshingToken(): boolean {
+    return this.refreshingToken;
+  }
 
   public getAccessToken(): string {
     return localStorage.getItem(this.authTokenKey) || '';

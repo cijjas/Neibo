@@ -66,6 +66,7 @@ export class JwtInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
+      this.tokenService.setRefreshingTokenState(true); // Notify refresh started
       this.refreshTokenSubject.next(null);
 
       return this.refreshToken().pipe(
@@ -84,6 +85,7 @@ export class JwtInterceptor implements HttpInterceptor {
         }),
         finalize(() => {
           this.isRefreshing = false;
+          this.tokenService.setRefreshingTokenState(false); // Notify refresh ended
         })
       );
     } else {
@@ -127,6 +129,7 @@ export class JwtInterceptor implements HttpInterceptor {
               return of(newAccessToken); // Emit the new access token
             } else {
               console.error('No access token found in response headers.');
+              this.authService.logout();
             }
           }
 
