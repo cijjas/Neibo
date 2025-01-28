@@ -9,12 +9,13 @@ import {
   HttpContextToken,
   HttpResponse,
 } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { catchError, switchMap, filter, take, finalize } from 'rxjs/operators';
 
 import { TokenService } from '@core/services/token.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment';
+import { AuthService } from '@core/services/auth.service';
 
 export const SKIP_ACCESS_TOKEN = new HttpContextToken<boolean>(() => false);
 
@@ -25,14 +26,16 @@ export class JwtInterceptor implements HttpInterceptor {
 
   private readonly apiServerUrl = environment.apiBaseUrl;
 
-  constructor(private tokenService: TokenService, private http: HttpClient) {}
+  constructor(
+    private tokenService: TokenService,
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log('Intercepting request...');
-
     const skip = request.context.get(SKIP_ACCESS_TOKEN);
     if (!skip) {
       const accessToken = this.tokenService.getAccessToken();
@@ -43,17 +46,15 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error) => {
-        // Handle 401 errors
         if (
           error instanceof HttpErrorResponse &&
           error.status === 401 &&
           !skip
         ) {
-          // We got a 401 with a normal request -> possible token expiry
+          console.warn(`401 error intercepted for URL: ${request.url}`);
           return this.handle401Error(request, next);
         }
 
-        // If it's not a 401 error (or we explicitly skip the token), just propagate
         return throwError(() => error);
       })
     );
@@ -69,19 +70,16 @@ export class JwtInterceptor implements HttpInterceptor {
 
       return this.refreshToken().pipe(
         switchMap((newAccessToken: string) => {
-          console.log('New access token received:', newAccessToken);
-
-          // Update the token storage with the new access token
           this.tokenService.setAccessToken(newAccessToken);
           this.refreshTokenSubject.next(newAccessToken);
 
-          // Retry the original request with the new token
-          return next.handle(this.addTokenHeader(request, newAccessToken));
+          // Retry the original request with the new access token
+          const clonedRequest = this.addTokenHeader(request, newAccessToken);
+          return next.handle(clonedRequest);
         }),
         catchError((refreshError) => {
           console.error('Failed to refresh token:', refreshError);
-          this.tokenService.clearTokens();
-          this.refreshTokenSubject.error(refreshError);
+          this.authService.logout(); // Log out the user if refresh fails
           return throwError(() => refreshError);
         }),
         finalize(() => {
@@ -89,13 +87,14 @@ export class JwtInterceptor implements HttpInterceptor {
         })
       );
     } else {
-      // If a refresh is already in progress, queue the request
+      // Wait for the token to refresh before proceeding with the request
       return this.refreshTokenSubject.pipe(
         filter((token) => token !== null),
         take(1),
-        switchMap((token) =>
-          next.handle(this.addTokenHeader(request, token as string))
-        )
+        switchMap((token) => {
+          const clonedRequest = this.addTokenHeader(request, token as string);
+          return next.handle(clonedRequest);
+        })
       );
     }
   }
@@ -123,16 +122,9 @@ export class JwtInterceptor implements HttpInterceptor {
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
-            console.log(
-              '401 received for refresh token request. Checking for new token...'
-            );
             const newAccessToken = error.headers.get('X-Access-Token');
             if (newAccessToken) {
-              console.log(
-                'New access token found in 401 response header:',
-                newAccessToken
-              );
-              return [newAccessToken]; // Resolve with the new access token
+              return of(newAccessToken); // Emit the new access token
             } else {
               console.error('No access token found in response headers.');
             }

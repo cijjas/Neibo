@@ -5,21 +5,18 @@ import { HateoasLinksService } from '@core/services/link.service';
 import { UserSessionService } from '@core/services/user-session.service';
 import { LinkKey, Roles } from '@shared/index';
 
-export const AuthGuard = () => {
-  const authService = inject(AuthService);
-  const userSessionService = inject(UserSessionService);
-
-  const router = inject(Router);
-  const linkStorage = inject(HateoasLinksService);
-
+export const AuthGuard = (
+  authService: AuthService,
+  userSessionService: UserSessionService,
+  router: Router,
+  linkStorage: HateoasLinksService
+) => {
   if (authService.isLoggedIn()) {
+    console.log('inauthguard');
     const userRole: Roles = userSessionService.getCurrentRole();
 
     switch (userRole) {
       case Roles.ADMINISTRATOR:
-        router.navigate(['/posts']);
-        break;
-
       case Roles.NEIGHBOR:
         router.navigate(['/posts']);
         break;

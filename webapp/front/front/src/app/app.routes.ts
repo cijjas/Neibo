@@ -21,7 +21,7 @@ export const appRoutes: Routes = [
         path: 'login',
         loadChildren: () =>
           import('@features/auth/auth.module').then((m) => m.AuthModule),
-        canActivate: [AuthGuard], // Protect login with AuthGuard
+        canActivate: [AuthGuard],
       },
       // 404 and Wildcard
       {
@@ -107,6 +107,8 @@ export const appRoutes: Routes = [
           import('@features/service-providers/service-providers.module').then(
             (m) => m.ServiceProvidersModule
           ),
+        canActivate: [RoleGuard],
+        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
       },
 
       // User Profile

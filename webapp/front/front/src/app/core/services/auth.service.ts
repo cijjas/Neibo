@@ -176,7 +176,7 @@ export class AuthService {
 
   // Helper Methods
   isLoggedIn(): boolean {
-    const token = this.tokenService.getAccessToken();
+    const token = this.tokenService.getRefreshToken();
     return !!token;
   }
 

@@ -66,7 +66,10 @@ export class SidebarComponent implements OnInit {
         this.channelClass = 'Feed';
       } else if (
         queryParams['inChannel'] ===
-        this.linkService.getLink(LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL)
+          this.linkService.getLink(
+            LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+          ) ||
+        !queryParams['inChannel']
       ) {
         this.channelClass = 'Announcements';
       } else if (
