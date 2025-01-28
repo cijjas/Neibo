@@ -1,10 +1,10 @@
 <div class="grey-static-container m-t-40">
   <div class="column d-flex justify-content-center align-items-center">
-    <h3 class="m-b-20">My Reservations</h3>
+    <h3 class="m-b-20">{{ "AMENITIES-RESERVATIONS-LIST.MY_RESERVATIONS" | translate }}</h3>
 
     <!-- Loading Indicator -->
     <div *ngIf="isLoading" class="f-c-c-c align-items-center">
-      <span class="w-100 mb-2">Loading reservations...</span>
+      <span class="w-100 mb-2">{{ "AMENITIES-RESERVATIONS-LIST.LOADING_RESERVATIONS" | translate }}</span>
     </div>
 
     <!-- Error Message -->
@@ -14,7 +14,7 @@
       style="color: var(--error)"
     >
       <span class="w-100 mb-2"
-        >Error loading reservations. Please try again later.</span
+        >{{ "AMENITIES-RESERVATIONS-LIST.ERROR_LOADING_RESERVATIONS_PLEASE_TRY_AGAIN_LATER" | translate }}</span
       >
     </div>
 
@@ -24,9 +24,9 @@
       class="f-c-c-c align-items-center mb-4"
       style="text-align: center"
     >
-      <span class="w-100 mb-2 c-light-text"> You have no reservations. </span>
+      <span class="w-100 mb-2 c-light-text"> {{ "AMENITIES-RESERVATIONS-LIST.YOU_HAVE_NO_RESERVATIONS" | translate }} </span>
       <span class="w-100 c-light-text">
-        Browse amenities and make your first reservation.
+        {{ "AMENITIES-RESERVATIONS-LIST.BROWSE_AMENITIES_AND_MAKE_YOUR_FIRST_RESERVATION" | translate }}
       </span>
     </div>
 
@@ -56,14 +56,14 @@
           </div>
           <div class="w-100">
             <h6 class="mb-3" style="color: var(--lighttext)">
-              Date
+              {{ "AMENITIES-RESERVATIONS-LIST.DATE" | translate }}
               <span class="c-primary font-weight-bold">{{
                 reservation.bookingDate
               }}</span>
             </h6>
             <div class="w-100 f-r-sb-c time-container">
               <h6 class="time-item start-time" style="color: var(--lighttext)">
-                Start Time
+                {{ "AMENITIES-RESERVATIONS-LIST.START_TIME" | translate }}
                 <span class="c-primary">{{
                   reservation.shift?.startTime
                 }}</span>
@@ -72,7 +72,7 @@
                 class="time-item end-time"
                 style="color: var(--lighttext); text-align: right"
               >
-                End Time
+              {{ "AMENITIES-RESERVATIONS-LIST.END_TIME" | translate }}
                 <span class="c-primary">{{ reservation.shift?.endTime }}</span>
               </h6>
             </div>
@@ -86,7 +86,7 @@
       <span id="prev" [class.disabled]="currentPage <= 1" (click)="prevPage()">
         <i class="fa-solid fa-angle-left"></i>
       </span>
-      <p>Page {{ currentPage }} of {{ totalPages }}</p>
+      <p>{{ "AMENITIES-RESERVATIONS-LIST.PAGE__CURRENTPAGE__OF__TOTALPAGES_" | translate: { currentPage: currentPage, totalPages: totalPages } }}</p>
       <span
         id="next"
         [class.disabled]="currentPage >= totalPages"

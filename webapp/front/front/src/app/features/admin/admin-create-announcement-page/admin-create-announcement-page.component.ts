@@ -14,6 +14,7 @@ import {
 } from '@core/index';
 import { PostService, TagService, LinkKey } from '@shared/index';
 import { catchError, forkJoin, of, switchMap, take } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 /** Minimal Tag interface. If you already have a Tag type, you can remove this. */
 interface Tag {
@@ -85,7 +86,8 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     private imageService: ImageService,
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translate: TranslateService
   ) {
     // Get the link to your announcements channel
     this.channel = this.linkService.getLink(
@@ -139,7 +141,12 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     const exists = this.appliedTags.some((t) => t.name === tag.name);
     if (exists) {
       this.toastService.showToast(
-        `You've already selected the tag '${tag.name}'`,
+        this.translate.instant(
+          'ADMIN-CREATE-ANNOUNCEMENT-PAGE.YOUVE_ALREADY_SELECTED_THE_TAG_TAGNAME',
+          {
+            tagName: tag.name,
+          }
+        ),
         'warning'
       );
       return;
@@ -182,14 +189,18 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       this.tagService.createTag(tag.name).pipe(
         switchMap((location: string | null) => {
           if (!location) {
-            console.error('Failed to create tag:', tag.name);
+            console.error(this.translate.instant(
+              'ADMIN-CREATE-ANNOUNCEMENT-PAGE.FAILED_TO_CREATE_TAG',
+            ), tag.name);
             return of(null);
           }
           // After creation, get the full Tag to retrieve the `self` link
           return this.tagService.getTag(location);
         }),
         catchError((err) => {
-          console.error('Error creating tag:', tag.name, err);
+          console.error(this.translate.instant(
+            'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_TAG',
+          ), tag.name, err);
           return of(null);
         })
       )
@@ -219,9 +230,13 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
         this.createAnnouncement();
       },
       error: (err) => {
-        console.error('Error creating tags:', err);
+        console.error(this.translate.instant(
+          'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_TAGS',
+        ), err);
         this.toastService.showToast(
-          'Some tags could not be created. Please try again.',
+          this.translate.instant(
+            'ADMIN-CREATE-ANNOUNCEMENT-PAGE.SOME_TAGS_COULD_NOT_BE_CREATED_PLEASE_TRY_AGAIN',
+          ),
           'error'
         );
       },
@@ -263,15 +278,21 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Announcement created successfully!',
+            this.translate.instant(
+              'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ANNOUNCEMENT_CREATED_SUCCESSFULLY',
+            ),
             'success'
           );
           this.resetForm();
         },
         error: (err) => {
-          console.error('Error creating announcement:', err);
+          console.error(this.translate.instant(
+            'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_ANNOUNCEMENT',
+          ), err);
           this.toastService.showToast(
-            'Error creating announcement. Please try again.',
+            this.translate.instant(
+              'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_ANNOUNCEMENT_PLEASE_TRY_AGAIN',
+            ),
             'error'
           );
         },
@@ -295,8 +316,12 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     }
     return this.imageService.createImage(imageFile).pipe(
       catchError((err) => {
-        console.error('Error uploading image:', err);
-        this.fileUploadError = 'Error uploading image';
+        console.error(this.translate.instant(
+            'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_UPLOADING_IMAGE',
+          ), err);
+        this.fileUploadError = this.translate.instant(
+          'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_UPLOADING_IMAGE_2',
+        );
         return of(null);
       })
     );

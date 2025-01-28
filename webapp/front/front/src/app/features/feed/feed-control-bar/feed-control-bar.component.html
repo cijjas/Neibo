@@ -6,7 +6,7 @@
       [ngClass]="{ active: statusClass === 'Latest' }"
     >
       <i class="fa-solid fa-arrow-up-wide-short"></i>
-      <span i18n>Latest</span>
+      <span i18n>{{ "FEED-CONTROL-BAR.LATEST" | translate }}</span>
     </a>
 
     <!-- Trending Button -->
@@ -16,7 +16,7 @@
       [ngClass]="{ active: statusClass === 'Trending' }"
     >
       <i class="fa-solid fa-arrow-trend-up ms-1"></i>
-      <span i18n>Trending</span>
+      <span i18n>{{ "FEED-CONTROL-BAR.TRENDING" | translate }}</span>
     </a>
 
     <!-- Hot Button -->
@@ -26,7 +26,7 @@
       [ngClass]="{ active: statusClass === 'Hot' }"
     >
       <i class="fa-solid fa-fire ms-1"></i>
-      <span i18n>Hot</span>
+      <span i18n>{{ "FEED-CONTROL-BAR.HOT" | translate }}</span>
     </a>
   </div>
 
@@ -35,9 +35,9 @@
       <i class="fa-solid fa-plus"></i>
 
       <ng-container [ngSwitch]="channelClass">
-        <span *ngSwitchCase="'Feed'" i18n>Create Post</span>
-        <span *ngSwitchCase="'Complaints'" i18n>Create Complaint</span>
-        <span *ngSwitchDefault i18n>Create Post</span>
+        <span *ngSwitchCase="'Feed'" i18n>{{ "FEED-CONTROL-BAR.CREATE_POST" | translate }}</span>
+        <span *ngSwitchCase="'Complaints'" i18n>{{ "FEED-CONTROL-BAR.CREATE_COMPLAINT" | translate }}</span>
+        <span *ngSwitchDefault i18n>{{ "FEED-CONTROL-BAR.CREATE_POST" | translate }}</span>
       </ng-container>
     </button>
   </div>

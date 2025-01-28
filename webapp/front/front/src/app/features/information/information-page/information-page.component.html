@@ -10,11 +10,11 @@
         style="word-wrap: break-word"
         aria-hidden="true"
       >
-        <h2 class="mb-3">Contact Information</h2>
+        <h2 class="mb-3">{{ "INFORMATION-PAGE.CONTACT_INFORMATION" | translate }}</h2>
         <div *ngIf="contacts.length === 0; else contactTable">
           <div class="no-posts-found">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            Information not found
+            {{ "INFORMATION-PAGE.INFORMATION_NOT_FOUND" | translate }}
           </div>
         </div>
         <ng-template #contactTable>
@@ -23,9 +23,9 @@
           >
             <table class="table-striped w-100">
               <tr>
-                <th class="day">Name</th>
-                <th>Address</th>
-                <th>Phone Number</th>
+                <th class="day">{{ "INFORMATION-PAGE.NAME" | translate }}</th>
+                <th>{{ "INFORMATION-PAGE.ADDRESS" | translate }}</th>
+                <th>{{ "INFORMATION-PAGE.PHONE_NUMBER" | translate }}</th>
               </tr>
               <tr *ngFor="let contact of contacts">
                 <td class="day">{{ contact.name }}</td>

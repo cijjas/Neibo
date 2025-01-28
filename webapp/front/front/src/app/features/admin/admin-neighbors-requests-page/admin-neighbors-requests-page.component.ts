@@ -6,6 +6,7 @@ import {
   ToastService,
 } from '@core/index';
 import { User, UserService, LinkKey } from '@shared/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-neighbors-requests-page',
@@ -24,7 +25,8 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
     private toastService: ToastService,
     private route: ActivatedRoute,
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +65,9 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
           this.totalPages = res.totalPages || 1;
         },
         error: (err) => {
-          console.error('Error loading users:', err);
+          console.error(this.translate.instant(
+            'ADMIN-NEIGHBORS-REQUESTS-PAGE.ERROR_LOADING_USERS',
+          ), err);
           this.users = [];
         },
       });
@@ -72,18 +76,18 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
   rejectUser(user: User): void {
     const actionDetails = this.neighbors
       ? {
-          title: 'Remove Neighbor',
-          message: `Are you sure you want to remove "${user.name}" as a neighbor? This action cannot be undone, and the user will lose access to neighborhood features.`,
-          confirmText: 'Yes, Remove',
-          successMessage: `"${user.name}" has been successfully removed as a neighbor. They no longer have access to neighborhood features.`,
-          errorMessage: `We encountered an issue while trying to remove "${user.name}" as a neighbor. Please check your connection or try again later.`,
+          title: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.REMOVE_NEIGHBOR'),
+          message: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.ARE_YOU_SURE_YOU_WANT_TO_REMOVE_USERNAME_AS_A_NEIG', {userName: user.name}),
+          confirmText: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.YES_REMOVE'),
+          successMessage: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.USERNAME_HAS_BEEN_SUCCESSFULLY_REMOVED_AS_A_NEIGHB', {userName: user.name}),
+          errorMessage: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.WE_ENCOUNTERED_AN_ISSUE_WHILE_TRYING_TO_REMOVE_USE', {userName: user.name}),
         }
       : {
-          title: 'Reject User Request',
-          message: `Are you sure you want to decline the request from "${user.name}"? This action cannot be undone.`,
-          confirmText: 'Yes, Reject',
-          successMessage: `The request from "${user.name}" has been successfully declined. The user will be notified accordingly.`,
-          errorMessage: `We encountered an issue while trying to decline the request from "${user.name}". Please check your connection or try again later.`,
+          title: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.REJECT_USER_REQUEST'),
+          message: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DECLINE_THE_REQUEST_FROM_', {userName: user.name}),
+          confirmText: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.YES_REJECT'),
+          successMessage: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.THE_REQUEST_FROM_USERNAME_HAS_BEEN_SUCCESSFULLY_DE', {userName: user.name}),
+          errorMessage: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.WE_ENCOUNTERED_AN_ISSUE_WHILE_TRYING_TO_DECLINE_TH', {userName: user.name}),
         };
 
     this.confirmationService
@@ -91,7 +95,7 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
         title: actionDetails.title,
         message: actionDetails.message,
         confirmText: actionDetails.confirmText,
-        cancelText: 'Cancel',
+        cancelText: this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.CANCEL'),
       })
       .subscribe((confirmed) => {
         if (confirmed) {
@@ -117,7 +121,7 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
     this.userService.verifyUser(user).subscribe({
       next: () => {
         this.toastService.showToast(
-          `User "${user.name}" has been successfully verified as a neighbor.`,
+          this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.USER_USERNAME_HAS_BEEN_SUCCESSFULLY_VERIFIED_AS_A_', {userName: user.name}),
           'success'
         );
         this.loadUsers(
@@ -126,7 +130,7 @@ export class AdminNeighborsRequestsPageComponent implements OnInit {
       },
       error: () => {
         this.toastService.showToast(
-          `Verification for user "${user.name}" failed. Please try again later.`,
+          this.translate.instant('ADMIN-NEIGHBORS-REQUESTS-PAGE.VERIFICATION_FOR_USER_USERNAME_FAILED_PLEASE_TRY_A', {userName: user.name}),
           'error'
         );
       },

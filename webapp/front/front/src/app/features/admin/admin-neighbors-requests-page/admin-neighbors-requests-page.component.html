@@ -3,7 +3,7 @@
   <!-- If there are no users -->
   <div class="f-r-s-c w-100 p-2">
     <h2 class="mb-0">
-      {{ !neighbors ? "Pending Neighbor Requests" : "Current Neighbors" }}
+      {{ neighbors ? ("ADMIN-NEIGHBORS-REQUESTS-PAGE.CURRENT_NEIGHBORS" | translate) : ("ADMIN-NEIGHBORS-REQUESTS-PAGE.PENDING_NEIGHBOR_REQUESTS" | translate) }}
     </h2>
   </div>
   <div class="divider"></div>
@@ -11,7 +11,7 @@
   <div class="user-row" *ngIf="users.length === 0">
     <div class="information">
       <!-- This is your fallback message -->
-      <div>No new requests found.</div>
+      <div>{{ "ADMIN-NEIGHBORS-REQUESTS-PAGE.NO_NEW_REQUESTS_FOUND" | translate }}</div>
     </div>
   </div>
 
@@ -31,19 +31,19 @@
         </div>
         <div class="information">
           <div>
-            <span style="color: var(--text)">Name: </span>
+            <span style="color: var(--text)">{{ "ADMIN-NEIGHBORS-REQUESTS-PAGE.NAME" | translate }} </span>
             <span style="color: var(--primary)">{{ user.name }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">Surname: </span>
+            <span style="color: var(--text)">{{ "ADMIN-NEIGHBORS-REQUESTS-PAGE.SURNAME" | translate }} </span>
             <span style="color: var(--primary)">{{ user.surname }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">Email: </span>
+            <span style="color: var(--text)">{{ "ADMIN-NEIGHBORS-REQUESTS-PAGE.EMAIL" | translate }} </span>
             <span style="color: var(--primary)">{{ user.email }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">Identification: </span>
+            <span style="color: var(--text)">{{ "ADMIN-NEIGHBORS-REQUESTS-PAGE.IDENTIFICATION" | translate }} </span>
             <span style="color: var(--primary)">{{ user.identification }}</span>
           </div>
         </div>
@@ -51,14 +51,14 @@
 
       <div class="f-r-c-c">
         <button class="ignore-button outlined on-bg" (click)="rejectUser(user)">
-          {{ neighbors ? "Remove" : "Reject" }}
+          {{ neighbors ? ("ADMIN-NEIGHBORS-REQUESTS-PAGE.REMOVE" | translate) : ("ADMIN-NEIGHBORS-REQUESTS-PAGE.REJECT" | translate) }}
         </button>
         <button
           *ngIf="!neighbors"
           class="cool-button cool-small font-weight-normal on-bg p-2"
           (click)="verifyUser(user)"
         >
-          Accept
+        {{ "ADMIN-NEIGHBORS-REQUESTS-PAGE.ACCEPT" | translate }}
         </button>
       </div>
     </div>

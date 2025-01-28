@@ -1,7 +1,7 @@
 <div class="error-content-container">
   <div class="flex-container">
     <div class="error-code">
-      Oops! {{ errorCode }}
+      {{ "NOT-FOUND-PAGE.OOPS__ERRORCODE_" | translate: {errorCode: errorCode} }}
     </div>
 
     <p class="error-description">
@@ -9,7 +9,7 @@
     </p>
     <div (click)="goBack()" id="goback-button" class="goback-button mt-5 font-weight-bold">
       <a class="">
-        Go back to home
+        {{ "NOT-FOUND-PAGE.GO_BACK_TO_HOME" | translate }}
       </a>
     </div>
   </div>

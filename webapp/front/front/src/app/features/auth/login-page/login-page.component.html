@@ -3,8 +3,7 @@
     <landing-page-navbar></landing-page-navbar>
     <div class="landing-neibo">Neibo</div>
     <p class="landing-description" style="mix-blend-mode: screen" i18n>
-      A platform for gated communities that allows you to share news, book
-      courts, and stay connected with your neighbors at all times.
+      {{ "LOGIN-PAGE.A_PLATFORM_FOR_GATED_COMMUNITIES_THAT_ALLOWS_YOU_T" | translate }}
     </p>
 
     <a
@@ -12,13 +11,13 @@
       (click)="openLoginDialog()"
       i18n
     >
-      Login
+    {{ "LOGIN-PAGE.LOGIN" | translate }}
     </a>
     <span
       style="color: var(--lighttext); font-size: 14px; mix-blend-mode: screen"
     >
-      <span i18n>Not a member?</span>
-      <a (click)="openSignupDialog()" class="a-link" i18n> Signup now </a>
+      <span i18n>{{ "LOGIN-PAGE.NOT_A_MEMBER" | translate }}</span>
+      <a (click)="openSignupDialog()" class="a-link" i18n> {{ "LOGIN-PAGE.SIGNUP_NOW" | translate }} </a>
     </span>
   </div>
 </div>

@@ -7,7 +7,7 @@
           class="cool-left-button admin-button leave f-r-sb-c"
         >
           <i class="fa-solid fa-chevron-left mr-5"></i>
-          <span class="text-end">Leave Admin Panel</span>
+          <span class="text-end">{{ "ADMIN-SIDEBAR.LEAVE_ADMIN_PANEL" | translate }}</span>
         </a>
         <div class="divider mt-1"></div>
       </div>
@@ -18,7 +18,7 @@
         [ngClass]="{ active: isActive('/admin/announcement/new') }"
       >
         <i class="fas fa-bullhorn m-r-5"></i>
-        <span class="text-end">Create Announcement</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.CREATE_ANNOUNCEMENT" | translate }}</span>
       </a>
       <div class="divider"></div>
       <a
@@ -27,7 +27,7 @@
         [ngClass]="{ active: isActive('/admin/neighbors/requests') }"
       >
         <i class="fa-solid fa-user-check m-r-5"></i>
-        <span class="text-end">Neighbor Requests</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.NEIGHBOR_REQUESTS" | translate }}</span>
       </a>
       <a
         [routerLink]="'/admin/neighbors'"
@@ -35,7 +35,7 @@
         [ngClass]="{ active: isActive('/admin/neighbors') }"
       >
         <i class="fa-solid fa-users m-r-5"></i>
-        <span class="text-end">Neighbor List</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.NEIGHBOR_LIST" | translate }}</span>
       </a>
       <a
         [routerLink]="'/admin/service-providers/requests'"
@@ -43,7 +43,7 @@
         [ngClass]="{ active: isActive('/admin/service-providers/requests') }"
       >
         <i class="fa-solid fa-clipboard-check"></i>
-        <span class="text-end">Provider Requests</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.PROVIDER_REQUESTS" | translate }}</span>
       </a>
       <a
         [routerLink]="'/admin/service-providers'"
@@ -51,7 +51,7 @@
         [ngClass]="{ active: isActive('/admin/service-providers') }"
       >
         <i class="fa-solid fa-hard-hat m-r-5"></i>
-        <span class="text-end">Provider List</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.PROVIDER_LIST" | translate }}</span>
       </a>
       <div class="divider"></div>
       <a
@@ -60,7 +60,7 @@
         [ngClass]="{ active: isActive('/admin/amenities') }"
       >
         <i class="fas fa-table-tennis-paddle-ball m-r-5"></i>
-        <span class="text-end">Amenities</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.AMENITIES" | translate }}</span>
       </a>
       <a
         [routerLink]="'/admin/information'"
@@ -69,7 +69,7 @@
         [ngClass]="{ active: isActive('/admin/information') }"
       >
         <i class="fas fa-address-card m-r-5"></i>
-        <span class="text-end">Information</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.INFORMATION" | translate }}</span>
       </a>
     </div>
     <div class="f-c-c-c">
@@ -79,7 +79,7 @@
         [ngClass]="{ active: isActive('/admin/calendar/events/create') }"
       >
         <i class="fas fa-calendar-days m-r-5"></i>
-        <span class="text-end">Create Event</span>
+        <span class="text-end">{{ "ADMIN-SIDEBAR.CREATE_EVENT" | translate }}</span>
       </a>
     </div>
   </div>

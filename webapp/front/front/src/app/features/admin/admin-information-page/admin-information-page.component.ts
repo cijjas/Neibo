@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, ToastService } from '@core/index';
 import { ContactService, ResourceService, ImageService } from '@shared/index';
 import { catchError, Observable, of, switchMap } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-information-page',
@@ -37,7 +38,8 @@ export class AdminInformationPageComponent implements OnInit {
     private resourceService: ResourceService,
     private toastService: ToastService,
     private imageService: ImageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -122,13 +124,15 @@ export class AdminInformationPageComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.toastService.showToast('Contact created!', 'success');
+          this.toastService.showToast(this.translate.instant(
+            'ADMIN-INFORMATION-PAGE.CONTACT_CREATED',
+          ), 'success');
           this.closeCreateContactDialog();
           this.fetchContacts(); // Refresh
         },
         error: (err) => {
-          console.error('Error creating contact:', err);
-          this.toastService.showToast('Failed to create contact.', 'error');
+          console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_CREATING_CONTACT'), err);
+          this.toastService.showToast(this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_CREATE_CONTACT'), 'error');
         },
       });
   }
@@ -148,7 +152,7 @@ export class AdminInformationPageComponent implements OnInit {
       .pipe(
         switchMap((imageUrl) => {
           if (!imageUrl) {
-            throw new Error('Image upload failed. Resource creation aborted.');
+            throw new Error(this.translate.instant('ADMIN-INFORMATION-PAGE.IMAGE_UPLOAD_FAILED_RESOURCE_CREATION_ABORTED'));
           }
           // Proceed to create the resource using the uploaded image URL
           return this.resourceService.createResource(
@@ -161,15 +165,15 @@ export class AdminInformationPageComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Resource created successfully!',
+            this.translate.instant('ADMIN-INFORMATION-PAGE.RESOURCE_CREATED_SUCCESSFULLY'),
             'success'
           );
           this.closeCreateResourceDialog();
           this.fetchResources(); // Refresh the list of resources
         },
         error: (err) => {
-          console.error('Error creating resource:', err);
-          this.toastService.showToast('Failed to create resource.', 'error');
+          console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_CREATING_RESOURCE'), err);
+          this.toastService.showToast(this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_CREATE_RESOURCE'), 'error');
         },
       });
   }
@@ -180,7 +184,7 @@ export class AdminInformationPageComponent implements OnInit {
     return imageFile
       ? this.imageService.createImage(imageFile).pipe(
           catchError((error) => {
-            console.error('Error uploading image:', error);
+            console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_UPLOADING_IMAGE'), error);
             return of(null); // Return null if image upload fails
           })
         )
@@ -219,7 +223,7 @@ export class AdminInformationPageComponent implements OnInit {
         },
         error: (err) => {
           this.toastService.showToast(
-            'There was an issue looking up contact information.',
+            this.translate.instant('ADMIN-INFORMATION-PAGE.THERE_WAS_AN_ISSUE_LOOKING_UP_CONTACT_INFORMATION'),
             'error'
           );
           console.error('Error fetching contacts:', err);
@@ -252,10 +256,10 @@ export class AdminInformationPageComponent implements OnInit {
         },
         error: (err) => {
           this.toastService.showToast(
-            'There was an issue looking up resource information.',
+            this.translate.instant('ADMIN-INFORMATION-PAGE.THERE_WAS_AN_ISSUE_LOOKING_UP_RESOURCE_INFORMATION'),
             'error'
           );
-          console.error('Error fetching resources:', err);
+          console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_FETCHING_RESOURCES'), err);
         },
       });
   }
@@ -274,25 +278,25 @@ export class AdminInformationPageComponent implements OnInit {
   deleteContact(contactUrl: string): void {
     this.confirmationService
       .askForConfirmation({
-        title: 'Delete Contact',
+        title: this.translate.instant('ADMIN-INFORMATION-PAGE.DELETE_CONTACT'),
         message:
-          'Are you sure you want to delete this contact? This action cannot be undone.',
-        confirmText: 'Yes, Delete',
-        cancelText: 'Cancel',
+        this.translate.instant('ADMIN-INFORMATION-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_CONTACT_THIS_'),
+        confirmText: this.translate.instant('ADMIN-INFORMATION-PAGE.YES_DELETE'),
+        cancelText: this.translate.instant('ADMIN-INFORMATION-PAGE.CANCEL'),
       })
       .subscribe((confirmed) => {
         if (confirmed) {
           this.contactService.deleteContact(contactUrl).subscribe({
             next: () => {
               this.toastService.showToast(
-                'Contact deleted successfully.',
+                this.translate.instant('ADMIN-INFORMATION-PAGE.CONTACT_DELETED_SUCCESSFULLY'),
                 'success'
               );
               this.fetchContacts(); // Refresh contacts list
             },
             error: (err) => {
-              console.error('Error deleting contact:', err);
-              this.toastService.showToast('Failed to delete contact.', 'error');
+              console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_DELETING_CONTACT'), err);
+              this.toastService.showToast(this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_DELETE_CONTACT'), 'error');
             },
           });
         }
@@ -303,26 +307,26 @@ export class AdminInformationPageComponent implements OnInit {
   deleteResource(resourceUrl: string): void {
     this.confirmationService
       .askForConfirmation({
-        title: 'Delete Resource',
+        title: this.translate.instant('ADMIN-INFORMATION-PAGE.DELETE_RESOURCE'),
         message:
-          'Are you sure you want to delete this resource? This action cannot be undone.',
-        confirmText: 'Yes, Delete',
-        cancelText: 'Cancel',
+        this.translate.instant('ADMIN-INFORMATION-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_RESOURCE_THIS'),
+        confirmText: this.translate.instant('ADMIN-INFORMATION-PAGE.YES_DELETE'),
+        cancelText: this.translate.instant('ADMIN-INFORMATION-PAGE.CANCEL'),
       })
       .subscribe((confirmed) => {
         if (confirmed) {
           this.resourceService.deleteResource(resourceUrl).subscribe({
             next: () => {
               this.toastService.showToast(
-                'Resource deleted successfully.',
+                this.translate.instant('ADMIN-INFORMATION-PAGE.RESOURCE_DELETED_SUCCESSFULLY'),
                 'success'
               );
               this.fetchResources(); // Refresh resources list
             },
             error: (err) => {
-              console.error('Error deleting resource:', err);
+              console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_DELETING_RESOURCE'), err);
               this.toastService.showToast(
-                'Failed to delete resource.',
+                this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_DELETE_RESOURCE'),
                 'error'
               );
             },

@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { ToastService } from '@core/index';
 import { CalendarService, EventService } from '@shared/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-admin-create-event',
@@ -21,7 +22,8 @@ export class AdminCreateEventComponent {
     private fb: FormBuilder,
     private eventService: EventService,
     private toastService: ToastService,
-    private calendarService: CalendarService
+    private calendarService: CalendarService,
+    private translate: TranslateService
   ) {
     // Inline definition of the validator function
     const startBeforeEndValidator: ValidatorFn = (
@@ -72,7 +74,9 @@ export class AdminCreateEventComponent {
       .subscribe({
         next: () => {
           // Show success toast
-          this.toastService.showToast('Event created successfully!', 'success');
+          this.toastService.showToast(this.translate.instant(
+            'ADMIN-CREATE-EVENT.EVENT_CREATED_SUCCESSFULLY',
+          ), 'success');
 
           // Reset the form
           this.eventForm.reset();
@@ -82,7 +86,9 @@ export class AdminCreateEventComponent {
           this.calendarService.triggerReload();
         },
         error: () => {
-          this.toastService.showToast('Failed creating event.', 'error');
+          this.toastService.showToast(this.translate.instant(
+            'ADMIN-CREATE-EVENT.FAILED_CREATING_EVENT',
+          ), 'error');
         },
       });
   }

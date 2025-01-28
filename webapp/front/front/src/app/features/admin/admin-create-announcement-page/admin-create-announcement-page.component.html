@@ -21,7 +21,7 @@
           class="form-row form-error"
           *ngIf="subjectControl?.invalid && subjectControl?.touched"
         >
-          <p class="error">*Subject is required</p>
+          <p class="error">{{"ADMIN-CREATE-ANNOUNCEMENT-PAGE.SUBJECT_IS_REQUIRED" | translate }}</p>
         </div>
       </div>
 
@@ -37,15 +37,15 @@
           class="form-row form-error"
           *ngIf="messageControl?.invalid && messageControl?.touched"
         >
-          <p class="error">*Message is required</p>
+          <p class="error">{{ "ADMIN-CREATE-ANNOUNCEMENT-PAGE.MESSAGE_IS_REQUIRED" | translate }}</p>
         </div>
       </div>
 
       <!-- File input -->
       <div class="col p-0">
         <label for="images" class="drop-container" id="dropcontainer">
-          <span class="drop-title">Drop files</span>
-          Or
+          <span class="drop-title">{{ "ADMIN-CREATE-ANNOUNCEMENT-PAGE.DROP_FILES" | translate }}</span>
+          {{ "ADMIN-CREATE-ANNOUNCEMENT-PAGE.OR" | translate }}
           <input
             type="file"
             id="images"
@@ -78,7 +78,7 @@
         -->
       <!-- Tags Section -->
       <div class="col p-0">
-        <label class="mb-2">Select from the available tags</label>
+        <label class="mb-2">{{ "ADMIN-CREATE-ANNOUNCEMENT-PAGE.SELECT_FROM_THE_AVAILABLE_TAGS" | translate }}</label>
 
         <!-- Display selected tags -->
         <div *ngIf="appliedTags.length > 0" class="tags-row tags w-100 mb-2">
@@ -107,7 +107,7 @@
             announcementForm.get('tags')?.touched
           "
         >
-          <p class="error">*At least one tag must be selected.</p>
+          <p class="error">{{ "ADMIN-CREATE-ANNOUNCEMENT-PAGE.AT_LEAST_ONE_TAG_MUST_BE_SELECTED" | translate }}</p>
         </div>
       </div>
     </div>
@@ -119,7 +119,7 @@
         class="cool-button cool-small on-bg w-25 font-weight-bolder"
         style="height: 40px"
       >
-        Post
+      {{ "ADMIN-CREATE-ANNOUNCEMENT-PAGE.POST" | translate }}
       </button>
     </div>
   </form>

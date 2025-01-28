@@ -12,24 +12,23 @@
           class="c-primary font-weight-bold mb-4 mt-4"
           i18n
         >
-          Hello there!
+        {{ "UNVERIFIED-PAGE.HELLO_THERE" | translate }}
         </p>
 
         <p style="font-size: 24px" class="c-primary mb-4" i18n>
-          You're one step away from becoming a neighbor!
+          {{ "UNVERIFIED-PAGE.YOURE_ONE_STEP_AWAY_FROM_BECOMING_A_NEIGHBOR" | translate }}
         </p>
         <br />
-        <p i18n>We've already sent your request to the administration,</p>
+        <p i18n>{{ "UNVERIFIED-PAGE.WEVE_ALREADY_SENT_YOUR_REQUEST_TO_THE_ADMINISTRATI" | translate }}</p>
         <br />
         <p i18n>
-          we are configuring your account to provide you with the best
-          experience.
+          {{ "UNVERIFIED-PAGE.WE_ARE_CONFIGURING_YOUR_ACCOUNT_TO_PROVIDE_YOU_WIT" | translate }}
         </p>
         <br />
-        <p i18n>We will notify you when your account is ready.</p>
+        <p i18n>{{ "UNVERIFIED-PAGE.WE_WILL_NOTIFY_YOU_WHEN_YOUR_ACCOUNT_IS_READY" | translate }}</p>
         <br />
         <button class="cool-button m-t-40" (click)="goBackToMainPage()" i18n>
-          Go back to login
+          {{ "UNVERIFIED-PAGE.GO_BACK_TO_LOGIN" | translate }}
         </button>
       </div>
     </div>

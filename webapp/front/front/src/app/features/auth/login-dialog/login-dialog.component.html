@@ -12,7 +12,7 @@
     <!-- Loading State -->
     <div *ngIf="loading; else loginFormTemplate">
       <div class="f-c-c-c">
-        <div style="font-size: 16px">Logging you in. Please wait...</div>
+        <div style="font-size: 16px">{{ "LOGIN-DIALOG.LOGGING_YOU_IN_PLEASE_WAIT" | translate }}</div>
         <div class="w-100 loader" style="margin-top: 20px"></div>
       </div>
     </div>
@@ -20,8 +20,8 @@
     <!-- Login Form -->
     <ng-template #loginFormTemplate>
       <div class=" ">
-        <div class="title mb-2">Welcome to Neibo</div>
-        <p>Log in to continue.</p>
+        <div class="title mb-2">{{ "LOGIN-DIALOG.WELCOME_TO_NEIBO" | translate }}</div>
+        <p>{{ "LOGIN-DIALOG.LOG_IN_TO_CONTINUE" | translate }}</p>
       </div>
       <form (ngSubmit)="tryLogin()" [formGroup]="loginForm" class="login-form">
         <div class="centered-column">
@@ -41,7 +41,7 @@
                 loginForm.get('email').invalid && loginForm.get('email').touched
               "
             >
-              *Entered email is not valid
+            {{ "LOGIN-DIALOG.ENTERED_EMAIL_IS_NOT_VALID" | translate }}
             </small>
           </label>
           <!-- Password Field -->
@@ -61,7 +61,7 @@
                 loginForm.get('password').touched
               "
             >
-              *Password is required
+              {{ "LOGIN-DIALOG.PASSWORD_IS_REQUIRED" | translate }}
             </small>
           </label>
         </div>
@@ -69,18 +69,18 @@
         <!-- Errors and Submit Button -->
         <div class="centered-column">
           <small class="form-error centered" *ngIf="loginFailed"
-            >*Invalid email or password</small
+            >{{ "LOGIN-DIALOG.INVALID_EMAIL_OR_PASSWORD" | translate }}</small
           >
           <button
             type="submit"
             class="action-button font-weight-bolder"
             [disabled]="loginForm.invalid"
           >
-            Login
+          {{ "LOGIN-DIALOG.LOGIN" | translate }}
           </button>
           <span class="light-text mt-2">
-            Not a member yet?
-            <a (click)="openSignupDialog()" class="a-link">Sign up now</a>
+            {{ "LOGIN-DIALOG.NOT_A_MEMBER_YET" | translate }}
+            <a (click)="openSignupDialog()" class="a-link">{{ "LOGIN-DIALOG.SIGN_UP_NOW" | translate }}</a>
           </span>
         </div>
       </form>

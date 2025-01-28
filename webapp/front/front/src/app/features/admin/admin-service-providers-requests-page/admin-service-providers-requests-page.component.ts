@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ConfirmationService,
   HateoasLinksService,
@@ -30,7 +31,8 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
     private affiliationService: AffiliationService,
     private route: ActivatedRoute,
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -72,7 +74,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
           this.totalPages = res.totalPages || 1;
         },
         error: (err) => {
-          console.error('Error loading workers:', err);
+          console.error(this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.ERROR_LOADING_WORKERS'), err);
           this.workers = [];
         },
       });
@@ -81,18 +83,18 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
   rejectWorker(worker: Worker): void {
     const actionDetails = this.serviceProviders
       ? {
-        title: 'Remove Service Provider',
-        message: `Are you sure you want to remove "${worker.user.name}" as a service provider? This action cannot be undone.`,
-        confirmText: 'Yes, Remove',
-        successMessage: `"${worker.user.name}" has been successfully removed as a service provider.`,
-        errorMessage: `We encountered an issue while trying to remove "${worker.user.name}" as a service provider. Please check your connection or try again later.`,
+        title: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.REMOVE_SERVICE_PROVIDER'),
+        message: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.ARE_YOU_SURE_YOU_WANT_TO_REMOVE_WORKERUSERNAME_AS_', {workerName: worker.user.name}),
+        confirmText: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.YES_REMOVE'),
+        successMessage: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.WORKERUSERNAME_HAS_BEEN_SUCCESSFULLY_REMOVED_AS_A_', {workerName: worker.user.name}),
+        errorMessage: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.WE_ENCOUNTERED_AN_ISSUE_WHILE_TRYING_TO_REMOVE_WOR', {workerName: worker.user.name}),
       }
       : {
-        title: 'Reject Service Provider Request',
-        message: `Are you sure you want to decline the request from "${worker.user.name}"? This action cannot be undone.`,
-        confirmText: 'Yes, Reject',
-        successMessage: `The request from "${worker.user.name}" has been successfully declined.`,
-        errorMessage: `We encountered an issue while trying to decline the request from "${worker.user.name}". Please check your connection or try again later.`,
+        title: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.REJECT_SERVICE_PROVIDER_REQUEST'),
+        message: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DECLINE_THE_REQUEST_FROM_', {workerName: worker.user.name}),
+        confirmText: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.YES_REJECT'),
+        successMessage: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.THE_REQUEST_FROM_WORKERUSERNAME_HAS_BEEN_SUCCESSFU', {workerName: worker.user.name}),
+        errorMessage: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.WE_ENCOUNTERED_AN_ISSUE_WHILE_TRYING_TO_DECLINE_TH', {workerName: worker.user.name}),
       };
 
     this.confirmationService
@@ -100,7 +102,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
         title: actionDetails.title,
         message: actionDetails.message,
         confirmText: actionDetails.confirmText,
-        cancelText: 'Cancel',
+        cancelText: this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.CANCEL'),
       })
       .subscribe((confirmed) => {
         if (confirmed) {
@@ -126,7 +128,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
     this.affiliationService.verifyWorker(worker.self).subscribe({
       next: () => {
         this.toastService.showToast(
-          'Worker ' + worker.user.name + ' was verified successfully.',
+          this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.WORKER_WAS_VERIFIED_SUCCESSFULLY', {workerName: worker.user.name}),
           'success'
         );
         this.loadWorkers(
@@ -135,9 +137,7 @@ export class AdminServiceProvidersRequestsPageComponent implements OnInit {
       },
       error: () => {
         this.toastService.showToast(
-          'Something went wrong, worker ' +
-          worker.user.name +
-          ' could not be verified.',
+          this.translate.instant('ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.SOMETHING_WENT_WRONG_WORKER_COULD_NOT', {workerName: worker.user.name}),
           'error'
         );
       },

@@ -40,7 +40,7 @@
                   "
                   class="form-row form-error"
                 >
-                  <p class="error">*Title is required.</p>
+                  <p class="error">{{ "FEED-CREATE-POST-PAGE.TITLE_IS_REQUIRED" | translate }}</p>
                 </div>
               </div>
             </div>
@@ -61,15 +61,15 @@
                 "
                 class="form-row form-error"
               >
-                <p class="error">*Body is required.</p>
+                <p class="error">{{ "FEED-CREATE-POST-PAGE.BODY_IS_REQUIRED" | translate }}</p>
               </div>
             </div>
 
             <div class="form-group w-50">
               <!-- Image File Input -->
               <label for="images" class="drop-container" id="dropcontainer">
-                <span class="drop-title"> Drop files </span>
-                Or
+                <span class="drop-title"> {{ "FEED-CREATE-POST-PAGE.DROP_FILES" | translate }} </span>
+                {{ "FEED-CREATE-POST-PAGE.OR" | translate }}
                 <input
                   type="file"
                   class="select-file-button"
@@ -107,7 +107,7 @@
               class="mt-3 w-50"
               style="border-top: 1px solid #ccc; padding-top: 1rem"
             >
-              <label class="mb-2">Select or create new tags</label>
+              <label class="mb-2">{{ "FEED-CREATE-POST-PAGE.SELECT_OR_CREATE_NEW_TAGS" | translate }}</label>
 
               <div
                 *ngIf="appliedTags.length > 0"
@@ -136,7 +136,7 @@
                     createCustomTag(newTagInput.value); newTagInput.value = ''
                   "
                 >
-                  Add
+                {{ "FEED-CREATE-POST-PAGE.ADD" | translate }}
                 </button>
               </div>
 
@@ -159,7 +159,7 @@
                 >
                   <i class="fa-solid fa-angle-left"></i>
                 </span>
-                <p>Page {{ currentPage }} of {{ totalPages }}</p>
+                <p>{{ "FEED-CREATE-POST-PAGE.PAGE__CURRENTPAGE__OF__TOTALPAGES_" | translate: { currentPage: currentPage, totalPages: totalPages } }}</p>
                 <span
                   id="next"
                   class="c-accent"
@@ -181,7 +181,7 @@
               class="cool-button cool-small on-bg w-25 font-weight-bolder"
               style="height: 40px"
             >
-              Post
+            {{ "FEED-CREATE-POST-PAGE.POST" | translate }}
             </button>
           </div>
         </form>

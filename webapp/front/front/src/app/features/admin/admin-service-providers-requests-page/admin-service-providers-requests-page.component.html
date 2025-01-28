@@ -3,14 +3,14 @@
 
   <div class="f-r-s-c w-100 p-2">
     <h2 class="mb-0">
-      {{ !serviceProviders ? "Pending Requests" : "Current Service Providers" }}
+      {{ serviceProviders ? ("ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.CURRENT_SERVICE_PROVIDERS" | translate ) : ("ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.PENDING_REQUESTS" | translate) }}
     </h2>
   </div>
   <div class="divider"></div>
 
   <div class="user-row" *ngIf="workers.length === 0">
     <div class="information">
-      <div>No new requests.</div>
+      <div>{{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.NO_NEW_REQUESTS" | translate }}</div>
     </div>
   </div>
 
@@ -31,29 +31,29 @@
         </div>
         <div class="information">
           <div>
-            <span style="color: var(--text)">Name: </span>
+            <span style="color: var(--text)">{{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.NAME" | translate }} </span>
             <span style="color: var(--primary)">{{ worker.user.name }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">Surname: </span>
+            <span style="color: var(--text)">{{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.SURNAME" | translate }} </span>
             <span style="color: var(--primary)">{{ worker.user.surname }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">Email: </span>
+            <span style="color: var(--text)">{{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.EMAIL" | translate }} </span>
             <span style="color: var(--primary)">{{ worker.user.email }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">Identification: </span>
+            <span style="color: var(--text)">{{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.IDENTIFICATION" | translate }} </span>
             <span style="color: var(--primary)">{{
               worker.user.identification
             }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">PhoneNumber: </span>
+            <span style="color: var(--text)">{{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.PHONE_NUMBER" | translate }} </span>
             <span style="color: var(--primary)">{{ worker.phoneNumber }}</span>
           </div>
           <div>
-            <span style="color: var(--text)">Business name: </span>
+            <span style="color: var(--text)">{{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.BUSINESS_NAME" | translate }} </span>
             <span style="color: var(--primary)">{{ worker.businessName }}</span>
           </div>
         </div>
@@ -71,7 +71,7 @@
           class="cool-button cool-small on-bg p-2"
           (click)="verifyWorker(worker)"
         >
-          Accept
+        {{ "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE.ACCEPT" | translate }}
         </button>
       </div>
     </div>

@@ -29,7 +29,7 @@
             : "Boost your Business with Neibo"
         }}
       </div>
-      <p>Sign up to get started.</p>
+      <p>{{ "SIGNUP-DIALOG.SIGN_UP_TO_GET_STARTED" | translate }}</p>
     </div>
 
     <!-- Toggle Options -->
@@ -40,14 +40,14 @@
           [class.active]="selectedOption === 'neighbor'"
           (click)="selectOption('neighbor')"
         >
-          Neighbor
+        {{ "SIGNUP-DIALOG.NEIGHBOR" | translate }}
         </button>
         <button
           class="cool-button"
           [class.active]="selectedOption === 'service'"
           (click)="selectOption('service')"
         >
-          Service Provider
+        {{ "SIGNUP-DIALOG.SERVICE_PROVIDER" | translate }}
         </button>
       </div>
 
@@ -59,7 +59,7 @@
         <div *ngIf="loading; else neighborSignupForm" class="w-100">
           <div class="f-c-c-c" class="w-100">
             <div style="font-size: 16px">
-              Creating your account. Please wait...
+              {{ "SIGNUP-DIALOG.CREATING_YOUR_ACCOUNT_PLEASE_WAIT" | translate }}
             </div>
             <div class="w-100 loader" style="margin-top: 20px"></div>
           </div>
@@ -93,7 +93,7 @@
                       signupForm.get('neighborhoodId')?.dirty)
                   "
                 >
-                  *Neighborhood is required.
+                {{ "SIGNUP-DIALOG.NEIGHBORHOOD_IS_REQUIRED" | translate }}
                 </small>
               </div>
             </div>
@@ -116,7 +116,7 @@
                       signupForm.get('name')?.dirty)
                   "
                 >
-                  *First name is required.
+                {{ "SIGNUP-DIALOG.FIRST_NAME_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -126,7 +126,7 @@
                       signupForm.get('name')?.dirty)
                   "
                 >
-                  *First name must only contain letters.
+                {{ "SIGNUP-DIALOG.FIRST_NAME_MUST_ONLY_CONTAIN_LETTERS" | translate }}
                 </small>
               </div>
               <div class="col p-0">
@@ -145,7 +145,7 @@
                       signupForm.get('surname')?.dirty)
                   "
                 >
-                  *Surname is required.
+                {{ "SIGNUP-DIALOG.SURNAME_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -155,7 +155,7 @@
                       signupForm.get('surname')?.dirty)
                   "
                 >
-                  *Surname must only contain letters.
+                {{ "SIGNUP-DIALOG.SURNAME_MUST_ONLY_CONTAIN_LETTERS" | translate }}
                 </small>
               </div>
             </div>
@@ -180,7 +180,7 @@
                       signupForm.get('mail')?.dirty)
                   "
                 >
-                  *Email is required.
+                {{ "SIGNUP-DIALOG.EMAIL_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -190,7 +190,7 @@
                       signupForm.get('mail')?.dirty)
                   "
                 >
-                  *Please enter a valid email address.
+                {{ "SIGNUP-DIALOG.PLEASE_ENTER_A_VALID_EMAIL_ADDRESS" | translate }}
                 </small>
               </div>
               <div class="col p-0">
@@ -211,7 +211,7 @@
                       signupForm.get('password')?.dirty)
                   "
                 >
-                  *Password is required.
+                {{ "SIGNUP-DIALOG.PASSWORD_IS_REQUIRED" | translate }}
                 </small>
                 <!-- <small
                   class="form-error"
@@ -256,7 +256,7 @@
                       signupForm.get('identification')?.dirty)
                   "
                 >
-                  *Identification is required.
+                {{ "SIGNUP-DIALOG.IDENTIFICATION_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -266,7 +266,7 @@
                       signupForm.get('identification')?.dirty)
                   "
                 >
-                  *Identification must be 7 to 8 digits, without leading zeros.
+                {{ "SIGNUP-DIALOG.IDENTIFICATION_MUST_BE_7_TO_8_DIGITS_WITHOUT_LEADI" | translate }}
                 </small>
               </div>
               <div class="col p-0">
@@ -278,7 +278,7 @@
                       selected
                       class="placeholder-option"
                     >
-                      Select Language
+                    {{ "SIGNUP-DIALOG.SELECT_LANGUAGE" | translate }}
                     </option>
                     <option
                       *ngFor="let language of languages"
@@ -296,7 +296,7 @@
                       signupForm.get('language')?.dirty)
                   "
                 >
-                  *Language is required.
+                {{ "SIGNUP-DIALOG.LANGUAGE_IS_REQUIRED" | translate }}
                 </small>
               </div>
             </div>
@@ -307,7 +307,7 @@
               class="action-button mt-4 mb-2"
               [disabled]="signupForm.invalid"
             >
-              Sign up
+            {{ "SIGNUP-DIALOG.SIGN_UP" | translate }}
             </button>
           </form>
         </ng-template>
@@ -321,7 +321,7 @@
         <div *ngIf="loading; else serviceSignupForm" class="w-100">
           <div class="f-c-c-c w-100">
             <div style="font-size: 16px">
-              Creating your service provider account. Please wait...
+              {{ "SIGNUP-DIALOG.CREATING_YOUR_SERVICE_PROVIDER_ACCOUNT_PLEASE_WAIT" | translate }}
             </div>
             <div class="w-100 loader" style="margin-top: 20px"></div>
           </div>
@@ -351,7 +351,7 @@
                       serviceForm.get('businessName')?.dirty)
                   "
                 >
-                  *Business name is required.
+                {{ "SIGNUP-DIALOG.BUSINESS_NAME_IS_REQUIRED" | translate }}
                 </div>
               </div>
             </div>
@@ -386,7 +386,7 @@
                       serviceForm.get('w_name')?.dirty)
                   "
                 >
-                  *First name is required.
+                {{ "SIGNUP-DIALOG.FIRST_NAME_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -396,7 +396,7 @@
                       serviceForm.get('w_name')?.dirty)
                   "
                 >
-                  *Only letters allowed.
+                {{ "SIGNUP-DIALOG.ONLY_LETTERS_ALLOWED" | translate }}
                 </small>
               </div>
               <div class="col p-0">
@@ -415,7 +415,7 @@
                       serviceForm.get('w_surname')?.dirty)
                   "
                 >
-                  *Surname is required.
+                {{ "SIGNUP-DIALOG.SURNAME_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -425,7 +425,7 @@
                       serviceForm.get('w_surname')?.dirty)
                   "
                 >
-                  *Only letters allowed.
+                {{ "SIGNUP-DIALOG.ONLY_LETTERS_ALLOWED" | translate }}
                 </small>
               </div>
             </div>
@@ -449,7 +449,7 @@
                       serviceForm.get('w_mail')?.dirty)
                   "
                 >
-                  *Email is required.
+                {{ "SIGNUP-DIALOG.EMAIL_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -459,7 +459,7 @@
                       serviceForm.get('w_mail')?.dirty)
                   "
                 >
-                  *Please enter a valid email.
+                {{ "SIGNUP-DIALOG.PLEASE_ENTER_A_VALID_EMAIL" | translate }}
                 </small>
               </div>
               <div class="col p-0">
@@ -480,7 +480,7 @@
                       serviceForm.get('w_password')?.dirty)
                   "
                 >
-                  *Password is required.
+                {{ "SIGNUP-DIALOG.PASSWORD_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -490,7 +490,7 @@
                       serviceForm.get('w_password')?.dirty)
                   "
                 >
-                  *Must be at least 8 characters.
+                {{ "SIGNUP-DIALOG.MUST_BE_AT_LEAST_8_CHARACTERS" | translate }}
                 </small>
                 <small
                   class="form-error w-100"
@@ -500,8 +500,7 @@
                       serviceForm.get('w_password')?.dirty)
                   "
                 >
-                  *Must contain at least 1 uppercase letter, 1 lowercase letter,
-                  and 1 digit.
+                {{ "SIGNUP-DIALOG.MUST_CONTAIN_AT_LEAST_1_UPPERCASE_LETTER_1_LOWERCA" | translate }}
                 </small>
               </div>
             </div>
@@ -523,7 +522,7 @@
                       serviceForm.get('w_address')?.dirty)
                   "
                 >
-                  *Address is required.
+                {{ "SIGNUP-DIALOG.ADDRESS_IS_REQUIRED" | translate }}
                 </small>
               </div>
               <div class="col p-0">
@@ -543,7 +542,7 @@
                       serviceForm.get('w_identification')?.dirty)
                   "
                 >
-                  *Identification is required.
+                {{ "SIGNUP-DIALOG.IDENTIFICATION_IS_REQUIRED" | translate }}
                 </small>
                 <small
                   class="form-error"
@@ -553,7 +552,7 @@
                       serviceForm.get('w_identification')?.dirty)
                   "
                 >
-                  *Identification must be 7 to 8 digits, without leading zeros.
+                {{ "SIGNUP-DIALOG.IDENTIFICATION_MUST_BE_7_TO_8_DIGITS_WITHOUT_LEADI" | translate }}
                 </small>
               </div>
             </div>
@@ -563,7 +562,7 @@
               <label>
                 <select class="cool-select" formControlName="w_language">
                   <option value="" disabled selected class="placeholder-option">
-                    Select Language
+                    {{ "SIGNUP-DIALOG.SELECT_LANGUAGE" | translate }}
                   </option>
                   <option
                     *ngFor="let language of languages"
@@ -581,7 +580,7 @@
                     serviceForm.get('w_language')?.dirty)
                 "
               >
-                *Language is required.
+              {{ "SIGNUP-DIALOG.LANGUAGE_IS_REQUIRED" | translate }}
               </small>
             </div>
 
@@ -602,7 +601,7 @@
                     serviceForm.get('phoneNumber')?.dirty)
                 "
               >
-                *Phone number is required.
+              {{ "SIGNUP-DIALOG.PHONE_NUMBER_IS_REQUIRED" | translate }}
               </small>
               <small
                 class="form-error"
@@ -612,7 +611,7 @@
                     serviceForm.get('phoneNumber')?.dirty)
                 "
               >
-                *Invalid phone format. E.g. +54 9 11 1234 5678
+              {{ "SIGNUP-DIALOG.INVALID_PHONE_FORMAT_EG_54_9_11_1234_5678" | translate }}
               </small>
             </div>
 
@@ -622,7 +621,7 @@
               class="action-button mt-4 mb-2"
               [disabled]="serviceForm.invalid"
             >
-              Sign up
+            {{ "SIGNUP-DIALOG.SIGN_UP" | translate }}
             </button>
           </form>
         </ng-template>

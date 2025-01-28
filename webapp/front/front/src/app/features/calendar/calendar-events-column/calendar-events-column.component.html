@@ -14,7 +14,7 @@
   <div id="actual-events" *ngIf="!isLoading">
     <div *ngIf="events.length === 0" class="no-posts-found">
       <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-      There are no events for this date.
+      {{ "CALENDAR-EVENTS-COLUMN.THERE_ARE_NO_EVENTS_FOR_THIS_DATE" | translate }}
     </div>
 
     <div *ngFor="let event of events" class="blogpost p-3">
@@ -45,10 +45,10 @@
           {{ event.startTime }} - {{ event.endTime }}
         </p>
         <p style="font-size: 12px; font-weight: normal">
-          {{ event.duration }} Minutes
+          {{ "CALENDAR-EVENTS-COLUMN._EVENTDURATION__MINUTES" | translate: {eventDuration: event.duration} }}
         </p>
         <p style="font-size: 12px; font-weight: normal">
-          {{ event.attendeesCount }} People will Attend
+          {{ "CALENDAR-EVENTS-COLUMN._EVENTATTENDEESCOUNT__PEOPLE_WILL_ATTEND" | translate: {eventAttendeesCount: event.attendeesCount} }}
         </p>
         <div class="divider"></div>
         <div class="postcard-description m-t-40" style="overflow: clip">

@@ -30,7 +30,7 @@
             <div class="f-c-c-c" *ngIf="isAdmin">
                 <a [routerLink]="['/admin/add-event']" [queryParams]="{ date: selectedDate | date: 'yyyy-MM-dd' }"
                     class="accept-button outlined on-background">
-                    Create New Event
+                    {{ "CALENDAR-BOX.CREATE_NEW_EVENT" | translate }}
                     <i class="fa-solid fa-plus"></i>
                 </a>
             </div>

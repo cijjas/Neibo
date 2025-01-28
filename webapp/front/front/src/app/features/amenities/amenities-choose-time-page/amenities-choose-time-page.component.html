@@ -14,17 +14,15 @@
         <div *ngIf="!isLoading && bookings?.length === 0">
           <div class="f-c-c-c" style="text-align: center">
             <span class="w-75 mb-2">
-              Unavailable times for
+              {{ "AMENITIES-CHOOSE-TIME-PAGE.UNAVAILABLE_TIMES_FOR" | translate }}
               <span class="font-weight-bolder c-primary">{{
                 amenityName
               }}</span>
-              on <span class="font-weight-bolder c-primary">{{ date }}</span
+              {{ "AMENITIES-CHOOSE-TIME-PAGE.ON" | translate }} <span class="font-weight-bolder c-primary">{{ date }}</span
               >.
             </span>
             <span class="w-75 mb-2 c-light-text">
-              No shifts are available on this day. Please check the amenity’s
-              shift availability table for open days and try selecting a
-              different date.
+              {{ "AMENITIES-CHOOSE-TIME-PAGE.NO_SHIFTS_ARE_AVAILABLE_ON_THIS_DAY_PLEASE_CHECK_T" | translate }}
             </span>
           </div>
           <div class="col-md-12">
@@ -33,7 +31,7 @@
                 (click)="goBack()"
                 class="cool-button cool-small on-bg w-25 font-weight-bold"
               >
-                Go back
+              {{ "AMENITIES-CHOOSE-TIME-PAGE.GO_BACK" | translate }}
               </button>
             </div>
           </div>
@@ -41,12 +39,12 @@
 
         <!-- If bookings are available -->
         <div *ngIf="!isLoading && bookings?.length > 0">
-          <h2>Select Time Slots</h2>
+          <h2>{{ "AMENITIES-CHOOSE-TIME-PAGE.SELECT_TIME_SLOTS" | translate }}</h2>
           <p class="c-light-text mt-2">
-            <strong>Amenity:</strong> {{ amenityName }}
+            <strong>{{ "AMENITIES-CHOOSE-TIME-PAGE.AMENITY" | translate }}</strong> {{ amenityName }}
           </p>
           <p class="c-light-text mt-2">
-            <strong>Date:</strong>
+            <strong>{{ "AMENITIES-CHOOSE-TIME-PAGE.DATE" | translate }}</strong>
             {{ date }}
           </p>
 
@@ -55,7 +53,7 @@
           <div class="f-c-c-c mt-4">
             <div class="shifts-reservation f-c-c-c w-50">
               <span class="font-weight-bold font-size-16">
-                Available times
+                {{ "AMENITIES-CHOOSE-TIME-PAGE.AVAILABLE_TIMES" | translate }}
               </span>
 
               <form [formGroup]="shiftsForm" *ngIf="bookings?.length > 0">
@@ -76,9 +74,9 @@
             </div>
             <div class="f-c-c-c">
               <div class="f-c-c-c" style="gap: 5px">
-                Remember that you can select multiple times at once.
+                {{ "AMENITIES-CHOOSE-TIME-PAGE.REMEMBER_THAT_YOU_CAN_SELECT_MULTIPLE_TIMES_AT_ONC" | translate }}
                 <span class="c-primary font-weight-bolder">
-                  Please confirm your selection.
+                  {{ "AMENITIES-CHOOSE-TIME-PAGE.PLEASE_CONFIRM_YOUR_SELECTION" | translate }}
                 </span>
               </div>
             </div>
@@ -91,7 +89,7 @@
                   [disabled]="isReserveDisabled()"
                   style="height: 40px"
                 >
-                  Confirm Reservation
+                {{ "AMENITIES-CHOOSE-TIME-PAGE.CONFIRM_RESERVATION" | translate }}
                 </button>
               </div>
             </div>
@@ -100,7 +98,7 @@
 
         <!-- Loading indicator -->
         <div *ngIf="isLoading" class="f-c-c-c" style="text-align: center">
-          <span class="w-100 mb-2">Loading available times...</span>
+          <span class="w-100 mb-2">{{ "AMENITIES-CHOOSE-TIME-PAGE.LOADING_AVAILABLE_TIMES" | translate }}</span>
         </div>
       </div>
     </div>
@@ -128,19 +126,18 @@
       <div class="success-icon mb-2" style="font-size: 50px">
         <i class="fas fa-check-circle"></i>
       </div>
-      <span class="font-weight-bold">Reservation Confirmed!</span>
+      <span class="font-weight-bold">{{ "AMENITIES-CHOOSE-TIME-PAGE.RESERVATION_CONFIRMED" | translate }}</span>
     </div>
     <div class="details text-center c-text">
       <div class="divider mb-4"></div>
 
       <p>
-        <strong>{{ amenityName }}</strong> has been successfully reserved for
-        you!
+        <strong>{{ amenityName }}</strong> {{ "AMENITIES-CHOOSE-TIME-PAGE.HAS_BEEN_SUCCESSFULLY_RESERVED_FOR_YOU" | translate }}
       </p>
       <div class="divider mb-4 mt-4"></div>
-      <p><strong>Date:</strong> {{ date }}</p>
+      <p><strong>{{ "AMENITIES-CHOOSE-TIME-PAGE.DATE" | translate }}</strong> {{ date }}</p>
       <p>
-        <strong>Shift(s):</strong>
+        <strong>{{ "AMENITIES-CHOOSE-TIME-PAGE.SHIFTS" | translate }}</strong>
       </p>
       <div class="shift-times" [innerHTML]="formattedShiftTimes"></div>
     </div>
@@ -149,7 +146,7 @@
       (click)="redirectToReservations()"
       class="action-button success-button font-weight-bolder"
     >
-      <span>Go to Amenities</span>
+      <span>{{ "AMENITIES-CHOOSE-TIME-PAGE.GO_TO_AMENITIES" | translate }}</span>
     </button>
   </div>
 </div>
