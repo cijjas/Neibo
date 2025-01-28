@@ -29,18 +29,17 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractDate;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalDate;
 
-
 /*
  * # Summary
  *   - A Neighborhood has many Events
  *   - A User can attend multiple Events, and the Events can have multiple Attendees
- *   - An event has a relationship with a Shifts
+ *   - An Event start time and end time are references to Shifts
  *
  * # Use cases
  *   - An Admin can create Events for its Neighborhoods
  *   - An Admin can update/delete an Event
- *   - A User/Admin can list the future Events for their Neighborhood
- *   - A User/Admin can attend an Event (maybe an Admin should not be able to, though it currently helps int testing)
+ *   - A Neighbor/Admin can list the future Events for their Neighborhood
+ *   - A Neighbor/Admin can attend an Event
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.EVENTS)

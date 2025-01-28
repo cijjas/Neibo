@@ -19,7 +19,6 @@ import javax.ws.rs.core.*;
 import java.io.InputStream;
 import java.net.URI;
 
-
 /*
  * # Summary
  *   - Self-Descriptive, has relationships with many entities like Posts, Products, Users, Workers, Resources

@@ -20,13 +20,12 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
-
 /*
  * # Summary
  *   - A Purchase has a Transaction Type which can be used to filter the Purchases, this is kind of conflicting with the Product Status enum
  *
  * # Use cases
- *   - A User/Admin filters the Purchases/Transactions through the Transaction Types
+ *   - A Neighbor/Admin filters the Requests through the Transaction Types
  */
 
 @Path(Endpoint.TRANSACTION_TYPES)

@@ -21,6 +21,14 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
+/*
+ * # Summary
+ *   - Criteria for Workers
+ *
+ * # Use cases
+ *   - A Worker/Neighbor/Admin can filter the Workers through this criteria
+ */
+
 @Path(Endpoint.WORKER_ROLES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})

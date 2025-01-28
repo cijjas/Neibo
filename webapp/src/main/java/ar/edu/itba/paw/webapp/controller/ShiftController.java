@@ -27,8 +27,10 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
  *   - A Shift is the combination of a Time and a Day
  *   - Shifts are utilized under the hood by Events, Availability, Bookings and more
  *
- * # Embeddable?
- *   - I think we can embed it, it would heavily reduce the amount of requests at certain points, Availabilities makes it hard
+ * # Use cases
+ *   - Anyone can list the Shifts
+ *   - A Neighbor/Admin can get the Shifts when an Amenity is available
+ *   - A Neighbor/Admin can get the Shifts when an Amenity is available on a specific Date
  */
 
 @Path(Endpoint.SHIFTS)

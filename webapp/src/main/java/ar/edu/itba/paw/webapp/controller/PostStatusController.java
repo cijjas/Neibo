@@ -21,14 +21,13 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
-
 /*
  * # Summary
  *   - Post Criteria, a Post can be Hot, Trending or none of those two
  *   - This attribute is exclusively used for Posts
  *
  * # Use cases
- *   - A User/Admin can filter the Posts over this criteria
+ *   - A Neighbor/Admin can filter the Posts through this criteria
  */
 
 @Path(Endpoint.POST_STATUSES)

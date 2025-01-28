@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,18 +28,14 @@ public class AffiliationDaoImpl implements AffiliationDao {
     // ----------------------------------------- NEIGHBORHOOD WORKERS INSERT -------------------------------------------
 
     @Override
-    public Affiliation createAffiliation(long neighborhoodId, long workerId, Long workerRoleId) {
+    public Affiliation createAffiliation(long neighborhoodId, long workerId, long workerRoleId) {
         LOGGER.debug("Inserting Affiliation between Worker Id {} and Neighborhood Id {}", workerId, neighborhoodId);
 
         Worker worker = em.find(Worker.class, workerId);
         Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
         WorkerRole workerRole = WorkerRole.fromId(workerRoleId);
 
-        Affiliation affiliation;
-        if (workerRole == null)
-            affiliation = new Affiliation(worker, neighborhood, WorkerRole.UNVERIFIED_WORKER);
-        else
-            affiliation = new Affiliation(worker, neighborhood, workerRole);
+        Affiliation affiliation = new Affiliation(worker, neighborhood, workerRole, new Date(System.currentTimeMillis()));
 
         em.persist(affiliation);
         return affiliation;
@@ -57,7 +54,6 @@ public class AffiliationDaoImpl implements AffiliationDao {
     public List<Affiliation> getAffiliations(Long neighborhoodId, Long workerId, int page, int size) {
         LOGGER.debug("Selecting Worker Affiliations with Worker Id {} and with Neighborhood Id {}", workerId, neighborhoodId);
 
-        TypedQuery<AffiliationKey> idQuery = null;
         StringBuilder queryBuilder = new StringBuilder("SELECT a.id FROM Affiliation a ");
 
         if (workerId != null && neighborhoodId != null) {
@@ -68,9 +64,9 @@ public class AffiliationDaoImpl implements AffiliationDao {
             queryBuilder.append("WHERE a.neighborhood.neighborhoodId = :neighborhoodId ");
         }
 
-        queryBuilder.append("ORDER BY a.worker.id, a.neighborhood.neighborhoodId");
+        queryBuilder.append("ORDER BY a.requestDate ASC");
 
-        idQuery = em.createQuery(queryBuilder.toString(), AffiliationKey.class);
+        TypedQuery<AffiliationKey> idQuery = em.createQuery(queryBuilder.toString(), AffiliationKey.class);
 
         if (workerId != null) {
             idQuery.setParameter("workerId", workerId);
@@ -86,10 +82,11 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
         if (!ids.isEmpty()) {
             TypedQuery<Affiliation> affiliationQuery = em.createQuery(
-                    "SELECT a FROM Affiliation a WHERE a.id IN :ids ORDER BY a.worker.id, a.neighborhood.neighborhoodId", Affiliation.class);
+                    "SELECT a FROM Affiliation a WHERE a.id IN :ids ORDER BY a.requestDate ASC", Affiliation.class); // Order by requestDate
             affiliationQuery.setParameter("ids", ids);
             return affiliationQuery.getResultList();
         }
+
         return Collections.emptyList();
     }
 
@@ -97,7 +94,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
     public int countAffiliations(Long neighborhoodId, Long workerId) {
         LOGGER.debug("Counting Worker Affiliations with Worker Id {} and with Neighborhood Id {}", workerId, neighborhoodId);
 
-        Long count = null;
+        Long count;
         if (workerId != null && neighborhoodId != null) {
             count = (Long) em.createQuery(
                             "SELECT COUNT(a) FROM Affiliation a WHERE a.worker.id = :workerId AND a.neighborhood.neighborhoodId = :neighborhoodId")
@@ -115,9 +112,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
                     .setParameter("neighborhoodId", neighborhoodId)
                     .getSingleResult();
         } else {
-            count = (Long) em.createQuery(
-                            "SELECT COUNT(a) FROM Affiliation a")
-                    .getSingleResult();
+            count = (Long) em.createQuery("SELECT COUNT(a) FROM Affiliation a").getSingleResult();
         }
 
         return count != null ? count.intValue() : 0;

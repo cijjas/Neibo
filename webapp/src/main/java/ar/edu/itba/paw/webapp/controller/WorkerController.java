@@ -35,9 +35,10 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - Main entity for the Workers functionality
  *
  * # Use Cases
- *   - A client can register as a Worker
+ *   - Anyone can register as a Worker
  *   - A Worker can update his/her profile
- *   - A User/Admin/Worker can list the Workers in a Neighborhood
+ *   - A Worker can list all the Workers
+ *   - A Neighbor/Admin can list the Workers affiliated with their Neighborhood
  */
 
 @Path(Endpoint.WORKERS)

@@ -164,7 +164,28 @@ public class ChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey2, chKey2);
 
         // Exercise
-        List<Channel> channelList = channelDaoImpl.getChannels(nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Channel> channelList = channelDaoImpl.getChannels(nhKey1, EMPTY_BOOLEAN_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, channelList.size());
+    }
+
+    @Test
+    public void get_isBase() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1, Boolean.TRUE);
+        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2, Boolean.FALSE);
+        long chKey3 = testInserter.createChannel(CHANNEL_NAME_3, Boolean.FALSE);
+        testInserter.createChannelMapping(nhKey1, chKey1);
+        testInserter.createChannelMapping(nhKey2, chKey2);
+        testInserter.createChannelMapping(nhKey1, chKey3);
+
+        List<Channel> channelListy = channelDaoImpl.getChannels(nhKey1, EMPTY_BOOLEAN_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        System.out.println(channelListy);
+        // Exercise
+        List<Channel> channelList = channelDaoImpl.getChannels(nhKey1, Boolean.FALSE, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, channelList.size());
@@ -176,7 +197,7 @@ public class ChannelDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        List<Channel> channelList = channelDaoImpl.getChannels(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Channel> channelList = channelDaoImpl.getChannels(nhKey, EMPTY_BOOLEAN_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(channelList.isEmpty());
@@ -196,7 +217,7 @@ public class ChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey1, chKey3);
 
         // Exercise
-        List<Channel> channelList = channelDaoImpl.getChannels(nhKey1, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Channel> channelList = channelDaoImpl.getChannels(nhKey1, EMPTY_BOOLEAN_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, channelList.size());
@@ -215,10 +236,29 @@ public class ChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey2, chKey2);
 
         // Exercise
-        int countChannels = channelDaoImpl.countChannels(nhKey1);
+        int countChannels = channelDaoImpl.countChannels(nhKey1, EMPTY_BOOLEAN_FIELD);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countChannels);
+    }
+
+    @Test
+    public void count_isBase() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1, Boolean.TRUE);
+        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2, Boolean.FALSE);
+        long chKey3 = testInserter.createChannel(CHANNEL_NAME_3, Boolean.FALSE);
+        testInserter.createChannelMapping(nhKey1, chKey1);
+        testInserter.createChannelMapping(nhKey2, chKey2);
+        testInserter.createChannelMapping(nhKey1, chKey3);
+
+        // Exercise
+        int channelCount = channelDaoImpl.countChannels(nhKey1, Boolean.FALSE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, channelCount);
     }
 
     @Test
@@ -227,7 +267,7 @@ public class ChannelDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        int countChannels = channelDaoImpl.countChannels(nhKey);
+        int countChannels = channelDaoImpl.countChannels(nhKey, EMPTY_BOOLEAN_FIELD);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countChannels);

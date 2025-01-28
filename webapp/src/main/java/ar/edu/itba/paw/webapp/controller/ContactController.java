@@ -30,11 +30,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  *   - A Neighborhood has many Contacts
  *
  * # Use cases
- *   - An admin can create, update, delete a Contact
- *   - A user/admin list all the Contacts
- *
- * # Issues
- *   - Contacts may have to be paginated, they currently are not
+ *   - A Neighbor/Admin can list all the Contacts
+ *   - An Admin can create, update and delete a Contact
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CONTACTS)

@@ -13,7 +13,6 @@ create sequence if not exists neighborhoods_neighborhoodid_seq;
 create sequence if not exists posts_postid_seq;
 create sequence if not exists products_productid_seq;
 create sequence if not exists products_users_inquiries_inquiryid_seq;
-create sequence if not exists products_users_purchases_purchaseid_seq;
 create sequence if not exists products_users_requests_requestid_seq;
 create sequence if not exists professions_professionid_seq;
 create sequence if not exists reviews_reviewid_seq;
@@ -27,12 +26,14 @@ create sequence if not exists users_userid_seq;
 CREATE TABLE IF NOT EXISTS neighborhoods
 (
     neighborhoodid   INTEGER IDENTITY PRIMARY KEY,
+    isBase           BOOLEAN,
     neighborhoodname VARCHAR(128)
 );
 
 CREATE TABLE IF NOT EXISTS channels
 (
     channelid INTEGER IDENTITY PRIMARY KEY,
+    isBase          BOOLEAN,
     channel   VARCHAR(64) NOT NULL UNIQUE
 );
 
@@ -162,6 +163,7 @@ CREATE TABLE IF NOT EXISTS workers_neighborhoods
 (
     workerId       INT,
     neighborhoodId INT,
+    requestDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     role VARCHAR(128),
         PRIMARY KEY (workerId, neighborhoodId),
     FOREIGN KEY (workerId) REFERENCES users (userId) ON DELETE CASCADE,

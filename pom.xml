@@ -340,6 +340,7 @@
         <module>interfaces</module>
         <module>persistence</module>
         <module>services</module>
+<!--        <module>frontend</module>-->
     </modules>
 
 </project>
