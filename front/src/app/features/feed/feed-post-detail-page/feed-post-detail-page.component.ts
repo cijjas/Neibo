@@ -1,8 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { HttpErrorResponse } from "@angular/common/http";
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
-import { Comment, Post, PostService, CommentService, LikeService } from "@shared/index";
+import {
+  Comment,
+  Post,
+  PostService,
+  CommentService,
+  LikeService,
+} from '@shared/index';
 import { UserSessionService } from '@core/index';
 
 @Component({
@@ -11,7 +17,6 @@ import { UserSessionService } from '@core/index';
 })
 export class FeedPostDetailPageComponent implements OnInit {
   postSelf!: string;
-  route: ActivatedRoute = inject(ActivatedRoute);
 
   public post: Post | undefined;
   public comments: Comment[] = [];
@@ -21,10 +26,9 @@ export class FeedPostDetailPageComponent implements OnInit {
 
   constructor(
     private postService: PostService,
-    private commentService: CommentService,
-    private likeService: LikeService,
-    private userSessionService: UserSessionService
-  ) { }
+    private userSessionService: UserSessionService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.postSelf = this.route.snapshot.paramMap.get('id')!;
@@ -49,9 +53,6 @@ export class FeedPostDetailPageComponent implements OnInit {
     this.getPost();
   }
 
-
-
-
   public getPost(): void {
     this.postService.getPost(this.postSelf).subscribe({
       next: (post: Post) => {
@@ -59,7 +60,7 @@ export class FeedPostDetailPageComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error fetching post:', error);
-      }
+      },
     });
   }
 }

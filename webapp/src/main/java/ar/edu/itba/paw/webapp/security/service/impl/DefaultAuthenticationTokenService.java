@@ -16,7 +16,7 @@ import java.util.UUID;
 @Service
 public class DefaultAuthenticationTokenService implements AuthenticationTokenService {
 
-    @Value("60") // 60 minutes
+    @Value("15") // 60 minutes
     private Long accessTokenValidity; // How long the access token is valid for, in seconds
 
     @Value("604800") // 7 days
