@@ -39,9 +39,11 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - Has many relationships, Comments, Users, Likes, Images...
  *
  * # Use cases
- *   - A User can create Posts in the Base Channels allowed for Users
+ *   - A Neighbor can create Posts in the Channels allowed for Users
  *   - An Admin can create Posts in the Channels allowed for Admins
- *   - User/Admin can view the posts in all Channels
+ *   - A Worker can create Posts in the Channel allowed for Workers
+ *   - Neighbor/Admin can view the posts in all Channels (including Workers Channel)
+ *   - A Worker can view the posts in the Workers Channel
  *   - An Admin can delete a Post
  */
 

@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
-
 /*
  * # Summary
  *   - Every Request has a RequestStatus, indicating if it has been seen by the requester (REQUESTED),
  *     accepted by the product owner (ACCEPTED), or declined by the owner (DECLINED)
+ * # Use cases
+ *   - A Neighbor/Admin can filter their requests through this criteria
  */
 
 @Path(Endpoint.REQUEST_STATUSES)

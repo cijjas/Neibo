@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -12,26 +10,34 @@ import java.util.Set;
 public class Neighborhood {
     @OneToMany(mappedBy = "neighborhood")  // mappedBy refers to the field in the User entity
     private final Set<User> users = new HashSet<>();
+
     @OneToMany(mappedBy = "neighborhood")
     private final Set<Contact> contacts = new HashSet<>();
+
     @OneToMany(mappedBy = "neighborhood")
     private final Set<Event> events = new HashSet<>();
+
     @OneToMany(mappedBy = "neighborhood")
     private final Set<Resource> resources = new HashSet<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "neighborhoods_neighborhoodid_seq")
     @SequenceGenerator(sequenceName = "neighborhoods_neighborhoodid_seq", name = "neighborhoods_neighborhoodid_seq", allocationSize = 1)
     private Long neighborhoodId;
+
     @Column(name = "neighborhoodname", length = 128, unique = true, nullable = false)
     private String name;
+
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "neighborhoods_channels",
-            joinColumns = @JoinColumn(name = "neighborhoodid"),
-            inverseJoinColumns = @JoinColumn(name = "channelid"))
+    @JoinTable(name = "neighborhoods_channels", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "channelid"))
     private Set<Neighborhood> channels;
+
     @ManyToMany
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> workers;
+
+    @Column(name = "isbase")
+    private Boolean isBase;
 
     Neighborhood() {
     }
@@ -39,6 +45,7 @@ public class Neighborhood {
     private Neighborhood(Builder builder) {
         this.neighborhoodId = builder.neighborhoodId;
         this.name = builder.name;
+        this.isBase = builder.isBase;
     }
 
     public Long getNeighborhoodId() {
@@ -49,12 +56,8 @@ public class Neighborhood {
         return name;
     }
 
-    @Override
-    public String toString() {
-        return "Neighborhood{" +
-                "neighborhoodId=" + neighborhoodId +
-                ", name='" + name + '\'' +
-                '}';
+    public Boolean getBase() {
+        return isBase;
     }
 
     @Override
@@ -73,6 +76,7 @@ public class Neighborhood {
     public static class Builder {
         private Long neighborhoodId;
         private String name;
+        private Boolean isBase;
 
         public Builder neighborhoodId(Long neighborhoodId) {
             this.neighborhoodId = neighborhoodId;
@@ -84,8 +88,21 @@ public class Neighborhood {
             return this;
         }
 
+        public Builder isBase(Boolean isBase) {
+            this.isBase = isBase;
+            return this;
+        }
+
         public Neighborhood build() {
             return new Neighborhood(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Neighborhood{" +
+                ", name='" + name + '\'' +
+                ", isBase=" + isBase +
+                '}';
     }
 }

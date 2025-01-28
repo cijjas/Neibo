@@ -25,14 +25,13 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
 
-
 /*
  * # Summary
  *   - A Post can have many Tags and a Tag can be utilized in many Posts
  *
  * # Use cases
- *   - A User creates a Tag through the Post creation
- *   - A User/Admin filters the Posts through a Tag
+ *   - A Neighbor/Admin can create a Tag
+ *   - A Neighbor/Admin filters the Posts through a Tag
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.TAGS)

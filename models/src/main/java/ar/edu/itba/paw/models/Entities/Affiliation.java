@@ -6,6 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -28,15 +29,20 @@ public class Affiliation implements Serializable {
     @Enumerated(EnumType.STRING)
     private WorkerRole role;
 
+    @Column(name = "requestDate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date requestDate;
+
     Affiliation() {
         this.id = new AffiliationKey();
     }
 
-    public Affiliation(Worker worker, Neighborhood neighborhood, WorkerRole workerRole) {
+    public Affiliation(Worker worker, Neighborhood neighborhood, WorkerRole workerRole, Date requestDate) {
         this.id = new AffiliationKey(worker.getUser().getUserId(), neighborhood.getNeighborhoodId());
         this.worker = worker;
         this.neighborhood = neighborhood;
         this.role = workerRole;
+        this.requestDate = requestDate;
     }
 
     public AffiliationKey getId() {

@@ -52,17 +52,17 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Channel> getChannels(long neighborhoodId, int page, int size) {
+    public List<Channel> getChannels(long neighborhoodId, Boolean isBase, int page, int size) {
         LOGGER.info("Getting Channels for Neighborhood {}", neighborhoodId);
 
-        return channelDao.getChannels(neighborhoodId, page, size);
+        return channelDao.getChannels(neighborhoodId, isBase, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateChannelPages(long neighborhoodId, int size) {
+    public int calculateChannelPages(long neighborhoodId, Boolean isBase, int size) {
         LOGGER.info("Calculating Channel Pages for Neighborhood {}", neighborhoodId);
 
-        return PaginationUtils.calculatePages(channelDao.countChannels(neighborhoodId), size);
+        return PaginationUtils.calculatePages(channelDao.countChannels(neighborhoodId, isBase), size);
     }
 }

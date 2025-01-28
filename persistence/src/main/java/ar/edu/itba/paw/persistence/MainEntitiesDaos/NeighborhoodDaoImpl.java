@@ -30,6 +30,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
         Neighborhood neighborhood = new Neighborhood.Builder()
                 .name(name)
+                .isBase(false)
                 .build();
         em.persist(neighborhood);
         return neighborhood;
@@ -54,26 +55,24 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public List<Neighborhood> getNeighborhoods(Long withWorkerId, Long withoutWorkerId, int page, int size) {
-        LOGGER.debug("Selecting Neighborhoods with Worker Id {} and without Worker Id {}", withWorkerId, withoutWorkerId);
+    public List<Neighborhood> getNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int page, int size) {
+        LOGGER.debug("Selecting Neighborhoods with Worker Id {}, without Worker Id {}, and isBase {}", withWorkerId, withoutWorkerId, isBase);
 
-        // Build the query
         StringBuilder queryBuilder = new StringBuilder(
-                "SELECT DISTINCT n.neighborhoodid " +
+                "SELECT DISTINCT n.* " +
                         "FROM neighborhoods n " +
-                        "LEFT JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid "
+                        "LEFT JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid " +
+                        "WHERE 1=1 "
         );
 
+        if (isBase != null) {
+            queryBuilder.append("AND n.isbase = :isBase ");
+        }
         if (withWorkerId != null) {
-            queryBuilder.append("WHERE wn.workerid = :withWorkerId ");
+            queryBuilder.append("AND wn.workerid = :withWorkerId ");
         }
         if (withoutWorkerId != null) {
-            if (withWorkerId != null) {
-                queryBuilder.append("AND ");
-            } else {
-                queryBuilder.append("WHERE ");
-            }
-            queryBuilder.append("n.neighborhoodid NOT IN ( " +
+            queryBuilder.append("AND n.neighborhoodid NOT IN ( " +
                     "SELECT wn2.neighborhoodid " +
                     "FROM neighborhoods neigh " +
                     "LEFT JOIN workers_neighborhoods wn2 ON neigh.neighborhoodid = wn2.neighborhoodid " +
@@ -82,8 +81,10 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
         queryBuilder.append("ORDER BY n.neighborhoodid");
 
-        // Create and parameterize the query
-        Query query = em.createNativeQuery(queryBuilder.toString());
+        Query query = em.createNativeQuery(queryBuilder.toString(), Neighborhood.class);
+        if (isBase != null) {
+            query.setParameter("isBase", isBase);
+        }
         if (withWorkerId != null) {
             query.setParameter("withWorkerId", withWorkerId);
         }
@@ -93,24 +94,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
 
-        // Execute the query and map results
-        List<?> result = query.getResultList();
-        List<Long> neighborhoodIds = result.stream()
-                .map(id -> ((Number) id).longValue())
-                .collect(Collectors.toList());
-
-        if (neighborhoodIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        // Fetch neighborhoods based on the IDs
-        TypedQuery<Neighborhood> dataQuery = em.createQuery(
-                "SELECT n FROM Neighborhood n WHERE n.neighborhoodId IN :neighborhoodIds ORDER BY n.neighborhoodId",
-                Neighborhood.class
-        );
-        dataQuery.setParameter("neighborhoodIds", neighborhoodIds);
-
-        return dataQuery.getResultList();
+        return query.getResultList();
     }
 
     @Override
@@ -123,26 +107,26 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public int countNeighborhoods(Long withWorkerId, Long withoutWorkerId) {
-        LOGGER.debug("Counting Neighborhoods with Worker Id {} and without Worker Id {}", withWorkerId, withoutWorkerId);
+    public int countNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId) {
+        LOGGER.debug("Counting Neighborhoods with Worker Id {}, without Worker Id {}, and isBase {}", withWorkerId, withoutWorkerId, isBase);
 
         // Build the query
         StringBuilder queryBuilder = new StringBuilder(
                 "SELECT COUNT(DISTINCT n.neighborhoodid) " +
                         "FROM neighborhoods n " +
-                        "LEFT JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid "
+                        "LEFT JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid " +
+                        "WHERE 1=1 "
         );
 
+        // Append conditions
+        if (isBase != null) {
+            queryBuilder.append("AND n.isbase = :isBase ");
+        }
         if (withWorkerId != null) {
-            queryBuilder.append("WHERE wn.workerid = :withWorkerId ");
+            queryBuilder.append("AND wn.workerid = :withWorkerId ");
         }
         if (withoutWorkerId != null) {
-            if (withWorkerId != null) {
-                queryBuilder.append("AND ");
-            } else {
-                queryBuilder.append("WHERE ");
-            }
-            queryBuilder.append("n.neighborhoodid NOT IN ( " +
+            queryBuilder.append("AND n.neighborhoodid NOT IN ( " +
                     "SELECT wn2.neighborhoodid " +
                     "FROM neighborhoods neigh " +
                     "LEFT JOIN workers_neighborhoods wn2 ON neigh.neighborhoodid = wn2.neighborhoodid " +
@@ -151,6 +135,10 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
         // Create and parameterize the query
         Query query = em.createNativeQuery(queryBuilder.toString());
+
+        if (isBase != null) {
+            query.setParameter("isBase", isBase);
+        }
         if (withWorkerId != null) {
             query.setParameter("withWorkerId", withWorkerId);
         }

@@ -29,11 +29,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  *   - A Neighborhood can have many channels that are exclusive to their Neighborhood (ie Golf, Volley, Etc)
  *
  * # Use cases
- *   - A User/Admin lists the Channels for its Neighborhood
- *   - An Admin creates/deletes a Channel
- *
- * # Issues
- *   - This part has to be restructured, there is more information in the notion, but basically there is a mix between the base channels, the channels and the menu options
+ *   - A Neighbor/Admin can list the Channels for its Neighborhood
+ *   - An Admin can create a Channel
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CHANNELS)
@@ -56,13 +53,14 @@ public class ChannelController {
     @GET
     public Response listChannels(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @QueryParam(QueryParameter.IS_BASE) Boolean isBase,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
         // Content
-        List<Channel> channels = cs.getChannels(neighborhoodId, page, size);
+        List<Channel> channels = cs.getChannels(neighborhoodId, isBase, page, size);
         String channelsHashCode = String.valueOf(channels.hashCode());
 
         // Cache Control
@@ -82,7 +80,7 @@ public class ChannelController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CHANNELS),
-                cs.calculateChannelPages(neighborhoodId, size),
+                cs.calculateChannelPages(neighborhoodId, isBase, size),
                 page,
                 size
         );

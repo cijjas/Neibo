@@ -34,7 +34,8 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A single Product can receive many Requests
  *
  * # Use cases
- *   - A User makes one or more Requests for one or more Products, any of those can be fulfilled or negated
+ *   - A Neighbor can make a Request for a Product
+ *   - The Seller can accept or deny the Requests
  *   - The Seller can list the Requests he has received for a certain Product
  *   - A User can list the Requests he has made for certain Products
  */

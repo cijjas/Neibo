@@ -20,6 +20,9 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private Set<Post> posts;
 
+    @Column(name = "isbase")
+    private Boolean isBase;
+
     @ManyToMany
     @JoinTable(
             name = "neighborhoods_channels",
@@ -34,6 +37,7 @@ public class Channel {
     private Channel(Builder builder) {
         this.channelId = builder.channelId;
         this.channel = builder.channel;
+        this.isBase = builder.isBase;
     }
 
     public static Builder newBuilder() {
@@ -75,8 +79,8 @@ public class Channel {
     @Override
     public String toString() {
         return "Channel{" +
-                "channelId=" + channelId +
                 ", channel='" + channel + '\'' +
+                ", isBase=" + isBase +
                 '}';
     }
 
@@ -96,6 +100,7 @@ public class Channel {
     public static class Builder {
         private Long channelId;
         private String channel;
+        private Boolean isBase;
 
         public Builder channelId(Long channelId) {
             this.channelId = channelId;
@@ -104,6 +109,11 @@ public class Channel {
 
         public Builder channel(String channel) {
             this.channel = channel;
+            return this;
+        }
+
+        public Builder isBase(Boolean isBase) {
+            this.isBase = isBase;
             return this;
         }
 

@@ -1,0 +1,48 @@
+<div class="service-widget">
+  <div [routerLink]="['/services', 'profile', worker?.self]">
+    <div class="card-text">
+      <!-- Avatar image -->
+      <div class="img-avatar">
+        <img
+          [id]="'worker-profile-image-' + worker?.user?.self"
+          [src]="profileImageUrl"
+          class="big-profile-picture"
+          [alt]="'worker_picture_img_' + worker?.user?.self"
+        />
+      </div>
+
+      <!-- Background / portada image -->
+      <div class="back-image">
+        <img
+          [id]="'worker-background-image-' + worker?.user?.self"
+          [src]="backgroundImageUrl"
+          class="background-cover"
+          [alt]="'worker_background_img_' + worker?.user?.self"
+        />
+      </div>
+
+      <div class="title-total">
+        <!-- Professions -->
+        <div class="f-c-c-e w-100" style="gap: 0.5em; flex-wrap: wrap">
+          <ng-container *ngFor="let profession of worker?.professions">
+            <span
+              class="profession-style"
+              (click)="onProfessionClick($event, profession)"
+              title="Click to filter by profession"
+            >
+              {{ profession.displayName }}
+            </span>
+          </ng-container>
+        </div>
+
+        <!-- Worker name -->
+        <h2>{{ worker?.user?.name }}</h2>
+
+        <!-- Worker bio -->
+        <div class="desc">
+          {{ worker?.bio }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

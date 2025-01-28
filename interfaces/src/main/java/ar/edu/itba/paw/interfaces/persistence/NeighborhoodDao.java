@@ -17,11 +17,11 @@ public interface NeighborhoodDao {
 
     Optional<Neighborhood> findNeighborhood(String name);
 
-    List<Neighborhood> getNeighborhoods(Long withWorkerId, Long withoutWorkerId, int page, int size);
+    List<Neighborhood> getNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int page, int size);
 
     List<Long> getNeighborhoodIds();
 
-    int countNeighborhoods(Long withWorkerId, Long withoutWorkerId);
+    int countNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId);
 
     // ----------------------------------------- NEIGHBORHOODS DELETE --------------------------------------------------
 

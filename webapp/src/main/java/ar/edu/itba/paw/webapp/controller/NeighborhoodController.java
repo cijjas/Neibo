@@ -33,8 +33,10 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - Has relationships with Users, Posts, Channels, Products and many more
  *
  * # Use cases
- *   - When registering all Neighborhoods have to be displayed
+ *   - Anyone can register as UNVERIFIED to any Non Base Neighborhood
+ *   - Registered Users can migrate Neighborhood but becoming UNVERIFIED in the process
  */
+
 @Path(Endpoint.NEIGHBORHOODS)
 @Component
 @Validated
@@ -55,6 +57,7 @@ public class NeighborhoodController {
     @GET
     @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#withWorker, #withoutWorker)")
     public Response listNeighborhoods(
+            @QueryParam(QueryParameter.IS_BASE) Boolean isBase,
             @QueryParam(QueryParameter.WITH_WORKER) @WorkerURIConstraint String withWorker,
             @QueryParam(QueryParameter.WITHOUT_WORKER) @WorkerURIConstraint String withoutWorker,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
@@ -62,12 +65,14 @@ public class NeighborhoodController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
+        System.out.println(isBase);
+
         // ID Extraction
         Long withWorkerId = extractOptionalFirstId(withWorker);
         Long withoutWorkerId = extractOptionalFirstId(withoutWorker);
 
         // Content
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(withWorkerId, withoutWorkerId, size, page);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(isBase, withWorkerId, withoutWorkerId, size, page);
         String neighborhoodsHashCode = String.valueOf(neighborhoods.hashCode());
 
         // Cache Control
@@ -87,7 +92,7 @@ public class NeighborhoodController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS),
-                ns.calculateNeighborhoodPages(withWorkerId, withoutWorkerId, size),
+                ns.calculateNeighborhoodPages(isBase, withWorkerId, withoutWorkerId, size),
                 page,
                 size
         );

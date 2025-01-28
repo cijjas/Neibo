@@ -38,8 +38,10 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - Has many relationships, Inquiries, Requests, Purchases, Images
  *
  * # Use cases
- *   - A User/Admin can create/update/delete a Product in their Neighborhood
- *   - A User/Admin can list the Products in its Neighborhood
+ *   - A Admin can create, update and delete any Product in their Neighborhood
+ *   - A Neighbor can create a Product
+ *   - A Neighbor can update and delete a Product if it belongs to them
+ *   - A Neighbor/Admin can list the Products in its Neighborhood
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS)

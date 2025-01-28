@@ -33,7 +33,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstIds;
  *   - An Amenity has many Availabilities
  *
  * # Use cases
- *   - A User/Admin can list the Amenities for their Neighborhood with the corresponding Shifts
+ *   - A Neighbor/Admin can list the Amenities for their Neighborhood with the corresponding Shifts
  *   - An Admin can create, delete and update an Amenity for their Neighborhood
  */
 

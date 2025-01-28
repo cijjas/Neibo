@@ -45,8 +45,6 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 @ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.security", "ar.edu.itba.paw.webapp.validation"})
 @CrossOrigin(origins = "http://localhost:4200/")
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
-    @Value("classpath:rememberme.key")
-    private Resource rememberMeKey;
     @Autowired
     private UserDetailsService userDetails;
     @Autowired

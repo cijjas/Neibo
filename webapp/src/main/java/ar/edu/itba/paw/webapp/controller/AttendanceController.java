@@ -34,9 +34,9 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - Junction Table between Events and Users
  *
  * # Use cases
- *   - A User/Admin can list the Events he plans to attend
- *   - A User/Admin can list the Users that will attend a certain Event
- *   - A User/Admin can confirm his attendance to a certain event
+ *   - A Neighbor/Admin can list the Events he plans to attend
+ *   - A Neighbor/Admin can list the Users that will attend a certain Event
+ *   - A Neighbor/Admin can notify his Attendance to a certain Event
  */
 
 @Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.ATTENDANCE)
