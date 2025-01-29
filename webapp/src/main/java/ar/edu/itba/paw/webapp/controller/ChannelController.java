@@ -33,7 +33,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  *   - An Admin can create a Channel
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CHANNELS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CHANNELS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -57,7 +57,7 @@ public class ChannelController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         List<Channel> channels = cs.getChannels(neighborhoodId, isBase, page, size);
@@ -79,7 +79,7 @@ public class ChannelController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CHANNELS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CHANNELS),
                 cs.calculateChannelPages(neighborhoodId, isBase, size),
                 page,
                 size
@@ -99,7 +99,7 @@ public class ChannelController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.CHANNEL_ID) @GenericIdConstraint long channelId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Channel channel = cs.findChannel(neighborhoodId, channelId).orElseThrow(NotFoundException::new);
@@ -124,7 +124,7 @@ public class ChannelController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull ChannelDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         final Channel channel = cs.createChannel(neighborhoodId, createForm.getName());

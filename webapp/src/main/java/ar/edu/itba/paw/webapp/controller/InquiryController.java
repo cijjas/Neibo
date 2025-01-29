@@ -42,7 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
  *   - A Neighbor/Admin can list the Inquiries that a certain Product has
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS + "/{" + PathParameter.PRODUCT_ID + "}/" + Endpoint.INQUIRIES)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS + "/{" + PathParameter.PRODUCT_ID + "}/" + Endpoint.INQUIRIES)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -68,7 +68,7 @@ public class InquiryController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Path Verification
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
@@ -93,7 +93,7 @@ public class InquiryController {
 
         // Pagination Link
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.INQUIRIES),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.INQUIRIES),
                 is.calculateInquiryPages(productId, size),
                 page,
                 size
@@ -114,7 +114,7 @@ public class InquiryController {
             @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
             @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Inquiry inquiry = is.findInquiry(neighborhoodId, productId, inquiryId).orElseThrow(NotFoundException::new);
@@ -140,7 +140,7 @@ public class InquiryController {
             @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
             @Valid @NotNull InquiryDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Path Verification
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
@@ -169,7 +169,7 @@ public class InquiryController {
             @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId,
             @Valid @NotNull InquiryDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Path Verification
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
@@ -191,7 +191,7 @@ public class InquiryController {
             @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
             @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (is.deleteInquiry(neighborhoodId, productId, inquiryId))

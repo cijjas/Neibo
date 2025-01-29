@@ -39,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A Neighbor/Admin can list his Bookings
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.BOOKINGS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.BOOKINGS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -64,7 +64,7 @@ public class BookingController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userId = extractOptionalFirstId(user);
@@ -90,7 +90,7 @@ public class BookingController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.BOOKINGS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.BOOKINGS),
                 bs.calculateBookingPages(neighborhoodId, amenityId, userId, size),
                 page,
                 size
@@ -110,7 +110,7 @@ public class BookingController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.BOOKING_ID) @GenericIdConstraint long bookingId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         Booking booking = bs.findBooking(neighborhoodId, bookingId).orElseThrow(NotFoundException::new);
         String bookingHashCode = String.valueOf(booking.hashCode());
@@ -136,7 +136,7 @@ public class BookingController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull BookingDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Booking booking = bs.createBooking(extractFirstId(createForm.getShift()), extractFirstId(createForm.getUser()), extractSecondId(createForm.getAmenity()), extractDate(createForm.getBookingDate()));
@@ -157,7 +157,7 @@ public class BookingController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.BOOKING_ID) @GenericIdConstraint long bookingId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (bs.deleteBooking(neighborhoodId, bookingId))

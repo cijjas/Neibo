@@ -29,7 +29,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Registered User can change his language preference
  */
 
-@Path(Endpoint.LANGUAGES)
+@Path(Endpoint.API + "/" + Endpoint.LANGUAGES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class LanguageController {
@@ -43,7 +43,7 @@ public class LanguageController {
 
     @GET
     public Response listLanguages() {
-        LOGGER.info("GET request arrived at '/languages'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         Language[] languages = Language.values();
         String languagesHashCode = String.valueOf(Arrays.hashCode(languages));
@@ -72,7 +72,7 @@ public class LanguageController {
     public Response findLanguage(
             @PathParam(PathParameter.LANGUAGE_ID) @GenericIdConstraint long languageId
     ) {
-        LOGGER.info("GET request arrived at '/languages/{}'", languageId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Language language = Language.fromId(languageId);

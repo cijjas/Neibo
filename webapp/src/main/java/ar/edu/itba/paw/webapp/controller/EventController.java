@@ -42,7 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalD
  *   - A Neighbor/Admin can attend an Event
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.EVENTS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.EVENTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -66,7 +66,7 @@ public class EventController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Extract Date
         Date extractedDate = extractOptionalDate(date);
@@ -91,7 +91,7 @@ public class EventController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.EVENTS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.EVENTS),
                 es.calculateEventPages(neighborhoodId, extractedDate, size),
                 page,
                 size
@@ -111,7 +111,7 @@ public class EventController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.EVENT_ID) @GenericIdConstraint long eventId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Event event = es.findEvent(neighborhoodId, eventId).orElseThrow(NotFoundException::new);
@@ -136,7 +136,7 @@ public class EventController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull EventDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Event event = es.createEvent(neighborhoodId, createForm.getName(), createForm.getDescription(), extractDate(createForm.getEventDate()), createForm.getStartTime(), createForm.getEndTime());
@@ -160,7 +160,7 @@ public class EventController {
             @PathParam(PathParameter.EVENT_ID) @GenericIdConstraint long eventId,
             @Valid @NotNull EventDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Event updatedEvent = es.updateEvent(neighborhoodId, eventId, updateForm.getName(), updateForm.getDescription(), extractDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
@@ -178,7 +178,7 @@ public class EventController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.EVENT_ID) @GenericIdConstraint long eventId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion attempt
         if (es.deleteEvent(neighborhoodId, eventId))

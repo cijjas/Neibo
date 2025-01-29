@@ -30,7 +30,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Neighbor/Admin can filter the Posts through this criteria
  */
 
-@Path(Endpoint.POST_STATUSES)
+@Path(Endpoint.API + "/" + Endpoint.POST_STATUSES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class PostStatusController {
@@ -44,7 +44,7 @@ public class PostStatusController {
 
     @GET
     public Response listPostStatuses() {
-        LOGGER.info("GET request arrived at '/post-statuses'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         PostStatus[] postStatuses = PostStatus.values();
         String postStatusesHashCode = String.valueOf(Arrays.hashCode(postStatuses));
@@ -73,7 +73,7 @@ public class PostStatusController {
     public Response findPostStatus(
             @PathParam(PathParameter.POST_STATUS_ID) @GenericIdConstraint Long postStatusId
     ) {
-        LOGGER.info("GET request arrived at '/post-statuses/{}'", postStatusId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         PostStatus postStatus = PostStatus.fromId(postStatusId);

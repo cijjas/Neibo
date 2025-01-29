@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -117,28 +118,28 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // Public endpoints
                 .antMatchers(
                         // Root
-                        "/" + Endpoint.ROOT,
-                        "/" + Endpoint.DEPARTMENTS, "/" + Endpoint.DEPARTMENTS + "/*",
-                        "/" + Endpoint.LANGUAGES, "/" + Endpoint.LANGUAGES + "/*",
-                        "/" + Endpoint.POST_STATUSES, "/" + Endpoint.POST_STATUSES + "/*",
-                        "/" + Endpoint.PRODUCT_STATUSES, "/" + Endpoint.PRODUCT_STATUSES + "/*",
-                        "/" + Endpoint.PROFESSIONS, "/" + Endpoint.PROFESSIONS + "/*",
-                        "/" + Endpoint.REQUEST_STATUSES, "/" + Endpoint.REQUEST_STATUSES + "/*",
-                        "/" + Endpoint.SHIFTS, "/" + Endpoint.SHIFTS + "/*",
-                        "/" + Endpoint.TRANSACTION_TYPES, "/" + Endpoint.TRANSACTION_TYPES + "/*",
-                        "/" + Endpoint.USER_ROLES, "/" + Endpoint.USER_ROLES + "/*",
-                        "/" + Endpoint.WORKER_ROLES, "/" + Endpoint.WORKER_ROLES + "/*",
-                        "/" + Endpoint.WORKER_STATUSES, "/" + Endpoint.WORKER_STATUSES + "/*",
+                        "/" + Endpoint.API,"/" + Endpoint.API + "/",
+                        "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS, "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.LANGUAGES, "/" + Endpoint.API + "/" + Endpoint.LANGUAGES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.POST_STATUSES, "/" + Endpoint.API + "/" + Endpoint.POST_STATUSES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES, "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS, "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES, "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.SHIFTS, "/" + Endpoint.API + "/" + Endpoint.SHIFTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.TRANSACTION_TYPES, "/" + Endpoint.API + "/" + Endpoint.TRANSACTION_TYPES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.USER_ROLES, "/" + Endpoint.API + "/" + Endpoint.USER_ROLES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.WORKER_ROLES, "/" + Endpoint.API + "/" + Endpoint.WORKER_ROLES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.WORKER_STATUSES, "/" + Endpoint.API + "/" + Endpoint.WORKER_STATUSES + "/*",
 
-                        "/" + Endpoint.IMAGES, "/" + Endpoint.IMAGES + "/*", // debatable, could be private
-                        "/" + Endpoint.NEIGHBORHOODS, "/" + Endpoint.NEIGHBORHOODS + "/*", // for signup
-                        "/" + Endpoint.USERS, // for signup
-                        "/" + Endpoint.WORKERS // for signup
+                        "/" + Endpoint.API + "/" + Endpoint.IMAGES, "/" + Endpoint.API + "/" + Endpoint.IMAGES + "/*", // debatable, could be private
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS, "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*", // for signup
+                        "/" + Endpoint.API + "/" + Endpoint.USERS, // for signup
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS // for signup
                 ).permitAll()
 
                 // Registered Users Endpoints
                 .antMatchers(
-                        "/" + Endpoint.USERS + "/*" // All users with an account can change their profile
+                        "/" + Endpoint.API + "/" + Endpoint.USERS + "/*" // All users with an account can change their profile
                 ).hasAnyRole(
                         UserRole.REJECTED.name(),
                         UserRole.UNVERIFIED_NEIGHBOR.name(),
@@ -150,10 +151,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 // Worker Related Endpoints
                 .antMatchers(
-                        "/" + Endpoint.AFFILIATIONS, "/" + Endpoint.AFFILIATIONS + "/*",
-                        "/" + Endpoint.WORKERS + "/*",
-                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
-                        "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
+                        "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS, "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
                 ).hasAnyRole(
                         UserRole.WORKER.name(),
                         UserRole.NEIGHBOR.name(),
@@ -163,12 +164,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 // Endpoints used in Neighborhoods and Workers Neighborhood
                 .antMatchers(
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/**",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*"
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/**",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*"
                 ).access(
                         "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
@@ -177,28 +178,28 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 // Endpoints used in Neighborhoods only
                 .antMatchers(
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS + "/*",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES + "/**",
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
-                        "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE + "/**"
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES + "/**",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE + "/**"
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
                                 "and " +
@@ -271,5 +272,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/static/**");
     }
 }

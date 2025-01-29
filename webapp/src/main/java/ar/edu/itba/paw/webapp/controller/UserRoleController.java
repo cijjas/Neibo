@@ -29,7 +29,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Neighbor/Admin can filter the Users through this criteria
  */
 
-@Path(Endpoint.USER_ROLES)
+@Path(Endpoint.API + "/" + Endpoint.USER_ROLES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class UserRoleController {
@@ -43,7 +43,7 @@ public class UserRoleController {
 
     @GET
     public Response listUserRoles() {
-        LOGGER.info("GET request arrived at '/user-roles'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         UserRole[] userRoles = UserRole.values();
@@ -73,7 +73,7 @@ public class UserRoleController {
     public Response findUserRole(
             @PathParam(PathParameter.USER_ROLE_ID) @GenericIdConstraint Long userRoleId
     ) {
-        LOGGER.info("GET request arrived at '/user-roles/{}'", userRoleId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         UserRole userRole = UserRole.fromId(userRoleId);

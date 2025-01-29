@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 
-@Path(Endpoint.ROOT)
+@Path(Endpoint.API)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class RootController {
@@ -26,7 +26,7 @@ public class RootController {
 
     @GET
     public Response getTreeStructure() {
-        LOGGER.info("GET request arrived at '/'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         return Response.ok(RootDto.createRootDto(uriInfo))
                 .build();

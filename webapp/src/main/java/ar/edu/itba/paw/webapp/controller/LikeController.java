@@ -36,7 +36,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A Neighbor/Admin can like and remove the like from a Post
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.LIKES)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.LIKES)
 @Component
 @Validated
 @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +61,7 @@ public class LikeController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhood/{}/likes'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userId = extractOptionalFirstId(user);
@@ -95,7 +95,7 @@ public class LikeController {
 
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.LIKES),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.LIKES),
                 ls.calculateLikePages(neighborhoodId, userId, postId, size),
                 page,
                 size);
@@ -115,7 +115,7 @@ public class LikeController {
             @QueryParam(QueryParameter.LIKED_BY) @UserURIConstraint String user,
             @QueryParam(QueryParameter.ON_POST) @PostURIConstraint String post
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         int count = ls.countLikes(neighborhoodId, extractOptionalFirstId(user), extractOptionalSecondId(post));
@@ -142,7 +142,7 @@ public class LikeController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull LikeDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Like like = ls.createLike(extractFirstId(createForm.getUser()), extractSecondId(createForm.getPost()));
@@ -163,7 +163,7 @@ public class LikeController {
             @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURIConstraint String user,
             @QueryParam(QueryParameter.ON_POST) @NotNull @PostURIConstraint String post
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         if (ls.deleteLike(extractOptionalFirstId(user), extractOptionalSecondId(post)))
             return Response.noContent()

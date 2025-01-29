@@ -21,7 +21,7 @@ public class LanguageDto {
 
         String languageId = String.valueOf(language.getId());
 
-        UriBuilder languageUri = uriInfo.getBaseUriBuilder().path(Endpoint.LANGUAGES).path(languageId);
+        UriBuilder languageUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.LANGUAGES).path(languageId);
 
         links.setSelf(languageUri.build());
 

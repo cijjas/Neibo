@@ -28,7 +28,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Neighbor/Admin/Worker can filter the workers through this criteria
  */
 
-@Path(Endpoint.WORKER_STATUSES)
+@Path(Endpoint.API + "/" + Endpoint.WORKER_STATUSES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class WorkerStatusController {
@@ -42,7 +42,7 @@ public class WorkerStatusController {
 
     @GET
     public Response listWorkerStatuses() {
-        LOGGER.info("GET request arrived at '/worker-statuses'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         WorkerStatus[] workerStatuses = WorkerStatus.values();
@@ -72,7 +72,7 @@ public class WorkerStatusController {
     public Response findWorkerStatus(
             @PathParam(PathParameter.WORKER_STATUS_ID) @GenericIdConstraint Long workerStatusId
     ) {
-        LOGGER.info("GET request arrived at '/worker-statuses/{}'", workerStatusId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         WorkerStatus workerStatus = WorkerStatus.fromId(workerStatusId);

@@ -33,7 +33,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
  *   - A Neighbor/Admin can get the Shifts when an Amenity is available on a specific Date
  */
 
-@Path(Endpoint.SHIFTS)
+@Path(Endpoint.API + "/" + Endpoint.SHIFTS)
 @Component
 @Produces(MediaType.APPLICATION_JSON)
 public class ShiftController {
@@ -53,7 +53,7 @@ public class ShiftController {
     public Response getShifts(
             @Valid @BeanParam ShiftForm shiftForm
     ) {
-        LOGGER.info("GET request arrived at '/shifts'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         List<Shift> shifts = ss.getShifts(extractOptionalSecondId(shiftForm.getAmenity()), extractOptionalDate(shiftForm.getDate()));
@@ -87,7 +87,7 @@ public class ShiftController {
     public Response findShift(
             @PathParam(PathParameter.SHIFT_ID) @GenericIdConstraint long shiftId
     ) {
-        LOGGER.info("GET request arrived at '/shifts/{}'", shiftId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Shift shift = ss.findShift(shiftId).orElseThrow(NotFoundException::new);

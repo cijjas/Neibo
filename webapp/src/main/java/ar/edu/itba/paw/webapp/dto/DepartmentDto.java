@@ -29,7 +29,7 @@ public class DepartmentDto {
 
         String departmentId = String.valueOf(department.getDepartmentId());
 
-        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS).path(departmentId);
+        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.DEPARTMENTS).path(departmentId);
 
         links.setSelf(departmentUri.build());
 

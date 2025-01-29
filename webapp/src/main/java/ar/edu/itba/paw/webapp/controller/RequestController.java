@@ -40,7 +40,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A User can list the Requests he has made for certain Products
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.REQUESTS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.REQUESTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -62,7 +62,7 @@ public class RequestController {
     public Response listRequests(
             @Valid @BeanParam RequestForm requestForm
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", requestForm.getNeighborhoodId());
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userId = extractOptionalSecondId(requestForm.getRequestedBy());
@@ -93,7 +93,7 @@ public class RequestController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(requestForm.getNeighborhoodId())).path(Endpoint.REQUESTS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(requestForm.getNeighborhoodId())).path(Endpoint.REQUESTS),
                 rs.calculateRequestPages(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId,
                         requestForm.getSize()),
                 requestForm.getPage(),
@@ -113,7 +113,7 @@ public class RequestController {
     public Response countRequests(
             @Valid @BeanParam RequestForm requestForm
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/count'", requestForm.getNeighborhoodId());
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userId = extractOptionalSecondId(requestForm.getRequestedBy());
@@ -147,7 +147,7 @@ public class RequestController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Request productRequest = rs.findRequest(neighborhoodId, requestId).orElseThrow(NotFoundException::new);
@@ -171,7 +171,7 @@ public class RequestController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull RequestDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Request request = rs.createRequest(extractFirstId(createForm.getUser()), extractSecondId(createForm.getProduct()), createForm.getMessage(), createForm.getUnitsRequested());
@@ -195,7 +195,7 @@ public class RequestController {
             @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId,
             @Valid @NotNull RequestDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
+        LOGGER.info("PATCH request arrived at '{}", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Request updatedRequest = rs.updateRequest(neighborhoodId, requestId, extractOptionalFirstId(updateForm.getRequestStatus()));
@@ -213,7 +213,7 @@ public class RequestController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (rs.deleteRequest(neighborhoodId, requestId))

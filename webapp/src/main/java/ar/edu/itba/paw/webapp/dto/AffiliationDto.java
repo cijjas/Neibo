@@ -43,12 +43,12 @@ public class AffiliationDto {
         String workerId = String.valueOf(affiliation.getWorker().getWorkerId());
         String workerRoleId = String.valueOf(affiliation.getRole().getId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId);
-        UriBuilder affiliationUri = uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS)
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(workerId);
+        UriBuilder affiliationUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.AFFILIATIONS)
                 .queryParam(QueryParameter.IN_NEIGHBORHOOD, neighborhoodUri.build())
                 .queryParam(QueryParameter.FOR_WORKER, workerUri.build());
-        UriBuilder workerRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES).path(workerRoleId);
+        UriBuilder workerRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKER_ROLES).path(workerRoleId);
 
         links.setSelf(affiliationUri.build());
         links.setWorker(workerUri.build());

@@ -21,7 +21,7 @@ public class ProductStatusDto {
 
         String productStatusId = String.valueOf(productStatus.getId());
 
-        UriBuilder productStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.PRODUCT_STATUSES).path(productStatusId);
+        UriBuilder productStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.PRODUCT_STATUSES).path(productStatusId);
 
         links.setSelf(productStatusUri.build());
 

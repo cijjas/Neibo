@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller.constants;
 public class Endpoint {
     public static final String AFFILIATIONS = "affiliations";
     public static final String AMENITIES = "amenities";
+    public static final String API = "api";
     public static final String ATTENDANCE = "attendance";
     public static final String AVERAGE = "average";
     public static final String BOOKINGS = "bookings";
@@ -26,7 +27,6 @@ public class Endpoint {
     public static final String REQUEST_STATUSES = "request-statuses";
     public static final String RESOURCES = "resources";
     public static final String REVIEWS = "reviews";
-    public static final String ROOT = "";
     public static final String SHIFTS = "shifts";
     public static final String TAGS = "tags";
     public static final String TRANSACTION_TYPES = "transaction-types";

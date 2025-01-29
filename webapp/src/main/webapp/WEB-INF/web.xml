@@ -22,7 +22,8 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <filter-mapping>
         <filter-name>encoding-filter</filter-name>
-        <url-pattern>/*</url-pattern>
+        <!-- HERE -->
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
     <context-param>
@@ -54,40 +55,6 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>-->
-<!--
-
-    <error-page>
-        <error-code>400</error-code>
-        <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
-    </error-page>
-
-    <error-page>
-        <error-code>401</error-code>
-        <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
-    </error-page>
-
-    <error-page>
-        <error-code>403</error-code>
-        <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
-    </error-page>
-
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
-    </error-page>
-
-    <error-page>
-        <error-code>405</error-code>
-        <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
-    </error-page>
-
-    <error-page>
-        <error-code>500</error-code>
-        <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
-    </error-page>
--->
-
-    <!-- JWT -->
 
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -95,10 +62,10 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>*</url-pattern>
+        <!-- HERE -->
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
-    <!-- JWT -->
 
     <filter>
         <filter-name>openEntityManagerInView</filter-name>
@@ -106,7 +73,8 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     </filter>
     <filter-mapping>
         <filter-name>openEntityManagerInView</filter-name>
-        <url-pattern>*</url-pattern>
+        <!-- HERE -->
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
 
@@ -120,42 +88,53 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
                 ar.edu.itba.paw.webapp.security
 
                 <!-- comment these to deactivate exception catchers -->
-<!--                ar.edu.itba.paw.webapp.mappers,-->
-<!--                ar.edu.itba.paw.webapp.mappers.jax,-->
+                ar.edu.itba.paw.webapp.mappers,
+                ar.edu.itba.paw.webapp.mappers.jax,
             </param-value>
         </init-param>
+
         <init-param>
             <param-name>jersey.config.servlet.filter.contextPath</param-name>
+            <!-- HERE -->
             <param-value>/</param-value>
         </init-param>
-<!--
-        i hope this does not produce any weird behaviours
-        <init-param>
-            <param-name>jersey.config.servlet.filter.forwardOn404</param-name>
-            <param-value>true</param-value>
-        </init-param>
--->
+
         <init-param>
             <param-name>jersey.config.beanValidation.enableOutputValidationErrorEntity.server</param-name>
             <param-value>true</param-value>
         </init-param>
+
         <init-param>
             <param-name>jersey.config.server.response.setStatusOverSendError</param-name>
             <param-value>true</param-value>
         </init-param>
 
-        <!-- Add MultiPartFeature configuration -->
         <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>
                 org.glassfish.jersey.media.multipart.MultiPartFeature
             </param-value>
         </init-param>
-        <!-- End of MultiPartFeature configuration -->
 
     </filter>
     <filter-mapping>
         <filter-name>jersey</filter-name>
-        <url-pattern>/*</url-pattern>
+        <!-- HERE -->
+        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/static/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>index</servlet-name>
+        <servlet-class>ar.edu.itba.paw.webapp.servlets.IndexServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>index</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -28,7 +28,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Neighbor can filter the Products over these criteria
  */
 
-@Path(Endpoint.PRODUCT_STATUSES)
+@Path(Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class ProductStatusController {
@@ -42,7 +42,7 @@ public class ProductStatusController {
 
     @GET
     public Response listProductStatuses() {
-        LOGGER.info("GET request arrived at '/product-statuses'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         ProductStatus[] productStatuses = ProductStatus.values();
@@ -71,7 +71,7 @@ public class ProductStatusController {
     public Response findProductStatus(
             @PathParam(PathParameter.PRODUCT_STATUS_ID) @GenericIdConstraint Long productStatusId
     ) {
-        LOGGER.info("GET request arrived at '/product-statuses/{}'", productStatusId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         ProductStatus productStatus = ProductStatus.fromId(productStatusId);

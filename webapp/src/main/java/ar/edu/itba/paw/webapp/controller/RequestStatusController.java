@@ -28,7 +28,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Neighbor/Admin can filter their requests through this criteria
  */
 
-@Path(Endpoint.REQUEST_STATUSES)
+@Path(Endpoint.API + "/" + Endpoint.REQUEST_STATUSES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class RequestStatusController {
@@ -42,7 +42,7 @@ public class RequestStatusController {
 
     @GET
     public Response listRequestStatuses() {
-        LOGGER.info("GET request arrived at '/request-statuses'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         RequestStatus[] requestStatuses = RequestStatus.values();
@@ -72,7 +72,7 @@ public class RequestStatusController {
     public Response findRequestStatus(
             @PathParam(PathParameter.REQUEST_STATUS_ID) @GenericIdConstraint Long requestStatusId
     ) {
-        LOGGER.info("GET request arrived at '/request-status/{}'", requestStatusId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         RequestStatus requestStatus = RequestStatus.fromId(requestStatusId);

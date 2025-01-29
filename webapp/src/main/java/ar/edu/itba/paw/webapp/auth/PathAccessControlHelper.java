@@ -90,13 +90,15 @@ public class PathAccessControlHelper {
         if (authHelper.isSuperAdministrator(authentication))
             return true;
 
-        // Only place where the URI does not have a fixed size
         String requestURI = request.getRequestURI();
         String[] uriParts = requestURI.split("/");
-        if (uriParts.length >= 3 && uriParts[1].equals(Endpoint.NEIGHBORHOODS)) {
+
+        // Updated check: now expecting /api/neighborhoods/...
+        if (uriParts.length >= 4 && uriParts[1].equals("api") && uriParts[2].equals(Endpoint.NEIGHBORHOODS)) {
             try {
-                long neighborhoodId = Long.parseLong(uriParts[2]);
-                return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId || neighborhoodId == BaseNeighborhood.WORKERS.getId();
+                long neighborhoodId = Long.parseLong(uriParts[3]);
+                return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId ||
+                        neighborhoodId == BaseNeighborhood.WORKERS.getId();
             } catch (NumberFormatException e) {
                 return false;
             }

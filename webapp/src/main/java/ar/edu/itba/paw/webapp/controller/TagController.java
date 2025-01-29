@@ -34,7 +34,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalS
  *   - A Neighbor/Admin filters the Posts through a Tag
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.TAGS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.TAGS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -58,7 +58,7 @@ public class TagController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long postId = extractOptionalSecondId(post);
@@ -83,7 +83,7 @@ public class TagController {
 
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.TAGS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.TAGS),
                 ts.calculateTagPages(neighborhoodId, postId, size),
                 page,
                 size
@@ -103,7 +103,7 @@ public class TagController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.TAG_ID) @GenericIdConstraint long tagId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Tag tag = ts.findTag(neighborhoodId, tagId).orElseThrow(NotFoundException::new);
@@ -127,7 +127,7 @@ public class TagController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull TagDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Tag tag = ts.createTag(neighborhoodId, createForm.getName());
@@ -152,7 +152,7 @@ public class TagController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.TAG_ID) @GenericIdConstraint long tagId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (ts.deleteTag(neighborhoodId, tagId))
