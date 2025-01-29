@@ -20,7 +20,7 @@ public class ReviewsAverageDto {
 
         String workerId = String.valueOf(workerIdLong);
 
-        UriBuilder workerReviewAverageUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId).path(Endpoint.REVIEWS).path(Endpoint.AVERAGE);
+        UriBuilder workerReviewAverageUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(workerId).path(Endpoint.REVIEWS).path(Endpoint.AVERAGE);
 
         links.setSelf(workerReviewAverageUri.build());
 

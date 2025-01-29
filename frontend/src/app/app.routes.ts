@@ -1,42 +1,42 @@
-import { Routes } from "@angular/router";
+import { Routes } from '@angular/router';
 
-import { RoleGuard, AuthGuard } from "@core/index";
+import { RoleGuard, AuthGuard } from '@core/index';
 import {
   MainLayoutComponent,
   PublicLayoutComponent,
   Roles,
-} from "@shared/index";
+} from '@shared/index';
 
 export const appRoutes: Routes = [
   // Redirect root to login
-  { path: "", redirectTo: "login", pathMatch: "full" },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   // Authentication
   {
-    path: "",
+    path: '',
     component: PublicLayoutComponent,
     children: [
       {
-        path: "login",
+        path: 'login',
         loadChildren: () =>
-          import("@features/auth/auth.module").then((m) => m.AuthModule),
+          import('@features/auth/auth.module').then(m => m.AuthModule),
         canActivate: [AuthGuard],
       },
       // 404 and Wildcard
       {
-        path: "not-found",
+        path: 'not-found',
         loadChildren: () =>
-          import("@features/not-found/not-found.module").then(
-            (m) => m.NotFoundModule
+          import('@features/not-found/not-found.module').then(
+            m => m.NotFoundModule,
           ),
       },
 
       // Unverified
       {
-        path: "unverified",
+        path: 'unverified',
         loadChildren: () =>
-          import("@features/unverified/unverified.module").then(
-            (m) => m.UnverifiedModule
+          import('@features/unverified/unverified.module').then(
+            m => m.UnverifiedModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.UNVERIFIED_NEIGHBOR] },
@@ -44,10 +44,10 @@ export const appRoutes: Routes = [
 
       // Unverified
       {
-        path: "rejected",
+        path: 'rejected',
         loadChildren: () =>
-          import("@features/rejected/rejected.module").then(
-            (m) => m.RejectedModule
+          import('@features/rejected/rejected.module').then(
+            m => m.RejectedModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.REJECTED] },
@@ -56,24 +56,24 @@ export const appRoutes: Routes = [
   },
 
   {
-    path: "",
+    path: '',
     component: MainLayoutComponent,
     children: [
       // Admin
       {
-        path: "admin",
+        path: 'admin',
         loadChildren: () =>
-          import("@features/admin/admin.module").then((m) => m.AdminModule),
+          import('@features/admin/admin.module').then(m => m.AdminModule),
         canActivate: [RoleGuard],
         data: { roles: [Roles.ADMINISTRATOR] },
       },
 
       // Amenities
       {
-        path: "amenities",
+        path: 'amenities',
         loadChildren: () =>
-          import("@features/amenities/amenities.module").then(
-            (m) => m.AmenitiesModule
+          import('@features/amenities/amenities.module').then(
+            m => m.AmenitiesModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
@@ -81,10 +81,10 @@ export const appRoutes: Routes = [
 
       // Calendar
       {
-        path: "calendar",
+        path: 'calendar',
         loadChildren: () =>
-          import("@features/calendar/calendar.module").then(
-            (m) => m.CalendarModule
+          import('@features/calendar/calendar.module').then(
+            m => m.CalendarModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
@@ -92,19 +92,19 @@ export const appRoutes: Routes = [
 
       // Feed
       {
-        path: "posts",
+        path: 'posts',
         loadChildren: () =>
-          import("@features/feed/feed.module").then((m) => m.FeedModule),
+          import('@features/feed/feed.module').then(m => m.FeedModule),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
       },
 
       // Information
       {
-        path: "information",
+        path: 'information',
         loadChildren: () =>
-          import("@features/information/information.module").then(
-            (m) => m.InformationModule
+          import('@features/information/information.module').then(
+            m => m.InformationModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
@@ -112,10 +112,10 @@ export const appRoutes: Routes = [
 
       // Marketplace
       {
-        path: "marketplace",
+        path: 'marketplace',
         loadChildren: () =>
-          import("@features/marketplace/marketplace.module").then(
-            (m) => m.MarketplaceModule
+          import('@features/marketplace/marketplace.module').then(
+            m => m.MarketplaceModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
@@ -123,10 +123,10 @@ export const appRoutes: Routes = [
 
       // Services
       {
-        path: "services",
+        path: 'services',
         loadChildren: () =>
-          import("@features/service-providers/service-providers.module").then(
-            (m) => m.ServiceProvidersModule
+          import('@features/service-providers/service-providers.module').then(
+            m => m.ServiceProvidersModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
@@ -134,10 +134,10 @@ export const appRoutes: Routes = [
 
       // User Profile
       {
-        path: "user",
+        path: 'profile',
         loadChildren: () =>
-          import("@features/user-profile/user-profile.module").then(
-            (m) => m.UserProfileModule
+          import('@features/user-profile/user-profile.module').then(
+            m => m.UserProfileModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
@@ -145,5 +145,5 @@ export const appRoutes: Routes = [
     ],
   },
 
-  { path: "**", redirectTo: "/not-found", pathMatch: "full" },
+  { path: '**', redirectTo: '/not-found', pathMatch: 'full' },
 ];

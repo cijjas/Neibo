@@ -48,7 +48,7 @@ public class InquiryDto {
         String replyUserId = String.valueOf(inquiry.getProduct().getSeller().getUserId());
         String inquiryId = String.valueOf(inquiry.getInquiryId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
         UriBuilder inquiryUserUri = neighborhoodUri.clone().path(Endpoint.USERS).path(inquiryUserId);
         UriBuilder replyUserUri = neighborhoodUri.clone().path(Endpoint.USERS).path(replyUserId);

@@ -68,31 +68,35 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private linkService: HateoasLinksService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
-    this.productSelf = this.route.snapshot.paramMap.get('id')!;
-
-    // Fetch product details
-    this.productService.getProduct(this.productSelf).subscribe((product) => {
+    // Get resolved product from route data
+    this.route.data.subscribe(({ product }) => {
+      if (!product) {
+        console.error('Product not found or failed to resolve');
+        return;
+      }
       this.product = product;
       this.currentBigImage = product.firstImage;
       this.loadProductImages();
-
-      this.route.queryParams.subscribe((params) => {
-        this.page = params['page'] ? +params['page'] : 1;
-        this.size = params['size'] ? +params['size'] : 10;
-        this.loadInquiries();
-      });
+      this.loadInquiries();
     });
 
     // Get current user
     this.userService
       .getUser(this.linkService.getLink(LinkKey.USER_SELF))
-      .subscribe((user) => {
+      .subscribe(user => {
         this.loggedUser = user;
       });
+
+    // Watch for questions query params (pagination)
+    this.route.queryParams.subscribe(params => {
+      this.page = params['page'] ? +params['page'] : 1;
+      this.size = params['size'] ? +params['size'] : 10;
+      this.loadInquiries();
+    });
   }
 
   private loadInquiries(): void {
@@ -102,11 +106,11 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
         size: this.size,
       })
       .subscribe({
-        next: (result) => {
+        next: result => {
           this.questions = result.inquiries;
           this.totalPages = result.totalPages;
         },
-        error: (err) => {
+        error: err => {
           console.error('Error fetching inquiries:', err);
         },
       });
@@ -117,7 +121,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
       this.product.firstImage,
       this.product.secondImage,
       this.product.thirdImage,
-    ].filter((image) => !!image);
+    ].filter(image => !!image);
   }
 
   // Methods to show/hide dialogs
@@ -156,17 +160,17 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
       .createInquiry(
         this.product.inquiries,
         this.questionMessage,
-        this.loggedUser.self
+        this.loggedUser.self,
       )
       .subscribe({
-        next: (inquiryUrl) => {
+        next: inquiryUrl => {
           if (inquiryUrl) {
             this.inquiryService.getInquiry(inquiryUrl).subscribe({
-              next: (createdInquiry) => {
+              next: createdInquiry => {
                 this.questions.unshift(createdInquiry);
                 this.questionMessage = '';
               },
-              error: (err) => {
+              error: err => {
                 console.error('Error retrieving inquiry:', err);
               },
             });
@@ -174,7 +178,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
             console.error('Inquiry creation did not return a valid URL');
           }
         },
-        error: (err) => {
+        error: err => {
           console.error('Error submitting inquiry:', err);
         },
       });
@@ -190,7 +194,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
         message,
         amount,
         this.product.self,
-        this.linkService.getLink(LinkKey.USER_SELF)
+        this.linkService.getLink(LinkKey.USER_SELF),
       )
       .subscribe({
         next: () => {
@@ -198,10 +202,10 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
           this.requestDialogVisible = false;
           requestForm.resetForm();
         },
-        error: (err) => {
+        error: err => {
           this.toastService.showToast(
             'Oops, an error ocurred try again later.',
-            'error'
+            'error',
           );
           this.requestError = true;
         },
@@ -223,32 +227,32 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
               message,
               amount,
               this.product.self,
-              this.loggedUser.self
+              this.loggedUser.self,
             )
             .subscribe({
               next: () => {
                 this.toastService.showToast(
                   'Request sent successfully',
-                  'success'
+                  'success',
                 );
                 this.requestDialogVisible = false;
                 phoneRequestForm.resetForm();
               },
-              error: (err) => {
+              error: err => {
                 console.error('Error sending request:', err);
                 this.toastService.showToast(
                   'Oops, an error ocurred try again later.',
-                  'error'
+                  'error',
                 );
                 this.requestError = true;
               },
             });
         },
-        error: (err) => {
+        error: err => {
           console.error('Error sending request:', err);
           this.toastService.showToast(
             'Oops, an error ocurred try again later.',
-            'error'
+            'error',
           );
           this.requestError = true;
         },
@@ -269,16 +273,16 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     this.inquiryService
       .updateInquiry(this.questionForReply.self, { reply: this.replyMessage })
       .subscribe({
-        next: (response) => {
+        next: response => {
           this.questionForReply.responseMessage = this.replyMessage;
           this.closeReplyDialog();
           this.toastService.showToast('Reply sent successfully', 'success');
         },
-        error: (err) => {
+        error: err => {
           console.error('Error replying to inquiry:', err);
           this.toastService.showToast(
             'Failed to send reply. Try again later.',
-            'error'
+            'error',
           );
         },
       });

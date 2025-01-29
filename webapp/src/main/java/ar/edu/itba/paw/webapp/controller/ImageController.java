@@ -27,7 +27,7 @@ import java.net.URI;
  *   - All Images are public and can be retrieved by any User
  */
 
-@Path(Endpoint.IMAGES)
+@Path(Endpoint.API + "/" + Endpoint.IMAGES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class ImageController {
@@ -48,7 +48,7 @@ public class ImageController {
     public Response findImage(
             @PathParam(PathParameter.IMAGE_ID) @GenericIdConstraint long imageId
     ) {
-        LOGGER.info("GET request arrived at '/images/{}'", imageId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Retrieve Image
         Image image = is.findImage(imageId).orElseThrow(NotFoundException::new);
@@ -74,7 +74,7 @@ public class ImageController {
             @FormDataParam("imageFile") InputStream fileInputStream,
             @FormDataParam("imageFile") FormDataContentDisposition fileDetail
     ) {
-        LOGGER.info("POST request arrived at '/images/'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         if (fileInputStream == null) {
             LOGGER.warn("Null Image InputStream");
@@ -99,7 +99,7 @@ public class ImageController {
     public Response deleteImage(
             @PathParam(PathParameter.IMAGE_ID) @GenericIdConstraint long imageId
     ) {
-        LOGGER.info("DELETE request arrived at '/images/{}'", imageId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (is.deleteImage(imageId))

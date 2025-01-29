@@ -6,11 +6,16 @@ import {
 } from '@features/index';
 
 import { FeedCreatePostPageComponent } from '@features/index';
+import { postResolver } from '@shared/resolvers/post.resolver';
 
 const routes: Routes = [
   { path: '', component: FeedPageComponent },
   { path: 'new', component: FeedCreatePostPageComponent },
-  { path: ':id', component: FeedPostDetailPageComponent },
+  {
+    path: ':id',
+    component: FeedPostDetailPageComponent,
+    resolve: { post: postResolver },
+  },
 ];
 
 @NgModule({

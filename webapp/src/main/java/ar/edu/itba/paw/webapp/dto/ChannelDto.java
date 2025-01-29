@@ -29,7 +29,7 @@ public class ChannelDto {
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
         String channelId = String.valueOf(channel.getChannelId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder channelUri = neighborhoodUri.clone().path(Endpoint.CHANNELS).path(channelId);
         UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.IN_CHANNEL, channelUri.build());
 

@@ -61,14 +61,14 @@ public class WorkerDto {
         String workerId = String.valueOf(worker.getWorkerId());
         String userId = String.valueOf(worker.getUser().getUserId());
 
-        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId);
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS).queryParam(QueryParameter.FOR_WORKER, workerUri.build());
-        UriBuilder workerNeighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).queryParam(QueryParameter.WITH_WORKER, workerUri.build());
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(workerId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.PROFESSIONS).queryParam(QueryParameter.FOR_WORKER, workerUri.build());
+        UriBuilder workerNeighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).queryParam(QueryParameter.WITH_WORKER, workerUri.build());
         UriBuilder reviewsUri = workerUri.clone().path(Endpoint.REVIEWS);
         UriBuilder reviewsAverageUri = reviewsUri.clone().path(Endpoint.AVERAGE);
         UriBuilder reviewsCountUri = reviewsUri.clone().path(Endpoint.COUNT);
-        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(userId);
         UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.POSTED_BY, userUri.build());
         UriBuilder postsCountUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(Endpoint.COUNT).queryParam(QueryParameter.POSTED_BY, userUri.build());
 
@@ -83,7 +83,7 @@ public class WorkerDto {
         links.setPostsCount(postsCountUri.build());
         if (worker.getBackgroundPicture() != null) {
             String backgroundPictureId = String.valueOf(worker.getBackgroundPicture().getImageId());
-            UriBuilder backgroundPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(backgroundPictureId);
+            UriBuilder backgroundPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(backgroundPictureId);
             links.setBackgroundImage(backgroundPictureUri.build());
         }
 

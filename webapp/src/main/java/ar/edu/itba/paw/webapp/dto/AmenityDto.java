@@ -43,9 +43,9 @@ public class AmenityDto {
         String neighborhoodId = String.valueOf(amenity.getNeighborhood().getNeighborhoodId());
         String amenityId = String.valueOf(amenity.getAmenityId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder amenityUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.AMENITIES).path(amenityId);
-        UriBuilder shiftsUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS).queryParam(QueryParameter.FOR_AMENITY, amenityUri.build());
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder amenityUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.AMENITIES).path(amenityId);
+        UriBuilder shiftsUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.SHIFTS).queryParam(QueryParameter.FOR_AMENITY, amenityUri.build());
 
         links.setSelf(amenityUri.build());
         links.setNeighborhood(neighborhoodUri.build());

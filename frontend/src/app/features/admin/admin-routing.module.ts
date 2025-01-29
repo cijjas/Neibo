@@ -10,6 +10,7 @@ import { AdminInformationPageComponent } from './admin-information-page/admin-in
 import { AdminCreateEventComponent } from './admin-create-event/admin-create-event.component';
 import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenities-page.component';
 import { AdminAmenityCreatePageComponent } from './admin-amenity-create-page/admin-amenity-create-page.component';
+import { amenityResolver } from '@shared/resolvers/amenity.resolver';
 
 const routes: Routes = [
   {
@@ -37,7 +38,11 @@ const routes: Routes = [
       // amenities
       { path: 'amenities', component: AdminAmenitiesPageComponent },
       { path: 'amenities/new', component: AdminAmenityCreatePageComponent },
-      { path: 'amenities/:id/edit', component: AdminAmenityEditPageComponent },
+      {
+        path: 'amenities/:id/edit',
+        component: AdminAmenityEditPageComponent,
+        resolve: { amenity: amenityResolver },
+      },
       // calendar
       { path: 'calendar/events/create', component: AdminCreateEventComponent },
       // information

@@ -42,9 +42,9 @@ public class CommentDto {
         String userId = String.valueOf((comment.getUser().getUserId()));
         String commentId = String.valueOf(comment.getCommentId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(postId);
-        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(userId);
         UriBuilder commentUri = postUri.clone().path(Endpoint.COMMENTS).path(commentId);
 
         links.setSelf(commentUri.build());

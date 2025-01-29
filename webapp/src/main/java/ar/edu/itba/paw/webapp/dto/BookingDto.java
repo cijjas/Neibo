@@ -52,10 +52,10 @@ public class BookingDto {
         String userId = String.valueOf(booking.getUser().getUserId());
         String bookingId = String.valueOf(booking.getBookingId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS).path(shiftId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.SHIFTS).path(shiftId);
         UriBuilder bookingUri = neighborhoodUri.clone().path(Endpoint.BOOKINGS).path(bookingId);
-        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(userId);
         UriBuilder amenityUri = neighborhoodUri.clone().path(Endpoint.AMENITIES).path(amenityId);
 
         links.setSelf(bookingUri.build());

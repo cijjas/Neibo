@@ -57,7 +57,7 @@ public class EventDto {
         String neighborhoodId = String.valueOf(event.getNeighborhood().getNeighborhoodId());
         String eventId = String.valueOf(event.getEventId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder eventUri = neighborhoodUri.clone().path(Endpoint.EVENTS).path(eventId);
         UriBuilder attendanceUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE).queryParam(QueryParameter.FOR_EVENT, eventUri);
         UriBuilder attendanceCountUri = neighborhoodUri.clone().path(Endpoint.ATTENDANCE).path(Endpoint.COUNT).queryParam(QueryParameter.FOR_EVENT, eventUri);

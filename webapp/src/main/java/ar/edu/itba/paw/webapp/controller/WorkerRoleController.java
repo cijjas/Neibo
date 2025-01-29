@@ -29,7 +29,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Worker/Neighbor/Admin can filter the Workers through this criteria
  */
 
-@Path(Endpoint.WORKER_ROLES)
+@Path(Endpoint.API + "/" + Endpoint.WORKER_ROLES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class WorkerRoleController {
@@ -43,7 +43,7 @@ public class WorkerRoleController {
 
     @GET
     public Response listWorkerRoles() {
-        LOGGER.info("GET request arrived at '/worker-roles'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         WorkerRole[] workerRoles = WorkerRole.values();
@@ -73,7 +73,7 @@ public class WorkerRoleController {
     public Response findWorkerRole(
             @PathParam(PathParameter.WORKER_ROLE_ID) @GenericIdConstraint Long workerRoleId
     ) {
-        LOGGER.info("GET request arrived at '/worker-roles/{}'", workerRoleId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         WorkerRole workerRole = WorkerRole.fromId(workerRoleId);

@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -30,7 +30,7 @@ export class SidebarComponent implements OnInit {
 
     // Listen for navigation changes to update the channel
     this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => this.updateChannelClass());
 
     // Initial update of the channel class
@@ -41,7 +41,7 @@ export class SidebarComponent implements OnInit {
     const currentUrl = this.router.url;
 
     // 1) Check more specific routes first
-    if (currentUrl.startsWith('/services/profile')) {
+    if (currentUrl.startsWith('/services/profiles')) {
       this.channelClass = 'Profile';
     } else if (currentUrl.startsWith('/services/join-neighborhoods')) {
       this.channelClass = 'Neighborhoods';
@@ -67,7 +67,7 @@ export class SidebarComponent implements OnInit {
       } else if (
         queryParams['inChannel'] ===
           this.linkService.getLink(
-            LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+            LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
           ) ||
         !queryParams['inChannel']
       ) {
@@ -90,7 +90,7 @@ export class SidebarComponent implements OnInit {
       .navigate(['/posts'], {
         queryParams: {
           inChannel: this.linkService.getLink(
-            LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL
+            LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL,
           ),
           withStatus: null, // Reset status filter
         },
@@ -103,7 +103,7 @@ export class SidebarComponent implements OnInit {
       .navigate(['/posts'], {
         queryParams: {
           inChannel: this.linkService.getLink(
-            LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+            LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
           ),
           withStatus: null, // Reset status filter
         },
@@ -116,7 +116,7 @@ export class SidebarComponent implements OnInit {
       .navigate(['/posts'], {
         queryParams: {
           inChannel: this.linkService.getLink(
-            LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+            LinkKey.NEIGHBORHOOD_FEED_CHANNEL,
           ),
           withStatus: null, // Reset status filter
         },

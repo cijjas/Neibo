@@ -39,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A Neighbor/Admin can notify his Attendance to a certain Event
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.ATTENDANCE)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.ATTENDANCE)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -67,7 +67,7 @@ public class AttendanceController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long eventId = extractOptionalSecondId(event);
@@ -101,7 +101,7 @@ public class AttendanceController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.EVENTS).path(String.valueOf(eventId)).path(Endpoint.ATTENDANCE),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.EVENTS).path(String.valueOf(eventId)).path(Endpoint.ATTENDANCE),
                 as.calculateAttendancePages(neighborhoodId, userId, eventId, size),
                 page,
                 size
@@ -122,7 +122,7 @@ public class AttendanceController {
             @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
             @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/attendance/count'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long eventId = extractOptionalSecondId(event);
@@ -153,7 +153,7 @@ public class AttendanceController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull AttendanceDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Attendance attendance = as.createAttendance(extractSecondId(createForm.getEvent()), extractFirstId(createForm.getUser()));
@@ -173,7 +173,7 @@ public class AttendanceController {
             @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
             @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/attendance'", neighborhoodId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (as.deleteAttendance(extractOptionalSecondId(event), extractFirstId(user)))

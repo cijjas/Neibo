@@ -21,7 +21,7 @@ public class WorkerStatusDto {
 
         String workerStatusId = String.valueOf(workerStatus.getId());
 
-        UriBuilder workerStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_STATUSES).path(workerStatusId);
+        UriBuilder workerStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKER_STATUSES).path(workerStatusId);
 
         links.setSelf(workerStatusUri.build());
 
