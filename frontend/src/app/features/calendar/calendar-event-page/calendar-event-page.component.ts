@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 // Import your services and models as needed
 import {
@@ -33,7 +34,8 @@ export class CalendarEventPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private eventService: EventService,
     private attendanceService: AttendanceService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +103,7 @@ export class CalendarEventPageComponent implements OnInit {
       // Manually increment the count in your local event object
       this.event.attendeesCount = (this.event.attendeesCount ?? 0) + 1;
 
-      this.toastService.showToast('Attendance to event confirmed.', 'success');
+      this.toastService.showToast(this.translate.instant('CALENDAR-EVENT-PAGE.ATTENDANCE_TO_EVENT_CONFIRMED'), 'success');
       this.loadAttendance(); // Refresh the list of attendees
     });
   }
@@ -116,7 +118,7 @@ export class CalendarEventPageComponent implements OnInit {
       );
 
       this.toastService.showToast(
-        'You were unlisted from the event.',
+        this.translate.instant('CALENDAR-EVENT-PAGE.YOU_WERE_UNLISTED_FROM_THE_EVENT'),
         'success'
       );
       this.loadAttendance(); // Refresh the list of attendees
