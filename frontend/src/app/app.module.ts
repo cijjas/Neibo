@@ -1,28 +1,23 @@
 // ANGULAR
-import {
-  HTTP_INTERCEPTORS,
-  HttpClient,
-  HttpClientModule,
-} from '@angular/common/http';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { NgOptimizedImage } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { NgOptimizedImage } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 // MISC
-import { AppComponent } from './app.component';
-import { appRoutes } from './app.routes';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { AppComponent } from "./app.component";
+import { appRoutes } from "./app.routes";
 
-import { SharedModule } from '@shared/shared.module';
-import { CoreModule } from '@core/core.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SharedModule } from "@shared/shared.module";
+import { CoreModule } from "@core/core.module";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
 }
 
 @NgModule({
@@ -30,13 +25,11 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(appRoutes),
     NgOptimizedImage,
     ReactiveFormsModule,
-    InfiniteScrollModule,
     SharedModule,
     CoreModule,
     TranslateModule.forRoot({

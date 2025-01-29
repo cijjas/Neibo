@@ -51,7 +51,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     private departmentService: DepartmentService,
     private imageService: ImageService,
     private toastService: ToastService,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
   ) {}
 
   ngOnInit(): void {
@@ -62,16 +62,14 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       error: (err: any) => console.error(err),
     });
 
-    const productUrl = this.route.snapshot.paramMap.get('id')!;
-    if (productUrl) {
-      this.productService.getProduct(productUrl).subscribe({
-        next: (prod) => {
-          this.product = prod;
-          this.populateForm(prod);
-        },
-        error: (err) => console.error(err),
-      });
-    }
+    this.route.data.subscribe(({ product }) => {
+      if (!product) {
+        console.error('Product not found or failed to resolve');
+        return;
+      }
+      this.product = product;
+      this.populateForm(product);
+    });
   }
 
   populateForm(prod: Product): void {
@@ -98,9 +96,9 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       prod.firstImage,
       prod.secondImage,
       prod.thirdImage,
-    ].filter((url) => url);
+    ].filter(url => url);
 
-    imageUrls.forEach((url) => {
+    imageUrls.forEach(url => {
       this.images.push({ file: null as unknown as File, preview: url });
     });
   }
@@ -203,40 +201,40 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     };
 
     // Separate new images (files) from preloaded images (URLs)
-    const newImageFiles = this.images.filter((img) => img.file);
+    const newImageFiles = this.images.filter(img => img.file);
     const existingImageUrls = this.images
-      .filter((img) => !img.file)
-      .map((img) => img.preview);
+      .filter(img => !img.file)
+      .map(img => img.preview);
 
-    const imageUploadObservables = newImageFiles.map((img) =>
-      this.imageService.createImage(img.file)
+    const imageUploadObservables = newImageFiles.map(img =>
+      this.imageService.createImage(img.file),
     );
 
     combineLatest(imageUploadObservables)
       .pipe(
-        map((newImageUrls) => {
+        map(newImageUrls => {
           productData.images = [
             ...existingImageUrls,
-            ...newImageUrls.filter((url) => url !== null),
+            ...newImageUrls.filter(url => url !== null),
           ];
           return productData;
         }),
-        switchMap((updatedProductData) =>
+        switchMap(updatedProductData =>
           this.productService.updateProduct(
             this.product!.self,
-            updatedProductData
-          )
-        )
+            updatedProductData,
+          ),
+        ),
       )
       .subscribe({
         next: () => {
           this.toastService.showToast(
             'Listing updated successfully',
-            'success'
+            'success',
           );
           this.router.navigate(['/marketplace/products', this.product!.self]);
         },
-        error: (err) => {
+        error: err => {
           this.formErrors = 'There was a problem updating the listing.';
           console.error(err);
         },

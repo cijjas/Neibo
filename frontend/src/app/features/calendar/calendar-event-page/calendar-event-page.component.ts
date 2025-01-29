@@ -33,39 +33,50 @@ export class CalendarEventPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private eventService: EventService,
     private attendanceService: AttendanceService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
     // 1) Get the Event ID from the URL (/events/:id)
-    const eventId = this.route.snapshot.paramMap.get('id');
-    if (eventId) {
-      // Build the attendance URL.
-      // For example, the backend might expect /events/1/attendance
-      this.loadEvent(eventId);
-    }
+    this.route.data.subscribe(({ event }) => {
+      if (!event) {
+        console.error('Event not found or failed to resolve');
+        return;
+      }
+      this.event = event;
+
+      // Load attendees after event is available
+      this.loadAttendance();
+
+      // Check if user will attend
+      this.checkUserAttendance();
+    });
 
     // 2) Watch query params for "attendancePage"
-    this.route.queryParamMap.subscribe((params) => {
+    this.route.queryParamMap.subscribe(params => {
       const attendancePageParam = params.get('attendancePage');
       this.attendanceCurrentPage = attendancePageParam
         ? +attendancePageParam
         : 1;
       this.loadAttendance(); // fetch attendees again if page changes
     });
+  }
+
+  checkUserAttendance(): void {
+    if (!this.event) return;
 
     this.attendanceService
       .getAttendances({
         forUser: this.linkService.getLink(LinkKey.USER_SELF),
-        forEvent: eventId,
+        forEvent: this.event.self,
         page: 1,
         size: 1,
       })
       .subscribe({
-        next: (next) => {
-          this.willAttend = next.attendances.length != 0;
+        next: next => {
+          this.willAttend = next.attendances.length !== 0;
         },
-        error: (error) => {
+        error: () => {
           console.error('Error getting attendance');
         },
       });
@@ -73,7 +84,7 @@ export class CalendarEventPageComponent implements OnInit {
 
   // Example: fetch the event from your EventService
   loadEvent(eventId: string): void {
-    this.eventService.getEvent(eventId).subscribe((event) => {
+    this.eventService.getEvent(eventId).subscribe(event => {
       this.event = event;
 
       this.loadAttendance();
@@ -88,7 +99,7 @@ export class CalendarEventPageComponent implements OnInit {
         page: this.attendanceCurrentPage,
         size: this.attendancePageSize,
       })
-      .subscribe((result) => {
+      .subscribe(result => {
         this.attendees = result.attendances ?? [];
         this.attendanceTotalPages = result.totalPages;
         this.attendanceCurrentPage = result.currentPage;
@@ -112,12 +123,12 @@ export class CalendarEventPageComponent implements OnInit {
       // Manually decrement the count
       this.event.attendeesCount = Math.max(
         (this.event.attendeesCount ?? 1) - 1,
-        0
+        0,
       );
 
       this.toastService.showToast(
         'You were unlisted from the event.',
-        'success'
+        'success',
       );
       this.loadAttendance(); // Refresh the list of attendees
     });

@@ -12,7 +12,6 @@ export const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   // Authentication
-
   {
     path: '',
     component: PublicLayoutComponent,
@@ -20,7 +19,7 @@ export const appRoutes: Routes = [
       {
         path: 'login',
         loadChildren: () =>
-          import('@features/auth/auth.module').then((m) => m.AuthModule),
+          import('@features/auth/auth.module').then(m => m.AuthModule),
         canActivate: [AuthGuard],
       },
       // 404 and Wildcard
@@ -28,8 +27,30 @@ export const appRoutes: Routes = [
         path: 'not-found',
         loadChildren: () =>
           import('@features/not-found/not-found.module').then(
-            (m) => m.NotFoundModule
+            m => m.NotFoundModule,
           ),
+      },
+
+      // Unverified
+      {
+        path: 'unverified',
+        loadChildren: () =>
+          import('@features/unverified/unverified.module').then(
+            m => m.UnverifiedModule,
+          ),
+        canActivate: [RoleGuard],
+        data: { roles: [Roles.UNVERIFIED_NEIGHBOR] },
+      },
+
+      // Unverified
+      {
+        path: 'rejected',
+        loadChildren: () =>
+          import('@features/rejected/rejected.module').then(
+            m => m.RejectedModule,
+          ),
+        canActivate: [RoleGuard],
+        data: { roles: [Roles.REJECTED] },
       },
     ],
   },
@@ -42,7 +63,7 @@ export const appRoutes: Routes = [
       {
         path: 'admin',
         loadChildren: () =>
-          import('@features/admin/admin.module').then((m) => m.AdminModule),
+          import('@features/admin/admin.module').then(m => m.AdminModule),
         canActivate: [RoleGuard],
         data: { roles: [Roles.ADMINISTRATOR] },
       },
@@ -52,7 +73,7 @@ export const appRoutes: Routes = [
         path: 'amenities',
         loadChildren: () =>
           import('@features/amenities/amenities.module').then(
-            (m) => m.AmenitiesModule
+            m => m.AmenitiesModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
@@ -63,7 +84,7 @@ export const appRoutes: Routes = [
         path: 'calendar',
         loadChildren: () =>
           import('@features/calendar/calendar.module').then(
-            (m) => m.CalendarModule
+            m => m.CalendarModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
@@ -73,7 +94,7 @@ export const appRoutes: Routes = [
       {
         path: 'posts',
         loadChildren: () =>
-          import('@features/feed/feed.module').then((m) => m.FeedModule),
+          import('@features/feed/feed.module').then(m => m.FeedModule),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
       },
@@ -83,7 +104,7 @@ export const appRoutes: Routes = [
         path: 'information',
         loadChildren: () =>
           import('@features/information/information.module').then(
-            (m) => m.InformationModule
+            m => m.InformationModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
@@ -94,7 +115,7 @@ export const appRoutes: Routes = [
         path: 'marketplace',
         loadChildren: () =>
           import('@features/marketplace/marketplace.module').then(
-            (m) => m.MarketplaceModule
+            m => m.MarketplaceModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
@@ -105,7 +126,7 @@ export const appRoutes: Routes = [
         path: 'services',
         loadChildren: () =>
           import('@features/service-providers/service-providers.module').then(
-            (m) => m.ServiceProvidersModule
+            m => m.ServiceProvidersModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
@@ -113,35 +134,13 @@ export const appRoutes: Routes = [
 
       // User Profile
       {
-        path: 'user',
+        path: 'profile',
         loadChildren: () =>
           import('@features/user-profile/user-profile.module').then(
-            (m) => m.UserProfileModule
+            m => m.UserProfileModule,
           ),
         canActivate: [RoleGuard],
         data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
-      },
-
-      // Unverified
-      {
-        path: 'unverified',
-        loadChildren: () =>
-          import('@features/unverified/unverified.module').then(
-            (m) => m.UnverifiedModule
-          ),
-        canActivate: [RoleGuard],
-        data: { roles: [Roles.UNVERIFIED_NEIGHBOR] },
-      },
-
-      // Unverified
-      {
-        path: 'rejected',
-        loadChildren: () =>
-          import('@features/rejected/rejected.module').then(
-            (m) => m.RejectedModule
-          ),
-        canActivate: [RoleGuard],
-        data: { roles: [Roles.REJECTED] },
       },
     ],
   },

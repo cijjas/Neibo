@@ -21,8 +21,8 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private imageService: ImageService,
     private linkService: HateoasLinksService,
-    private router: Router // Inject Router to handle navigation
-  ) { }
+    private router: Router, // Inject Router to handle navigation
+  ) {}
 
   ngOnInit(): void {
     const userSub = this.userSessionService
@@ -30,7 +30,6 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
       .subscribe((user: User | null) => {
         this.currentUser = user;
         this.loadProfileImage(user.image);
-
       });
     this.subscriptions.add(userSub);
   }
@@ -49,9 +48,6 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
   }
 
   navigateToProfile(): void {
-    this.router.navigate([
-      '/user',
-      this.linkService.getLink(LinkKey.USER_SELF),
-    ]);
+    this.router.navigate(['/profile']);
   }
 }

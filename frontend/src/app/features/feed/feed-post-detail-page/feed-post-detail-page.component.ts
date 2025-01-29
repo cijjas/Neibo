@@ -1,14 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
-import {
-  Comment,
-  Post,
-  PostService,
-  CommentService,
-  LikeService,
-} from '@shared/index';
+import { Comment, Post, CommentService, LikeService } from '@shared/index';
 import { UserSessionService } from '@core/index';
 
 @Component({
@@ -16,51 +10,18 @@ import { UserSessionService } from '@core/index';
   templateUrl: './feed-post-detail-page.component.html',
 })
 export class FeedPostDetailPageComponent implements OnInit {
-  postSelf!: string;
+  public post!: Post;
 
-  public post: Post | undefined;
-  public comments: Comment[] = [];
-  public loggedUserUrn: string | undefined;
-  public likeCount: number = 0;
-  public isLikedByUser: boolean = false;
-
-  constructor(
-    private postService: PostService,
-    private userSessionService: UserSessionService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.postSelf = this.route.snapshot.paramMap.get('id')!;
-    this.loadLoggedUserUrn();
-    this.loadPostData();
-  }
-
-  private loadLoggedUserUrn(): void {
-    this.userSessionService.getCurrentUser().subscribe(
-      (user) => {
-        if (user) {
-          this.loggedUserUrn = user.self;
-        }
-      },
-      (error: any) => {
-        console.error('Error retrieving logged user URN:', error);
+    // Get resolved post from route data
+    this.route.data.subscribe(({ post }) => {
+      if (!post) {
+        console.error('Post not found or failed to resolve');
+        return;
       }
-    );
-  }
-
-  private loadPostData(): void {
-    this.getPost();
-  }
-
-  public getPost(): void {
-    this.postService.getPost(this.postSelf).subscribe({
-      next: (post: Post) => {
-        this.post = post;
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error fetching post:', error);
-      },
+      this.post = post;
     });
   }
 }
