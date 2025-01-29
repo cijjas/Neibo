@@ -17,12 +17,10 @@ const routes: Routes = [
     component: AdminLayoutComponent,
     children: [
       { path: '', redirectTo: 'announcement/new', pathMatch: 'full' },
-
       {
         path: 'announcement/new',
         component: AdminCreateAnnouncementPageComponent,
       },
-      // neighbors and services
       {
         path: 'neighbors/requests',
         component: AdminNeighborsRequestsPageComponent,
