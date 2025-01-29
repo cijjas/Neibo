@@ -27,8 +27,8 @@ public class ProfessionDto {
 
         String professionId = String.valueOf(profession.getProfessionId());
 
-        UriBuilder professionUri = uriInfo.getBaseUriBuilder().path(Endpoint.PROFESSIONS).path(professionId);
-        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).queryParam(QueryParameter.WITH_PROFESSION, professionUri.build());
+        UriBuilder professionUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.PROFESSIONS).path(professionId);
+        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).queryParam(QueryParameter.WITH_PROFESSION, professionUri.build());
 
         links.setSelf(professionUri.build());
         links.setWorkers(workersUri.build());

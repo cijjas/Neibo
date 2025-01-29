@@ -42,7 +42,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - The Worker can list the Neighborhoods he has an Affiliation with
  */
 
-@Path(Endpoint.AFFILIATIONS)
+@Path(Endpoint.API + "/" + Endpoint.AFFILIATIONS)
 @Validated
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -60,13 +60,14 @@ public class AffiliationController {
     }
 
     @GET
+    // PreAuthorize that the InNeighborhood parameter is only used by the Admins
     public Response listAffiliations(
             @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURIConstraint String neighborhood,
             @QueryParam(QueryParameter.FOR_WORKER) @WorkerURIConstraint String worker,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/affiliations'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long neighborhoodId = extractOptionalFirstId(neighborhood);
@@ -99,7 +100,7 @@ public class AffiliationController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.AFFILIATIONS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.AFFILIATIONS),
                 nws.calculateAffiliationPages(neighborhoodId, workerId, size),
                 page,
                 size
@@ -119,7 +120,7 @@ public class AffiliationController {
     public Response createAffiliation(
             @Valid @NotNull AffiliationDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/affiliations'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         Affiliation affiliation = nws.createAffiliation(extractFirstId(createForm.getNeighborhood()), extractFirstId(createForm.getWorker()), extractFirstId(createForm.getWorkerRole()));
@@ -141,7 +142,7 @@ public class AffiliationController {
             @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURIConstraint String worker,
             @Valid @NotNull AffiliationDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/affiliations'");
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Affiliation updatedAffiliation = nws.updateAffiliation(extractFirstId(neighborhood), extractFirstId(worker), extractFirstId(updateForm.getWorkerRole()));
@@ -158,7 +159,7 @@ public class AffiliationController {
             @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURIConstraint String neighborhood,
             @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURIConstraint String worker
     ) {
-        LOGGER.info("DELETE request arrived at '/affiliations'");
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (nws.deleteAffiliation(extractFirstId(neighborhood), extractFirstId(worker)))

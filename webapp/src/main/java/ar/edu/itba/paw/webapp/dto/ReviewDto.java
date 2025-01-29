@@ -46,7 +46,7 @@ public class ReviewDto {
         String workerId = String.valueOf(review.getWorker().getWorkerId());
         String reviewId = String.valueOf(review.getReviewId());
 
-        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId);
+        UriBuilder workerUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(workerId);
         UriBuilder reviewUri = workerUri.clone().path(Endpoint.REVIEWS).path(reviewId);
 
         links.setSelf(reviewUri.build());

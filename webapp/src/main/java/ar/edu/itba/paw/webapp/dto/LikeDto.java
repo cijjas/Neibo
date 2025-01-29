@@ -41,9 +41,9 @@ public class LikeDto {
         String userId = String.valueOf(like.getUser().getUserId());
         String postId = String.valueOf(like.getPost().getPostId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES);
-        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder likesUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.LIKES);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(userId);
         UriBuilder postUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(postId);
         UriBuilder likeUri = likesUri.clone().queryParam(QueryParameter.LIKED_BY, userUri).queryParam(QueryParameter.ON_POST, postUri);
 

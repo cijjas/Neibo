@@ -34,7 +34,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
  *   - An Admin can create, update and delete a Contact
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CONTACTS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.CONTACTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -57,7 +57,7 @@ public class ContactController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         final List<Contact> contacts = cs.getContacts(neighborhoodId, page, size);
@@ -79,7 +79,7 @@ public class ContactController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CONTACTS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CONTACTS),
                 cs.calculateContactPages(neighborhoodId, size),
                 page,
                 size
@@ -99,7 +99,7 @@ public class ContactController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Contact contact = cs.findContact(neighborhoodId, contactId).orElseThrow(NotFoundException::new);
@@ -124,7 +124,7 @@ public class ContactController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull ContactDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Contact contact = cs.createContact(neighborhoodId, createForm.getName(), createForm.getAddress(), createForm.getPhone());
@@ -148,7 +148,7 @@ public class ContactController {
             @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId,
             @Valid @NotNull ContactDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Contact updatedContact = cs.updateContact(neighborhoodId, contactId, updateForm.getName(), updateForm.getAddress(), updateForm.getPhone());
@@ -166,7 +166,7 @@ public class ContactController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (cs.deleteContact(neighborhoodId, contactId))

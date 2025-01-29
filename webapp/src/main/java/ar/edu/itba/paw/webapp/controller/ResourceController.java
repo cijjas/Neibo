@@ -35,7 +35,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - A Neighbor/Admin can list the Resources of their Neighborhood
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.RESOURCES)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.RESOURCES)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -58,7 +58,7 @@ public class ResourceController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         final List<Resource> resources = rs.getResources(neighborhoodId, page, size);
@@ -80,7 +80,7 @@ public class ResourceController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.RESOURCES),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.RESOURCES),
                 rs.calculateResourcePages(neighborhoodId, size),
                 page,
                 size
@@ -100,7 +100,7 @@ public class ResourceController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.RESOURCE_ID) @GenericIdConstraint long resourceId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Resource resource = rs.findResource(neighborhoodId, resourceId).orElseThrow(NotFoundException::new);
@@ -125,7 +125,7 @@ public class ResourceController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull ResourceDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & ETag Generation
         final Resource resource = rs.createResource(neighborhoodId, createForm.getTitle(), createForm.getDescription(), extractOptionalFirstId(createForm.getImage()));
@@ -148,7 +148,7 @@ public class ResourceController {
             @PathParam(PathParameter.RESOURCE_ID) @GenericIdConstraint long resourceId,
             @Valid @NotNull ResourceDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Resource updatedResource = rs.updateResource(neighborhoodId, resourceId, updateForm.getTitle(), updateForm.getDescription(), extractOptionalFirstId(updateForm.getImage()));
@@ -166,7 +166,7 @@ public class ResourceController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.RESOURCE_ID) @GenericIdConstraint long resourceId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (rs.deleteResource(neighborhoodId, resourceId))

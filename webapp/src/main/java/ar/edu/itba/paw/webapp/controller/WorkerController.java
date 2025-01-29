@@ -41,7 +41,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A Neighbor/Admin can list the Workers affiliated with their Neighborhood
  */
 
-@Path(Endpoint.WORKERS)
+@Path(Endpoint.API + "/" + Endpoint.WORKERS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -68,7 +68,7 @@ public class WorkerController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/workers'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         List<Long> neighborhoodIds = extractFirstIds(neighborhoods);
@@ -96,7 +96,7 @@ public class WorkerController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS),
                 ws.calculateWorkerPages(neighborhoodIds, professionIds, workerRoleId, workerStatusId, size),
                 page,
                 size
@@ -115,7 +115,7 @@ public class WorkerController {
     public Response findWorker(
             @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId
     ) {
-        LOGGER.info("GET request arrived at '/workers/{}'", workerId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Worker worker = ws.findWorker(workerId).orElseThrow(NotFoundException::new);
@@ -138,7 +138,7 @@ public class WorkerController {
     public Response createWorker(
             @Valid @NotNull WorkerDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/workers'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & Etag Generation
         final Worker worker = ws.createWorker(extractFirstId(createForm.getUser()), extractFirstIds(createForm.getProfessions()), createForm.getBusinessName(), createForm.getAddress(), createForm.getPhoneNumber());
@@ -160,7 +160,7 @@ public class WorkerController {
             @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId,
             @Valid @NotNull WorkerDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Worker updatedWorker = ws.updateWorker(workerId, updateForm.getBusinessName(), updateForm.getAddress(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getBackgroundImage()), updateForm.getBio());

@@ -9,29 +9,29 @@ import java.util.regex.Pattern;
 public class URIValidator {
     private static final Map<String, Pattern> patternMap = new HashMap<>();
 
-    private static final String CHANNEL_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.CHANNELS + "/\\d+$";
-    private static final String NEIGHBORHOOD_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/-?\\d+$";
-    private static final String AMENITY_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.AMENITIES + "/\\d+$";
-    private static final String SHIFT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.SHIFTS + "/\\d+$";
-    private static final String POST_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.POSTS + "/\\d+$";
-    private static final String EVENT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.EVENTS + "/\\d+$";
-    private static final String REQUEST_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.PRODUCTS + "/\\d+/" + Endpoint.REQUESTS + "/\\d+$";
-    private static final String USER_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.USERS + "/\\d+$";
-    private static final String DEPARTMENT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.DEPARTMENTS + "/\\d+$";
-    private static final String WORKERS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.WORKERS + "/\\d+$";
-    private static final String INQUIRY_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.PRODUCTS + "/\\d+/" + Endpoint.INQUIRIES + "/\\d+$";
-    private static final String PRODUCT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.PRODUCTS + "/\\d+$";
-    private static final String LANGUAGE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.LANGUAGES + "/\\d+$";
-    private static final String REQUEST_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.REQUEST_STATUSES + "/\\d+$";
-    private static final String PROFESSION_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.PROFESSIONS + "/\\d+$";
-    private static final String USER_ROLE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.USER_ROLES + "/\\d+$";
-    private static final String POST_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.POST_STATUSES + "/\\d+$";
-    private static final String PRODUCT_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.PRODUCT_STATUSES + "/\\d+$";
-    private static final String WORKER_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.WORKER_STATUSES + "/\\d+$";
-    private static final String WORKER_ROLE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.WORKER_ROLES + "/\\d+$";
-    private static final String TRANSACTION_TYPE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.TRANSACTION_TYPES + "/\\d+$";
-    private static final String IMAGE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.IMAGES + "/\\d+$";
-    private static final String TAGS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.TAGS + "/\\d+$";
+    private static final String CHANNEL_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.CHANNELS + "/\\d+$";
+    private static final String NEIGHBORHOOD_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/-?\\d+$";
+    private static final String AMENITY_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.AMENITIES + "/\\d+$";
+    private static final String SHIFT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.SHIFTS + "/\\d+$";
+    private static final String POST_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.POSTS + "/\\d+$";
+    private static final String EVENT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.EVENTS + "/\\d+$";
+    private static final String REQUEST_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.PRODUCTS + "/\\d+/" + Endpoint.REQUESTS + "/\\d+$";
+    private static final String USER_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.USERS + "/\\d+$";
+    private static final String DEPARTMENT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.DEPARTMENTS + "/\\d+$";
+    private static final String WORKERS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.WORKERS + "/\\d+$";
+    private static final String INQUIRY_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.PRODUCTS + "/\\d+/" + Endpoint.INQUIRIES + "/\\d+$";
+    private static final String PRODUCT_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.PRODUCTS + "/\\d+$";
+    private static final String LANGUAGE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.LANGUAGES + "/\\d+$";
+    private static final String REQUEST_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.REQUEST_STATUSES + "/\\d+$";
+    private static final String PROFESSION_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.PROFESSIONS + "/\\d+$";
+    private static final String USER_ROLE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.USER_ROLES + "/\\d+$";
+    private static final String POST_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.POST_STATUSES + "/\\d+$";
+    private static final String PRODUCT_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.PRODUCT_STATUSES + "/\\d+$";
+    private static final String WORKER_STATUS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.WORKER_STATUSES + "/\\d+$";
+    private static final String WORKER_ROLE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.WORKER_ROLES + "/\\d+$";
+    private static final String TRANSACTION_TYPE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.TRANSACTION_TYPES + "/\\d+$";
+    private static final String IMAGE_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.IMAGES + "/\\d+$";
+    private static final String TAGS_URI_REGEX = "^(https?://[^/]+)?/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.TAGS + "/\\d+$";
 
     // Compile regex patterns during application startup
     static {

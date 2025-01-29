@@ -37,7 +37,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - Registered Users can migrate Neighborhood but becoming UNVERIFIED in the process
  */
 
-@Path(Endpoint.NEIGHBORHOODS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -63,7 +63,7 @@ public class NeighborhoodController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         System.out.println(isBase);
 
@@ -91,7 +91,7 @@ public class NeighborhoodController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS),
                 ns.calculateNeighborhoodPages(isBase, withWorkerId, withoutWorkerId, size),
                 page,
                 size
@@ -110,7 +110,7 @@ public class NeighborhoodController {
     public Response findNeighborhood(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Neighborhood neighborhood = ns.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
@@ -134,7 +134,7 @@ public class NeighborhoodController {
     public Response createNeighborhood(
             @Valid @NotNull NeighborhoodDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Neighborhood neighborhood = ns.createNeighborhood(createForm.getName());
@@ -158,7 +158,7 @@ public class NeighborhoodController {
     public Response deleteNeighborhood(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}'", neighborhoodId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (ns.deleteNeighborhood(neighborhoodId))

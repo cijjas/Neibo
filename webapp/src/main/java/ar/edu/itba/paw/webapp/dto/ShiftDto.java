@@ -28,7 +28,7 @@ public class ShiftDto {
 
         String shiftId = String.valueOf(shift.getShiftId());
 
-        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.SHIFTS).path(shiftId);
+        UriBuilder shiftUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.SHIFTS).path(shiftId);
 
         links.setSelf(shiftUri.build());
 

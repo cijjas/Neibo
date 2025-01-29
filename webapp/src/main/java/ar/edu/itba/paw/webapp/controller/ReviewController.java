@@ -37,7 +37,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
  *   - A Neighbor/Admin/Worker can list the Reviews of the Workers and their overall score
  */
 
-@Path(Endpoint.WORKERS + "/{" + PathParameter.WORKER_ID + "}/" + Endpoint.REVIEWS)
+@Path(Endpoint.API + "/" + Endpoint.WORKERS + "/{" + PathParameter.WORKER_ID + "}/" + Endpoint.REVIEWS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -60,7 +60,7 @@ public class ReviewController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         final List<Review> reviews = rs.getReviews(workerId, page, size);
@@ -82,7 +82,7 @@ public class ReviewController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(String.valueOf(workerId)).path(Endpoint.REVIEWS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(String.valueOf(workerId)).path(Endpoint.REVIEWS),
                 rs.calculateReviewPages(workerId, size),
                 page,
                 size
@@ -101,7 +101,7 @@ public class ReviewController {
     public Response countReviews(
             @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId
     ) {
-        LOGGER.info("GET request arrived at '/workers/{}/reviews/count'", workerId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         int count = rs.countReviews(workerId);
@@ -127,7 +127,7 @@ public class ReviewController {
     public Response averageReviews(
             @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId
     ) {
-        LOGGER.info("GET request arrived at '/workers/{}/reviews/average'", workerId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         float average = rs.findAverageRating(workerId);
@@ -154,7 +154,7 @@ public class ReviewController {
             @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
             @PathParam(PathParameter.REVIEW_ID) @GenericIdConstraint long reviewId
     ) {
-        LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Review review = rs.findReview(workerId, reviewId).orElseThrow(NotFoundException::new);
@@ -196,7 +196,7 @@ public class ReviewController {
         the authentication can be changed to let go the null but i really dont like that option
         programatically transitioning the call to within th controller or within the service is another option i dont like
          */
-        LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         final Review review = rs.createReview(workerId, extractFirstId(createForm.getUser()), createForm.getRating(), createForm.getMessage());
@@ -217,7 +217,7 @@ public class ReviewController {
             @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
             @PathParam(PathParameter.REVIEW_ID) @GenericIdConstraint long reviewId
     ) {
-        LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (rs.deleteReview(workerId, reviewId))

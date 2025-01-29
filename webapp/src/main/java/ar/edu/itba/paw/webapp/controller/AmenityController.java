@@ -37,7 +37,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstIds;
  *   - An Admin can create, delete and update an Amenity for their Neighborhood
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.AMENITIES)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.AMENITIES)
 @Validated
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -60,7 +60,7 @@ public class AmenityController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
@@ -81,7 +81,7 @@ public class AmenityController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.AMENITIES),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.AMENITIES),
                 as.calculateAmenityPages(neighborhoodId, size),
                 page,
                 size
@@ -101,7 +101,7 @@ public class AmenityController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.AMENITY_ID) @GenericIdConstraint Long amenityId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Amenity amenity = as.findAmenity(neighborhoodId, amenityId).orElseThrow(NotFoundException::new);
@@ -126,7 +126,7 @@ public class AmenityController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @Valid @NotNull AmenityDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
         Amenity amenity = as.createAmenity(neighborhoodId, createForm.getName(), createForm.getDescription(), extractFirstIds(createForm.getSelectedShifts()));
@@ -150,7 +150,7 @@ public class AmenityController {
             @PathParam(PathParameter.AMENITY_ID) @GenericIdConstraint Long amenityId,
             @Valid @NotNull AmenityDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Amenity updatedAmenity = as.updateAmenity(neighborhoodId, amenityId, updateForm.getName(), updateForm.getDescription(), extractFirstIds(updateForm.getSelectedShifts()));
@@ -169,7 +169,7 @@ public class AmenityController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
             @PathParam(PathParameter.AMENITY_ID) @GenericIdConstraint Long amenityId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, amenityId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Attempt to delete the amenity
         boolean response = as.deleteAmenity(neighborhoodId, amenityId);

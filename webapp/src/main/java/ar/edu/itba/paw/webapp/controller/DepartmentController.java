@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  *   - A Neighbor/Admin can filter the Products according to their Department
  */
 
-@Path(Endpoint.DEPARTMENTS)
+@Path(Endpoint.API + "/" + Endpoint.DEPARTMENTS)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class DepartmentController {
@@ -52,7 +52,7 @@ public class DepartmentController {
 
     @GET
     public Response listDepartments() {
-        LOGGER.info("GET request arrived at '/departments'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         List<Department> departments = ds.getDepartments();
@@ -84,7 +84,7 @@ public class DepartmentController {
     public Response findDepartment(
             @PathParam(PathParameter.DEPARTMENT_ID) @GenericIdConstraint Long departmentId
     ) {
-        LOGGER.info("GET request arrived at '/departments/{}'", departmentId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Department department = ds.findDepartment(departmentId).orElseThrow(NotFoundException::new);
@@ -108,7 +108,7 @@ public class DepartmentController {
     public Response createDepartment(
             @Valid @NotNull DepartmentDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/departments'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         final Department department = ds.createDepartment(createForm.getName());
@@ -132,7 +132,7 @@ public class DepartmentController {
     public Response deleteDepartment(
             @PathParam(PathParameter.DEPARTMENT_ID) @GenericIdConstraint long departmentId
     ) {
-        LOGGER.info("DELETE request arrived at '/departments/{}'", departmentId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (ds.deleteDepartment(departmentId))

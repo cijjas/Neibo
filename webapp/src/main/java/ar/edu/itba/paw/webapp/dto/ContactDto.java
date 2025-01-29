@@ -38,7 +38,7 @@ public class ContactDto {
         String neighborhoodId = String.valueOf(contact.getNeighborhood().getNeighborhoodId());
         String contactId = String.valueOf(contact.getContactId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder contactUri = neighborhoodUri.clone().path(Endpoint.CONTACTS).path(contactId);
 
         links.setSelf(contactUri.build());

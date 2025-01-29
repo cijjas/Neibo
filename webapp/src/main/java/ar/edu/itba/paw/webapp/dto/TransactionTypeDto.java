@@ -21,7 +21,7 @@ public class TransactionTypeDto {
 
         String transactionTypeId = String.valueOf(transactionType.getId());
 
-        UriBuilder transactionTypeUri = uriInfo.getBaseUriBuilder().path(Endpoint.TRANSACTION_TYPES).path(transactionTypeId);
+        UriBuilder transactionTypeUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.TRANSACTION_TYPES).path(transactionTypeId);
 
         links.setSelf(transactionTypeUri.build());
 

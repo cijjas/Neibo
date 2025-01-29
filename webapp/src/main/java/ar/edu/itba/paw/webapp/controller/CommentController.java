@@ -39,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
  *   - An Admin can delete a Comment
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.POSTS + "/{" + PathParameter.POST_ID + "}/" + Endpoint.COMMENTS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.POSTS + "/{" + PathParameter.POST_ID + "}/" + Endpoint.COMMENTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -69,7 +69,7 @@ public class CommentController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Verify path
         ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
@@ -93,7 +93,7 @@ public class CommentController {
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS).path(String.valueOf(postId)).path(Endpoint.COMMENTS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS).path(String.valueOf(postId)).path(Endpoint.COMMENTS),
                 cs.calculateCommentPages(neighborhoodId, postId, size),
                 page,
                 size
@@ -114,7 +114,7 @@ public class CommentController {
             @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
             @PathParam(PathParameter.COMMENT_ID) @GenericIdConstraint long commentId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Comment comment = cs.findComment(neighborhoodId, postId, commentId).orElseThrow(NotFoundException::new);
@@ -139,7 +139,7 @@ public class CommentController {
             @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
             @Valid @NotNull CommentDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Path Verification
         ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
@@ -168,7 +168,7 @@ public class CommentController {
             @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
             @PathParam(PathParameter.COMMENT_ID) @GenericIdConstraint long commentId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (cs.deleteComment(neighborhoodId, postId, commentId))

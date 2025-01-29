@@ -37,14 +37,14 @@ public class ResourceDto {
         String neighborhoodId = String.valueOf(resource.getNeighborhood().getNeighborhoodId());
         String resourceId = String.valueOf(resource.getResourceId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder resourceUri = neighborhoodUri.clone().path(Endpoint.RESOURCES).path(resourceId);
 
         links.setSelf(resourceUri.build());
         links.setNeighborhood(neighborhoodUri.build());
         if (resource.getImage() != null) {
             String imageId = String.valueOf(resource.getImage().getImageId());
-            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(imageId);
+            UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(imageId);
             links.setResourceImage(imageUri.build());
         }
 

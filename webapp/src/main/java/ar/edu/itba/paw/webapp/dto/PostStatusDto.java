@@ -21,7 +21,7 @@ public class PostStatusDto {
 
         String postStatusId = String.valueOf(postStatus.getId());
 
-        UriBuilder postStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.POST_STATUSES).path(postStatusId);
+        UriBuilder postStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.POST_STATUSES).path(postStatusId);
 
         links.setSelf(postStatusUri.build());
 

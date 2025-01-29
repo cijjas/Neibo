@@ -101,15 +101,15 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             // Construct a full URL for the User URL, Workers' Neighborhood, and User's Neighborhood URL and add them to the response headers
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (userAuth.getNeighborhoodId() != BaseNeighborhood.WORKERS.getId()) {
-                String workersNeighborhoodURL = String.format("%s://%s:%d%s/%s/%d",
-                        request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.NEIGHBORHOODS, BaseNeighborhood.WORKERS.getId());
+                String workersNeighborhoodURL = String.format("%s://%s:%d%s/%s/%s/%d",
+                        request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.API, Endpoint.NEIGHBORHOODS, BaseNeighborhood.WORKERS.getId());
                 response.addHeader("X-Workers-Neighborhood-URL", Link.fromUri(workersNeighborhoodURL).rel("workers-neighborhood-url").build().toString());
             }
-            String neighborhoodURL = String.format("%s://%s:%d%s/%s/%d",
-                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.NEIGHBORHOODS, userAuth.getNeighborhoodId());
+            String neighborhoodURL = String.format("%s://%s:%d%s/%s/%s/%d",
+                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.API, Endpoint.NEIGHBORHOODS, userAuth.getNeighborhoodId());
             response.addHeader("X-Neighborhood-URL", Link.fromUri(neighborhoodURL).rel("neighborhood-url").build().toString());
-            String userURL = String.format("%s://%s:%d%s/%s/%d",
-                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.USERS, userAuth.getUserId());
+            String userURL = String.format("%s://%s:%d%s/%s/%s/%d",
+                    request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath(), Endpoint.API, Endpoint.USERS, userAuth.getUserId());
             response.addHeader("X-User-URL", Link.fromUri(userURL).rel("user-url").build().toString());
         } catch (AuthenticationException e) {
             LOGGER.debug("Invalid Basic Authentication provided");
