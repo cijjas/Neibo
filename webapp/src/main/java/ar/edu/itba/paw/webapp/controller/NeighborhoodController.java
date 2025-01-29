@@ -65,8 +65,6 @@ public class NeighborhoodController {
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
-        System.out.println(isBase);
-
         // ID Extraction
         Long withWorkerId = extractOptionalFirstId(withWorker);
         Long withoutWorkerId = extractOptionalFirstId(withoutWorker);

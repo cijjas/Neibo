@@ -18,7 +18,7 @@ public class IndexServlet extends HttpServlet {
     @Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         LOGGER.info("Index Servlet taking action");
 
-        Path file = Paths.get(getServletContext().getRealPath("/static/index.html"));
+        Path file = Paths.get(getServletContext().getRealPath("/static/browser/index.html"));
         resp.setContentType("text/html");
         Files.copy(file, resp.getOutputStream());
     }

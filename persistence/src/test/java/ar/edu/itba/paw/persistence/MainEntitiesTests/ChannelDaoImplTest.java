@@ -183,7 +183,6 @@ public class ChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey1, chKey3);
 
         List<Channel> channelListy = channelDaoImpl.getChannels(nhKey1, EMPTY_BOOLEAN_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
-        System.out.println(channelListy);
         // Exercise
         List<Channel> channelList = channelDaoImpl.getChannels(nhKey1, Boolean.FALSE, BASE_PAGE, BASE_PAGE_SIZE);
 

@@ -19,6 +19,8 @@
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
+            "baseHref": "/paw-2023b-02/static/browser/",
+            "deployUrl": "/paw-2023b-02/static/browser/",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
