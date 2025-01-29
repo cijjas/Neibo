@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>paw2023b</artifactId>
+        <artifactId>paw2023b02</artifactId>
         <groupId>ar.edu.itba.paw</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -76,6 +76,13 @@
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>ar.edu.itba.paw</groupId>
+            <artifactId>frontend</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
@@ -173,14 +180,6 @@
         <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>${maven-war-plugin.version}</version>
-                    <configuration>
-                        <packagingExcludes>**/logback-test.xml</packagingExcludes>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.1.0</version>
                 </plugin>
@@ -210,8 +209,14 @@
                     <version>3.2.2</version>
                     <configuration>
                         <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                        <webResources>
+                            <resource>
+                                <directory>../frontend/dist/paw2023b02</directory>
+                            </resource>
+                        </webResources>
                     </configuration>
                 </plugin>
+
             </plugins>
         </pluginManagement>
     </build>

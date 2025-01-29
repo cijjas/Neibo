@@ -4,10 +4,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>ar.edu.itba.paw</groupId>
-    <artifactId>paw2023b</artifactId>
+    <artifactId>paw2023b02</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>paw2023b</name>
+    <name>paw2023b02</name>
 
     <properties>
         <!-- Spring -->
@@ -46,6 +46,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <frontend.plugin.version>1.12.1</frontend.plugin.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
 
         <!-- Removable-->
@@ -339,6 +341,18 @@
         </dependencies>
 
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend.plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
     <modules>
         <module>webapp</module>

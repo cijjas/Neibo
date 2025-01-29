@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "front": {
+    "paw2023b02": {
       "i18n": {},
       "projectType": "application",
       "schematics": {},
@@ -14,7 +14,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/front",
+            "outputPath": "dist/paw2023b02/static",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -63,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "front:build:production"
+              "buildTarget": "paw2023b02:build:production"
             },
             "development": {
-              "buildTarget": "front:build:development"
+              "buildTarget": "paw2023b02:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -74,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "front:build"
+            "buildTarget": "paw2023b02:build"
           }
         },
         "test": {

@@ -31,9 +31,6 @@ public class NeighborhoodDto {
         Long neighborhoodIdLong = neighborhood.getNeighborhoodId();
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        // Templating Test
-        links.setPosts2("http://localhost:8080/neighborhoods/1/posts{?postedBy,inChannel,withTags*,withStatus,page,size}");
-
         UriBuilder neighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS);
         UriBuilder self = neighborhoodsUri.clone().path(neighborhoodId);
         UriBuilder channelsUri = self.clone().path(Endpoint.CHANNELS);

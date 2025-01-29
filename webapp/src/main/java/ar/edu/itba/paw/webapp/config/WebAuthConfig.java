@@ -43,7 +43,7 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @ComponentScan({"ar.edu.itba.paw.webapp.auth", "ar.edu.itba.paw.webapp.security", "ar.edu.itba.paw.webapp.validation"})
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = {"http://localhost:4200/", "http://old-pawserver.it.itba.edu.ar/paw-2023b-02/"})
 public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetails;
@@ -130,7 +130,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/" + Endpoint.WORKER_ROLES, "/" + Endpoint.WORKER_ROLES + "/*",
                         "/" + Endpoint.WORKER_STATUSES, "/" + Endpoint.WORKER_STATUSES + "/*",
 
-                        "/" + Endpoint.IMAGES, "/" + Endpoint.IMAGES + "/*", // debatable, could be public
+                        "/" + Endpoint.IMAGES, "/" + Endpoint.IMAGES + "/*", // debatable, could be private
                         "/" + Endpoint.NEIGHBORHOODS, "/" + Endpoint.NEIGHBORHOODS + "/*", // for signup
                         "/" + Endpoint.USERS, // for signup
                         "/" + Endpoint.WORKERS // for signup

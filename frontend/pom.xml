@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-        xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
-        http://maven.apache.org/POM/4.0.0        http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <!-- Reference your root (parent) POM -->
   <parent>
-    <artifactId>paw2023b</artifactId>
+    <artifactId>paw2023b02</artifactId>
     <groupId>ar.edu.itba.paw</groupId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath> <!-- Adjust if necessary -->
   </parent>
 
   <groupId>ar.edu.itba.paw</groupId>
@@ -22,34 +14,22 @@
 
   <name>frontend</name>
 
-  <properties>
-    <frontend-maven-plugin.version>1.14.2</frontend-maven-plugin.version>
-    <node.version>v20.5.0</node.version> <!-- Updated Node.js version -->
-    <npm.version>9.5.0</npm.version> <!-- Optionally update npm version -->
-    <frontend.build.dir>dist</frontend.build.dir> <!-- Adjust if your Angular build outputs elsewhere -->
-  </properties>
-
   <build>
     <plugins>
-      <!-- Frontend Maven Plugin Configuration -->
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>${frontend-maven-plugin.version}</version>
         <executions>
-          <!-- Install Node and npm -->
           <execution>
             <id>install node and npm</id>
             <goals>
               <goal>install-node-and-npm</goal>
             </goals>
             <configuration>
-              <nodeVersion>${node.version}</nodeVersion>
-              <npmVersion>${npm.version}</npmVersion>
+              <nodeVersion>v20.9.0</nodeVersion>
+              <npmVersion>10.1.0</npmVersion>
             </configuration>
           </execution>
-
-          <!-- npm install -->
           <execution>
             <id>npm install</id>
             <goals>
@@ -59,72 +39,17 @@
               <arguments>install</arguments>
             </configuration>
           </execution>
-
-          <!-- npm run build -->
           <execution>
             <id>npm run build</id>
             <goals>
               <goal>npm</goal>
             </goals>
             <configuration>
-              <!-- Ensure this matches your package.json scripts -->
               <arguments>run build</arguments>
             </configuration>
           </execution>
         </executions>
       </plugin>
-
-      <!-- Maven Resources Plugin to copy built Angular files -->
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <id>copy-frontend-build</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.parent.basedir}/webapp/src/main/webapp/</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.basedir}/${frontend.build.dir}</directory>
-                  <includes>
-                    <include>**/*</include>
-                  </includes>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Maven Clean Plugin -->
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <version>3.2.0</version>
-      </plugin>
-
-      <!-- Maven Resources Plugin (Optional) -->
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
-      </plugin>
-
-      <!-- Maven Compiler Plugin (Optional) -->
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
-      </plugin>
-
-      <!-- Maven Surefire Plugin (Optional) -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0</version>
-      </plugin>
     </plugins>
   </build>
-
 </project>
