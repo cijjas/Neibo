@@ -43,7 +43,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
     private amenityService: AmenityService,
     private toastService: ToastService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -53,49 +53,45 @@ export class AdminAmenityEditPageComponent implements OnInit {
       description: ['', Validators.required],
     });
 
-    // Get the ID from the URL
-    const amenityId = this.route.snapshot.params['id'];
-
     // 1) Load the Amenity
     // We'll store the amenity’s shift references in some temporary variable
     // until we’ve loaded allShifts
+    this.route.data.subscribe(({ amenity }) => {
+      if (!amenity) {
+        // Possibly handle a "not found" fallback if needed
+        return;
+      }
+      this.amenityName = amenity.name;
+      this.amenityForm.patchValue({
+        name: amenity.name,
+        description: amenity.description,
+      });
 
-    this.amenityService.getAmenity(amenityId).subscribe({
-      next: (amenityData) => {
-        // Fill name & desc
-        this.amenityName = amenityData.name;
-        this.amenityForm.patchValue({
-          name: amenityData.name,
-          description: amenityData.description,
-        });
+      this.amenityShiftRefs = amenity.availableShifts.map(s => s.self);
+      // 2) Load all Shifts
+      this.shiftService.getShifts().subscribe({
+        next: shiftsFromApi => {
+          this.allShifts = shiftsFromApi;
 
-        this.amenityShiftRefs = amenityData.availableShifts.map((s) => s.self);
-        // 2) Load all Shifts
-        this.shiftService.getShifts().subscribe({
-          next: (shiftsFromApi) => {
-            this.allShifts = shiftsFromApi;
+          // Build uniqueDays / uniqueTimes
+          const daysSet = new Set<string>();
+          const timesSet = new Set<string>();
+          for (const shift of this.allShifts) {
+            daysSet.add(shift.day);
+            timesSet.add(shift.startTime);
+          }
+          this.uniqueDays = Array.from(daysSet).sort(sortDays);
+          this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
 
-            // Build uniqueDays / uniqueTimes
-            const daysSet = new Set<string>();
-            const timesSet = new Set<string>();
-            for (const shift of this.allShifts) {
-              daysSet.add(shift.day);
-              timesSet.add(shift.startTime);
-            }
-            this.uniqueDays = Array.from(daysSet).sort(sortDays);
-            this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
-
-            // E.g., if amenityShiftRefs are shift 'self' URLs:
-            if (this.amenityShiftRefs?.length) {
-              this.selectedShifts = this.allShifts.filter((shift) =>
-                this.amenityShiftRefs.includes(shift.self)
-              );
-            }
-          },
-          error: (err) => console.error(err),
-        });
-      },
-      error: (err) => console.error('Error loading amenity:', err),
+          // E.g., if amenityShiftRefs are shift 'self' URLs:
+          if (this.amenityShiftRefs?.length) {
+            this.selectedShifts = this.allShifts.filter(shift =>
+              this.amenityShiftRefs.includes(shift.self),
+            );
+          }
+        },
+        error: err => console.error(err),
+      });
     });
   }
 
@@ -118,37 +114,37 @@ export class AdminAmenityEditPageComponent implements OnInit {
     const formValue = this.amenityForm.value;
     const amenityId = this.route.snapshot.params['id'];
     // Convert selectedShifts to an array of SHIFT URLs or SHIFT IDs
-    const selectedShiftRefs: string[] = this.selectedShifts.map((s) => s.self);
+    const selectedShiftRefs: string[] = this.selectedShifts.map(s => s.self);
 
     this.amenityService
       .updateAmenity(
         amenityId,
         formValue.name,
         formValue.description,
-        selectedShiftRefs
+        selectedShiftRefs,
       )
       .subscribe({
-        next: (updatedAmenity) => {
+        next: updatedAmenity => {
           this.toastService.showToast(
             this.translate.instant(
               'ADMIN-AMENITY-EDIT-PAGE.AMENITY_THISAMENITYNAME_UPDATED_SUCCESSFULLY',
               {
                 amenityName: this.amenityName,
-              }
+              },
             ),
-            'success'
+            'success',
           );
           this.router.navigate(['admin/amenities']);
         },
-        error: (err) => {
+        error: err => {
           this.toastService.showToast(
             this.translate.instant(
               'ADMIN-AMENITY-EDIT-PAGE.ERROR_UPDATING_AMENITY_THISAMENITYNAME_TRY_AGAIN_L',
               {
                 amenityName: this.amenityName,
-              }
+              },
             ),
-            'error'
+            'error',
           );
         },
       });
@@ -157,36 +153,36 @@ export class AdminAmenityEditPageComponent implements OnInit {
   // Reuse your shift selection toggles, identical to your create component
   isShiftSelected(shift: Shift): boolean {
     return this.selectedShifts.some(
-      (s) =>
+      s =>
         s.day === shift.day &&
         s.startTime === shift.startTime &&
-        s.endTime === shift.endTime
+        s.endTime === shift.endTime,
     );
   }
   toggleCellSelection(dayName: string, startTime: string) {
     const foundShift = this.allShifts.find(
-      (s) => s.day === dayName && s.startTime === startTime
+      s => s.day === dayName && s.startTime === startTime,
     );
     if (!foundShift) return;
 
     if (this.isShiftSelected(foundShift)) {
       // remove it
       this.selectedShifts = this.selectedShifts.filter(
-        (s) =>
+        s =>
           !(
             s.day === foundShift.day &&
             s.startTime === foundShift.startTime &&
             s.endTime === foundShift.endTime
-          )
+          ),
       );
     } else {
       this.selectedShifts.push(foundShift);
     }
   }
   isRowSelected(time: string): boolean {
-    return this.uniqueDays.every((day) => {
+    return this.uniqueDays.every(day => {
       const shift = this.allShifts.find(
-        (s) => s.day === day && s.startTime === time
+        s => s.day === day && s.startTime === time,
       );
       return shift && this.isShiftSelected(shift);
     });
@@ -195,12 +191,12 @@ export class AdminAmenityEditPageComponent implements OnInit {
     const fullySelected = this.isRowSelected(time);
     if (fullySelected) {
       this.selectedShifts = this.selectedShifts.filter(
-        (sel) => sel.startTime !== time
+        sel => sel.startTime !== time,
       );
     } else {
       for (const day of this.uniqueDays) {
         const shift = this.allShifts.find(
-          (s) => s.day === day && s.startTime === time
+          s => s.day === day && s.startTime === time,
         );
         if (shift && !this.isShiftSelected(shift)) {
           this.selectedShifts.push(shift);
@@ -221,7 +217,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
   }
   uncheckWeekends() {
     this.selectedShifts = this.selectedShifts.filter(
-      (s) => s.day !== 'Saturday' && s.day !== 'Sunday'
+      s => s.day !== 'Saturday' && s.day !== 'Sunday',
     );
   }
   clearAllCheckedHours() {
@@ -229,7 +225,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
   }
   getShift(day: string, time: string): Shift | null {
     return (
-      this.allShifts.find((s) => s.day === day && s.startTime === time) || null
+      this.allShifts.find(s => s.day === day && s.startTime === time) || null
     );
   }
   isShiftSelectedByDayTime(day: string, time: string): boolean {

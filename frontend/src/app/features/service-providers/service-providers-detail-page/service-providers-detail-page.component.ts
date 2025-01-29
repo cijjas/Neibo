@@ -31,22 +31,24 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     private route: ActivatedRoute,
     private reviewService: ReviewService,
     private toastService: ToastService,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
   ) {}
 
   ngOnInit(): void {
-    const workerId = this.route.snapshot.paramMap.get('id');
-    if (workerId) {
-      this.loadWorker(workerId);
-    }
+    this.route.data.subscribe(({ worker }) => {
+      if (!worker) {
+        console.error('Service Provider not found or failed to resolve');
+      }
+      this.worker = worker;
+    });
   }
 
   loadWorker(id: string): void {
     this.workerService.getWorker(id).subscribe({
-      next: (worker) => {
+      next: worker => {
         this.worker = worker;
       },
-      error: (err) => {
+      error: err => {
         console.error('Error loading worker:', err);
       },
     });
@@ -80,7 +82,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
       next: () => {
         this.toastService.showToast(
           'Review submitted successfully!',
-          'success'
+          'success',
         );
 
         // 2) Directly call child's reload method
@@ -99,16 +101,16 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
       next: () => {
         this.toastService.showToast(
           'New profile information saved successfully!',
-          'success'
+          'success',
         );
         if (this.worker?.self) {
           this.loadWorker(this.worker.self); // Refresh the worker data
         }
       },
-      error: (err) => {
+      error: err => {
         this.toastService.showToast(
           'There was an error updating profile. Try again.',
-          'error'
+          'error',
         );
         console.error('Error saving profile:', err);
       },

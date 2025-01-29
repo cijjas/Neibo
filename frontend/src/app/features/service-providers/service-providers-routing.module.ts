@@ -11,6 +11,7 @@ import {
 import { Roles } from '@shared/models';
 import { ServiceProvidersLayoutComponent } from './service-providers-layout/service-providers-layout.component';
 import { ServiceProvidersCreatePostComponent } from './service-providers-create-post/service-providers-create-post.component';
+import { serviceProviderResolver } from '@shared/resolvers/service-provider.resolver';
 
 const routes: Routes = [
   {
@@ -18,7 +19,11 @@ const routes: Routes = [
     component: ServiceProvidersLayoutComponent,
     children: [
       { path: '', component: ServiceProvidersPageComponent },
-      { path: 'profile/:id', component: ServiceProvidersDetailPageComponent },
+      {
+        path: 'profiles/:id',
+        component: ServiceProvidersDetailPageComponent,
+        resolve: { worker: serviceProviderResolver },
+      },
       {
         path: 'join-neighborhoods',
         component: ServiceProvidersJoinNeighborhoodsComponent,
@@ -39,4 +44,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ServiceProvidersRoutingModule { }
+export class ServiceProvidersRoutingModule {}

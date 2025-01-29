@@ -1,10 +1,10 @@
-import { inject } from "@angular/core";
-import { Router } from "@angular/router";
-import { AuthService } from "@core/services/auth.service";
-import { HateoasLinksService } from "@core/services/link.service";
-import { TokenService } from "@core/services/token.service";
-import { UserSessionService } from "@core/services/user-session.service";
-import { LinkKey, Roles } from "@shared/index";
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '@core/services/auth.service';
+import { HateoasLinksService } from '@core/services/link.service';
+import { TokenService } from '@core/services/token.service';
+import { UserSessionService } from '@core/services/user-session.service';
+import { LinkKey, Roles } from '@shared/index';
 
 export const AuthGuard = () => {
   const authService = inject(AuthService);
@@ -17,29 +17,29 @@ export const AuthGuard = () => {
   // Utility function to handle redirection based on role
   const redirectByRole = (role: Roles) => {
     const routes = {
-      [Roles.ADMINISTRATOR]: ["/posts"],
-      [Roles.NEIGHBOR]: ["/posts"],
-      [Roles.UNVERIFIED_NEIGHBOR]: ["/unverified"],
-      [Roles.REJECTED]: ["/rejected"],
+      [Roles.ADMINISTRATOR]: ['/posts'],
+      [Roles.NEIGHBOR]: ['/posts'],
+      [Roles.UNVERIFIED_NEIGHBOR]: ['/unverified'],
+      [Roles.REJECTED]: ['/rejected'],
       [Roles.WORKER]: () => {
         const workerUrl = linkStorage.getLink(LinkKey.USER_WORKER);
-        return workerUrl ? ["services", "profile", workerUrl] : ["/not-found"];
+        return workerUrl ? ['services', 'profiles', workerUrl] : ['/not-found'];
       },
     };
 
     const targetRoute = routes[role];
-    if (typeof targetRoute === "function") {
+    if (typeof targetRoute === 'function') {
       router.navigate(targetRoute());
     } else if (targetRoute) {
       router.navigate(targetRoute);
     } else {
-      router.navigate(["/not-found"]);
+      router.navigate(['/not-found']);
     }
   };
 
   // Handle ongoing token refresh
   if (tokenService.isRefreshingToken()) {
-    if (currentUrl === "/" && authService.isLoggedIn()) {
+    if (currentUrl === '/' && authService.isLoggedIn()) {
       const userRole = userSessionService.getCurrentRole();
       redirectByRole(userRole);
     }
