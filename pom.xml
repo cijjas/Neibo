@@ -33,8 +33,8 @@
         <mockito.version>2.25.1</mockito.version>
         <org.hsqldb.version>2.3.1</org.hsqldb.version>
         <!-- Logging -->
-        <org.slf4j.version>1.7.5</org.slf4j.version>
-        <logback.version>1.1.2</logback.version>
+        <org.slf4j.version>1.7.36</org.slf4j.version>
+        <logback.version>1.2.11</logback.version>
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
         <!-- Validation-->
         <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
@@ -240,7 +240,17 @@
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
+                <artifactId>jul-to-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
                 <version>${org.slf4j.version}</version>
             </dependency>
             <dependency>

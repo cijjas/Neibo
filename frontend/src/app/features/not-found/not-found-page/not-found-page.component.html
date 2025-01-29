@@ -1,18 +1,27 @@
 <div class="error-content-container">
   <div class="flex-container">
     <div class="error-code">
-      {{ "NOT-FOUND-PAGE.OOPS__ERRORCODE_" | translate: {errorCode: errorCode} }}
+      {{
+        'NOT-FOUND-PAGE.OOPS__ERRORCODE_' | translate : { errorCode: errorCode }
+      }}
     </div>
 
     <p class="error-description">
       {{ errorMessage }}
     </p>
-    <div (click)="goBack()" id="goback-button" class="goback-button mt-5 font-weight-bold">
+    <div
+      (click)="goBack()"
+      id="goback-button"
+      class="goback-button mt-5 font-weight-bold"
+    >
       <a class="">
-        {{ "NOT-FOUND-PAGE.GO_BACK_TO_HOME" | translate }}
+        {{
+          errorCode === '0'
+            ? ('NOT-FOUND-PAGE.RETRY' | translate)
+            : ('NOT-FOUND-PAGE.GO_BACK_TO_HOME' | translate)
+        }}
       </a>
     </div>
   </div>
 </div>
-
 <app-background-drawing></app-background-drawing>

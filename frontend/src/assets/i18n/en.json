@@ -1302,6 +1302,7 @@
     "APPNOTFOUNDPAGE": "app-not-found-page",
     "NOTFOUNDPAGECOMPONENTHTML": "./not-found-page.component.html",
     "THE_PAGE_YOU_ARE_LOOKING_FOR_CANNOT_BE_FOUND": "The page you are looking for cannot be found.",
+    "RETRY": "Retry",
     "CODE": "code",
     "MESSAGE": "message"
   },
