@@ -6,6 +6,7 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.validation.ExtractionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,21 +88,21 @@ public class PathAccessControlHelper {
 
         Authentication authentication = authHelper.getAuthentication();
 
-        if (authHelper.isSuperAdministrator(authentication))
+        if (authHelper.isSuperAdministrator(authentication)) {
             return true;
+        }
 
         String requestURI = request.getRequestURI();
-        String[] uriParts = requestURI.split("/");
 
-        // Updated check: now expecting /api/neighborhoods/...
-        if (uriParts.length >= 4 && uriParts[1].equals("api") && uriParts[2].equals(Endpoint.NEIGHBORHOODS)) {
-            try {
-                long neighborhoodId = Long.parseLong(uriParts[3]);
+        try {
+            if (ExtractionUtils.isNeighborhoodPath(requestURI)) {
+                long neighborhoodId = ExtractionUtils.extractNeighborhoodId(requestURI);
                 return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId ||
                         neighborhoodId == BaseNeighborhood.WORKERS.getId();
-            } catch (NumberFormatException e) {
-                return false;
             }
+        } catch (IllegalArgumentException e) {
+            LOGGER.warn("Failed to validate neighborhood membership", e);
+            return false;
         }
 
         return false;
