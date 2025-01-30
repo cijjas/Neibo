@@ -42,7 +42,6 @@ export class PublicLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('hola');
     this.userSessionService.getCurrentUser().subscribe({
       next: user => {
         this.currentUser = user;

@@ -3,30 +3,30 @@
     <a
       (click)="changeStatusToLatest()"
       class="cool-feed-button rounded"
-      [ngClass]="{ active: statusClass === 'Latest' }"
+      [class.active]="status === FeedStatus.LATEST"
     >
       <i class="fa-solid fa-arrow-up-wide-short"></i>
-      <span i18n>{{ "FEED-CONTROL-BAR.LATEST" | translate }}</span>
+      <span i18n>{{ 'FEED-CONTROL-BAR.LATEST' | translate }}</span>
     </a>
 
     <!-- Trending Button -->
     <a
       (click)="changeStatusToTrending()"
       class="cool-feed-button rounded"
-      [ngClass]="{ active: statusClass === 'Trending' }"
+      [class.active]="status === FeedStatus.TRENDING"
     >
       <i class="fa-solid fa-arrow-trend-up ms-1"></i>
-      <span i18n>{{ "FEED-CONTROL-BAR.TRENDING" | translate }}</span>
+      <span i18n>{{ 'FEED-CONTROL-BAR.TRENDING' | translate }}</span>
     </a>
 
     <!-- Hot Button -->
     <a
       (click)="changeStatusToHot()"
       class="coolest-button"
-      [ngClass]="{ active: statusClass === 'Hot' }"
+      [class.active]="status === FeedStatus.HOT"
     >
       <i class="fa-solid fa-fire ms-1"></i>
-      <span i18n>{{ "FEED-CONTROL-BAR.HOT" | translate }}</span>
+      <span i18n>{{ 'FEED-CONTROL-BAR.HOT' | translate }}</span>
     </a>
   </div>
 
@@ -35,9 +35,15 @@
       <i class="fa-solid fa-plus"></i>
 
       <ng-container [ngSwitch]="channelClass">
-        <span *ngSwitchCase="'Feed'" i18n>{{ "FEED-CONTROL-BAR.CREATE_POST" | translate }}</span>
-        <span *ngSwitchCase="'Complaints'" i18n>{{ "FEED-CONTROL-BAR.CREATE_COMPLAINT" | translate }}</span>
-        <span *ngSwitchDefault i18n>{{ "FEED-CONTROL-BAR.CREATE_POST" | translate }}</span>
+        <span *ngSwitchCase="'Feed'" i18n>{{
+          'FEED-CONTROL-BAR.CREATE_POST' | translate
+        }}</span>
+        <span *ngSwitchCase="'Complaints'" i18n>{{
+          'FEED-CONTROL-BAR.CREATE_COMPLAINT' | translate
+        }}</span>
+        <span *ngSwitchDefault i18n>{{
+          'FEED-CONTROL-BAR.CREATE_POST' | translate
+        }}</span>
       </ng-container>
     </button>
   </div>

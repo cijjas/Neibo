@@ -26,13 +26,13 @@ export class WorkerService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   public getWorker(url: string): Observable<Worker> {
     return this.http.get<WorkerDto>(url).pipe(
       tap((workerDto: WorkerDto) => console.log('Response:', workerDto)),
-      mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto))
+      mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto)),
     );
   }
 
@@ -44,14 +44,14 @@ export class WorkerService {
       inNeighborhood?: string[];
       withRole?: string;
       withStatus?: string;
-    } = {}
+    } = {},
   ): Observable<{
     workers: Worker[];
     totalPages: number;
     currentPage: number;
   }> {
     let workersUrl: string = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_WORKERS
+      LinkKey.NEIGHBORHOOD_WORKERS,
     );
 
     let params = new HttpParams();
@@ -63,7 +63,7 @@ export class WorkerService {
     if (queryParams.inNeighborhood && queryParams.inNeighborhood.length > 0)
       params = params.set(
         'inNeighborhood',
-        queryParams.inNeighborhood.join(',')
+        queryParams.inNeighborhood.join(','),
       );
     if (queryParams.withRole)
       params = params.set('withRole', queryParams.withRole);
@@ -72,7 +72,7 @@ export class WorkerService {
 
     // Add each profession as a separate query parameter
     if (queryParams.withProfession && queryParams.withProfession.length > 0) {
-      queryParams.withProfession.forEach((profession) => {
+      queryParams.withProfession.forEach(profession => {
         params = params.append('withProfession', profession);
       });
     }
@@ -80,7 +80,7 @@ export class WorkerService {
     return this.http
       .get<WorkerDto[]>(workersUrl, { params, observe: 'response' })
       .pipe(
-        mergeMap((response) => {
+        mergeMap(response => {
           // Handle 204 No Content response
           if (response.status === 204 || !response.body) {
             return of({
@@ -94,26 +94,26 @@ export class WorkerService {
           const linkHeader = response.headers.get('Link');
           const paginationInfo = parseLinkHeader(linkHeader);
 
-          const workerObservables = workersDto.map((workerDto) =>
-            mapWorker(this.http, workerDto)
+          const workerObservables = workersDto.map(workerDto =>
+            mapWorker(this.http, workerDto),
           );
 
           return forkJoin(workerObservables).pipe(
-            map((workers) => ({
+            map(workers => ({
               workers,
               totalPages: paginationInfo.totalPages || 0,
               currentPage: paginationInfo.currentPage || 0,
-            }))
+            })),
           );
         }),
-        catchError((error) => {
+        catchError(error => {
           console.error('Error fetching workers:', error);
           return of({
             workers: [],
             totalPages: 0,
             currentPage: 0,
           });
-        })
+        }),
       );
   }
 
@@ -127,14 +127,14 @@ export class WorkerService {
     professions: string[],
     phoneNumber: string,
     businessName: string,
-    address: string
+    address: string,
   ): Observable<string | null> {
     const workersUrl: string = this.linkService.getLink(LinkKey.WORKERS);
 
     return this.userService
       .createWorkerUser(name, surname, password, mail, language, identification)
       .pipe(
-        switchMap((createdUserUrl) => {
+        switchMap(createdUserUrl => {
           if (!createdUserUrl) {
             console.error('User creation failed.');
             return of(null); // Exit early if user creation fails
@@ -149,7 +149,7 @@ export class WorkerService {
           };
 
           return this.http.post(workersUrl, body, { observe: 'response' }).pipe(
-            map((response) => {
+            map(response => {
               const locationHeader = response.headers.get('Location');
               if (locationHeader) {
                 return locationHeader;
@@ -158,39 +158,38 @@ export class WorkerService {
                 return null;
               }
             }),
-            catchError((error) => {
+            catchError(error => {
               console.error('Error creating Worker', error);
               return of(null);
-            })
+            }),
           );
         }),
-        catchError((error) => {
+        catchError(error => {
           console.error('Error creating User', error);
           return of(null);
-        })
+        }),
       );
   }
 
   public updateWorker(worker: WorkerDto): Observable<void> {
     let workerUrl: string = this.linkService.getLink(LinkKey.USER_WORKER);
-    console.log(worker);
     return this.http.patch<void>(workerUrl, worker).pipe(
-      catchError((error) => {
+      catchError(error => {
         console.error('Error updating product:', error);
         return throwError(() => new Error('Failed to update worker.'));
-      })
+      }),
     );
   }
 }
 
 export function mapWorker(
   http: HttpClient,
-  workerDto: WorkerDto
+  workerDto: WorkerDto,
 ): Observable<Worker> {
   return forkJoin([
     http
       .get<UserDto>(workerDto._links.user)
-      .pipe(mergeMap((userDto) => mapUser(http, userDto))),
+      .pipe(mergeMap(userDto => mapUser(http, userDto))),
     http.get<NeighborhoodDto[]>(workerDto._links.workerNeighborhoods),
     http.get<ProfessionDto[]>(workerDto._links.professions),
     http.get<ReviewsAverageDto>(workerDto._links.reviewsAverage),
@@ -219,15 +218,15 @@ export function mapWorker(
           user: user,
           backgroundImage: workerDto._links.backgroundImage,
           neighborhoodAffiliated: neighborhoods
-            ? neighborhoods.map((n) => n.name)
+            ? neighborhoods.map(n => n.name)
             : null,
           professions: professions
-            ? professions.map((p) => mapProfession(p))
+            ? professions.map(p => mapProfession(p))
             : null,
           self: workerDto._links.self,
         } as Worker;
         return worker;
-      }
-    )
+      },
+    ),
   );
 }

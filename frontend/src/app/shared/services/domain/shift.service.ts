@@ -2,15 +2,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LinkKey, Shift, ShiftDto } from '@shared/index';
+import { formatTime, LinkKey, Shift, ShiftDto } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class ShiftService {
   constructor(
     private http: HttpClient,
-    private linkService: HateoasLinksService
-  ) { }
+    private linkService: HateoasLinksService,
+  ) {}
 
   public getShift(url: string): Observable<Shift> {
     return this.http
@@ -22,10 +22,9 @@ export class ShiftService {
     queryParams: {
       forAmenity?: string;
       forDate?: string;
-    } = {}
+    } = {},
   ): Observable<Shift[]> {
     let shiftsUrl: string = this.linkService.getLink(LinkKey.SHIFTS);
-
 
     let params = new HttpParams();
     if (queryParams.forAmenity) {
@@ -37,14 +36,16 @@ export class ShiftService {
 
     return this.http
       .get<ShiftDto[]>(shiftsUrl, { params })
-      .pipe(map((shiftsDto) => shiftsDto.map(mapShift)));
+      .pipe(map(shiftsDto => shiftsDto.map(mapShift)));
   }
 }
 
 export function mapShift(shiftDto: ShiftDto): Shift {
   return {
-    startTime: shiftDto.startTime,
-    endTime: addOneHour(shiftDto.startTime),
+    startTime: formatTime(shiftDto.startTime, 'es-AR', { hour12: true }),
+    endTime: formatTime(addOneHour(shiftDto.startTime), 'es-AR', {
+      hour12: true,
+    }),
     day: shiftDto.day,
     taken: shiftDto.isBooked,
     self: shiftDto._links.self,

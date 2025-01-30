@@ -14,26 +14,21 @@
   <div id="actual-events" *ngIf="!isLoading">
     <div *ngIf="events.length === 0" class="no-posts-found">
       <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-      {{ "CALENDAR-EVENTS-COLUMN.THERE_ARE_NO_EVENTS_FOR_THIS_DATE" | translate }}
+      {{
+        'CALENDAR-EVENTS-COLUMN.THERE_ARE_NO_EVENTS_FOR_THIS_DATE' | translate
+      }}
     </div>
 
     <div *ngFor="let event of events" class="blogpost p-3">
-      <div class="row w-100">
-        <div
-          class="col-{{ isAdmin ? '10' : '12' }}"
-          style="overflow: hidden; text-overflow: ellipsis"
-        >
-          <a [routerLink]="['/calendar/events', event.self]">
-            <div>{{ event.name }}</div>
+      <div class="f-r-sb-c w-100">
+        <div class="" style="overflow: hidden; text-overflow: ellipsis">
+          <a [routerLink]="['/calendar', 'events', event.self]">
+            <div class="mb-3 bold font-size-20">{{ event.name }}</div>
           </a>
         </div>
-        <div class="col-2" *ngIf="isAdmin">
+        <div *ngIf="isAdmin">
           <span class="admin-link">
-            <a
-              [routerLink]="['/admin/delete-event', event.self]"
-              [queryParams]="{ date: (selectedDate | date : 'yyyy-MM-dd') }"
-              class="btn btn-link"
-            >
+            <a class="btn btn-link" (click)="deleteEvent(event)">
               <i class="fas fa-trash" style="color: var(--error)"></i>
             </a>
           </span>
@@ -45,10 +40,16 @@
           {{ event.startTime }} - {{ event.endTime }}
         </p>
         <p style="font-size: 12px; font-weight: normal">
-          {{ "CALENDAR-EVENTS-COLUMN._EVENTDURATION__MINUTES" | translate: {eventDuration: event.duration} }}
+          {{
+            'CALENDAR-EVENTS-COLUMN._EVENTDURATION__MINUTES'
+              | translate : { eventDuration: event.duration }
+          }}
         </p>
         <p style="font-size: 12px; font-weight: normal">
-          {{ "CALENDAR-EVENTS-COLUMN._EVENTATTENDEESCOUNT__PEOPLE_WILL_ATTEND" | translate: {eventAttendeesCount: event.attendeesCount} }}
+          {{
+            'CALENDAR-EVENTS-COLUMN._EVENTATTENDEESCOUNT__PEOPLE_WILL_ATTEND'
+              | translate : { eventAttendeesCount: event.attendeesCount }
+          }}
         </p>
         <div class="divider"></div>
         <div class="postcard-description m-t-40" style="overflow: clip">

@@ -653,7 +653,15 @@
     "PAGE": "page",
     "NO_SELECTED_DATE_PROVIDED": "No selected date provided",
     "ERROR_FETCHING_EVENTS": "Error fetching events:",
-    "MERGE": "merge"
+    "MERGE": "merge",
+
+    "DELETE_EVENT_TITLE": "Delete Event",
+    "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_EVENT": "Are you sure you want to delete the event '{{ eventName }}'?",
+    "YES_DELETE": "Yes, Delete",
+    "CANCEL": "Cancel",
+    "EVENT_DELETED_SUCCESSFULLY": "Event '{{ eventName }}' was successfully deleted.",
+    "ERROR_DELETING_EVENT": "Error deleting event '{{ eventName }}'.",
+    "FAILED_TO_DELETE_EVENT": "Failed to delete event '{{ eventName }}'."
   },
   "CALENDAR-PAGE": {
     "EVENTS": "Events",
@@ -1347,8 +1355,8 @@
     "PLEASE_SELECT_A_NEIGHBORHOOD": "Please select a neighborhood.",
     "ERROR": "error",
     "LOGIN": "/login",
-    "SUCCESSFULLY_REQUESTED":"Successfully requested neighborhood to join! Wait until an administrator approves your request.",
-    "ERROR_REQUESTED":"There was an error sending your requested neighborhood to join!"
+    "SUCCESSFULLY_REQUESTED": "Successfully requested neighborhood to join! Wait until an administrator approves your request.",
+    "ERROR_REQUESTED": "There was an error sending your requested neighborhood to join!"
   },
   "REJECTED.MODULE.TS": {
     "ANGULARCORE": "@angular/core",

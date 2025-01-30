@@ -55,8 +55,8 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private shiftService: ShiftService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.reservationForm = this.fb.group({
@@ -69,7 +69,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 
     this.route.queryParams
       .pipe(
-        switchMap((params) => {
+        switchMap(params => {
           this.currentPage = +params['page'] || 1;
           this.pageSize = +params['size'] || 10;
 
@@ -87,7 +87,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
           }
 
           return this.loadAmenities();
-        })
+        }),
       )
       .subscribe();
   }
@@ -95,7 +95,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   // Example shift-loading logic
   private loadShifts(): void {
     this.shiftService.getShifts().subscribe({
-      next: (shiftsFromApi) => {
+      next: shiftsFromApi => {
         this.allShifts = shiftsFromApi;
         const daysSet = new Set<string>();
         const timesSet = new Set<string>();
@@ -105,10 +105,12 @@ export class AmenitiesReservationsPageComponent implements OnInit {
           timesSet.add(shift.startTime);
         }
 
+        // LISTA
         this.uniqueDays = Array.from(daysSet).sort(sortDays);
+        console.log('hola');
         this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
       },
-      error: (err) => {
+      error: err => {
         console.error('Error fetching shifts:', err);
       },
     });
@@ -122,7 +124,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     };
 
     return this.amenityService.getAmenities(queryParams).pipe(
-      map((response) => {
+      map(response => {
         if (response) {
           this.amenities = response.amenities;
           this.totalPages = response.totalPages;
@@ -133,13 +135,13 @@ export class AmenitiesReservationsPageComponent implements OnInit {
         }
         this.isLoading = false;
       }),
-      catchError((error) => {
+      catchError(error => {
         console.error('Error loading amenities:', error);
         this.amenities = [];
         this.totalPages = 0;
         this.isLoading = false;
         return of();
-      })
+      }),
     );
   }
 
@@ -176,12 +178,11 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     this.reservationForm.get('amenity')?.setValue(amenitySelfLink);
   }
 
-
   // Check if day/time is available
   checkAvailability(shifts: Shift[], dayKey: string, timeKey: string): boolean {
     if (!shifts) return false;
     return shifts.some(
-      (shift) => shift.day === dayKey && shift.startTime === timeKey
+      shift => shift.day === dayKey && shift.startTime === timeKey,
     );
   }
 
@@ -193,11 +194,11 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 
   fetchAmenities = (page: number, size: number): Observable<any> => {
     return this.amenityService.getAmenities({ page, size }).pipe(
-      map((response) => ({
+      map(response => ({
         items: response.amenities,
         currentPage: response.currentPage,
         totalPages: response.totalPages,
-      }))
+      })),
     );
   };
 

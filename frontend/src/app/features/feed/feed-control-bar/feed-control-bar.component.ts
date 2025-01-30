@@ -8,6 +8,12 @@ import {
 import { User, LinkKey, Roles } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
 
+export enum FeedStatus {
+  LATEST = 'Latest',
+  HOT = 'Hot',
+  TRENDING = 'Trending',
+}
+
 @Component({
   selector: 'app-feed-control-bar',
   templateUrl: './feed-control-bar.component.html',
@@ -22,12 +28,13 @@ export class FeedControlBarComponent implements OnInit {
   channel: string;
 
   // STATUSES
+  private statusMapping: Record<string, FeedStatus>;
+  FeedStatus = FeedStatus;
+  statusClass: string = '';
+  status: FeedStatus;
   latestUrl: string;
   hotUrl: string;
   trendingUrl: string;
-
-  statusClass: string = '';
-  status: string;
 
   currentUser: User;
   isNotAdmin: boolean;
@@ -37,8 +44,6 @@ export class FeedControlBarComponent implements OnInit {
     private router: Router,
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
-    private authService: AuthService,
-    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -52,79 +57,65 @@ export class FeedControlBarComponent implements OnInit {
     this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
     this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);
     this.trendingUrl = this.linkService.getLink(LinkKey.TRENDING_POST_STATUS);
+    this.statusMapping = {
+      [this.latestUrl]: FeedStatus.LATEST,
+      [this.hotUrl]: FeedStatus.HOT,
+      [this.trendingUrl]: FeedStatus.TRENDING,
+    };
 
     this.feedChannelUrl = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+      LinkKey.NEIGHBORHOOD_FEED_CHANNEL,
     );
     this.announcementsChannelUrl = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
     );
     this.complaintsChannelUrl = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL
+      LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL,
     );
 
-    this.route.queryParams.subscribe((params) => {
-      this.status = params['withStatus'];
+    this.route.queryParams.subscribe(params => {
+      const paramStatus = params['withStatus'];
+      this.status = this.statusMapping[paramStatus] || FeedStatus.LATEST;
       this.channel = params['inChannel'];
       this.updateStatusClass();
-      this.updateChannelClass();
     });
-  }
-
-  updateChannelClass() {
-    if (this.channel === this.feedChannelUrl) {
-      this.channelClass = this.translate.instant('FEED-CONTROL-BAR.FEED');
-    } else if (this.channel === this.announcementsChannelUrl) {
-      this.channelClass = this.translate.instant('FEED-CONTROL-BAR.ANNOUNCEMENTS');
-    } else if (this.channel === this.complaintsChannelUrl) {
-      this.channelClass = this.translate.instant('FEED-CONTROL-BAR.COMPLAINTS');
-    }
   }
 
   updateStatusClass() {
     if (this.status === this.latestUrl) {
-      this.statusClass = this.translate.instant('FEED-CONTROL-BAR.LATEST');
+      this.statusClass = 'Latest';
     } else if (this.status === this.hotUrl) {
-      this.statusClass = this.translate.instant('FEED-CONTROL-BAR.HOT');
+      this.statusClass = 'Hot';
     } else if (this.status === this.trendingUrl) {
-      this.statusClass = this.translate.instant('FEED-CONTROL-BAR.TRENDING');
+      this.statusClass = 'Trending';
     }
   }
 
-  changeStatusToLatest(): void {
+  changeStatus(newStatus: FeedStatus): void {
+    let newUrl = this.latestUrl; // Default to Latest
+    if (newStatus === FeedStatus.HOT) {
+      newUrl = this.hotUrl;
+    } else if (newStatus === FeedStatus.TRENDING) {
+      newUrl = this.trendingUrl;
+    }
+
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: {
-        withStatus: this.latestUrl,
-        inChannel: this.channel, // Preserve the current channel
-      },
-      queryParamsHandling: 'merge', // Merge with existing query params
+      queryParams: { withStatus: newUrl },
+      queryParamsHandling: 'merge',
     });
-    this.updateStatusClass();
+  }
+
+  changeStatusToLatest(): void {
+    this.changeStatus(FeedStatus.LATEST);
   }
 
   changeStatusToHot(): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        withStatus: this.hotUrl,
-        inChannel: this.channel, // Preserve the current channel
-      },
-      queryParamsHandling: 'merge', // Merge with existing query params
-    });
-    this.updateStatusClass();
+    this.changeStatus(FeedStatus.HOT);
   }
 
   changeStatusToTrending(): void {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: {
-        withStatus: this.trendingUrl,
-        inChannel: this.channel, // Preserve the current channel
-      },
-      queryParamsHandling: 'merge', // Merge with existing query params
-    });
-    this.updateStatusClass();
+    this.changeStatus(FeedStatus.TRENDING);
   }
 
   publishInChannel(): void {

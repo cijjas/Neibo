@@ -38,6 +38,7 @@ public class NeighborhoodDto {
         UriBuilder postsUri = self.clone().path(Endpoint.POSTS);
         UriBuilder postsCountUri = self.clone().path(Endpoint.POSTS).path(Endpoint.COUNT);
         UriBuilder usersUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).queryParam(QueryParameter.IN_NEIGHBORHOOD, self.build());
+        UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS);
 
         links.setSelf(self.build());
         links.setChannels(channelsUri.build());
@@ -56,7 +57,6 @@ public class NeighborhoodDto {
             UriBuilder requestsUri = self.clone().path(Endpoint.REQUESTS);
             UriBuilder resourcesUri = self.clone().path(Endpoint.RESOURCES);
             UriBuilder tagsUri = self.clone().path(Endpoint.TAGS);
-            UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS);
 
             UriBuilder feedChannelUri = channelsUri.clone().path(String.valueOf(BaseChannel.FEED.getId()));
             UriBuilder complaintsChannelUri = channelsUri.clone().path(String.valueOf(BaseChannel.COMPLAINTS.getId()));
@@ -84,7 +84,7 @@ public class NeighborhoodDto {
         } else if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()){
             UriBuilder workersChannelUri = channelsUri.clone().path(String.valueOf(BaseChannel.WORKERS.getId()));
             links.setWorkerChannel(workersChannelUri.build());
-
+            links.setWorkers(workersUri.build());
         }
 
         dto.set_links(links);

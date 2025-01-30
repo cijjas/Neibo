@@ -28,7 +28,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           // Backend error
           console.log(error.status);
           switch (error.status) {
-            case 403:
+            // case 403:
             case 404:
             case 503:
             case 500:
