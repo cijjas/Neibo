@@ -6,6 +6,7 @@ import {
   ToastService,
 } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-amenities-reservations-list',
@@ -26,7 +27,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private confirmationService: ConfirmationService,
-
+    private translate: TranslateService,
     private router: Router
   ) { }
 
@@ -57,7 +58,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
         error: (err) => {
           console.error(err);
           this.toastService.showToast(
-            'There was a problem getting your reservations.',
+            this.translate.instant('AMENITIES-RESERVATIONS-LIST.THERE_WAS_A_PROBLEM_GETTING_YOUR_RESERVATIONS'),
             'error'
           );
           this.showErrorMessage = true;
@@ -99,10 +100,10 @@ export class AmenitiesReservationsListComponent implements OnInit {
 
     this.confirmationService
       .askForConfirmation({
-        title: `Cancel Reservation`,
-        message: `Are you sure you want to cancel your reservation for '${booking.amenity.name}' on ${booking.bookingDate}, starting at ${booking.shift.startTime}?`,
-        confirmText: 'Yes, Cancel',
-        cancelText: 'No, Keep',
+        title: this.translate.instant('AMENITIES-RESERVATIONS-LIST.CENCEL_RESERVATION'),
+        message: this.translate.instant('AMENITIES-RESERVATIONS-LIST.ARE_YOU_SURE_YOU_WANT_TO_CANCEL_YOUR_RESERVATION_F', {bookingAmenityName: booking.amenity.name, bookingBookingDate: booking.bookingDate, bookingShiftStartTime : booking.shift.startTime}),
+        confirmText: this.translate.instant('AMENITIES-RESERVATIONS-LIST.YES_CANCEL'),
+        cancelText: this.translate.instant('AMENITIES-RESERVATIONS-LIST.NO_KEEP'),
       })
       .subscribe((confirmed) => {
         if (confirmed) {
@@ -113,14 +114,14 @@ export class AmenitiesReservationsListComponent implements OnInit {
               );
               this.loadReservations(); // Reload reservations after deletion
               this.toastService.showToast(
-                `Your reservation for '${booking.amenity.name}' on ${booking.bookingDate} from ${booking.shift.startTime} to ${booking.shift.endTime} has been successfully canceled.`,
+                this.translate.instant('AMENITIES-RESERVATIONS-LIST.YOUR_RESERVATION_FOR_BOOKINGAMENITYNAME_ON_BOOKING', {bookingAmenityName: booking.amenity.name, bookingBookingDate: booking.bookingDate, bookingShiftStartTime : booking.shift.startTime, bookingShiftEndTime: booking.shift.endTime}),
                 'success'
               );
             },
             error: (err) => {
               console.error(err);
               this.toastService.showToast(
-                `We couldn't cancel your reservation for '${booking.amenity.name}' on ${booking.bookingDate} from ${booking.shift.startTime} to ${booking.shift.endTime}. Please check your connection or try again later.`,
+                this.translate.instant('AMENITIES-RESERVATIONS-LIST.WE_COULDNT_CANCEL_YOUR_RESERVATION_FOR_BOOKINGAMEN', {bookingAmenityName: booking.amenity.name, bookingBookingDate: booking.bookingDate, bookingShiftStartTime : booking.shift.startTime, bookingShiftEndTime: booking.shift.endTime}),
                 'error'
               );
             },

@@ -6,6 +6,7 @@ import {
   UserSessionService,
 } from '@core/index';
 import { User, LinkKey, Roles } from '@shared/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-feed-control-bar',
@@ -36,7 +37,8 @@ export class FeedControlBarComponent implements OnInit {
     private router: Router,
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -71,21 +73,21 @@ export class FeedControlBarComponent implements OnInit {
 
   updateChannelClass() {
     if (this.channel === this.feedChannelUrl) {
-      this.channelClass = 'Feed';
+      this.channelClass = this.translate.instant('FEED-CONTROL-BAR.FEED');
     } else if (this.channel === this.announcementsChannelUrl) {
-      this.channelClass = 'Announcements';
+      this.channelClass = this.translate.instant('FEED-CONTROL-BAR.ANNOUNCEMENTS');
     } else if (this.channel === this.complaintsChannelUrl) {
-      this.channelClass = 'Complaints';
+      this.channelClass = this.translate.instant('FEED-CONTROL-BAR.COMPLAINTS');
     }
   }
 
   updateStatusClass() {
     if (this.status === this.latestUrl) {
-      this.statusClass = 'Latest';
+      this.statusClass = this.translate.instant('FEED-CONTROL-BAR.LATEST');
     } else if (this.status === this.hotUrl) {
-      this.statusClass = 'Hot';
+      this.statusClass = this.translate.instant('FEED-CONTROL-BAR.HOT');
     } else if (this.status === this.trendingUrl) {
-      this.statusClass = 'Trending';
+      this.statusClass = this.translate.instant('FEED-CONTROL-BAR.TRENDING');
     }
   }
 

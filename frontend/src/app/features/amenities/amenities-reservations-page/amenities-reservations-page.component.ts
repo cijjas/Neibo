@@ -11,6 +11,7 @@ import {
 } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-amenities-reservations-page',
@@ -33,13 +34,13 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 
   // (Optional) day name abbreviations
   private dayAbbreviations: Record<string, string> = {
-    Monday: 'Mon',
-    Tuesday: 'Tue',
-    Wednesday: 'Wed',
-    Thursday: 'Thu',
-    Friday: 'Fri',
-    Saturday: 'Sat',
-    Sunday: 'Sun',
+    Monday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.MON'),
+    Tuesday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.TUE'),
+    Wednesday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.WED'),
+    Thursday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.THU'),
+    Friday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.FRI'),
+    Saturday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.SAT'),
+    Sunday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.SUN'),
   };
 
   getAbbreviatedDay(day: string): string {
@@ -53,7 +54,8 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     private bookingService: BookingService,
     private router: Router,
     private route: ActivatedRoute,
-    private shiftService: ShiftService
+    private shiftService: ShiftService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -207,13 +209,13 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 /** Utility sorting functions */
 function sortDays(a: string, b: string) {
   const order = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
+    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.MONDAY'),
+    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.TUESDAY'),
+    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.WEDNESDAY'),
+    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.THURSDAY'),
+    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.FRIDAY'),
+    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.SATURDAY'),
+    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.SUNDAY'),
   ];
   return order.indexOf(a) - order.indexOf(b);
 }

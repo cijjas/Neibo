@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
   Tag,
@@ -63,7 +64,8 @@ export class FeedCreatePostPageComponent implements OnInit {
     private route: ActivatedRoute,
     private userSessionService: UserSessionService,
     private toastService: ToastService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -106,13 +108,13 @@ export class FeedCreatePostPageComponent implements OnInit {
   // Determine the title based on channel
   updateChannelTitle() {
     if (this.channel === this.feedChannelUrl) {
-      this.title = 'Create Post';
+      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_POST');
     } else if (this.channel === this.announcementsChannelUrl) {
-      this.title = 'Create Announcement';
+      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_ANNOUNCEMENT');
     } else if (this.channel === this.complaintsChannelUrl) {
-      this.title = 'Create Complaint';
+      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_COMPLAINT');
     } else {
-      this.title = 'Create Content';
+      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_CONTENT');
     }
   }
 
@@ -169,14 +171,14 @@ export class FeedCreatePostPageComponent implements OnInit {
 
     if (!this.isValidTag(formattedTag)) {
       this.toastService.showToast(
-        'Invalid tag format. Use letters only.',
+        this.title = this.translate.instant('FEED-CREATE-POST-PAGE.INVALID_TAG_FORMAT_USE_LETTERS_ONLY'),
         'warning'
       );
       return;
     }
 
     if (this.appliedTags.length >= 5) {
-      this.toastService.showToast('You can only add up to 5 tags.', 'warning');
+      this.toastService.showToast(this.title = this.translate.instant('FEED-CREATE-POST-PAGE.YOU_CAN_ONLY_ADD_UP_TO_5_TAGS'), 'warning');
       return;
     }
 
@@ -192,14 +194,14 @@ export class FeedCreatePostPageComponent implements OnInit {
     const exists = this.appliedTags.find((t) => t.name === tag.name);
     if (exists) {
       this.toastService.showToast(
-        `You've already selected the tag '${tag.name}'`,
+        this.translate.instant('FEED-CREATE-POST-PAGE.YOUVE_ALREADY_SELECTED_THE_TAG_TAGNAME', {tagName: tag.name}),
         'warning'
       );
       return;
     }
 
     if (this.appliedTags.length >= 5) {
-      this.toastService.showToast('You can only add up to 5 tags.', 'warning');
+      this.toastService.showToast(this.translate.instant('FEED-CREATE-POST-PAGE.YOU_CAN_ONLY_ADD_UP_TO_5_TAGS'), 'warning');
       return;
     }
 
@@ -315,7 +317,7 @@ export class FeedCreatePostPageComponent implements OnInit {
             next: () => {
               const contentType = this.getContentType();
               this.toastService.showToast(
-                `Your ${contentType} was created successfully!`,
+                this.translate.instant('FEED-CREATE-POST-PAGE.YOUR_CONTENTTYPE_WAS_CREATED_SUCCESSFULLY', {contentType: contentType}),
                 'success'
               );
               // Navigate away if needed
@@ -326,7 +328,7 @@ export class FeedCreatePostPageComponent implements OnInit {
             error: (error) => {
               const contentType = this.getContentType();
               this.toastService.showToast(
-                `There was a problem creating your ${contentType}.`,
+                this.translate.instant('FEED-CREATE-POST-PAGE.THERE_WAS_A_PROBLEM_CREATING_YOUR_CONTENTTYPE', {contentType: contentType}),
                 'error'
               );
               console.error('Error creating post:', error);
@@ -344,13 +346,13 @@ export class FeedCreatePostPageComponent implements OnInit {
    */
   getContentType(): string {
     if (this.channel === this.feedChannelUrl) {
-      return 'post';
+      return this.translate.instant('FEED-CREATE-POST-PAGE.POST');
     } else if (this.channel === this.announcementsChannelUrl) {
-      return 'announcement';
+      return this.translate.instant('FEED-CREATE-POST-PAGE.ANNOUNCEMENT');
     } else if (this.channel === this.complaintsChannelUrl) {
-      return 'complaint';
+      return this.translate.instant('FEED-CREATE-POST-PAGE.COMPLAINT');
     }
-    return 'content'; // Fallback
+    return this.translate.instant('FEED-CREATE-POST-PAGE.CONTENT'); // Fallback
   }
 
   /**

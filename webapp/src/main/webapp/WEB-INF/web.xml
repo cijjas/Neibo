@@ -125,7 +125,7 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <servlet-mapping>
         <servlet-name>default</servlet-name>
-        <url-pattern>/static/*</url-pattern>
+        <url-pattern>/static/browser/*</url-pattern>
     </servlet-mapping>
 
     <servlet>

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService, User, Roles } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ImageService,
   AuthService,
@@ -30,6 +31,7 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private authService: AuthService,
     private toastService: ToastService,
+    private translate: TranslateService,
     private router: Router // private preferencesService: PreferencesService
   ) {}
 
@@ -116,6 +118,6 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
-    this.toastService.showToast('Successfully logged out.', 'success');
+    this.toastService.showToast(this.translate.instant('USER-PROFILE-PAGE.SUCCESSFULLY_LOGGED_OUT'), 'success');
   }
 }
