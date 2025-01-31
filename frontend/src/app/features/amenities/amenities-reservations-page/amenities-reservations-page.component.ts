@@ -22,7 +22,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   reservationsList: Booking[] = [];
   reservationForm!: FormGroup;
 
-  currentPage = 1; // Current or highest loaded page
+  currentPage = 1;
   totalPages = 1;
   pageSize = 10;
   isLoading = false;
@@ -32,17 +32,15 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   uniqueDays: string[] = [];
   uniqueTimes: string[] = [];
 
-  // (Optional) day name abbreviations
   private dayAbbreviations: Record<string, string> = {
-    Monday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.MON'),
-    Tuesday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.TUE'),
-    Wednesday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.WED'),
-    Thursday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.THU'),
-    Friday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.FRI'),
-    Saturday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.SAT'),
-    Sunday: this.translate.instant('AMENITIES-RESERVATIONS-PAGE.SUN'),
+    Monday: this.translate.instant('ADMIN-AMENITIES-PAGE.MON'),
+    Tuesday: this.translate.instant('ADMIN-AMENITIES-PAGE.TUE'),
+    Wednesday: this.translate.instant('ADMIN-AMENITIES-PAGE.WED'),
+    Thursday: this.translate.instant('ADMIN-AMENITIES-PAGE.THU'),
+    Friday: this.translate.instant('ADMIN-AMENITIES-PAGE.FRI'),
+    Saturday: this.translate.instant('ADMIN-AMENITIES-PAGE.SAT'),
+    Sunday: this.translate.instant('ADMIN-AMENITIES-PAGE.SUN'),
   };
-
   getAbbreviatedDay(day: string): string {
     return this.dayAbbreviations[day] || day;
   }
@@ -64,32 +62,15 @@ export class AmenitiesReservationsPageComponent implements OnInit {
       date: ['', Validators.required],
     });
 
-    // Load the first page + shifts
+    // Get initial page/size from query params
+    this.route.queryParams.subscribe(params => {
+      this.currentPage = +params['page'] || 1;
+      this.pageSize = +params['size'] || 10;
+      this.loadAmenities();
+    });
+
+    // Also load all shifts
     this.loadShifts();
-
-    this.route.queryParams
-      .pipe(
-        switchMap(params => {
-          this.currentPage = +params['page'] || 1;
-          this.pageSize = +params['size'] || 10;
-
-          // Update queryParams if defaults are missing
-          const missingParams: any = {};
-          if (!params['page']) missingParams['page'] = this.currentPage;
-          if (!params['size']) missingParams['size'] = this.pageSize;
-
-          if (Object.keys(missingParams).length > 0) {
-            this.router.navigate([], {
-              relativeTo: this.route,
-              queryParams: { ...missingParams },
-              queryParamsHandling: 'merge',
-            });
-          }
-
-          return this.loadAmenities();
-        }),
-      )
-      .subscribe();
   }
 
   // Example shift-loading logic
@@ -117,40 +98,34 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   }
 
   // Unified loader
-  private loadAmenities(): Observable<void> {
-    const queryParams = {
-      page: this.currentPage,
-      size: this.pageSize,
-    };
 
-    return this.amenityService.getAmenities(queryParams).pipe(
-      map(response => {
-        if (response) {
+  loadAmenities(): void {
+    if (this.isLoading) return;
+    this.isLoading = true;
+
+    this.amenityService
+      .getAmenities({
+        page: this.currentPage,
+        size: this.pageSize,
+      })
+      .subscribe({
+        next: response => {
           this.amenities = response.amenities;
-          this.totalPages = response.totalPages;
           this.currentPage = response.currentPage;
-        } else {
-          this.amenities = [];
-          this.totalPages = 0;
-        }
-        this.isLoading = false;
-      }),
-      catchError(error => {
-        console.error('Error loading amenities:', error);
-        this.amenities = [];
-        this.totalPages = 0;
-        this.isLoading = false;
-        return of();
-      }),
-    );
+          this.totalPages = response.totalPages;
+          this.isLoading = false;
+        },
+        error: err => {
+          console.error('Error loading amenities:', err);
+          this.isLoading = false;
+        },
+      });
   }
 
   onPageChange(page: number): void {
-    if (page < 1 || page > this.totalPages || page === this.currentPage) {
-      return;
-    }
     this.currentPage = page;
     this.updateQueryParams();
+    this.loadAmenities();
   }
 
   private updateQueryParams(): void {
@@ -166,7 +141,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     if (this.reservationForm.valid) {
       const amenityUrl = this.reservationForm.get('amenity')?.value.self;
       const date = this.reservationForm.get('date')?.value;
-      this.router.navigate(['/amenities/choose-time'], {
+      this.router.navigate(['/amenities', 'choose-time'], {
         queryParams: { amenityUrl, date },
       });
     } else {
@@ -207,20 +182,25 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   };
 }
 
-/** Utility sorting functions */
+/**
+ * Example sort for days – so they appear Monday, Tuesday, etc.
+ */
 function sortDays(a: string, b: string) {
   const order = [
-    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.MONDAY'),
-    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.TUESDAY'),
-    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.WEDNESDAY'),
-    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.THURSDAY'),
-    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.FRIDAY'),
-    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.SATURDAY'),
-    this.translate.instant('AMENITIES-RESERVATIONS-PAGE-PAGE.SUNDAY'),
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
   ];
   return order.indexOf(a) - order.indexOf(b);
 }
 
+/**
+ * Example sort for times as strings "HH:mm:ss".
+ */
 function sortTimes(a: string, b: string) {
   const aH = parseInt(a.split(':')[0], 10);
   const bH = parseInt(b.split(':')[0], 10);

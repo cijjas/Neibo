@@ -21,12 +21,10 @@ export class AdminAmenitiesPageComponent implements OnInit {
 
   isLoading = false;
 
-  // Dynamically loaded from the backend
   allShifts: Shift[] = [];
   uniqueDays: string[] = [];
   uniqueTimes: string[] = [];
 
-  // Optional day abbreviations if you want them
   private dayAbbreviations: Record<string, string> = {
     Monday: this.translate.instant('ADMIN-AMENITIES-PAGE.MON'),
     Tuesday: this.translate.instant('ADMIN-AMENITIES-PAGE.TUE'),
@@ -47,12 +45,12 @@ export class AdminAmenitiesPageComponent implements OnInit {
     private route: ActivatedRoute,
     private toastService: ToastService,
     private confirmationService: ConfirmationService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     // Get initial page/size from query params
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       this.currentPage = +params['page'] || 1;
       this.pageSize = +params['size'] || 10;
       this.loadAmenities();
@@ -67,7 +65,7 @@ export class AdminAmenitiesPageComponent implements OnInit {
    */
   private loadShifts(): void {
     this.shiftService.getShifts().subscribe({
-      next: (shiftsFromApi) => {
+      next: shiftsFromApi => {
         this.allShifts = shiftsFromApi;
 
         const daysSet = new Set<string>();
@@ -81,7 +79,7 @@ export class AdminAmenitiesPageComponent implements OnInit {
         this.uniqueDays = Array.from(daysSet).sort(sortDays);
         this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
       },
-      error: (err) => {
+      error: err => {
         console.error('Error loading shifts:', err);
       },
     });
@@ -97,13 +95,13 @@ export class AdminAmenitiesPageComponent implements OnInit {
         size: this.pageSize,
       })
       .subscribe({
-        next: (response) => {
+        next: response => {
           this.amenities = response.amenities;
           this.currentPage = response.currentPage;
           this.totalPages = response.totalPages;
           this.isLoading = false;
         },
-        error: (err) => {
+        error: err => {
           console.error('Error loading amenities:', err);
           this.isLoading = false;
         },
@@ -113,19 +111,19 @@ export class AdminAmenitiesPageComponent implements OnInit {
   deleteAmenity(amenity: Amenity) {
     const title = this.translate.instant(
       'ADMIN-AMENITIES-PAGE.DELETE_AMENITY_AMENITYNAME',
-      { amenityName: amenity.name }
+      { amenityName: amenity.name },
     );
 
     this.confirmationService
       .askForConfirmation({
         title: title,
         message: this.translate.instant(
-          'ADMIN-AMENITIES-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AMENITY'
+          'ADMIN-AMENITIES-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_AMENITY',
         ),
         confirmText: this.translate.instant('ADMIN-AMENITIES-PAGE.DELETE'),
         cancelText: this.translate.instant('ADMIN-AMENITIES-PAGE.CANCEL'),
       })
-      .subscribe((confirmed) => {
+      .subscribe(confirmed => {
         if (confirmed) {
           this.amenityService.deleteAmenity(amenity.self).subscribe({
             next: () => {
@@ -134,21 +132,21 @@ export class AdminAmenitiesPageComponent implements OnInit {
                   'ADMIN-AMENITIES-PAGE.AMENITY_AMENITYNAME_DELETED_SUCCESSFULLY',
                   {
                     amenityName: amenity.name,
-                  }
+                  },
                 ),
-                'success'
+                'success',
               );
               this.loadAmenities();
             },
-            error: (err) => {
+            error: err => {
               this.toastService.showToast(
                 this.translate.instant(
                   'ADMIN-AMENITIES-PAGE.COULD_NOT_REMOVE_AMENITYNAME_TRY_AGAIN',
                   {
                     amenityName: amenity.name,
-                  }
+                  },
                 ),
-                'error'
+                'error',
               );
               console.error('Error deleting amenities:', err);
             },
@@ -161,7 +159,7 @@ export class AdminAmenitiesPageComponent implements OnInit {
   checkAvailability(shifts: Shift[], dayKey: string, timeKey: string): boolean {
     if (!shifts) return false;
     return shifts.some(
-      (shift) => shift.day === dayKey && shift.startTime === timeKey
+      shift => shift.day === dayKey && shift.startTime === timeKey,
     );
   }
 

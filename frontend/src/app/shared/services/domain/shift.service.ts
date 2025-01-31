@@ -42,8 +42,10 @@ export class ShiftService {
 
 export function mapShift(shiftDto: ShiftDto): Shift {
   return {
-    startTime: formatTime(shiftDto.startTime, 'es-AR', { hour12: true }),
-    endTime: formatTime(addOneHour(shiftDto.startTime), 'es-AR', {
+    startTime: shiftDto.startTime,
+    endTime: addOneHour(shiftDto.startTime),
+    startTimeDisplay: formatTime(shiftDto.startTime, 'es-AR', { hour12: true }),
+    endTimeDisplay: formatTime(addOneHour(shiftDto.startTime), 'es-AR', {
       hour12: true,
     }),
     day: shiftDto.day,
