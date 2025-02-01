@@ -19,7 +19,7 @@
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "baseHref": "/paw-2023b-02/static/browser/",
+            "baseHref": "/paw-2023b-02/",
             "deployUrl": "/paw-2023b-02/static/browser/",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [

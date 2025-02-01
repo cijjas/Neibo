@@ -12,12 +12,14 @@ import {
   AffiliationService,
   LinkKey,
 } from '@shared/index';
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-admin-service-providers-requests-page',
   templateUrl: './admin-service-providers-requests-page.component.html',
 })
 export class AdminServiceProvidersRequestsPageComponent implements OnInit {
+  environment = environment;
   serviceProviders: boolean = false; // Indicates if working with service providers
   workers: Worker[] = [];
   totalPages: number = 1;

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Worker, Profession } from '@shared/index';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-service-providers-content',
@@ -24,12 +25,12 @@ export class ServiceProvidersContentComponent {
 
   get backgroundImageUrl(): string {
     return (
-      this.worker?.backgroundImage || 'assets/images/default-background.png'
+      this.worker?.backgroundImage || environment.deployUrl + 'assets/images/default-background.png'
     );
   }
 
   get profileImageUrl(): string {
-    return this.worker?.user?.image || 'assets/images/default-profile.png';
+    return this.worker?.user?.image || environment.deployUrl + 'assets/images/default-profile.png';
   }
 
   setProfession(prof: Profession | null): void {

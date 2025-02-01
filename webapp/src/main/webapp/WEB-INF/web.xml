@@ -128,6 +128,15 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
         <url-pattern>/static/browser/*</url-pattern>
     </servlet-mapping>
 
+    <filter>
+        <filter-name>StaticCacheFilter</filter-name>
+        <filter-class>ar.edu.itba.paw.webapp.config.StaticCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>StaticCacheFilter</filter-name>
+        <url-pattern>/static/browser/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>index</servlet-name>
         <servlet-class>ar.edu.itba.paw.webapp.servlets.IndexServlet</servlet-class>
@@ -135,6 +144,6 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <servlet-mapping>
         <servlet-name>index</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>

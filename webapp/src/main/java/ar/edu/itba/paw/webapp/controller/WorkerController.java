@@ -157,7 +157,7 @@ public class WorkerController {
     @PreAuthorize("@pathAccessControlHelper.canUpdateWorker(#workerId)")
     @Validated(UpdateSequence.class)
     public Response updateWorker(
-            @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId,
+            @PathParam(PathParameter.WORKER_ID) long workerId,
             @Valid @NotNull WorkerDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());

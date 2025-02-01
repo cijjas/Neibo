@@ -15,9 +15,10 @@ import { CoreModule } from "@core/core.module";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { environment } from "../environments/environment";
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, environment.deployUrl + 'assets/i18n/', '.json');
 }
 
 @NgModule({

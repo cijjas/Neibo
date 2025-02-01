@@ -7,12 +7,14 @@ import {
 } from '@core/index';
 import { User, UserService, LinkKey } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-admin-neighbors-requests-page',
   templateUrl: './admin-neighbors-requests-page.component.html',
 })
 export class AdminNeighborsRequestsPageComponent implements OnInit {
+  environment = environment;
   neighbors: boolean = false; // Determines if we are dealing with neighbors or another role
   users: User[] = [];
   totalPages: number = 1;

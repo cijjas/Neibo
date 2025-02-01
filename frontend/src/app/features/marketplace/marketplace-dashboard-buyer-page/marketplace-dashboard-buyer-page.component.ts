@@ -8,6 +8,7 @@ import {
   LinkKey,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-marketplace-dashboard-buyer-page',
@@ -151,7 +152,7 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   getProductImage(product: Product): string {
     return product?.firstImage
       ? product?.firstImage
-      : 'assets/images/default-product.png';
+      : environment.deployUrl + environment.deployUrl + 'assets/images/default-product.png';
   }
   /** Department navigation (shared by both requests and purchases) */
   goToDepartment(department: Department): void {

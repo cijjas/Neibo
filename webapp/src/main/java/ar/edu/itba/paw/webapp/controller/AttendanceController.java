@@ -176,7 +176,7 @@ public class AttendanceController {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
-        if (as.deleteAttendance(extractOptionalSecondId(event), extractFirstId(user)))
+        if (as.deleteAttendance(extractSecondId(event), extractFirstId(user)))
             return Response.noContent()
                     .build();
 

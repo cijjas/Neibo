@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Profession, Worker } from '@shared/index';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-service-providers-preview',
@@ -17,11 +18,11 @@ export class ServiceProvidersPreviewComponent implements OnInit {
   ngOnInit(): void {
     this.profileImageUrl = this.worker?.user?.image
       ? this.worker.user.image
-      : 'assets/images/default-profile.png';
+      : environment.deployUrl + 'assets/images/default-profile.png';
 
     this.backgroundImageUrl = this.worker?.backgroundImage
       ? this.worker.backgroundImage
-      : 'assets/images/default-background.png';
+      : environment.deployUrl + 'assets/images/default-background.png';
   }
 
   onProfessionClick(event: MouseEvent, profession: Profession) {

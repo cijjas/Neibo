@@ -111,7 +111,7 @@ public class UserController {
     @Path("{" + PathParameter.USER_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canFindUser(#userId)")
     public Response findUser(
-            @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId
+            @PathParam(PathParameter.USER_ID) long userId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 

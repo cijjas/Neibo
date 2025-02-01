@@ -205,8 +205,8 @@ public class PostController {
     @Path("{" + PathParameter.POST_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeletePost(#postId)")
     public Response deletePost(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) @GenericIdConstraint long postId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) long postId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

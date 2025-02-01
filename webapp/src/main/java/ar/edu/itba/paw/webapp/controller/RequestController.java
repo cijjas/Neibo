@@ -144,8 +144,8 @@ public class RequestController {
     @Path("{" + PathParameter.REQUEST_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.REQUEST_ID) long requestId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -191,8 +191,8 @@ public class RequestController {
     @PreAuthorize("@pathAccessControlHelper.canUpdateRequest(#requestId)")
     @Validated(UpdateSequence.class)
     public Response updateRequest(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.REQUEST_ID) long requestId,
             @Valid @NotNull RequestDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}", uriInfo.getRequestUri());
@@ -210,8 +210,8 @@ public class RequestController {
     @Path("{" + PathParameter.REQUEST_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteRequest(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.REQUEST_ID) @GenericIdConstraint long requestId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.REQUEST_ID) long requestId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

@@ -12,6 +12,7 @@ import {
 } from '@core/index';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'user-user-profile-page',
@@ -25,6 +26,7 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   theme: 'default' | 'marketplace' | 'services' | 'admin' = 'default';
   currentUserRole: Roles;
   private subscriptions = new Subscription();
+  environment = environment;
 
   constructor(
     private userService: UserService,
@@ -125,4 +127,5 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
       'success',
     );
   }
+
 }

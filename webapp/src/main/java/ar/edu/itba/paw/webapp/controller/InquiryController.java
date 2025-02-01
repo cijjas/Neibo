@@ -136,8 +136,8 @@ public class InquiryController {
     @PreAuthorize("@pathAccessControlHelper.canCreateInquiry(#productId)")
     @Validated(CreateSequence.class)
     public Response createInquiry(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) Long productId,
             @Valid @NotNull InquiryDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -164,9 +164,9 @@ public class InquiryController {
     @PreAuthorize("@pathAccessControlHelper.canAnswerInquiry(#inquiryId)")
     @Validated(UpdateSequence.class)
     public Response updateInquiry(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
-            @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) Long productId,
+            @PathParam(PathParameter.INQUIRY_ID) long inquiryId,
             @Valid @NotNull InquiryDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
@@ -187,9 +187,9 @@ public class InquiryController {
     @Path("{" + PathParameter.INQUIRY_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteInquiry(#inquiryId)")
     public Response deleteInquiry(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
-            @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) Long productId,
+            @PathParam(PathParameter.INQUIRY_ID) long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

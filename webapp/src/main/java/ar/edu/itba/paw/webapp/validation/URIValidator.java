@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class URIValidator {
     private static final Map<String, Pattern> patternMap = new HashMap<>();
 
-    private static final String BASE_URL_REGEX = "^(https?://(old-pawserver\\.it\\.itba\\.edu\\.ar/paw-2023b-02|localhost:\\d+))?";
+    private static final String BASE_URL_REGEX = "^(https?://(old-pawserver\\.it\\.itba\\.edu\\.ar/paw-2023b-02|localhost:\\d+/paw-2023b-02))?";
 
     private static final String CHANNEL_URI_REGEX = BASE_URL_REGEX + "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/\\d+/" + Endpoint.CHANNELS + "/\\d+$";
     private static final String NEIGHBORHOOD_URI_REGEX = BASE_URL_REGEX + "/" + Endpoint.API + "/"  + Endpoint.NEIGHBORHOODS + "/-?\\d+$";

@@ -161,8 +161,8 @@ public class ProductController {
     @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#productId)")
     @Validated(UpdateSequence.class)
     public Response updateProduct(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId,
             @Valid @NotNull ProductDto updateForm
     ) {
         LOGGER.info("UPDATE request arrived at '{}'", uriInfo.getRequestUri());
@@ -189,8 +189,8 @@ public class ProductController {
     @Path("{" + PathParameter.PRODUCT_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
     public Response deleteProduct(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

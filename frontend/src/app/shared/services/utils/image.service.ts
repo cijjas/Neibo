@@ -5,12 +5,13 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { HateoasLinksService } from '@core/index';
 import { LinkKey } from '@shared/index';
+import { environment } from 'environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ImageService {
-  private fallbackImage = 'assets/images/default-profile.png';
+  private fallbackImage = environment.deployUrl + 'assets/images/default-profile.png';
 
   constructor(
     private http: HttpClient,

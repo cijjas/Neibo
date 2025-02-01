@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Department, Product } from '@shared/index';
 import { Router } from '@angular/router';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-marketplace-product-preview',
@@ -24,7 +25,7 @@ export class MarketplaceProductPreviewComponent {
   getProductImage(): string {
     return this.product?.firstImage
       ? this.product?.firstImage
-      : 'assets/images/default-product.png';
+      : environment.deployUrl + 'assets/images/default-product.png';
   }
 
 

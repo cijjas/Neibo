@@ -3,7 +3,7 @@
     <div class="col-4 f-c-c-c pe-2">
       <div style="display: flex; justify-content: center; align-items: center;">
         <img class="big-profile-picture" style="width: 40px; height: 40px;"
-          [src]="profileImageSafeUrl || 'assets/images/default-profile.png'" alt="User profile image" />
+             [src]="profileImageSafeUrl || environment.deployUrl + 'assets/images/default-profile.png'" alt="User profile image" />
       </div>
     </div>
     <div class="col-8 p-0">

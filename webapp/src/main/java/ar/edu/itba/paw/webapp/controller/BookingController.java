@@ -154,8 +154,8 @@ public class BookingController {
     @Path("{" + PathParameter.BOOKING_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteBooking(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.BOOKING_ID) @GenericIdConstraint long bookingId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.BOOKING_ID) long bookingId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

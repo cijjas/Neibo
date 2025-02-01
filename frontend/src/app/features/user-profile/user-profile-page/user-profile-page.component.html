@@ -27,7 +27,7 @@
                 <img
                   id="output"
                   [src]="
-                    profileImageSafeUrl || 'assets/images/default-profile.png'
+                    profileImageSafeUrl || environment.deployUrl + 'assets/images/default-profile.png'
                   "
                   alt="profile_picture_img"
                 />

@@ -164,9 +164,9 @@ public class CommentController {
     @Path("{" + PathParameter.COMMENT_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteComment(#commentId)")
     public Response deleteComment(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
-            @PathParam(PathParameter.COMMENT_ID) @GenericIdConstraint long commentId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) Long postId,
+            @PathParam(PathParameter.COMMENT_ID) long commentId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
