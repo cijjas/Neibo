@@ -17,7 +17,7 @@ select,
 textarea,
 button,
 span {
-  font: 14px/1 "IBM Plex Sans", sans-serif;
+  font: 14px/1 'IBM Plex Sans', sans-serif;
   /* font-weight: bold; */
 }
 
@@ -223,21 +223,21 @@ form {
 }
 
 select,
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="number"],
-input[type="date"],
-input[type="time"],
-input[type="tel"],
-input[type="url"],
-input[type="search"],
-input[type="select"] {
+input[type='text'],
+input[type='password'],
+input[type='email'],
+input[type='number'],
+input[type='date'],
+input[type='time'],
+input[type='tel'],
+input[type='url'],
+input[type='search'],
+input[type='select'] {
   width: 100%;
   height: var(--input-height);
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   position: relative;
   width: 1.5em;
   height: 1.5em;
@@ -250,7 +250,7 @@ input[type="checkbox"] {
   transition: all 0.3s ease-in-out;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     width: 100%;
     height: 110%;
@@ -263,7 +263,7 @@ input[type="checkbox"] {
 
   &::before {
     position: absolute;
-    content: "";
+    content: '';
     display: block;
     top: 0;
     left: 5px;
@@ -304,7 +304,7 @@ select {
   appearance: none;
   -moz-appearance: none;
   transition: none;
-  background: url("assets/images/chevron-down-solid.svg") no-repeat;
+  background: url('assets/images/chevron-down-solid.svg') no-repeat;
   background-size: 1em;
   background-position-x: 98%;
   background-position-y: 50%;
@@ -489,7 +489,7 @@ p {
   background: var(--color-base);
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -577,6 +577,10 @@ p {
 
 .g-05 {
   gap: 0.5em;
+}
+
+.g-07 {
+  gap: 0.7em;
 }
 
 /* ...................... */
