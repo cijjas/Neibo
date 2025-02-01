@@ -38,7 +38,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - A Neighbor/Admin can filter the Workers through certain Profession
  */
 
-@Path(Endpoint.PROFESSIONS)
+@Path(Endpoint.API + "/" + Endpoint.PROFESSIONS)
 @Component
 @Validated
 @Produces(MediaType.APPLICATION_JSON)
@@ -60,7 +60,7 @@ public class ProfessionController {
     public Response listProfessions(
             @QueryParam(QueryParameter.FOR_WORKER) @WorkerURIConstraint String worker
     ) {
-        LOGGER.info("GET request arrived at '/professions'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         List<Profession> professions = ps.getProfessions(extractOptionalFirstId(worker));
@@ -92,7 +92,7 @@ public class ProfessionController {
     public Response findProfession(
             @PathParam(PathParameter.PROFESSION_ID) @GenericIdConstraint long professionId
     ) {
-        LOGGER.info("GET request arrived at '/professions/{}'", professionId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Profession profession = ps.findProfession(professionId).orElseThrow(NotFoundException::new);
@@ -116,7 +116,7 @@ public class ProfessionController {
     public Response createProfession(
             @Valid @NotNull ProfessionDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/professions'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         final Profession profession = ps.createProfession(createForm.getName());
@@ -140,7 +140,7 @@ public class ProfessionController {
     public Response deleteProfession(
             @PathParam(PathParameter.PROFESSION_ID) @GenericIdConstraint long professionId
     ) {
-        LOGGER.info("DELETE request arrived at '/professions/{}'", professionId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
         if (ps.deleteProfession(professionId))

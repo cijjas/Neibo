@@ -11,7 +11,7 @@
               [src]="[
                 post.author?.image
                   ? post.author?.image
-                  : '/assets/images/default-profile.png'
+                  : environment.deployUrl + 'assets/images/default-profile.png'
               ]"
               class="small-profile-picture"
               alt="profile_picture_img"

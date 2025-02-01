@@ -28,15 +28,10 @@ export class ErrorInterceptor implements HttpInterceptor {
           // Backend error
           console.log(error.status);
           switch (error.status) {
-            case 403: // Forbidden
-              this.showNotification(
-                'You do not have permission to perform this action.',
-              );
-              break;
-
-            case 404: // Not Found
-            case 503: // Service Unavailable
-            case 500: // Internal Server Error
+            // case 403:
+            case 404:
+            case 503:
+            case 500:
               this.router.navigate(['/not-found'], {
                 queryParams: {
                   code: error.status,
@@ -45,9 +40,20 @@ export class ErrorInterceptor implements HttpInterceptor {
               });
               break;
 
+            case 0:
+              this.router.navigate(['/not-found'], {
+                queryParams: {
+                  code: error.status,
+                  message: 'You are offline. Check your internet connection.',
+                },
+              });
+              break;
+
             default:
               // Generic error handling
-              this.showNotification(`- ${error.status} -`);
+              console.warn(
+                `Received error [${error.status}]. ${error.message} `,
+              );
               break;
           }
         }

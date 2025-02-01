@@ -43,7 +43,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalF
  *   - An Admin can update the profiles of the Neighbors it moderates
  */
 
-@Path( Endpoint.USERS)
+@Path(Endpoint.API + "/" +  Endpoint.USERS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -68,7 +68,7 @@ public class UserController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/users'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userRoleId = extractOptionalFirstId(userRole);
@@ -91,7 +91,7 @@ public class UserController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.USERS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS),
                 us.calculateUserPages(neighborhoodId, userRoleId, size),
                 page,
                 size
@@ -111,9 +111,9 @@ public class UserController {
     @Path("{" + PathParameter.USER_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canFindUser(#userId)")
     public Response findUser(
-            @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId
+            @PathParam(PathParameter.USER_ID) long userId
     ) {
-        LOGGER.info("GET request arrived at '/users/{}'", userId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         User user = us.findUser(userId).orElseThrow(NotFoundException::new);
@@ -136,7 +136,7 @@ public class UserController {
     public Response createUser(
             @Valid @NotNull UserDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/users'");
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & ETag Generation
         final User user = us.createUser(extractFirstId(createForm.getNeighborhood()), createForm.getMail(), createForm.getName(), createForm.getSurname(), createForm.getPassword(), createForm.getIdentification(), extractOptionalFirstId(createForm.getLanguage()), extractOptionalFirstId(createForm.getUserRole()));
@@ -153,13 +153,13 @@ public class UserController {
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
     // until we get an answer...
-     @PreAuthorize("@pathAccessControlHelper.canUpdateUser(userId, #updateForm.neighborhood, #updateForm.userRole)")
+//     @PreAuthorize("@pathAccessControlHelper.canUpdateUser(userId, #updateForm.neighborhood, #updateForm.userRole)")
     @Validated(UpdateSequence.class)
     public Response updateUser(
             @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,
             @Valid @NotNull UserDto updateForm
     ) {
-        LOGGER.info("PATCH request arrived at '/users/{}'", userId);
+        LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final User updatedUser = us.updateUser(userId, extractOptionalFirstId(updateForm.getNeighborhood()), updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));

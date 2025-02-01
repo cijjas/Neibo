@@ -63,8 +63,8 @@ public class RequestDto {
         String productId = String.valueOf(request.getProduct().getProductId());
         String requestUserId = String.valueOf(request.getUser().getUserId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
         UriBuilder requestUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).path(requestId);
         UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
         UriBuilder requestUserUri = neighborhoodUri.clone().path(Endpoint.USERS).path(requestUserId);

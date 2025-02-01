@@ -11,6 +11,7 @@ import {
   mapAmenity,
   parseLinkHeader,
   LinkKey,
+  formatDate,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
@@ -18,14 +19,14 @@ import { HateoasLinksService } from '@core/index';
 export class BookingService {
   constructor(
     private http: HttpClient,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
   ) {}
 
   public getBooking(url: string): Observable<Booking> {
     return this.http
       .get<BookingDto>(url)
       .pipe(
-        mergeMap((bookingDto: BookingDto) => mapBooking(this.http, bookingDto))
+        mergeMap((bookingDto: BookingDto) => mapBooking(this.http, bookingDto)),
       );
   }
 
@@ -36,7 +37,7 @@ export class BookingService {
       size?: number;
       bookedBy?: string;
       forAmenity?: string;
-    } = {}
+    } = {},
   ): Observable<{
     bookings: Booking[];
     totalPages: number;
@@ -56,7 +57,7 @@ export class BookingService {
     return this.http
       .get<BookingDto[]>(url, { params, observe: 'response' })
       .pipe(
-        mergeMap((response) => {
+        mergeMap(response => {
           const bookingsDto: BookingDto[] = response.body || [];
           const pagination = parseLinkHeader(response.headers.get('Link'));
 
@@ -69,22 +70,22 @@ export class BookingService {
             });
           }
 
-          const bookingObservables = bookingsDto.map((bookingDto) =>
-            mapBooking(this.http, bookingDto)
+          const bookingObservables = bookingsDto.map(bookingDto =>
+            mapBooking(this.http, bookingDto),
           );
 
           return forkJoin(bookingObservables).pipe(
-            map((bookings) => ({
+            map(bookings => ({
               bookings,
               totalPages: pagination.totalPages,
               currentPage: pagination.currentPage,
-            }))
+            })),
           );
         }),
-        catchError((err) => {
+        catchError(err => {
           console.error('Error in getBookings:', err);
           return of({ bookings: [], totalPages: 1, currentPage: 1 }); // Fallback response
-        })
+        }),
       );
   }
 
@@ -92,10 +93,10 @@ export class BookingService {
     amenity: string,
     bookingDate: string,
     shifts: string[],
-    user: string
+    user: string,
   ): Observable<(string | null)[]> {
     return forkJoin(
-      shifts.map((shift) =>
+      shifts.map(shift =>
         this.http
           .post(
             this.linkService.getLink(LinkKey.NEIGHBORHOOD_BOOKINGS),
@@ -105,10 +106,10 @@ export class BookingService {
               shift,
               user,
             },
-            { observe: 'response' }
+            { observe: 'response' },
           )
           .pipe(
-            map((response) => {
+            map(response => {
               const locationHeader = response.headers.get('Location');
               if (locationHeader) {
                 return locationHeader;
@@ -117,12 +118,12 @@ export class BookingService {
                 return null;
               }
             }),
-            catchError((error) => {
+            catchError(error => {
               console.error('Error creating booking for shift:', shift, error);
               return of(null);
-            })
-          )
-      )
+            }),
+          ),
+      ),
     );
   }
 
@@ -133,21 +134,21 @@ export class BookingService {
 
 export function mapBooking(
   http: HttpClient,
-  bookingDto: BookingDto
+  bookingDto: BookingDto,
 ): Observable<Booking> {
   return forkJoin([
     http
       .get<AmenityDto>(bookingDto._links.amenity)
-      .pipe(mergeMap((amenityDto) => mapAmenity(http, amenityDto))),
+      .pipe(mergeMap(amenityDto => mapAmenity(http, amenityDto))),
     http.get<ShiftDto>(bookingDto._links.shift),
   ]).pipe(
     map(([amenity, shiftDto]) => {
       return {
         shift: mapShift(shiftDto),
         amenity: amenity,
-        bookingDate: bookingDto.bookingDate,
+        bookingDate: formatDate(bookingDto.bookingDate),
         self: bookingDto._links.self,
       } as Booking;
-    })
+    }),
   );
 }

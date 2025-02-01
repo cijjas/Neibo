@@ -23,7 +23,7 @@ public class ImageDto {
 
         String imageId = String.valueOf(image.getImageId());
 
-        UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(imageId);
+        UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(imageId);
 
         links.setSelf(imageUri.build());
 

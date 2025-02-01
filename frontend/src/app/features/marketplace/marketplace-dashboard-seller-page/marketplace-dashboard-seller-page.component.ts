@@ -10,6 +10,7 @@ import {
   LinkKey,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-marketplace-dashboard-seller-page',
@@ -160,6 +161,6 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   getProductImage(product: Product): string {
     return product?.firstImage
       ? product?.firstImage
-      : 'assets/images/default-product.png';
+      : environment.deployUrl + 'assets/images/default-product.png';
   }
 }

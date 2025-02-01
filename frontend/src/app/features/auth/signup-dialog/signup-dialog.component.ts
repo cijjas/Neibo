@@ -30,6 +30,7 @@ import {
 } from '@core/index';
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -71,7 +72,8 @@ export class SignupDialogComponent implements OnInit {
     private professionService: ProfessionService,
     private router: Router,
     private workerService: WorkerService,
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -191,7 +193,7 @@ export class SignupDialogComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Neighbor signup successful! Logging you in...',
+            this.translate.instant('SIGNUP-DIALOG.NEIGHBOR_SIGNUP_SUCCESSFUL_LOGGING_YOU_IN'),
             'success'
           );
           // Attempt auto-login
@@ -253,7 +255,7 @@ export class SignupDialogComponent implements OnInit {
                   }
                 } else {
                   this.toastService.showToast(
-                    'Login failed after signup, please try manually.',
+                    this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
                     'error'
                   );
                   this.closeSignupDialog();
@@ -263,7 +265,7 @@ export class SignupDialogComponent implements OnInit {
                 console.error('Automatic login error:', err);
                 this.loading = false;
                 this.toastService.showToast(
-                  'Login failed after signup, please try manually.',
+                  this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
                   'error'
                 );
                 this.closeSignupDialog();
@@ -274,7 +276,7 @@ export class SignupDialogComponent implements OnInit {
           console.error('Error during neighbor signup:', error);
           this.loading = false;
           this.toastService.showToast(
-            'Signup failed. Please try again.',
+            this.translate.instant('SIGNUP-DIALOG.SIGNUP_FAILED_PLEASE_TRY_AGAIN'),
             'error'
           );
         },
@@ -287,7 +289,7 @@ export class SignupDialogComponent implements OnInit {
   submitServiceForm(): void {
     if (this.serviceForm.invalid) {
       this.toastService.showToast(
-        'Please fill out all required fields.',
+        this.translate.instant('SIGNUP-DIALOG.PLEASE_FILL_OUT_ALL_REQUIRED_FIELDS'),
         'error'
       );
       return;
@@ -312,7 +314,7 @@ export class SignupDialogComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Neighbor signup successful! Logging you in...',
+            this.translate.instant('SIGNUP-DIALOG.NEIGHBOR_SIGNUP_SUCCESSFUL_LOGGING_YOU_IN'),
             'success'
           );
           // Attempt auto-login
@@ -342,7 +344,7 @@ export class SignupDialogComponent implements OnInit {
                   }
                 } else {
                   this.toastService.showToast(
-                    'Login failed after signup, please try manually.',
+                    this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
                     'error'
                   );
                   this.closeSignupDialog();
@@ -352,7 +354,7 @@ export class SignupDialogComponent implements OnInit {
                 console.error('Automatic login error:', err);
                 this.loading = false;
                 this.toastService.showToast(
-                  'Login failed after signup, please try manually.',
+                  this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
                   'error'
                 );
                 this.closeSignupDialog();
@@ -363,7 +365,7 @@ export class SignupDialogComponent implements OnInit {
           console.error('Error during neighbor signup:', error);
           this.loading = false;
           this.toastService.showToast(
-            'Signup failed. Please try again.',
+            this.translate.instant('SIGNUP-DIALOG.SIGNUP_FAILED_PLEASE_TRY_AGAIN'),
             'error'
           );
         },
@@ -407,7 +409,7 @@ export class SignupDialogComponent implements OnInit {
       error: (error) => {
         console.error('Error getting neighborhoods:', error);
         this.toastService.showToast(
-          'There was a problem fetching the neighborhoods. Try again.',
+          this.translate.instant('SIGNUP-DIALOG.THERE_WAS_A_PROBLEM_FETCHING_THE_NEIGHBORHOODS_TRY'),
           'error'
         );
       },
@@ -422,7 +424,7 @@ export class SignupDialogComponent implements OnInit {
       error: (error) => {
         console.error('Error getting languages:', error);
         this.toastService.showToast(
-          'Could not retrieve available languages. Try Again.',
+          this.translate.instant('SIGNUP-DIALOG.COULD_NOT_RETRIEVE_AVAILABLE_LANGUAGES_TRY_AGAIN'),
           'error'
         );
       },

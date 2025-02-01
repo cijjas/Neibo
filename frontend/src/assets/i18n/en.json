@@ -417,12 +417,12 @@
     "ERROR": "error",
     "MERGE": "merge",
     "CANCEL_RESERVATION": "Cancel Reservation",
-    "ARE_YOU_SURE_YOU_WANT_TO_CANCEL_YOUR_RESERVATION_F": "Are you sure you want to cancel your reservation for '${booking.amenity.name}' on ${booking.bookingDate}, starting at ${booking.shift.startTime}?",
+    "ARE_YOU_SURE_YOU_WANT_TO_CANCEL_YOUR_RESERVATION_F": "Are you sure you want to cancel your reservation for {{bookingAmenityName}} on {{bookingBookingDate}}, starting at {{bookingShiftStartTime}}?",
     "YES_CANCEL": "Yes, Cancel",
     "NO_KEEP": "No, Keep",
-    "YOUR_RESERVATION_FOR_BOOKINGAMENITYNAME_ON_BOOKING": "Your reservation for '${booking.amenity.name}' on ${booking.bookingDate} from ${booking.shift.startTime} to ${booking.shift.endTime} has been successfully canceled.",
+    "YOUR_RESERVATION_FOR_BOOKINGAMENITYNAME_ON_BOOKING": "Your reservation for '{{bookingAmenityName}}' on {{bookingBookingDate}} from {{bookingShiftStartTime}} to {{bookingShiftEndTime}} has been successfully canceled.",
     "SUCCESS": "success",
-    "WE_COULDNT_CANCEL_YOUR_RESERVATION_FOR_BOOKINGAMEN": "We couldn't cancel your reservation for '${booking.amenity.name}' on ${booking.bookingDate} from ${booking.shift.startTime} to ${booking.shift.endTime}. Please check your connection or try again later."
+    "WE_COULDNT_CANCEL_YOUR_RESERVATION_FOR_BOOKINGAMEN": "We couldn't cancel your reservation for '{{bookingAmenityName}}' on {{bookingBookingDate}} from {{bookingShiftStartTime}} to {{bookingShiftEndTime}}. Please check your connection or try again later."
   },
   "AMENITIES-RESERVATIONS-PAGE": {
     "AMENITIES_NOT_FOUND": "Amenities not found",
@@ -454,7 +454,14 @@
     "THURSDAY": "Thursday",
     "FRIDAY": "Friday",
     "SATURDAY": "Saturday",
-    "SUNDAY": "Sunday"
+    "SUNDAY": "Sunday",
+    "MON": "Mon",
+    "TUE": "Tue",
+    "WED": "Wed",
+    "THU": "Thu",
+    "FRI": "Fri",
+    "SAT": "Sat",
+    "SUN": "Sun"
   },
   "AMENITIES-ROUTING.MODULE.TS": {
     "CHOOSETIME": "choose-time"
@@ -646,7 +653,15 @@
     "PAGE": "page",
     "NO_SELECTED_DATE_PROVIDED": "No selected date provided",
     "ERROR_FETCHING_EVENTS": "Error fetching events:",
-    "MERGE": "merge"
+    "MERGE": "merge",
+
+    "DELETE_EVENT_TITLE": "Delete Event",
+    "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_EVENT": "Are you sure you want to delete the event '{{ eventName }}'?",
+    "YES_DELETE": "Yes, Delete",
+    "CANCEL": "Cancel",
+    "EVENT_DELETED_SUCCESSFULLY": "Event '{{ eventName }}' was successfully deleted.",
+    "ERROR_DELETING_EVENT": "Error deleting event '{{ eventName }}'.",
+    "FAILED_TO_DELETE_EVENT": "Failed to delete event '{{ eventName }}'."
   },
   "CALENDAR-PAGE": {
     "EVENTS": "Events",
@@ -750,14 +765,14 @@
     "WARNING": "warning",
     "YOU_CAN_ONLY_ADD_UP_TO_5_TAGS": "You can only add up to 5 tags.",
     "NULL": "null",
-    "YOUVE_ALREADY_SELECTED_THE_TAG_TAGNAME": "You've already selected the tag '${tag.name}'",
+    "YOUVE_ALREADY_SELECTED_THE_TAG_TAGNAME": "You've already selected the tag '{{tag.name}}'",
     "FORM_IS_INVALID": "Form is invalid",
     "FAILED_TO_CREATE_TAG": "Failed to create tag:",
     "ERROR_CREATING_TAG": "Error creating tag:",
-    "YOUR_CONTENTTYPE_WAS_CREATED_SUCCESSFULLY": "Your ${contentType} was created successfully!",
+    "YOUR_CONTENTTYPE_WAS_CREATED_SUCCESSFULLY": "Your {{contentType}} was created successfully!",
     "SUCCESS": "success",
     "POSTS": "/posts",
-    "THERE_WAS_A_PROBLEM_CREATING_YOUR_CONTENTTYPE": "There was a problem creating your ${contentType}.",
+    "THERE_WAS_A_PROBLEM_CREATING_YOUR_CONTENTTYPE": "There was a problem creating your {{contentType}}.",
     "ERROR": "error",
     "ERROR_CREATING_POST": "Error creating post:",
     "ERROR_CREATING_TAGS": "Error creating tags:",
@@ -1143,6 +1158,7 @@
     "APPNOTFOUNDPAGE": "app-not-found-page",
     "NOTFOUNDPAGECOMPONENTHTML": "./not-found-page.component.html",
     "THE_PAGE_YOU_ARE_LOOKING_FOR_CANNOT_BE_FOUND": "The page you are looking for cannot be found.",
+    "RETRY": "Retry",
     "CODE": "code",
     "MESSAGE": "message"
   },
@@ -1179,7 +1195,9 @@
     "FORM_SUBMITTED": "Form Submitted:",
     "PLEASE_SELECT_A_NEIGHBORHOOD": "Please select a neighborhood.",
     "ERROR": "error",
-    "LOGIN": "/login"
+    "LOGIN": "/login",
+    "SUCCESSFULLY_REQUESTED": "Successfully requested neighborhood to join! Wait until an administrator approves your request.",
+    "ERROR_REQUESTED": "There was an error sending your requested neighborhood to join!"
   },
   "REJECTED.MODULE.TS": {
     "ANGULARCORE": "@angular/core",

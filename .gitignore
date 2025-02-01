@@ -101,3 +101,4 @@ atlassian-ide-plugin.xml
 .vscode/
 
 /webapp/src/main/webapp/front
+/.smarttomcat/

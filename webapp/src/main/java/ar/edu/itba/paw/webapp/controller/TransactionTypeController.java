@@ -28,7 +28,7 @@ import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECON
  *   - A Neighbor/Admin filters the Requests through the Transaction Types
  */
 
-@Path(Endpoint.TRANSACTION_TYPES)
+@Path(Endpoint.API + "/" + Endpoint.TRANSACTION_TYPES)
 @Component
 @Produces(value = {MediaType.APPLICATION_JSON})
 public class TransactionTypeController {
@@ -42,7 +42,7 @@ public class TransactionTypeController {
 
     @GET
     public Response listTransactionTypes() {
-        LOGGER.info("GET request arrived at '/transaction-type'");
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         TransactionType[] transactionTypes = TransactionType.values();
@@ -72,7 +72,7 @@ public class TransactionTypeController {
     public Response findTransactionType(
             @PathParam(PathParameter.TRANSACTION_TYPE_ID) @GenericIdConstraint Long transactionTypeId
     ) {
-        LOGGER.info("GET request arrived at '/transaction-type/{}'", transactionTypeId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         TransactionType transactionType = TransactionType.fromId(transactionTypeId);

@@ -13,7 +13,9 @@
                 <!-- Instead of JSP form, use a normal file input and handle the event in TS -->
                 <label class="-label" for="file">
                   <span class="glyphicon glyphicon-camera"></span>
-                  <span>{{ "USER-PROFILE-PAGE.CHANGE_PROFILE_IMAGE" | translate }}</span>
+                  <span>{{
+                    'USER-PROFILE-PAGE.CHANGE_PROFILE_IMAGE' | translate
+                  }}</span>
                 </label>
                 <input
                   id="file"
@@ -25,7 +27,7 @@
                 <img
                   id="output"
                   [src]="
-                    profileImageSafeUrl || 'assets/images/default-profile.png'
+                    profileImageSafeUrl || environment.deployUrl + 'assets/images/default-profile.png'
                   "
                   alt="profile_picture_img"
                 />
@@ -36,68 +38,69 @@
         </div>
         <div class="col-md-8">
           <div class="card-block mt-5">
-            <h3 class="p-b-5 f-w-600">{{ "USER-PROFILE-PAGE.INFORMATION" | translate }}</h3>
+            <h3 class="p-b-5 f-w-600">
+              {{ 'USER-PROFILE-PAGE.INFORMATION' | translate }}
+            </h3>
             <div class="divider mb-3 mt-3"></div>
             <div class="row">
               <div class="col-md-6 mb-2">
-                <p class="m-b-10 f-w-600">{{ "USER-PROFILE-PAGE.EMAIL" | translate }}</p>
+                <p class="m-b-10">
+                  {{ 'USER-PROFILE-PAGE.EMAIL' | translate }}
+                </p>
                 <h6 class="text-muted f-w-400">{{ currentUser?.email }}</h6>
               </div>
               <div class="col-md-6 mb-2">
-                <p class="m-b-10 f-w-600">{{ "USER-PROFILE-PAGE.NAME" | translate }}</p>
+                <p class="m-b-10">
+                  {{ 'USER-PROFILE-PAGE.NAME' | translate }}
+                </p>
                 <h6 class="text-muted f-w-400">{{ currentUser?.name }}</h6>
               </div>
             </div>
-            <div class="divider mb-3 mt-3"></div>
             <div class="row m-t-40">
               <div class="col-md-6 mb-2">
-                <p class="m-b-10 f-w-600">{{ "USER-PROFILE-PAGE.SURNAME" | translate }}</p>
+                <p class="m-b-10 f-w-500">
+                  {{ 'USER-PROFILE-PAGE.SURNAME' | translate }}
+                </p>
                 <h6 class="text-muted f-w-400">{{ currentUser?.surname }}</h6>
               </div>
               <div class="col-md-6 mb-2">
-                <p class="m-b-10 f-w-600">{{ "USER-PROFILE-PAGE.USER_SINCE" | translate }}</p>
+                <p class="m-b-10">
+                  {{ 'USER-PROFILE-PAGE.USER_SINCE' | translate }}
+                </p>
                 <h6 class="text-muted f-w-400">
                   {{ currentUser?.creationDate }}
                 </h6>
               </div>
             </div>
-            <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Preferences</h6>
+
+            <h3 class="p-b-5 f-w-600 pt-5">Preferences</h3>
+            <div class="divider mb-3 mt-3"></div>
+
             <div class="row m-t-40">
               <!-- Dark mode toggle -->
-              <div class="col-md-6 mb-2">
-                <p class="m-b-10 f-w-600">{{ "USER-PROFILE-PAGE.DARK_MODE" | translate }}</p>
-                <div class="controlled">
-                  <h6 class="text-muted f-w-400">{{ "USER-PROFILE-PAGE.OFF" | translate }}</h6>
-                  <label class="switch">
-                    <input
-                      class="toggle"
-                      type="checkbox"
-                      [checked]="darkMode"
-                      (change)="toggleDarkMode()"
-                    />
-                    <span class="slider"></span>
-                    <span class="card-side"></span>
-                  </label>
-                  <h6 class="text-muted f-w-400">{{ "USER-PROFILE-PAGE.ON" | translate }}</h6>
-                </div>
-              </div>
 
               <!-- Language toggle -->
               <div class="col-md-6 mb-2">
-                <p class="m-b-10 f-w-600">{{ "USER-PROFILE-PAGE.LANGUAGE" | translate }}</p>
+                <p class="m-b-10 f-w-500">
+                  {{ 'USER-PROFILE-PAGE.LANGUAGE' | translate }}
+                </p>
                 <div class="controlled">
-                  <h6 class="text-muted f-w-400">{{ "USER-PROFILE-PAGE.ENGLISH" | translate }}</h6>
+                  <h6 class="text-muted f-w-400">
+                    {{ 'USER-PROFILE-PAGE.ENGLISH' | translate }}
+                  </h6>
                   <label class="switch">
                     <input
                       class="toggle"
                       type="checkbox"
-                      [checked]="language === 'es'"
+                      [checked]="isSpanish"
                       (change)="toggleLanguage()"
                     />
                     <span class="slider"></span>
                     <span class="card-side"></span>
                   </label>
-                  <h6 class="text-muted f-w-400">{{ "USER-PROFILE-PAGE.SPANISH" | translate }}</h6>
+                  <h6 class="text-muted f-w-400">
+                    {{ 'USER-PROFILE-PAGE.SPANISH' | translate }}
+                  </h6>
                 </div>
               </div>
             </div>
@@ -108,7 +111,7 @@
               class="cool-button cool-small on-bg font-weight-normal p-3"
               style="width: auto"
             >
-            {{ "USER-PROFILE-PAGE.LOGOUT" | translate }}
+              {{ 'USER-PROFILE-PAGE.LOGOUT' | translate }}
             </a>
           </div>
         </div>

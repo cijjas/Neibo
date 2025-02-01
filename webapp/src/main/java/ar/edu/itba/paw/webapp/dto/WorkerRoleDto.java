@@ -21,7 +21,7 @@ public class WorkerRoleDto {
 
         String workerRoleId = String.valueOf(workerRole.getId());
 
-        UriBuilder workerRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKER_ROLES).path(workerRoleId);
+        UriBuilder workerRoleUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKER_ROLES).path(workerRoleId);
 
         links.setSelf(workerRoleUri.build());
 

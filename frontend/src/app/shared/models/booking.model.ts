@@ -1,8 +1,8 @@
-import { Amenity, Shift } from "./index";
+import { Amenity, Shift } from './index';
 
 export interface Booking {
   shift: Shift;
   amenity: Amenity;
-  bookingDate: Date;
+  bookingDate: string;
   self: string;
 }

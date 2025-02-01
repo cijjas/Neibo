@@ -21,7 +21,7 @@ public class AttendanceCountDto {
 
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.ATTENDANCE).path(Endpoint.COUNT);
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.ATTENDANCE).path(Endpoint.COUNT);
 
         if (eventURI != null && !eventURI.isEmpty())
             self.queryParam(QueryParameter.FOR_EVENT, eventURI);

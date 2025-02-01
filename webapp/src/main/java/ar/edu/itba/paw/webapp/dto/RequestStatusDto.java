@@ -21,7 +21,7 @@ public class RequestStatusDto {
 
         String requestStatusId = String.valueOf(requestStatus.getId());
 
-        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
+        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
 
         links.setSelf(requestStatusUri.build());
 

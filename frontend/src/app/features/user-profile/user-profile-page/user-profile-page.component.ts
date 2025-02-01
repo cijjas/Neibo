@@ -1,15 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService, User, Roles } from '@shared/index';
+import { UserService, User, Roles, LinkKey } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ImageService,
   AuthService,
   UserSessionService,
   ToastService,
+  HateoasLinksService,
   // PreferencesService,
 } from '@core/index';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'user-user-profile-page',
@@ -23,6 +26,7 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   theme: 'default' | 'marketplace' | 'services' | 'admin' = 'default';
   currentUserRole: Roles;
   private subscriptions = new Subscription();
+  environment = environment;
 
   constructor(
     private userService: UserService,
@@ -30,7 +34,8 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private authService: AuthService,
     private toastService: ToastService,
-    private router: Router // private preferencesService: PreferencesService
+    private translate: TranslateService,
+    private linkService: HateoasLinksService,
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +45,10 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
         if (user) {
           this.currentUser = user;
           this.darkMode = !!user.darkMode;
-          this.language = user.language === 'SPANISH' ? 'es' : 'en';
+          this.language =
+            user.language === this.linkService.getLink(LinkKey.SPANISH_LANGUAGE)
+              ? 'es'
+              : 'en';
           this.loadProfileImage(user.image);
         }
       });
@@ -59,6 +67,10 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     }
   }
 
+  get isSpanish(): boolean {
+    return this.language === 'es';
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
@@ -72,17 +84,11 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     this.subscriptions.add(imageSub);
   }
 
-  toggleDarkMode(): void {
-    // const currentDarkMode =
-    //   document.documentElement.classList.contains('dark-mode');
-    // this.preferencesService.setDarkMode(!currentDarkMode);
-  }
-
   toggleLanguage(): void {
     if (this.currentUser) {
       this.userService
         .toggleLanguage(this.currentUser)
-        .subscribe((updatedUser) => {
+        .subscribe(updatedUser => {
           this.userSessionService.setUserInformation(updatedUser);
         });
     }
@@ -107,7 +113,7 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     if (this.currentUser) {
       this.userService
         .uploadProfilePicture(this.currentUser, file)
-        .subscribe((updatedUser) => {
+        .subscribe(updatedUser => {
           this.userSessionService.setUserInformation(updatedUser);
           this.loadProfileImage(updatedUser.image);
         });
@@ -116,6 +122,10 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authService.logout();
-    this.toastService.showToast('Successfully logged out.', 'success');
+    this.toastService.showToast(
+      this.translate.instant('USER-PROFILE-PAGE.SUCCESSFULLY_LOGGED_OUT'),
+      'success',
+    );
   }
+
 }

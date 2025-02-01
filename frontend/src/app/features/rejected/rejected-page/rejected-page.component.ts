@@ -11,6 +11,7 @@ import {
 } from '@shared/index';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-rejected-page',
@@ -28,6 +29,7 @@ export class RejectedPageComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private userService: UserService,
+    private translate: TranslateService,
     private userSessionService: UserSessionService
   ) {
     this.neighborhoodForm = this.fb.group({
@@ -86,7 +88,7 @@ export class RejectedPageComponent implements OnInit {
 
             // Show success message
             this.toastService.showToast(
-              'Successfully requested neighborhood to join! Wait until an administrator approves your request.',
+              this.translate.instant('REJECTED-PAGE.SUCCESSFULLY_REQUESTED'),
               'success'
             );
 
@@ -95,13 +97,13 @@ export class RejectedPageComponent implements OnInit {
           },
           error: () => {
             this.toastService.showToast(
-              'There was an error sending your requested neighborhood to join!',
+              this.translate.instant('REJECTED-PAGE.ERROR_REQUESTED'),
               'error'
             );
           },
         });
     } else {
-      this.toastService.showToast('Please select a neighborhood.', 'error');
+      this.toastService.showToast(this.translate.instant('REJECTED-PAGE.PLEASE_SELECT_A_NEIGHBORHOOD'), 'error');
     }
   }
 

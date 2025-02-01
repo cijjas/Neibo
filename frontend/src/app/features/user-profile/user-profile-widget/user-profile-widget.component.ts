@@ -5,6 +5,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from "../../../../environments/environment";
 
 @Component({
   selector: 'app-user-profile-widget',
@@ -13,6 +14,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, RouterModule],
 })
 export class UserProfileWidgetComponent implements OnInit, OnDestroy {
+  environment = environment;
   currentUser: User | null = null;
   profileImageSafeUrl: SafeUrl | null = null;
   private subscriptions = new Subscription();
@@ -22,7 +24,7 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
     private imageService: ImageService,
     private linkService: HateoasLinksService,
     private router: Router, // Inject Router to handle navigation
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const userSub = this.userSessionService

@@ -44,7 +44,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - A Neighbor/Admin can list the Products in its Neighborhood
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.PRODUCTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -70,7 +70,7 @@ public class ProductController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userId = extractOptionalFirstId(user);
@@ -97,7 +97,7 @@ public class ProductController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.PRODUCTS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.PRODUCTS),
                 ps.calculateProductPages(neighborhoodId, userId, departmentId, productStatusId, size),
                 page,
                 size
@@ -117,7 +117,7 @@ public class ProductController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId
     ) {
-        LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+        LOGGER.info("GET request arrived '{}'", uriInfo.getRequestUri());
 
         // Content
         Product product = ps.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
@@ -141,14 +141,11 @@ public class ProductController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull ProductDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
-        System.out.println(createForm);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & ETag Generation
         final Product product = ps.createProduct(extractFirstId(createForm.getUser()), createForm.getName(), createForm.getDescription(), createForm.getPrice(), createForm.getRemainingUnits(), createForm.getUsed(), extractFirstId(createForm.getDepartment()), extractFirstIds(createForm.getImages()));
         String productHashCode = String.valueOf(product.hashCode());
-
-        System.out.println("getting here");
 
         // Resource URI
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();
@@ -164,11 +161,11 @@ public class ProductController {
     @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#productId)")
     @Validated(UpdateSequence.class)
     public Response updateProduct(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId,
             @Valid @NotNull ProductDto updateForm
     ) {
-        LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+        LOGGER.info("UPDATE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
         final Product updatedProduct = ps.updateProduct(
@@ -192,10 +189,10 @@ public class ProductController {
     @Path("{" + PathParameter.PRODUCT_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
     public Response deleteProduct(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Attempt to delete the amenity
         if (ps.deleteProduct(neighborhoodId, productId))

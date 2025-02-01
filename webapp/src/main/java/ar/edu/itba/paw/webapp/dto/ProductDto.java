@@ -74,16 +74,16 @@ public class ProductDto {
         String departmentId = String.valueOf(product.getDepartment().getDepartmentId());
         String requestStatusId = String.valueOf(RequestStatus.REQUESTED.getId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
-        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.DEPARTMENTS).path(departmentId);
-        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder departmentUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.DEPARTMENTS).path(departmentId);
+        UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
         UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
         UriBuilder inquiriesUri = productUri.clone().path(Endpoint.INQUIRIES);
         UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).queryParam(QueryParameter.FOR_PRODUCT, productUri.build());
         UriBuilder pendingRequestsCountUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).path(Endpoint.COUNT)
                 .queryParam(QueryParameter.FOR_PRODUCT, productUri.build())
                 .queryParam(QueryParameter.WITH_STATUS, requestStatusUri.build());
-        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(userId);
+        UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(userId);
 
         links.setSelf(productUri.build());
         links.setProductUser(userUri.build());
@@ -94,17 +94,17 @@ public class ProductDto {
 
         if (product.getPrimaryPicture() != null) {
             String primaryPictureId = String.valueOf(product.getPrimaryPicture().getImageId());
-            UriBuilder primaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(primaryPictureId);
+            UriBuilder primaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(primaryPictureId);
             links.setFirstProductImage(primaryPictureUri.build());
         }
         if (product.getSecondaryPicture() != null) {
             String secondaryPictureId = String.valueOf(product.getSecondaryPicture().getImageId());
-            UriBuilder secondaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(secondaryPictureId);
+            UriBuilder secondaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(secondaryPictureId);
             links.setSecondProductImage(secondaryPictureUri.build());
         }
         if (product.getTertiaryPicture() != null) {
             String tertiaryPictureId = String.valueOf(product.getTertiaryPicture().getImageId());
-            UriBuilder tertiaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.IMAGES).path(tertiaryPictureId);
+            UriBuilder tertiaryPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(tertiaryPictureId);
             links.setThirdProductImage(tertiaryPictureUri.build());
         }
 

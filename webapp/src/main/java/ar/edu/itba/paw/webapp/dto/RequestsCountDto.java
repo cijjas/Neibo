@@ -21,7 +21,7 @@ public class RequestsCountDto {
 
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
 
-        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.REQUESTS).path(Endpoint.COUNT);
+        UriBuilder self = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId).path(Endpoint.REQUESTS).path(Endpoint.COUNT);
 
         if (userURI != null && !userURI.isEmpty())
             self.queryParam(QueryParameter.REQUESTED_BY, userURI);

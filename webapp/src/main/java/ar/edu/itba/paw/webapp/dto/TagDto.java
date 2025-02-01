@@ -32,7 +32,7 @@ public class TagDto {
         String neighborhoodId = String.valueOf(neighborhoodIdLong);
         String tagId = String.valueOf(tag.getTagId());
 
-        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
+        UriBuilder neighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(neighborhoodId);
         UriBuilder tagUri = neighborhoodUri.clone().path(Endpoint.TAGS).path(tagId);
         UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.WITH_TAG, tagUri.build());
 

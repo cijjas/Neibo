@@ -47,7 +47,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
  *   - An Admin can delete a Post
  */
 
-@Path(Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.POSTS)
+@Path(Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/{" + PathParameter.NEIGHBORHOOD_ID + "}/" + Endpoint.POSTS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON,})
@@ -74,7 +74,7 @@ public class PostController {
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userId = extractOptionalFirstId(user);
@@ -102,7 +102,7 @@ public class PostController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS),
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS),
                 ps.calculatePostPages(neighborhoodId, userId, channelId, tagIds, postStatusId, size),
                 page,
                 size
@@ -125,7 +125,7 @@ public class PostController {
             @QueryParam(QueryParameter.WITH_TAG) @TagsURIConstraint List<String> tags,
             @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURIConstraint String postStatus
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/count'", neighborhoodId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
         Long userId = extractOptionalFirstId(user);
@@ -158,7 +158,7 @@ public class PostController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @PathParam(PathParameter.POST_ID) @GenericIdConstraint long postId
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
+        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
         Post post = ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
@@ -182,7 +182,7 @@ public class PostController {
             @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
             @Valid @NotNull PostDto createForm
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
+        LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Validation, Creation & ETag Generation
         final Post post = ps.createPost(neighborhoodId, extractFirstId(createForm.getUser()), createForm.getTitle(), createForm.getBody(), extractSecondId(createForm.getChannel()), extractSecondIds(createForm.getTags()), extractOptionalFirstId(createForm.getImage()));
@@ -205,10 +205,10 @@ public class PostController {
     @Path("{" + PathParameter.POST_ID + "}")
     @PreAuthorize("@pathAccessControlHelper.canDeletePost(#postId)")
     public Response deletePost(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) @GenericIdConstraint long postId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) long postId
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
+        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Attempt to delete the amenity
         if (ps.deletePost(neighborhoodId, postId))

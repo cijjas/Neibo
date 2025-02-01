@@ -13,19 +13,21 @@
         <!-- If no amenities -->
         <div class="no-posts-found" *ngIf="amenities?.length === 0">
           <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-          {{ "AMENITIES-RESERVATIONS-PAGE.AMENITIES_NOT_FOUND" | translate }}
+          {{ 'AMENITIES-RESERVATIONS-PAGE.AMENITIES_NOT_FOUND' | translate }}
         </div>
 
         <!-- If amenities are available -->
         <div *ngIf="amenities?.length > 0">
-          <h2>{{ "AMENITIES-RESERVATIONS-PAGE.MAKE_A_RESERVATION" | translate }}</h2>
+          <h2>
+            {{ 'AMENITIES-RESERVATIONS-PAGE.MAKE_A_RESERVATION' | translate }}
+          </h2>
           <div class="divider"></div>
 
           <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
             <div class="col-md-12">
-              <label for="amenityUrl" class="mt-3 mb-2"
-                >{{ "AMENITIES-RESERVATIONS-PAGE.SELECT_AN_AMENITY" | translate }}</label
-              >
+              <label for="amenityUrl" class="mt-3 mb-2">{{
+                'AMENITIES-RESERVATIONS-PAGE.SELECT_AN_AMENITY' | translate
+              }}</label>
               <app-infinite-scroll-select
                 [theme]="'default'"
                 [multiple]="false"
@@ -45,12 +47,17 @@
                   reservationForm.get('amenityUrl')?.touched
                 "
               >
-              {{ "AMENITIES-RESERVATIONS-PAGE.PLEASE_SELECT_AN_AMENITY" | translate }}
+                {{
+                  'AMENITIES-RESERVATIONS-PAGE.PLEASE_SELECT_AN_AMENITY'
+                    | translate
+                }}
               </p>
             </div>
 
             <div class="col-md-12">
-              <label for="date" class="mt-3 mb-1">{{ "AMENITIES-RESERVATIONS-PAGE.CHOOSE_DATE" | translate }}</label>
+              <label for="date" class="mt-3 mb-1">{{
+                'AMENITIES-RESERVATIONS-PAGE.CHOOSE_DATE' | translate
+              }}</label>
               <input
                 type="date"
                 id="date"
@@ -65,7 +72,10 @@
                   reservationForm.get('date')?.touched
                 "
               >
-              {{ "AMENITIES-RESERVATIONS-PAGE.PLEASE_CHOOSE_A_VALID_DATE" | translate }}
+                {{
+                  'AMENITIES-RESERVATIONS-PAGE.PLEASE_CHOOSE_A_VALID_DATE'
+                    | translate
+                }}
               </p>
             </div>
 
@@ -76,7 +86,7 @@
                   class="cool-button cool-small on-bg w-25 font-weight-bold"
                   style="height: 40px"
                 >
-                {{ "AMENITIES-RESERVATIONS-PAGE.SEE_TIMES" | translate }}
+                  {{ 'AMENITIES-RESERVATIONS-PAGE.SEE_TIMES' | translate }}
                 </button>
               </div>
             </div>
@@ -103,10 +113,12 @@
           <div class="cool-table w-100">
             <table class="table-striped w-100">
               <tr>
-                <th>{{ "AMENITIES-RESERVATIONS-PAGE.AMENITY_HOURS" | translate }}</th>
+                <th>
+                  {{ 'AMENITIES-RESERVATIONS-PAGE.AMENITY_HOURS' | translate }}
+                </th>
                 <!-- Use the abbreviated day name -->
                 <th *ngFor="let d of uniqueDays">
-                  {{ getAbbreviatedDay(d) }}
+                  {{ getAbbreviatedDay(d) | translate }}
                 </th>
               </tr>
 

@@ -20,7 +20,7 @@ public class ReviewsCountDto {
 
         String workerId = String.valueOf(workerIdLong);
 
-        UriBuilder workerReviewCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.WORKERS).path(workerId).path(Endpoint.REVIEWS).path(Endpoint.COUNT);
+        UriBuilder workerReviewCountUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(workerId).path(Endpoint.REVIEWS).path(Endpoint.COUNT);
 
         links.setSelf(workerReviewCountUri.build());
 
