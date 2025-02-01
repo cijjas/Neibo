@@ -18,7 +18,7 @@
   height: auto;
   background-color: var(--onbackground);
   color: var(--primary);
-  border: 1px solid var(--shadow);
+  border: 1px solid var(--bordercolor);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
   box-shadow: -3px 5px 0 0 var(--lighttext);
@@ -143,7 +143,7 @@
     &::before {
       transition: all 0.3s ease-in-out;
       position: absolute;
-      content: "";
+      content: '';
       left: 50%;
       top: 50%;
       height: 22px;
