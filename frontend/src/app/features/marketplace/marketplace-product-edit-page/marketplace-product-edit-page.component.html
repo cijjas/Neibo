@@ -17,7 +17,7 @@
         </div>
         <div class="f-c-c-c">
           <div class="f-r-c-c">
-            <span class="font-size-24"> Edit Listing </span>
+            <span class="font-size-24">{{ "MARKETPLACE-PRODUCT-EDIT-PAGE.EDIT_LISTING" | translate }}</span>
           </div>
           <div class="divider w-75 mb-3"></div>
         </div>
@@ -45,7 +45,7 @@
                       listingForm.get('title')?.invalid
                     "
                   >
-                    Title is required.
+                  {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.TITLE_IS_REQUIRED" | translate }}
                   </div>
                 </div>
 
@@ -66,7 +66,7 @@
                       listingForm.get('price')?.invalid
                     "
                   >
-                    Price is required and must be a valid amount.
+                  {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.PRICE_IS_REQUIRED" | translate }}
                   </div>
                 </div>
               </div>
@@ -97,7 +97,7 @@
                           <i class="fa fa-plus ms-2"></i>
                         </span>
                         <h3 id="add-photo-text" class="font-weight-bold">
-                          Add photo ({{ images.length }}/3)
+                          {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.ADD_PHOTO" | translate }} ({{ images.length }}/3)
                         </h3>
                       </div>
                     </a>
@@ -106,7 +106,7 @@
                     class="f-c-c-c w-100 c-light-text font-weight-normal special-hover mb-3"
                     *ngIf="images.length < 3"
                   >
-                    Select images for your listing (up to 3).
+                  {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.SELECT_IMAGES" | translate }}
                   </div>
 
                   <!-- Preview of uploaded images -->
@@ -155,7 +155,7 @@
                   listingForm.get('description')?.invalid
                 "
               >
-                Description is required.
+              {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.DESCRIPTION_IS_REQUIRED" | translate }}
               </div>
 
               <!-- DEPARTMENT -->
@@ -164,7 +164,7 @@
                 class="cool-input marketplace-input font-weight-bold font-size-12"
                 id="department"
               >
-                <option value="" disabled>-- Select Department --</option>
+                <option value="" disabled>{{ "MARKETPLACE-PRODUCT-EDIT-PAGE.SELECT_DEPARTMENT" | translate }}</option>
                 <option *ngFor="let dept of departmentList" [value]="dept.self">
                   {{ dept.displayName }}
                 </option>
@@ -177,7 +177,7 @@
                   listingForm.get('departmentId')?.invalid
                 "
               >
-                Department is required.
+              {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.DEPARTMENT_IS_REQUIRED" | translate }}
               </div>
 
               <!-- CONDITION -->
@@ -189,8 +189,8 @@
                     class="cool-input marketplace-input font-weight-bold font-size-14"
                     id="condition"
                   >
-                    <option [value]="false">New</option>
-                    <option [value]="true">Used</option>
+                    <option [value]="false">{{ "MARKETPLACE-PRODUCT-EDIT-PAGE.NEW" | translate }}</option>
+                    <option [value]="true">{{ "MARKETPLACE-PRODUCT-EDIT-PAGE.USED" | translate }}</option>
                   </select>
                   <div
                     class="error pt-1"
@@ -199,7 +199,7 @@
                       listingForm.get('used')?.invalid
                     "
                   >
-                    Condition is required.
+                  {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.CONDITION_IS_REQUIRED" | translate }}
                   </div>
                 </div>
               </div>
@@ -207,7 +207,7 @@
               <!-- QUANTITY -->
               <div class="f-c-c-c w-100 g-0">
                 <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
-                  Quantity
+                  {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.QUANTITY" | translate }}
                   <div>
                     <select
                       formControlName="quantity"
@@ -230,7 +230,7 @@
                     listingForm.get('quantity')?.invalid
                   "
                 >
-                  Quantity is required.
+                {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.QUANTITY_IS_REQUIRED" | translate }}
                 </div>
               </div>
             </div>
@@ -242,7 +242,7 @@
               style="width: 200px"
               type="submit"
             >
-              Save Changes
+            {{ "MARKETPLACE-PRODUCT-EDIT-PAGE.SAVE_CHANGES" | translate }}
             </button>
           </div>
         </form>

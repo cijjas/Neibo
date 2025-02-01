@@ -13,7 +13,7 @@
           [ngClass]="{ active: channelClass === 'Profile' }"
         >
           <i class="fa-solid fa-address-card"></i>
-          <span i18n>Business Card</span>
+          <span>{{ "SIDEBAR.CHANNELS.WORKER-PROFILE" | translate }}</span>
         </a>
         <a
           id="workerServicesButton"
@@ -22,7 +22,7 @@
           [ngClass]="{ active: channelClass === 'Services' }"
         >
           <i class="fa-solid fa-handshake-angle"></i>
-          <span i18n>See Services</span>
+          <span>{{ "SIDEBAR.CHANNELS.WORKER-SERVICES" | translate }}</span>
         </a>
         <a
           id="neighborhoodsButton"
@@ -31,7 +31,7 @@
           [ngClass]="{ active: channelClass === 'Neighborhoods' }"
         >
           <i class="fa-solid fa-house"></i>
-          <span i18n>My Neighborhoods</span>
+          <span>{{ "SIDEBAR.CHANNELS.WORKER-NEIGHBORHOODS" | translate }}</span>
         </a>
       </div>
     </div>
@@ -46,7 +46,7 @@
             class="cool-left-button admin-button f-r-sb-c"
           >
             <i class="fa-solid fa-chart-pie"></i>
-            <span i18n>Admin Panel</span>
+            <span>{{ "SIDEBAR.CHANNELS.ADMINISTRATOR" | translate }}</span>
           </a>
           <a
             id="announcementsButton"
@@ -55,7 +55,7 @@
             [ngClass]="{ active: channelClass === 'Announcements' }"
           >
             <i class="fas fa-bullhorn"></i>
-            <span i18n>Announcements</span>
+            <span>{{ "SIDEBAR.CHANNELS.ANNOUNCEMENTS" | translate }}</span>
           </a>
           <a
             id="feedButton"
@@ -64,7 +64,7 @@
             [ngClass]="{ active: channelClass === 'Feed' }"
           >
             <i class="fas fa-comments"></i>
-            <span i18n>Feed</span>
+            <span>{{ "SIDEBAR.CHANNELS.FEED" | translate }}</span>
           </a>
           <a
             id="complaintsButton"
@@ -73,7 +73,7 @@
             [ngClass]="{ active: channelClass === 'Complaints' }"
           >
             <i class="fas fa-envelope"></i>
-            <span i18n>Complaints</span>
+            <span>{{ "SIDEBAR.CHANNELS.COMPLAINTS" | translate }}</span>
           </a>
         </div>
         <div class="f-c-c-c second">
@@ -85,7 +85,7 @@
             [ngClass]="{ active: channelClass === 'Marketplace' }"
           >
             <i class="fa-solid fa-store"></i>
-            <span i18n>Marketplace</span>
+            <span>{{ "SIDEBAR.CHANNELS.MARKETPLACE" | translate }}</span>
           </a>
           <a
             id="servicesButton"
@@ -94,7 +94,7 @@
             [ngClass]="{ active: channelClass === 'Services' }"
           >
             <i class="fa-solid fa-handshake-angle"></i>
-            <span i18n>Services</span>
+            <span>{{ "SIDEBAR.CHANNELS.SERVICES" | translate }}</span>
           </a>
           <a
             id="reservationsButton"
@@ -103,7 +103,7 @@
             [ngClass]="{ active: channelClass === 'Reservations' }"
           >
             <i class="fas fa-calendar-days"></i>
-            <span i18n>Amenities</span>
+            <span>{{ "SIDEBAR.CHANNELS.AMENITIES" | translate }}</span>
           </a>
           <a
             id="informationButton"
@@ -112,7 +112,7 @@
             [ngClass]="{ active: channelClass === 'Information' }"
           >
             <i class="fa-solid fa-circle-info"></i>
-            <span i18n>Information</span>
+            <span>{{ "SIDEBAR.CHANNELS.INFORMATION" | translate }}</span>
           </a>
         </div>
       </div>

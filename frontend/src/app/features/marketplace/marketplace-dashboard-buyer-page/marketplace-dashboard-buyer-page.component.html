@@ -25,7 +25,7 @@
               [class.active]="isRequests"
             >
               <i class="fa-solid fa-basket-shopping"></i>
-              <span class="hide-text">My requests</span>
+              <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.MY_REQUESTS" | translate }}</span>
             </a>
             <!-- "My purchases" button -->
             <a
@@ -34,7 +34,7 @@
               [class.active]="isPurchases"
             >
               <i class="fa-solid fa-calendar-check"></i>
-              <span class="hide-text">My purchases</span>
+              <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.MY_PURCHASES" | translate }}</span>
             </a>
           </div>
         </div>
@@ -48,7 +48,7 @@
             *ngIf="purchaseList && purchaseList.length === 0"
           >
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            Purchases not found
+            {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.PURCHASES_NOT_FOUND" | translate }}
           </div>
 
           <!-- Otherwise, show all purchases -->
@@ -101,19 +101,19 @@
                           *ngIf="purchase.product.used; else newPurchase"
                           class="used-tag used font-weight-normal"
                         >
-                          Used
+                        {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.USED" | translate }}
                         </div>
                         <ng-template #newPurchase>
-                          <div class="used-tag new font-weight-normal">New</div>
+                          <div class="used-tag new font-weight-normal">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.NEW" | translate }}</div>
                         </ng-template>
                       </div>
                     </div>
 
                     <div class="f-r-c-c font-weight-normal">
-                      Quantity: {{ purchase.unitsRequested }}
+                      {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.QUANTITY" | translate }}: {{ purchase.unitsRequested }}
                     </div>
                     <div class="f-r-c-c g-05">
-                      <span class="font-weight-normal">Sold by</span>
+                      <span class="font-weight-normal">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.SOLD_BY" | translate }}</span>
                       <span style="color: var(--lila)">
                         {{ purchase.product.seller?.name }}
                       </span>
@@ -170,7 +170,7 @@
             *ngIf="requestList && requestList.length === 0"
           >
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            No new requests
+            {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.NO_NEW_REQUESTS" | translate }}
           </div>
 
           <!-- Otherwise, show all requests -->
@@ -227,7 +227,7 @@
                           *ngIf="request.product.used; else newTag"
                           class="used-tag used font-weight-normal"
                         >
-                          Used
+                        {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.USED" | translate }}
                         </div>
                         <ng-template #newTag>
                           <div class="used-tag new font-weight-normal">New</div>
@@ -274,7 +274,7 @@
                         class="cool-button small-a marketplace-button font-weight-bold"
                       >
                         <i class="fa-solid fa-arrow-right-to-bracket pe-1"></i>
-                        View Product
+                        {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.VIEW_PRODUCT" | translate }}
                       </a>
                     </div>
                   </div>

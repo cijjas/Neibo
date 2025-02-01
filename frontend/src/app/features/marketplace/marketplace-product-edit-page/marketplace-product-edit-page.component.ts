@@ -10,6 +10,7 @@ import {
 import { ImageService, ToastService, HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, map, switchMap } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-marketplace-product-edit-page',
@@ -52,6 +53,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     private imageService: ImageService,
     private toastService: ToastService,
     private linkService: HateoasLinksService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -141,7 +143,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   clearImageError(): void {
     if (
       this.images.length > 0 &&
-      this.formErrors === 'Please upload at least one image for the product.'
+      this.formErrors === this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT')
     ) {
       this.formErrors = null;
     }
@@ -170,18 +172,18 @@ export class MarketplaceProductEditPageComponent implements OnInit {
 
   onSubmit(): void {
     if (this.listingForm.invalid) {
-      this.formErrors = 'Please fill in all required fields correctly.';
+      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY');
       return;
     }
 
     if (!this.product) {
-      this.formErrors = 'No product loaded.';
+      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.NO_PRODUCT_LOADED');
       return;
     }
 
     // Check if at least one image exists
     if (this.images.length === 0) {
-      this.formErrors = 'Please upload at least one image for the product.';
+      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT');
       return;
     }
 
@@ -229,13 +231,13 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Listing updated successfully',
+            this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.LISTING_UPDATED_SUCCESSFULLY'),
             'success',
           );
           this.router.navigate(['/marketplace/products', this.product!.self]);
         },
         error: err => {
-          this.formErrors = 'There was a problem updating the listing.';
+          this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING');
           console.error(err);
         },
       });

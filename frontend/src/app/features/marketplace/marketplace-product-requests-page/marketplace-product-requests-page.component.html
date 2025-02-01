@@ -43,7 +43,7 @@
           </div>
           <div class="f-r-c-c g-0">
             <span class="price font-size-20 font-weight-normal">
-              In stock: {{ product?.stock }}
+              {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.IN_STOCK" | translate }}: {{ product?.stock }}
             </span>
           </div>
         </div>
@@ -53,7 +53,7 @@
         <!-- List of interested people -->
         <div class="f-r-c-c w-100 pt-2 pb-2">
           <h1 class="font-weight-normal font-size-16">
-            List of interested people
+            {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.LIST_OF_INTERESTED_PEOPLE" | translate }}
           </h1>
         </div>
 
@@ -63,7 +63,7 @@
           class="no-posts-found"
         >
           <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-          No new requests
+          {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.NO_NEW_REQUESTS" | translate }}
         </div>
 
         <!-- If requests exist -->
@@ -80,26 +80,26 @@
               <div class="f-r-c-c">
                 <div class="f-c-s-s">
                   <div>
-                    Requester:
+                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUESTER" | translate }}
                     <span style="color: var(--lila)">
                       {{ request.requestingUser?.name }}
                     </span>
                   </div>
 
                   <div>
-                    Email:
+                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.EMAIL" | translate }}
                     <span style="color: var(--lila)">
                       {{ request.requestingUser?.email }}
                     </span>
                   </div>
                   <div>
-                    Phone Number:
+                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PHONE_NUMBER" | translate }}
                     <span style="color: var(--lila)">
                       {{ request.requestingUser?.phoneNumber }}
                     </span>
                   </div>
                   <div>
-                    Request Date:
+                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUEST_DATE" | translate }}
                     <span style="color: var(--lila)">
                       {{ request.createdAt | date : "dd MMM yyyy" }}
                       -
@@ -119,7 +119,7 @@
                 "
                 class="cool-action-button rounded marketplace-button font-weight-normal"
               >
-                Respond to Request
+              {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.RESPOND_TO_REQUEST" | translate }}
               </a>
             </div>
 
@@ -130,13 +130,13 @@
               <div class="f-r-c-c">
                 <div class="f-c-s-s">
                   <div>
-                    Amount:
+                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.AMOUNT" | translate }}
                     <span style="color: var(--lila)">
                       {{ request.unitsRequested }}
                     </span>
                   </div>
                   <div>
-                    Message:
+                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.MESSAGE" | translate }}
                     <span style="color: var(--lila)">
                       {{ request.message }}
                     </span>
@@ -238,13 +238,13 @@
         </div>
         <!-- Overlay Text -->
         <div class="inclined-dialog-text">
-          <h3 class="font-size-18 font-weight-bold">Pending Request</h3>
+          <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PENDING_REQUEST" | translate }}</h3>
           <p class="font-weight-normal font-size-14">
-            You have a pending request for
+            {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.YOU_HAVE_A_PENDING_REQUEST_FOR" | translate }}
             <span class="font-weight-bold">{{ selectedUnitsRequested }}</span>
-            units from
+            {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.UNITS_FROM" | translate }}
             <span class="font-weight-bold">{{ selectedRequesterName }}</span
-            >. Please choose to either confirm the sale or decline the request.
+            >{{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PLEASE_CHOOSE" | translate }}
           </p>
         </div>
       </div>
@@ -271,7 +271,7 @@
       *ngIf="product?.stock < selectedUnitsRequested"
       class="c-red mt-2 font-size-14"
     >
-      The requested quantity is greater than the current stock.
+    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUESTED_QUANTITY_GREATER" | translate }}
     </div>
   </div>
 </div>
@@ -284,7 +284,7 @@
 >
   <div class="cool-static-container small-size-container">
     <div style="font-weight: bold; font-size: 16px">
-      Processing the request...
+      {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PROCESSING_THE_REQUEST" | translate }}
     </div>
     <div class="loader marketplace" style="margin-top: 20px"></div>
   </div>

@@ -3,14 +3,14 @@
   <!-- If associatedNeighborhoods is empty -->
   <div *ngIf="associatedNeighborhoods?.length === 0; else associatedNotEmpty">
     <div class="f-c-c-c w-100 mt-3" style="text-align: center">
-      <div class="w-75">No associated neighborhoods</div>
+      <div class="w-75">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.NO_ASSOCIATED_NEIGHBORHOODS" | translate }}</div>
     </div>
   </div>
 
   <!-- If associatedNeighborhoods is NOT empty -->
   <ng-template #associatedNotEmpty>
     <div class="f-c-s-c mt-2 w-100">
-      <span class="font-weight-bold font-size-20">My Neighborhoods</span>
+      <span class="font-weight-bold font-size-20">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.MY_NEIGHBORHOODS" | translate }}</span>
       <table class="table-striped w-100 mt-3">
         <thead>
           <tr></tr>
@@ -24,7 +24,7 @@
                 *ngIf="entry.role === 'UNVERIFIED_WORKER'"
                 class="badge-pending"
               >
-                Pending
+              {{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.PENDING" | translate }}
               </span>
             </td>
             <td>
@@ -55,7 +55,7 @@
   <!-- If otherNeighborhoods is empty -->
   <div *ngIf="otherNeighborhoods?.length === 0; else othersNotEmpty">
     <div class="f-c-c-c w-100 mb-3" style="text-align: center">
-      <div class="w-75">No new neighborhoods</div>
+      <div class="w-75">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.NO_NEW_NEIGHBORHOODS" | translate }}</div>
     </div>
   </div>
 
@@ -66,7 +66,7 @@
       <!-- Angular handle of errors or validations can go here -->
       <!-- <p class="error"> ... </p> -->
 
-      <span class="font-weight-bold font-size-20"> Join Neighborhoods </span>
+      <span class="font-weight-bold font-size-20">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.JOIN_NEIGHBORHOODS" | translate }}</span>
 
       <div class="neighborhoods-select mb-4 w-100">
         <!-- Hidden input replaced by an Angular property binding (for storing IDs) -->
@@ -121,7 +121,7 @@
             type="submit"
             class="cool-button cool-small services-button on-bg font-weight-bold w-25"
           >
-            Add
+          {{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.ADD" | translate }}
             <i class="fa-solid fa-share ml-1"></i>
           </button>
         </div>
@@ -134,9 +134,7 @@
 
       <div class="w-100 f-c-c-c" style="font-size: 14px; text-align: center">
         <span class="font-weight-normal">
-          By adding neighborhoods, your request to join the neighborhood as a
-          service provider will be submitted for review. Until approved, the
-          request will remain pending.
+          {{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.BY_ADDING" | translate }}
         </span>
       </div>
     </form>

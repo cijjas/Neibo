@@ -14,6 +14,7 @@ import {
 } from '@core/index';
 import { AffiliationService, NeighborhoodService } from '@shared/index';
 import { Affiliation, LinkKey, Neighborhood } from '@shared/models';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-neighborhoods',
@@ -55,7 +56,8 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     private toastService: ToastService,
     private affiliationService: AffiliationService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -107,7 +109,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
       },
       error: () => {
         this.toastService.showToast(
-          'Could not load associated neighborhoods.',
+          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.COULD_NOT_LOAD_ASSOCIATED_NEIGHBORHOODS'),
           'error'
         );
       },
@@ -166,7 +168,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
       },
       error: () => {
         this.toastService.showToast(
-          'Could not load unassociated neighborhoods.',
+          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.COULD_NOT_LOAD_UNASSOCIATED_NEIGHBORHOODS'),
           'error'
         );
         this.isLoading = false;
@@ -197,17 +199,17 @@ export class ServiceProvidersJoinNeighborhoodsComponent
         // After removal, reload the list (optional if you prefer)
         this.loadOtherNeighborhoods(true);
         this.toastService.showToast(
-          `You have successfully left '${neighborhood.name}'.`,
+          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.YOU_HAVE_SUCCESSFULLY_LEFT', { neighborhood: neighborhood.name }),
           'success'
         );
       },
       error: (err) => {
         console.error(
-          `Failed to unaffiliate from '${neighborhood.name}':`,
+          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.FAILED_TO_UNAFFILIATE_FROM', { neighborhood: neighborhood.name }),
           err
         );
         this.toastService.showToast(
-          `Failed to leave '${neighborhood.name}'. Please try again.`,
+          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.FAILED_TO_LEAVE', { neighborhood: neighborhood.name }),
           'error'
         );
       },
@@ -239,7 +241,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
    */
   get displayText(): string {
     if (this.selectedNeighborhoodIds.length === 0) {
-      return 'Select neighborhood';
+      return this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.SELECT_NEIGHBORHOOD');
     }
     const selected = this.otherNeighborhoods
       .filter((o) => this.selectedNeighborhoodIds.includes(o.self))
@@ -269,7 +271,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            'Request to join the neighborhood as a service provider sent!',
+            this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.REQUEST_ACCEPTED'),
             'success'
           );
 
@@ -288,7 +290,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
         },
         error: () => {
           this.toastService.showToast(
-            'Request to join the neighborhood as a service provider sent failed, try again later.',
+            this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.REQUEST_FAILED'),
             'error'
           );
         },

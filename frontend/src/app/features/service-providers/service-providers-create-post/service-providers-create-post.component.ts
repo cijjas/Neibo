@@ -11,6 +11,7 @@ import {
 import { PostService } from '@shared/index';
 import { Channel } from '@shared/models';
 import { catchError, of, switchMap, take } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-service-providers-create-post',
@@ -36,7 +37,8 @@ export class ServiceProvidersCreatePostComponent {
     private router: Router,
     private route: ActivatedRoute,
     private userSessionService: UserSessionService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +103,7 @@ export class ServiceProvidersCreatePostComponent {
       .subscribe({
         next: (response) => {
           this.toastService.showToast(
-            `Your post was created successfully!`,
+            this.translate.instant('SERVICE-PROVIDERS-CREATE-POST.YOUR_POST_WAS_CREATED_SUCCESSFULLY'),
             'success'
           );
           // Navigate the workerrs posts
@@ -111,7 +113,7 @@ export class ServiceProvidersCreatePostComponent {
         },
         error: (error) => {
           this.toastService.showToast(
-            `There was a problem creating your post.`,
+            this.translate.instant('SERVICE-PROVIDERS-CREATE-POST.THERE_WAS_A_PROBLEM_CREATING_YOUR_POST'),
             'error'
           );
           console.error('Error creating post:', error);

@@ -7,10 +7,10 @@
     <div class="dialog-header">
       <div class="review-dialog-text">
         <h3 class="font-size-20 font-weight-bold c-services mb-3">
-          Leave a Review
+          {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.LEAVE_A_REVIEW" | translate }}
         </h3>
         <p class="font-weight-normal font-size-14">
-          Share your experience with
+          {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.SHARE_YOUR_EXPERIENCE_WITH" | translate }}
           <strong class="c-services">{{ worker?.businessName }}</strong>
         </p>
       </div>
@@ -37,7 +37,7 @@
           *ngIf="!rating && reviewForm.submitted"
           class="error-message c-red"
         >
-          *Please select a star rating.
+        {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.PLEASE_SELECT_A_STAR_RATING" | translate }}
         </div>
 
         <textarea
@@ -54,7 +54,7 @@
           class="error-message c-red"
         >
           <span *ngIf="reviewMessage?.length < 10"
-            >*Review must be at least 10 characters long.</span
+            >{{ "SERVICE-PROVIDERS-REVIEW-DIALOG.REVIEW_MUST_BE_AT_LEAST" | translate }}</span
           >
         </div>
       </div>
@@ -63,7 +63,7 @@
         class="w-75 cool-button services-button pure filled-interesting square-radius font-size-14 font-weight-bold"
         [disabled]="reviewForm.invalid"
       >
-        Submit Review
+      {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.SUBMIT_REVIEW" | translate }}
       </button>
     </form>
   </div>

@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="used-tag" [ngClass]="product.used ? 'used' : 'new'">
-                    {{ product.used ? 'Used' : 'New' }}
+                    {{ product.used ? ('MARKETPLACE-PRODUCT-PREVIEW.USED' | translate) : ('MARKETPLACE-PRODUCT-PREVIEW.NEW' | translate) }}
                 </div>
             </div>
 

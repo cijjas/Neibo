@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, ConfirmationOptions } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-confirmation-dialog',
@@ -9,13 +10,16 @@ import { ConfirmationService, ConfirmationOptions } from '@core/index';
 export class ConfirmationDialogComponent implements OnInit {
   isVisible = false;
   options: ConfirmationOptions = {
-    title: 'Confirm',
-    message: 'Are you sure?',
-    confirmText: 'Yes',
-    cancelText: 'No',
+    title: this.translate.instant('CONFIRMATION-DIALOG.TITLE'),
+    message: this.translate.instant('CONFIRMATION-DIALOG.MESSAGE'),
+    confirmText: this.translate.instant('CONFIRMATION-DIALOG.CONFIRM_TEXT'),
+    cancelText: this.translate.instant('CONFIRMATION-DIALOG.CANCEL_TEXT'),
   };
 
-  constructor(private confirmationService: ConfirmationService) {}
+  constructor(
+    private confirmationService: ConfirmationService,
+    private translate: TranslateService
+  ) {}
 
   ngOnInit(): void {
     this.confirmationService.onConfirm$().subscribe((options) => {

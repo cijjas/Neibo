@@ -1,5 +1,5 @@
 <div class="cool-static-container">
-  <h2 class="card-title">Create a Post</h2>
+  <h2 class="card-title">{{ "SERVICE-PROVIDERS-CREATE-POST.CREATE_A_POST" | translate }}</h2>
   <div class="divider"></div>
 
   <!-- Post Creation Form -->
@@ -30,7 +30,7 @@
             "
             class="form-row form-error"
           >
-            <p class="error">*Title is required.</p>
+            <p class="error">{{ "SERVICE-PROVIDERS-CREATE-POST.TITLE_IS_REQUIRED" | translate }}</p>
           </div>
         </div>
       </div>
@@ -51,15 +51,15 @@
           "
           class="form-row form-error"
         >
-          <p class="error">*Body is required.</p>
+          <p class="error">{{ "SERVICE-PROVIDERS-CREATE-POST.BODY_IS_REQUIRED" | translate }}</p>
         </div>
       </div>
 
       <div class="form-group w-50">
         <!-- Image File Input -->
         <label for="images" class="drop-container" id="dropcontainer">
-          <span class="drop-title"> Drop files </span>
-          Or
+          <span class="drop-title">{{ "SERVICE-PROVIDERS-CREATE-POST.DROP_FILES" | translate }}</span>
+          {{ "SERVICE-PROVIDERS-CREATE-POST.OR" | translate }}
           <input
             type="file"
             class="select-file-button"
@@ -101,7 +101,7 @@
         class="cool-button cool-small on-bg w-25 font-weight-bolder"
         style="height: 40px"
       >
-        Post
+      {{ "SERVICE-PROVIDERS-CREATE-POST.POST" | translate }}
       </button>
     </div>
   </form>

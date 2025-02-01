@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { combineLatest, map, switchMap } from 'rxjs';
 import { Department, LinkKey } from '@shared/index';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 import {
   HateoasLinksService,
   ImageService,
@@ -46,7 +48,8 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     private imageService: ImageService,
     private linkService: HateoasLinksService,
     private departmentService: DepartmentService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -96,7 +99,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
   clearImageError(): void {
     if (
       this.images.length > 0 &&
-      this.formErrors === 'Please upload at least one image for the product.'
+      this.formErrors === this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT')
     ) {
       this.formErrors = null;
     }
@@ -126,13 +129,13 @@ export class MarketplaceProductSellPageComponent implements OnInit {
 
   onSubmit(): void {
     if (this.listingForm.invalid) {
-      this.formErrors = 'Please fill in all required fields correctly.';
+      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY');
       return;
     }
 
     // Ensure at least one image exists
     if (this.images.length === 0) {
-      this.formErrors = 'Please upload at least one image for the product.';
+      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT');
       return;
     }
 
@@ -145,7 +148,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     const price = parseFloat(priceString);
 
     if (isNaN(price)) {
-      this.formErrors = 'Invalid price format.';
+      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.INVALID_PRICE_FORMAT');
       return;
     }
 
@@ -179,12 +182,12 @@ export class MarketplaceProductSellPageComponent implements OnInit {
         next: (productUrl) => {
           this.router.navigate(['/marketplace/products', productUrl]);
           this.toastService.showToast(
-            'Listing created successfully',
+            this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.LISTING_CREATED_SUCCESSFULLY'),
             'success'
           );
         },
         error: (err) => {
-          this.formErrors = 'There was a problem creating the listing.';
+          this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.THERE_WAS_A_PROBLEM_CREATING_THE_LISTING');
           console.error(err);
         },
       });

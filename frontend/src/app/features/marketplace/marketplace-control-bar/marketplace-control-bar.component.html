@@ -10,7 +10,7 @@
           [ngClass]="{ active: channel === 'Marketplace' }"
         >
           <i class="fa-solid fa-shopping-cart"></i>
-          <span class="hide-text">Marketplace</span>
+          <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.MARKETPLACE" | translate }}</span>
         </a>
 
         <!-- Buyer and Seller Hub Links -->
@@ -22,7 +22,7 @@
             [ngClass]="{ active: channel.startsWith('BuyerHub') }"
           >
             <i class="fa-solid fa-bag-shopping hide-icons"></i>
-            <span class="hide-text">Buyer Dashboard</span>
+            <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.BUYER_DASHBOARD" | translate }}</span>
           </a>
 
           <!-- Seller Hub -->
@@ -32,7 +32,7 @@
             [ngClass]="{ active: channel.startsWith('SellerHub') }"
           >
             <i class="fa-solid fa-tags"></i>
-            <span class="hide-text">Seller Dashboard</span>
+            <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.SELLER_DASHBOARD" | translate }}</span>
           </a>
         </div>
       </div>
@@ -41,11 +41,11 @@
       <div *ngIf="channel === 'Marketplace'">
         <div class="custom-dropdown">
           <div class="dropdown-toggle" id="department-toggle">
-            {{ departmentName === "NONE" ? "All" : departmentName }}
+            {{ departmentName === "NONE" ? ('MARKETPLACE-CONTROL-BAR.ALL' | translate) : departmentName }}
           </div>
           <ul class="dropdown-options">
             <li>
-              <a [routerLink]="['/marketplace']" [queryParams]="{}">All</a>
+              <a [routerLink]="['/marketplace']" [queryParams]="{}">{{ "MARKETPLACE-CONTROL-BAR.ALL" | translate }}</a>
             </li>
             <li
               *ngFor="let department of departmentList"
@@ -70,7 +70,7 @@
       [ngClass]="{ active: channel === 'Sell' }"
     >
       <i class="fa-solid fa-tag"></i>
-      Sell
+      {{ "MARKETPLACE-CONTROL-BAR.SELL" | translate }}
     </a>
   </div>
 </div>

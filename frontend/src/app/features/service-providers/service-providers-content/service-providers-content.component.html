@@ -9,7 +9,7 @@
     >
       <i class="fa-solid fa-user-pen ml-1"></i>
 
-      Edit Profile
+      {{ "SERVICE-PROVIDERS-CONTENT.EDIT_PROFILE" | translate }}
     </button>
     <div class="card-header">
       <!-- Background image -->
@@ -69,15 +69,15 @@
               : "--"
           }}
         </div>
-        <div class="c-light-text">Rating</div>
+        <div class="c-light-text">{{ "SERVICE-PROVIDERS-CONTENT.RATING" | translate }}</div>
       </div>
       <div class="inner">
         <div class="c-services">{{ reviewsCount || 0 }}</div>
-        <div class="c-light-text">Reviews</div>
+        <div class="c-light-text">{{ "SERVICE-PROVIDERS-CONTENT.REVIEWS" | translate }}</div>
       </div>
       <div class="inner">
         <div class="c-services">{{ postCount || 0 }}</div>
-        <div class="c-light-text">Posts</div>
+        <div class="c-light-text">{{ "SERVICE-PROVIDERS-CONTENT.POSTS" | translate }}</div>
       </div>
     </div>
   </div>

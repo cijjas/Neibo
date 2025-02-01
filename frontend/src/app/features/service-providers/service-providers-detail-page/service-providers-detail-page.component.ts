@@ -14,6 +14,7 @@ import {
   LinkKey,
 } from '@shared/index';
 import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-service-providers-detail-page',
@@ -32,6 +33,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     private reviewService: ReviewService,
     private toastService: ToastService,
     private linkService: HateoasLinksService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +83,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     this.reviewService.createReview(this.worker?.reviews, newReview).subscribe({
       next: () => {
         this.toastService.showToast(
-          'Review submitted successfully!',
+          this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.REVIEW_SUBMITTED_SUCCESSFULLY'),
           'success',
         );
 
@@ -91,7 +93,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
         }
       },
       error: () => {
-        this.toastService.showToast('Failed to submit review.', 'error');
+        this.toastService.showToast(this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.FAILED_TO_SUBMIT_REVIEW'), 'error');
       },
     });
   }
@@ -100,7 +102,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     this.workerService.updateWorker(workerDto).subscribe({
       next: () => {
         this.toastService.showToast(
-          'New profile information saved successfully!',
+          this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.NEW_PROFILE_INFORMATION_SAVED_SUCCESFULLY'),
           'success',
         );
         if (this.worker?.self) {
@@ -109,7 +111,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
       },
       error: err => {
         this.toastService.showToast(
-          'There was an error updating profile. Try again.',
+          this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.THERE_WAS_AN_ERROR_SUBMITTING_PROFILE_TRY_AGAIN'),
           'error',
         );
         console.error('Error saving profile:', err);
