@@ -15,45 +15,44 @@ export class ServiceProvidersPageComponent implements OnInit {
   totalPages: number = 0;
   pageSize: number = 10;
   professions: string[] = []; // Changed to handle `withProfession` query params
-  loading: boolean = true;
+
+  isLoading: boolean = true; // Track loading state
+  placeholderItems = Array.from({ length: 10 }, (_, i) => i);
 
   constructor(
     private workerService: WorkerService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams
-      .pipe(
-        switchMap((params) => {
-          // Handle `page` and `size` query params
-          this.currentPage = +params['page'] || 1;
-          this.pageSize = +params['size'] || 10;
+    this.route.queryParams.subscribe(params => {
+      this.currentPage = +params['page'] || 1;
+      this.pageSize = +params['size'] || 10;
 
-          // Handle multiple `withProfession` params
-          const professionsParam = params['withProfession'];
-          this.professions = Array.isArray(professionsParam)
-            ? professionsParam
-            : professionsParam
-            ? [professionsParam]
-            : [];
+      // Handle multiple `withProfession` params
+      const professionsParam = params['withProfession'];
+      this.professions = Array.isArray(professionsParam)
+        ? professionsParam
+        : professionsParam
+        ? [professionsParam]
+        : [];
 
-          return this.loadWorkers();
-        })
-      )
-      .subscribe();
+      // Call loadWorkers() directly after setting parameters
+      this.loadWorkers();
+    });
   }
 
   loadWorkers() {
+    this.isLoading = true;
     const queryParams = {
       page: this.currentPage,
       size: this.pageSize,
       withProfession: this.professions,
     };
 
-    return this.workerService.getWorkers(queryParams).pipe(
-      map((response) => {
+    this.workerService.getWorkers(queryParams).subscribe({
+      next: response => {
         if (response) {
           this.workersList = response.workers;
           this.totalPages = response.totalPages;
@@ -62,28 +61,27 @@ export class ServiceProvidersPageComponent implements OnInit {
           this.workersList = [];
           this.totalPages = 0;
         }
-        this.loading = false;
-      }),
-      catchError((error) => {
+        this.isLoading = false;
+      },
+      error: error => {
         console.error('Error loading workers:', error);
         this.workersList = [];
         this.totalPages = 0;
-        this.loading = false;
-        return of();
-      })
-    );
+        this.isLoading = false;
+      },
+    });
   }
 
   onPageChange(page: number): void {
     this.currentPage = page;
     this.updateQueryParams();
-    this.loadWorkers().subscribe();
+    this.loadWorkers();
   }
 
   onProfessionChange(selectedProfessions: string[]): void {
     this.professions = selectedProfessions;
     this.updateQueryParams();
-    this.loadWorkers().subscribe();
+    this.loadWorkers();
   }
 
   private updateQueryParams(): void {

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
 import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
-
 import { PostService, Post, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
@@ -13,9 +12,9 @@ import { HateoasLinksService } from '@core/index';
 export class FeedPageComponent implements OnInit {
   public postList: Post[] = [];
   public loading: boolean = true;
+  public placeholderArray = new Array(10); // Placeholder count
 
   currentPage: number = 1;
-
   pageSize: number = 10;
   totalPages: number = 0;
   channel: string;
@@ -26,57 +25,41 @@ export class FeedPageComponent implements OnInit {
     private postService: PostService,
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    const defaultChannel = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
-    );
-    const defaultStatus = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
-
     this.route.queryParams
       .pipe(
-        // 1. Map the full queryParams to an object with only feed-related params:
-        map((params) => {
-          return {
-            page: +params['page'] || 1,
-            size: +params['size'] || 10,
-            inChannel: params['inChannel'] || defaultChannel,
-            withStatus: params['withStatus'] || defaultStatus,
-            // Ensure tags is always an array
-            withTag: Array.isArray(params['withTag'])
-              ? params['withTag']
-              : params['withTag']
-              ? [params['withTag']]
-              : [],
-          };
-        }),
-
-        // 2. Use distinctUntilChanged to ignore changes that do NOT affect feed parameters:
-        distinctUntilChanged((prev, curr) => {
-          return (
+        map(params => ({
+          page: +params['page'] || 1,
+          size: +params['size'] || 10,
+          inChannel:
+            params['inChannel'] ||
+            this.linkService.getLink(
+              LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
+            ),
+          withStatus:
+            params['withStatus'] ||
+            this.linkService.getLink(LinkKey.NONE_POST_STATUS),
+          withTag: Array.isArray(params['withTag'])
+            ? params['withTag']
+            : params['withTag']
+            ? [params['withTag']]
+            : [],
+        })),
+        distinctUntilChanged(
+          (prev, curr) =>
             prev.page === curr.page &&
             prev.size === curr.size &&
             prev.inChannel === curr.inChannel &&
             prev.withStatus === curr.withStatus &&
-            JSON.stringify(prev.withTag) === JSON.stringify(curr.withTag)
-          );
-        }),
-
-        // 3. Load posts only when the relevant feed parameters have actually changed
-        switchMap((feedParams) => {
-          return this.loadPosts(feedParams);
-        })
+            JSON.stringify(prev.withTag) === JSON.stringify(curr.withTag),
+        ),
+        switchMap(feedParams => this.loadPosts(feedParams)),
       )
-      .subscribe({
-        next: () => {
-          // feedParams changed => new posts loaded
-        },
-        error: (err) => console.error(err),
-      });
+      .subscribe();
   }
-  x;
 
   loadPosts(feedParams: {
     page: number;
@@ -85,14 +68,10 @@ export class FeedPageComponent implements OnInit {
     withStatus: string;
     withTag: string[];
   }): Observable<void> {
-    this.currentPage = feedParams.page;
-    this.pageSize = feedParams.size;
-    this.channel = feedParams.inChannel;
-    this.postStatus = feedParams.withStatus;
-    this.tags = feedParams.withTag;
+    this.loading = true;
 
     return this.postService.getPosts(feedParams).pipe(
-      map((response) => {
+      map(response => {
         if (response) {
           this.postList = response.posts;
           this.totalPages = response.totalPages;
@@ -103,13 +82,13 @@ export class FeedPageComponent implements OnInit {
         }
         this.loading = false;
       }),
-      catchError((error) => {
+      catchError(error => {
         console.error('Error loading posts:', error);
         this.postList = [];
         this.totalPages = 0;
         this.loading = false;
         return of();
-      })
+      }),
     );
   }
 
