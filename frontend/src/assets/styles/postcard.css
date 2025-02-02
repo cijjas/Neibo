@@ -2,7 +2,7 @@
   width: 100%;
   padding: 20px;
   transform: translateY(-4px);
-  border: 1px solid var(--shadow);
+  border: 1px solid var(--bordercolor);
   box-shadow: -3px 5px 0 0 var(--shadow);
   background-color: var(--onbackground);
   color: var(--text);

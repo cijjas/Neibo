@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--onbackground);
-  border: 1px solid var(--shadow);
+  border: 1px solid var(--bordercolor);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
   transition: all 0.3s ease-in-out;
@@ -28,7 +28,7 @@
     border-bottom: 1px solid var(--lighttext);
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: -65px;
       left: 50%;
@@ -87,7 +87,7 @@
   background: var(--onbackground);
   width: 100%;
   border-radius: var(--border-radius);
-  border: 1px solid var(--shadow);
+  border: var(--bordercolor);
   transition: all 0.3s ease-in-out;
   overflow: hidden;
   white-space: normal;
@@ -212,7 +212,7 @@
       var(--border-radius);
   }
 
-  & input[type="radio"] {
+  & input[type='radio'] {
     display: none;
   }
 

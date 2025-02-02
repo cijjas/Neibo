@@ -1,0 +1,59 @@
+.placeholder-post {
+  border-radius: var(--border-radius);
+  padding: 15px;
+  margin-bottom: 10px;
+
+  .placeholder-header,
+  .placeholder-content,
+  .placeholder-footer {
+    background: var(--darkonbackground);
+    border-radius: 4px;
+    animation: pulse 1.5s infinite ease-in-out; /* Apply pulse animation */
+  }
+
+  .placeholder-header {
+    height: 20px;
+    width: 50%;
+    margin-bottom: 10px;
+  }
+
+  .placeholder-content {
+    height: 15px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+
+  /* Varying sizes for placeholder content */
+  .placeholder-content:nth-child(2) {
+    width: 90%;
+  }
+
+  .placeholder-content:nth-child(3) {
+    width: 70%;
+  }
+
+  .placeholder-content:nth-child(4) {
+    width: 85%;
+  }
+
+  .placeholder-content:nth-child(5) {
+    width: 60%;
+  }
+
+  .placeholder-footer {
+    height: 10px;
+    width: 30%;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #7d7d7d63;
+  }
+  50% {
+    background-color: #7d7d7d0e;
+  }
+  100% {
+    background-color: #7d7d7d63;
+  }
+}

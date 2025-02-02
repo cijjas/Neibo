@@ -1,23 +1,46 @@
-<!-- If workersList is empty, show "not found" -->
-<ng-container *ngIf="workersList && workersList.length > 0; else noWorkersFound">
-  <!-- The main service widgets -->
+<!-- If data is still loading, show placeholders -->
+<ng-container *ngIf="isLoading; else workersLoaded">
   <div class="f-c-c-c w-100">
-    <div class="w-100" *ngFor="let worker of workersList">
-      <app-service-providers-preview [worker]="worker"></app-service-providers-preview>
+    <div class="w-100 mb-3" *ngFor="let i of placeholderItems">
+      <app-placeholder-service-provider></app-placeholder-service-provider>
     </div>
   </div>
-
-  <!-- Another paginator at the bottom -->
-  <app-paginator [currentPage]="currentPage" [totalPages]="totalPages" [theme]="'services'"
-    (pageChange)="onPageChange($event)">
-  </app-paginator>
 </ng-container>
-<!-- Template shown when there are no workers -->
+
+<!-- Real data once loaded -->
+<ng-template #workersLoaded>
+  <ng-container
+    *ngIf="workersList && workersList.length > 0; else noWorkersFound"
+  >
+    <div class="f-c-c-c w-100">
+      <div class="w-100" *ngFor="let worker of workersList">
+        <app-service-providers-preview
+          [worker]="worker"
+        ></app-service-providers-preview>
+      </div>
+    </div>
+
+    <!-- Paginator -->
+    <app-paginator
+      [currentPage]="currentPage"
+      [totalPages]="totalPages"
+      [theme]="'services'"
+      (pageChange)="onPageChange($event)"
+    >
+    </app-paginator>
+  </ng-container>
+</ng-template>
+
+<!-- If no workers found -->
 <ng-template #noWorkersFound>
-  <div class="cool-static-container m-b-20" style="word-wrap: break-word" aria-hidden="true">
+  <div
+    class="cool-static-container m-b-20"
+    style="word-wrap: break-word"
+    aria-hidden="true"
+  >
     <div class="no-posts-found">
       <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-      <span>{{ "SERVICE-PROVIDERS-PAGE.COULD_NOT_FIND" | translate }}</span>
+      <span>{{ 'SERVICE-PROVIDERS-PAGE.COULD_NOT_FIND' | translate }}</span>
     </div>
   </div>
 </ng-template>

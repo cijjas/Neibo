@@ -39,7 +39,7 @@
   padding: 0.7em 1em;
   background-color: var(--darkonbackground);
   color: var(--text);
-  border: 1px solid var(--shadow);
+  border: 1px solid var(--bordercolor);
   border-radius: var(--border-radius);
   position: relative;
   transform: translateY(0);

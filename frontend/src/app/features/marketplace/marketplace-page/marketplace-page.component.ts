@@ -22,17 +22,20 @@ export class MarketplacePageComponent implements OnInit {
   totalPages: number = 1;
   size: number = 30; // Default page size
 
+  isLoading: boolean = true;
+  placeholderItems = Array.from({ length: 20 }, (_, i) => i);
+
   constructor(
     private productService: ProductService,
     private departmentService: DepartmentService,
     private linkService: HateoasLinksService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     // Read query params for page and size
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       this.page = params['page'] ? +params['page'] : 1;
       this.size = params['size'] ? +params['size'] : 20;
       this.selectedDepartment = params['inDepartment'] || null;
@@ -41,9 +44,7 @@ export class MarketplacePageComponent implements OnInit {
   }
 
   private loadProducts(): void {
-    const productsUrl: string = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_PRODUCTS
-    );
+    this.isLoading = true;
 
     this.productService
       .getProducts({
@@ -52,11 +53,15 @@ export class MarketplacePageComponent implements OnInit {
         inDepartment: this.selectedDepartment,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.productList = data.products;
           this.totalPages = data.totalPages;
+          this.isLoading = false;
         },
-        error: (err) => console.error(err),
+        error: err => {
+          console.error(err);
+          this.isLoading = false;
+        },
       });
   }
 

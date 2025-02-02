@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router'; // For directives like routerLink
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { environment } from 'environments/environment'
+import { environment } from 'environments/environment';
 
 // Import shared components and pipes
 import {
@@ -18,6 +18,9 @@ import {
   TagsFilterWidgetComponent,
   InfiniteScrollSelectComponent,
   ConfirmationDialogComponent,
+  PlaceholderPostComponent,
+  PlaceholderServiceProviderComponent,
+  PlaceholderProductComponent,
 } from '@shared/index';
 
 import { TimeAgoPipe, AddHoursPipe } from '@shared/index';
@@ -30,10 +33,14 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import {Environment} from "@angular/cli/lib/config/workspace-schema";
+import { Environment } from '@angular/cli/lib/config/workspace-schema';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.deployUrl + 'assets/i18n/', '.json');
+  return new TranslateHttpLoader(
+    http,
+    environment.deployUrl + 'assets/i18n/',
+    '.json',
+  );
 }
 
 @NgModule({
@@ -52,6 +59,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     InfiniteScrollSelectComponent,
     PublicLayoutComponent,
     MainLayoutComponent,
+    PlaceholderPostComponent,
+    PlaceholderServiceProviderComponent,
+    PlaceholderProductComponent,
   ],
   imports: [
     CommonModule,
@@ -90,6 +100,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     TimeAgoPipe,
     AddHoursPipe,
     TranslateModule,
+    PlaceholderPostComponent,
+    PlaceholderServiceProviderComponent,
+    PlaceholderProductComponent,
   ],
 })
 export class SharedModule {}

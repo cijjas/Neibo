@@ -11,6 +11,11 @@ export * from './components/right-column/right-column.component';
 export * from './components/confirmation-dialog/confirmation-dialog.component';
 export * from './components/success-toast/success-toast.component';
 export * from './components/wave-footer/wave-footer.component';
+
+export * from './components/placeholder-post/placeholder-post.component';
+export * from './components/placeholder-product/placeholder-product.component';
+export * from './components/placeholder-service-provider/placeholder-service-provider.component';
+
 export * from './layouts/main-layout/main-layout.component';
 export * from './layouts/public-layout/public-layout.component';
 export * from './dtos/app-dtos';

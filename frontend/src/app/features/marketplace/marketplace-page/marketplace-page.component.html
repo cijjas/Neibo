@@ -10,14 +10,20 @@
         <app-marketplace-control-bar [channel]="channel">
         </app-marketplace-control-bar>
 
-        <!-- If no products found -->
+        <div *ngIf="isLoading" class="row product-grid-row">
+          <div class="mb-3" *ngFor="let i of placeholderItems">
+            <app-placeholder-product></app-placeholder-product>
+          </div>
+        </div>
+
+        <!-- No products found (once loaded) -->
         <div
-          *ngIf="productList && productList.length === 0"
+          *ngIf="!isLoading && productList && productList.length === 0"
           class="cool-static-container w-100"
         >
           <div class="no-posts-found">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{ "MARKETPLACE-PAGE.PRODUCTS_NOT_FOUND" | translate }}
+            {{ 'MARKETPLACE-PAGE.PRODUCTS_NOT_FOUND' | translate }}
           </div>
         </div>
 
