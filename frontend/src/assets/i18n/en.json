@@ -654,7 +654,6 @@
     "NO_SELECTED_DATE_PROVIDED": "No selected date provided",
     "ERROR_FETCHING_EVENTS": "Error fetching events:",
     "MERGE": "merge",
-
     "DELETE_EVENT_TITLE": "Delete Event",
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_EVENT": "Are you sure you want to delete the event '{{ eventName }}'?",
     "YES_DELETE": "Yes, Delete",
@@ -1058,7 +1057,7 @@
     "ERROR_REPLYING_TO_INQUIRY": "Error replying to inquiry:",
     "FAILED_TO_SEND_REPLY": "Failed to send reply. Try again later.",
     "NEW": "New",
-    "USED":"Used",
+    "USED": "Used",
     "UNIT": "Unit",
     "UNITS": "Units"
   },
@@ -1087,7 +1086,7 @@
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Used",
-    "NEW":"New"
+    "NEW": "New"
   },
   "MARKETPLACE-PRODUCT-REQUESTS-PAGE": {
     "IN_STOCK": "In stock",
