@@ -1,16 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RoleGuard } from '@core/index';
-import {
-  ServiceProvidersDetailPageComponent,
-  ServiceProvidersPageComponent,
-  ServiceProvidersJoinNeighborhoodsComponent,
-  FeedCreatePostPageComponent,
-} from '@features/index';
-
-import { Roles } from '@shared/models';
+import { ServiceProvidersDetailPageComponent } from './service-providers-detail-page/service-providers-detail-page.component';
+import { ServiceProvidersPageComponent } from './service-providers-page/service-providers-page.component';
+import { ServiceProvidersJoinNeighborhoodsPageComponent } from './service-providers-join-neighborhoods-page/service-providers-join-neighborhoods-page.component';
 import { ServiceProvidersLayoutComponent } from './service-providers-layout/service-providers-layout.component';
 import { ServiceProvidersCreatePostComponent } from './service-providers-create-post/service-providers-create-post.component';
+
+import { Roles } from '@shared/models';
 import { serviceProviderResolver } from '@shared/resolvers/service-provider.resolver';
 
 const routes: Routes = [
@@ -26,7 +23,7 @@ const routes: Routes = [
       },
       {
         path: 'join-neighborhoods',
-        component: ServiceProvidersJoinNeighborhoodsComponent,
+        component: ServiceProvidersJoinNeighborhoodsPageComponent,
         canActivate: [RoleGuard],
         data: { roles: [Roles.WORKER] },
       },

@@ -4,36 +4,35 @@ import { RouterModule } from '@angular/router'; // For directives like routerLin
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 
-// Import shared components and pipes
-import {
-  NavbarComponent,
-  SuccessToastComponent,
-  SidebarComponent,
-  WaveFooterComponent,
-  BackgroundCloudsComponent,
-  LandingPageNavbarComponent,
-  BackgroundDrawingComponent,
-  PaginatorComponent,
-  RightColumnComponent,
-  TagsFilterWidgetComponent,
-  InfiniteScrollSelectComponent,
-  ConfirmationDialogComponent,
-  PlaceholderPostComponent,
-  PlaceholderServiceProviderComponent,
-  PlaceholderProductComponent,
-} from '@shared/index';
-
-import { TimeAgoPipe, AddHoursPipe } from '@shared/index';
-import {
-  CalendarWidgetComponent,
-  UserProfileWidgetComponent,
-} from '@features/index';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+// Import shared components and pipes
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { SuccessToastComponent } from './components/success-toast/success-toast.component';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { WaveFooterComponent } from './components/wave-footer/wave-footer.component';
+import { BackgroundCloudsComponent } from './components/background-clouds/background-clouds.component';
+import { LandingPageNavbarComponent } from './components/landing-page-navbar/landing-page-navbar.component';
+import { BackgroundDrawingComponent } from './components/background-drawing/background-drawing.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
+import { RightColumnComponent } from './components/right-column/right-column.component';
+import { TagsFilterWidgetComponent } from './components/tags-filter-widget/tags-filter-widget.component';
+import { InfiniteScrollSelectComponent } from './components/infinite-scroll-select/infinite-scroll-select.component';
+import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+import { PlaceholderPostComponent } from './components/placeholder-post/placeholder-post.component';
+import { PlaceholderServiceProviderComponent } from './components/placeholder-service-provider/placeholder-service-provider.component';
+import { PlaceholderProductComponent } from './components/placeholder-product/placeholder-product.component';
+
+import { CalendarWidgetComponent } from '@features/index';
+import { UserProfileWidgetComponent } from '@features/index';
+
+import { TimeAgoPipe } from './pipes/time-ago/time-ago.pipe';
+import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
+
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { Environment } from '@angular/cli/lib/config/workspace-schema';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -65,13 +64,11 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   imports: [
     CommonModule,
-    RouterModule, // Add this for routerLink and related directives
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     TimeAgoPipe,
     AddHoursPipe,
-    CalendarWidgetComponent,
-    UserProfileWidgetComponent,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserProfilePageComponent } from '@features/index';
-import { userResolver } from '@shared/resolvers/user.resolver';
+import { UserProfilePageComponent } from './user-profile-page/user-profile-page.component';
 
 const routes: Routes = [
   {

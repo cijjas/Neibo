@@ -13,7 +13,7 @@ import {
   WorkerDto,
   LinkKey,
 } from '@shared/index';
-import { ServiceProvidersReviewsAndPostsComponent } from '@features/index';
+import { ServiceProvidersReviewsAndPostsComponent } from '../service-providers-reviews-and-posts/service-providers-reviews-and-posts.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -33,7 +33,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     private reviewService: ReviewService,
     private toastService: ToastService,
     private linkService: HateoasLinksService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -83,7 +83,9 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     this.reviewService.createReview(this.worker?.reviews, newReview).subscribe({
       next: () => {
         this.toastService.showToast(
-          this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.REVIEW_SUBMITTED_SUCCESSFULLY'),
+          this.translate.instant(
+            'SERVICE-PROVIDERS-DETAIL-PAGE.REVIEW_SUBMITTED_SUCCESSFULLY',
+          ),
           'success',
         );
 
@@ -93,7 +95,12 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
         }
       },
       error: () => {
-        this.toastService.showToast(this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.FAILED_TO_SUBMIT_REVIEW'), 'error');
+        this.toastService.showToast(
+          this.translate.instant(
+            'SERVICE-PROVIDERS-DETAIL-PAGE.FAILED_TO_SUBMIT_REVIEW',
+          ),
+          'error',
+        );
       },
     });
   }
@@ -102,7 +109,9 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     this.workerService.updateWorker(workerDto).subscribe({
       next: () => {
         this.toastService.showToast(
-          this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.NEW_PROFILE_INFORMATION_SAVED_SUCCESFULLY'),
+          this.translate.instant(
+            'SERVICE-PROVIDERS-DETAIL-PAGE.NEW_PROFILE_INFORMATION_SAVED_SUCCESFULLY',
+          ),
           'success',
         );
         if (this.worker?.self) {
@@ -111,7 +120,9 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
       },
       error: err => {
         this.toastService.showToast(
-          this.translate.instant('SERVICE-PROVIDERS-DETAIL-PAGE.THERE_WAS_AN_ERROR_SUBMITTING_PROFILE_TRY_AGAIN'),
+          this.translate.instant(
+            'SERVICE-PROVIDERS-DETAIL-PAGE.THERE_WAS_AN_ERROR_SUBMITTING_PROFILE_TRY_AGAIN',
+          ),
           'error',
         );
         console.error('Error saving profile:', err);

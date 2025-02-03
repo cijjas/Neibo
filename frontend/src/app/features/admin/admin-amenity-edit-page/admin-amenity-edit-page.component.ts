@@ -58,7 +58,6 @@ export class AdminAmenityEditPageComponent implements OnInit {
     // until we’ve loaded allShifts
     this.route.data.subscribe(({ amenity }) => {
       if (!amenity) {
-        // Possibly handle a "not found" fallback if needed
         return;
       }
       this.amenityName = amenity.name;
@@ -67,7 +66,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
         description: amenity.description,
       });
 
-      this.amenityShiftRefs = amenity.availableShifts.map(s => s.self);
+      this.amenityShiftRefs = amenity.availableShifts.map((s: Shift) => s.self);
       // 2) Load all Shifts
       this.shiftService.getShifts().subscribe({
         next: shiftsFromApi => {

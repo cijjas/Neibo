@@ -12,18 +12,14 @@ import {
   UserSessionService,
   ToastService,
 } from '@core/index';
-import { PostService, TagService, LinkKey } from '@shared/index';
+import { PostService, TagService, LinkKey, Tag } from '@shared/index';
 import { catchError, forkJoin, of, switchMap, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 /** Minimal Tag interface. If you already have a Tag type, you can remove this. */
-interface Tag {
-  name: string;
-  self: string | null;
-}
 
 export function atLeastOneTagSelected(
-  control: AbstractControl
+  control: AbstractControl,
 ): ValidationErrors | null {
   const tags = control.value || [];
   return tags.length > 0 ? null : { noTagsSelected: true };
@@ -87,11 +83,11 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private userSessionService: UserSessionService,
     private toastService: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {
     // Get the link to your announcements channel
     this.channel = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
     );
   }
 
@@ -138,16 +134,16 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
   // TAGS: Only from default set
   // --------------------------------------------------
   addTagToApplied(tag: Tag) {
-    const exists = this.appliedTags.some((t) => t.name === tag.name);
+    const exists = this.appliedTags.some(t => t.name === tag.name);
     if (exists) {
       this.toastService.showToast(
         this.translate.instant(
           'ADMIN-CREATE-ANNOUNCEMENT-PAGE.YOUVE_ALREADY_SELECTED_THE_TAG_TAGNAME',
           {
             tagName: tag.name,
-          }
+          },
         ),
-        'warning'
+        'warning',
       );
       return;
     }
@@ -156,16 +152,16 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     // Update the tags control value
     this.announcementForm
       .get('tags')
-      ?.setValue(this.appliedTags.map((t) => t.self));
+      ?.setValue(this.appliedTags.map(t => t.self));
   }
 
   removeTag(tag: Tag) {
-    this.appliedTags = this.appliedTags.filter((t) => t.name !== tag.name);
+    this.appliedTags = this.appliedTags.filter(t => t.name !== tag.name);
 
     // Update the tags control value
     this.announcementForm
       .get('tags')
-      ?.setValue(this.appliedTags.map((t) => t.self));
+      ?.setValue(this.appliedTags.map(t => t.self));
   }
 
   // --------------------------------------------------
@@ -178,32 +174,39 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     }
 
     // Separate new (no self link) from existing (already has self)
-    const newTags = this.appliedTags.filter((t) => t.self === null);
-    const existingTags = this.appliedTags.filter((t) => t.self !== null);
+    const newTags = this.appliedTags.filter(t => t.self === null);
+    const existingTags = this.appliedTags.filter(t => t.self !== null);
 
     // Extract the existing tag `self` links
-    const existingTagUrls = existingTags.map((t) => t.self as string);
+    const existingTagUrls = existingTags.map(t => t.self as string);
 
     // 1. For new tags, call createTag(...)
-    const createTagsObservables = newTags.map((tag) =>
+    const createTagsObservables = newTags.map(tag =>
       this.tagService.createTag(tag.name).pipe(
         switchMap((location: string | null) => {
           if (!location) {
-            console.error(this.translate.instant(
-              'ADMIN-CREATE-ANNOUNCEMENT-PAGE.FAILED_TO_CREATE_TAG',
-            ), tag.name);
+            console.error(
+              this.translate.instant(
+                'ADMIN-CREATE-ANNOUNCEMENT-PAGE.FAILED_TO_CREATE_TAG',
+              ),
+              tag.name,
+            );
             return of(null);
           }
           // After creation, get the full Tag to retrieve the `self` link
           return this.tagService.getTag(location);
         }),
-        catchError((err) => {
-          console.error(this.translate.instant(
-            'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_TAG',
-          ), tag.name, err);
+        catchError(err => {
+          console.error(
+            this.translate.instant(
+              'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_TAG',
+            ),
+            tag.name,
+            err,
+          );
           return of(null);
-        })
-      )
+        }),
+      ),
     );
 
     // 2. Wait for all new tags to be created
@@ -212,12 +215,12 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       : of([]); // <-- if no new tags, just emit [] immediately
 
     newTags$.subscribe({
-      next: (createdTags) => {
+      next: createdTags => {
         // Now this always fires
 
         // Extract `self` from newly created tags
         const createdTagUrls = createdTags
-          .filter((t) => t !== null)
+          .filter(t => t !== null)
           .map((t: any) => t.self);
 
         // Combine existing + newly created
@@ -229,15 +232,18 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
         // Final step: create the announcement post
         this.createAnnouncement();
       },
-      error: (err) => {
-        console.error(this.translate.instant(
-          'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_TAGS',
-        ), err);
+      error: err => {
+        console.error(
+          this.translate.instant(
+            'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_TAGS',
+          ),
+          err,
+        );
         this.toastService.showToast(
           this.translate.instant(
             'ADMIN-CREATE-ANNOUNCEMENT-PAGE.SOME_TAGS_COULD_NOT_BE_CREATED_PLEASE_TRY_AGAIN',
           ),
-          'error'
+          'error',
         );
       },
     });
@@ -253,12 +259,12 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       .getCurrentUser()
       .pipe(
         take(1),
-        switchMap((user) => {
+        switchMap(user => {
           // Map fields to match backend expectations
           const payload = {
             title: formValue.subject, // Map "subject" to "title"
             body: formValue.message, // Map "message" to "body"
-            tags: formValue.tags.filter((url) => url !== null), // Ensure valid tag URLs
+            tags: formValue.tags.filter(url => url !== null), // Ensure valid tag URLs
             user: user.self, // User link
             channel: this.channel, // Channel link
             image: null, // Default to null unless an image is uploaded
@@ -266,14 +272,14 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
 
           // Handle image upload if present
           return this.createImageObservable(formValue.imageFile).pipe(
-            switchMap((imageUrl) => {
+            switchMap(imageUrl => {
               if (imageUrl) {
                 payload.image = imageUrl;
               }
               return this.postService.createPost(payload);
-            })
+            }),
           );
-        })
+        }),
       )
       .subscribe({
         next: () => {
@@ -281,19 +287,22 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
             this.translate.instant(
               'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ANNOUNCEMENT_CREATED_SUCCESSFULLY',
             ),
-            'success'
+            'success',
           );
           this.resetForm();
         },
-        error: (err) => {
-          console.error(this.translate.instant(
-            'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_ANNOUNCEMENT',
-          ), err);
+        error: err => {
+          console.error(
+            this.translate.instant(
+              'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_ANNOUNCEMENT',
+            ),
+            err,
+          );
           this.toastService.showToast(
             this.translate.instant(
               'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_CREATING_ANNOUNCEMENT_PLEASE_TRY_AGAIN',
             ),
-            'error'
+            'error',
           );
         },
       });
@@ -315,15 +324,18 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       return of(null);
     }
     return this.imageService.createImage(imageFile).pipe(
-      catchError((err) => {
-        console.error(this.translate.instant(
+      catchError(err => {
+        console.error(
+          this.translate.instant(
             'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_UPLOADING_IMAGE',
-          ), err);
+          ),
+          err,
+        );
         this.fileUploadError = this.translate.instant(
           'ADMIN-CREATE-ANNOUNCEMENT-PAGE.ERROR_UPLOADING_IMAGE_2',
         );
         return of(null);
-      })
+      }),
     );
   }
 }

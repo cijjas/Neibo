@@ -23,11 +23,11 @@ export class AdminCreateEventComponent {
     private eventService: EventService,
     private toastService: ToastService,
     private calendarService: CalendarService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {
     // Inline definition of the validator function
     const startBeforeEndValidator: ValidatorFn = (
-      control: AbstractControl
+      control: AbstractControl,
     ): ValidationErrors | null => {
       const group = control as FormGroup;
       const start = group.get('startTime')?.value;
@@ -47,7 +47,7 @@ export class AdminCreateEventComponent {
       },
       {
         validators: [startBeforeEndValidator],
-      }
+      },
     );
   }
 
@@ -59,6 +59,9 @@ export class AdminCreateEventComponent {
 
     const formValue = { ...this.eventForm.value };
 
+    // Convert date string to Date object before calling the service
+    const eventDate = new Date(formValue.date);
+
     // Ensure startTime and endTime include seconds
     formValue.startTime = this.ensureSeconds(formValue.startTime);
     formValue.endTime = this.ensureSeconds(formValue.endTime);
@@ -67,16 +70,18 @@ export class AdminCreateEventComponent {
       .createEvent(
         formValue.name,
         formValue.description,
-        formValue.date,
+        eventDate,
         formValue.startTime,
-        formValue.endTime
+        formValue.endTime,
       )
       .subscribe({
         next: () => {
-          // Show success toast
-          this.toastService.showToast(this.translate.instant(
-            'ADMIN-CREATE-EVENT.EVENT_CREATED_SUCCESSFULLY',
-          ), 'success');
+          this.toastService.showToast(
+            this.translate.instant(
+              'ADMIN-CREATE-EVENT.EVENT_CREATED_SUCCESSFULLY',
+            ),
+            'success',
+          );
 
           // Reset the form
           this.eventForm.reset();
@@ -86,9 +91,10 @@ export class AdminCreateEventComponent {
           this.calendarService.triggerReload();
         },
         error: () => {
-          this.toastService.showToast(this.translate.instant(
-            'ADMIN-CREATE-EVENT.FAILED_CREATING_EVENT',
-          ), 'error');
+          this.toastService.showToast(
+            this.translate.instant('ADMIN-CREATE-EVENT.FAILED_CREATING_EVENT'),
+            'error',
+          );
         },
       });
   }

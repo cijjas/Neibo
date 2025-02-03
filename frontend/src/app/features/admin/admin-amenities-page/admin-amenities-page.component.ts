@@ -63,7 +63,7 @@ export class AdminAmenitiesPageComponent implements OnInit {
   /**
    * Fetch all possible shifts from the API, then generate uniqueDays/uniqueTimes.
    */
-  private loadShifts(): void {
+  loadShifts(): void {
     this.shiftService.getShifts().subscribe({
       next: shiftsFromApi => {
         this.allShifts = shiftsFromApi;
@@ -87,6 +87,7 @@ export class AdminAmenitiesPageComponent implements OnInit {
 
   loadAmenities(): void {
     if (this.isLoading) return;
+
     this.isLoading = true;
 
     this.amenityService

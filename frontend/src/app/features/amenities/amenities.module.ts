@@ -1,31 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-    AmenitiesChooseTimePageComponent,
-    AmenitiesReservationsListComponent,
-    AmenitiesReservationsPageComponent
-} from '@features/index';
-
 import { SharedModule } from '@shared/shared.module';
-import { CalendarWidgetComponent } from '@features/index';
 import { AmenitiesRoutingModule } from './amenities-routing.module';
 
+import { AmenitiesChooseTimePageComponent } from './amenities-choose-time-page/amenities-choose-time-page.component';
+import { AmenitiesReservationsListComponent } from './amenities-reservations-list/amenities-reservations-list.component';
+import { AmenitiesReservationsPageComponent } from './amenities-reservations-page/amenities-reservations-page.component';
+
+import { CalendarWidgetComponent } from '../calendar/calendar-widget/calendar-widget.component';
+
 @NgModule({
-    declarations: [
-        AmenitiesChooseTimePageComponent,
-        AmenitiesReservationsListComponent,
-        AmenitiesReservationsPageComponent
-    ],
-    imports: [
-        CommonModule,
-        SharedModule,
-        CalendarWidgetComponent,
-        AmenitiesRoutingModule
-    ],
-    exports: [
-        AmenitiesChooseTimePageComponent,
-        AmenitiesReservationsListComponent,
-        AmenitiesReservationsPageComponent
-    ]
+  declarations: [
+    AmenitiesChooseTimePageComponent,
+    AmenitiesReservationsListComponent,
+    AmenitiesReservationsPageComponent,
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AmenitiesRoutingModule,
+    CalendarWidgetComponent,
+  ],
+  exports: [
+    AmenitiesChooseTimePageComponent,
+    AmenitiesReservationsListComponent,
+    AmenitiesReservationsPageComponent,
+  ],
 })
-export class AmenitiesModule { }
+export class AmenitiesModule {}

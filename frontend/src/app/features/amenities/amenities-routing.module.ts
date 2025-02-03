@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {
-  AmenitiesChooseTimePageComponent,
-  AmenitiesReservationsPageComponent,
-} from '@features/index';
+import { AmenitiesChooseTimePageComponent } from './amenities-choose-time-page/amenities-choose-time-page.component';
+import { AmenitiesReservationsPageComponent } from './amenities-reservations-page/amenities-reservations-page.component';
 
 const routes: Routes = [
   { path: '', component: AmenitiesReservationsPageComponent },
