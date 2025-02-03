@@ -33,6 +33,8 @@ import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
 
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
+import { UserProfileBridgeModule } from '@features/user-profile/user-profile-bridge.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -69,6 +71,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     ReactiveFormsModule,
     TimeAgoPipe,
     AddHoursPipe,
+    CalendarBridgeModule,
+    UserProfileBridgeModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
@@ -100,6 +104,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     PlaceholderPostComponent,
     PlaceholderServiceProviderComponent,
     PlaceholderProductComponent,
+    CalendarBridgeModule,
+    UserProfileBridgeModule,
   ],
 })
 export class SharedModule {}

@@ -14,6 +14,7 @@ import { AdminInformationPageComponent } from './admin-information-page/admin-in
 import { AdminCreateEventComponent } from './admin-create-event/admin-create-event.component';
 import { AdminServiceProvidersRequestsPageComponent } from './admin-service-providers-requests-page/admin-service-providers-requests-page.component';
 import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenities-page.component';
+import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenit
   imports: [
     CommonModule,
     SharedModule,
-    CalendarWidgetComponent,
+    CalendarBridgeModule,
     AdminRoutingModule,
   ],
 })

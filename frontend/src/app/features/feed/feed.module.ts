@@ -10,6 +10,7 @@ import { FeedPostContentComponent } from './feed-post-content/feed-post-content.
 import { FeedPostDetailPageComponent } from './feed-post-detail-page/feed-post-detail-page.component';
 import { FeedPostPreviewComponent } from './feed-post-preview/feed-post-preview.component';
 import { CalendarWidgetComponent } from '@features/calendar/calendar-widget/calendar-widget.component';
+import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { CalendarWidgetComponent } from '@features/calendar/calendar-widget/cale
   imports: [
     CommonModule,
     SharedModule,
-    CalendarWidgetComponent,
+    CalendarBridgeModule,
     FeedRoutingModule,
   ],
   exports: [

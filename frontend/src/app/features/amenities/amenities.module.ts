@@ -8,6 +8,7 @@ import { AmenitiesReservationsListComponent } from './amenities-reservations-lis
 import { AmenitiesReservationsPageComponent } from './amenities-reservations-page/amenities-reservations-page.component';
 
 import { CalendarWidgetComponent } from '../calendar/calendar-widget/calendar-widget.component';
+import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { CalendarWidgetComponent } from '../calendar/calendar-widget/calendar-wi
     CommonModule,
     SharedModule,
     AmenitiesRoutingModule,
-    CalendarWidgetComponent,
+    CalendarBridgeModule,
   ],
   exports: [
     AmenitiesChooseTimePageComponent,

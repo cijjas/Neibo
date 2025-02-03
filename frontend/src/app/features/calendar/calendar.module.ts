@@ -8,6 +8,7 @@ import { CalendarEventsColumnComponent } from './calendar-events-column/calendar
 import { CalendarPageComponent } from './calendar-page/calendar-page.component';
 import { CalendarEventPageComponent } from './calendar-event-page/calendar-event-page.component';
 import { CalendarWidgetComponent } from './calendar-widget/calendar-widget.component';
+import { CalendarBridgeModule } from './calendar-bridge.module';
 @NgModule({
   declarations: [
     CalendarBoxComponent,
@@ -19,7 +20,7 @@ import { CalendarWidgetComponent } from './calendar-widget/calendar-widget.compo
     CommonModule,
     SharedModule,
     CalendarRoutingModule,
-    CalendarWidgetComponent, // POSSIBLE PROBLEM
+    CalendarBridgeModule,
   ],
   exports: [
     CalendarBoxComponent,

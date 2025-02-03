@@ -6,6 +6,7 @@ import { UserProfileRoutingModule } from './user-profile-routing.module';
 import { CalendarWidgetComponent } from '@features/calendar/calendar-widget/calendar-widget.component';
 import { UserProfilePageComponent } from './user-profile-page/user-profile-page.component';
 import { UserProfileWidgetComponent } from './user-profile-widget/user-profile-widget.component';
+import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 
 @NgModule({
   declarations: [UserProfilePageComponent],
@@ -14,7 +15,7 @@ import { UserProfileWidgetComponent } from './user-profile-widget/user-profile-w
     SharedModule,
     UserProfileWidgetComponent,
     UserProfileRoutingModule,
-    CalendarWidgetComponent,
+    CalendarBridgeModule,
   ],
   exports: [UserProfilePageComponent, UserProfileWidgetComponent],
 })

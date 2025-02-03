@@ -16,6 +16,7 @@ import { ServiceProvidersReviewsAndPostsComponent } from './service-providers-re
 import { ServiceProvidersJoinNeighborhoodsPageComponent } from '@features/index';
 import { ServiceProvidersLayoutComponent } from './service-providers-layout/service-providers-layout.component';
 import { ServiceProvidersCreatePostComponent } from './service-providers-create-post/service-providers-create-post.component';
+import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { ServiceProvidersCreatePostComponent } from './service-providers-create-
     CommonModule,
     SharedModule,
     ServiceProvidersRoutingModule,
-    CalendarWidgetComponent,
+    CalendarBridgeModule,
   ],
   exports: [],
 })
