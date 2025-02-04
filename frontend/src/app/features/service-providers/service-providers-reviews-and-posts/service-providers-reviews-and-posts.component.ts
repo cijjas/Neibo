@@ -50,7 +50,7 @@ export class ServiceProvidersReviewsAndPostsComponent
     private postService: PostService,
     private route: ActivatedRoute,
     private router: Router,
-    private workerService: WorkerService
+    private workerService: WorkerService,
   ) {}
 
   ngOnInit(): void {
@@ -66,7 +66,7 @@ export class ServiceProvidersReviewsAndPostsComponent
 
         // Subscribe to query parameters for pagination *and* for tab selection
         this.subscriptions.add(
-          this.route.queryParams.subscribe((params) => {
+          this.route.queryParams.subscribe(params => {
             // Pagination params
             this.reviewCurrentPage = +params['reviewPage'] || 1;
             this.reviewPageSize = +params['reviewSize'] || 10;
@@ -79,22 +79,22 @@ export class ServiceProvidersReviewsAndPostsComponent
             // Reload data after query params change
             this.loadReviews();
             this.loadPosts();
-          })
+          }),
         );
 
         // Reactively load data when the worker changes
         this.subscriptions.add(
           this.workerSubject
             .pipe(
-              switchMap((worker) => {
+              switchMap(worker => {
                 if (worker) {
                   this.loadReviews();
                   this.loadPosts();
                 }
                 return [];
-              })
+              }),
             )
-            .subscribe()
+            .subscribe(),
         );
       });
     }
@@ -103,12 +103,12 @@ export class ServiceProvidersReviewsAndPostsComponent
   loadWorker(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.workerService.getWorker(id).subscribe({
-        next: (worker) => {
+        next: worker => {
           this.worker = worker;
           this.workerSubject.next(worker); // Update workerSubject
           resolve();
         },
-        error: (err) => {
+        error: err => {
           console.error('Error loading worker:', err);
           reject(err);
         },
@@ -137,30 +137,32 @@ export class ServiceProvidersReviewsAndPostsComponent
         size: this.reviewPageSize,
       };
       this.reviewService.getReviews(worker.reviews, queryParams).subscribe({
-        next: (response) => {
+        next: response => {
           this.reviews = response.reviews;
           this.reviewTotalPages = response.totalPages;
         },
-        error: (err) => console.error('Error loading reviews:', err),
+        error: err => console.error('Error loading reviews:', err),
       });
     }
   }
 
   loadPosts(): void {
-    const worker = this.workerSubject.getValue();
-    if (worker?.posts) {
-      const queryParams = {
+    // Suppose you've got a URL from somewhere (like from linkService or another param)
+    const workerPostsUrl = this.worker.posts;
+
+    this.postService
+      .getWorkerPostsByUrl(workerPostsUrl, {
         page: this.postCurrentPage,
         size: this.postPageSize,
-      };
-      this.postService.getWorkerPosts(queryParams).subscribe({
-        next: (response) => {
+      })
+      .subscribe({
+        next: response => {
           this.posts = response.posts;
           this.postTotalPages = response.totalPages;
+          this.postCurrentPage = response.currentPage;
         },
-        error: (err) => console.error('Error loading posts:', err),
+        error: err => console.error('Error loading worker posts:', err),
       });
-    }
   }
 
   onReviewPageChange(page: number): void {
@@ -212,7 +214,7 @@ export class ServiceProvidersReviewsAndPostsComponent
     this.router.navigate(['/services', 'posts', 'new'], {
       queryParams: {
         inChannel: this.linkService.getLink(
-          LinkKey.NEIGHBORHOOD_WORKER_CHANNEL
+          LinkKey.NEIGHBORHOOD_WORKER_CHANNEL,
         ),
         forWorker: this.worker.self,
       },

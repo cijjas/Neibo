@@ -30,10 +30,11 @@ export class WorkerService {
   ) {}
 
   public getWorker(url: string): Observable<Worker> {
-    return this.http.get<WorkerDto>(url).pipe(
-      tap((workerDto: WorkerDto) => console.log('Response:', workerDto)),
-      mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto)),
-    );
+    return this.http
+      .get<WorkerDto>(url)
+      .pipe(
+        mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto)),
+      );
   }
 
   public getWorkers(

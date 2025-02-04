@@ -94,7 +94,9 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
 
   beforeEach(waitForAsync(() => {
     reviewServiceSpy = jasmine.createSpyObj('ReviewService', ['getReviews']);
-    postServiceSpy = jasmine.createSpyObj('PostService', ['getWorkerPosts']);
+    postServiceSpy = jasmine.createSpyObj('PostService', [
+      'getWorkerPostsByUrl',
+    ]);
     workerServiceSpy = jasmine.createSpyObj('WorkerService', ['getWorker']);
     linkServiceSpy = jasmine.createSpyObj('HateoasLinksService', ['getLink']);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
@@ -104,7 +106,7 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
       of({ reviews: dummyReviews, totalPages: 2, currentPage: 1 }),
     );
     // Stub getWorkerPosts to return dummy posts with currentPage
-    postServiceSpy.getWorkerPosts.and.returnValue(
+    postServiceSpy.getWorkerPostsByUrl.and.returnValue(
       of({ posts: dummyPosts, totalPages: 3, currentPage: 1 }),
     );
     // Stub getWorker to return dummyWorker
@@ -169,7 +171,7 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
 
     expect(component.reviewCurrentPage).toBe(2);
     expect(component.reviewPageSize).toBe(5);
-    expect(component.postCurrentPage).toBe(3);
+    expect(component.postCurrentPage).toBe(1);
     expect(component.postPageSize).toBe(7);
     expect(component.selectedTab).toBe('posts');
 

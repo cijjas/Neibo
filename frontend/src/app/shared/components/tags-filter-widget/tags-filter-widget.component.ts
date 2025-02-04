@@ -1,21 +1,21 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
-import { HateoasLinksService } from "@core/index";
+import { Component, OnInit, Input } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { HateoasLinksService } from '@core/index';
 import {
   TagService,
   ProfessionService,
   Tag,
   Profession,
   LinkKey,
-} from "@shared/index";
-import { forkJoin } from "rxjs";
+} from '@shared/index';
+import { forkJoin } from 'rxjs';
 
 @Component({
-  selector: "app-tags-filter-widget",
-  templateUrl: "./tags-filter-widget.component.html",
+  selector: 'app-tags-filter-widget',
+  templateUrl: './tags-filter-widget.component.html',
 })
 export class TagsFilterWidgetComponent implements OnInit {
-  @Input() mode: "tags" | "professions" = "tags"; // 'tags' or 'professions'
+  @Input() mode: 'tags' | 'professions' = 'tags'; // 'tags' or 'professions'
 
   // Pagination state (only used for tags)
   currentPage: number = 1;
@@ -33,16 +33,16 @@ export class TagsFilterWidgetComponent implements OnInit {
     private professionService: ProfessionService,
     private linkService: HateoasLinksService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      if (this.mode === "tags") {
-        this.currentPage = +params["tagsCurrent"] || 1;
+    this.route.queryParams.subscribe(params => {
+      if (this.mode === 'tags') {
+        this.currentPage = +params['tagsCurrent'] || 1;
 
         // Handle tags from query params
-        const tagUrls = params["withTag"];
+        const tagUrls = params['withTag'];
 
         if (tagUrls) {
           // If there's a 'withTag' param, fetch those tags
@@ -54,9 +54,9 @@ export class TagsFilterWidgetComponent implements OnInit {
         }
 
         this.loadTagsFromApi();
-      } else if (this.mode === "professions") {
+      } else if (this.mode === 'professions') {
         // Handle professions from query params
-        const professionUrls = params["withProfession"];
+        const professionUrls = params['withProfession'];
 
         if (professionUrls) {
           const professionUrlArray = Array.isArray(professionUrls)
@@ -74,31 +74,31 @@ export class TagsFilterWidgetComponent implements OnInit {
   }
 
   private fetchAndApplyTags(tagUrls: string[]): void {
-    const tagObservables = tagUrls.map((url) => this.tagService.getTag(url));
+    const tagObservables = tagUrls.map(url => this.tagService.getTag(url));
     forkJoin(tagObservables).subscribe({
-      next: (tags) => {
-        this.appliedItems = tags.map((tag) => ({
+      next: tags => {
+        this.appliedItems = tags.map(tag => ({
           name: tag.name,
           self: tag.self,
         }));
       },
-      error: (err) => console.error("Failed to fetch tags:", err),
+      error: err => console.error('Failed to fetch tags:', err),
     });
   }
 
   private fetchAndApplyProfessions(professionUrls: string[]): void {
-    const professionObservables = professionUrls.map((url) =>
-      this.professionService.getProfession(url)
+    const professionObservables = professionUrls.map(url =>
+      this.professionService.getProfession(url),
     );
 
     forkJoin(professionObservables).subscribe({
-      next: (professions) => {
-        this.appliedItems = professions.map((profession) => ({
+      next: professions => {
+        this.appliedItems = professions.map(profession => ({
           name: profession.displayName,
           self: profession.self,
         }));
       },
-      error: (err) => console.error("Failed to fetch professions:", err),
+      error: err => console.error('Failed to fetch professions:', err),
     });
   }
 
@@ -111,35 +111,35 @@ export class TagsFilterWidgetComponent implements OnInit {
 
     this.tagService.getTags(tagsUrl, queryParams).subscribe({
       next: ({ tags, totalPages }: { tags: Tag[]; totalPages: number }) => {
-        this.itemList = tags.map((tag) => ({
+        this.itemList = tags.map(tag => ({
           name: tag.name,
           self: tag.self,
         }));
         this.totalPages = totalPages || 1;
       },
-      error: (err: any) => console.error("Failed to load tags:", err),
+      error: (err: any) => console.error('Failed to load tags:', err),
     });
   }
 
   private loadProfessions(): void {
     this.professionService.getProfessions().subscribe({
       next: (professions: Profession[]) => {
-        this.itemList = professions.map((profession) => ({
+        this.itemList = professions.map(profession => ({
           name: profession.displayName,
           self: profession.self,
         }));
       },
-      error: (err: any) => console.error("Failed to load professions:", err),
+      error: (err: any) => console.error('Failed to load professions:', err),
     });
   }
 
   addItem(item: { name: string; self: string }): void {
     // Only add if it's not already in the appliedItems array
-    if (!this.appliedItems.find((t) => t.self === item.self)) {
+    if (!this.appliedItems.find(t => t.self === item.self)) {
       this.appliedItems.push(item);
 
       const queryParams = { ...this.route.snapshot.queryParams };
-      const key = this.mode === "tags" ? "withTag" : "withProfession";
+      const key = this.mode === 'tags' ? 'withTag' : 'withProfession';
 
       if (!queryParams[key]) {
         queryParams[key] = [];
@@ -152,35 +152,34 @@ export class TagsFilterWidgetComponent implements OnInit {
 
       this.router.navigate([], {
         queryParams,
-        queryParamsHandling: "merge",
+        queryParamsHandling: 'merge',
       });
     }
   }
 
   removeItem(item: { name: string; self: string }): void {
-    this.appliedItems = this.appliedItems.filter((t) => t.self !== item.self);
+    this.appliedItems = this.appliedItems.filter(t => t.self !== item.self);
 
     const queryParams = { ...this.route.snapshot.queryParams };
-    const key = this.mode === "tags" ? "withTag" : "withProfession";
+    const key = this.mode === 'tags' ? 'withTag' : 'withProfession';
 
     if (Array.isArray(queryParams[key])) {
       // Remove the item from the array
       queryParams[key] = queryParams[key].filter(
-        (value: string) => value !== item.self
+        (value: string) => value !== item.self,
       );
       // If array is now empty, remove the param altogether
       if (queryParams[key].length === 0) {
         delete queryParams[key];
       }
     } else if (queryParams[key] === item.self) {
-      console.log("normal");
       // Single string case
       delete queryParams[key];
     }
 
     this.router.navigate([], {
       queryParams,
-      queryParamsHandling: "",
+      queryParamsHandling: '',
     });
   }
 
@@ -204,7 +203,7 @@ export class TagsFilterWidgetComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { tagsCurrent: this.currentPage },
-      queryParamsHandling: "merge",
+      queryParamsHandling: 'merge',
     });
   }
 }

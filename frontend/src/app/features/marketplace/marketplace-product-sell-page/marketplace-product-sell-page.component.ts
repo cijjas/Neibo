@@ -49,7 +49,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private departmentService: DepartmentService,
     private toastService: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -99,7 +99,10 @@ export class MarketplaceProductSellPageComponent implements OnInit {
   clearImageError(): void {
     if (
       this.images.length > 0 &&
-      this.formErrors === this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT')
+      this.formErrors ===
+        this.translate.instant(
+          'MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT',
+        )
     ) {
       this.formErrors = null;
     }
@@ -129,13 +132,17 @@ export class MarketplaceProductSellPageComponent implements OnInit {
 
   onSubmit(): void {
     if (this.listingForm.invalid) {
-      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY');
+      this.formErrors = this.translate.instant(
+        'MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY',
+      );
       return;
     }
 
     // Ensure at least one image exists
     if (this.images.length === 0) {
-      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT');
+      this.formErrors = this.translate.instant(
+        'MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT',
+      );
       return;
     }
 
@@ -148,7 +155,9 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     const price = parseFloat(priceString);
 
     if (isNaN(price)) {
-      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.INVALID_PRICE_FORMAT');
+      this.formErrors = this.translate.instant(
+        'MARKETPLACE-PRODUCT-SELL-PAGE.INVALID_PRICE_FORMAT',
+      );
       return;
     }
 
@@ -164,30 +173,33 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       images: [],
     };
 
-    console.log(productData.price);
     // Upload images
-    const imageUploadObservables = this.images.map((img) =>
-      this.imageService.createImage(img.file)
+    const imageUploadObservables = this.images.map(img =>
+      this.imageService.createImage(img.file),
     );
 
     combineLatest(imageUploadObservables)
       .pipe(
-        map((imageUrls) => {
-          productData.images = imageUrls.filter((url) => url !== null);
+        map(imageUrls => {
+          productData.images = imageUrls.filter(url => url !== null);
           return productData;
         }),
-        switchMap((data) => this.productService.createProduct(data))
+        switchMap(data => this.productService.createProduct(data)),
       )
       .subscribe({
-        next: (productUrl) => {
+        next: productUrl => {
           this.router.navigate(['/marketplace/products', productUrl]);
           this.toastService.showToast(
-            this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.LISTING_CREATED_SUCCESSFULLY'),
-            'success'
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-SELL-PAGE.LISTING_CREATED_SUCCESSFULLY',
+            ),
+            'success',
           );
         },
-        error: (err) => {
-          this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-SELL-PAGE.THERE_WAS_A_PROBLEM_CREATING_THE_LISTING');
+        error: err => {
+          this.formErrors = this.translate.instant(
+            'MARKETPLACE-PRODUCT-SELL-PAGE.THERE_WAS_A_PROBLEM_CREATING_THE_LISTING',
+          );
           console.error(err);
         },
       });

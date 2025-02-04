@@ -164,7 +164,7 @@ describe('ServiceProvidersCreatePostComponent', () => {
     );
     // Verify that the router navigates to the expected URL.
     expect(routerSpy.navigate).toHaveBeenCalledWith(
-      ['/services', 'profile', 'worker123'],
+      ['/services', 'profiles', 'worker123'],
       { queryParams: { tab: 'posts' } },
     );
   }));
