@@ -12,7 +12,7 @@ import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 // Import service types (adjust paths as needed)
-import { NeighborhoodService, Neighborhood, Roles } from '@shared/index';
+import { NeighborhoodService, Neighborhood, Role } from '@shared/index';
 import {
   AuthService,
   ToastService,
@@ -109,18 +109,18 @@ describe('RejectedPageComponent', () => {
     // Verify that userSessionService.updateUserProperty is called with the proper values.
     expect(userSessionServiceSpy.updateUserProperty).toHaveBeenCalledWith(
       'userRole',
-      Roles.UNVERIFIED_NEIGHBOR,
+      Role.UNVERIFIED_NEIGHBOR,
     );
     expect(userSessionServiceSpy.updateUserProperty).toHaveBeenCalledWith(
       'userRoleEnum',
-      Roles.UNVERIFIED_NEIGHBOR,
+      Role.UNVERIFIED_NEIGHBOR,
     );
     expect(userSessionServiceSpy.updateUserProperty).toHaveBeenCalledWith(
       'userRoleDisplay',
       'Unverified',
     );
     expect(userSessionServiceSpy.setUserRole).toHaveBeenCalledWith(
-      Roles.UNVERIFIED_NEIGHBOR,
+      Role.UNVERIFIED_NEIGHBOR,
     );
     // Verify that the success toast is shown with the correct key.
     expect(toastServiceSpy.showToast).toHaveBeenCalledWith(

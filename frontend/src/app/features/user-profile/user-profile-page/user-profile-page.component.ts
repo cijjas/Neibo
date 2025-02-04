@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService, User, Roles, LinkKey } from '@shared/index';
+import { UserService, User, Role, LinkKey } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -24,7 +24,7 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   darkMode: boolean = false;
   language: string = 'en';
   theme: 'default' | 'marketplace' | 'services' | 'admin' = 'default';
-  currentUserRole: Roles;
+  currentUserRole: Role;
   private subscriptions = new Subscription();
   environment = environment;
 
@@ -56,10 +56,10 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     this.currentUserRole = this.userSessionService.getCurrentRole();
 
     switch (this.currentUserRole) {
-      case Roles.ADMINISTRATOR:
+      case Role.ADMINISTRATOR:
         this.theme = 'admin';
         break;
-      case Roles.WORKER:
+      case Role.WORKER:
         this.theme = 'services';
         break;
       default:

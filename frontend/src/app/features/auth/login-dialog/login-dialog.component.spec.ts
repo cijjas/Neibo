@@ -9,7 +9,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { LinkKey, Roles } from '@shared/index';
+import { LinkKey, Role } from '@shared/index';
 import {
   AuthService,
   HateoasLinksService,
@@ -125,7 +125,7 @@ describe('LoginDialogComponent', () => {
       password: 'secret',
     });
     authServiceSpy.login.and.returnValue(of(true));
-    userSessionServiceSpy.getCurrentRole.and.returnValue(Roles.WORKER);
+    userSessionServiceSpy.getCurrentRole.and.returnValue(Role.WORKER);
     linkStorageSpy.getLink.and.callFake((key: string) => {
       if (key === LinkKey.USER_WORKER) {
         return 'worker_url';

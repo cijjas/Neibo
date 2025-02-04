@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 // Import service types (adjust paths as needed)
-import { ProductService, LinkKey, Product, Roles } from '@shared/index';
+import { ProductService, LinkKey, Product, Role } from '@shared/index';
 import { DepartmentService } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
@@ -43,7 +43,7 @@ describe('MarketplacePageComponent - Initialization', () => {
         creationDate: new Date(),
         language: 'en',
         userRole: '',
-        userRoleEnum: Roles.ADMINISTRATOR,
+        userRoleEnum: Role.ADMINISTRATOR,
         userRoleDisplay: 'Admin',
         image: 'seller_image.png',
         self: 'seller_self',

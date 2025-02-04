@@ -8,7 +8,7 @@ import {
   UserRoleDto,
   User,
   parseLinkHeader,
-  Roles,
+  Role,
   LinkKey,
 } from '@shared/index';
 import { HateoasLinksService, ImageService } from '@core/index';
@@ -252,11 +252,11 @@ export class UserService {
 
 export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
   const roleDisplayMapping = {
-    [Roles.ADMINISTRATOR]: 'Administrator',
-    [Roles.NEIGHBOR]: 'Neighbor',
-    [Roles.UNVERIFIED_NEIGHBOR]: 'Unverified Neighbor',
-    [Roles.WORKER]: 'Service Provider',
-    [Roles.REJECTED]: 'Rejected',
+    [Role.ADMINISTRATOR]: 'Administrator',
+    [Role.NEIGHBOR]: 'Neighbor',
+    [Role.UNVERIFIED_NEIGHBOR]: 'Unverified Neighbor',
+    [Role.WORKER]: 'Service Provider',
+    [Role.REJECTED]: 'Rejected',
   };
 
   return forkJoin([
@@ -264,7 +264,7 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
     http.get<UserRoleDto>(userDto._links.userRole),
   ]).pipe(
     map(([language, userRole]) => {
-      const roleEnum = userRole.role as Roles;
+      const roleEnum = userRole.role as Role;
       return {
         email: userDto.mail,
         name: userDto.name,

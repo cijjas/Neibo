@@ -53,6 +53,8 @@ export * from './service-providers/service-providers-review-dialog/service-provi
 export * from './service-providers/service-providers-reviews-and-posts/service-providers-reviews-and-posts.component';
 export * from './service-providers/service-providers-routing.module';
 export * from './service-providers/service-providers.module';
+export * from './super-admin/super-admin-page/super-admin-page.component';
+export * from './super-admin/super-admin.module';
 export * from './rejected/rejected-page/rejected-page.component';
 export * from './unverified/unverified-page/unverified-page.component';
 export * from './user-profile/user-profile-page/user-profile-page.component';

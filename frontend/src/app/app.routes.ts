@@ -4,7 +4,7 @@ import { RoleGuard, AuthGuard } from '@core/index';
 import {
   MainLayoutComponent,
   PublicLayoutComponent,
-  Roles,
+  Role,
 } from '@shared/index';
 
 export const appRoutes: Routes = [
@@ -39,7 +39,7 @@ export const appRoutes: Routes = [
             m => m.UnverifiedModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.UNVERIFIED_NEIGHBOR] },
+        data: { roles: [Role.UNVERIFIED_NEIGHBOR] },
       },
 
       // Unverified
@@ -50,7 +50,18 @@ export const appRoutes: Routes = [
             m => m.RejectedModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.REJECTED] },
+        data: { roles: [Role.REJECTED] },
+      },
+
+      // Unverified
+      {
+        path: 'super-admin',
+        loadChildren: () =>
+          import('@features/super-admin/super-admin.module').then(
+            m => m.SuperAdminModule,
+          ),
+        canActivate: [RoleGuard],
+        data: { roles: [Role.SUPER_ADMIN] },
       },
     ],
   },
@@ -65,7 +76,7 @@ export const appRoutes: Routes = [
         loadChildren: () =>
           import('@features/admin/admin.module').then(m => m.AdminModule),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.ADMINISTRATOR] },
+        data: { roles: [Role.ADMINISTRATOR] },
       },
 
       // Amenities
@@ -76,7 +87,7 @@ export const appRoutes: Routes = [
             m => m.AmenitiesModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
+        data: { roles: [Role.NEIGHBOR, Role.ADMINISTRATOR] },
       },
 
       // Calendar
@@ -87,7 +98,7 @@ export const appRoutes: Routes = [
             m => m.CalendarModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
+        data: { roles: [Role.NEIGHBOR, Role.ADMINISTRATOR, Role.WORKER] },
       },
 
       // Feed
@@ -96,7 +107,7 @@ export const appRoutes: Routes = [
         loadChildren: () =>
           import('@features/feed/feed.module').then(m => m.FeedModule),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
+        data: { roles: [Role.NEIGHBOR, Role.ADMINISTRATOR] },
       },
 
       // Information
@@ -107,7 +118,7 @@ export const appRoutes: Routes = [
             m => m.InformationModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
+        data: { roles: [Role.NEIGHBOR, Role.ADMINISTRATOR] },
       },
 
       // Marketplace
@@ -118,7 +129,7 @@ export const appRoutes: Routes = [
             m => m.MarketplaceModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR] },
+        data: { roles: [Role.NEIGHBOR, Role.ADMINISTRATOR] },
       },
 
       // Services
@@ -129,7 +140,7 @@ export const appRoutes: Routes = [
             m => m.ServiceProvidersModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
+        data: { roles: [Role.NEIGHBOR, Role.ADMINISTRATOR, Role.WORKER] },
       },
 
       // User Profile
@@ -140,7 +151,7 @@ export const appRoutes: Routes = [
             m => m.UserProfileModule,
           ),
         canActivate: [RoleGuard],
-        data: { roles: [Roles.NEIGHBOR, Roles.ADMINISTRATOR, Roles.WORKER] },
+        data: { roles: [Role.NEIGHBOR, Role.ADMINISTRATOR, Role.WORKER] },
       },
     ],
   },

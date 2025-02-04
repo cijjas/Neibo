@@ -6,7 +6,7 @@ import {
   UserSessionService,
 } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Event, EventService, LinkKey, Roles } from '@shared/index';
+import { Event, EventService, LinkKey, Role } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -45,7 +45,7 @@ export class CalendarEventsColumnComponent implements OnInit {
     });
 
     this.isAdmin =
-      this.userSessionService.getCurrentRole() == Roles.ADMINISTRATOR;
+      this.userSessionService.getCurrentRole() == Role.ADMINISTRATOR;
   }
 
   loadEventsForSelectedDate(): void {

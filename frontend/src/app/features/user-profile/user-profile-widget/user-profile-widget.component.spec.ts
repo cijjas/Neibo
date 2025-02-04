@@ -11,7 +11,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
 // Import service types (adjust paths as needed)
-import { User, Roles } from '@shared/index';
+import { User, Role } from '@shared/index';
 import {
   UserSessionService,
   ImageService,
@@ -37,7 +37,7 @@ describe('UserProfileWidgetComponent - Toggles and Image', () => {
     identification: 12345678,
     creationDate: new Date(),
     userRole: '',
-    userRoleEnum: Roles.NEIGHBOR,
+    userRoleEnum: Role.NEIGHBOR,
     userRoleDisplay: 'Neighbor',
     self: 'dummy_self',
   };
@@ -49,7 +49,7 @@ describe('UserProfileWidgetComponent - Toggles and Image', () => {
   ]);
   userSessionServiceSpy.getCurrentUser.and.returnValue(of(dummyUser));
   // For this test, return any role (e.g., NEIGHBOR).
-  userSessionServiceSpy.getCurrentRole.and.returnValue(Roles.NEIGHBOR);
+  userSessionServiceSpy.getCurrentRole.and.returnValue(Role.NEIGHBOR);
 
   // Stub ImageService: fetchImage returns a dummy safe URL.
   const imageServiceSpy = jasmine.createSpyObj('ImageService', ['fetchImage']);

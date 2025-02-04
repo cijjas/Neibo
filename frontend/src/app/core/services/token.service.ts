@@ -12,7 +12,7 @@ export class TokenService {
 
   private refreshingToken = false;
 
-  constructor(private userSessionService: UserSessionService) {}
+  constructor() {}
 
   setRefreshingTokenState(isRefreshing: boolean): void {
     this.refreshingToken = isRefreshing;

@@ -6,17 +6,17 @@ import {
   HateoasLinksService,
   UserSessionService,
 } from '@core/index';
-import { LinkKey, Roles } from '@shared/models';
+import { LinkKey, Role } from '@shared/models';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
 })
 export class SidebarComponent implements OnInit {
-  userRole: Roles | null = null; // Role of the logged-in user
+  userRole: Role | null = null; // Role of the logged-in user
   workerId: string | null = '';
   channelClass: string = ''; // Active channel class
-  public Roles = Roles; // Expose Roles enum to the template
+  public Roles = Role; // Expose Roles enum to the template
 
   constructor(
     private linkService: HateoasLinksService,

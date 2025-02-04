@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Import your service types (adjust paths as needed).
-import { TagService, LinkKey, Roles, Tag } from '@shared/index';
+import { TagService, LinkKey, Role, Tag } from '@shared/index';
 import {
   HateoasLinksService,
   UserSessionService,
@@ -83,7 +83,7 @@ describe('FeedCreatePostPageComponent', () => {
 
   beforeEach(() => {
     // By default, the user is NEIGHBOR (not worker).
-    userSessionSpy.getCurrentRole.and.returnValue(Roles.NEIGHBOR);
+    userSessionSpy.getCurrentRole.and.returnValue(Role.NEIGHBOR);
     // The user object isn't used extensively, so we can return a simple stub.
     userSessionSpy.getCurrentUser.and.returnValue(of({ self: 'user_self' }));
 
@@ -129,7 +129,7 @@ describe('FeedCreatePostPageComponent', () => {
   // 2) Worker initialization => does NOT fetch tags
   it('should skip tag fetching if user is worker', () => {
     // Now we set the role to WORKER before we create the component
-    userSessionSpy.getCurrentRole.and.returnValue(Roles.WORKER);
+    userSessionSpy.getCurrentRole.and.returnValue(Role.WORKER);
 
     // Reset any calls from previous tests
     tagServiceSpy.getTags.calls.reset();

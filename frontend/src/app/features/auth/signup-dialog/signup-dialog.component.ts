@@ -17,7 +17,7 @@ import {
   Language,
   ProfessionService,
   Profession,
-  Roles,
+  Role,
   LinkKey,
   WorkerService,
 } from '@shared/index';
@@ -208,7 +208,7 @@ export class SignupDialogComponent implements OnInit {
                   // Get the user's role from UserSessionService
                   const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
-                    case Roles.WORKER:
+                    case Role.WORKER:
                       const workerUrl = this.linkStorage.getLink(
                         LinkKey.USER_WORKER,
                       );
@@ -217,8 +217,8 @@ export class SignupDialogComponent implements OnInit {
                         .then(() => this.closeSignupDialog());
                       break;
 
-                    case Roles.NEIGHBOR:
-                    case Roles.ADMINISTRATOR:
+                    case Role.NEIGHBOR:
+                    case Role.ADMINISTRATOR:
                       const announcementesChannelUrl = this.linkStorage.getLink(
                         LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
                       );
@@ -235,14 +235,14 @@ export class SignupDialogComponent implements OnInit {
                         .then(() => this.closeSignupDialog());
                       break;
 
-                    case Roles.UNVERIFIED_NEIGHBOR:
+                    case Role.UNVERIFIED_NEIGHBOR:
                       this.router
                         .navigate(['unverified'])
                         .then(() => this.closeSignupDialog());
 
                       break;
 
-                    case Roles.REJECTED:
+                    case Role.REJECTED:
                       this.router
                         .navigate(['rejected'])
                         .then(() => this.closeSignupDialog());
@@ -339,7 +339,7 @@ export class SignupDialogComponent implements OnInit {
                   // Get the user's role from UserSessionService
                   const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
-                    case Roles.WORKER:
+                    case Role.WORKER:
                       const workerUrl = this.linkStorage.getLink(
                         LinkKey.USER_WORKER,
                       );

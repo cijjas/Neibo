@@ -5,7 +5,7 @@ import {
   HateoasLinksService,
   UserSessionService,
 } from '@core/index';
-import { User, LinkKey, Roles } from '@shared/index';
+import { User, LinkKey, Role } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
 
 export enum FeedStatus {
@@ -52,7 +52,7 @@ export class FeedControlBarComponent implements OnInit {
     });
 
     this.isNotAdmin =
-      this.userSessionService.getCurrentRole() != Roles.ADMINISTRATOR;
+      this.userSessionService.getCurrentRole() != Role.ADMINISTRATOR;
 
     this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
     this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);

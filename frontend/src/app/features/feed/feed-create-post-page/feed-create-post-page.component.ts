@@ -9,7 +9,7 @@ import {
   PostService,
   TagService,
   LinkKey,
-  Roles,
+  Role,
 } from '@shared/index';
 import {
   HateoasLinksService,
@@ -70,7 +70,7 @@ export class FeedCreatePostPageComponent implements OnInit {
 
   ngOnInit(): void {
     const userRole = this.userSessionService.getCurrentRole();
-    this.notWorker = userRole !== Roles.WORKER;
+    this.notWorker = userRole !== Role.WORKER;
 
     // Build form
     this.createPostForm = this.fb.group({

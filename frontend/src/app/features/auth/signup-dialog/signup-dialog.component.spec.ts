@@ -22,7 +22,7 @@ import {
   Language,
   Profession,
   LinkKey,
-  Roles,
+  Role,
 } from '@shared/index';
 import { AuthService } from '@core/index';
 import {
@@ -153,7 +153,7 @@ describe('SignupDialogComponent - Submission', () => {
     // Stub authService.login to return success.
     authServiceSpy.login.and.returnValue(of(true));
     // Simulate user role as NEIGHBOR.
-    userSessionServiceSpy.getCurrentRole.and.returnValue(Roles.NEIGHBOR);
+    userSessionServiceSpy.getCurrentRole.and.returnValue(Role.NEIGHBOR);
     // For NEIGHBOR (or ADMINISTRATOR) flow, simulate link lookups.
     linkStorageSpy.getLink.and.callFake((key: string) => {
       if (key === LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL) {
@@ -224,7 +224,7 @@ describe('SignupDialogComponent - Submission', () => {
     // Stub authService.login to return success.
     authServiceSpy.login.and.returnValue(of(true));
     // Simulate user role as WORKER.
-    userSessionServiceSpy.getCurrentRole.and.returnValue(Roles.WORKER);
+    userSessionServiceSpy.getCurrentRole.and.returnValue(Role.WORKER);
     // For WORKER, simulate link lookup for USER_WORKER.
     linkStorageSpy.getLink.and.callFake((key: string) => {
       if (key === LinkKey.USER_WORKER) {

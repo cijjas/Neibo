@@ -6,7 +6,7 @@ import { SafeUrl } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
 
 // Import service types (adjust paths as needed)
-import { UserService, User, Roles, LinkKey } from '@shared/index';
+import { UserService, User, Role, LinkKey } from '@shared/index';
 import {
   ImageService,
   AuthService,
@@ -30,7 +30,7 @@ export interface DummyUser extends User {
   identification: number;
   creationDate: Date;
   userRole: string;
-  userRoleEnum: Roles;
+  userRoleEnum: Role;
   userRoleDisplay: string;
   self: string;
 }
@@ -59,7 +59,7 @@ describe('UserProfilePageComponent - Initialization', () => {
     identification: 12345678,
     creationDate: new Date(),
     userRole: '',
-    userRoleEnum: Roles.WORKER,
+    userRoleEnum: Role.WORKER,
     userRoleDisplay: 'Worker',
     self: 'dummy_self',
   };
@@ -70,7 +70,7 @@ describe('UserProfilePageComponent - Initialization', () => {
     'getCurrentRole',
   ]);
   userSessionServiceSpy.getCurrentUser.and.returnValue(of(dummyUser));
-  userSessionServiceSpy.getCurrentRole.and.returnValue(Roles.WORKER);
+  userSessionServiceSpy.getCurrentRole.and.returnValue(Role.WORKER);
 
   // Stub imageService to return a dummy safe URL.
   const imageServiceSpy = jasmine.createSpyObj('ImageService', ['fetchImage']);

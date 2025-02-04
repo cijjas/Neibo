@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 // Assume these types come from your shared code.
-import { Post, Roles } from '@shared/index';
+import { Post, Role } from '@shared/index';
 
 // Create a dummy post with all required properties. Use a cast to bypass type issues.
 const dummyPost: Post = {
@@ -25,8 +25,8 @@ const dummyPost: Post = {
     identification: 1,
     creationDate: new Date(),
     language: 'en',
-    userRole: Roles.NEIGHBOR,
-    userRoleEnum: Roles.NEIGHBOR,
+    userRole: Role.NEIGHBOR,
+    userRoleEnum: Role.NEIGHBOR,
     userRoleDisplay: 'Neighbor',
     image: 'author_image_url',
     self: 'author_self',

@@ -1066,7 +1066,7 @@
     "SOLD_BY": "Vendido por",
     "NO_NEW_REQUESTS": "No hay nuevas solicitudes",
     "VIEW_PRODUCT": "Ver producto"
-},
+  },
   "MARKETPLACE-DASHBOARD-SELLER-PAGE": {
     "MY_LISTINGS": "Mis publicaciones",
     "MY_SALES": "Mis ventas",
@@ -1080,8 +1080,8 @@
     "PURCHASES_NOT_FOUND": "No se encontraron compras",
     "QUANTITY": "Cantidad",
     "BOUGHT_BY": "Comprado por"
-},
- "MARKETPLACE-PAGE": {
+  },
+  "MARKETPLACE-PAGE": {
     "PRODUCTS_NOT_FOUND": "Productos no encontrados"
   },
   "MARKETPLACE-PRODUCT-DETAIL-PAGE": {
@@ -1148,7 +1148,7 @@
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Usado",
-    "NEW":"Nuevo"
+    "NEW": "Nuevo"
   },
   "MARKETPLACE-PRODUCT-REQUESTS-PAGE": {
     "IN_STOCK": "En stock",

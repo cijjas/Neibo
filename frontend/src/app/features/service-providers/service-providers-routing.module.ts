@@ -7,7 +7,7 @@ import { ServiceProvidersJoinNeighborhoodsPageComponent } from './service-provid
 import { ServiceProvidersLayoutComponent } from './service-providers-layout/service-providers-layout.component';
 import { ServiceProvidersCreatePostComponent } from './service-providers-create-post/service-providers-create-post.component';
 
-import { Roles } from '@shared/models';
+import { Role } from '@shared/models';
 import { serviceProviderResolver } from '@shared/resolvers/service-provider.resolver';
 
 const routes: Routes = [
@@ -25,13 +25,13 @@ const routes: Routes = [
         path: 'join-neighborhoods',
         component: ServiceProvidersJoinNeighborhoodsPageComponent,
         canActivate: [RoleGuard],
-        data: { roles: [Roles.WORKER] },
+        data: { roles: [Role.WORKER] },
       },
       {
         path: 'posts/new',
         component: ServiceProvidersCreatePostComponent,
         canActivate: [RoleGuard],
-        data: { roles: [Roles.WORKER] },
+        data: { roles: [Role.WORKER] },
       },
     ],
   },

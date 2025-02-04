@@ -7,7 +7,12 @@
     </div>
 
     <p class="error-description">
-      {{ errorMessage }}
+      {{
+        errorMessage
+          ? errorMessage
+          : ('NOT-FOUND-PAGE.THE_PAGE_YOU_ARE_LOOKING_FOR_CANNOT_BE_FOUND'
+            | translate)
+      }}
     </p>
     <div
       (click)="goBack()"

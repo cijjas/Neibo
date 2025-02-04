@@ -11,7 +11,7 @@ import { of, throwError } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // Services/models (adjust import paths as needed)
-import { EventService, LinkKey, Event, Roles } from '@shared/index';
+import { EventService, LinkKey, Event, Role } from '@shared/index';
 import {
   HateoasLinksService,
   ConfirmationService,
@@ -86,7 +86,7 @@ describe('CalendarEventsColumnComponent', () => {
     // Confirmation by default: auto-confirm for testing
     confirmationServiceSpy.askForConfirmation.and.returnValue(of(true));
 
-    userSessionSpy.getCurrentRole.and.returnValue(Roles.NEIGHBOR);
+    userSessionSpy.getCurrentRole.and.returnValue(Role.NEIGHBOR);
 
     TestBed.configureTestingModule({
       declarations: [CalendarEventsColumnComponent, FakeTranslatePipe],

@@ -5,7 +5,7 @@ import {
 } from './admin-create-announcement-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { PostService, TagService, LinkKey, Tag, Roles } from '@shared/index';
+import { PostService, TagService, LinkKey, Tag, Role } from '@shared/index';
 import {
   ImageService,
   HateoasLinksService,
@@ -61,7 +61,7 @@ describe('AdminCreateAnnouncementPageComponent', () => {
         creationDate: new Date(),
         language: 'en',
         userRole: 'ADMIN',
-        userRoleEnum: Roles.ADMINISTRATOR,
+        userRoleEnum: Role.ADMINISTRATOR,
         userRoleDisplay: 'Admin',
         image: 'http://example.com/avatar.png',
         self: '/api/users/1',

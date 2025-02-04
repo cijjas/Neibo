@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 // Import types (adjust paths as needed)
-import { Post, Tag, Comment, Roles, LinkKey } from '@shared/index';
+import { Post, Tag, Comment, Role, LinkKey } from '@shared/index';
 import {
   CommentService,
   ImageService,
@@ -48,7 +48,7 @@ const dummyPost: Post = {
     creationDate: new Date(),
     language: 'en',
     userRole: '',
-    userRoleEnum: Roles.NEIGHBOR,
+    userRoleEnum: Role.NEIGHBOR,
     userRoleDisplay: '',
     image: 'author_image_url',
     self: 'author_self',

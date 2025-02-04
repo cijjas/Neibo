@@ -10,7 +10,7 @@ import {
   HateoasLinksService,
   UserSessionService,
 } from '@core/index';
-import { LikeService, TagService, Post, Roles, LinkKey } from '@shared/index';
+import { LikeService, TagService, Post, Role, LinkKey } from '@shared/index';
 
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
@@ -37,8 +37,8 @@ const dummyPost: Post = {
     identification: 1,
     creationDate: new Date(),
     language: 'en',
-    userRole: Roles.NEIGHBOR,
-    userRoleEnum: Roles.NEIGHBOR,
+    userRole: Role.NEIGHBOR,
+    userRoleEnum: Role.NEIGHBOR,
     userRoleDisplay: 'Neighbor',
     image: 'author_image_url',
     self: 'author_self',
