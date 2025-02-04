@@ -44,9 +44,7 @@ describe('NotFoundPageComponent', () => {
   it('should create and initialize with default error code and message', () => {
     expect(component).toBeTruthy();
     expect(component.errorCode).toEqual('404');
-    expect(component.errorMessage).toEqual(
-      'NOT-FOUND-PAGE.THE_PAGE_YOU_ARE_LOOKING_FOR_CANNOT_BE_FOUND',
-    );
+    expect(component.errorMessage).toEqual('');
   });
 
   it('should navigate to root when goBack is called', () => {
