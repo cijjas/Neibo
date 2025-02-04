@@ -1,13 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  AuthService,
-  HateoasLinksService,
-  ImageService,
-  ToastService,
-  UserSessionService,
-} from '@core/index';
+import { ImageService, ToastService, UserSessionService } from '@core/index';
 import { PostService } from '@shared/index';
 import { Channel } from '@shared/models';
 import { catchError, of, switchMap, take } from 'rxjs';
@@ -38,7 +32,7 @@ export class ServiceProvidersCreatePostComponent {
     private route: ActivatedRoute,
     private userSessionService: UserSessionService,
     private toastService: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +46,7 @@ export class ServiceProvidersCreatePostComponent {
     });
 
     // Listen to route queryParams for channel
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       this.channel = params['inChannel'];
       this.workerId = params['forWorker'];
     });
@@ -67,7 +61,7 @@ export class ServiceProvidersCreatePostComponent {
 
       // Preview
       const reader = new FileReader();
-      reader.onload = (e) => (this.imagePreviewUrl = reader.result);
+      reader.onload = e => (this.imagePreviewUrl = reader.result);
       reader.readAsDataURL(file);
     }
   }
@@ -87,34 +81,38 @@ export class ServiceProvidersCreatePostComponent {
       .getCurrentUser()
       .pipe(
         take(1),
-        switchMap((user) => {
+        switchMap(user => {
           formValue.user = user.self;
           formValue.channel = this.channel;
           return this.createImageObservable(formValue.imageFile).pipe(
-            switchMap((imageUrl) => {
+            switchMap(imageUrl => {
               if (imageUrl) {
                 formValue.image = imageUrl;
               }
               return this.postService.createPost(formValue);
-            })
+            }),
           );
-        })
+        }),
       )
       .subscribe({
-        next: (response) => {
+        next: response => {
           this.toastService.showToast(
-            this.translate.instant('SERVICE-PROVIDERS-CREATE-POST.YOUR_POST_WAS_CREATED_SUCCESSFULLY'),
-            'success'
+            this.translate.instant(
+              'SERVICE-PROVIDERS-CREATE-POST.YOUR_POST_WAS_CREATED_SUCCESSFULLY',
+            ),
+            'success',
           );
           // Navigate the workerrs posts
           this.router.navigate(['/services', 'profile', this.workerId], {
             queryParams: { tab: 'posts' },
           });
         },
-        error: (error) => {
+        error: error => {
           this.toastService.showToast(
-            this.translate.instant('SERVICE-PROVIDERS-CREATE-POST.THERE_WAS_A_PROBLEM_CREATING_YOUR_POST'),
-            'error'
+            this.translate.instant(
+              'SERVICE-PROVIDERS-CREATE-POST.THERE_WAS_A_PROBLEM_CREATING_YOUR_POST',
+            ),
+            'error',
           );
           console.error('Error creating post:', error);
         },
@@ -129,10 +127,10 @@ export class ServiceProvidersCreatePostComponent {
       return of(null);
     }
     return this.imageService.createImage(imageFile).pipe(
-      catchError((err) => {
+      catchError(err => {
         console.error('Error uploading image:', err);
         return of(null);
-      })
+      }),
     );
   }
 }

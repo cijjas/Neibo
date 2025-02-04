@@ -44,8 +44,6 @@ export * from './models/shift.model';
 export * from './models/tag.model';
 export * from './models/user.model';
 export * from './models/worker.model';
-export * from './pipes/add-hours/add-hours.pipe';
-export * from './pipes/time-ago/time-ago.pipe';
 export * from './services/domain/affiliation.service';
 export * from './services/domain/amenity.service';
 export * from './services/domain/attendance.service';

@@ -25,12 +25,6 @@ import { PlaceholderPostComponent } from './components/placeholder-post/placehol
 import { PlaceholderServiceProviderComponent } from './components/placeholder-service-provider/placeholder-service-provider.component';
 import { PlaceholderProductComponent } from './components/placeholder-product/placeholder-product.component';
 
-import { CalendarWidgetComponent } from '@features/index';
-import { UserProfileWidgetComponent } from '@features/index';
-
-import { TimeAgoPipe } from './pipes/time-ago/time-ago.pipe';
-import { AddHoursPipe } from './pipes/add-hours/add-hours.pipe';
-
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
@@ -69,8 +63,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    TimeAgoPipe,
-    AddHoursPipe,
     CalendarBridgeModule,
     UserProfileBridgeModule,
     TranslateModule.forChild({
@@ -98,8 +90,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     TagsFilterWidgetComponent,
     InfiniteScrollSelectComponent,
     ConfirmationDialogComponent,
-    TimeAgoPipe,
-    AddHoursPipe,
     TranslateModule,
     PlaceholderPostComponent,
     PlaceholderServiceProviderComponent,

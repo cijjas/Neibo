@@ -1,4 +1,4 @@
-import { Product, User } from "./index";
+import { Product, User } from './index';
 
 export interface Request {
   message: string;

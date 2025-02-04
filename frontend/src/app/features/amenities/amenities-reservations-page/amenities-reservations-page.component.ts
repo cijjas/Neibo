@@ -88,7 +88,6 @@ export class AmenitiesReservationsPageComponent implements OnInit {
 
         // LISTA
         this.uniqueDays = Array.from(daysSet).sort(sortDays);
-        console.log('hola');
         this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
       },
       error: err => {

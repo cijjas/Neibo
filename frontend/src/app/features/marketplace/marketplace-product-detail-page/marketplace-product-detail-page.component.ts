@@ -70,7 +70,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private linkService: HateoasLinksService,
     private toastService: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -200,7 +200,12 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.toastService.showToast(this.translate.instant('MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST_SENT_SUCCESSFULLY'), 'success');
+          this.toastService.showToast(
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST_SENT_SUCCESSFULLY',
+            ),
+            'success',
+          );
           this.requestDialogVisible = false;
           requestForm.resetForm();
         },
@@ -234,7 +239,9 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
             .subscribe({
               next: () => {
                 this.toastService.showToast(
-                  this.translate.instant('MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST_SENT_SUCCESSFULLY'),
+                  this.translate.instant(
+                    'MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST_SENT_SUCCESSFULLY',
+                  ),
                   'success',
                 );
                 this.requestDialogVisible = false;
@@ -243,7 +250,9 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
               error: err => {
                 console.error('Error sending request:', err);
                 this.toastService.showToast(
-                  this.translate.instant('MARKETPLACE-PRODUCT-DETAIL-PAGE.OOPS'),
+                  this.translate.instant(
+                    'MARKETPLACE-PRODUCT-DETAIL-PAGE.OOPS',
+                  ),
                   'error',
                 );
                 this.requestError = true;
@@ -278,12 +287,19 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
         next: response => {
           this.questionForReply.responseMessage = this.replyMessage;
           this.closeReplyDialog();
-          this.toastService.showToast(this.translate.instant('MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY_SENT_SUCCESSFULLY'), 'success');
+          this.toastService.showToast(
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY_SENT_SUCCESSFULLY',
+            ),
+            'success',
+          );
         },
         error: err => {
           console.error('Error replying to inquiry:', err);
           this.toastService.showToast(
-            this.translate.instant('MARKETPLACE-PRODUCT-DETAIL-PAGE.FAILED_TO_SEND_REPLY'),
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.FAILED_TO_SEND_REPLY',
+            ),
             'error',
           );
         },

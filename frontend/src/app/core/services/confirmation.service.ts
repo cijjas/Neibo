@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 
-
-
 // Interface for customization options
 export interface ConfirmationOptions {
   title?: string;
@@ -10,7 +8,6 @@ export interface ConfirmationOptions {
   confirmText?: string;
   cancelText?: string;
 }
-
 
 @Injectable({
   providedIn: 'root',
