@@ -103,7 +103,7 @@ export class ServiceProvidersCreatePostComponent {
             'success',
           );
           // Navigate the workerrs posts
-          this.router.navigate(['/services', 'profile', this.workerId], {
+          this.router.navigate(['/services', 'profiles', this.workerId], {
             queryParams: { tab: 'posts' },
           });
         },
