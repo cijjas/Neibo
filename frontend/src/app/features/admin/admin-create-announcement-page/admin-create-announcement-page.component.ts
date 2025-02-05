@@ -15,15 +15,7 @@ import {
 import { PostService, TagService, LinkKey, Tag } from '@shared/index';
 import { catchError, forkJoin, of, switchMap, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-
-/** Minimal Tag interface. If you already have a Tag type, you can remove this. */
-
-export function atLeastOneTagSelected(
-  control: AbstractControl,
-): ValidationErrors | null {
-  const tags = control.value || [];
-  return tags.length > 0 ? null : { noTagsSelected: true };
-}
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-admin-create-announcement-page',
@@ -95,8 +87,8 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     this.announcementForm = this.fb.group({
       subject: ['', Validators.required],
       message: ['', Validators.required],
-      imageFile: [null],
-      tags: [[], atLeastOneTagSelected],
+      imageFile: [null, VALIDATION_CONFIG.imageValidator],
+      tags: [[], VALIDATION_CONFIG.atLeastOneTagSelected],
     });
   }
 
@@ -106,6 +98,9 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
   }
   get messageControl() {
     return this.announcementForm.get('message');
+  }
+  get imageFileControl() {
+    return this.announcementForm.get('imageFile');
   }
 
   // --------------------------------------------------

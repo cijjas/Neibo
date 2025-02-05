@@ -1,6 +1,6 @@
 <div class="cool-static-container shifts-reservation">
   <h2 class="card-title">
-    {{ "ADMIN-AMENITY-EDIT-PAGE.EDIT_AMENITY" | translate }}
+    {{ 'ADMIN-AMENITY-EDIT-PAGE.EDIT_AMENITY' | translate }}
   </h2>
   <div class="divider"></div>
   <div>
@@ -16,14 +16,11 @@
             [placeholder]="'ADMIN-AMENITY-EDIT-PAGE.NAME' | translate"
             type="text"
           />
-          <div
-            class="form-row form-error"
-            *ngIf="nameControl?.invalid && nameControl?.touched"
-          >
-            <p class="error">
-              {{ "ADMIN-AMENITY-EDIT-PAGE.NAME_IS_REQUIRED" | translate }}
-            </p>
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="nameControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
       </div>
 
@@ -31,37 +28,36 @@
       <div
         class="d-flex flex-column justify-content-between align-items-center"
       >
-        <textarea
-          formControlName="description"
-          class="cool-input textarea-min-max"
-          rows="5"
-          [placeholder]="'ADMIN-AMENITY-EDIT-PAGE.DESCRIPTION' | translate"
-        ></textarea>
-        <div
-          class="form-row form-error"
-          *ngIf="descControl?.invalid && descControl?.touched"
-        >
-          <p class="error">
-            {{ "ADMIN-AMENITY-EDIT-PAGE.DESCRIPTION_IS_REQUIRED" | translate }}
-          </p>
+        <div class="form-row">
+          <textarea
+            formControlName="description"
+            class="cool-input textarea-min-max"
+            rows="5"
+            [placeholder]="'ADMIN-AMENITY-EDIT-PAGE.DESCRIPTION' | translate"
+          ></textarea>
+          <app-form-error
+            class="w-100"
+            [control]="descControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
       </div>
 
       <p class="m-t-40">
-        {{ "ADMIN-AMENITY-EDIT-PAGE.AMENITY_HOURS" | translate }}
+        {{ 'ADMIN-AMENITY-EDIT-PAGE.AMENITY_HOURS' | translate }}
       </p>
       <div class="divider"></div>
 
       <!-- Action buttons -->
       <div class="f-r-sb-c w-100 ps-3 p-3">
         <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">
-          {{ "ADMIN-AMENITY-EDIT-PAGE.917" | translate }}
+          {{ 'ADMIN-AMENITY-EDIT-PAGE.917' | translate }}
         </a>
         <a (click)="uncheckWeekends()" class="w-100 cool-button red">
-          {{ "ADMIN-AMENITY-EDIT-PAGE.CLEAR_WEEKEND" | translate }}
+          {{ 'ADMIN-AMENITY-EDIT-PAGE.CLEAR_WEEKEND' | translate }}
         </a>
         <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">
-          {{ "ADMIN-AMENITY-EDIT-PAGE.CLEAR_ALL" | translate }}
+          {{ 'ADMIN-AMENITY-EDIT-PAGE.CLEAR_ALL' | translate }}
         </a>
       </div>
 
@@ -69,7 +65,7 @@
       <div class="cool-table w-100 p-4">
         <table>
           <tr>
-            <th>{{ "ADMIN-AMENITY-EDIT-PAGE.ROW" | translate }}</th>
+            <th>{{ 'ADMIN-AMENITY-EDIT-PAGE.ROW' | translate }}</th>
             <!-- Header columns for unique days -->
             <th *ngFor="let day of uniqueDays">
               {{ getAbbreviatedDay(day) }}
@@ -108,12 +104,12 @@
       <!-- Info text -->
       <div class="f-c-c-c">
         <div class="f-r-c-c" style="gap: 5px">
-          {{ "ADMIN-AMENITY-EDIT-PAGE.REMEMBER_THAT" | translate }}
+          {{ 'ADMIN-AMENITY-EDIT-PAGE.REMEMBER_THAT' | translate }}
           <span class="c-primary font-weight-bolder">
-            {{ "ADMIN-AMENITY-EDIT-PAGE.ONLY_SELECTED_SHIFTS" | translate }}
+            {{ 'ADMIN-AMENITY-EDIT-PAGE.ONLY_SELECTED_SHIFTS' | translate }}
           </span>
           {{
-            "ADMIN-AMENITY-EDIT-PAGE.WILL_BE_ACTIVE_FOR_YOUR_AMENITY"
+            'ADMIN-AMENITY-EDIT-PAGE.WILL_BE_ACTIVE_FOR_YOUR_AMENITY'
               | translate
           }}
         </div>
@@ -128,7 +124,7 @@
           style="height: 40px"
           [disabled]="!anyShiftChecked"
         >
-          {{ "ADMIN-AMENITY-EDIT-PAGE.SAVE_CHANGES" | translate }}
+          {{ 'ADMIN-AMENITY-EDIT-PAGE.SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

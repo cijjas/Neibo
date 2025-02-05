@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 import { ShiftService, Shift, AmenityService } from '@shared/index';
 
 @Component({
@@ -49,8 +50,20 @@ export class AdminAmenityEditPageComponent implements OnInit {
   ngOnInit(): void {
     // Create the form
     this.amenityForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.name.maxLength),
+        ],
+      ],
+      description: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.description.maxLength),
+        ],
+      ],
     });
 
     // 1) Load the Amenity

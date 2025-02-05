@@ -1,21 +1,24 @@
 <!-- Contact Information -->
 <div class="cool-static-container m-b-20" style="word-wrap: break-word">
   <div class="f-r-sb-c mb-4">
-    <h3 class="mb-0">{{ "ADMIN-INFORMATION-PAGE.CONTACT_INFORMATION" | translate }}</h3>
+    <h3 class="mb-0">
+      {{ 'ADMIN-INFORMATION-PAGE.CONTACT_INFORMATION' | translate }}
+    </h3>
 
     <!-- Add contact button -->
     <button
       class="cool-action-button admin-button"
       (click)="openCreateContactDialog()"
     >
-      <i class="fas fa-plus"></i> {{ "ADMIN-INFORMATION-PAGE.ADD_CONTACT_INFO" | translate }}
+      <i class="fas fa-plus"></i>
+      {{ 'ADMIN-INFORMATION-PAGE.ADD_CONTACT_INFO' | translate }}
     </button>
   </div>
 
   <!-- If no phone numbers -->
   <div class="no-posts-found" *ngIf="phoneNumbersList?.length === 0">
     <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-    {{ "ADMIN-INFORMATION-PAGE.INFORMATION_NOT_FOUND" | translate }}
+    {{ 'ADMIN-INFORMATION-PAGE.INFORMATION_NOT_FOUND' | translate }}
   </div>
 
   <!-- Otherwise, show table -->
@@ -25,9 +28,9 @@
   >
     <table class="table-striped w-100">
       <tr>
-        <th class="day">{{ "ADMIN-INFORMATION-PAGE.NAME" | translate }}</th>
-        <th>{{ "ADMIN-INFORMATION-PAGE.ADDRESS" | translate }}</th>
-        <th>{{ "ADMIN-INFORMATION-PAGE.PHONE_NUMBER" | translate }}</th>
+        <th class="day">{{ 'ADMIN-INFORMATION-PAGE.NAME' | translate }}</th>
+        <th>{{ 'ADMIN-INFORMATION-PAGE.ADDRESS' | translate }}</th>
+        <th>{{ 'ADMIN-INFORMATION-PAGE.PHONE_NUMBER' | translate }}</th>
         <th></th>
       </tr>
       <tr *ngFor="let contact of phoneNumbersList">
@@ -35,7 +38,6 @@
         <td>{{ contact.address }}</td>
         <td>{{ contact.phoneNumber }}</td>
         <td>
-          <!-- Example delete button -->
           <button class="btn btn-link" (click)="deleteContact(contact.self)">
             <i class="fas fa-trash" style="color: var(--error)"></i>
           </button>
@@ -59,19 +61,20 @@
 
 <!-- Add resource button -->
 <div class="upper-feed-buttons-box m-b-20">
-  <h3 class="mb-0">{{ "ADMIN-INFORMATION-PAGE.RESOURCES" | translate }}</h3>
+  <h3 class="mb-0">{{ 'ADMIN-INFORMATION-PAGE.RESOURCES' | translate }}</h3>
   <a
     class="cool-action-button admin-button"
     (click)="openCreateResourceDialog()"
   >
-    <i class="fa-solid fa-plus"></i> {{ "ADMIN-INFORMATION-PAGE.ADD_RESOURCE" | translate }}
+    <i class="fa-solid fa-plus"></i>
+    {{ 'ADMIN-INFORMATION-PAGE.ADD_RESOURCE' | translate }}
   </a>
 </div>
 
 <!-- Resources list -->
 <div class="no-posts-found" *ngIf="resourceList?.length === 0">
   <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-  {{ "ADMIN-INFORMATION-PAGE.RESOURCES_NOT_FOUND" | translate }}
+  {{ 'ADMIN-INFORMATION-PAGE.RESOURCES_NOT_FOUND' | translate }}
 </div>
 
 <div
@@ -120,7 +123,7 @@
   <div class="dialog-content">
     <div class="dialog-header">
       <h3 class="font-size-20 font-weight-bold" style="color: var(--primary)">
-        {{ "ADMIN-INFORMATION-PAGE.CREATE_CONTACT" | translate }}
+        {{ 'ADMIN-INFORMATION-PAGE.CREATE_CONTACT' | translate }}
       </h3>
     </div>
 
@@ -139,17 +142,11 @@
             placeholder="Contact Name"
             type="text"
           />
-          <div
-            class="form-row form-error"
-            *ngIf="contactNameControl?.invalid && contactNameControl?.touched"
-          >
-            <p class="error" *ngIf="contactNameControl?.hasError('required')">
-              {{ "ADMIN-INFORMATION-PAGE.NAME_IS_REQUIRED" | translate }}
-            </p>
-            <p class="error" *ngIf="contactNameControl?.hasError('maxlength')">
-              {{ "ADMIN-INFORMATION-PAGE.NAME_CANNOT_EXCEED_50_CHARACTERS" | translate }}
-            </p>
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="contactNameControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
 
         <!-- Contact Address -->
@@ -160,17 +157,11 @@
             placeholder="Contact Address"
             type="text"
           />
-          <div
-            class="form-row form-error"
-            *ngIf="addressControl?.invalid && addressControl?.touched"
-          >
-            <p class="error" *ngIf="addressControl?.hasError('required')">
-              {{ "ADMIN-INFORMATION-PAGE.ADDRESS_IS_REQUIRED" | translate }}
-            </p>
-            <p class="error" *ngIf="addressControl?.hasError('maxlength')">
-              {{ "ADMIN-INFORMATION-PAGE.ADDRESS_CANNOT_EXCEED_50_CHARACTERS" | translate }}
-            </p>
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="addressControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
 
         <!-- Contact Phone -->
@@ -181,12 +172,11 @@
             placeholder="Contact Phone"
             type="text"
           />
-          <div
-            class="form-row form-error"
-            *ngIf="phoneControl?.invalid && phoneControl?.touched"
-          >
-            <p class="error">{{ "ADMIN-INFORMATION-PAGE.PHONE_IS_REQUIRED" | translate }}</p>
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="phoneControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
       </div>
 
@@ -197,7 +187,7 @@
           class="w-75 cool-button pure filled-interesting square-radius font-size-14"
           style="height: 40px"
         >
-        {{ "ADMIN-INFORMATION-PAGE.CREATE" | translate }}
+          {{ 'ADMIN-INFORMATION-PAGE.CREATE' | translate }}
         </button>
       </div>
     </form>
@@ -209,7 +199,7 @@
   <div class="dialog-content">
     <div class="dialog-header">
       <h3 class="font-size-20 font-weight-bold" style="color: var(--primary)">
-        {{ "ADMIN-INFORMATION-PAGE.CREATE_RESOURCE" | translate }}
+        {{ 'ADMIN-INFORMATION-PAGE.CREATE_RESOURCE' | translate }}
       </h3>
     </div>
 
@@ -234,12 +224,11 @@
             placeholder="Title"
             type="text"
           />
-          <div
-            class="form-row form-error"
-            *ngIf="titleControl?.invalid && titleControl?.touched"
-          >
-            <p class="error">{{ "ADMIN-INFORMATION-PAGE.TITLE_IS_REQUIRED" | translate }}</p>
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="titleControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
 
         <!-- Description -->
@@ -250,26 +239,32 @@
             placeholder="Description"
             type="text"
           />
-          <div
-            class="form-row form-error"
-            *ngIf="descControl?.invalid && descControl?.touched"
-          >
-            <p class="error">{{ "ADMIN-INFORMATION-PAGE.DESCRIPTION_IS_REQUIRED" | translate }}</p>
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="descControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
 
         <!-- Image File Input -->
         <!-- If you want to keep drag-and-drop, replace this input with your drag/drop code -->
         <div class="form-group">
           <label class="drop-container">
-            <span class="drop-title">{{ "ADMIN-INFORMATION-PAGE.DROP_FILES" | translate }}</span>
-            {{ "ADMIN-INFORMATION-PAGE.OR" | translate }}
+            <span class="drop-title">{{
+              'ADMIN-INFORMATION-PAGE.DROP_FILES' | translate
+            }}</span>
+            {{ 'ADMIN-INFORMATION-PAGE.OR' | translate }}
             <input
               type="file"
               accept="image/*"
               (change)="onFileChange($event)"
             />
           </label>
+          <app-form-error
+            class="w-100"
+            [control]="this.resourceForm.get('imageFile')"
+            [centered]="false"
+          ></app-form-error>
         </div>
 
         <!-- Preview (optional) -->
@@ -295,7 +290,7 @@
           class="w-75 cool-button pure filled-interesting square-radius font-size-14"
           style="height: 40px"
         >
-        {{ "ADMIN-INFORMATION-PAGE.CREATE" | translate }}
+          {{ 'ADMIN-INFORMATION-PAGE.CREATE' | translate }}
         </button>
       </div>
     </form>

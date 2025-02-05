@@ -1,8 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  AdminCreateAnnouncementPageComponent,
-  atLeastOneTagSelected,
-} from './admin-create-announcement-page.component';
+import { AdminCreateAnnouncementPageComponent } from './admin-create-announcement-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { PostService, TagService, LinkKey, Tag, Role } from '@shared/index';
@@ -14,6 +11,7 @@ import {
 } from '@core/index';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { fakeAsync, flush } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AdminCreateAnnouncementPageComponent', () => {
   let component: AdminCreateAnnouncementPageComponent;
@@ -90,6 +88,7 @@ describe('AdminCreateAnnouncementPageComponent', () => {
         { provide: ToastService, useValue: mockToastService },
         TranslateService,
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 

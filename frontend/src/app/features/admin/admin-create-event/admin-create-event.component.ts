@@ -10,6 +10,7 @@ import {
 import { ToastService } from '@core/index';
 import { CalendarService, EventService } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-admin-create-event',
@@ -46,7 +47,7 @@ export class AdminCreateEventComponent {
         endTime: ['', [Validators.required]],
       },
       {
-        validators: [startBeforeEndValidator],
+        validators: [VALIDATION_CONFIG.startBeforeEndValidator],
       },
     );
   }

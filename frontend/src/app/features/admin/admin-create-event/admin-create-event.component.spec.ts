@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 
 import { EventService } from '@shared/index';
 import { ToastService } from '@core/index';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AdminCreateEventComponent', () => {
   let component: AdminCreateEventComponent;
@@ -34,6 +35,7 @@ describe('AdminCreateEventComponent', () => {
         { provide: EventService, useValue: mockEventService },
         { provide: ToastService, useValue: mockToastService },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 

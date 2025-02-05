@@ -24,7 +24,7 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { PlaceholderPostComponent } from './components/placeholder-post/placeholder-post.component';
 import { PlaceholderServiceProviderComponent } from './components/placeholder-service-provider/placeholder-service-provider.component';
 import { PlaceholderProductComponent } from './components/placeholder-product/placeholder-product.component';
-
+import { FormErrorComponent } from './components/form-error/form-error.component';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
@@ -57,6 +57,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PlaceholderPostComponent,
     PlaceholderServiceProviderComponent,
     PlaceholderProductComponent,
+    FormErrorComponent,
   ],
   imports: [
     CommonModule,
@@ -96,6 +97,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PlaceholderProductComponent,
     CalendarBridgeModule,
     UserProfileBridgeModule,
+    FormErrorComponent,
   ],
 })
 export class SharedModule {}

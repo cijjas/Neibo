@@ -9,6 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ToastService, ConfirmationService } from '@core/index';
 // Mocks for Shared services
 import { ContactService, ResourceService, ImageService } from '@shared/index';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AdminInformationPageComponent', () => {
   let component: AdminInformationPageComponent;
@@ -98,6 +99,7 @@ describe('AdminInformationPageComponent', () => {
         { provide: ImageService, useValue: mockImageService },
         { provide: ConfirmationService, useValue: mockConfirmationService },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
