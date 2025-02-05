@@ -1,10 +1,4 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FeedPostContentComponent } from './feed-post-content.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +6,7 @@ import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
 // Import types (adjust paths as needed)
-import { Post, Tag, Comment, Role, LinkKey } from '@shared/index';
+import { Post, Role, LinkKey } from '@shared/index';
 import {
   CommentService,
   ImageService,
@@ -191,7 +185,7 @@ describe('FeedPostContentComponent', () => {
     );
     expect(component.getComments).toHaveBeenCalled();
     // After reset, the comment control should be null.
-    expect(component.commentForm.value.comment).toBeNull();
+    expect(component.commentForm.value.comment).toBe('');
   });
 
   // Test 4: Comment Pagination (onPageChange)

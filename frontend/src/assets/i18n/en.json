@@ -161,6 +161,7 @@
     "HHMMSS": "HH:mm:ss"
   },
   "ADMIN-INFORMATION-PAGE": {
+    "REMOVE_IMAGE": "Remove Image",
     "CONTACT_INFORMATION": "Contact Information",
     "ADD_CONTACT_INFO": "Add Contact Info",
     "INFORMATION_NOT_FOUND": "Information not found",
@@ -366,6 +367,8 @@
     "ADMINAMENITIESPAGEADMINAMENITIESPAGECOMPONENT": "./admin-amenities-page/admin-amenities-page.component"
   },
   "AMENITIES-CHOOSE-TIME-PAGE": {
+    "START_TIME": "Start Time",
+    "END_TIME": "End Time",
     "UNAVAILABLE_TIMES_FOR": "Unavailable times for",
     "ON": "on",
     "": ".",
@@ -734,6 +737,7 @@
     "POSTSNEW": "/posts/new"
   },
   "FEED-CREATE-POST-PAGE": {
+    "REMOVE_IMAGE": "Remove Image",
     "_TITLE_": "{{ title }}",
     "TITLE_IS_REQUIRED": "*Title is required.",
     "BODY_IS_REQUIRED": "*Body is required.",

@@ -80,6 +80,8 @@ export const VALIDATION_CONFIG = {
     }
     return start >= end ? { startBeforeEnd: true } : null;
   },
-
+  PATTERN_PHONE_NUMBER: '^\\+?\\d[\\d\\s()-]+\\d$',
+  PATTERN_ID: '^[1-9][0-9]{6,7}$',
+  PATTERN_LETTERS_AND_SPACES: '^[a-zA-ZÀ-ž\\s]+$',
   PATTERN_ALPHA_NUM_SPACE_HYPHEN: /^[a-zA-Z0-9\s\-]*$/,
 };

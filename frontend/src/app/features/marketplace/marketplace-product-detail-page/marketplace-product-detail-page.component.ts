@@ -4,10 +4,8 @@ import { NgForm } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
 import {
-  DepartmentService,
   InquiryService,
   LinkKey,
-  ProductService,
   RequestService,
   UserService,
 } from '@shared/index';
@@ -59,9 +57,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   toastType: 'success' | 'error' = 'success';
 
   constructor(
-    private productService: ProductService,
-    private userSession: UserSessionService,
-    private departmentService: DepartmentService,
     private requestService: RequestService,
     private inquiryService: InquiryService,
     private userService: UserService,

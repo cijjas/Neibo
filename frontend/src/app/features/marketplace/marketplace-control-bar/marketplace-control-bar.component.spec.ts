@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { DepartmentService, Department } from '@shared/index';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('MarketplaceControlBarComponent', () => {
@@ -19,7 +18,6 @@ describe('MarketplaceControlBarComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule, // Provides routerLink and related directives.
         TranslateModule.forRoot(), // Provides the translate pipe.
       ],
       declarations: [MarketplaceControlBarComponent],

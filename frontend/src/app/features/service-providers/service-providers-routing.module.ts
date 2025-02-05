@@ -17,6 +17,11 @@ const routes: Routes = [
     children: [
       { path: '', component: ServiceProvidersPageComponent },
       {
+        path: 'my-profile/:id',
+        component: ServiceProvidersDetailPageComponent,
+        resolve: { worker: serviceProviderResolver },
+      },
+      {
         path: 'profiles/:id',
         component: ServiceProvidersDetailPageComponent,
         resolve: { worker: serviceProviderResolver },

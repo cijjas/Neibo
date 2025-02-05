@@ -41,7 +41,14 @@
 
       <!-- File input -->
       <div class="col p-0">
-        <label for="images" class="drop-container" id="dropcontainer">
+        <!-- A "drop-container" for drag/drop + fallback file input -->
+        <label
+          for="images"
+          class="drop-container"
+          id="dropcontainer"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event)"
+        >
           <span class="drop-title">{{
             'ADMIN-CREATE-ANNOUNCEMENT-PAGE.DROP_FILES' | translate
           }}</span>
@@ -53,15 +60,26 @@
             (change)="onFileChange($event)"
           />
         </label>
-        <app-form-error
-          class="w-100"
-          [control]="imageFileControl"
-          [centered]="false"
-        ></app-form-error>
+        <div class="f-c-c-c w-100 mt-2">
+          <div *ngIf="imageFileControl?.value">
+            <button
+              type="button"
+              class="cool-button red"
+              (click)="removeImage()"
+            >
+              {{ 'ADMIN-INFORMATION-PAGE.REMOVE_IMAGE' | translate }}
+            </button>
+          </div>
+          <app-form-error
+            class="w-100"
+            [control]="imageFileControl"
+            [centered]="true"
+          ></app-form-error>
+        </div>
       </div>
 
       <!-- Image preview -->
-      <div>
+      <div class="preview-container" *ngIf="imagePreviewUrl">
         <img
           id="frame"
           class="blogpost-image"

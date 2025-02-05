@@ -46,14 +46,14 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     private tagService: TagService,
     private userSessionService: UserSessionService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     //
 
     this.commentForm = this.fb.group({
-      comment: ['', [Validators.required, Validators.minLength(1)]],
+      comment: ['', [Validators.required]],
     });
 
     const tagLink = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_TAGS);
@@ -63,7 +63,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     this.fetchTags(tagLink);
 
     // Monitor query parameters
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       this.currentPage = +params['page'] || 1; // Default to page 1
       this.pageSize = +params['size'] || 10; // Default to size 10
       this.getComments(this.currentPage, this.pageSize);
@@ -94,18 +94,18 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   private loadLikeStatus(): void {
     if (!this.likesUrl) return;
 
-    this.userSessionService.getCurrentUser().subscribe((user) => {
+    this.userSessionService.getCurrentUser().subscribe(user => {
       this.likeService
         .getLikes(this.likesUrl, {
           onPost: this.post.self,
           likedBy: user.self,
         })
         .subscribe({
-          next: (response) => {
+          next: response => {
             // If the array is non-empty, the current user liked this post
             this.isLiked = response.likes.length > 0;
           },
-          error: (err) => {
+          error: err => {
             console.error('Error fetching like status:', err);
           },
         });
@@ -121,7 +121,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   }
 
   private likePost(): void {
-    this.userSessionService.getCurrentUser().subscribe((user) => {
+    this.userSessionService.getCurrentUser().subscribe(user => {
       if (this.likesUrl) {
         this.likeService
           .createLike({ post: this.post.self, user: user.self })
@@ -130,7 +130,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
               this.isLiked = true;
               this.post.likeCount++;
             },
-            error: (err) => {
+            error: err => {
               console.error('Error liking post:', err);
             },
           });
@@ -139,14 +139,14 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   }
 
   private unlikePost(): void {
-    this.userSessionService.getCurrentUser().subscribe((user) => {
+    this.userSessionService.getCurrentUser().subscribe(user => {
       if (this.likesUrl) {
         this.likeService.deleteLike(this.post.self, user.self).subscribe({
           next: () => {
             this.isLiked = false;
             this.post.likeCount--;
           },
-          error: (err) => {
+          error: err => {
             console.error('Error unliking post:', err);
           },
         });
@@ -160,7 +160,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
         next: ({ tags }: { tags: Tag[] }) => {
           this.tags = tags || [];
         },
-        error: (err) => {
+        error: err => {
           console.error('Error fetching tags:', err);
           this.tags = [];
         },
@@ -176,26 +176,22 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
       console.error('Comment form is invalid');
       return;
     }
-    const commentValue = this.commentForm.value.comment.trim();
 
-    // Get the current user
-    this.userSessionService.getCurrentUser().subscribe((user) => {
-      // Submit the comment
+    this.userSessionService.getCurrentUser().subscribe(user => {
       this.commentService
         .createComment(
           this.post.comments,
           this.commentForm.get('comment')?.value,
-          user.self
+          user.self,
         )
         .subscribe({
-          next: (createdComment) => {
-            // Reset the form
-            this.commentForm.reset();
+          next: createdComment => {
+            // Reset the form and explicitly set comment to an empty string.
+            this.commentForm.reset({ comment: '' });
             this.isFocused = false;
-            // Refresh the comments list
             this.getComments(this.currentPage, this.pageSize);
           },
-          error: (error) => {
+          error: error => {
             console.error('Error creating comment:', error);
           },
         });
@@ -203,7 +199,8 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.commentForm.reset();
+    // Reset with default value to avoid null
+    this.commentForm.reset({ comment: '' });
     this.isFocused = false;
   }
 
@@ -212,12 +209,12 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
       this.commentService
         .getComments(this.post.comments, { page, size })
         .subscribe({
-          next: (response) => {
+          next: response => {
             this.comments = response.comments || [];
             this.totalPages = response.totalPages || 1;
             this.currentPage = response.currentPage || 1;
           },
-          error: (err) => {
+          error: err => {
             console.error('Error fetching comments:', err);
             this.comments = [];
           },
@@ -243,7 +240,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
     if (this.post.createdAt) {
       this.humanReadableDate = formatDistanceToNow(
         new Date(this.post.createdAt),
-        { addSuffix: true }
+        { addSuffix: true },
       );
     }
   }

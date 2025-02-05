@@ -31,8 +31,9 @@ export class FormErrorComponent {
     required: () => 'This field is required',
     maxlength: (err: any) =>
       `The value is too long (max ${err.requiredLength} characters)`,
+    minLength: (err: any) =>
+      `The value is too short (min ${err.requiredLength} characters)`,
     pattern: () => 'Invalid format',
-    // For image validator errors:
     fileSize: (err: any) =>
       `File size should be less than ${err.requiredMax} MB.`,
     fileFormat: () =>
@@ -40,6 +41,7 @@ export class FormErrorComponent {
     // For tag selection:
     noTagsSelected: () => 'Please select at least one tag.',
     startBeforeEnd: () => 'Start time should be before end time.',
+    email: () => 'Entered email is not valid',
   };
 
   shouldShowErrors(): boolean {

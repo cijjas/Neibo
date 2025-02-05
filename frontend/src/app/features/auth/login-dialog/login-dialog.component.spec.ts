@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Pipe, PipeTransform } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  NO_ERRORS_SCHEMA,
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -54,6 +59,7 @@ describe('LoginDialogComponent', () => {
         { provide: UserSessionService, useValue: userSessionServiceSpy },
         { provide: ChangeDetectorRef, useValue: cdrSpy },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 

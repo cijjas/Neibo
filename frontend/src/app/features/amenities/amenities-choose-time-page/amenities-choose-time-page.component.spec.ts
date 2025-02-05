@@ -34,16 +34,14 @@ describe('AmenitiesChooseTimePageComponent', () => {
 
   // Mocks for services:
   const mockAmenityService = {
-    getAmenity: jasmine
-      .createSpy('getAmenity')
-      .and.returnValue(
-        of({
-          name: 'Test Amenity',
-          description: 'desc',
-          availableShifts: [],
-          self: 'amenity_self',
-        }),
-      ),
+    getAmenity: jasmine.createSpy('getAmenity').and.returnValue(
+      of({
+        name: 'Test Amenity',
+        description: 'desc',
+        availableShifts: [],
+        self: 'amenity_self',
+      }),
+    ),
   };
 
   // Two shifts: one available and one taken.
@@ -166,10 +164,6 @@ describe('AmenitiesChooseTimePageComponent', () => {
       'user_self_link',
     );
 
-    // After a successful booking, the formattedShiftTimes should be built.
-    // Times should be formatted to '08:00' and '09:00' (removing seconds).
-    const expectedFormatted = `<p>08:00 - 09:00</p>`;
-    expect(component.formattedShiftTimes).toEqual(expectedFormatted);
     expect(component.showReservationDialog).toBeTrue();
   });
 

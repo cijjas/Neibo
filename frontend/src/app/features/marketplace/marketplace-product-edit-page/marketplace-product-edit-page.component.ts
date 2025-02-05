@@ -9,8 +9,9 @@ import {
 } from '@shared/index';
 import { ImageService, ToastService, HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, map, switchMap } from 'rxjs';
+import { combineLatest, forkJoin, map, of, switchMap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-marketplace-product-edit-page',
@@ -28,12 +29,24 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   quantities: number[] = Array.from({ length: 100 }, (_, i) => i + 1);
 
   listingForm = this.fb.group({
-    title: ['', Validators.required],
+    title: [
+      '',
+      [
+        Validators.required,
+        Validators.maxLength(VALIDATION_CONFIG.name.maxLength),
+      ],
+    ],
     price: [
       '',
       [Validators.required, Validators.pattern(/^\$?\d+(,\d{3})*(\.\d{2})?$/)],
     ],
-    description: ['', Validators.required],
+    description: [
+      '',
+      [
+        Validators.required,
+        Validators.maxLength(VALIDATION_CONFIG.description.maxLength),
+      ],
+    ],
     departmentId: ['', Validators.required],
     used: [false, Validators.required],
     quantity: [1, Validators.required],
@@ -53,7 +66,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     private imageService: ImageService,
     private toastService: ToastService,
     private linkService: HateoasLinksService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -143,7 +156,10 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   clearImageError(): void {
     if (
       this.images.length > 0 &&
-      this.formErrors === this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT')
+      this.formErrors ===
+        this.translate.instant(
+          'MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT',
+        )
     ) {
       this.formErrors = null;
     }
@@ -172,18 +188,24 @@ export class MarketplaceProductEditPageComponent implements OnInit {
 
   onSubmit(): void {
     if (this.listingForm.invalid) {
-      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY');
+      this.formErrors = this.translate.instant(
+        'MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY',
+      );
       return;
     }
 
     if (!this.product) {
-      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.NO_PRODUCT_LOADED');
+      this.formErrors = this.translate.instant(
+        'MARKETPLACE-PRODUCT-EDIT-PAGE.NO_PRODUCT_LOADED',
+      );
       return;
     }
 
     // Check if at least one image exists
     if (this.images.length === 0) {
-      this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT');
+      this.formErrors = this.translate.instant(
+        'MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT',
+      );
       return;
     }
 
@@ -194,50 +216,55 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     const productData: any = {
       name: rawValue.title,
       description: rawValue.description,
-      price: rawValue.price.replace('$', ''), // Remove the dollar sign before sending
+      price: rawValue.price.replace('$', ''),
       used: rawValue.used,
       department: rawValue.departmentId,
       remainingUnits: rawValue.quantity,
       user: userSelf,
-      images: [], // Collect image URLs here
+      images: [],
     };
 
-    // Separate new images (files) from preloaded images (URLs)
-    const newImageFiles = this.images.filter(img => img.file);
+    // Separate new vs. existing images
+    const newImageFiles = this.images.filter(img => !!img.file);
     const existingImageUrls = this.images
       .filter(img => !img.file)
       .map(img => img.preview);
 
+    // Build an observable that uploads only if there are new images
     const imageUploadObservables = newImageFiles.map(img =>
       this.imageService.createImage(img.file),
     );
 
-    combineLatest(imageUploadObservables)
+    // Use forkJoin if there's something to upload; otherwise emit []
+    const upload$ = imageUploadObservables.length
+      ? forkJoin(imageUploadObservables)
+      : of<string[]>([]);
+
+    upload$
       .pipe(
         map(newImageUrls => {
-          productData.images = [
-            ...existingImageUrls,
-            ...newImageUrls.filter(url => url !== null),
-          ];
+          // Combine existing + newly uploaded
+          productData.images = [...existingImageUrls, ...newImageUrls];
           return productData;
         }),
-        switchMap(updatedProductData =>
-          this.productService.updateProduct(
-            this.product!.self,
-            updatedProductData,
-          ),
+        switchMap(finalData =>
+          this.productService.updateProduct(this.product!.self, finalData),
         ),
       )
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.LISTING_UPDATED_SUCCESSFULLY'),
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-EDIT-PAGE.LISTING_UPDATED_SUCCESSFULLY',
+            ),
             'success',
           );
           this.router.navigate(['/marketplace/products', this.product!.self]);
         },
         error: err => {
-          this.formErrors = this.translate.instant('MARKETPLACE-PRODUCT-EDIT-PAGE.THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING');
+          this.formErrors = this.translate.instant(
+            'MARKETPLACE-PRODUCT-EDIT-PAGE.THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING',
+          );
           console.error(err);
         },
       });

@@ -6,7 +6,6 @@ import {
   Output,
   ViewChild,
   ElementRef,
-  HostListener,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -31,6 +30,7 @@ import {
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -88,12 +88,15 @@ export class SignupDialogComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ž\\s]+$'), // Example: Only letters/spaces
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES), // Example: Only letters/spaces
         ],
       ],
       surname: [
         '',
-        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+        [
+          Validators.required,
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES),
+        ],
       ],
       mail: [
         '',
@@ -116,7 +119,7 @@ export class SignupDialogComponent implements OnInit {
         null,
         [
           Validators.required,
-          Validators.pattern('^[1-9][0-9]{6,7}$'), // 7 to 8 digits, no leading zeros
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_ID), // 7 to 8 digits, no leading zeros
         ],
       ],
       language: ['', Validators.required],
@@ -128,11 +131,17 @@ export class SignupDialogComponent implements OnInit {
       professions: [[], Validators.required],
       w_name: [
         '',
-        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+        [
+          Validators.required,
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES),
+        ],
       ],
       w_surname: [
         '',
-        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+        [
+          Validators.required,
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES),
+        ],
       ],
       w_mail: ['', [Validators.required, Validators.email]],
       w_password: [
@@ -148,7 +157,7 @@ export class SignupDialogComponent implements OnInit {
         null,
         [
           Validators.required,
-          Validators.pattern('^[1-9][0-9]{6,7}$'), // 7 to 8 digits, no leading zeros
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_ID), // 7 to 8 digits, no leading zeros
         ],
       ],
       w_language: ['', Validators.required],
@@ -158,7 +167,7 @@ export class SignupDialogComponent implements OnInit {
           Validators.required,
           // Example pattern for phone: +54 9 11 1234 5678
           // This is just an example - adapt to your country or remove if not needed
-          Validators.pattern('^\\+?\\d[\\d\\s()-]+\\d$'),
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_PHONE_NUMBER),
         ],
       ],
     });

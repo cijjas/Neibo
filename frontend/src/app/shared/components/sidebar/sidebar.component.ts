@@ -40,8 +40,7 @@ export class SidebarComponent implements OnInit {
   updateChannelClass(): void {
     const currentUrl = this.router.url;
 
-    // 1) Check more specific routes first
-    if (currentUrl.startsWith('/services/profiles')) {
+    if (currentUrl.includes('/services/my-profile')) {
       this.channelClass = 'Profile';
     } else if (currentUrl.startsWith('/services/join-neighborhoods')) {
       this.channelClass = 'Neighborhoods';

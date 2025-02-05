@@ -107,22 +107,83 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
   // IMAGE HANDLING
   // --------------------------------------------------
   onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (!file) {
-      this.imagePreviewUrl = null;
-      this.announcementForm.patchValue({ imageFile: null });
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
       return;
     }
 
-    // Update the form
-    this.announcementForm.patchValue({ imageFile: file });
+    const file = input.files[0];
+    const imageControl = this.announcementForm.get('imageFile');
 
-    // Create a preview
+    if (!imageControl) return;
+
+    // Patch the file
+    imageControl.patchValue(file);
+    imageControl.markAsTouched();
+    imageControl.updateValueAndValidity();
+
+    // If invalid, do NOT remove file from the control
+    if (imageControl.errors) {
+      // Hide preview
+      this.imagePreviewUrl = null;
+      // The user sees the error in <app-form-error>.
+      // They also still see the file's name in <input type="file"> by default.
+      return;
+    }
+
+    // If valid, show the preview
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreviewUrl = reader.result;
     };
     reader.readAsDataURL(file);
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    // Might set a CSS class to highlight the drop area
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.handleDroppedFile(file);
+    }
+  }
+
+  handleDroppedFile(file: File) {
+    // For instance, patch the form or feed it to your onFileChange logic
+    this.announcementForm.patchValue({ imageFile: file });
+    this.announcementForm.get('imageFile')?.updateValueAndValidity();
+
+    // If you want a preview, do:
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(): void {
+    this.imagePreviewUrl = null;
+
+    const imageControl = this.announcementForm.get('imageFile');
+    if (imageControl) {
+      // Reset the control
+      imageControl.patchValue(null);
+      imageControl.setErrors(null);
+      imageControl.markAsPristine();
+      imageControl.markAsUntouched();
+    }
+
+    // Reset the native <input type="file">
+    const input = document.getElementById('images') as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
   }
 
   // --------------------------------------------------

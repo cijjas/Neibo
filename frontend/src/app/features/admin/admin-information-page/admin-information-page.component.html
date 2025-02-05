@@ -48,7 +48,6 @@
 
   <!-- Paginator for contacts -->
   <div class="d-flex justify-content-center mt-3" *ngIf="contactTotalPages > 1">
-    <!-- app-paginator is assumed to exist in your project -->
     <app-paginator
       [totalPages]="contactTotalPages"
       [currentPage]="contactCurrentPage"
@@ -246,32 +245,49 @@
           ></app-form-error>
         </div>
 
-        <!-- Image File Input -->
-        <!-- If you want to keep drag-and-drop, replace this input with your drag/drop code -->
+        <!-- (UPDATED) Image File Input + Drag/Drop -->
         <div class="form-group">
-          <label class="drop-container">
+          <label
+            for="resourceImages"
+            class="drop-container"
+            id="dropcontainer"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)"
+          >
             <span class="drop-title">{{
               'ADMIN-INFORMATION-PAGE.DROP_FILES' | translate
             }}</span>
             {{ 'ADMIN-INFORMATION-PAGE.OR' | translate }}
             <input
               type="file"
+              id="resourceImages"
               accept="image/*"
               (change)="onFileChange($event)"
             />
           </label>
+
+          <!-- Remove Image button if something is selected -->
+          <div *ngIf="imageFileControl?.value" style="margin-top: 0.5rem">
+            <button
+              type="button"
+              class="cool-button red"
+              (click)="removeImage()"
+            >
+              {{ 'ADMIN-INFORMATION-PAGE.REMOVE_IMAGE' | translate }}
+            </button>
+          </div>
+
           <app-form-error
             class="w-100"
-            [control]="this.resourceForm.get('imageFile')"
+            [control]="imageFileControl"
             [centered]="false"
           ></app-form-error>
         </div>
 
-        <!-- Preview (optional) -->
-        <div style="text-align: center">
+        <!-- (UPDATED) Preview container -->
+        <div class="preview-container" *ngIf="imagePreviewUrl">
           <img
-            *ngIf="previewSrc"
-            [src]="previewSrc"
+            [src]="imagePreviewUrl"
             class="blogpost-image"
             style="
               max-width: 90% !important;

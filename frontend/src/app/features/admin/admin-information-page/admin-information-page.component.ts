@@ -28,8 +28,9 @@ export class AdminInformationPageComponent implements OnInit {
   // New Resource dialog
   showCreateResourceDialog = false;
   resourceForm: FormGroup;
-  // For image preview
-  previewSrc: string | null = null;
+
+  // (UPDATED) For image preview
+  imagePreviewUrl: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,7 +68,11 @@ export class AdminInformationPageComponent implements OnInit {
     this.resourceForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      imageFile: [null, Validators.required, VALIDATION_CONFIG.imageValidator],
+      // (UPDATED) Using image validator
+      imageFile: [
+        null,
+        [Validators.required, VALIDATION_CONFIG.imageValidator],
+      ],
     });
 
     // Subscribe to query params for pagination
@@ -75,7 +80,6 @@ export class AdminInformationPageComponent implements OnInit {
       const contactPageParam = params.get('contactsPage');
       const resourcePageParam = params.get('resourcesPage');
 
-      // Use the param or default to page 1
       this.contactCurrentPage = contactPageParam ? +contactPageParam : 1;
       this.resourceCurrentPage = resourcePageParam ? +resourcePageParam : 1;
 
@@ -103,6 +107,11 @@ export class AdminInformationPageComponent implements OnInit {
     return this.resourceForm.get('description');
   }
 
+  // (NEW) For easier image control checks
+  get imageFileControl() {
+    return this.resourceForm.get('imageFile');
+  }
+
   // ------------------ CONTACT DIALOG CONTROL ------------------
   openCreateContactDialog() {
     this.showCreateContactDialog = true;
@@ -114,10 +123,19 @@ export class AdminInformationPageComponent implements OnInit {
   // ------------------ RESOURCE DIALOG CONTROL ------------------
   openCreateResourceDialog() {
     this.showCreateResourceDialog = true;
-    // Reset preview each time we open the dialog
-    this.previewSrc = null;
+    const input = document.getElementById('resourceImages') as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
     this.resourceForm.reset();
+    this.resourceForm.setValue({
+      title: '',
+      description: '',
+      imageFile: null,
+    });
+    this.imagePreviewUrl = null;
   }
+
   closeCreateResourceDialog() {
     this.showCreateResourceDialog = false;
   }
@@ -199,7 +217,7 @@ export class AdminInformationPageComponent implements OnInit {
             'success',
           );
           this.closeCreateResourceDialog();
-          this.fetchResources(); // Refresh the list of resources
+          this.fetchResources();
         },
         error: err => {
           console.error(
@@ -218,6 +236,7 @@ export class AdminInformationPageComponent implements OnInit {
       });
   }
 
+  // (UNCHANGED) Uploads the file to the server
   private createImageObservable(
     imageFile: File | null,
   ): Observable<string | null> {
@@ -236,20 +255,88 @@ export class AdminInformationPageComponent implements OnInit {
       : of(null);
   }
 
-  // ------------------ IMAGE PREVIEW ------------------
+  // --------------------------------------------------
+  // (NEW) IMAGE HANDLING EXACTLY AS REFERENCE
+  // --------------------------------------------------
   onFileChange(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.resourceForm.patchValue({ imageFile: file });
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
 
-      // file preview
-      const reader = new FileReader();
-      reader.onload = e => {
-        this.previewSrc = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      this.previewSrc = null;
+    const file = input.files[0];
+    const imageControl = this.resourceForm.get('imageFile');
+    if (!imageControl) return;
+
+    // Patch file
+    imageControl.patchValue(file);
+    imageControl.markAsTouched();
+    imageControl.updateValueAndValidity();
+
+    // If invalid, remove preview
+    if (imageControl.errors) {
+      this.imagePreviewUrl = null;
+      return;
+    }
+
+    // If valid, show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.handleDroppedFile(file);
+    }
+  }
+
+  handleDroppedFile(file: File) {
+    const imageControl = this.resourceForm.get('imageFile');
+    if (!imageControl) return;
+
+    imageControl.patchValue(file);
+    imageControl.markAsTouched();
+    imageControl.updateValueAndValidity();
+
+    if (imageControl.errors) {
+      this.imagePreviewUrl = null;
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(): void {
+    this.imagePreviewUrl = null;
+
+    const imageControl = this.resourceForm.get('imageFile');
+    if (imageControl) {
+      // Reset the control
+      imageControl.patchValue(null);
+      imageControl.setErrors(null);
+      imageControl.markAsPristine();
+      imageControl.markAsUntouched();
+    }
+
+    // Clear the native <input type="file">
+    const input = document.getElementById('resourceImages') as HTMLInputElement;
+    if (input) {
+      input.value = '';
     }
   }
 

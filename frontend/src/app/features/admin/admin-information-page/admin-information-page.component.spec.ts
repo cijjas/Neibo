@@ -125,11 +125,11 @@ describe('AdminInformationPageComponent', () => {
     component.openCreateResourceDialog();
     expect(component.showCreateResourceDialog).toBeTrue();
     // When opening, the preview should be reset.
-    expect(component.previewSrc).toBeNull();
+    expect(component.imagePreviewUrl).toBeNull();
     // Also, the resourceForm should be reset (its controls become null).
     expect(component.resourceForm.value).toEqual({
-      title: null,
-      description: null,
+      title: '',
+      description: '',
       imageFile: null,
     });
     component.closeCreateResourceDialog();
