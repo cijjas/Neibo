@@ -8,12 +8,11 @@ import ar.edu.itba.paw.webapp.security.jwt.JwtAuthenticationProvider;
 import ar.edu.itba.paw.webapp.security.jwt.JwtAuthenticationTokenFilter;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -115,31 +114,306 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
 
-                // Public endpoints
-                .antMatchers(
-                        // Root
-                        "/" + Endpoint.API,"/" + Endpoint.API + "/",
-                        "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS, "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.LANGUAGES, "/" + Endpoint.API + "/" + Endpoint.LANGUAGES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.POST_STATUSES, "/" + Endpoint.API + "/" + Endpoint.POST_STATUSES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES, "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS, "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES, "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.SHIFTS, "/" + Endpoint.API + "/" + Endpoint.SHIFTS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.TRANSACTION_TYPES, "/" + Endpoint.API + "/" + Endpoint.TRANSACTION_TYPES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.USER_ROLES, "/" + Endpoint.API + "/" + Endpoint.USER_ROLES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.WORKER_ROLES, "/" + Endpoint.API + "/" + Endpoint.WORKER_ROLES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.WORKER_STATUSES, "/" + Endpoint.API + "/" + Endpoint.WORKER_STATUSES + "/*",
+                ////////////////////////////////////////////////////////////////////////////////////////
 
-                        "/" + Endpoint.API + "/" + Endpoint.IMAGES, "/" + Endpoint.API + "/" + Endpoint.IMAGES + "/*", // debatable, could be private
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS, "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*", // for signup
-                        "/" + Endpoint.API + "/" + Endpoint.USERS, // for signup
-                        "/" + Endpoint.API + "/" + Endpoint.WORKERS // for signup
+                // Affiliations
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS
+                ).hasAnyRole(
+                        UserRole.WORKER.name(), UserRole.NEIGHBOR.name(), UserRole.ADMINISTRATOR.name(), UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS
+                ).hasAnyRole(
+                        UserRole.WORKER.name(), UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.PATCH,
+                        "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS
+                ).hasAnyRole(
+                        UserRole.ADMINISTRATOR.name(), UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS
+                ).hasAnyRole(
+                        UserRole.WORKER.name(), UserRole.SUPER_ADMINISTRATOR.name()
+                )
+
+                // Amenities
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*"
+                ).access(
+                "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES
+                ).access(
+                        "hasAnyRole('ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.PATCH,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*"
+                ).access(
+                        "hasAnyRole('ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*"
+                ).access(
+                        "hasAnyRole('ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+
+                // Attendance, Bookings, Comments, Inquiries, Likes, Products, Requests
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*"
+                ).access(
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS
+                ).access(
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.PATCH,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*"
+                ).access(
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*"
+                ).access(
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+
+                // Channels, Contacts, Events
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES + "/*"
+                ).access(
+                        "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES
+                ).access(
+                        "hasAnyRole('ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.PATCH,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES + "/*"
+                ).access(
+                        "hasAnyRole('ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES + "/*"
+                ).access(
+                        "hasAnyRole('ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+
+                // Departments, Neighborhoods
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*"
                 ).permitAll()
-
-                // Registered Users Endpoints
                 .antMatchers(
-                        "/" + Endpoint.API + "/" + Endpoint.USERS + "/*" // All users with an account can change their profile
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS
+                        ).hasAnyRole(
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*"
+                ).hasAnyRole(
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+
+                // Root Endpoint, Images, Languages, Post Statuses, Professions, Request Statuses, Shifts, Transaction Types, User Roles, Worker Roles, Worker Statuses
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API,
+                        "/" + Endpoint.API + "/",
+                        "/" + Endpoint.API + "/" + Endpoint.IMAGES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.LANGUAGES,
+                        "/" + Endpoint.API + "/" + Endpoint.LANGUAGES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.POST_STATUSES,
+                        "/" + Endpoint.API + "/" + Endpoint.POST_STATUSES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES,
+                        "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS,
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES,
+                        "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.SHIFTS,
+                        "/" + Endpoint.API + "/" + Endpoint.SHIFTS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.TRANSACTION_TYPES,
+                        "/" + Endpoint.API + "/" + Endpoint.TRANSACTION_TYPES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.USER_ROLES,
+                        "/" + Endpoint.API + "/" + Endpoint.USER_ROLES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.WORKER_ROLES,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKER_ROLES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.WORKER_STATUSES,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKER_STATUSES + "/*"
+                ).permitAll()
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.IMAGES,
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS
+                ).hasAnyRole(
+                        UserRole.REJECTED.name(),
+                        UserRole.UNVERIFIED_NEIGHBOR.name(),
+                        UserRole.WORKER.name(),
+                        UserRole.NEIGHBOR.name(),
+                        UserRole.ADMINISTRATOR.name(),
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.IMAGES + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*"
+                ).hasAnyRole(
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+
+                // Posts
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*"
+                ).access(
+                        "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS
+                ).access(
+                        "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*"
+                ).access(
+                        "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+
+                // Reviews
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
+                ).hasAnyRole(
+                        UserRole.WORKER.name(), UserRole.NEIGHBOR.name(), UserRole.ADMINISTRATOR.name(), UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS
+                ).hasAnyRole(
+                        UserRole.NEIGHBOR.name(), UserRole.ADMINISTRATOR.name(), UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
+                ).hasAnyRole(
+                        UserRole.NEIGHBOR.name(), UserRole.ADMINISTRATOR.name(), UserRole.SUPER_ADMINISTRATOR.name()
+                )
+
+                // Tags
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS + "/*"
+                ).access(
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS
+                ).access(
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+                .antMatchers(
+                        HttpMethod.DELETE,
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS + "/*"
+                ).access(
+                        "hasAnyRole('SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                )
+
+                // Users
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.USERS,
+                        "/" + Endpoint.API + "/" + Endpoint.USERS + "/*"
+                ).hasAnyRole(
+                        UserRole.REJECTED.name(),
+                        UserRole.UNVERIFIED_NEIGHBOR.name(),
+                        UserRole.WORKER.name(),
+                        UserRole.NEIGHBOR.name(),
+                        UserRole.ADMINISTRATOR.name(),
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.USERS
+                ).permitAll()
+                .antMatchers(
+                        HttpMethod.PATCH,
+                        "/" + Endpoint.API + "/" + Endpoint.USERS + "/*"
                 ).hasAnyRole(
                         UserRole.REJECTED.name(),
                         UserRole.UNVERIFIED_NEIGHBOR.name(),
@@ -149,12 +423,24 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
 
-                // Worker Related Endpoints
+                // Workers
                 .antMatchers(
-                        "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS, "/" + Endpoint.API + "/" + Endpoint.AFFILIATIONS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
-                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
+                        HttpMethod.GET,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*"
+                ).hasAnyRole(
+                        UserRole.WORKER.name(),
+                        UserRole.NEIGHBOR.name(),
+                        UserRole.ADMINISTRATOR.name(),
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+                .antMatchers(
+                        HttpMethod.POST,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS
+                ).permitAll()
+                .antMatchers(
+                        HttpMethod.PATCH,
+                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*"
                 ).hasAnyRole(
                         UserRole.WORKER.name(),
                         UserRole.NEIGHBOR.name(),
@@ -162,60 +448,13 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
 
-                // Endpoints used in Neighborhoods and Workers Neighborhood
-                .antMatchers(
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/**",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CHANNELS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.EVENTS + "/*"
-                ).access(
-                        "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
-                                "and " +
-                                "@pathAccessControlHelper.isNeighborhoodMember(request)"
-                )
-
-                // Endpoints used in Neighborhoods only
-                .antMatchers(
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.TAGS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.RESOURCES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.CONTACTS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES + "/**",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE + "/**"
-                ).access(
-                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
-                                "and " +
-                                "@pathAccessControlHelper.isNeighborhoodMember(request)"
-                )
-
                 .anyRequest().denyAll();
     }
 
-
-    // WORKING VERSION
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList(ALL));
-        // configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "https://your-production-url.com"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.addAllowedHeader(ALL);
         configuration.setExposedHeaders(Arrays.asList("Authorization", "Link", "Location", "ETag", "Total-Elements"));

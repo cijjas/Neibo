@@ -67,8 +67,6 @@ export class AdminAmenityEditPageComponent implements OnInit {
     });
 
     // 1) Load the Amenity
-    // We'll store the amenity’s shift references in some temporary variable
-    // until we’ve loaded allShifts
     this.route.data.subscribe(({ amenity }) => {
       if (!amenity) {
         return;
@@ -95,7 +93,6 @@ export class AdminAmenityEditPageComponent implements OnInit {
           this.uniqueDays = Array.from(daysSet).sort(sortDays);
           this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
 
-          // E.g., if amenityShiftRefs are shift 'self' URLs:
           if (this.amenityShiftRefs?.length) {
             this.selectedShifts = this.allShifts.filter(shift =>
               this.amenityShiftRefs.includes(shift.self),
@@ -125,7 +122,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
 
     const formValue = this.amenityForm.value;
     const amenityId = this.route.snapshot.params['id'];
-    // Convert selectedShifts to an array of SHIFT URLs or SHIFT IDs
+    // Convert selectedShifts to an array of SHIFT URLs
     const selectedShiftRefs: string[] = this.selectedShifts.map(s => s.self);
 
     this.amenityService
@@ -162,7 +159,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
       });
   }
 
-  // Reuse your shift selection toggles, identical to your create component
+  // Reuse shift selection toggles
   isShiftSelected(shift: Shift): boolean {
     return this.selectedShifts.some(
       s =>

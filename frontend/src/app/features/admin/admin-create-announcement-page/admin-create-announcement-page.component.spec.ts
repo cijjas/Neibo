@@ -141,7 +141,6 @@ describe('AdminCreateAnnouncementPageComponent', () => {
 
     component.onFileChange(event);
     expect(component.announcementForm.get('imageFile')?.value).toBe(file);
-    // Note: FileReader is asynchronous; you could spy on FileReader if needed.
   });
 
   it('should submit the announcement and create post (valid scenario)', fakeAsync(() => {
@@ -197,7 +196,6 @@ describe('AdminCreateAnnouncementPageComponent', () => {
     spyOn(component.announcementForm, 'markAllAsTouched');
     component.onSubmit();
     expect(component.announcementForm.markAllAsTouched).toHaveBeenCalled();
-    // postService.createPost should not be called.
     expect(mockPostService.createPost).not.toHaveBeenCalled();
   });
 });

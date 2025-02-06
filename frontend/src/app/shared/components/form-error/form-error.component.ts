@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-form-error',
@@ -27,22 +28,8 @@ import { AbstractControl } from '@angular/forms';
 export class FormErrorComponent {
   @Input() control!: AbstractControl;
   @Input() centered: boolean = false;
-  @Input() errorMessages: { [key: string]: (errorValue?: any) => string } = {
-    required: () => 'This field is required',
-    maxlength: (err: any) =>
-      `The value is too long (max ${err.requiredLength} characters)`,
-    minLength: (err: any) =>
-      `The value is too short (min ${err.requiredLength} characters)`,
-    pattern: () => 'Invalid format',
-    fileSize: (err: any) =>
-      `File size should be less than ${err.requiredMax} MB.`,
-    fileFormat: () =>
-      'Invalid file format. Only JPEG, PNG, or GIF images are allowed.',
-    // For tag selection:
-    noTagsSelected: () => 'Please select at least one tag.',
-    startBeforeEnd: () => 'Start time should be before end time.',
-    email: () => 'Entered email is not valid',
-  };
+
+  constructor(private translate: TranslateService) {}
 
   shouldShowErrors(): boolean {
     return (
@@ -60,7 +47,9 @@ export class FormErrorComponent {
     const errorValue = this.control.errors
       ? this.control.errors[errorKey]
       : null;
-    const messageFunc = this.errorMessages[errorKey];
-    return messageFunc ? messageFunc(errorValue) : 'Invalid field';
+    const translationKey = `FORM-ERROR-COMPONENT.${errorKey}`;
+    return (
+      this.translate.instant(translationKey, errorValue) || 'Invalid field'
+    );
   }
 }

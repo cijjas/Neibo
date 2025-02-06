@@ -6,9 +6,7 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
 import ar.edu.itba.paw.webapp.dto.RequestsCountDto;
-import ar.edu.itba.paw.webapp.dto.queryForms.RequestForm;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.RequestParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
@@ -58,21 +56,21 @@ public class RequestController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canAccessRequests(#requestForm.requestedBy, #requestForm.forProduct)")
+    @PreAuthorize("@accessControlHelper.canListOrCountRequests(#requestParams.user, #requestParams.product, #requestParams.transactionType, #requestParams.requestStatus)")
     public Response listRequests(
-            @Valid @BeanParam RequestForm requestForm
+            @Valid @BeanParam RequestParams requestParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(requestForm.getRequestedBy());
-        Long productId = extractOptionalSecondId(requestForm.getForProduct());
-        Long requestStatusId = extractOptionalFirstId(requestForm.getWithStatus());
-        Long transactionTypeId = extractOptionalFirstId(requestForm.getWithType());
+        Long userId = extractOptionalSecondId(requestParams.getUser());
+        Long productId = extractOptionalSecondId(requestParams.getProduct());
+        Long transactionTypeId = extractOptionalFirstId(requestParams.getTransactionType());
+        Long requestStatusId = extractOptionalFirstId(requestParams.getRequestStatus());
 
         // Content
-        final List<Request> requests = rs.getRequests(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId,
-                requestForm.getPage(), requestForm.getSize());
+        final List<Request> requests = rs.getRequests(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId,
+                requestParams.getPage(), requestParams.getSize());
         String requestsHashCode = String.valueOf(requests.hashCode());
 
         // Cache Control
@@ -93,11 +91,11 @@ public class RequestController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(requestForm.getNeighborhoodId())).path(Endpoint.REQUESTS),
-                rs.calculateRequestPages(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId,
-                        requestForm.getSize()),
-                requestForm.getPage(),
-                requestForm.getSize()
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(requestParams.getNeighborhoodId())).path(Endpoint.REQUESTS),
+                rs.calculateRequestPages(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId,
+                        requestParams.getSize()),
+                requestParams.getPage(),
+                requestParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<RequestDto>>(requestDto) {
@@ -110,19 +108,20 @@ public class RequestController {
 
     @GET
     @Path(Endpoint.COUNT)
+    @PreAuthorize("@accessControlHelper.canListOrCountRequests(#requestParams.user, #requestParams.product, #requestParams.transactionType, #requestParams.requestStatus)")
     public Response countRequests(
-            @Valid @BeanParam RequestForm requestForm
+            @Valid @BeanParam RequestParams requestParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(requestForm.getRequestedBy());
-        Long productId = extractOptionalSecondId(requestForm.getForProduct());
-        Long requestStatusId = extractOptionalFirstId(requestForm.getWithStatus());
-        Long transactionTypeId = extractOptionalFirstId(requestForm.getWithType());
+        Long userId = extractOptionalSecondId(requestParams.getUser());
+        Long productId = extractOptionalSecondId(requestParams.getProduct());
+        Long requestStatusId = extractOptionalFirstId(requestParams.getRequestStatus());
+        Long transactionTypeId = extractOptionalFirstId(requestParams.getTransactionType());
 
         // Content
-        int count = rs.countRequests(requestForm.getNeighborhoodId(), userId, productId, requestStatusId, transactionTypeId);
+        int count = rs.countRequests(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId);
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -131,7 +130,7 @@ public class RequestController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestForm.getNeighborhoodId(), requestForm.getRequestedBy(), requestForm.getForProduct(), requestForm.getWithStatus(), requestForm.getWithType(), uriInfo);
+        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestParams.getNeighborhoodId(), requestParams.getUser(), requestParams.getProduct(), requestParams.getRequestStatus(), requestParams.getTransactionType(), uriInfo);
 
         return Response.ok(new GenericEntity<RequestsCountDto>(dto) {
                 })
@@ -142,7 +141,7 @@ public class RequestController {
 
     @GET
     @Path("{" + PathParameter.REQUEST_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canAccessRequest(#requestId)")
+    @PreAuthorize("@accessControlHelper.canFindRequest(#requestId)")
     public Response findRequest(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.REQUEST_ID) long requestId
@@ -167,8 +166,9 @@ public class RequestController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateRequest(#createForm.user, #createForm.product)")
     public Response createRequest(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull RequestDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -188,7 +188,7 @@ public class RequestController {
     @PATCH
     @Path("{" + PathParameter.REQUEST_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@pathAccessControlHelper.canUpdateRequest(#requestId)")
+    @PreAuthorize("@accessControlHelper.canUpdateRequest(#updateForm.user, #updateForm.product, #updateForm.requestStatus, #requestId)")
     @Validated(UpdateSequence.class)
     public Response updateRequest(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -208,7 +208,7 @@ public class RequestController {
 
     @DELETE
     @Path("{" + PathParameter.REQUEST_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canDeleteRequest(#requestId)")
+    @PreAuthorize("@accessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteRequest(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.REQUEST_ID) long requestId

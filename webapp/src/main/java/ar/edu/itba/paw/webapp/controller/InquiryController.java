@@ -8,8 +8,6 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
@@ -63,15 +61,15 @@ public class InquiryController {
 
     @GET
     public Response listInquiries(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Path Verification
-        ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
+        ps.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
 
         // Content
         final List<Inquiry> inquiries = is.getInquiries(productId, size, page);
@@ -110,9 +108,9 @@ public class InquiryController {
     @GET
     @Path("{" + PathParameter.INQUIRY_ID + "}")
     public Response findInquiry(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint Long productId,
-            @PathParam(PathParameter.INQUIRY_ID) @GenericIdConstraint long inquiryId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId,
+            @PathParam(PathParameter.INQUIRY_ID) long inquiryId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -133,17 +131,17 @@ public class InquiryController {
     }
 
     @POST
-    @PreAuthorize("@pathAccessControlHelper.canCreateInquiry(#productId)")
+    @PreAuthorize("@accessControlHelper.canCreateInquiry(#createForm.user, #productId)")
     @Validated(CreateSequence.class)
     public Response createInquiry(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) Long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId,
             @Valid @NotNull InquiryDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Path Verification
-        ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
+        ps.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
 
         // Creation & HashCode Generation
         final Inquiry inquiry = is.createInquiry(extractFirstId(createForm.getUser()), productId, createForm.getMessage());
@@ -161,18 +159,18 @@ public class InquiryController {
     @PATCH
     @Path("{" + PathParameter.INQUIRY_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@pathAccessControlHelper.canAnswerInquiry(#inquiryId)")
+    @PreAuthorize("@accessControlHelper.canUpdateInquiry(#updateForm.user, #inquiryId)")
     @Validated(UpdateSequence.class)
     public Response updateInquiry(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) Long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId,
             @PathParam(PathParameter.INQUIRY_ID) long inquiryId,
             @Valid @NotNull InquiryDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Path Verification
-        ps.findProduct(neighborhoodId, productId).orElseThrow(NotAcceptableException::new);
+        ps.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
 
         // Modification & HashCode Generation
         final Inquiry updatedInquiry = is.replyInquiry(neighborhoodId, productId, inquiryId, updateForm.getReply());
@@ -185,10 +183,10 @@ public class InquiryController {
 
     @DELETE
     @Path("{" + PathParameter.INQUIRY_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canDeleteInquiry(#inquiryId)")
+    @PreAuthorize("@accessControlHelper.canDeleteInquiry(#inquiryId)")
     public Response deleteInquiry(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) Long productId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId,
             @PathParam(PathParameter.INQUIRY_ID) long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());

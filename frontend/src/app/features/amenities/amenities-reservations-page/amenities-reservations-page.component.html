@@ -95,7 +95,6 @@
       </div>
 
       <!-- The schedule table for each amenity -->
-      <!-- Example snippet showing how to iterate over dynamic days & times -->
       <div
         *ngFor="let amenity of amenities"
         class="cool-static-container m-b-20"
@@ -124,7 +123,7 @@
 
               <!-- For each unique time, display a row -->
               <tr *ngFor="let t of uniqueTimes">
-                <!-- Format the time string (e.g. "HH:mm:ss" -> "HH:mm") -->
+                <!-- Format the time string -->
                 <td>{{ formatTime(t) }}</td>
 
                 <!-- For each day, check if the shift is available for this amenity -->

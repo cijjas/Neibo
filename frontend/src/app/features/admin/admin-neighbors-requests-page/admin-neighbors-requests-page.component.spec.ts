@@ -9,9 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
-//
-// Create a fake translate pipe so the component template works.
-//
+// Create a fake translate pipe so the component template works
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string, ...args: any[]): string {
@@ -23,8 +21,6 @@ describe('AdminNeighborsRequestsPageComponent', () => {
   let component: AdminNeighborsRequestsPageComponent;
   let fixture: ComponentFixture<AdminNeighborsRequestsPageComponent>;
 
-  // Adjusted the link spy to accept both the expected literal key and the key
-  // your application may be passing (e.g. 'root:neighborUserRole').
   const mockLinkService = {
     getLink: jasmine.createSpy('getLink').and.callFake((key: string) => {
       if (key === 'root:neighborUserRole' || key === 'NEIGHBOR_USER_ROLE') {

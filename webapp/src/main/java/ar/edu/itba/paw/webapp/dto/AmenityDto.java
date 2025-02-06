@@ -3,10 +3,8 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ShiftsURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.constraints.ShiftsURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -17,17 +15,17 @@ import java.util.List;
 
 public class AmenityDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 100, groups = Basic.class)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 100)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String name;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 1000, groups = Basic.class)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 1000)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String description;
 
-    @ShiftsURIConstraint(groups = URI.class)
+    @ShiftsURIConstraint
     private List<String> selectedShifts;
 
     private Links _links;

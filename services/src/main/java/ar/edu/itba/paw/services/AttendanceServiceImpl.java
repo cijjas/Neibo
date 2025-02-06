@@ -46,7 +46,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Attendance> getAttendance(long neighborhoodId, Long eventId, Long userId, int size, int page) {
+    public List<Attendance> getAttendance(long neighborhoodId, Long eventId, Long userId, int page, int size) {
         LOGGER.info("Getting Attendance for Event {} and User {} in Neighborhood {}", eventId, userId, neighborhoodId);
 
         return attendanceDao.getAttendance(neighborhoodId, eventId, userId, page, size);

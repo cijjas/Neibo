@@ -2,39 +2,34 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.BookingDateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.AmenityURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ShiftURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.constraints.BookingDateConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.DateConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.Specific;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 @BookingDateConstraint(groups = Specific.class)
 public class BookingDto {
 
-    @NotNull(groups = Null.class)
-    @AmenityURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.AMENITY_URI_REGEX)
     private String amenity;
 
-    @NotNull(groups = Null.class)
-    @ShiftURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.SHIFT_URI_REGEX)
     private String shift;
 
-    @NotNull(groups = Null.class)
+    @NotNull(groups = OnCreate.class)
     @DateConstraint(groups = Specific.class)
     private String bookingDate;
 
-    @NotNull(groups = Null.class)
-    @UserURIConstraint(groups = URI.class)
-    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
 
     private Links _links;

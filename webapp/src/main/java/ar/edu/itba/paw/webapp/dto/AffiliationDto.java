@@ -3,33 +3,26 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerRoleURIReferenceInAffiliationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.WorkerURIReferenceInAffiliationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerRoleURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class AffiliationDto {
 
-    @NotNull(groups = Null.class)
-    @WorkerRoleURIConstraint(groups = URI.class)
-    @WorkerRoleURIReferenceInAffiliationConstraint(groups = Authorization.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.WORKER_ROLE_URI_REGEX)
     private String workerRole;
 
-    @NotNull(groups = Null.class)
-    @WorkerURIConstraint(groups = URI.class)
-    @WorkerURIReferenceInAffiliationConstraint(groups = Authorization.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.WORKER_URI_REGEX)
     private String worker;
 
-    @NotNull(groups = Null.class)
-    @NeighborhoodURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.NEIGHBORHOOD_URI_REGEX)
     private String neighborhood;
 
     private Links _links;

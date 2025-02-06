@@ -24,25 +24,6 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
     @Override
     public Response toResponse(ConstraintViolationException exception) {
-        // Check if there is a FORBIDDEN violation
-        boolean containsForbidden = exception.getConstraintViolations().stream()
-                .anyMatch(violation -> HttpStatus.FORBIDDEN.toString().equals(violation.getMessage()));
-
-        if (containsForbidden) {
-            // Build a 403 FORBIDDEN response
-            ApiErrorDetails errorDetails = new ApiErrorDetails();
-            errorDetails.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            errorDetails.setTitle(Response.Status.FORBIDDEN.getReasonPhrase());
-            errorDetails.setMessage("You are not allowed to perform this operation.");
-            errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
-
-            return Response.status(Response.Status.FORBIDDEN)
-                    .entity(errorDetails)
-                    .type(MediaType.APPLICATION_JSON)
-                    .build();
-        }
-
-        // Otherwise, handle as a BAD_REQUEST (400)
         Response.Status status = Response.Status.BAD_REQUEST;
 
         ApiErrorDetails errorDetails = new ApiErrorDetails();
@@ -50,21 +31,6 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
         errorDetails.setTitle(status.getReasonPhrase());
         errorDetails.setMessage("The form contains invalid data.");
 
-        // Extract details of each constraint violation
-        Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
-        List<ErrorDetail> errorDetailsList = new ArrayList<>();
-
-        for (ConstraintViolation<?> violation : violations) {
-            String propertyPath = violation.getPropertyPath().toString();
-            String lastSection = propertyPath.substring(propertyPath.lastIndexOf('.') + 1);
-
-            errorDetailsList.add(new ErrorDetail(
-                    lastSection,
-                    violation.getMessage().substring(0, 1).toUpperCase() + violation.getMessage().substring(1)
-            ));
-        }
-
-        errorDetails.setErrors(errorDetailsList);
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
 
         return Response.status(status)

@@ -54,7 +54,6 @@ describe('AmenitiesReservationsListComponent', () => {
     instant: jasmine
       .createSpy('instant')
       .and.callFake((key: string, params?: any) => {
-        // Optionally include params in the returned string if needed.
         return key;
       }),
   };

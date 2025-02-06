@@ -3,9 +3,8 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.TagsConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.constraints.TagsConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import ar.edu.itba.paw.webapp.validation.groups.Specific;
 
 import javax.validation.constraints.NotNull;
@@ -15,8 +14,8 @@ import javax.ws.rs.core.UriInfo;
 
 public class TagDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 1, max = 20, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 20)
     @TagsConstraint(groups = Specific.class)
     private String name;
 

@@ -1,9 +1,7 @@
-<!-- Include your navbar component here -->
 
 <div class="container f-c-c-c">
   <div class="row w-100">
     <div class="col-lg-8 w-100 m-b-20">
-      <!-- Include the calendar box component -->
       <app-calendar-box [selectedDate]="selectedDate"></app-calendar-box>
     </div>
     <div class="col-lg-4 h-100 w-100">
@@ -23,7 +21,6 @@
               <p style="font-size: 16px">{{ formattedSelectedDate }}</p>
             </div>
             <div class="divider m-b-20"></div>
-            <!-- Include the events column component -->
             <div class="w-100">
               <app-calendar-events-column
                 [selectedDate]="selectedDate"
@@ -36,5 +33,4 @@
   </div>
 </div>
 
-<!-- Include your footer component here -->
 <app-wave-footer></app-wave-footer>

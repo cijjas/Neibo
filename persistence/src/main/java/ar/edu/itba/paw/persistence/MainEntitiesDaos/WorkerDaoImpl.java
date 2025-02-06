@@ -87,7 +87,7 @@ public class WorkerDaoImpl implements WorkerDao {
 
         // Set parameters
         if (workerRoleId != null) {
-            nativeQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).name());
+            nativeQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).get().name()); // Optional not empty, check in authorization
         }
 
         if (professionIds != null && !professionIds.isEmpty()) {
@@ -135,7 +135,7 @@ public class WorkerDaoImpl implements WorkerDao {
 
         // Set parameters
         if (workerRoleId != null) {
-            countQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).name());
+            countQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).get().name()); // Optional not empty, check in authorization
         }
 
         if (professionIds != null && !professionIds.isEmpty()) {

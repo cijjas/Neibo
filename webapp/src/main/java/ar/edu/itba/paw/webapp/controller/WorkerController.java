@@ -4,17 +4,12 @@ import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodsURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ProfessionsURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerRoleURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerStatusURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.WorkerParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -59,25 +54,20 @@ public class WorkerController {
     }
 
     @GET
-    @Secured({UserRole.WORKER, UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
+    @PreAuthorize("@accessControlHelper.canListWorkers(#workerParams.neighborhoods, #workerParams.professions, #workerParams.workerRole, #workerParams.workerStatus)")
     public Response listWorkers(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodsURIConstraint List<String> neighborhoods,
-            @QueryParam(QueryParameter.WITH_PROFESSION) @ProfessionsURIConstraint List<String> professions,
-            @QueryParam(QueryParameter.WITH_ROLE) @WorkerRoleURIConstraint String workerRole,
-            @QueryParam(QueryParameter.WITH_STATUS) @WorkerStatusURIConstraint String workerStatus,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam WorkerParams workerParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        List<Long> neighborhoodIds = extractFirstIds(neighborhoods);
-        List<Long> professionIds = extractFirstIds(professions);
-        Long workerRoleId = extractOptionalFirstId(workerRole);
-        Long workerStatusId = extractOptionalFirstId(workerStatus);
+        List<Long> neighborhoodIds = extractFirstIds(workerParams.getNeighborhoods());
+        List<Long> professionIds = extractFirstIds(workerParams.getProfessions());
+        Long workerRoleId = extractOptionalFirstId(workerParams.getWorkerRole());
+        Long workerStatusId = extractOptionalFirstId(workerParams.getWorkerStatus());
 
         // Content
-        List<Worker> workers = ws.getWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId, page, size);
+        List<Worker> workers = ws.getWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId, workerParams.getPage(), workerParams.getSize());
         String workersHashCode = String.valueOf(workers.hashCode());
 
         // Cache Control
@@ -97,9 +87,9 @@ public class WorkerController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS),
-                ws.calculateWorkerPages(neighborhoodIds, professionIds, workerRoleId, workerStatusId, size),
-                page,
-                size
+                ws.calculateWorkerPages(neighborhoodIds, professionIds, workerRoleId, workerStatusId, workerParams.getSize()),
+                workerParams.getPage(),
+                workerParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto) {
@@ -113,7 +103,7 @@ public class WorkerController {
     @GET
     @Path("{" + PathParameter.WORKER_ID + "}")
     public Response findWorker(
-            @PathParam(PathParameter.WORKER_ID) @GenericIdConstraint long workerId
+            @PathParam(PathParameter.WORKER_ID) long workerId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -135,6 +125,7 @@ public class WorkerController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateWorker(#createForm.user, #createForm.professions, #createForm.backgroundImage)")
     public Response createWorker(
             @Valid @NotNull WorkerDto createForm
     ) {
@@ -154,7 +145,7 @@ public class WorkerController {
 
     @PATCH
     @Path("{" + PathParameter.WORKER_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canUpdateWorker(#workerId)")
+    @PreAuthorize("@accessControlHelper.canUpdateWorker(#updateForm.user, #updateForm.professions, #updateForm.backgroundImage, #workerId)")
     @Validated(UpdateSequence.class)
     public Response updateWorker(
             @PathParam(PathParameter.WORKER_ID) long workerId,

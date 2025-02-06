@@ -50,10 +50,10 @@ public class UserServiceImpl implements UserService {
 
         UserRole userRole = UserRole.UNVERIFIED_NEIGHBOR;
         if (userRoleId != null)
-            userRole = UserRole.fromId(userRoleId);
+            userRole = UserRole.fromId(userRoleId).get(); // Controller layer guarantees non-empty Optional
         Language language = Language.ENGLISH;
         if (languageId != null)
-            language = Language.fromId(languageId);
+            language = Language.fromId(languageId).get(); // Controller layer guarantees non-empty Optional
 
         Optional<User> n = userDao.findUser(mail);
         if (!n.isPresent()) {
@@ -146,9 +146,9 @@ public class UserServiceImpl implements UserService {
         if (identification != null)
             user.setIdentification(identification);
         if (languageId != null)
-            user.setLanguage(Language.fromId(languageId));
+            user.setLanguage(Language.fromId(languageId).get()); // Controller layer guarantees non-empty optional
         if (userRoleId != null)
-            user.setRole(UserRole.fromId(userRoleId));
+            user.setRole(UserRole.fromId(userRoleId).get()); // Controller layer guarantees non-empty optional
 
         return user;
     }

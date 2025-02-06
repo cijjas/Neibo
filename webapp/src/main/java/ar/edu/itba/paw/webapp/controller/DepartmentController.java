@@ -4,14 +4,11 @@ import ar.edu.itba.paw.interfaces.services.DepartmentService;
 import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -82,7 +79,7 @@ public class DepartmentController {
     @GET
     @Path("{" + PathParameter.DEPARTMENT_ID + "}")
     public Response findDepartment(
-            @PathParam(PathParameter.DEPARTMENT_ID) @GenericIdConstraint Long departmentId
+            @PathParam(PathParameter.DEPARTMENT_ID) Long departmentId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -103,7 +100,6 @@ public class DepartmentController {
     }
 
     @POST
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     @Validated(CreateSequence.class)
     public Response createDepartment(
             @Valid @NotNull DepartmentDto createForm
@@ -128,9 +124,8 @@ public class DepartmentController {
 
     @DELETE
     @Path("{" + PathParameter.DEPARTMENT_ID + "}")
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteDepartment(
-            @PathParam(PathParameter.DEPARTMENT_ID) @GenericIdConstraint long departmentId
+            @PathParam(PathParameter.DEPARTMENT_ID) long departmentId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

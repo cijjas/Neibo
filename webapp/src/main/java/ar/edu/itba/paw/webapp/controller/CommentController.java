@@ -8,8 +8,6 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,8 +62,8 @@ public class CommentController {
 
     @GET
     public Response listComments(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) Long postId,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -110,9 +108,9 @@ public class CommentController {
     @GET
     @Path("{" + PathParameter.COMMENT_ID + "}")
     public Response findComment(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
-            @PathParam(PathParameter.COMMENT_ID) @GenericIdConstraint long commentId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) Long postId,
+            @PathParam(PathParameter.COMMENT_ID) long commentId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -134,9 +132,10 @@ public class CommentController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateComment(#createForm.user)")
     public Response createComment(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) @GenericIdConstraint Long postId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) Long postId,
             @Valid @NotNull CommentDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -162,10 +161,10 @@ public class CommentController {
 
     @DELETE
     @Path("{" + PathParameter.COMMENT_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canDeleteComment(#commentId)")
+    @PreAuthorize("@accessControlHelper.canDeleteComment(#neighborhoodId, #postId, #commentId)")
     public Response deleteComment(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) Long postId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) long postId,
             @PathParam(PathParameter.COMMENT_ID) long commentId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());

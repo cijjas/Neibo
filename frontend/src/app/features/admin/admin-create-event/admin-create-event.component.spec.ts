@@ -82,11 +82,10 @@ describe('AdminCreateEventComponent', () => {
       name: 'Test Event',
       description: 'Desc',
       date: '2025-01-01',
-      startTime: '10:00', // 10:00
-      endTime: '09:00', // 09:00 => start is >= end
+      startTime: '10:00', 
+      endTime: '09:00', 
     });
     expect(component.eventForm.invalid).toBeTrue();
-    // Optionally check the error object
     expect(component.eventForm.errors).toEqual({ startBeforeEnd: true });
   });
 
@@ -108,11 +107,11 @@ describe('AdminCreateEventComponent', () => {
   it('should mark form touched and return if invalid', () => {
     spyOn(component.eventForm, 'markAllAsTouched');
     component.eventForm.setValue({
-      name: '', // required => missing
-      description: '', // required => missing
-      date: '', // required => missing
-      startTime: '', // required => missing
-      endTime: '', // required => missing
+      name: '', 
+      description: '', 
+      date: '', 
+      startTime: '', 
+      endTime: '', 
     });
     component.onSubmit();
 
@@ -143,7 +142,7 @@ describe('AdminCreateEventComponent', () => {
       'Some Event',
       'Event Description',
       new Date('2025-01-01T00:00:00Z'),
-      '09:00:00', // ensureSeconds adds :00
+      '09:00:00', 
       '10:00:00',
     );
 
@@ -160,6 +159,6 @@ describe('AdminCreateEventComponent', () => {
   it('should append :00 if missing seconds', () => {
     expect(component['ensureSeconds']('09:15')).toBe('09:15:00');
     expect(component['ensureSeconds']('09:15:30')).toBe('09:15:30');
-    expect(component['ensureSeconds']('0915')).toBe('0915'); // no colon => return as is
+    expect(component['ensureSeconds']('0915')).toBe('0915'); 
   });
 });

@@ -17,7 +17,7 @@ public class ApiErrorDetails {
     private String message;
     private String path;
     private Set<LinkEntry> links;
-    private List<ErrorDetail> errors; // Change this field to a List
+    private List<ErrorDetail> errors;
 
     public List<ErrorDetail> getErrors() {
         return errors;

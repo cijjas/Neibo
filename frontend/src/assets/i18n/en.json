@@ -1074,5 +1074,17 @@
   "WAVE-FOOTER": {
     "SLOGAN": "Your peace of mind is our priority. Safe, secure, and serene.",
     "CONTACT": "Contact us: +54 911 2328-6639 | info&#64;neibo.com"
+  },
+
+  "FORM-ERROR-COMPONENT": {
+    "required": "This field is required",
+    "maxlength": "The value is too long (max {{requiredLength}} characters)",
+    "minLength": "The value is too short (min {{requiredLength}} characters)",
+    "pattern": "Invalid format",
+    "fileSize": "File size should be less than {{requiredMax}} MB.",
+    "fileFormat": "Invalid file format. Only JPEG, PNG, or GIF images are allowed.",
+    "noTagsSelected": "Please select at least one tag.",
+    "startBeforeEnd": "Start time should be before end time.",
+    "email": "Entered email is not valid"
   }
 }

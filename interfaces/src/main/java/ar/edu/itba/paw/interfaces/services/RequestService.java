@@ -15,11 +15,11 @@ public interface RequestService {
 
     Optional<Request> findRequest(long neighborhoodId, long requestId);
 
-    List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int page, int size);
+    List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int page, int size);
 
-    int countRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId);
+    int countRequests(long neighborhoodId, Long userId, Long productId, Long transactionTypeId, Long requestStatusId);
 
-    int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int size);
+    int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

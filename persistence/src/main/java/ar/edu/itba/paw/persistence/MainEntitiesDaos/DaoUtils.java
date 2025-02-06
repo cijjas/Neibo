@@ -19,7 +19,7 @@ class DaoUtils {
             appendTagsCondition(query, queryParams, tags);
 
         if (postStatusId != null) {
-            switch (PostStatus.fromId(postStatusId)) {
+            switch (PostStatus.fromId(postStatusId).get()) { // Controller layer guarantees optional not empty if not null
                 case HOT:
                     appendHotClause(query);
                     break;

@@ -74,7 +74,7 @@ public class UserDaoImpl implements UserDao {
 
         List<Predicate> predicates = new ArrayList<>();
         if (userRoleId != null) {
-            predicates.add(cb.equal(idRoot.get("role"), UserRole.fromId(userRoleId)));
+            predicates.add(cb.equal(idRoot.get("role"), UserRole.fromId(userRoleId).get())); // Controller layer guarantees non-empty optional
         }
         if (neighborhoodId != null) {
             Join<User, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
@@ -130,7 +130,7 @@ public class UserDaoImpl implements UserDao {
         }
         TypedQuery<Long> query = em.createQuery(jpqlConditions.toString(), Long.class);
         if (userRoleId != null) {
-            query.setParameter("role", UserRole.fromId(userRoleId));
+            query.setParameter("role", UserRole.fromId(userRoleId).get()); // Controller layer guarantees non-empty optional
         }
         if (neighborhoodId != null) {
             query.setParameter("neighborhoodId", neighborhoodId);

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.enums;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum PostStatus {
     HOT(1),
@@ -19,10 +20,9 @@ public enum PostStatus {
         return id;
     }
 
-    public static PostStatus fromId(long id) {
+    public static Optional<PostStatus> fromId(long id) {
         return Arrays.stream(values())
                 .filter(ps -> ps.getId() == id)
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+                .findFirst();
     }
 }

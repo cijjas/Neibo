@@ -3,11 +3,9 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ImageURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ProfessionsURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.constraints.ProfessionsURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -17,32 +15,34 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 public class WorkerDto {
-    @NotNull(groups = Null.class)
+
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
 
-    @NotNull(groups = Null.class)
-    @ProfessionsURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @ProfessionsURIConstraint
     private List<String> professions;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 1, max = 64, groups = Basic.class)
-    @Pattern(regexp = "^[0-9+\\- ]*", groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 64)
+    @Pattern(regexp = "^[0-9+\\- ]*")
     private String phoneNumber;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 1, max = 128, groups = Basic.class)
-    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 128)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*")
     private String businessName;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 1, max = 128, groups = Basic.class)
-    @Pattern(regexp = "^[a-zA-Z0-9 -]*", groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 128)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*")
     private String address;
 
-    @Size(max = 1000, groups = Basic.class)
+    @Size(max = 1000)
     private String bio;
 
-    @ImageURIConstraint(groups = URI.class)
+    @Pattern(regexp = URIValidator.NEIGHBORHOOD_URI_REGEX)
     private String backgroundImage;
 
     private Links _links;

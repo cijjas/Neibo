@@ -10,7 +10,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 
-// Import service types (adjust paths as needed)
 import { EventService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 

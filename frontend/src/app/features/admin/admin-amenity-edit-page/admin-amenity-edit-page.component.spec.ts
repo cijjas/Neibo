@@ -95,8 +95,6 @@ describe('AdminAmenityEditPageComponent', () => {
             snapshot: { params: { id: '123' } },
           },
         },
-        // Optionally, provide ToastService if needed
-        // { provide: ToastService, useValue: jasmine.createSpyObj('ToastService', ['showToast']) },
       ],
     }).compileComponents();
 

@@ -4,18 +4,16 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.UserRole;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
@@ -46,7 +44,7 @@ public class ImageController {
     @GET
     @Path("{" + PathParameter.IMAGE_ID + "}")
     public Response findImage(
-            @PathParam(PathParameter.IMAGE_ID) @GenericIdConstraint long imageId
+            @PathParam(PathParameter.IMAGE_ID) long imageId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -69,7 +67,6 @@ public class ImageController {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Secured({UserRole.REJECTED, UserRole.UNVERIFIED, UserRole.WORKER, UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response storeImage(
             @FormDataParam("imageFile") InputStream fileInputStream,
             @FormDataParam("imageFile") FormDataContentDisposition fileDetail
@@ -78,7 +75,18 @@ public class ImageController {
 
         if (fileInputStream == null) {
             LOGGER.warn("Null Image InputStream");
-            return Response.ok().build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        try {
+            if (fileInputStream.available() > 10 * 1024 * 1024) { // 10 MB
+                LOGGER.warn("Uploaded file exceeds 10 MB limit.");
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("File size exceeds the 10 MB limit")
+                        .build();
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error reading file stream", e);
+            return Response.serverError().build();
         }
 
         // Creation & HashCode Generation
@@ -95,9 +103,8 @@ public class ImageController {
 
     @DELETE
     @Path("{" + PathParameter.IMAGE_ID + "}")
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteImage(
-            @PathParam(PathParameter.IMAGE_ID) @GenericIdConstraint long imageId
+            @PathParam(PathParameter.IMAGE_ID) long imageId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

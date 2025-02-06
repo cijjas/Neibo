@@ -2,16 +2,12 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.ProductURIInRequestConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.PhoneNumberConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ProductURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.RequestStatusURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
 import ar.edu.itba.paw.webapp.validation.groups.*;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -19,26 +15,23 @@ import java.util.Date;
 
 public class RequestDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 500, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 500)
     private String message;
 
-    @NotNull(groups = Null.class)
-    @ProductURIConstraint(groups = URI.class)
-    @ProductURIInRequestConstraint(groups = Authorization.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.PRODUCT_URI_REGEX)
     private String product;
 
-    @NotNull(groups = Null.class)
-    @Range(min = 1, max = 100, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Range(min = 1, max = 100)
     private Integer unitsRequested;
 
-    @NotNull(groups = Null.class)
-    @UserURIConstraint(groups = URI.class)
-    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
-    @PhoneNumberConstraint(groups = Specific.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
 
-    @RequestStatusURIConstraint(groups = URI.class)
+    @Pattern(regexp = URIValidator.REQUEST_STATUS_URI_REGEX)
     private String requestStatus;
 
     private Date requestDate;

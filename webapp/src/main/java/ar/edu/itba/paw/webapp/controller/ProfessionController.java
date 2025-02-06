@@ -7,8 +7,6 @@ import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.ProfessionDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,9 +54,9 @@ public class ProfessionController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInProfessions(#worker)")
+    @PreAuthorize("@accessControlHelper.canUseWorkerQPInProfessions(#worker)")
     public Response listProfessions(
-            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURIConstraint String worker
+            @QueryParam(QueryParameter.FOR_WORKER) String worker
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -90,7 +88,7 @@ public class ProfessionController {
     @GET
     @Path("{" + PathParameter.PROFESSION_ID + "}")
     public Response findProfession(
-            @PathParam(PathParameter.PROFESSION_ID) @GenericIdConstraint long professionId
+            @PathParam(PathParameter.PROFESSION_ID) long professionId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -138,7 +136,7 @@ public class ProfessionController {
     @Path("{" + PathParameter.PROFESSION_ID + "}")
     @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteProfession(
-            @PathParam(PathParameter.PROFESSION_ID) @GenericIdConstraint long professionId
+            @PathParam(PathParameter.PROFESSION_ID) long professionId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
