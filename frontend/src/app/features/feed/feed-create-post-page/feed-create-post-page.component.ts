@@ -9,7 +9,7 @@ import {
   PostService,
   TagService,
   LinkKey,
-  Roles,
+  Role,
 } from '@shared/index';
 import {
   HateoasLinksService,
@@ -19,6 +19,7 @@ import {
   AuthService,
 } from '@core/index';
 import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-create-post-page',
@@ -29,24 +30,23 @@ export class FeedCreatePostPageComponent implements OnInit {
   createPostForm: FormGroup;
 
   // Channel data
-  channelList: Channel[] = [];
   channel: string;
   title: string = '';
 
   // Tag pagination data
-  tagList: Tag[] = []; // Fetched tags for the current page
-  appliedTags: Tag[] = []; // Tags the user has chosen
+  tagList: Tag[] = [];
+  appliedTags: Tag[] = [];
 
   // Pagination
   currentPage: number = 1;
   pageSize: number = 20;
   totalPages: number = 1;
 
-  // For image preview, etc.
-  imagePreviewUrl: string | ArrayBuffer;
+  // (UPDATED) For image preview
+  imagePreviewUrl: string | ArrayBuffer | null = null;
   fileUploadError: string;
 
-  // For channel logic
+  // For channel logic (unchanged)
   feedChannelUrl: string;
   announcementsChannelUrl: string;
   complaintsChannelUrl: string;
@@ -65,18 +65,30 @@ export class FeedCreatePostPageComponent implements OnInit {
     private userSessionService: UserSessionService,
     private toastService: ToastService,
     private authService: AuthService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     const userRole = this.userSessionService.getCurrentRole();
-    this.notWorker = userRole !== Roles.WORKER;
+    this.notWorker = userRole !== Role.WORKER;
 
     // Build form
     this.createPostForm = this.fb.group({
-      title: ['', Validators.required],
-      body: ['', Validators.required],
-      imageFile: [null],
+      title: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.name.maxLength),
+        ],
+      ],
+      body: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.description.maxLength),
+        ],
+      ],
+      imageFile: [null, VALIDATION_CONFIG.imageValidator],
       tags: [[]], // Will store final tags array here
       channel: [''],
       user: [''],
@@ -84,19 +96,21 @@ export class FeedCreatePostPageComponent implements OnInit {
 
     // Fetch channels from links
     this.feedChannelUrl = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_FEED_CHANNEL
+      LinkKey.NEIGHBORHOOD_FEED_CHANNEL,
     );
     this.announcementsChannelUrl = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
     );
     this.complaintsChannelUrl = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL
+      LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL,
     );
 
-    // Listen to route queryParams for channel
-    this.route.queryParams.subscribe((params) => {
-      this.channel = params['inChannel'];
-      this.updateChannelTitle();
+    this.translate.getTranslation(this.translate.currentLang).subscribe(() => {
+      // Listen to route queryParams for channel
+      this.route.queryParams.subscribe(params => {
+        this.channel = params['inChannel'];
+        this.updateChannelTitle();
+      });
     });
 
     // If user is not a worker, load tags
@@ -105,17 +119,106 @@ export class FeedCreatePostPageComponent implements OnInit {
     }
   }
 
+  // ------------------------------------
+  // (NEW) Helper to get imageFile control
+  // ------------------------------------
+  get imageFileControl() {
+    return this.createPostForm.get('imageFile');
+  }
+
+  // ------------------------------------
+  // (UPDATED) IMAGE HANDLING
+  // ------------------------------------
+  onFileChange(event: any) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Patch the file into the form control
+    this.createPostForm.patchValue({ imageFile: file });
+    // Mark as touched so errors appear if invalid
+    this.createPostForm.get('imageFile')?.markAsTouched();
+
+    // If invalid, remove preview
+    if (this.imageFileControl?.errors) {
+      this.imagePreviewUrl = null;
+      return;
+    }
+
+    // If valid, show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.handleDroppedFile(file);
+    }
+  }
+
+  handleDroppedFile(file: File) {
+    this.createPostForm.patchValue({ imageFile: file });
+    this.createPostForm.get('imageFile')?.markAsTouched();
+
+    if (this.imageFileControl?.errors) {
+      this.imagePreviewUrl = null;
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(): void {
+    this.imagePreviewUrl = null;
+
+    const imageControl = this.createPostForm.get('imageFile');
+    if (imageControl) {
+      // Reset the control
+      imageControl.patchValue(null);
+      imageControl.setErrors(null);
+      imageControl.markAsPristine();
+      imageControl.markAsUntouched();
+    }
+
+    // Also clear the native <input type="file">
+    const input = document.getElementById('images') as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
+  }
+
   // Determine the title based on channel
   updateChannelTitle() {
+    let key = '';
+
     if (this.channel === this.feedChannelUrl) {
-      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_POST');
+      key = 'FEED-CREATE-POST-PAGE.CREATE_POST';
     } else if (this.channel === this.announcementsChannelUrl) {
-      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_ANNOUNCEMENT');
+      key = 'FEED-CREATE-POST-PAGE.CREATE_ANNOUNCEMENT';
     } else if (this.channel === this.complaintsChannelUrl) {
-      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_COMPLAINT');
+      key = 'FEED-CREATE-POST-PAGE.CREATE_COMPLAINT';
     } else {
-      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_CONTENT');
+      key = 'FEED-CREATE-POST-PAGE.CREATE_CONTENT';
     }
+
+    this.translate.get(key).subscribe(translated => {
+      this.title = translated;
+      console.log(this.title);
+    });
   }
 
   // ---- TAGS & PAGINATION ----
@@ -137,7 +240,7 @@ export class FeedCreatePostPageComponent implements OnInit {
         this.tagList = response.tags || [];
         this.totalPages = response.totalPages || 1;
       },
-      error: (err) => {
+      error: err => {
         console.error('Error fetching paginated tags:', err);
       },
     });
@@ -171,14 +274,21 @@ export class FeedCreatePostPageComponent implements OnInit {
 
     if (!this.isValidTag(formattedTag)) {
       this.toastService.showToast(
-        this.title = this.translate.instant('FEED-CREATE-POST-PAGE.INVALID_TAG_FORMAT_USE_LETTERS_ONLY'),
-        'warning'
+        (this.title = this.translate.instant(
+          'FEED-CREATE-POST-PAGE.INVALID_TAG_FORMAT_USE_LETTERS_ONLY',
+        )),
+        'warning',
       );
       return;
     }
 
     if (this.appliedTags.length >= 5) {
-      this.toastService.showToast(this.title = this.translate.instant('FEED-CREATE-POST-PAGE.YOU_CAN_ONLY_ADD_UP_TO_5_TAGS'), 'warning');
+      this.toastService.showToast(
+        (this.title = this.translate.instant(
+          'FEED-CREATE-POST-PAGE.YOU_CAN_ONLY_ADD_UP_TO_5_TAGS',
+        )),
+        'warning',
+      );
       return;
     }
 
@@ -191,17 +301,25 @@ export class FeedCreatePostPageComponent implements OnInit {
   }
 
   addTagToApplied(tag: Tag) {
-    const exists = this.appliedTags.find((t) => t.name === tag.name);
+    const exists = this.appliedTags.find(t => t.name === tag.name);
     if (exists) {
       this.toastService.showToast(
-        this.translate.instant('FEED-CREATE-POST-PAGE.YOUVE_ALREADY_SELECTED_THE_TAG_TAGNAME', {tagName: tag.name}),
-        'warning'
+        this.translate.instant(
+          'FEED-CREATE-POST-PAGE.YOUVE_ALREADY_SELECTED_THE_TAG_TAGNAME',
+          { tagName: tag.name },
+        ),
+        'warning',
       );
       return;
     }
 
     if (this.appliedTags.length >= 5) {
-      this.toastService.showToast(this.translate.instant('FEED-CREATE-POST-PAGE.YOU_CAN_ONLY_ADD_UP_TO_5_TAGS'), 'warning');
+      this.toastService.showToast(
+        this.translate.instant(
+          'FEED-CREATE-POST-PAGE.YOU_CAN_ONLY_ADD_UP_TO_5_TAGS',
+        ),
+        'warning',
+      );
       return;
     }
 
@@ -212,7 +330,7 @@ export class FeedCreatePostPageComponent implements OnInit {
     return input
       .toLowerCase()
       .split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join('');
   }
 
@@ -222,21 +340,7 @@ export class FeedCreatePostPageComponent implements OnInit {
   }
 
   removeTag(tag: Tag) {
-    this.appliedTags = this.appliedTags.filter((t) => t.name !== tag.name);
-  }
-
-  // ---- IMAGE HANDLING ----
-
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.createPostForm.patchValue({ imageFile: file });
-
-      // Preview
-      const reader = new FileReader();
-      reader.onload = (e) => (this.imagePreviewUrl = reader.result);
-      reader.readAsDataURL(file);
-    }
+    this.appliedTags = this.appliedTags.filter(t => t.name !== tag.name);
   }
 
   // ---- FORM SUBMIT ----
@@ -248,13 +352,13 @@ export class FeedCreatePostPageComponent implements OnInit {
     }
 
     // Separate new tags from existing tags
-    const newTags = this.appliedTags.filter((tag) => !tag.self);
+    const newTags = this.appliedTags.filter(tag => !tag.self);
     const existingTagUrls = this.appliedTags
-      .filter((tag) => tag.self)
-      .map((tag) => tag.self);
+      .filter(tag => tag.self)
+      .map(tag => tag.self);
 
     // 1. Create new tags on the server only for newTags
-    const createTagsObservables = newTags.map((tag) =>
+    const createTagsObservables = newTags.map(tag =>
       this.tagService.createTag(tag.name).pipe(
         switchMap((location: string | null) => {
           if (!location) {
@@ -264,11 +368,11 @@ export class FeedCreatePostPageComponent implements OnInit {
           // Fetch the newly created Tag resource to get its full details
           return this.tagService.getTag(location);
         }),
-        catchError((err) => {
+        catchError(err => {
           console.error('Error creating tag:', tag.name, err);
           return of(null);
-        })
-      )
+        }),
+      ),
     );
 
     // IMPORTANT: If createTagsObservables is empty, forkJoin([]) completes without emitting
@@ -278,12 +382,12 @@ export class FeedCreatePostPageComponent implements OnInit {
       : of([]);
 
     tagsForkJoin$.subscribe({
-      next: (createdTags) => {
+      next: createdTags => {
         // 'createdTags' will be an array of Tag objects (or nulls), or [] if none were created
 
         const createdTagUrls = createdTags
           .filter((tag): tag is Tag => !!tag)
-          .map((tag) => tag.self);
+          .map(tag => tag.self);
 
         // Combine any newly created Tag URLs + existing Tag URLs
         const allTagUrls = [...existingTagUrls, ...createdTagUrls];
@@ -300,42 +404,46 @@ export class FeedCreatePostPageComponent implements OnInit {
           .getCurrentUser()
           .pipe(
             take(1),
-            switchMap((user) => {
+            switchMap(user => {
               formValue.user = user.self;
-              // Optionally handle image
               return this.createImageObservable(formValue.imageFile).pipe(
-                switchMap((imageUrl) => {
+                switchMap(imageUrl => {
                   if (imageUrl) {
                     formValue.image = imageUrl;
                   }
                   return this.postService.createPost(formValue);
-                })
+                }),
               );
-            })
+            }),
           )
           .subscribe({
             next: () => {
               const contentType = this.getContentType();
               this.toastService.showToast(
-                this.translate.instant('FEED-CREATE-POST-PAGE.YOUR_CONTENTTYPE_WAS_CREATED_SUCCESSFULLY', {contentType: contentType}),
-                'success'
+                this.translate.instant(
+                  'FEED-CREATE-POST-PAGE.YOUR_CONTENTTYPE_WAS_CREATED_SUCCESSFULLY',
+                  { contentType: contentType },
+                ),
+                'success',
               );
-              // Navigate away if needed
               this.router.navigate(['/posts'], {
                 queryParams: { inChannel: this.channel },
               });
             },
-            error: (error) => {
+            error: error => {
               const contentType = this.getContentType();
               this.toastService.showToast(
-                this.translate.instant('FEED-CREATE-POST-PAGE.THERE_WAS_A_PROBLEM_CREATING_YOUR_CONTENTTYPE', {contentType: contentType}),
-                'error'
+                this.translate.instant(
+                  'FEED-CREATE-POST-PAGE.THERE_WAS_A_PROBLEM_CREATING_YOUR_CONTENTTYPE',
+                  { contentType: contentType },
+                ),
+                'error',
               );
               console.error('Error creating post:', error);
             },
           });
       },
-      error: (err) => {
+      error: err => {
         console.error('Error creating tags in forkJoin:', err);
       },
     });
@@ -363,10 +471,10 @@ export class FeedCreatePostPageComponent implements OnInit {
       return of(null);
     }
     return this.imageService.createImage(imageFile).pipe(
-      catchError((err) => {
+      catchError(err => {
         console.error('Error uploading image:', err);
         return of(null);
-      })
+      }),
     );
   }
 

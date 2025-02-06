@@ -59,14 +59,11 @@ export class HateoasLinksService {
     // Retain only root links
     const rootLinks = new Map<LinkKey, string>(
       Array.from(this.linksMap.entries()).filter(([key]) =>
-        key.startsWith('root:')
-      )
+        key.startsWith('root:'),
+      ),
     );
 
-    // Replace linksMap with the filtered map
     this.linksMap = rootLinks;
-
-    // Save the updated links to session storage
     this.saveToLocal();
   }
 
@@ -83,14 +80,13 @@ export class HateoasLinksService {
   }
 
   private toEnumKey(raw: string): LinkKey | null {
-    const possibleKey = Object.values(LinkKey).find((v) => v === raw);
+    const possibleKey = Object.values(LinkKey).find(v => v === raw);
     if (possibleKey) {
       const enumKey = (
         Object.keys(LinkKey) as Array<keyof typeof LinkKey>
-      ).find((k) => LinkKey[k] === raw);
+      ).find(k => LinkKey[k] === raw);
       return enumKey ? LinkKey[enumKey] : null;
     }
-    // Normal fallback
     return null;
   }
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { UserSessionService, HateoasLinksService } from '@core/index';
@@ -13,17 +13,23 @@ import {
 } from '@shared/index';
 import { Subscription } from 'rxjs';
 
+interface ShiftTime {
+  start: string;
+  end: string;
+}
+
 @Component({
   selector: 'app-amenities-choose-time-page',
   templateUrl: './amenities-choose-time-page.component.html',
 })
-export class AmenitiesChooseTimePageComponent implements OnInit {
+export class AmenitiesChooseTimePageComponent implements OnInit, OnDestroy {
   amenityUrl!: string;
   date!: string;
   amenityName: string = '';
   bookings: Shift[] = [];
   private queryParamsSubscription!: Subscription;
-  selectedShiftsPopup: string[] = [];
+  // Remove the old string and use an array of shift times
+  selectedShiftTimes: ShiftTime[] = [];
   isLoading = false;
 
   shiftsForm = this.fb.group({
@@ -41,18 +47,18 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
     private bookingService: BookingService,
     private shiftService: ShiftService,
     private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
   ) {}
 
   ngOnInit(): void {
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(
-      (params) => {
+      params => {
         this.amenityUrl = params.get('amenityUrl') || '';
         this.date = params.get('date') || '';
         if (this.amenityUrl && this.date) {
           this.loadData();
         }
-      }
+      },
     );
   }
 
@@ -63,7 +69,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
       next: (amenity: Amenity) => {
         this.amenityName = amenity.name;
       },
-      error: (err) => {
+      error: err => {
         console.error(err);
       },
     });
@@ -76,7 +82,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
           const formArray = this.shiftsForm.get('selectedShifts') as FormArray;
           formArray.clear();
 
-          this.bookings.forEach((booking) => {
+          this.bookings.forEach(booking => {
             const control = this.fb.control({
               value: false,
               disabled: booking.taken,
@@ -86,7 +92,7 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
 
           this.isLoading = false;
         },
-        error: (err) => {
+        error: err => {
           console.error(err);
           this.isLoading = false;
         },
@@ -97,22 +103,19 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
     this.location.back();
   }
 
-  formattedShiftTimes: string = '';
-
   onReserve() {
     const formArray = this.shiftsForm.get('selectedShifts') as FormArray;
 
     const selectedShifts: string[] = [];
-    const selectedShiftTimes: string[] = [];
+    // Prepare an array for table data instead of HTML strings
+    const shiftTimes: ShiftTime[] = [];
     formArray.controls.forEach((ctrl, i) => {
       if (ctrl.value === true && !this.bookings[i].taken) {
         selectedShifts.push(this.bookings[i].self);
         // Format time to remove seconds (hh:mm)
         const formattedStartTime = this.bookings[i].startTime.slice(0, 5);
         const formattedEndTime = this.bookings[i].endTime.slice(0, 5);
-        selectedShiftTimes.push(
-          `<p>${formattedStartTime} - ${formattedEndTime}</p>`
-        );
+        shiftTimes.push({ start: formattedStartTime, end: formattedEndTime });
       }
     });
 
@@ -122,10 +125,11 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
       .createBooking(this.amenityUrl, this.date, selectedShifts, userUrl)
       .subscribe({
         next: () => {
-          this.formattedShiftTimes = selectedShiftTimes.join('<br>');
+          // Instead of joining HTML strings, store the array
+          this.selectedShiftTimes = shiftTimes;
           this.showReservationDialog = true;
         },
-        error: (err) => {
+        error: err => {
           console.error(err);
           this.router.navigate(['/not-found']); // Navigate to the error page
         },
@@ -147,6 +151,6 @@ export class AmenitiesChooseTimePageComponent implements OnInit {
 
   isReserveDisabled(): boolean {
     const formArray = this.shiftsForm.get('selectedShifts') as FormArray;
-    return !formArray.controls.some((control) => control.value === true);
+    return !formArray.controls.some(control => control.value === true);
   }
 }

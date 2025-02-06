@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-// Replace with your actual models and services
 import {
   ProductService,
   RequestService,
@@ -31,7 +30,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     private router: Router,
     private linkService: HateoasLinksService,
     private requestService: RequestService,
-    private productService: ProductService
+    private productService: ProductService,
   ) {}
 
   // Computed properties for toggling UI
@@ -58,7 +57,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     });
 
     // Handle query params for pagination
-    this.route.queryParams.subscribe((queryParams) => {
+    this.route.queryParams.subscribe(queryParams => {
       this.page = queryParams['page'] ? +queryParams['page'] : 1;
       this.size = queryParams['size'] ? +queryParams['size'] : 10;
 
@@ -79,7 +78,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   loadListings(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const productStatusUrl: string = this.linkService.getLink(
-      LinkKey.SELLING_PRODUCT_STATUS
+      LinkKey.SELLING_PRODUCT_STATUS,
     );
 
     this.productService
@@ -90,21 +89,21 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
         size: this.size,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.listings = data.products;
           this.totalPages = data.totalPages;
         },
-        error: (err) => console.error(err),
+        error: err => console.error(err),
       });
   }
 
   loadSales(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const requestStatusUrl: string = this.linkService.getLink(
-      LinkKey.ACCEPTED_REQUEST_STATUS
+      LinkKey.ACCEPTED_REQUEST_STATUS,
     );
     const transactionTypeUrl: string = this.linkService.getLink(
-      LinkKey.SALE_TRANSACTION_TYPE
+      LinkKey.SALE_TRANSACTION_TYPE,
     );
 
     this.requestService
@@ -116,11 +115,11 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
         size: this.size,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.sales = data.requests;
           this.totalPages = data.totalPages;
         },
-        error: (err) => console.error(err),
+        error: err => console.error(err),
       });
   }
 

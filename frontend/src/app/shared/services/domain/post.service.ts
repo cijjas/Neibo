@@ -18,7 +18,7 @@ import { HateoasLinksService } from '@core/index';
 export class PostService {
   constructor(
     private http: HttpClient,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
   ) {}
 
   public getPost(postUrl: string): Observable<Post> {
@@ -27,13 +27,67 @@ export class PostService {
       .pipe(mergeMap((postDto: PostDto) => mapPost(this.http, postDto)));
   }
 
+  public getWorkerPostsByUrl(
+    workerPostsUrl: string,
+    queryParams: { page?: number; size?: number } = {},
+  ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
+    let params = new HttpParams();
+
+    if (queryParams.page !== undefined) {
+      params = params.set('page', queryParams.page.toString());
+    }
+    if (queryParams.size !== undefined) {
+      params = params.set('size', queryParams.size.toString());
+    }
+
+    return this.http
+      .get<PostDto[] | PostDto>(workerPostsUrl, { params, observe: 'response' })
+      .pipe(
+        mergeMap(response => {
+          if (response.status === 204 || !response.body) {
+            return of({
+              posts: [],
+              totalPages: 0,
+              currentPage: 0,
+            });
+          }
+
+          let postsDto = response.body;
+          if (!Array.isArray(postsDto)) {
+            postsDto = [postsDto];
+          }
+
+          const linkHeader = response.headers.get('Link');
+          const paginationInfo = linkHeader
+            ? parseLinkHeader(linkHeader)
+            : { totalPages: 0, currentPage: 0 };
+
+          const postObservables = postsDto.map(postDto =>
+            mapWorkerPost(this.http, postDto),
+          );
+
+          return forkJoin(postObservables).pipe(
+            map(posts => ({
+              posts,
+              totalPages: paginationInfo.totalPages || 0,
+              currentPage: paginationInfo.currentPage || 0,
+            })),
+          );
+        }),
+        catchError(error => {
+          console.error('Error fetching worker posts:', error);
+          return of({ posts: [], totalPages: 0, currentPage: 0 });
+        }),
+      );
+  }
+
   public getWorkerPosts(
     queryParams: {
       page?: number;
       size?: number;
       inChannel?: string;
       postedBy?: string;
-    } = {}
+    } = {},
   ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
     const workerPostsUrl = this.linkService.getLink(LinkKey.USER_POSTS);
     let params = new HttpParams();
@@ -50,8 +104,7 @@ export class PostService {
     return this.http
       .get<PostDto[]>(workerPostsUrl, { params, observe: 'response' })
       .pipe(
-        mergeMap((response) => {
-          // Handle 204 No Content response
+        mergeMap(response => {
           if (response.status === 204 || !response.body) {
             return of({
               posts: [],
@@ -60,30 +113,28 @@ export class PostService {
             });
           }
 
-          // Parse the response for normal cases
           const postsDto = response.body || [];
           const linkHeader = response.headers.get('Link');
           const paginationInfo = linkHeader
             ? parseLinkHeader(linkHeader)
             : { totalPages: 0, currentPage: 0 };
 
-          // Process the posts
-          const postObservables = postsDto.map((postDto) =>
-            mapWorkerPost(this.http, postDto)
+          const postObservables = postsDto.map(postDto =>
+            mapWorkerPost(this.http, postDto),
           );
 
           return forkJoin(postObservables).pipe(
-            map((posts) => ({
+            map(posts => ({
               posts,
               totalPages: paginationInfo.totalPages || 0,
               currentPage: paginationInfo.currentPage || 0,
-            }))
+            })),
           );
         }),
-        catchError((error) => {
+        catchError(error => {
           console.error('Error fetching posts:', error);
           return of({ posts: [], totalPages: 0, currentPage: 0 });
-        })
+        }),
       );
   }
 
@@ -92,10 +143,10 @@ export class PostService {
       page?: number;
       size?: number;
       inChannel?: string;
-      withTag?: string[]; // Array of tags
+      withTag?: string[];
       withStatus?: string;
       postedBy?: string;
-    } = {}
+    } = {},
   ): Observable<{ posts: Post[]; totalPages: number; currentPage: number }> {
     const postsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_POSTS);
 
@@ -112,9 +163,9 @@ export class PostService {
     if (queryParams.postedBy)
       params = params.set('postedBy', queryParams.postedBy);
 
-    // Add each withTag as a separate query parameter
+    // Each withTag as a separate query parameter
     if (queryParams.withTag && queryParams.withTag.length > 0) {
-      queryParams.withTag.forEach((tag) => {
+      queryParams.withTag.forEach(tag => {
         params = params.append('withTag', tag);
       });
     }
@@ -122,8 +173,7 @@ export class PostService {
     return this.http
       .get<PostDto[]>(postsUrl, { params, observe: 'response' })
       .pipe(
-        mergeMap((response) => {
-          // Handle 204 No Content response
+        mergeMap(response => {
           if (response.status === 204 || !response.body) {
             return of({
               posts: [],
@@ -132,7 +182,6 @@ export class PostService {
             });
           }
 
-          // Parse the response for normal cases
           const postsDto = response.body || [];
           const linkHeader = response.headers.get('Link');
           const paginationInfo = linkHeader
@@ -140,22 +189,22 @@ export class PostService {
             : { totalPages: 0, currentPage: 0 };
 
           // Process the posts
-          const postObservables = postsDto.map((postDto) =>
-            mapPost(this.http, postDto)
+          const postObservables = postsDto.map(postDto =>
+            mapPost(this.http, postDto),
           );
 
           return forkJoin(postObservables).pipe(
-            map((posts) => ({
+            map(posts => ({
               posts,
               totalPages: paginationInfo.totalPages || 0,
               currentPage: paginationInfo.currentPage || 0,
-            }))
+            })),
           );
         }),
-        catchError((error) => {
+        catchError(error => {
           console.error('Error fetching posts:', error);
           return of({ posts: [], totalPages: 0, currentPage: 0 });
-        })
+        }),
       );
   }
 
@@ -164,7 +213,7 @@ export class PostService {
     return this.http
       .post<PostDto>(createPostUrl, postForm, { observe: 'response' })
       .pipe(
-        map((response) => {
+        map(response => {
           const locationHeader = response.headers.get('Location');
           if (locationHeader) {
             return locationHeader;
@@ -173,10 +222,10 @@ export class PostService {
             return null;
           }
         }),
-        catchError((error) => {
+        catchError(error => {
           console.error('Error creating post:', error);
           return of(null);
-        })
+        }),
       );
   }
 }
@@ -187,7 +236,7 @@ export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
     http.get<LikeCountDto>(postDto._links.likeCount),
     http
       .get<UserDto>(postDto._links.postUser)
-      .pipe(mergeMap((userDto) => mapUser(http, userDto))),
+      .pipe(mergeMap(userDto => mapUser(http, userDto))),
   ]).pipe(
     map(([channelDto, likeCountDto, user]) => {
       return {
@@ -201,18 +250,18 @@ export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
         author: user,
         self: postDto._links.self,
       } as Post;
-    })
+    }),
   );
 }
 
 export function mapWorkerPost(
   http: HttpClient,
-  postDto: PostDto
+  postDto: PostDto,
 ): Observable<Post> {
   return forkJoin([
     http
       .get<UserDto>(postDto._links.postUser)
-      .pipe(mergeMap((userDto) => mapUser(http, userDto))),
+      .pipe(mergeMap(userDto => mapUser(http, userDto))),
   ]).pipe(
     map(([user]) => {
       return {
@@ -224,6 +273,6 @@ export function mapWorkerPost(
         author: user,
         self: postDto._links.self,
       } as Post;
-    })
+    }),
   );
 }

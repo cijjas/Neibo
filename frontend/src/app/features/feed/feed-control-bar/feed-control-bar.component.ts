@@ -5,7 +5,7 @@ import {
   HateoasLinksService,
   UserSessionService,
 } from '@core/index';
-import { User, LinkKey, Roles } from '@shared/index';
+import { User, LinkKey, Role } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
 
 export enum FeedStatus {
@@ -52,7 +52,7 @@ export class FeedControlBarComponent implements OnInit {
     });
 
     this.isNotAdmin =
-      this.userSessionService.getCurrentRole() != Roles.ADMINISTRATOR;
+      this.userSessionService.getCurrentRole() != Role.ADMINISTRATOR;
 
     this.latestUrl = this.linkService.getLink(LinkKey.NONE_POST_STATUS);
     this.hotUrl = this.linkService.getLink(LinkKey.HOT_POST_STATUS);
@@ -78,6 +78,7 @@ export class FeedControlBarComponent implements OnInit {
       this.status = this.statusMapping[paramStatus] || FeedStatus.LATEST;
       this.channel = params['inChannel'];
       this.updateStatusClass();
+      this.updateChannelClass();
     });
   }
 
@@ -88,6 +89,16 @@ export class FeedControlBarComponent implements OnInit {
       this.statusClass = 'Hot';
     } else if (this.status === this.trendingUrl) {
       this.statusClass = 'Trending';
+    }
+  }
+
+  updateChannelClass() {
+    if (this.channel === this.feedChannelUrl) {
+      this.channelClass = 'Feed';
+    } else if (this.channel === this.announcementsChannelUrl) {
+      this.channelClass = 'Announcements';
+    } else if (this.channel === this.complaintsChannelUrl) {
+      this.channelClass = 'Complaints';
     }
   }
 

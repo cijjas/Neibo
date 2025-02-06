@@ -1,15 +1,15 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { HateoasLinksService } from "@core/index";
-import { Language, LinkKey, LanguageDto } from "@shared/index";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { HateoasLinksService } from '@core/index';
+import { Language, LinkKey, LanguageDto } from '@shared/index';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class LanguageService {
   constructor(
     private http: HttpClient,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
   ) {}
 
   public getLanguage(url: string): Observable<Language> {
@@ -20,7 +20,7 @@ export class LanguageService {
     let url = this.linkService.getLink(LinkKey.LANGUAGES);
     return this.http
       .get<LanguageDto[]>(url)
-      .pipe(map((languageDtos) => languageDtos.map(mapLanguage)));
+      .pipe(map(languageDtos => languageDtos.map(mapLanguage)));
   }
 }
 

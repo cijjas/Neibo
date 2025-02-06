@@ -2,10 +2,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  /* 
-      Flex column so each new toast stacks on top of the previous one. 
-      Reverse column so the newest appears at the bottom, if you prefer.
-    */
+  /* Flex column so each new toast stacks on top of the previous one. */
   display: flex;
   flex-direction: column;
   gap: 10px; /* Spacing between toasts */

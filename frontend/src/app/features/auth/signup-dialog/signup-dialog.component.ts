@@ -6,7 +6,6 @@ import {
   Output,
   ViewChild,
   ElementRef,
-  HostListener,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -17,7 +16,7 @@ import {
   Language,
   ProfessionService,
   Profession,
-  Roles,
+  Role,
   LinkKey,
   WorkerService,
 } from '@shared/index';
@@ -31,6 +30,7 @@ import {
 import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -73,7 +73,7 @@ export class SignupDialogComponent implements OnInit {
     private router: Router,
     private workerService: WorkerService,
     private userSessionService: UserSessionService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -88,12 +88,15 @@ export class SignupDialogComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern('^[a-zA-ZÀ-ž\\s]+$'), // Example: Only letters/spaces
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES), // Example: Only letters/spaces
         ],
       ],
       surname: [
         '',
-        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+        [
+          Validators.required,
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES),
+        ],
       ],
       mail: [
         '',
@@ -107,7 +110,6 @@ export class SignupDialogComponent implements OnInit {
         [
           Validators.required,
           // Validators.minLength(8),
-          // Simple example pattern:
           // At least one uppercase, one lowercase, and a digit
           // Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
         ],
@@ -116,7 +118,7 @@ export class SignupDialogComponent implements OnInit {
         null,
         [
           Validators.required,
-          Validators.pattern('^[1-9][0-9]{6,7}$'), // 7 to 8 digits, no leading zeros
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_ID), // 7 to 8 digits, no leading zeros
         ],
       ],
       language: ['', Validators.required],
@@ -128,11 +130,17 @@ export class SignupDialogComponent implements OnInit {
       professions: [[], Validators.required],
       w_name: [
         '',
-        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+        [
+          Validators.required,
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES),
+        ],
       ],
       w_surname: [
         '',
-        [Validators.required, Validators.pattern('^[a-zA-ZÀ-ž\\s]+$')],
+        [
+          Validators.required,
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_LETTERS_AND_SPACES),
+        ],
       ],
       w_mail: ['', [Validators.required, Validators.email]],
       w_password: [
@@ -148,7 +156,7 @@ export class SignupDialogComponent implements OnInit {
         null,
         [
           Validators.required,
-          Validators.pattern('^[1-9][0-9]{6,7}$'), // 7 to 8 digits, no leading zeros
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_ID), // 7 to 8 digits, no leading zeros
         ],
       ],
       w_language: ['', Validators.required],
@@ -156,9 +164,7 @@ export class SignupDialogComponent implements OnInit {
         '',
         [
           Validators.required,
-          // Example pattern for phone: +54 9 11 1234 5678
-          // This is just an example - adapt to your country or remove if not needed
-          Validators.pattern('^\\+?\\d[\\d\\s()-]+\\d$'),
+          Validators.pattern(VALIDATION_CONFIG.PATTERN_PHONE_NUMBER),
         ],
       ],
     });
@@ -170,8 +176,8 @@ export class SignupDialogComponent implements OnInit {
   trySignup(): void {
     if (this.signupForm.invalid) {
       this.toastService.showToast(
-        'Please fill out all required fields.',
-        'error'
+        this.translate.instant('SIGNUP-DIALOG.PLEASE_FILL_OUT_ALL_REQUIRED_FIELDS'),
+        'error',
       );
       return;
     }
@@ -188,40 +194,42 @@ export class SignupDialogComponent implements OnInit {
         signupValues.password,
         signupValues.mail,
         signupValues.language,
-        signupValues.identification
+        signupValues.identification,
       )
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            this.translate.instant('SIGNUP-DIALOG.NEIGHBOR_SIGNUP_SUCCESSFUL_LOGGING_YOU_IN'),
-            'success'
+            this.translate.instant(
+              'SIGNUP-DIALOG.NEIGHBOR_SIGNUP_SUCCESSFUL_LOGGING_YOU_IN',
+            ),
+            'success',
           );
           // Attempt auto-login
           this.authService
             .login(signupValues.mail, signupValues.password)
             .subscribe({
-              next: (success) => {
+              next: success => {
                 this.loading = false;
                 if (success) {
                   // Get the user's role from UserSessionService
                   const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
-                    case Roles.WORKER:
+                    case Role.WORKER:
                       const workerUrl = this.linkStorage.getLink(
-                        LinkKey.USER_WORKER
+                        LinkKey.USER_WORKER,
                       );
                       this.router
                         .navigate(['services', 'profile', workerUrl])
                         .then(() => this.closeSignupDialog());
                       break;
 
-                    case Roles.NEIGHBOR:
-                    case Roles.ADMINISTRATOR:
+                    case Role.NEIGHBOR:
+                    case Role.ADMINISTRATOR:
                       const announcementesChannelUrl = this.linkStorage.getLink(
-                        LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+                        LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
                       );
                       const nonePostStatus = this.linkStorage.getLink(
-                        LinkKey.NONE_POST_STATUS
+                        LinkKey.NONE_POST_STATUS,
                       );
                       this.router
                         .navigate(['posts'], {
@@ -233,14 +241,14 @@ export class SignupDialogComponent implements OnInit {
                         .then(() => this.closeSignupDialog());
                       break;
 
-                    case Roles.UNVERIFIED_NEIGHBOR:
+                    case Role.UNVERIFIED_NEIGHBOR:
                       this.router
                         .navigate(['unverified'])
                         .then(() => this.closeSignupDialog());
 
                       break;
 
-                    case Roles.REJECTED:
+                    case Role.REJECTED:
                       this.router
                         .navigate(['rejected'])
                         .then(() => this.closeSignupDialog());
@@ -255,29 +263,35 @@ export class SignupDialogComponent implements OnInit {
                   }
                 } else {
                   this.toastService.showToast(
-                    this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
-                    'error'
+                    this.translate.instant(
+                      'SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY',
+                    ),
+                    'error',
                   );
                   this.closeSignupDialog();
                 }
               },
-              error: (err) => {
+              error: err => {
                 console.error('Automatic login error:', err);
                 this.loading = false;
                 this.toastService.showToast(
-                  this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
-                  'error'
+                  this.translate.instant(
+                    'SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY',
+                  ),
+                  'error',
                 );
                 this.closeSignupDialog();
               },
             });
         },
-        error: (error) => {
+        error: error => {
           console.error('Error during neighbor signup:', error);
           this.loading = false;
           this.toastService.showToast(
-            this.translate.instant('SIGNUP-DIALOG.SIGNUP_FAILED_PLEASE_TRY_AGAIN'),
-            'error'
+            this.translate.instant(
+              'SIGNUP-DIALOG.SIGNUP_FAILED_PLEASE_TRY_AGAIN',
+            ),
+            'error',
           );
         },
       });
@@ -289,8 +303,10 @@ export class SignupDialogComponent implements OnInit {
   submitServiceForm(): void {
     if (this.serviceForm.invalid) {
       this.toastService.showToast(
-        this.translate.instant('SIGNUP-DIALOG.PLEASE_FILL_OUT_ALL_REQUIRED_FIELDS'),
-        'error'
+        this.translate.instant(
+          'SIGNUP-DIALOG.PLEASE_FILL_OUT_ALL_REQUIRED_FIELDS',
+        ),
+        'error',
       );
       return;
     }
@@ -309,27 +325,29 @@ export class SignupDialogComponent implements OnInit {
         workerValues.professions.map((p: Profession) => p.self),
         workerValues.phoneNumber,
         workerValues.businessName,
-        workerValues.w_address
+        workerValues.w_address,
       )
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            this.translate.instant('SIGNUP-DIALOG.NEIGHBOR_SIGNUP_SUCCESSFUL_LOGGING_YOU_IN'),
-            'success'
+            this.translate.instant(
+              'SIGNUP-DIALOG.NEIGHBOR_SIGNUP_SUCCESSFUL_LOGGING_YOU_IN',
+            ),
+            'success',
           );
           // Attempt auto-login
           this.authService
             .login(workerValues.w_mail, workerValues.w_password)
             .subscribe({
-              next: (success) => {
+              next: success => {
                 this.loading = false;
                 if (success) {
                   // Get the user's role from UserSessionService
                   const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
-                    case Roles.WORKER:
+                    case Role.WORKER:
                       const workerUrl = this.linkStorage.getLink(
-                        LinkKey.USER_WORKER
+                        LinkKey.USER_WORKER,
                       );
                       this.router
                         .navigate(['services', 'profile', workerUrl])
@@ -344,29 +362,35 @@ export class SignupDialogComponent implements OnInit {
                   }
                 } else {
                   this.toastService.showToast(
-                    this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
-                    'error'
+                    this.translate.instant(
+                      'SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY',
+                    ),
+                    'error',
                   );
                   this.closeSignupDialog();
                 }
               },
-              error: (err) => {
+              error: err => {
                 console.error('Automatic login error:', err);
                 this.loading = false;
                 this.toastService.showToast(
-                  this.translate.instant('SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY'),
-                  'error'
+                  this.translate.instant(
+                    'SIGNUP-DIALOG.LOGIN_FAILED_AFTER_SIGNUP_PLEASE_TRY_MANUALLY',
+                  ),
+                  'error',
                 );
                 this.closeSignupDialog();
               },
             });
         },
-        error: (error) => {
+        error: error => {
           console.error('Error during neighbor signup:', error);
           this.loading = false;
           this.toastService.showToast(
-            this.translate.instant('SIGNUP-DIALOG.SIGNUP_FAILED_PLEASE_TRY_AGAIN'),
-            'error'
+            this.translate.instant(
+              'SIGNUP-DIALOG.SIGNUP_FAILED_PLEASE_TRY_AGAIN',
+            ),
+            'error',
           );
         },
       });
@@ -403,14 +427,16 @@ export class SignupDialogComponent implements OnInit {
   // =========== Data Fetching =============
   getNeighborhoods(): void {
     this.neighborhoodService.getNeighborhoods().subscribe({
-      next: (response) => {
+      next: response => {
         this.neighborhoodsList = response.neighborhoods;
       },
-      error: (error) => {
+      error: error => {
         console.error('Error getting neighborhoods:', error);
         this.toastService.showToast(
-          this.translate.instant('SIGNUP-DIALOG.THERE_WAS_A_PROBLEM_FETCHING_THE_NEIGHBORHOODS_TRY'),
-          'error'
+          this.translate.instant(
+            'SIGNUP-DIALOG.THERE_WAS_A_PROBLEM_FETCHING_THE_NEIGHBORHOODS_TRY',
+          ),
+          'error',
         );
       },
     });
@@ -418,14 +444,16 @@ export class SignupDialogComponent implements OnInit {
 
   getLanguages(): void {
     this.languageService.getLanguages().subscribe({
-      next: (languages) => {
+      next: languages => {
         this.languages = languages;
       },
-      error: (error) => {
+      error: error => {
         console.error('Error getting languages:', error);
         this.toastService.showToast(
-          this.translate.instant('SIGNUP-DIALOG.COULD_NOT_RETRIEVE_AVAILABLE_LANGUAGES_TRY_AGAIN'),
-          'error'
+          this.translate.instant(
+            'SIGNUP-DIALOG.COULD_NOT_RETRIEVE_AVAILABLE_LANGUAGES_TRY_AGAIN',
+          ),
+          'error',
         );
       },
     });
@@ -433,11 +461,11 @@ export class SignupDialogComponent implements OnInit {
 
   fetchNeighborhoods = (page: number, size: number): Observable<any> => {
     return this.neighborhoodService.getNeighborhoods({ page, size }).pipe(
-      map((response) => ({
+      map(response => ({
         items: response.neighborhoods,
         currentPage: response.currentPage,
         totalPages: response.totalPages,
-      }))
+      })),
     );
   };
 
@@ -451,7 +479,7 @@ export class SignupDialogComponent implements OnInit {
         items: professions,
         currentPage: 1,
         totalPages: 1,
-      }))
+      })),
     );
   };
 

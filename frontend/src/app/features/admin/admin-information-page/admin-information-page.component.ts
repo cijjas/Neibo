@@ -5,6 +5,7 @@ import { ConfirmationService, ToastService } from '@core/index';
 import { ContactService, ResourceService, ImageService } from '@shared/index';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-admin-information-page',
@@ -27,8 +28,9 @@ export class AdminInformationPageComponent implements OnInit {
   // New Resource dialog
   showCreateResourceDialog = false;
   resourceForm: FormGroup;
-  // For image preview
-  previewSrc: string | null = null;
+
+  // (UPDATED) For image preview
+  imagePreviewUrl: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,14 +41,26 @@ export class AdminInformationPageComponent implements OnInit {
     private toastService: ToastService,
     private imageService: ImageService,
     private confirmationService: ConfirmationService,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     // ------------------ Contact Form ------------------
     this.contactForm = this.fb.group({
-      contactName: ['', [Validators.required, Validators.maxLength(50)]],
-      contactAddress: ['', [Validators.required, Validators.maxLength(50)]],
+      contactName: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.name.maxLength),
+        ],
+      ],
+      contactAddress: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.name.maxLength),
+        ],
+      ],
       contactPhone: ['', [Validators.required]],
     });
 
@@ -54,15 +68,18 @@ export class AdminInformationPageComponent implements OnInit {
     this.resourceForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      imageFile: [null],
+      // (UPDATED) Using image validator
+      imageFile: [
+        null,
+        [Validators.required, VALIDATION_CONFIG.imageValidator],
+      ],
     });
 
     // Subscribe to query params for pagination
-    this.route.queryParamMap.subscribe((params) => {
+    this.route.queryParamMap.subscribe(params => {
       const contactPageParam = params.get('contactsPage');
       const resourcePageParam = params.get('resourcesPage');
 
-      // Use the param or default to page 1
       this.contactCurrentPage = contactPageParam ? +contactPageParam : 1;
       this.resourceCurrentPage = resourcePageParam ? +resourcePageParam : 1;
 
@@ -90,6 +107,11 @@ export class AdminInformationPageComponent implements OnInit {
     return this.resourceForm.get('description');
   }
 
+  // (NEW) For easier image control checks
+  get imageFileControl() {
+    return this.resourceForm.get('imageFile');
+  }
+
   // ------------------ CONTACT DIALOG CONTROL ------------------
   openCreateContactDialog() {
     this.showCreateContactDialog = true;
@@ -101,10 +123,19 @@ export class AdminInformationPageComponent implements OnInit {
   // ------------------ RESOURCE DIALOG CONTROL ------------------
   openCreateResourceDialog() {
     this.showCreateResourceDialog = true;
-    // Reset preview each time we open the dialog
-    this.previewSrc = null;
+    const input = document.getElementById('resourceImages') as HTMLInputElement;
+    if (input) {
+      input.value = '';
+    }
     this.resourceForm.reset();
+    this.resourceForm.setValue({
+      title: '',
+      description: '',
+      imageFile: null,
+    });
+    this.imagePreviewUrl = null;
   }
+
   closeCreateResourceDialog() {
     this.showCreateResourceDialog = false;
   }
@@ -120,19 +151,30 @@ export class AdminInformationPageComponent implements OnInit {
       .createContact(
         this.contactForm.value.contactName,
         this.contactForm.value.contactPhone,
-        this.contactForm.value.contactAddress
+        this.contactForm.value.contactAddress,
       )
       .subscribe({
         next: () => {
-          this.toastService.showToast(this.translate.instant(
-            'ADMIN-INFORMATION-PAGE.CONTACT_CREATED',
-          ), 'success');
+          this.toastService.showToast(
+            this.translate.instant('ADMIN-INFORMATION-PAGE.CONTACT_CREATED'),
+            'success',
+          );
           this.closeCreateContactDialog();
           this.fetchContacts(); // Refresh
         },
-        error: (err) => {
-          console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_CREATING_CONTACT'), err);
-          this.toastService.showToast(this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_CREATE_CONTACT'), 'error');
+        error: err => {
+          console.error(
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.ERROR_CREATING_CONTACT',
+            ),
+            err,
+          );
+          this.toastService.showToast(
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.FAILED_TO_CREATE_CONTACT',
+            ),
+            'error',
+          );
         },
       });
   }
@@ -150,61 +192,151 @@ export class AdminInformationPageComponent implements OnInit {
     // Create the image first, then create the resource
     this.createImageObservable(file)
       .pipe(
-        switchMap((imageUrl) => {
+        switchMap(imageUrl => {
           if (!imageUrl) {
-            throw new Error(this.translate.instant('ADMIN-INFORMATION-PAGE.IMAGE_UPLOAD_FAILED_RESOURCE_CREATION_ABORTED'));
+            throw new Error(
+              this.translate.instant(
+                'ADMIN-INFORMATION-PAGE.IMAGE_UPLOAD_FAILED_RESOURCE_CREATION_ABORTED',
+              ),
+            );
           }
           // Proceed to create the resource using the uploaded image URL
           return this.resourceService.createResource(
             formValue.title,
             formValue.description,
-            imageUrl
+            imageUrl,
           );
-        })
+        }),
       )
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            this.translate.instant('ADMIN-INFORMATION-PAGE.RESOURCE_CREATED_SUCCESSFULLY'),
-            'success'
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.RESOURCE_CREATED_SUCCESSFULLY',
+            ),
+            'success',
           );
           this.closeCreateResourceDialog();
-          this.fetchResources(); // Refresh the list of resources
+          this.fetchResources();
         },
-        error: (err) => {
-          console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_CREATING_RESOURCE'), err);
-          this.toastService.showToast(this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_CREATE_RESOURCE'), 'error');
+        error: err => {
+          console.error(
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.ERROR_CREATING_RESOURCE',
+            ),
+            err,
+          );
+          this.toastService.showToast(
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.FAILED_TO_CREATE_RESOURCE',
+            ),
+            'error',
+          );
         },
       });
   }
 
+  // (UNCHANGED) Uploads the file to the server
   private createImageObservable(
-    imageFile: File | null
+    imageFile: File | null,
   ): Observable<string | null> {
     return imageFile
       ? this.imageService.createImage(imageFile).pipe(
-          catchError((error) => {
-            console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_UPLOADING_IMAGE'), error);
+          catchError(error => {
+            console.error(
+              this.translate.instant(
+                'ADMIN-INFORMATION-PAGE.ERROR_UPLOADING_IMAGE',
+              ),
+              error,
+            );
             return of(null); // Return null if image upload fails
-          })
+          }),
         )
       : of(null);
   }
 
-  // ------------------ IMAGE PREVIEW ------------------
+  // --------------------------------------------------
+  // (NEW) IMAGE HANDLING EXACTLY AS REFERENCE
+  // --------------------------------------------------
   onFileChange(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.resourceForm.patchValue({ imageFile: file });
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
 
-      // file preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.previewSrc = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      this.previewSrc = null;
+    const file = input.files[0];
+    const imageControl = this.resourceForm.get('imageFile');
+    if (!imageControl) return;
+
+    // Patch file
+    imageControl.patchValue(file);
+    imageControl.markAsTouched();
+    imageControl.updateValueAndValidity();
+
+    // If invalid, remove preview
+    if (imageControl.errors) {
+      this.imagePreviewUrl = null;
+      return;
+    }
+
+    // If valid, show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const file = event.dataTransfer.files[0];
+      this.handleDroppedFile(file);
+    }
+  }
+
+  handleDroppedFile(file: File) {
+    const imageControl = this.resourceForm.get('imageFile');
+    if (!imageControl) return;
+
+    imageControl.patchValue(file);
+    imageControl.markAsTouched();
+    imageControl.updateValueAndValidity();
+
+    if (imageControl.errors) {
+      this.imagePreviewUrl = null;
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreviewUrl = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(): void {
+    this.imagePreviewUrl = null;
+
+    const imageControl = this.resourceForm.get('imageFile');
+    if (imageControl) {
+      // Reset the control
+      imageControl.patchValue(null);
+      imageControl.setErrors(null);
+      imageControl.markAsPristine();
+      imageControl.markAsUntouched();
+    }
+
+    // Clear the native <input type="file">
+    const input = document.getElementById('resourceImages') as HTMLInputElement;
+    if (input) {
+      input.value = '';
     }
   }
 
@@ -216,15 +348,17 @@ export class AdminInformationPageComponent implements OnInit {
         size: this.contactPageSize,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.phoneNumbersList = data.contacts;
           this.contactTotalPages = data.totalPages;
           this.contactCurrentPage = data.currentPage;
         },
-        error: (err) => {
+        error: err => {
           this.toastService.showToast(
-            this.translate.instant('ADMIN-INFORMATION-PAGE.THERE_WAS_AN_ISSUE_LOOKING_UP_CONTACT_INFORMATION'),
-            'error'
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.THERE_WAS_AN_ISSUE_LOOKING_UP_CONTACT_INFORMATION',
+            ),
+            'error',
           );
           console.error('Error fetching contacts:', err);
         },
@@ -249,17 +383,24 @@ export class AdminInformationPageComponent implements OnInit {
         size: this.resourcePageSize,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.resourceList = data.resources;
           this.resourceTotalPages = data.totalPages;
           this.resourceCurrentPage = data.currentPage;
         },
-        error: (err) => {
+        error: err => {
           this.toastService.showToast(
-            this.translate.instant('ADMIN-INFORMATION-PAGE.THERE_WAS_AN_ISSUE_LOOKING_UP_RESOURCE_INFORMATION'),
-            'error'
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.THERE_WAS_AN_ISSUE_LOOKING_UP_RESOURCE_INFORMATION',
+            ),
+            'error',
           );
-          console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_FETCHING_RESOURCES'), err);
+          console.error(
+            this.translate.instant(
+              'ADMIN-INFORMATION-PAGE.ERROR_FETCHING_RESOURCES',
+            ),
+            err,
+          );
         },
       });
   }
@@ -279,24 +420,39 @@ export class AdminInformationPageComponent implements OnInit {
     this.confirmationService
       .askForConfirmation({
         title: this.translate.instant('ADMIN-INFORMATION-PAGE.DELETE_CONTACT'),
-        message:
-        this.translate.instant('ADMIN-INFORMATION-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_CONTACT_THIS_'),
-        confirmText: this.translate.instant('ADMIN-INFORMATION-PAGE.YES_DELETE'),
+        message: this.translate.instant(
+          'ADMIN-INFORMATION-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_CONTACT_THIS_',
+        ),
+        confirmText: this.translate.instant(
+          'ADMIN-INFORMATION-PAGE.YES_DELETE',
+        ),
         cancelText: this.translate.instant('ADMIN-INFORMATION-PAGE.CANCEL'),
       })
-      .subscribe((confirmed) => {
+      .subscribe(confirmed => {
         if (confirmed) {
           this.contactService.deleteContact(contactUrl).subscribe({
             next: () => {
               this.toastService.showToast(
-                this.translate.instant('ADMIN-INFORMATION-PAGE.CONTACT_DELETED_SUCCESSFULLY'),
-                'success'
+                this.translate.instant(
+                  'ADMIN-INFORMATION-PAGE.CONTACT_DELETED_SUCCESSFULLY',
+                ),
+                'success',
               );
               this.fetchContacts(); // Refresh contacts list
             },
-            error: (err) => {
-              console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_DELETING_CONTACT'), err);
-              this.toastService.showToast(this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_DELETE_CONTACT'), 'error');
+            error: err => {
+              console.error(
+                this.translate.instant(
+                  'ADMIN-INFORMATION-PAGE.ERROR_DELETING_CONTACT',
+                ),
+                err,
+              );
+              this.toastService.showToast(
+                this.translate.instant(
+                  'ADMIN-INFORMATION-PAGE.FAILED_TO_DELETE_CONTACT',
+                ),
+                'error',
+              );
             },
           });
         }
@@ -308,26 +464,38 @@ export class AdminInformationPageComponent implements OnInit {
     this.confirmationService
       .askForConfirmation({
         title: this.translate.instant('ADMIN-INFORMATION-PAGE.DELETE_RESOURCE'),
-        message:
-        this.translate.instant('ADMIN-INFORMATION-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_RESOURCE_THIS'),
-        confirmText: this.translate.instant('ADMIN-INFORMATION-PAGE.YES_DELETE'),
+        message: this.translate.instant(
+          'ADMIN-INFORMATION-PAGE.ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_RESOURCE_THIS',
+        ),
+        confirmText: this.translate.instant(
+          'ADMIN-INFORMATION-PAGE.YES_DELETE',
+        ),
         cancelText: this.translate.instant('ADMIN-INFORMATION-PAGE.CANCEL'),
       })
-      .subscribe((confirmed) => {
+      .subscribe(confirmed => {
         if (confirmed) {
           this.resourceService.deleteResource(resourceUrl).subscribe({
             next: () => {
               this.toastService.showToast(
-                this.translate.instant('ADMIN-INFORMATION-PAGE.RESOURCE_DELETED_SUCCESSFULLY'),
-                'success'
+                this.translate.instant(
+                  'ADMIN-INFORMATION-PAGE.RESOURCE_DELETED_SUCCESSFULLY',
+                ),
+                'success',
               );
               this.fetchResources(); // Refresh resources list
             },
-            error: (err) => {
-              console.error(this.translate.instant('ADMIN-INFORMATION-PAGE.ERROR_DELETING_RESOURCE'), err);
+            error: err => {
+              console.error(
+                this.translate.instant(
+                  'ADMIN-INFORMATION-PAGE.ERROR_DELETING_RESOURCE',
+                ),
+                err,
+              );
               this.toastService.showToast(
-                this.translate.instant('ADMIN-INFORMATION-PAGE.FAILED_TO_DELETE_RESOURCE'),
-                'error'
+                this.translate.instant(
+                  'ADMIN-INFORMATION-PAGE.FAILED_TO_DELETE_RESOURCE',
+                ),
+                'error',
               );
             },
           });

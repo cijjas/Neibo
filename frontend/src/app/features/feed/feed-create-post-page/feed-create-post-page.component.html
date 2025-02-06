@@ -1,6 +1,3 @@
-<!-- Include your head content here or in the index.html -->
-<!-- Include Navbar Component -->
-
 <div class="container">
   <div class="row init">
     <div class="column-publish">
@@ -15,33 +12,29 @@
           enctype="multipart/form-data"
         >
           <div class="form-column" style="margin-top: 1rem">
-            <div class="form-group">
-              <!-- Hidden Channel Input -->
-              <input
-                type="hidden"
-                formControlName="channel"
-                [value]="channel"
-              />
+            <!-- Hidden Channel -->
+            <input type="hidden" formControlName="channel" [value]="channel" />
 
-              <div class="form-row">
-                <!-- Subject Input -->
-                <input
-                  type="text"
-                  formControlName="title"
-                  class="cool-input"
-                  style="border-radius: var(--border-radius)"
-                  placeholder="Title"
-                />
-                <div
-                  *ngIf="
-                    createPostForm.get('title').invalid &&
-                    (createPostForm.get('title').dirty ||
-                      createPostForm.get('title').touched)
-                  "
-                  class="form-row form-error"
-                >
-                  <p class="error">{{ "FEED-CREATE-POST-PAGE.TITLE_IS_REQUIRED" | translate }}</p>
-                </div>
+            <div class="form-group">
+              <!-- Subject/Title Input -->
+              <input
+                type="text"
+                formControlName="title"
+                class="cool-input"
+                style="border-radius: var(--border-radius)"
+                placeholder="Title"
+              />
+              <div
+                *ngIf="
+                  createPostForm.get('title').invalid &&
+                  (createPostForm.get('title').dirty ||
+                    createPostForm.get('title').touched)
+                "
+                class="form-row form-error"
+              >
+                <p class="error">
+                  {{ 'FEED-CREATE-POST-PAGE.TITLE_IS_REQUIRED' | translate }}
+                </p>
               </div>
             </div>
 
@@ -61,15 +54,25 @@
                 "
                 class="form-row form-error"
               >
-                <p class="error">{{ "FEED-CREATE-POST-PAGE.BODY_IS_REQUIRED" | translate }}</p>
+                <p class="error">
+                  {{ 'FEED-CREATE-POST-PAGE.BODY_IS_REQUIRED' | translate }}
+                </p>
               </div>
             </div>
 
+            <!-- (UPDATED) Image File Input + Drag & Drop -->
             <div class="form-group w-50">
-              <!-- Image File Input -->
-              <label for="images" class="drop-container" id="dropcontainer">
-                <span class="drop-title"> {{ "FEED-CREATE-POST-PAGE.DROP_FILES" | translate }} </span>
-                {{ "FEED-CREATE-POST-PAGE.OR" | translate }}
+              <label
+                for="images"
+                class="drop-container"
+                id="dropcontainer"
+                (dragover)="onDragOver($event)"
+                (drop)="onDrop($event)"
+              >
+                <span class="drop-title">
+                  {{ 'FEED-CREATE-POST-PAGE.DROP_FILES' | translate }}
+                </span>
+                {{ 'FEED-CREATE-POST-PAGE.OR' | translate }}
                 <input
                   type="file"
                   class="select-file-button"
@@ -78,17 +81,29 @@
                   (change)="onFileChange($event)"
                 />
               </label>
-              <div style="text-align: center">
-                <p class="error" *ngIf="fileUploadError">
-                  {{ fileUploadError }}
-                </p>
+
+              <!-- (NEW) Remove Image button (only if an image is selected) -->
+              <div *ngIf="imageFileControl?.value" style="margin-top: 0.75rem">
+                <button
+                  type="button"
+                  class="cool-button red"
+                  (click)="removeImage()"
+                >
+                  {{ 'FEED-CREATE-POST-PAGE.REMOVE_IMAGE' | translate }}
+                </button>
               </div>
+
+              <!-- Show validation errors (if any) -->
+              <app-form-error
+                class="w-100"
+                [control]="imageFileControl"
+                [centered]="false"
+              ></app-form-error>
             </div>
 
-            <!-- Image Preview -->
-            <div>
+            <!-- (UPDATED) Image Preview -->
+            <div class="preview-container" *ngIf="imagePreviewUrl">
               <img
-                *ngIf="imagePreviewUrl"
                 [src]="imagePreviewUrl"
                 class="blogpost-image"
                 alt="uploading image"
@@ -97,18 +112,16 @@
 
             <!-- 
               Tag Section (only visible if not a WORKER)
-              Allows: 
-                1) Creating a new tag
-                2) Selecting from existing tags (paginated)
-                3) Viewing and removing applied tags
             -->
             <div
               *ngIf="notWorker"
               class="mt-3 w-50"
               style="border-top: 1px solid #ccc; padding-top: 1rem"
             >
-              <label class="mb-2">{{ "FEED-CREATE-POST-PAGE.SELECT_OR_CREATE_NEW_TAGS" | translate }}</label>
-
+              <label class="mb-2">{{
+                'FEED-CREATE-POST-PAGE.SELECT_OR_CREATE_NEW_TAGS' | translate
+              }}</label>
+              <!-- Display selected tags -->
               <div
                 *ngIf="appliedTags.length > 0"
                 class="tags-row tags w-100 mb-2"
@@ -126,7 +139,6 @@
                   type="text"
                   placeholder="Create a tag (e.g., ThisIsATag)"
                   (keydown)="handleTagInputKeydown($event, newTagInput)"
-                  class=""
                 />
                 <button
                   type="button"
@@ -136,7 +148,7 @@
                     createCustomTag(newTagInput.value); newTagInput.value = ''
                   "
                 >
-                {{ "FEED-CREATE-POST-PAGE.ADD" | translate }}
+                  {{ 'FEED-CREATE-POST-PAGE.ADD' | translate }}
                 </button>
               </div>
 
@@ -159,7 +171,13 @@
                 >
                   <i class="fa-solid fa-angle-left"></i>
                 </span>
-                <p>{{ "FEED-CREATE-POST-PAGE.PAGE__CURRENTPAGE__OF__TOTALPAGES_" | translate: { currentPage: currentPage, totalPages: totalPages } }}</p>
+                <p>
+                  {{
+                    'FEED-CREATE-POST-PAGE.PAGE__CURRENTPAGE__OF__TOTALPAGES_'
+                      | translate
+                        : { currentPage: currentPage, totalPages: totalPages }
+                  }}
+                </p>
                 <span
                   id="next"
                   class="c-accent"
@@ -169,8 +187,6 @@
                   <i class="fa-solid fa-angle-right"></i>
                 </span>
               </div>
-
-              <!-- Display applied/selected tags -->
             </div>
           </div>
 
@@ -181,14 +197,13 @@
               class="cool-button cool-small on-bg w-25 font-weight-bolder"
               style="height: 40px"
             >
-            {{ "FEED-CREATE-POST-PAGE.POST" | translate }}
+              {{ 'FEED-CREATE-POST-PAGE.POST' | translate }}
             </button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- If you have a calendar widget -->
     <div class="column-info">
       <app-calendar-widget></app-calendar-widget>
     </div>

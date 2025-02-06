@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
     private preferencesService: PreferencesService,
     private userService: UserService,
     private linkService: HateoasLinksService,
-    private translate: TranslateService, // Add TranslateService
+    private translate: TranslateService, 
   ) {
     // Precompute language links
     this.englishLanguageLink = this.linkService.getLink(

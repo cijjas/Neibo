@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-right-column',
   templateUrl: './right-column.component.html',
 })
-export class RightColumnComponent {
-
-}
+export class RightColumnComponent {}

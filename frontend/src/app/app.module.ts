@@ -1,24 +1,33 @@
 // ANGULAR
-import { HttpClient, HttpClientModule } from "@angular/common/http";
-import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
-import { NgOptimizedImage } from "@angular/common";
-import { RouterModule } from "@angular/router";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { NgOptimizedImage } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// MISC
-import { AppComponent } from "./app.component";
-import { appRoutes } from "./app.routes";
+//  2. Third-Party Modules (Libraries, Translate, etc.)
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { SharedModule } from "@shared/shared.module";
-import { CoreModule } from "@core/core.module";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-import { environment } from "../environments/environment";
+//  3. Application-Level Modules (Shared, Core, Routes)
+import { SharedModule } from '@shared/shared.module';
+import { CoreModule } from '@core/core.module';
+import { appRoutes } from './app.routes';
+
+//  4. Components (Specific Components at the Bottom)
+import { AppComponent } from './app.component';
+
+//  5. Environments & Configuration Functions
+import { environment } from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.deployUrl + 'assets/i18n/', '.json');
+  return new TranslateHttpLoader(
+    http,
+    environment.deployUrl + 'assets/i18n/',
+    '.json',
+  );
 }
 
 @NgModule({
@@ -28,11 +37,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(appRoutes),
     NgOptimizedImage,
-    ReactiveFormsModule,
+
     SharedModule,
     CoreModule,
+
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

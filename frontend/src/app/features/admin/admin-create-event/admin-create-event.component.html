@@ -3,7 +3,9 @@
   style="word-wrap: break-word"
   aria-hidden="true"
 >
-  <h2 class="card-title">{{ "ADMIN-CREATE-EVENT.CREATE_NEW_EVENT" | translate }}</h2>
+  <h2 class="card-title">
+    {{ 'ADMIN-CREATE-EVENT.CREATE_NEW_EVENT' | translate }}
+  </h2>
   <div class="divider mb-3 mt-3"></div>
 
   <!-- Form for creating a new event -->
@@ -11,7 +13,7 @@
     <div class="form-column" style="margin-top: 1rem">
       <!-- Event Name -->
       <div class="form-group">
-        <label for="name">{{ "ADMIN-CREATE-EVENT.NAME" | translate }}</label>
+        <label for="name">{{ 'ADMIN-CREATE-EVENT.NAME' | translate }}</label>
         <input
           id="name"
           type="text"
@@ -19,20 +21,18 @@
           formControlName="name"
           placeholder="Enter event name"
         />
-        <div
-          *ngIf="
-            eventForm.controls['name'].invalid &&
-            eventForm.controls['name'].touched
-          "
-          class="form-error"
-        >
-        {{ "ADMIN-CREATE-EVENT.NAME_IS_REQUIRED" | translate }}
-        </div>
+        <app-form-error
+          class="w-100"
+          [control]="eventForm.get('name')"
+          [centered]="false"
+        ></app-form-error>
       </div>
 
       <!-- Description -->
       <div class="form-group">
-        <label for="description">{{ "ADMIN-CREATE-EVENT.DESCRIPTION" | translate }}</label>
+        <label for="description">{{
+          'ADMIN-CREATE-EVENT.DESCRIPTION' | translate
+        }}</label>
         <textarea
           id="description"
           rows="5"
@@ -40,57 +40,63 @@
           formControlName="description"
           placeholder="Enter event description"
         ></textarea>
-        <div
-          *ngIf="
-            eventForm.controls['description'].invalid &&
-            eventForm.controls['description'].touched
-          "
-          class="form-error"
-        >
-        {{ "ADMIN-CREATE-EVENT.DESCRIPTION_IS_REQUIRED" | translate }}
-        </div>
+        <app-form-error
+          class="w-100"
+          [control]="eventForm.get('description')"
+          [centered]="false"
+        ></app-form-error>
       </div>
 
       <!-- Date -->
       <div class="f-c-c-c w-100">
         <div class="">
-          <label for="date" class="mb-1">{{ "ADMIN-CREATE-EVENT.DATE" | translate }}</label>
+          <label for="date" class="mb-1">{{
+            'ADMIN-CREATE-EVENT.DATE' | translate
+          }}</label>
           <input
             id="date"
             type="date"
             class="cool-input"
             formControlName="date"
           />
-          <div
-            *ngIf="
-              eventForm.controls['date'].invalid &&
-              eventForm.controls['date'].touched
-            "
-            class="form-error"
-          >
-          {{ "ADMIN-CREATE-EVENT.DATE_IS_REQUIRED" | translate }}
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="eventForm.get('date')"
+            [centered]="false"
+          ></app-form-error>
         </div>
 
         <!-- Start Time and End Time -->
         <div class="f-r-sb-c">
           <div class="col-6 ps-0">
-            <label for="startTime" class="mb-1">{{ "ADMIN-CREATE-EVENT.START_TIME" | translate }}</label>
+            <label for="startTime" class="mb-1">{{
+              'ADMIN-CREATE-EVENT.START_TIME' | translate
+            }}</label>
             <input
               id="startTime"
               type="time"
               class="cool-input"
               formControlName="startTime"
             />
+            <app-form-error
+              [control]="eventForm.get('startTime')"
+              [centered]="false"
+            ></app-form-error>
           </div>
           <div class="col-6 pe-0">
-            <label for="endTime" class="mb-1">{{ "ADMIN-CREATE-EVENT.END_TIME" | translate }}</label>
+            <label for="endTime" class="mb-1">{{
+              'ADMIN-CREATE-EVENT.END_TIME' | translate
+            }}</label>
             <input
               id="endTime"
               type="time"
               class="cool-input"
               formControlName="endTime"
             />
+            <app-form-error
+              [control]="eventForm.get('endTime')"
+              [centered]="false"
+            ></app-form-error>
           </div>
         </div>
         <div
@@ -99,7 +105,11 @@
             (eventForm.dirty || eventForm.touched)
           "
         >
-          <p class="error">{{ "ADMIN-CREATE-EVENT.START_TIME_MUST_BE_EARLIER_THAN_END_TIME" | translate }}</p>
+          <app-form-error
+            class="w-100"
+            [control]="eventForm"
+            [centered]="false"
+          ></app-form-error>
         </div>
       </div>
     </div>
@@ -111,7 +121,7 @@
         class="cool-button cool-small on-bg w-25 font-weight-bolder"
         [disabled]="eventForm.invalid"
       >
-      {{ "ADMIN-CREATE-EVENT.CREATE" | translate }}
+        {{ 'ADMIN-CREATE-EVENT.CREATE' | translate }}
       </button>
     </div>
   </form>

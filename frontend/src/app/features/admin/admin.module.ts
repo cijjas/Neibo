@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '@shared/index';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminCreateAnnouncementPageComponent } from './admin-create-announcement-page/admin-create-announcement-page.component';
-import { CalendarWidgetComponent } from '@features/index';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { AdminSidebarComponent } from './admin-sidebar/admin-sidebar.component';
 import { AdminNeighborsRequestsPageComponent } from './admin-neighbors-requests-page/admin-neighbors-requests-page.component';
@@ -14,6 +13,7 @@ import { AdminInformationPageComponent } from './admin-information-page/admin-in
 import { AdminCreateEventComponent } from './admin-create-event/admin-create-event.component';
 import { AdminServiceProvidersRequestsPageComponent } from './admin-service-providers-requests-page/admin-service-providers-requests-page.component';
 import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenities-page.component';
+import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,7 @@ import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenit
   imports: [
     CommonModule,
     SharedModule,
-    CalendarWidgetComponent,
+    CalendarBridgeModule,
     AdminRoutingModule,
   ],
 })

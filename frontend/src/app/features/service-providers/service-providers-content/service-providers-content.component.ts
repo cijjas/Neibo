@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Worker, Profession } from '@shared/index';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HateoasLinksService } from '@core/index';
 import { environment } from 'environments/environment';
 
 @Component({
@@ -17,20 +16,20 @@ export class ServiceProvidersContentComponent {
 
   @Output() openEditProfile = new EventEmitter<void>(); // EventEmitter to notify parent
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private linkService: HateoasLinksService
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   get backgroundImageUrl(): string {
     return (
-      this.worker?.backgroundImage || environment.deployUrl + 'assets/images/default-background.png'
+      this.worker?.backgroundImage ||
+      environment.deployUrl + 'assets/images/default-background.png'
     );
   }
 
   get profileImageUrl(): string {
-    return this.worker?.user?.image || environment.deployUrl + 'assets/images/default-profile.png';
+    return (
+      this.worker?.user?.image ||
+      environment.deployUrl + 'assets/images/default-profile.png'
+    );
   }
 
   setProfession(prof: Profession | null): void {

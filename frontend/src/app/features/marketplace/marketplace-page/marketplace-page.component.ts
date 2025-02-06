@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ProductService,
-  DepartmentService,
-  Product,
-  LinkKey,
-} from '@shared/index';
+import { ProductService, DepartmentService, Product } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
 @Component({
@@ -27,8 +22,6 @@ export class MarketplacePageComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private departmentService: DepartmentService,
-    private linkService: HateoasLinksService,
     private route: ActivatedRoute,
     private router: Router,
   ) {}

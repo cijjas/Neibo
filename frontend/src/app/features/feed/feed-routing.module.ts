@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {
-  FeedPageComponent,
-  FeedPostDetailPageComponent,
-} from '@features/index';
+import { FeedPageComponent } from './feed-page/feed-page.component';
+import { FeedPostDetailPageComponent } from './feed-post-detail-page/feed-post-detail-page.component';
 
 import { FeedCreatePostPageComponent } from '@features/index';
 import { postResolver } from '@shared/resolvers/post.resolver';

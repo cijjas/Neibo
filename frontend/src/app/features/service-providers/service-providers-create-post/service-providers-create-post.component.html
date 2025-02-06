@@ -1,5 +1,7 @@
 <div class="cool-static-container">
-  <h2 class="card-title">{{ "SERVICE-PROVIDERS-CREATE-POST.CREATE_A_POST" | translate }}</h2>
+  <h2 class="card-title">
+    {{ 'SERVICE-PROVIDERS-CREATE-POST.CREATE_A_POST' | translate }}
+  </h2>
   <div class="divider"></div>
 
   <!-- Post Creation Form -->
@@ -30,7 +32,11 @@
             "
             class="form-row form-error"
           >
-            <p class="error">{{ "SERVICE-PROVIDERS-CREATE-POST.TITLE_IS_REQUIRED" | translate }}</p>
+            <p class="error">
+              {{
+                'SERVICE-PROVIDERS-CREATE-POST.TITLE_IS_REQUIRED' | translate
+              }}
+            </p>
           </div>
         </div>
       </div>
@@ -51,15 +57,25 @@
           "
           class="form-row form-error"
         >
-          <p class="error">{{ "SERVICE-PROVIDERS-CREATE-POST.BODY_IS_REQUIRED" | translate }}</p>
+          <p class="error">
+            {{ 'SERVICE-PROVIDERS-CREATE-POST.BODY_IS_REQUIRED' | translate }}
+          </p>
         </div>
       </div>
 
+      <!-- (UPDATED) Image File Input + Drag/Drop -->
       <div class="form-group w-50">
-        <!-- Image File Input -->
-        <label for="images" class="drop-container" id="dropcontainer">
-          <span class="drop-title">{{ "SERVICE-PROVIDERS-CREATE-POST.DROP_FILES" | translate }}</span>
-          {{ "SERVICE-PROVIDERS-CREATE-POST.OR" | translate }}
+        <label
+          for="images"
+          class="drop-container"
+          id="dropcontainer"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event)"
+        >
+          <span class="drop-title">{{
+            'SERVICE-PROVIDERS-CREATE-POST.DROP_FILES' | translate
+          }}</span>
+          {{ 'SERVICE-PROVIDERS-CREATE-POST.OR' | translate }}
           <input
             type="file"
             class="select-file-button"
@@ -68,17 +84,25 @@
             (change)="onFileChange($event)"
           />
         </label>
-        <div style="text-align: center">
-          <p class="error" *ngIf="fileUploadError">
-            {{ fileUploadError }}
-          </p>
+
+        <!-- Remove Image button if an image is selected -->
+        <div
+          style="text-align: center; margin-top: 0.75rem"
+          *ngIf="imageFileControl?.value"
+        >
+          <button type="button" class="cool-button red" (click)="removeImage()">
+            {{ 'ADMIN-INFORMATION-PAGE.REMOVE_IMAGE' | translate }}
+          </button>
         </div>
+
+        <!-- Show any custom file upload error -->
+        <app-form-error [centered]="true" [control]="imageFileControl">
+        </app-form-error>
       </div>
 
-      <!-- Image Preview -->
-      <div>
+      <!-- (UPDATED) Image Preview Container -->
+      <div class="preview-container" *ngIf="imagePreviewUrl">
         <img
-          *ngIf="imagePreviewUrl"
           [src]="imagePreviewUrl"
           class="blogpost-image"
           alt="uploading image"
@@ -95,13 +119,13 @@
     </div>
 
     <!-- Submit Button -->
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end mt-3">
       <button
         type="submit"
         class="cool-button cool-small on-bg w-25 font-weight-bolder"
         style="height: 40px"
       >
-      {{ "SERVICE-PROVIDERS-CREATE-POST.POST" | translate }}
+        {{ 'SERVICE-PROVIDERS-CREATE-POST.POST' | translate }}
       </button>
     </div>
   </form>

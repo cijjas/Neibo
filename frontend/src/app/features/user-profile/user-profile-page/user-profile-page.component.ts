@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService, User, Roles, LinkKey } from '@shared/index';
+import { UserService, User, Role, LinkKey } from '@shared/index';
 import { SafeUrl } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -8,11 +8,11 @@ import {
   UserSessionService,
   ToastService,
   HateoasLinksService,
-  // PreferencesService,
 } from '@core/index';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
-import {environment} from "../../../../environments/environment";
+import { environment } from '../../../../environments/environment';
+import { FormControl } from '@angular/forms';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'user-user-profile-page',
@@ -24,9 +24,14 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   darkMode: boolean = false;
   language: string = 'en';
   theme: 'default' | 'marketplace' | 'services' | 'admin' = 'default';
-  currentUserRole: Roles;
+  currentUserRole: Role;
   private subscriptions = new Subscription();
   environment = environment;
+
+  profileImageControl: FormControl = new FormControl(
+    null,
+    VALIDATION_CONFIG.imageValidator,
+  );
 
   constructor(
     private userService: UserService,
@@ -56,10 +61,10 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     this.currentUserRole = this.userSessionService.getCurrentRole();
 
     switch (this.currentUserRole) {
-      case Roles.ADMINISTRATOR:
+      case Role.ADMINISTRATOR:
         this.theme = 'admin';
         break;
-      case Roles.WORKER:
+      case Role.WORKER:
         this.theme = 'services';
         break;
       default:
@@ -94,17 +99,42 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Called when the user selects a new profile image.
+   * The method validates the file using the FormControl’s custom validator.
+   */
   onProfilePictureSelected(event: Event): void {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
-      const reader = new FileReader();
 
+      // Set the file on the FormControl so that validation is triggered.
+      this.profileImageControl.setValue(file);
+      this.profileImageControl.updateValueAndValidity();
+
+      // If the file does not meet the validation requirements, show error messages.
+      if (this.profileImageControl.errors) {
+        if (this.profileImageControl.errors['fileSize']) {
+          this.toastService.showToast(
+            `Image size exceeds ${this.profileImageControl.errors['fileSize'].requiredMax}MB.`,
+            'error',
+          );
+        }
+        if (this.profileImageControl.errors['fileFormat']) {
+          this.toastService.showToast(
+            'Invalid image format. Only JPEG, PNG, and GIF are allowed.',
+            'error',
+          );
+        }
+        return;
+      }
+
+      // If the file passes validation, use FileReader to create a preview and upload.
+      const reader = new FileReader();
       reader.onload = (e: any) => {
         this.profileImageSafeUrl = e.target.result;
         this.uploadProfilePicture(file);
       };
-
       reader.readAsDataURL(file);
     }
   }
@@ -127,5 +157,4 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
       'success',
     );
   }
-
 }

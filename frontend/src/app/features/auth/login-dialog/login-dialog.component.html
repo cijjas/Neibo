@@ -12,7 +12,9 @@
     <!-- Loading State -->
     <div *ngIf="loading; else loginFormTemplate">
       <div class="f-c-c-c">
-        <div style="font-size: 16px">{{ "LOGIN-DIALOG.LOGGING_YOU_IN_PLEASE_WAIT" | translate }}</div>
+        <div style="font-size: 16px">
+          {{ 'LOGIN-DIALOG.LOGGING_YOU_IN_PLEASE_WAIT' | translate }}
+        </div>
         <div class="w-100 loader" style="margin-top: 20px"></div>
       </div>
     </div>
@@ -20,8 +22,10 @@
     <!-- Login Form -->
     <ng-template #loginFormTemplate>
       <div class=" ">
-        <div class="title mb-2">{{ "LOGIN-DIALOG.WELCOME_TO_NEIBO" | translate }}</div>
-        <p>{{ "LOGIN-DIALOG.LOG_IN_TO_CONTINUE" | translate }}</p>
+        <div class="title mb-2">
+          {{ 'LOGIN-DIALOG.WELCOME_TO_NEIBO' | translate }}
+        </div>
+        <p>{{ 'LOGIN-DIALOG.LOG_IN_TO_CONTINUE' | translate }}</p>
       </div>
       <form (ngSubmit)="tryLogin()" [formGroup]="loginForm" class="login-form">
         <div class="centered-column">
@@ -35,14 +39,12 @@
               formControlName="email"
               autocomplete="email"
             />
-            <small
-              class="form-error"
-              *ngIf="
-                loginForm.get('email').invalid && loginForm.get('email').touched
-              "
+            <app-form-error
+              class="w-100"
+              [centered]="true"
+              [control]="loginForm.get('email')"
             >
-            {{ "LOGIN-DIALOG.ENTERED_EMAIL_IS_NOT_VALID" | translate }}
-            </small>
+            </app-form-error>
           </label>
           <!-- Password Field -->
           <label>
@@ -54,33 +56,32 @@
               formControlName="password"
               autocomplete="current-password"
             />
-            <small
-              class="form-error"
-              *ngIf="
-                loginForm.get('password').invalid &&
-                loginForm.get('password').touched
-              "
+            <app-form-error
+              class="w-100"
+              [centered]="true"
+              [control]="loginForm.get('password')"
             >
-              {{ "LOGIN-DIALOG.PASSWORD_IS_REQUIRED" | translate }}
-            </small>
+            </app-form-error>
           </label>
         </div>
 
         <!-- Errors and Submit Button -->
         <div class="centered-column">
-          <small class="form-error centered" *ngIf="loginFailed"
-            >{{ "LOGIN-DIALOG.INVALID_EMAIL_OR_PASSWORD" | translate }}</small
-          >
+          <small class="form-error centered" *ngIf="loginFailed">{{
+            'LOGIN-DIALOG.INVALID_EMAIL_OR_PASSWORD' | translate
+          }}</small>
           <button
             type="submit"
             class="action-button font-weight-bolder"
             [disabled]="loginForm.invalid"
           >
-          {{ "LOGIN-DIALOG.LOGIN" | translate }}
+            {{ 'LOGIN-DIALOG.LOGIN' | translate }}
           </button>
           <span class="light-text mt-2">
-            {{ "LOGIN-DIALOG.NOT_A_MEMBER_YET" | translate }}
-            <a (click)="openSignupDialog()" class="a-link">{{ "LOGIN-DIALOG.SIGN_UP_NOW" | translate }}</a>
+            {{ 'LOGIN-DIALOG.NOT_A_MEMBER_YET' | translate }}
+            <a (click)="openSignupDialog()" class="a-link">{{
+              'LOGIN-DIALOG.SIGN_UP_NOW' | translate
+            }}</a>
           </span>
         </div>
       </form>

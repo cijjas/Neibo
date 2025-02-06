@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { UserSessionService } from '@core/services/user-session.service';
-import { Roles } from '@shared/index';
+import { Role } from '@shared/index';
 
 export const RoleGuard = async (
   route: ActivatedRouteSnapshot
@@ -18,7 +18,7 @@ export const RoleGuard = async (
   }
 
   // 2) Check route data for roles required by this route
-  const requiredRoles = route.data['roles'] as Roles[] | undefined; // gets the roles specified in router
+  const requiredRoles = route.data['roles'] as Role[] | undefined; // gets the roles specified in router
   if (!requiredRoles || requiredRoles.length === 0) {
     // If no roles are specified, allow access
     return true;

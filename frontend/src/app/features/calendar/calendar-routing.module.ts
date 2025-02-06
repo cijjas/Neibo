@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {
-  CalendarPageComponent,
-  CalendarEventPageComponent,
-} from '@features/index';
+import { CalendarPageComponent } from './calendar-page/calendar-page.component';
+import { CalendarEventPageComponent } from './calendar-event-page/calendar-event-page.component';
+
 import { eventResolver } from '@shared/resolvers/event.resolver';
 
 const routes: Routes = [

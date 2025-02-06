@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-neighborhoods',
   templateUrl: './service-providers-join-neighborhoods-page.component.html',
 })
-export class ServiceProvidersJoinNeighborhoodsComponent
+export class ServiceProvidersJoinNeighborhoodsPageComponent
   implements OnInit, AfterViewInit
 {
   // Simulates the data from your JSP
@@ -57,11 +57,11 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     private affiliationService: AffiliationService,
     private route: ActivatedRoute,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       this.currentAssociatedPage = +params['page'] || 1; // Default to page 1
       this.pageSize = +params['size'] || 10; // Default to size 10
       this.loadAssociatedNeighborhoods();
@@ -74,7 +74,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     if (this.listItemsRef) {
       this.listItemsRef.nativeElement.addEventListener(
         'scroll',
-        this.onListScroll.bind(this)
+        this.onListScroll.bind(this),
       );
     }
   }
@@ -87,7 +87,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     if (!this.isListenerAttached) {
       this.listItemsRef.nativeElement.addEventListener(
         'scroll',
-        this.onListScroll.bind(this)
+        this.onListScroll.bind(this),
       );
       this.isListenerAttached = true; // Prevent reattaching
     }
@@ -102,15 +102,17 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     };
 
     this.affiliationService.getAffiliations(queryParams).subscribe({
-      next: (response) => {
+      next: response => {
         this.associatedNeighborhoods = response.affiliations;
         this.totalAssociatedPages = response.totalPages || 1; // Total pages from API response
         this.updateQueryParams(); // Persist the current page in the URL
       },
       error: () => {
         this.toastService.showToast(
-          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.COULD_NOT_LOAD_ASSOCIATED_NEIGHBORHOODS'),
-          'error'
+          this.translate.instant(
+            'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.COULD_NOT_LOAD_ASSOCIATED_NEIGHBORHOODS',
+          ),
+          'error',
         );
       },
     });
@@ -152,7 +154,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     };
 
     this.neighborhoodService.getNeighborhoods(queryParams).subscribe({
-      next: (response) => {
+      next: response => {
         const newItems = response.neighborhoods ?? [];
         // Append new items to existing
         this.otherNeighborhoods.push(...newItems);
@@ -168,8 +170,10 @@ export class ServiceProvidersJoinNeighborhoodsComponent
       },
       error: () => {
         this.toastService.showToast(
-          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.COULD_NOT_LOAD_UNASSOCIATED_NEIGHBORHOODS'),
-          'error'
+          this.translate.instant(
+            'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.COULD_NOT_LOAD_UNASSOCIATED_NEIGHBORHOODS',
+          ),
+          'error',
         );
         this.isLoading = false;
       },
@@ -194,23 +198,32 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     this.affiliationService.deleteAffiliation(neighborhood.self).subscribe({
       next: () => {
         this.associatedNeighborhoods = this.associatedNeighborhoods.filter(
-          (affiliation) => affiliation.neighborhood.self !== neighborhood.self
+          affiliation => affiliation.neighborhood.self !== neighborhood.self,
         );
         // After removal, reload the list (optional if you prefer)
         this.loadOtherNeighborhoods(true);
         this.toastService.showToast(
-          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.YOU_HAVE_SUCCESSFULLY_LEFT', { neighborhood: neighborhood.name }),
-          'success'
+          this.translate.instant(
+            'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.YOU_HAVE_SUCCESSFULLY_LEFT',
+            { neighborhood: neighborhood.name },
+          ),
+          'success',
         );
       },
-      error: (err) => {
+      error: err => {
         console.error(
-          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.FAILED_TO_UNAFFILIATE_FROM', { neighborhood: neighborhood.name }),
-          err
+          this.translate.instant(
+            'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.FAILED_TO_UNAFFILIATE_FROM',
+            { neighborhood: neighborhood.name },
+          ),
+          err,
         );
         this.toastService.showToast(
-          this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.FAILED_TO_LEAVE', { neighborhood: neighborhood.name }),
-          'error'
+          this.translate.instant(
+            'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.FAILED_TO_LEAVE',
+            { neighborhood: neighborhood.name },
+          ),
+          'error',
         );
       },
     });
@@ -225,7 +238,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
     if (this.selectedNeighborhoodIds.includes(neighborhoodId)) {
       // Remove it
       this.selectedNeighborhoodIds = this.selectedNeighborhoodIds.filter(
-        (id) => id !== neighborhoodId
+        id => id !== neighborhoodId,
       );
     } else {
       // Add it
@@ -241,11 +254,13 @@ export class ServiceProvidersJoinNeighborhoodsComponent
    */
   get displayText(): string {
     if (this.selectedNeighborhoodIds.length === 0) {
-      return this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.SELECT_NEIGHBORHOOD');
+      return this.translate.instant(
+        'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.SELECT_NEIGHBORHOOD',
+      );
     }
     const selected = this.otherNeighborhoods
-      .filter((o) => this.selectedNeighborhoodIds.includes(o.self))
-      .map((o) => o.name);
+      .filter(o => this.selectedNeighborhoodIds.includes(o.self))
+      .map(o => o.name);
 
     if (selected.length > 1) {
       return `(${selected.length}) ${selected.join(', ')}`;
@@ -271,8 +286,10 @@ export class ServiceProvidersJoinNeighborhoodsComponent
       .subscribe({
         next: () => {
           this.toastService.showToast(
-            this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.REQUEST_ACCEPTED'),
-            'success'
+            this.translate.instant(
+              'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.REQUEST_ACCEPTED',
+            ),
+            'success',
           );
 
           // Reload associated neighborhoods
@@ -290,8 +307,10 @@ export class ServiceProvidersJoinNeighborhoodsComponent
         },
         error: () => {
           this.toastService.showToast(
-            this.translate.instant('SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.REQUEST_FAILED'),
-            'error'
+            this.translate.instant(
+              'SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.REQUEST_FAILED',
+            ),
+            'error',
           );
         },
       });
@@ -313,7 +332,7 @@ export class ServiceProvidersJoinNeighborhoodsComponent
       if (!this.isListenerAttached) {
         this.listItemsRef.nativeElement.addEventListener(
           'scroll',
-          this.onListScroll.bind(this)
+          this.onListScroll.bind(this),
         );
         this.isListenerAttached = true; // Prevent duplicate listeners
       }

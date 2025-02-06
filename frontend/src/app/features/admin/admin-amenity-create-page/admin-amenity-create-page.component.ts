@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 import { ShiftService, Shift, AmenityService } from '@shared/index';
 
 @Component({
@@ -43,18 +44,30 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     private amenityService: AmenityService,
     private toastService: ToastService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
     this.amenityForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.name.maxLength),
+        ],
+      ],
+      description: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(VALIDATION_CONFIG.description.maxLength),
+        ],
+      ],
     });
 
     // Example: adjust params as needed or remove them altogether
     this.shiftService.getShifts().subscribe({
-      next: (shiftsFromApi) => {
+      next: shiftsFromApi => {
         this.allShifts = shiftsFromApi;
 
         // Build a unique sorted list of days
@@ -71,7 +84,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
         this.uniqueDays = Array.from(daysSet).sort(sortDays);
         this.uniqueTimes = Array.from(timesSet).sort(sortTimes);
       },
-      error: (err) => console.error(err),
+      error: err => console.error(err),
     });
   }
 
@@ -95,7 +108,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     const formValue = { ...this.amenityForm.value };
 
     const selectedShiftUrls: string[] = this.selectedShifts.map(
-      (shift) => shift.self
+      shift => shift.self,
     );
 
     this.amenityService
@@ -107,9 +120,9 @@ export class AdminAmenityCreatePageComponent implements OnInit {
               'ADMIN-AMENITY-CREATE-PAGE.AMENITY_FORM_VALUE_NAME_CREATED_SUCCESSFULLY',
               {
                 formValueName: formValue.name,
-              }
+              },
             ),
-            'success'
+            'success',
           );
           this.router.navigate(['admin/amenities']);
         },
@@ -119,9 +132,9 @@ export class AdminAmenityCreatePageComponent implements OnInit {
               'ADMIN-AMENITY-CREATE-PAGE.ERROR_CREATING_AMENITY_FORM_VALUE_NAME_TRY_AGAIN_LA',
               {
                 formValueName: formValue.name,
-              }
+              },
             ),
-            'error'
+            'error',
           );
         },
       });
@@ -132,10 +145,10 @@ export class AdminAmenityCreatePageComponent implements OnInit {
    */
   isShiftSelected(shift: Shift): boolean {
     return this.selectedShifts.some(
-      (s) =>
+      s =>
         s.day === shift.day &&
         s.startTime === shift.startTime &&
-        s.endTime === shift.endTime
+        s.endTime === shift.endTime,
     );
   }
 
@@ -145,7 +158,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
    */
   toggleCellSelection(dayName: string, startTime: string) {
     const foundShift = this.allShifts.find(
-      (s) => s.day === dayName && s.startTime === startTime
+      s => s.day === dayName && s.startTime === startTime,
     );
     if (!foundShift) {
       // If there's literally no shift for that day/time, do nothing
@@ -155,12 +168,12 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     // If selected => remove it
     if (this.isShiftSelected(foundShift)) {
       this.selectedShifts = this.selectedShifts.filter(
-        (s) =>
+        s =>
           !(
             s.day === foundShift.day &&
             s.startTime === foundShift.startTime &&
             s.endTime === foundShift.endTime
-          )
+          ),
       );
     } else {
       // Otherwise add it
@@ -175,9 +188,9 @@ export class AdminAmenityCreatePageComponent implements OnInit {
   isRowSelected(time: string): boolean {
     // For each day, check if there's a shift. If it exists, is it selected?
     // The row is "fully selected" only if for every day, the shift is selected
-    return this.uniqueDays.every((day) => {
+    return this.uniqueDays.every(day => {
       const shift = this.allShifts.find(
-        (s) => s.day === day && s.startTime === time
+        s => s.day === day && s.startTime === time,
       );
       return shift && this.isShiftSelected(shift);
     });
@@ -192,13 +205,13 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     if (fullySelected) {
       // Unselect all in this row
       this.selectedShifts = this.selectedShifts.filter(
-        (sel) => sel.startTime !== time
+        sel => sel.startTime !== time,
       );
     } else {
       // Select all shifts in this row
       for (const day of this.uniqueDays) {
         const shift = this.allShifts.find(
-          (s) => s.day === day && s.startTime === time
+          s => s.day === day && s.startTime === time,
         );
         if (shift && !this.isShiftSelected(shift)) {
           this.selectedShifts.push(shift);
@@ -229,7 +242,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
    */
   uncheckWeekends() {
     this.selectedShifts = this.selectedShifts.filter(
-      (s) => s.day !== 'Saturday' && s.day !== 'Sunday'
+      s => s.day !== 'Saturday' && s.day !== 'Sunday',
     );
   }
 
@@ -245,7 +258,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
    */
   getShift(day: string, time: string): Shift | null {
     return (
-      this.allShifts.find((s) => s.day === day && s.startTime === time) || null
+      this.allShifts.find(s => s.day === day && s.startTime === time) || null
     );
   }
 

@@ -28,13 +28,9 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private linkService: HateoasLinksService,
-    private requestService: RequestService
+    private requestService: RequestService,
   ) {}
 
-  /**
-   * We'll use two getters to know the current mode (requests / purchases)
-   * without storing an extra "channel" variable.
-   */
   get isPurchases(): boolean {
     return this.route.snapshot.paramMap.get('mode') === 'purchases';
   }
@@ -59,7 +55,7 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
     });
 
     // Also handle query params for pagination
-    this.route.queryParams.subscribe((queryParams) => {
+    this.route.queryParams.subscribe(queryParams => {
       this.page = queryParams['page'] ? +queryParams['page'] : 1;
       this.size = queryParams['size'] ? +queryParams['size'] : 10;
 
@@ -81,10 +77,10 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   loadRequests(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const requestStatusUrl: string = this.linkService.getLink(
-      LinkKey.REQUESTED_REQUEST_STATUS
+      LinkKey.REQUESTED_REQUEST_STATUS,
     );
     const transactionTypeUrl: string = this.linkService.getLink(
-      LinkKey.PURCHASE_TRANSACTION_TYPE
+      LinkKey.PURCHASE_TRANSACTION_TYPE,
     );
 
     this.requestService
@@ -96,21 +92,21 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
         size: this.size,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.requestList = data.requests;
           this.totalPages = data.totalPages;
         },
-        error: (err) => console.error(err),
+        error: err => console.error(err),
       });
   }
 
   loadPurchases(): void {
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const requestStatusUrl: string = this.linkService.getLink(
-      LinkKey.ACCEPTED_REQUEST_STATUS
+      LinkKey.ACCEPTED_REQUEST_STATUS,
     );
     const transactionTypeUrl: string = this.linkService.getLink(
-      LinkKey.PURCHASE_TRANSACTION_TYPE
+      LinkKey.PURCHASE_TRANSACTION_TYPE,
     );
 
     this.requestService
@@ -122,11 +118,11 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
         size: this.size,
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.purchaseList = data.requests;
           this.totalPages = data.totalPages;
         },
-        error: (err) => console.error(err),
+        error: err => console.error(err),
       });
   }
 
@@ -152,7 +148,9 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   getProductImage(product: Product): string {
     return product?.firstImage
       ? product?.firstImage
-      : environment.deployUrl + environment.deployUrl + 'assets/images/default-product.png';
+      : environment.deployUrl +
+          environment.deployUrl +
+          'assets/images/default-product.png';
   }
   /** Department navigation (shared by both requests and purchases) */
   goToDepartment(department: Department): void {

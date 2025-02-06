@@ -62,7 +62,6 @@ export class BookingService {
           const pagination = parseLinkHeader(response.headers.get('Link'));
 
           if (bookingsDto.length === 0) {
-            // Directly return an empty result when there are no bookings
             return of({
               bookings: [],
               totalPages: pagination.totalPages,
@@ -84,7 +83,7 @@ export class BookingService {
         }),
         catchError(err => {
           console.error('Error in getBookings:', err);
-          return of({ bookings: [], totalPages: 1, currentPage: 1 }); // Fallback response
+          return of({ bookings: [], totalPages: 1, currentPage: 1 });
         }),
       );
   }

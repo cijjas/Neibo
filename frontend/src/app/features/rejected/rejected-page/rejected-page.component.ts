@@ -6,7 +6,7 @@ import { AuthService, ToastService, UserSessionService } from '@core/index';
 import {
   Neighborhood,
   NeighborhoodService,
-  Roles,
+  Role,
   UserService,
 } from '@shared/index';
 import { Observable } from 'rxjs';
@@ -72,11 +72,11 @@ export class RejectedPageComponent implements OnInit {
             // Update the user role to "UNVERIFIED"
             this.userSessionService.updateUserProperty(
               'userRole',
-              Roles.UNVERIFIED_NEIGHBOR
+              Role.UNVERIFIED_NEIGHBOR
             );
             this.userSessionService.updateUserProperty(
               'userRoleEnum',
-              Roles.UNVERIFIED_NEIGHBOR
+              Role.UNVERIFIED_NEIGHBOR
             );
             this.userSessionService.updateUserProperty(
               'userRoleDisplay',
@@ -84,7 +84,7 @@ export class RejectedPageComponent implements OnInit {
             );
 
             // Update standalone currentUserRole in local storage
-            this.userSessionService.setUserRole(Roles.UNVERIFIED_NEIGHBOR);
+            this.userSessionService.setUserRole(Role.UNVERIFIED_NEIGHBOR);
 
             // Show success message
             this.toastService.showToast(

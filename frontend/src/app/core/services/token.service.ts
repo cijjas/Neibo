@@ -1,7 +1,5 @@
 // token.service.ts
 import { Injectable } from '@angular/core';
-import { UserSessionService } from './user-session.service';
-import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +10,7 @@ export class TokenService {
 
   private refreshingToken = false;
 
-  constructor(private userSessionService: UserSessionService) {}
+  constructor() {}
 
   setRefreshingTokenState(isRefreshing: boolean): void {
     this.refreshingToken = isRefreshing;

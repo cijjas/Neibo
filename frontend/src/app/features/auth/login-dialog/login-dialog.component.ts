@@ -15,7 +15,7 @@ import {
   AuthService,
   UserSessionService,
 } from '@core/index';
-import { LinkKey, Roles } from '@shared/index';
+import { LinkKey, Role } from '@shared/index';
 
 @Component({
   selector: 'app-login-dialog',
@@ -38,7 +38,7 @@ export class LoginDialogComponent implements OnInit {
     private router: Router,
     private linkStorage: HateoasLinksService,
     private cdr: ChangeDetectorRef,
-    private userSessionService: UserSessionService
+    private userSessionService: UserSessionService,
   ) {}
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -78,7 +78,7 @@ export class LoginDialogComponent implements OnInit {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password).subscribe({
-        next: (success) => {
+        next: success => {
           this.loading = false;
 
           if (success) {
@@ -86,20 +86,25 @@ export class LoginDialogComponent implements OnInit {
             const userRole = this.userSessionService.getCurrentRole();
 
             switch (userRole) {
-              case Roles.WORKER:
+              case Role.SUPER_ADMIN:
+                this.router
+                  .navigate(['super-admin'])
+                  .then(() => this.closeLoginDialog());
+                break;
+              case Role.WORKER:
                 const workerUrl = this.linkStorage.getLink(LinkKey.USER_WORKER);
                 this.router
                   .navigate(['services', 'profile', workerUrl])
                   .then(() => this.closeLoginDialog());
                 break;
 
-              case Roles.NEIGHBOR:
-              case Roles.ADMINISTRATOR:
+              case Role.NEIGHBOR:
+              case Role.ADMINISTRATOR:
                 const announcementesChannelUrl = this.linkStorage.getLink(
-                  LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL
+                  LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
                 );
                 const nonePostStatus = this.linkStorage.getLink(
-                  LinkKey.NONE_POST_STATUS
+                  LinkKey.NONE_POST_STATUS,
                 );
                 this.router
                   .navigate(['posts'], {
@@ -111,13 +116,13 @@ export class LoginDialogComponent implements OnInit {
                   .then(() => this.closeLoginDialog());
                 break;
 
-              case Roles.UNVERIFIED_NEIGHBOR:
+              case Role.UNVERIFIED_NEIGHBOR:
                 this.router
                   .navigate(['unverified'])
                   .then(() => this.closeLoginDialog());
 
                 break;
-              case Roles.REJECTED:
+              case Role.REJECTED:
                 this.router
                   .navigate(['rejected'])
                   .then(() => this.closeLoginDialog());
@@ -134,7 +139,7 @@ export class LoginDialogComponent implements OnInit {
             this.handleLoginFailure();
           }
         },
-        error: (error) => {
+        error: error => {
           console.error('Login failed:', error);
           this.handleLoginFailure();
         },

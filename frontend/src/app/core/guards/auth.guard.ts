@@ -4,7 +4,7 @@ import { AuthService } from '@core/services/auth.service';
 import { HateoasLinksService } from '@core/services/link.service';
 import { TokenService } from '@core/services/token.service';
 import { UserSessionService } from '@core/services/user-session.service';
-import { LinkKey, Roles } from '@shared/index';
+import { LinkKey, Role } from '@shared/index';
 
 export const AuthGuard = () => {
   const authService = inject(AuthService);
@@ -14,14 +14,15 @@ export const AuthGuard = () => {
   const tokenService = inject(TokenService);
   const currentUrl = router.url;
 
-  // Utility function to handle redirection based on role
-  const redirectByRole = (role: Roles) => {
+  //  handle redirection based on role
+  const redirectByRole = (role: Role) => {
     const routes = {
-      [Roles.ADMINISTRATOR]: ['/posts'],
-      [Roles.NEIGHBOR]: ['/posts'],
-      [Roles.UNVERIFIED_NEIGHBOR]: ['/unverified'],
-      [Roles.REJECTED]: ['/rejected'],
-      [Roles.WORKER]: () => {
+      [Role.ADMINISTRATOR]: ['/posts'],
+      [Role.NEIGHBOR]: ['/posts'],
+      [Role.UNVERIFIED_NEIGHBOR]: ['/unverified'],
+      [Role.SUPER_ADMIN]: ['/super-admin'],
+      [Role.REJECTED]: ['/rejected'],
+      [Role.WORKER]: () => {
         const workerUrl = linkStorage.getLink(LinkKey.USER_WORKER);
         return workerUrl ? ['services', 'profiles', workerUrl] : ['/not-found'];
       },

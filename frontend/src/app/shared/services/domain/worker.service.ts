@@ -8,14 +8,12 @@ import {
   UserDto,
   NeighborhoodDto,
   ProfessionDto,
-  ImageDto,
   ReviewsAverageDto,
   mapUser,
   parseLinkHeader,
   mapProfession,
   ReviewsCountDto,
   PostsCountDto,
-  Affiliation,
   UserService,
   LinkKey,
 } from '@shared/index';
@@ -30,10 +28,11 @@ export class WorkerService {
   ) {}
 
   public getWorker(url: string): Observable<Worker> {
-    return this.http.get<WorkerDto>(url).pipe(
-      tap((workerDto: WorkerDto) => console.log('Response:', workerDto)),
-      mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto)),
-    );
+    return this.http
+      .get<WorkerDto>(url)
+      .pipe(
+        mergeMap((workerDto: WorkerDto) => mapWorker(this.http, workerDto)),
+      );
   }
 
   public getWorkers(
@@ -137,7 +136,7 @@ export class WorkerService {
         switchMap(createdUserUrl => {
           if (!createdUserUrl) {
             console.error('User creation failed.');
-            return of(null); // Exit early if user creation fails
+            return of(null);
           }
 
           const body: WorkerDto = {

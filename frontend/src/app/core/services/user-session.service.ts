@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Neighborhood, Roles, User } from '@shared/index';
-import { HateoasLinksService } from './link.service';
+import { Neighborhood, Role, User } from '@shared/index';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +8,7 @@ import { HateoasLinksService } from './link.service';
 export class UserSessionService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private neighborhoodSubject = new BehaviorSubject<Neighborhood | null>(null);
-  private currentRole: Roles | null = null;
+  private currentRole: Role | null = null;
 
   constructor() {
     try {
@@ -78,14 +77,17 @@ export class UserSessionService {
     localStorage.removeItem('neighborhood');
   }
 
-  public setUserRole(role: Roles): void {
+  // ----------------------------------------------
+  //  Role helpers
+  // ----------------------------------------------
+  public setUserRole(role: Role): void {
     this.currentRole = role;
     localStorage.setItem('currentUserRole', role);
   }
 
-  public getCurrentRole(): Roles | null {
+  public getCurrentRole(): Role | null {
     if (!this.currentRole) {
-      const saved = localStorage.getItem('currentUserRole') as Roles;
+      const saved = localStorage.getItem('currentUserRole') as Role;
       if (saved) this.currentRole = saved;
     }
     return this.currentRole;

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
-  BehaviorSubject,
   catchError,
   forkJoin,
   map,
@@ -12,7 +11,6 @@ import {
   of,
   switchMap,
   tap,
-  throwError,
 } from 'rxjs';
 import {
   NeighborhoodDto,
@@ -20,7 +18,7 @@ import {
   mapNeighborhood,
   mapUser,
   LinkKey,
-  Roles,
+  Role,
 } from '@shared/index';
 import { UserSessionService } from './user-session.service';
 import { HateoasLinksService } from './link.service';
@@ -36,11 +34,12 @@ export class AuthService {
   private channel: BroadcastChannel;
 
   private roleMapping = {
-    [LinkKey.ADMINISTRATOR_USER_ROLE]: Roles.ADMINISTRATOR,
-    [LinkKey.NEIGHBOR_USER_ROLE]: Roles.NEIGHBOR,
-    [LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE]: Roles.UNVERIFIED_NEIGHBOR,
-    [LinkKey.REJECTED_USER_ROLE]: Roles.REJECTED,
-    [LinkKey.WORKER_USER_ROLE]: Roles.WORKER,
+    [LinkKey.ADMINISTRATOR_USER_ROLE]: Role.ADMINISTRATOR,
+    [LinkKey.NEIGHBOR_USER_ROLE]: Role.NEIGHBOR,
+    [LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE]: Role.UNVERIFIED_NEIGHBOR,
+    [LinkKey.REJECTED_USER_ROLE]: Role.REJECTED,
+    [LinkKey.WORKER_USER_ROLE]: Role.WORKER,
+    [LinkKey.SUPER_ADMINISTRATOR_USER_ROLE]: Role.SUPER_ADMIN,
   };
 
   constructor(
@@ -49,7 +48,7 @@ export class AuthService {
     private userSessionService: UserSessionService,
     private tokenService: TokenService,
     private router: Router,
-    private preferencesService: PreferencesService
+    private preferencesService: PreferencesService,
   ) {
     this.channel = new BroadcastChannel('auth_channel');
   }
@@ -65,15 +64,15 @@ export class AuthService {
     return this.http
       .get<any>(`${this.apiServerUrl}/`, { headers, observe: 'response' })
       .pipe(
-        switchMap((response) => {
+        switchMap(response => {
           const accessToken = response.headers.get('X-Access-Token');
           const refreshToken = response.headers.get('X-Refresh-Token');
           const userUrl = this.extractUrl(response.headers.get('X-User-URL'));
           const neighUrl = this.extractUrl(
-            response.headers.get('X-Neighborhood-URL')
+            response.headers.get('X-Neighborhood-URL'),
           );
           const workersNeighUrl = this.extractUrl(
-            response.headers.get('X-Workers-Neighborhood-URL')
+            response.headers.get('X-Workers-Neighborhood-URL'),
           );
 
           if (accessToken) {
@@ -86,7 +85,7 @@ export class AuthService {
           // Create observables for user, neighborhood, and workers neighborhood
           const userObs = userUrl
             ? this.http.get<UserDto>(userUrl).pipe(
-                switchMap((userDto) => {
+                switchMap(userDto => {
                   if (userDto._links) {
                     this.linkRegistry.registerLinks(userDto._links, 'user:');
                   }
@@ -99,67 +98,67 @@ export class AuthService {
                   }
                   return mapUser(this.http, userDto);
                 }),
-                tap((user) => {
+                tap(user => {
                   this.userSessionService.setUserInformation(user);
                   this.preferencesService.applyDarkMode(user.darkMode);
                 }),
-                catchError((error) => {
+                catchError(error => {
                   console.error('Error fetching user data:', error);
                   return of(null); // Continue even if user data fails
-                })
+                }),
               )
             : of(null);
 
           const neighObs = neighUrl
             ? this.http.get<NeighborhoodDto>(neighUrl).pipe(
-                tap((neighDto) => {
+                tap(neighDto => {
                   if (neighDto._links) {
                     this.linkRegistry.registerLinks(
                       neighDto._links,
-                      'neighborhood:'
+                      'neighborhood:',
                     );
                   }
                   this.userSessionService.setNeighborhoodInformation(
-                    mapNeighborhood(neighDto)
+                    mapNeighborhood(neighDto),
                   );
                 }),
-                catchError((error) => {
+                catchError(error => {
                   console.error('Error fetching neighborhood data:', error);
                   return of(null); // Continue even if neighborhood data fails
-                })
+                }),
               )
             : of(null);
 
           const workersNeighObs = workersNeighUrl
             ? this.http.get<NeighborhoodDto>(workersNeighUrl).pipe(
-                tap((workersNeighDto) => {
+                tap(workersNeighDto => {
                   if (workersNeighDto._links) {
                     this.linkRegistry.registerLinks(
                       workersNeighDto._links,
-                      'workerNeighborhood:'
+                      'workerNeighborhood:',
                     );
                   }
                 }),
-                catchError((error) => {
+                catchError(error => {
                   console.error('Error fetching workers neighborhood:', error);
                   return of(null); // Continue even if workers neighborhood data fails
-                })
+                }),
               )
             : of(null);
 
           // Use forkJoin to execute all observables in parallel
           return forkJoin([userObs, neighObs, workersNeighObs]).pipe(
             tap(() => {
-              // Emit the 'login' event after successful login
+              // Emit the 'login' event after successful login for other tabs to get notified
               this.channel.postMessage({ type: 'login' });
             }),
-            map(() => true) // Indicate successful login
+            map(() => true), // Indicate successful login
           );
         }),
-        catchError((error) => {
+        catchError(error => {
           console.error('Authentication error:', error);
           return of(false); // Indicate failed login
-        })
+        }),
       );
   }
 
@@ -174,13 +173,12 @@ export class AuthService {
     this.router.navigate(['']);
   }
 
-  // Helper Methods
   isLoggedIn(): boolean {
     const token = this.tokenService.getRefreshToken();
     return !!token;
   }
 
-  public mapLinkToRole(link: string | null | undefined): Roles | null {
+  public mapLinkToRole(link: string | null | undefined): Role | null {
     if (!link) return null;
     for (const [linkKey, role] of Object.entries(this.roleMapping)) {
       const knownUrl = this.linkRegistry.getLink(linkKey as LinkKey);

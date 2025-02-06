@@ -1,6 +1,6 @@
 <div class="cool-static-container shifts-reservation">
   <h2 class="card-title">
-    {{ "ADMIN-AMENITY-CREATE-PAGE.CREATE_NEW_AMENITY" | translate }}
+    {{ 'ADMIN-AMENITY-CREATE-PAGE.CREATE_NEW_AMENITY' | translate }}
   </h2>
   <div class="divider"></div>
   <div>
@@ -16,14 +16,11 @@
             [placeholder]="'ADMIN-AMENITY-CREATE-PAGE.AMENITY_NAME' | translate"
             type="text"
           />
-          <div
-            class="form-row form-error"
-            *ngIf="nameControl?.invalid && nameControl?.touched"
-          >
-            <p class="error">
-              {{ "ADMIN-AMENITY-CREATE-PAGE.NAME_IS_REQUIRED" | translate }}
-            </p>
-          </div>
+          <app-form-error
+            class="w-100"
+            [control]="nameControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
       </div>
 
@@ -31,39 +28,36 @@
       <div
         class="d-flex flex-column justify-content-between align-items-center"
       >
-        <textarea
-          formControlName="description"
-          class="cool-input textarea-min-max"
-          rows="5"
-          [placeholder]="'ADMIN-AMENITY-CREATE-PAGE.DESCRIPTION' | translate"
-        ></textarea>
-        <div
-          class="form-row form-error"
-          *ngIf="descControl?.invalid && descControl?.touched"
-        >
-          <p class="error">
-            {{
-              "ADMIN-AMENITY-CREATE-PAGE.DESCRIPTION_IS_REQUIRED" | translate
-            }}
-          </p>
+        <div class="form-row">
+          <textarea
+            formControlName="description"
+            class="cool-input textarea-min-max"
+            rows="5"
+            [placeholder]="'ADMIN-AMENITY-CREATE-PAGE.DESCRIPTION' | translate"
+          ></textarea>
+          <app-form-error
+            class="w-100"
+            [control]="descControl"
+            [centered]="false"
+          ></app-form-error>
         </div>
       </div>
 
       <p class="m-t-40">
-        {{ "ADMIN-AMENITY-CREATE-PAGE.AMENITY_HOURS" | translate }}
+        {{ 'ADMIN-AMENITY-CREATE-PAGE.AMENITY_HOURS' | translate }}
       </p>
       <div class="divider mt-2 mb-3"></div>
 
       <!-- Action buttons -->
       <div class="f-r-sb-c w-100 ps-3 pe-3">
         <a (click)="check9to5()" class="w-100 cool-button cool-small on-bg">
-          {{ "ADMIN-AMENITY-CREATE-PAGE.917" | translate }}
+          {{ 'ADMIN-AMENITY-CREATE-PAGE.917' | translate }}
         </a>
         <a (click)="uncheckWeekends()" class="w-100 cool-button red">
-          {{ "ADMIN-AMENITY-CREATE-PAGE.CLEAR_WEEKEND" | translate }}
+          {{ 'ADMIN-AMENITY-CREATE-PAGE.CLEAR_WEEKEND' | translate }}
         </a>
         <a (click)="clearAllCheckedHours()" class="w-100 cool-button red">
-          {{ "ADMIN-AMENITY-CREATE-PAGE.CLEAR_ALL" | translate }}
+          {{ 'ADMIN-AMENITY-CREATE-PAGE.CLEAR_ALL' | translate }}
         </a>
       </div>
 
@@ -103,12 +97,12 @@
       <!-- Info Text -->
       <div class="f-c-c-c">
         <div class="f-r-c-c" style="gap: 5px">
-          {{ "ADMIN-AMENITY-CREATE-PAGE.REMEMBER_THAT" | translate }}
+          {{ 'ADMIN-AMENITY-CREATE-PAGE.REMEMBER_THAT' | translate }}
           <span class="c-primary font-weight-bolder">
-            {{ "ADMIN-AMENITY-CREATE-PAGE.ONLY_SELECTED_SHIFTS" | translate }}
+            {{ 'ADMIN-AMENITY-CREATE-PAGE.ONLY_SELECTED_SHIFTS' | translate }}
           </span>
           {{
-            "ADMIN-AMENITY-CREATE-PAGE.WILL_BE_ACTIVE_FOR_YOUR_AMENITY"
+            'ADMIN-AMENITY-CREATE-PAGE.WILL_BE_ACTIVE_FOR_YOUR_AMENITY'
               | translate
           }}
         </div>
@@ -123,7 +117,7 @@
           style="height: 40px"
           [disabled]="!anyShiftChecked"
         >
-          {{ "ADMIN-AMENITY-CREATE-PAGE.CREATE" | translate }}
+          {{ 'ADMIN-AMENITY-CREATE-PAGE.CREATE' | translate }}
         </button>
       </div>
     </form>

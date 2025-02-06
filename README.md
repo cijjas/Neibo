@@ -1,87 +1,124 @@
-# Neibo
+<div align="center">
 
-### Group
+[![Neibo App Logo ][repo_logo_img]][page_url]
 
-Felix Lopez Menardi
+<div style="position: relative; width: 90%; display: flex; justify-content: center;">
 
-Christian Tomas Ijjas
+<div style="
+position: absolute;
+bottom: 10px;
+right: 10px;
+font-size: 16px;
+color: #FAF6E8FF;
+">
+Your peace of mind, our priority. Stay safe, stay connected.
+</div>
 
-Joaquin Girod
-
-Iñaki Bengolea
-
-# Summary
-
-## English
-
-> The application aims to solve the problem of a lack of connectivity among residents within a gated community. It offers various services that facilitate communication between residents and between administrators and residents. Through these communications, the goal is to streamline requests that often remain within the community and don't reach the administrators efficiently and quickly.
-
-> It's worth mentioning that residents can view a 'feed' where they can filter by 'hot' and 'trending' to see which posts are gaining traction on the platform, allowing them to stay informed about important events and updates in the community.
-
-> In addition to the mentioned utilities, the application also provides common services for gated community residents, such as amenity reservations. Administrators can create these amenities and set their opening and closing hours. This is similar to the events, where users cannot create events themselves but can confirm their attendance at events created by the administrator.
-
-> Another significant module is the service providers section, where residents of a gated community have access to a screen where they can search for service providers, such as gardeners, electricians, yoga instructors, and others. They can access the provider's profile, view reviews, and see posts made by the service provider. This way, they can find the services they need more easily and with the confidence that these services are part of a gated community application. On the other side, service providers can only see their profile, other service profiles in the communities they are already a part of, and a panel to join new communities to offer their services and expand their visibility.
-
-> These are some of the major features that the application offers. To get to know it better, use the credentials below to log in and try it out.
-
----
-## Español
-
-> La aplicación tiene como objetivo solucionar el problema de la falta de conectividad entre vecinos dentro de un barrio cerrado. Se ofrece distintos servicios que facilitan la comunicación de vecino residente a residente como de administrador a residente. Con estas comunicaciones se busca agilizar las peticiones que usualmente quedan en boca de los residentes y nunca llegan a los administradores de forma eficiente y rápida.
-
-> Es relevante mencionar que los residentes pueden ver un "feed" en donde pueden filtrar por "hot" y "trending" para ver qué publicaciones están teniendo movimiento en la página y así enterarse de eventos y acontecimientos que el barrio considera importantes
-
-> Por otro lado más allá de la utilidad mencionada, también ofrece servicios de utilidad común para los residentes de los barrios cerrados como lo es la reserva de amenidades. Por parte de los administradores ellos pueden crear estas amenidades y seleccionar los horarios de apertura y de cierre. Algo semejante ocurre con los eventos en donde los usuarios no tienen poder de creación de eventos pero si pueden confirmar asistencia de algún evento creado previamente por el administrador.
-
-> Otro módulo importante es el de los proveedores de servicios, donde los residentes de un barrio cerrado tienen acceso a una pantalla en donde pueden consultar por proveedores de servicio como lo son un jardinero, un electricista y un profesor de yoga entre otros. Pueden entrar en su perfil y ver las reviews que se le han dado y los posts que el propio proveedor de servicios publicó. Des esta forma pueden encontrar el servicio que necesitan con más facilidad y con la confianza de  que el servicio está en una aplicación de barrio cerrado. Los trabajadores del otro lado solo pueden ver su perfil, los otros perfiles de los servicios en los barrios en los que él ya se encuentra y  un panel para unirse a barrios nuevos para brindar sus servicios y ampliar su visibilidad.
-
-> Estas son algunas de las utilidades más grandes que ofrece la aplicación para conocerla mejor utilice las credenciales de abajo para ingresar y probarla.
+</div>
 
 
-# UserForm credentials by neighborhood
+</div>
 
-> [!INFO]
-> There are 4 access levels
-> - Neighbors
-> - Administrator
-> - Unverified neighbors
-> - Service providers/ workers
->
-> The accounts provided are from the Martindale neighborhood. Each of the accounts has a corresponding gmail account for actual mails.
+## Introduction
+
+Welcome to **Neibo**, a full-featured web application designed to streamline and enhance community interactions.
+Whether you’re an **admin** managing amenities and user requests, a **service provider** offering services,
+or a **resident** engaging with your neighborhood through events, posts, and a marketplace,
+Neibo provides a seamless experience tailored to your needs.
+
+## Features
+
+### 🏢 Administration
+
+Admins have full control over the community, with the ability to create and manage amenities, schedule events, curate neighborhood information, and approve or reject residents and service providers. Keep the community well-organized and secure with powerful administration tools.
+
+### 🎾 Amenities Reservation
+
+Easily book community amenities such as tennis courts, pools, and clubhouses. Residents can check availability, make reservations, and manage their bookings hassle-free.
+
+### 📅 Events
+
+Stay updated with community events through an interactive calendar. Join or leave events with a simple click and never miss out on neighborhood gatherings, activities, or important meetings.
+
+### 📢 Announcements & Community Feed
+
+Stay informed with an announcement board for admins and a community feed for residents. Share news, updates, and discussions with neighbors, and even submit complaints or concerns in dedicated channels.
+
+### 🛠️ Service Providers Management
+
+A curated list of trusted neighborhood service providers, complete with ratings and reviews. Residents can easily find and contact plumbers, electricians, landscapers, and more, ensuring quality and reliability in their local community.
+
+### 🌍 Neighborhood Information
+
+Admins can maintain an up-to-date database of important neighborhood information, including contacts, emergency numbers, and essential local services, providing residents with quick access to key resources.
+
+### 🛍️ Marketplace
+
+A community-driven marketplace where residents can buy, sell, and trade goods within the neighborhood. Find great deals, support local sellers, and create a thriving local economy.
+
+## Default Test Accounts
+
+| Role                | Username                     | Password                   |
+|---------------------|----------------------------|---------------------------|
+| **Admin**           | moderatorneibo@gmail.com    | moderatorneibo2023b-02    |
+| **Verified Neighbor** | verifiedneibo@gmail.com    | verifiedneibo2023b-02     |
+| **Service Provider** | workerneibo@gmail.com      | workerneibo2023b-02       |
+| **Unverified Neighbor** | unverifiedneibo@gmail.com | unverifiedneibo2023b-02   |
+| **Rejected Neighbor** | rejected@test.com         | rejected                  |
+
+## Quick start
+
+### Docker-way to quick start
 
 
-## g-mail accounts
+## Frontend
 
-### 1
-- **Email**: verifiedneibo@gmail.com
-- **Password**: verifiedneibo2023b-02
----
-### 2
-- **Email**: unverifiedneibo@gmail.com
-- **Password**: unverifiedneibo2023b-02
----
-### 3
-- **Email**: moderatorneibo@gmail.com
-- **Password**: moderatorneibo2023b-02
----
-### 4
-- **Email**: workerneibo@gmail.com
-- **Password**: workerneibo2023b-02
+## License
 
-## neibo accounts ( in Martindale)
 
-### 1
-- **Email**: verifiedneibo@gmail.com
-- **Password**: verifiedneibo
---- 
-### 2
-- **Email**: unverifiedneibo@gmail.com
-- **Password**: unverifiedneibo
----
-### 3
-- **Email**: moderatorneibo@gmail.com
-- **Password**: moderatorneibo
----
-### 4
-- **Email**: workerneibo@gmail.com
-- **Password**: workerneibo
+<h3 style="width: 100%; display: flex; flex-direction: row; justify-content: end; align-items: center;"> Contributors</h3>
+
+<table style="width: 100%; display: flex; flex-direction: row; justify-content: end; align-items: center;">
+<tr>
+<td align="center">
+<a href="https://github.com/cijjas">
+<img src="https://avatars.githubusercontent.com/u/95446446?v=4" width="50px;" alt="Chris"/>
+<br /><sub><b>Chris</b></sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/JoacoGirod">
+<img src="https://avatars.githubusercontent.com/u/62113898?v=4" width="50px;" alt="Joaco"/>
+<br /><sub><b>Joaco</b></sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/flopezmenardi">
+<img src="https://avatars.githubusercontent.com/u/95313072?v=4" width="50px;" alt="Felix"/>
+<br /><sub><b>Felix</b></sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/meursault00">
+<img src="https://avatars.githubusercontent.com/u/95638674?v=4" width="50px;" alt="Inaki"/>
+<br /><sub><b>Inaki</b></sub>
+</a>
+</td>
+</tr>
+</table>
+
+  
+<!-- Go -->
+
+<!-- Repository -->
+
+[page_url]: http://old-pawserver.it.itba.edu.ar/paw-2023b-02
+[repo_logo_img]: /frontend/src/assets/images/banner_neibo.png
+
+<!-- Project -->
+
+<!-- Author -->
+
+<!-- Readme links -->
+
+<!-- Other projects links -->

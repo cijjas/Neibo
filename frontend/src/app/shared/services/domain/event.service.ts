@@ -77,10 +77,10 @@ export class EventService {
             map(response => response.events),
             catchError(error => {
               console.error(`Error fetching events for date ${date}:`, error);
-              return of([]); // Return an empty array on error to prevent breaking the stream
+              return of([]);
             }),
           ),
-        5, // Limit concurrency to 5 requests at a time
+        5,
       ),
       toArray(),
       map(eventsArrays => eventsArrays.flat()),
@@ -162,9 +162,9 @@ function calculateDurationInMinutes(
   const [startHours, startMinutes] = startTime.split(':').map(Number);
   const [endHours, endMinutes] = endTime.split(':').map(Number);
 
-  const startDate = new Date(0, 0, 0, startHours, startMinutes); // Arbitrary date
+  const startDate = new Date(0, 0, 0, startHours, startMinutes);
   const endDate = new Date(0, 0, 0, endHours, endMinutes);
 
   const durationMilliseconds = endDate.getTime() - startDate.getTime();
-  return durationMilliseconds / (1000 * 60); // Convert milliseconds to minutes
+  return durationMilliseconds / (1000 * 60);
 }

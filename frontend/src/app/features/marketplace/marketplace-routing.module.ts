@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {
-  MarketplacePageComponent,
-  MarketplaceDashboardBuyerPageComponent,
-  MarketplaceDashboardSellerPageComponent,
-  MarketplaceProductSellPageComponent,
-  MarketplaceProductDetailPageComponent,
-  MarketplaceProductEditPageComponent,
-  MarketplaceProductRequestsPageComponent,
-} from '@features/index';
+import { MarketplacePageComponent } from './marketplace-page/marketplace-page.component';
+import { MarketplaceDashboardBuyerPageComponent } from './marketplace-dashboard-buyer-page/marketplace-dashboard-buyer-page.component';
+import { MarketplaceDashboardSellerPageComponent } from './marketplace-dashboard-seller-page/marketplace-dashboard-seller-page.component';
+import { MarketplaceProductSellPageComponent } from './marketplace-product-sell-page/marketplace-product-sell-page.component';
+import { MarketplaceProductDetailPageComponent } from './marketplace-product-detail-page/marketplace-product-detail-page.component';
+import { MarketplaceProductEditPageComponent } from './marketplace-product-edit-page/marketplace-product-edit-page.component';
+import { MarketplaceProductRequestsPageComponent } from './marketplace-product-requests-page/marketplace-product-requests-page.component';
 import { productResolver } from '@shared/resolvers/product.resolver';
 
 const routes: Routes = [
