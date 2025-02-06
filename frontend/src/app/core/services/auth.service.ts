@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
-  BehaviorSubject,
   catchError,
   forkJoin,
   map,
@@ -12,7 +11,6 @@ import {
   of,
   switchMap,
   tap,
-  throwError,
 } from 'rxjs';
 import {
   NeighborhoodDto,
@@ -151,7 +149,7 @@ export class AuthService {
           // Use forkJoin to execute all observables in parallel
           return forkJoin([userObs, neighObs, workersNeighObs]).pipe(
             tap(() => {
-              // Emit the 'login' event after successful login
+              // Emit the 'login' event after successful login for other tabs to get notified
               this.channel.postMessage({ type: 'login' });
             }),
             map(() => true), // Indicate successful login
@@ -175,7 +173,6 @@ export class AuthService {
     this.router.navigate(['']);
   }
 
-  // Helper Methods
   isLoggedIn(): boolean {
     const token = this.tokenService.getRefreshToken();
     return !!token;

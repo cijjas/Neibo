@@ -14,7 +14,7 @@ export const AuthGuard = () => {
   const tokenService = inject(TokenService);
   const currentUrl = router.url;
 
-  // Utility function to handle redirection based on role
+  //  handle redirection based on role
   const redirectByRole = (role: Role) => {
     const routes = {
       [Role.ADMINISTRATOR]: ['/posts'],

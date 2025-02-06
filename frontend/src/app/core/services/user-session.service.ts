@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Neighborhood, Role, User } from '@shared/index';
-import { HateoasLinksService } from './link.service';
 
 @Injectable({
   providedIn: 'root',
@@ -78,6 +77,9 @@ export class UserSessionService {
     localStorage.removeItem('neighborhood');
   }
 
+  // ----------------------------------------------
+  //  Role helpers
+  // ----------------------------------------------
   public setUserRole(role: Role): void {
     this.currentRole = role;
     localStorage.setItem('currentUserRole', role);
