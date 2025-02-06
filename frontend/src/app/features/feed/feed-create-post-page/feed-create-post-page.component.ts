@@ -155,7 +155,6 @@ export class FeedCreatePostPageComponent implements OnInit {
   onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    // Optionally add a CSS class to highlight the area
   }
 
   onDrop(event: DragEvent) {
@@ -407,7 +406,6 @@ export class FeedCreatePostPageComponent implements OnInit {
             take(1),
             switchMap(user => {
               formValue.user = user.self;
-              // Optionally handle image
               return this.createImageObservable(formValue.imageFile).pipe(
                 switchMap(imageUrl => {
                   if (imageUrl) {
@@ -428,7 +426,6 @@ export class FeedCreatePostPageComponent implements OnInit {
                 ),
                 'success',
               );
-              // Navigate away if needed
               this.router.navigate(['/posts'], {
                 queryParams: { inChannel: this.channel },
               });

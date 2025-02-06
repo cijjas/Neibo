@@ -16,12 +16,10 @@ import { environment } from 'environments/environment';
   templateUrl: './marketplace-dashboard-seller-page.component.html',
 })
 export class MarketplaceDashboardSellerPageComponent implements OnInit {
-  // Pagination
   page: number = 1;
   totalPages: number = 1;
   size: number = 10;
 
-  // Data for listings vs. sales
   listings: Product[] = [];
   sales: Request[] = [];
 
@@ -33,7 +31,6 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     private productService: ProductService,
   ) {}
 
-  // Computed properties for toggling UI
   get isListings(): boolean {
     return this.route.snapshot.paramMap.get('mode') === 'listings';
   }
@@ -43,7 +40,6 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Listen for route changes (listings vs. sales)
     this.route.paramMap.subscribe((params: ParamMap) => {
       const mode = params.get('mode');
       this.clearLists();
@@ -51,17 +47,14 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
       if (mode === 'sales') {
         this.loadSales();
       } else {
-        // Default to listings if mode != 'sales'
         this.loadListings();
       }
     });
 
-    // Handle query params for pagination
     this.route.queryParams.subscribe(queryParams => {
       this.page = queryParams['page'] ? +queryParams['page'] : 1;
       this.size = queryParams['size'] ? +queryParams['size'] : 10;
 
-      // Reload data if user changes pagination
       if (this.isSales) {
         this.loadSales();
       } else {
@@ -127,7 +120,6 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     this.page = newPage;
     this.updateQueryParams();
 
-    // Reload relevant data
     if (this.isSales) {
       this.loadSales();
     } else {

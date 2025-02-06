@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AuthService } from '@core/index';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
-// Fake translate pipe to satisfy template usage of "| translate"
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {

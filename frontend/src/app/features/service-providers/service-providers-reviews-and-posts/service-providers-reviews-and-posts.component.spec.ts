@@ -21,10 +21,6 @@ import {
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
-/**
- * A fake pipe that simply returns its input. This satisfies any usage of | translate
- * in the component template, eliminating the “NG0302: The pipe 'translate' could not be found” error.
- */
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {
@@ -36,14 +32,12 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
   let component: ServiceProvidersReviewsAndPostsComponent;
   let fixture: ComponentFixture<ServiceProvidersReviewsAndPostsComponent>;
 
-  // Service spies
   let reviewServiceSpy: jasmine.SpyObj<ReviewService>;
   let postServiceSpy: jasmine.SpyObj<PostService>;
   let workerServiceSpy: jasmine.SpyObj<WorkerService>;
   let linkServiceSpy: jasmine.SpyObj<HateoasLinksService>;
   let routerSpy: jasmine.SpyObj<Router>;
 
-  // Dummy data for reviews and posts
   const dummyReviews: Review[] = [
     {
       rating: 5,
@@ -61,7 +55,6 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     },
   ] as any;
 
-  // Minimal dummy worker
   const dummyWorker: Worker = {
     phoneNumber: '111-222-3333',
     businessName: 'Business',
@@ -79,10 +72,8 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     self: 'worker123',
   };
 
-  // Create a Subject to simulate queryParams changes
   let fakeQueryParams$ = new Subject<any>();
 
-  // Provide a minimal ActivatedRoute stub with snapshot.paramMap and queryParams
   const activatedRouteStub = {
     snapshot: {
       paramMap: {
@@ -101,26 +92,23 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     linkServiceSpy = jasmine.createSpyObj('HateoasLinksService', ['getLink']);
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-    // Stub getReviews to return dummy reviews with currentPage
     reviewServiceSpy.getReviews.and.returnValue(
       of({ reviews: dummyReviews, totalPages: 2, currentPage: 1 }),
     );
-    // Stub getWorkerPosts to return dummy posts with currentPage
     postServiceSpy.getWorkerPostsByUrl.and.returnValue(
       of({ posts: dummyPosts, totalPages: 3, currentPage: 1 }),
     );
-    // Stub getWorker to return dummyWorker
+
     workerServiceSpy.getWorker.and.returnValue(of(dummyWorker));
 
-    // Stub linkService.getLink to return values that make isTheWorker/isWorker = true
     linkServiceSpy.getLink.and.callFake((key: string) => {
       switch (key) {
         case LinkKey.USER_WORKER:
-          return 'worker123'; // matches dummyWorker.self => isTheWorker = true
+          return 'worker123'; 
         case LinkKey.USER_USER_ROLE:
-          return 'worker'; // some role
+          return 'worker'; 
         case LinkKey.WORKER_USER_ROLE:
-          return 'worker'; // so isWorker = true
+          return 'worker'; 
         default:
           return '';
       }
@@ -129,7 +117,7 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ServiceProvidersReviewsAndPostsComponent,
-        FakeTranslatePipe, // Declare the fake translate pipe
+        FakeTranslatePipe, 
       ],
       providers: [
         { provide: ReviewService, useValue: reviewServiceSpy },
@@ -146,8 +134,8 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
   beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(ServiceProvidersReviewsAndPostsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // triggers ngOnInit => calls loadWorker('worker123')
-    tick(); // flush async from loadWorker promise
+    fixture.detectChanges(); 
+    tick(); 
   }));
 
   // Test 1: Initialization
@@ -155,11 +143,9 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     expect(workerServiceSpy.getWorker).toHaveBeenCalledWith('worker123');
     expect(component.worker).toEqual(dummyWorker);
 
-    // Because linkService matches 'worker123', isTheWorker should be true, isWorker also true
     expect(component.isTheWorker).toBeTrue();
     expect(component.isWorker).toBeTrue();
 
-    // Now simulate query params => { reviewPage: '2', reviewSize: '5', postPage: '3', postSize: '7', tab: 'posts' }
     fakeQueryParams$.next({
       reviewPage: '2',
       reviewSize: '5',
@@ -167,7 +153,7 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
       postSize: '7',
       tab: 'posts',
     });
-    tick(); // flush
+    tick(); 
 
     expect(component.reviewCurrentPage).toBe(2);
     expect(component.reviewPageSize).toBe(5);
@@ -175,7 +161,6 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     expect(component.postPageSize).toBe(7);
     expect(component.selectedTab).toBe('posts');
 
-    // Also expect the local arrays to reflect the stub responses:
     expect(component.reviews).toEqual(dummyReviews);
     expect(component.reviewTotalPages).toBe(2);
     expect(component.posts).toEqual(dummyPosts);

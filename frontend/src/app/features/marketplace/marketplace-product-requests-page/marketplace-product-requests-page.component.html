@@ -1,20 +1,15 @@
 <div class="container">
   <div class="row init">
-    <!-- Left Column -->
     <div class="column-left">
       <app-sidebar></app-sidebar>
     </div>
 
-    <!-- Center Column -->
     <div id="center-grid" class="column-center ps-3">
-      <!-- Upper Marketplace Buttons Component -->
       <app-marketplace-control-bar
         [channel]="channel"
       ></app-marketplace-control-bar>
 
-      <!-- Back Button / Title / Price -->
       <div class="w-100 f-c-c-c g-1 cool-static-container">
-        <!-- “Go back” link -->
         <div class="f-r-s-c w-100">
           <a
             [routerLink]="['/marketplace', 'seller-hub', 'listings']"
@@ -50,14 +45,12 @@
 
         <div class="divider"></div>
 
-        <!-- List of interested people -->
         <div class="f-r-c-c w-100 pt-2 pb-2">
           <h1 class="font-weight-normal font-size-16">
             {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.LIST_OF_INTERESTED_PEOPLE" | translate }}
           </h1>
         </div>
 
-        <!-- If there are no requests -->
         <div
           *ngIf="requestList && requestList.length === 0"
           class="no-posts-found"
@@ -66,7 +59,6 @@
           {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.NO_NEW_REQUESTS" | translate }}
         </div>
 
-        <!-- If requests exist -->
         <div
           class="f-c-c-c w-100"
           *ngIf="requestList && requestList.length > 0"
@@ -75,7 +67,6 @@
             *ngFor="let request of requestList; let i = index"
             class="cool-static-container"
           >
-            <!-- Requester Info + Mark as sold button -->
             <div class="f-r-sb-s w-100">
               <div class="f-r-c-c">
                 <div class="f-c-s-s">
@@ -125,7 +116,6 @@
 
             <div class="divider mt-3 mb-3"></div>
 
-            <!-- Request message -->
             <div class="f-r-s-s w-100">
               <div class="f-r-c-c">
                 <div class="f-c-s-s">
@@ -147,7 +137,6 @@
           </div>
         </div>
 
-        <!-- Paginator (for example) -->
         <app-paginator
           [totalPages]="totalPages"
           [currentPage]="page"
@@ -160,7 +149,6 @@
   </div>
 </div>
 
-<!-- Mark as sold dialog -->
 <div
   id="mark-as-sold-dialog"
   class="dialog"
@@ -236,7 +224,6 @@
             </defs>
           </svg>
         </div>
-        <!-- Overlay Text -->
         <div class="inclined-dialog-text">
           <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PENDING_REQUEST" | translate }}</h3>
           <p class="font-weight-normal font-size-14">
@@ -249,11 +236,9 @@
         </div>
       </div>
     </div>
-    <!-- Close Button -->
     <a class="close-button marketplace" (click)="closeRequestDialog()">
       <i class="fas fa-close"></i>
     </a>
-    <!-- Action Buttons -->
     <div class="f-c-c-c w-100 g-1 mt-3">
       <button
         (click)="submitMarkAsSold()"
@@ -266,7 +251,6 @@
         Decline
       </button>
     </div>
-    <!-- Warning Text -->
     <div
       *ngIf="product?.stock < selectedUnitsRequested"
       class="c-red mt-2 font-size-14"
@@ -276,7 +260,6 @@
   </div>
 </div>
 
-<!-- Loader container -->
 <div
   id="loader-container"
   class="loader-container"

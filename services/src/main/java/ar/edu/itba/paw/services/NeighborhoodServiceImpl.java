@@ -45,7 +45,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int size, int page) {
+    public List<Neighborhood> getNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int page, int size) {
         LOGGER.info("Getting Neighborhoods that have an Affiliation with Worker {} and without Worker {}", withWorkerId, withoutWorkerId);
 
         return neighborhoodDao.getNeighborhoods(isBase, withWorkerId, withoutWorkerId, page, size);

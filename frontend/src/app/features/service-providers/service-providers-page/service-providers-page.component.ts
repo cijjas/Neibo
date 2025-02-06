@@ -14,9 +14,9 @@ export class ServiceProvidersPageComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   pageSize: number = 10;
-  professions: string[] = []; // Changed to handle `withProfession` query params
+  professions: string[] = []; 
 
-  isLoading: boolean = true; // Track loading state
+  isLoading: boolean = true; 
   placeholderItems = Array.from({ length: 10 }, (_, i) => i);
 
   constructor(
@@ -30,7 +30,6 @@ export class ServiceProvidersPageComponent implements OnInit {
       this.currentPage = +params['page'] || 1;
       this.pageSize = +params['size'] || 10;
 
-      // Handle multiple `withProfession` params
       const professionsParam = params['withProfession'];
       this.professions = Array.isArray(professionsParam)
         ? professionsParam
@@ -38,7 +37,6 @@ export class ServiceProvidersPageComponent implements OnInit {
         ? [professionsParam]
         : [];
 
-      // Call loadWorkers() directly after setting parameters
       this.loadWorkers();
     });
   }
@@ -90,7 +88,7 @@ export class ServiceProvidersPageComponent implements OnInit {
       queryParams: {
         page: this.currentPage,
         size: this.pageSize,
-        withProfession: this.professions, // Update query params for professions
+        withProfession: this.professions, 
       },
       queryParamsHandling: 'merge',
     });

@@ -9,8 +9,6 @@ export class SuperAdminPageComponent {
   constructor(private authService: AuthService) {}
 
   goBackToMainPage(): void {
-    // Example: log out and navigate to root or login
-
     this.authService.logout();
   }
 }

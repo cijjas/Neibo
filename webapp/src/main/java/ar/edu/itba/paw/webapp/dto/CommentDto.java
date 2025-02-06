@@ -2,14 +2,11 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -17,13 +14,12 @@ import java.util.Date;
 
 public class CommentDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 500, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 500)
     private String message;
 
-    @NotNull(groups = Null.class)
-    @UserURIConstraint(groups = URI.class)
-    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
 
     private Date creationDate;

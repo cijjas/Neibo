@@ -1,13 +1,10 @@
-<!-- "Associated Neighborhoods" Section -->
 <div class="cool-static-container mb-4">
-  <!-- If associatedNeighborhoods is empty -->
   <div *ngIf="associatedNeighborhoods?.length === 0; else associatedNotEmpty">
     <div class="f-c-c-c w-100 mt-3" style="text-align: center">
       <div class="w-75">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.NO_ASSOCIATED_NEIGHBORHOODS" | translate }}</div>
     </div>
   </div>
 
-  <!-- If associatedNeighborhoods is NOT empty -->
   <ng-template #associatedNotEmpty>
     <div class="f-c-s-c mt-2 w-100">
       <span class="font-weight-bold font-size-20">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.MY_NEIGHBORHOODS" | translate }}</span>
@@ -19,7 +16,6 @@
           <tr *ngFor="let entry of associatedNeighborhoods">
             <td style="text-align: start">
               <span class="ps-2 pe-2">{{ entry.neighborhood.name }}</span>
-              <!-- Show 'Pending' tag if role is 'UNVERIFIED_WORKER' -->
               <span
                 *ngIf="entry.role === 'UNVERIFIED_WORKER'"
                 class="badge-pending"
@@ -28,7 +24,6 @@
               </span>
             </td>
             <td>
-              <!-- Button to remove neighborhood -->
               <button
                 type="button"
                 class="btn btn-link"
@@ -50,26 +45,19 @@
   </ng-template>
 </div>
 
-<!-- "Other Neighborhoods" Section -->
 <div class="cool-static-container" style="overflow: visible">
-  <!-- If otherNeighborhoods is empty -->
   <div *ngIf="otherNeighborhoods?.length === 0; else othersNotEmpty">
     <div class="f-c-c-c w-100 mb-3" style="text-align: center">
       <div class="w-75">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.NO_NEW_NEIGHBORHOODS" | translate }}</div>
     </div>
   </div>
 
-  <!-- If otherNeighborhoods is NOT empty -->
   <ng-template #othersNotEmpty>
-    <!-- Here we replicate the form from the JSP -->
     <form class="f-c-c-c w-100" (ngSubmit)="onSubmit()">
-      <!-- Angular handle of errors or validations can go here -->
-      <!-- <p class="error"> ... </p> -->
 
       <span class="font-weight-bold font-size-20">{{ "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE.JOIN_NEIGHBORHOODS" | translate }}</span>
 
       <div class="neighborhoods-select mb-4 w-100">
-        <!-- Hidden input replaced by an Angular property binding (for storing IDs) -->
         <input
           type="hidden"
           id="selectedNeighborhoods"
@@ -77,10 +65,8 @@
           [value]="selectedNeighborhoodIds.join(',')"
         />
 
-        <!-- The "select button" container -->
         <div class="f-r-c-c w-100">
           <div class="container m-0" #listContainer>
-            <!-- "select-btn" toggles the .open class -->
             <div
               class="select-btn n-workers w-100"
               [class.open]="isSelectOpen"
@@ -93,7 +79,6 @@
               </span>
             </div>
 
-            <!-- The dropdown UL has no .open class needed -->
             <ul
               [hidden]="otherNeighborhoods.length === 0"
               class="list-items n-workers"
@@ -126,11 +111,6 @@
           </button>
         </div>
       </div>
-
-      <!--
-                  You can place error displays for `selectedNeighborhoodIds` here if needed.
-                  <p class="error" *ngIf="someErrorCondition">Error message</p>
-                -->
 
       <div class="w-100 f-c-c-c" style="font-size: 14px; text-align: center">
         <span class="font-weight-normal">

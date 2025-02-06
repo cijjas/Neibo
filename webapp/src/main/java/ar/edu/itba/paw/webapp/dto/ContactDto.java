@@ -2,8 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Contact;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,16 +11,16 @@ import javax.ws.rs.core.UriInfo;
 
 public class ContactDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 64, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 64)
     private String name;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 64, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 64)
     private String address;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 20, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 20)
     private String phone;
 
     private Links _links;

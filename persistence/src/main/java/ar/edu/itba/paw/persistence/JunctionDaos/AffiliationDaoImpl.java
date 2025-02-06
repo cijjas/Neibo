@@ -33,7 +33,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
         Worker worker = em.find(Worker.class, workerId);
         Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
-        WorkerRole workerRole = WorkerRole.fromId(workerRoleId);
+        WorkerRole workerRole = WorkerRole.fromId(workerRoleId).get(); // Optional not empty, checked in authorization
 
         Affiliation affiliation = new Affiliation(worker, neighborhood, workerRole, new Date(System.currentTimeMillis()));
 

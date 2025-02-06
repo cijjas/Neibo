@@ -3,39 +3,38 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.TimeConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.TimeRangeConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.Specific;
+import ar.edu.itba.paw.webapp.validation.constraints.DateConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.TimeConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.TimeRangeConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import java.text.SimpleDateFormat;
 
-@TimeRangeConstraint(groups = Specific.class)
+@TimeRangeConstraint
 public class EventDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 100, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 100)
     private String name;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 2000, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 2000)
     private String description;
 
-    @NotNull(groups = Null.class)
-    @DateConstraint(groups = Specific.class)
+    @NotNull(groups = OnCreate.class)
+    @DateConstraint
     private String eventDate;
 
-    @NotNull(groups = Null.class)
+    @NotNull(groups = OnCreate.class)
     @TimeConstraint
     private String startTime;
 
+    @NotNull(groups = OnCreate.class)
     @TimeConstraint
-    @NotNull(groups = Null.class)
     private String endTime;
 
     private Boolean willAttend;
@@ -45,9 +44,11 @@ public class EventDto {
     public static EventDto fromEvent(Event event, Boolean willAttend, UriInfo uriInfo) {
         final EventDto dto = new EventDto();
 
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
         dto.name = event.getName();
         dto.description = event.getDescription();
-        dto.eventDate = event.getDate().toString();
+        dto.eventDate = dateFormatter.format(event.getDate());
         dto.startTime = event.getStartTime().getTimeInterval().toString();
         dto.endTime = event.getEndTime().getTimeInterval().toString();
         dto.willAttend = willAttend;

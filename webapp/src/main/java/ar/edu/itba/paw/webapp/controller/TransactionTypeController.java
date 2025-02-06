@@ -4,15 +4,11 @@ import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.TransactionTypeDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
@@ -70,12 +66,12 @@ public class TransactionTypeController {
     @GET
     @Path("{" + PathParameter.TRANSACTION_TYPE_ID + "}")
     public Response findTransactionType(
-            @PathParam(PathParameter.TRANSACTION_TYPE_ID) @GenericIdConstraint Long transactionTypeId
+            @PathParam(PathParameter.TRANSACTION_TYPE_ID) Long transactionTypeId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        TransactionType transactionType = TransactionType.fromId(transactionTypeId);
+        TransactionType transactionType = TransactionType.fromId(transactionTypeId).orElseThrow(NotFoundException::new);
         String transactionTypeHashCode = String.valueOf(transactionType.hashCode());
 
         // Cache Control

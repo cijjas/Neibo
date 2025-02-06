@@ -7,12 +7,11 @@
     class="dialog-content services"
     style="background-color: var(--onbackground)"
   >
-    <!-- Close Button -->
+
     <div class="close-button services" (click)="closeEditDialog()">
       <i class="fas fa-close"></i>
     </div>
 
-    <!-- Title -->
     <div
       class="mb-2 mt-3 f-c-c-c c-services font-weight-bold"
       style="font-size: 20px"
@@ -20,17 +19,14 @@
     {{ "SERVICE-PROVIDERS-EDIT-DIALOG.EDIT_PROFILE" | translate }}
     </div>
 
-    <!-- Form -->
     <form
       (ngSubmit)="submitEditProfileForm()"
       #editForm="ngForm"
       enctype="multipart/form-data"
     >
       <div class="f-c-c-c ps-3 pe-3 c-text" style="width: 500px">
-        <!-- Error Messages Placeholder -->
 
         <div class="w-75 f-c-c-c" style="gap: 10px">
-          <!-- Business Name Input -->
           <input
             name="businessName"
             [(ngModel)]="businessName"
@@ -49,7 +45,6 @@
           {{ "SERVICE-PROVIDERS-EDIT-DIALOG.BUSINESS_NAME_IS_REQUIRED" | translate }}
           </p>
 
-          <!-- Bio Input -->
           <input
             name="bio"
             [(ngModel)]="bio"
@@ -68,7 +63,6 @@
           {{ "SERVICE-PROVIDERS-EDIT-DIALOG.DESCRIPTION_IS_REQUIRED" | translate }}
           </p>
 
-          <!-- Phone Number Input -->
           <input
             name="phoneNumber"
             [(ngModel)]="phoneNumber"
@@ -87,7 +81,6 @@
           {{ "SERVICE-PROVIDERS-EDIT-DIALOG.PHONE_NUMBER_IS_REQUIRED" | translate }}
           </p>
 
-          <!-- Address Input -->
           <input
             name="address"
             [(ngModel)]="address"
@@ -107,7 +100,6 @@
           </p>
         </div>
 
-        <!-- Image Upload -->
         <label for="imageInput1" class="mt-3">{{ "SERVICE-PROVIDERS-EDIT-DIALOG.BACKGROUND_IMAGE" | translate }}</label>
         <input
           id="imageInput1"
@@ -118,7 +110,6 @@
           accept="image/*"
         />
 
-        <!-- Submit Button -->
         <button
           type="submit"
           class="cool-button cool-small services-button on-bg font-weight-bolder mb-4 mt-3"

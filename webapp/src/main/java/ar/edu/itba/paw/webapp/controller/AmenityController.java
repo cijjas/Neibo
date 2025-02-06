@@ -5,14 +5,12 @@ import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -56,7 +54,7 @@ public class AmenityController {
 
     @GET
     public Response listAmenities(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -98,8 +96,8 @@ public class AmenityController {
     @GET
     @Path("{" + PathParameter.AMENITY_ID + "}")
     public Response findAmenity(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.AMENITY_ID) @GenericIdConstraint Long amenityId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.AMENITY_ID) Long amenityId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -120,10 +118,10 @@ public class AmenityController {
     }
 
     @POST
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateAmenity(#createForm.selectedShifts)")
     public Response createAmenity(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
             @Valid @NotNull AmenityDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -143,11 +141,11 @@ public class AmenityController {
     @PATCH
     @Path("{" + PathParameter.AMENITY_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
+    @PreAuthorize("@accessControlHelper.canUpdateAmenity(#updateForm.selectedShifts)")
     @Validated(UpdateSequence.class)
     public Response updateAmenity(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.AMENITY_ID) @GenericIdConstraint Long amenityId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.AMENITY_ID) Long amenityId,
             @Valid @NotNull AmenityDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
@@ -164,10 +162,9 @@ public class AmenityController {
 
     @DELETE
     @Path("{" + PathParameter.AMENITY_ID + "}")
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response deleteAmenity(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.AMENITY_ID) @GenericIdConstraint Long amenityId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.AMENITY_ID) Long amenityId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

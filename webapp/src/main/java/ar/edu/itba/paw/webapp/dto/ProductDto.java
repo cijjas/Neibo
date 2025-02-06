@@ -4,17 +4,13 @@ import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.DepartmentURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ImagesURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.constraints.ImagesURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -22,34 +18,33 @@ import java.util.Date;
 import java.util.List;
 
 public class ProductDto {
-    @NotNull(groups = Null.class)
-    @Size(max = 100, groups = Basic.class)
+
+    @NotNull(groups = OnCreate.class)
+    @Size(max = 100)
     private String name;
 
-    @NotNull(groups = Null.class)
+    @NotNull(groups = OnCreate.class)
     private Double price;
 
-    @ImagesURIConstraint(groups = URI.class)
+    @ImagesURIConstraint
     private List<String> images;
 
-    @NotNull(groups = Null.class)
-    @Size(max = 2000, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(max = 2000)
     private String description;
 
-    @NotNull(groups = Null.class)
-    @DepartmentURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
     private String department;
 
-    @NotNull(groups = Null.class)
-    @Range(min = 1, max = 100, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Range(min = 1, max = 100)
     private Long remainingUnits;
 
-    @NotNull(groups = Null.class)
+    @NotNull(groups = OnCreate.class)
     private Boolean used;
 
-    @NotNull(groups = Null.class)
-    @UserURIConstraint(groups = URI.class)
-    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
 
     private Date creationDate;

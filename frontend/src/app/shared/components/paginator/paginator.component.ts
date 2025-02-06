@@ -29,7 +29,7 @@ export class PaginatorComponent implements OnChanges {
     }
   }
   private updatePageNumbers(): void {
-    const maxVisiblePages = 5; // Adjust this number to reduce the number of visible buttons
+    const maxVisiblePages = 5; 
     const pages: number[] = [];
 
     if (this.totalPages <= maxVisiblePages) {

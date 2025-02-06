@@ -2,14 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
-import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.AffiliationParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.DeleteSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.GetSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,21 +59,19 @@ public class AffiliationController {
     }
 
     @GET
-    // PreAuthorize that the InNeighborhood parameter is only used by the Admins
+    @Validated(GetSequence.class)
+    @PreAuthorize("@accessControlHelper.canListAffiliations(#affiliationParams.neighborhood, #affiliationParams.worker)")
     public Response listAffiliations(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURIConstraint String neighborhood,
-            @QueryParam(QueryParameter.FOR_WORKER) @WorkerURIConstraint String worker,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam AffiliationParams affiliationParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long neighborhoodId = extractOptionalFirstId(neighborhood);
-        Long workerId = extractOptionalFirstId(worker);
+        Long neighborhoodId = extractOptionalFirstId(affiliationParams.getNeighborhood());
+        Long workerId = extractOptionalFirstId(affiliationParams.getWorker());
 
         // Content
-        List<Affiliation> affiliations = nws.getAffiliations(neighborhoodId, workerId, page, size);
+        List<Affiliation> affiliations = nws.getAffiliations(neighborhoodId, workerId, affiliationParams.getPage(), affiliationParams.getSize());
         String affiliationsHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a "find"
@@ -101,9 +98,9 @@ public class AffiliationController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.AFFILIATIONS),
-                nws.calculateAffiliationPages(neighborhoodId, workerId, size),
-                page,
-                size
+                nws.calculateAffiliationPages(neighborhoodId, workerId, affiliationParams.getSize()),
+                affiliationParams.getPage(),
+                affiliationParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {
@@ -117,6 +114,7 @@ public class AffiliationController {
     @POST
     @Validated(CreateSequence.class)
     @Secured({UserRole.WORKER, UserRole.SUPER_ADMINISTRATOR})
+    @PreAuthorize("@accessControlHelper.canCreateAffiliation(#createForm.neighborhood, #createForm.worker, #createForm.workerRole)")
     public Response createAffiliation(
             @Valid @NotNull AffiliationDto createForm
     ) {
@@ -135,17 +133,16 @@ public class AffiliationController {
     }
 
     @PATCH
-    @PreAuthorize("@pathAccessControlHelper.canUpdateAffiliation(#neighborhood)")
+    @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#affiliationParams.neighborhood, #affiliationParams.worker, #updateForm.workerRole)")
     @Validated(UpdateSequence.class)
     public Response updateAffiliation(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURIConstraint String neighborhood,
-            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURIConstraint String worker,
+            @Valid @BeanParam AffiliationParams affiliationParams,
             @Valid @NotNull AffiliationDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(extractFirstId(neighborhood), extractFirstId(worker), extractFirstId(updateForm.getWorkerRole()));
+        final Affiliation updatedAffiliation = nws.updateAffiliation(extractFirstId(affiliationParams.getNeighborhood()), extractFirstId(affiliationParams.getWorker()), extractFirstId(updateForm.getWorkerRole()));
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
@@ -154,15 +151,15 @@ public class AffiliationController {
     }
 
     @DELETE
-    @PreAuthorize("@pathAccessControlHelper.canDeleteAffiliation(#worker)")
+    @PreAuthorize("@accessControlHelper.canDeleteAffiliation(#affiliationParams.neighborhood, #affiliationParams.worker)")
+    @Validated(DeleteSequence.class)
     public Response deleteAffiliation(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NotNull @NeighborhoodURIConstraint String neighborhood,
-            @QueryParam(QueryParameter.FOR_WORKER) @NotNull @WorkerURIConstraint String worker
+            @Valid @BeanParam AffiliationParams affiliationParams
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
-        if (nws.deleteAffiliation(extractFirstId(neighborhood), extractFirstId(worker)))
+        if (nws.deleteAffiliation(extractFirstId(affiliationParams.getNeighborhood()), extractFirstId(affiliationParams.getWorker())))
             return Response.noContent()
                     .build();
 

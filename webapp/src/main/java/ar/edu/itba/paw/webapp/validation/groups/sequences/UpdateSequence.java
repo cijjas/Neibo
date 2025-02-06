@@ -1,12 +1,11 @@
 package ar.edu.itba.paw.webapp.validation.groups.sequences;
 
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
+import ar.edu.itba.paw.webapp.validation.groups.OnUpdate;
 import ar.edu.itba.paw.webapp.validation.groups.Specific;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
 
 import javax.validation.GroupSequence;
+import javax.validation.groups.Default;
 
-@GroupSequence({Basic.class, URI.class, Specific.class, Authorization.class})
+@GroupSequence({OnUpdate.class, Default.class, Specific.class})
 public interface UpdateSequence {
 }

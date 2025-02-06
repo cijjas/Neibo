@@ -9,28 +9,22 @@ describe('NotFoundPageComponent', () => {
   let component: NotFoundPageComponent;
   let fixture: ComponentFixture<NotFoundPageComponent>;
 
-  // Provide a fake ActivatedRoute that emits an empty queryParams object.
   const fakeActivatedRoute = { queryParams: of({}) };
 
-  // Spy on Router.navigate.
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-  // Fake TranslateService that returns the key passed to instant().
   const fakeTranslateService = { instant: (key: string) => key };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      // Declare the component.
       declarations: [NotFoundPageComponent],
       providers: [
         { provide: ActivatedRoute, useValue: fakeActivatedRoute },
         { provide: Router, useValue: routerSpy },
         { provide: TranslateService, useValue: fakeTranslateService },
       ],
-      // Use NO_ERRORS_SCHEMA to ignore other unknown elements.
       schemas: [NO_ERRORS_SCHEMA],
     })
-      // Override the component template to bypass the translate pipe.
       .overrideTemplate(NotFoundPageComponent, `<div>Dummy Template</div>`)
       .compileComponents();
   }));
@@ -38,7 +32,7 @@ describe('NotFoundPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(NotFoundPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // triggers ngOnInit
+    fixture.detectChanges(); 
   });
 
   it('should create and initialize with default error code and message', () => {

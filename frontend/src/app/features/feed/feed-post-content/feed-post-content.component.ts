@@ -54,8 +54,6 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    //
-
     this.commentForm = this.fb.group({
       comment: ['', [Validators.required]],
     });

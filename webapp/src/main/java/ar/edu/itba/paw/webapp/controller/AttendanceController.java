@@ -2,16 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
-import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.AttendanceCountDto;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.EventURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.AttendanceParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.DeleteSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,21 +57,18 @@ public class AttendanceController {
     }
 
     @GET
+    @PreAuthorize("@accessControlHelper.canListAttendance(#attendanceParams.event, #attendanceParams.user)")
     public Response listAttendance(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
-            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam AttendanceParams attendanceParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long eventId = extractOptionalSecondId(event);
-        Long userId = extractOptionalFirstId(user);
+        Long eventId = extractOptionalSecondId(attendanceParams.getEvent());
+        Long userId = extractOptionalFirstId(attendanceParams.getUser());
 
         // Content
-        final List<Attendance> attendance = as.getAttendance(neighborhoodId, eventId, userId, size, page);
+        final List<Attendance> attendance = as.getAttendance(attendanceParams.getNeighborhoodId(), eventId, userId, attendanceParams.getPage(), attendanceParams.getSize());
         String attendanceHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -101,10 +95,10 @@ public class AttendanceController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.EVENTS).path(String.valueOf(eventId)).path(Endpoint.ATTENDANCE),
-                as.calculateAttendancePages(neighborhoodId, userId, eventId, size),
-                page,
-                size
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(attendanceParams.getNeighborhoodId())).path(Endpoint.EVENTS).path(String.valueOf(eventId)).path(Endpoint.ATTENDANCE),
+                as.calculateAttendancePages(attendanceParams.getNeighborhoodId(), userId, eventId, attendanceParams.getSize()),
+                attendanceParams.getPage(),
+                attendanceParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto) {
@@ -117,19 +111,18 @@ public class AttendanceController {
 
     @GET
     @Path(Endpoint.COUNT)
+    @PreAuthorize("@accessControlHelper.canCountAttendance(#attendanceParams.event, #attendanceParams.user)")
     public Response countAttendance(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
-            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user
+            @Valid @BeanParam AttendanceParams attendanceParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long eventId = extractOptionalSecondId(event);
-        Long userId = extractOptionalFirstId(user);
+        Long eventId = extractOptionalSecondId(attendanceParams.getEvent());
+        Long userId = extractOptionalFirstId(attendanceParams.getUser());
 
         // Content
-        int count = as.countAttendance(neighborhoodId, eventId, userId);
+        int count = as.countAttendance(attendanceParams.getNeighborhoodId(), eventId, userId);
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -138,7 +131,7 @@ public class AttendanceController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, neighborhoodId, event, user, uriInfo);
+        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, attendanceParams.getNeighborhoodId(), attendanceParams.getEvent(), attendanceParams.getUser(), uriInfo);
 
         return Response.ok(new GenericEntity<AttendanceCountDto>(dto) {
                 })
@@ -149,8 +142,9 @@ public class AttendanceController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateAttendance(#createForm.event, #createForm.user)")
     public Response createAttendance(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
             @Valid @NotNull AttendanceDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -167,16 +161,16 @@ public class AttendanceController {
     }
 
     @DELETE
-    @PreAuthorize("@pathAccessControlHelper.canDeleteAttendance(#user)")
+    @PreAuthorize("@accessControlHelper.canDeleteAttendance(#attendanceParams.event, #attendanceParams.user)")
+    @Validated(DeleteSequence.class)
     public Response deleteAttendance(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_EVENT) @EventURIConstraint String event,
-            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @Valid @BeanParam AttendanceParams attendanceParams
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
-        if (as.deleteAttendance(extractSecondId(event), extractFirstId(user)))
+        if (as.deleteAttendance(extractSecondId(attendanceParams.getEvent()), extractFirstId(attendanceParams.getUser())))
             return Response.noContent()
                     .build();
 

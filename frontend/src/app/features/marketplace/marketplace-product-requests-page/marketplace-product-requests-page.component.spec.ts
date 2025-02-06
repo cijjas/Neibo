@@ -14,14 +14,8 @@ import {
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
-// Create a simple stub for ProductService to avoid HttpClient dependencies.
 class ProductServiceStub {}
 
-////////////////////////////////////////////////////
-// Dummy Data for Testing
-////////////////////////////////////////////////////
-
-// Dummy User
 const dummyUser = {
   email: 'seller@test.com',
   name: 'Seller',
@@ -38,14 +32,12 @@ const dummyUser = {
   self: 'seller1',
 };
 
-// Dummy Department
 const dummyDepartment = {
   self: 'dept1',
   name: 'Dept 1',
   displayName: 'Department 1',
 };
 
-// Dummy Product
 const dummyProduct: Product = {
   name: 'Dummy Product',
   description: 'A dummy product',
@@ -63,7 +55,6 @@ const dummyProduct: Product = {
   self: 'product1',
 };
 
-// Dummy Requests list (with all required properties)
 const dummyRequests: Request[] = [
   {
     message: 'Request 1',
@@ -87,10 +78,6 @@ const dummyRequests: Request[] = [
   },
 ];
 
-////////////////////////////////////////////////////
-// Spec File
-////////////////////////////////////////////////////
-
 describe('MarketplaceProductRequestsPageComponent', () => {
   let component: MarketplaceProductRequestsPageComponent;
   let fixture: ComponentFixture<MarketplaceProductRequestsPageComponent>;
@@ -100,7 +87,6 @@ describe('MarketplaceProductRequestsPageComponent', () => {
   let hateoasLinksServiceSpy: jasmine.SpyObj<HateoasLinksService>;
 
   beforeEach(waitForAsync(() => {
-    // Create spies for dependencies.
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     requestServiceSpy = jasmine.createSpyObj('RequestService', [
       'getRequests',
@@ -110,7 +96,6 @@ describe('MarketplaceProductRequestsPageComponent', () => {
       'getLink',
     ]);
 
-    // Create a stub for ActivatedRoute that provides both data and queryParams.
     activatedRouteStub = {
       data: of({ product: dummyProduct }),
       queryParams: of({ page: '2' }),
@@ -120,12 +105,10 @@ describe('MarketplaceProductRequestsPageComponent', () => {
       },
     } as any as ActivatedRoute;
 
-    // Stub getRequests to return dummy requests including currentPage.
     requestServiceSpy.getRequests.and.returnValue(
       of({ requests: dummyRequests, totalPages: 5, currentPage: 2 }),
     );
 
-    // Stub getLink to return dummy status URLs.
     hateoasLinksServiceSpy.getLink.and.callFake((key: string) => {
       if (key === LinkKey.REQUESTED_REQUEST_STATUS) {
         return 'statusRequested';
@@ -140,7 +123,7 @@ describe('MarketplaceProductRequestsPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [MarketplaceProductRequestsPageComponent],
       imports: [
-        TranslateModule.forRoot(), // Provide the translate pipe
+        TranslateModule.forRoot(), 
       ],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
@@ -149,14 +132,13 @@ describe('MarketplaceProductRequestsPageComponent', () => {
         { provide: HateoasLinksService, useValue: hateoasLinksServiceSpy },
         { provide: ProductService, useClass: ProductServiceStub },
       ],
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements/pipes in template.
+      schemas: [NO_ERRORS_SCHEMA], 
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MarketplaceProductRequestsPageComponent);
     component = fixture.componentInstance;
-    // Set productSelf so that fetchRequests uses the correct product identifier.
     component.productSelf = dummyProduct.self;
     fixture.detectChanges();
   });

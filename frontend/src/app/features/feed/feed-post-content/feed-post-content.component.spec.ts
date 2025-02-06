@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
-// Import types (adjust paths as needed)
 import { Post, Role, LinkKey } from '@shared/index';
 import {
   CommentService,

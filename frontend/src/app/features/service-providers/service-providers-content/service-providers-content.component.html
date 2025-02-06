@@ -1,4 +1,3 @@
-<!-- service-providers-content.component.html -->
 <div class="container">
   <div class="service-card">
     <button
@@ -12,7 +11,6 @@
       {{ "SERVICE-PROVIDERS-CONTENT.EDIT_PROFILE" | translate }}
     </button>
     <div class="card-header">
-      <!-- Background image -->
       <img
         class="back-image"
         [src]="backgroundImageUrl"
@@ -25,12 +23,10 @@
       style="--background-image: url({{ profileImageUrl }})"
     >
       <div class="inner f-c-c-c">
-        <!-- businessName -->
         <div style="font-size: 2em; margin-bottom: 10px" class="c-services">
           <strong>{{ worker?.businessName }}</strong>
         </div>
 
-        <!-- Professions Section -->
         <div
           class="f-r-c-c w-75"
           style="gap: 0.5em; flex-wrap: wrap"
@@ -47,7 +43,6 @@
           </ng-container>
         </div>
 
-        <!-- phone & address -->
         <span class="c-light-text"> {{ worker?.phoneNumber }} </span>
         <span class="c-light-text"> {{ worker?.address }} </span>
 
@@ -56,13 +51,11 @@
           {{ worker?.bio }}
         </p>
 
-        <!-- Show "Edit" if loggedUser is the same user -->
       </div>
     </div>
     <div class="card-footer m-3">
       <div class="inner">
         <div class="c-services">
-          <!-- rating with 2 decimals or '--' -->
           {{
             averageRating && averageRating > 0
               ? (averageRating | number : "1.2-2")

@@ -1,9 +1,7 @@
 <div class="w-100" style="position: relative; z-index: 2">
   <div class="upper-feed-buttons-box w-100">
     <div class="f-r-c-c g-05">
-      <!-- Filters Marketplace -->
       <div class="f-r-s-c filters-marketplace g-05">
-        <!-- Marketplace -->
         <a
           [routerLink]="['/marketplace']"
           class="cool-feed-button rounded marketplace-button"
@@ -13,9 +11,7 @@
           <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.MARKETPLACE" | translate }}</span>
         </a>
 
-        <!-- Buyer and Seller Hub Links -->
         <div class="f-r-s-c sub-filters g-05">
-          <!-- Buyer Hub -->
           <a
             [routerLink]="['/marketplace/buyer-hub', 'requests']"
             class="cool-feed-button rounded marketplace-button"
@@ -25,7 +21,6 @@
             <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.BUYER_DASHBOARD" | translate }}</span>
           </a>
 
-          <!-- Seller Hub -->
           <a
             [routerLink]="['/marketplace/seller-hub', 'listings']"
             class="cool-feed-button rounded marketplace-button"
@@ -37,7 +32,6 @@
         </div>
       </div>
 
-      <!-- Department Filters -->
       <div *ngIf="channel === 'Marketplace'">
         <div class="custom-dropdown">
           <div class="dropdown-toggle" id="department-toggle">
@@ -63,7 +57,6 @@
       </div>
     </div>
 
-    <!-- Create Listing Button -->
     <a
       [routerLink]="['/marketplace/products/new']"
       class="cool-feed-button p-3 marketplace-button square font-size-16 font-weight-bold"

@@ -5,7 +5,6 @@ import { of } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
 
-// Import service types (adjust paths as needed)
 import { UserService, User, Role, LinkKey } from '@shared/index';
 import {
   ImageService,
@@ -17,9 +16,7 @@ import {
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-// (Optional) Define a dummy User interface if not imported.
 export interface DummyUser extends User {
-  // This example uses only the properties needed for this test.
   darkMode: boolean;
   language: string;
   image: string;
@@ -35,7 +32,6 @@ export interface DummyUser extends User {
   self: string;
 }
 
-// Fake translate pipe to satisfy usage of "| translate" in the template.
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {
@@ -47,10 +43,9 @@ describe('UserProfilePageComponent - Initialization', () => {
   let component: UserProfilePageComponent;
   let fixture: ComponentFixture<UserProfilePageComponent>;
 
-  // Dummy user for initialization.
   const dummyUser: DummyUser = {
     darkMode: true,
-    language: 'spanish_dummy', // will be compared against Spanish key.
+    language: 'spanish_dummy', 
     image: 'dummy_image',
     email: 'dummy@example.com',
     name: 'Dummy',
@@ -64,7 +59,6 @@ describe('UserProfilePageComponent - Initialization', () => {
     self: 'dummy_self',
   };
 
-  // Stub userSessionService to return the dummy user and a WORKER role.
   const userSessionServiceSpy = jasmine.createSpyObj('UserSessionService', [
     'getCurrentUser',
     'getCurrentRole',
@@ -72,13 +66,11 @@ describe('UserProfilePageComponent - Initialization', () => {
   userSessionServiceSpy.getCurrentUser.and.returnValue(of(dummyUser));
   userSessionServiceSpy.getCurrentRole.and.returnValue(Role.WORKER);
 
-  // Stub imageService to return a dummy safe URL.
   const imageServiceSpy = jasmine.createSpyObj('ImageService', ['fetchImage']);
   imageServiceSpy.fetchImage.and.returnValue(
     of({ safeUrl: 'dummy_safe_url' as SafeUrl }),
   );
 
-  // Stub link service to return a dummy value for the Spanish language key.
   const linkServiceSpy = jasmine.createSpyObj('HateoasLinksService', [
     'getLink',
   ]);
@@ -89,13 +81,11 @@ describe('UserProfilePageComponent - Initialization', () => {
     return '';
   });
 
-  // Provide dummy objects for the other services.
   const userServiceSpy = {};
   const authServiceSpy = {};
   const toastServiceSpy = jasmine.createSpyObj('ToastService', ['showToast']);
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-  // Provide a simple fake TranslateService.
   const fakeTranslateService = { instant: (key: string) => key };
 
   beforeEach(waitForAsync(() => {
@@ -122,20 +112,12 @@ describe('UserProfilePageComponent - Initialization', () => {
   });
 
   it('should initialize with dummy user data, load profile image, and set theme based on role', () => {
-    // Verify that currentUser is set to the dummy user.
     expect(component.currentUser).toEqual(dummyUser);
-    // darkMode should be true.
     expect(component.darkMode).toBeTrue();
-    // Since dummyUser.language equals 'spanish_dummy' and linkServiceSpy.getLink returns 'spanish_dummy' for the Spanish key,
-    // the language should be set to 'es'.
     expect(component.language).toEqual('es');
-    // imageService.fetchImage should have been called with dummyUser.image.
     expect(imageServiceSpy.fetchImage).toHaveBeenCalledWith('dummy_image');
-    // The profileImageSafeUrl should be set.
     expect(component.profileImageSafeUrl).toEqual('dummy_safe_url' as SafeUrl);
-    // Since the role is WORKER, the theme should be 'services'.
     expect(component.theme).toEqual('services');
-    // Also, the environment property should match.
     expect(component.environment).toEqual(environment);
   });
 });

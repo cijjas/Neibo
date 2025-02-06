@@ -22,7 +22,6 @@ import {
 import { ImageService, ToastService, HateoasLinksService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 
-// Create a complete dummy seller that satisfies the User interface.
 const dummySeller = {
   email: 'seller@example.com',
   name: 'Seller',
@@ -33,19 +32,17 @@ const dummySeller = {
   creationDate: new Date(),
   language: 'en',
   userRole: 'seller',
-  userRoleEnum: null, // Replace with an appropriate enum value if needed.
+  userRoleEnum: null, 
   userRoleDisplay: 'Seller',
   image: 'seller.jpg',
   self: 'sellerSelf',
 };
 
-// Dummy departments with the required displayName property.
 const dummyDepartments: Department[] = [
   { self: 'dept1', name: 'Dept 1', displayName: 'Department 1' },
   { self: 'dept2', name: 'Dept 2', displayName: 'Department 2' },
 ];
 
-// Dummy product with a complete seller.
 const dummyProduct: Product = {
   name: 'Test Product',
   description: 'Test Description',
@@ -63,7 +60,6 @@ const dummyProduct: Product = {
   self: 'productSelf',
 };
 
-// Updated translate service stub with the missing properties.
 const translateServiceStub = {
   instant: (key: string) => key,
   get: (key: string) => of(key),
@@ -76,7 +72,6 @@ describe('MarketplaceProductEditPageComponent', () => {
   let component: MarketplaceProductEditPageComponent;
   let fixture: ComponentFixture<MarketplaceProductEditPageComponent>;
 
-  // Create spies/stubs for the injected services.
   const departmentServiceSpy = jasmine.createSpyObj('DepartmentService', [
     'getDepartments',
   ]);
@@ -90,7 +85,6 @@ describe('MarketplaceProductEditPageComponent', () => {
   ]);
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-  // Fake ActivatedRoute with product data.
   const activatedRouteStub = {
     data: of({ product: dummyProduct }),
   };
@@ -100,7 +94,7 @@ describe('MarketplaceProductEditPageComponent', () => {
       declarations: [MarketplaceProductEditPageComponent],
       imports: [
         ReactiveFormsModule,
-        TranslateModule.forRoot(), // Provides the translate pipe.
+        TranslateModule.forRoot(), 
       ],
       providers: [
         FormBuilder,
@@ -118,9 +112,7 @@ describe('MarketplaceProductEditPageComponent', () => {
   }));
 
   beforeEach(() => {
-    // Stub the department list.
     departmentServiceSpy.getDepartments.and.returnValue(of(dummyDepartments));
-    // Return a dummy user self link.
     hateoasLinksServiceSpy.getLink.and.callFake((key: string) => {
       if (key === LinkKey.USER_SELF) {
         return 'userSelf';
@@ -130,15 +122,13 @@ describe('MarketplaceProductEditPageComponent', () => {
 
     fixture = TestBed.createComponent(MarketplaceProductEditPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // triggers ngOnInit
+    fixture.detectChanges(); 
   });
 
   // Test 1: Component initialization and form population.
   it('should create the component and populate the form on init', () => {
     expect(component).toBeTruthy();
-    // Verify department list is set.
     expect(component.departmentList).toEqual(dummyDepartments);
-    // Verify product is set and the form is patched.
     expect(component.product).toEqual(dummyProduct);
     const formValues = component.listingForm.value;
     expect(formValues.title).toEqual(dummyProduct.name);
@@ -149,7 +139,6 @@ describe('MarketplaceProductEditPageComponent', () => {
     expect(formValues.departmentId).toEqual(dummyProduct.department.self);
     expect(formValues.used).toEqual(dummyProduct.used);
     expect(formValues.quantity).toEqual(dummyProduct.stock);
-    // Verify that only non-null image URLs were preloaded.
     expect(component.images.length).toEqual(2);
     expect(component.images[0].preview).toEqual(dummyProduct.firstImage);
     expect(component.images[1].preview).toEqual(dummyProduct.secondImage);
@@ -157,20 +146,16 @@ describe('MarketplaceProductEditPageComponent', () => {
 
   // Test 2: onFileChange should add a new image (simulate file upload).
   it('should add new image on file change', fakeAsync(() => {
-    // Create a proper File instance.
     const dummyFile = new File(['dummy content'], 'test.png', {
       type: 'image/png',
     });
 
-    // Create a fake file input element.
     const inputElement = document.createElement('input');
     inputElement.type = 'file';
-    // Use DataTransfer to create a valid FileList.
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(dummyFile);
-    inputElement.files = dataTransfer.files; // Now inputElement.files is a proper FileList
+    inputElement.files = dataTransfer.files; 
 
-    // Override FileReader with a fake that immediately triggers onload.
     const dummyResult = 'data:image/png;base64,dummy';
     class FakeFileReader {
       public onload: any;
@@ -180,32 +165,25 @@ describe('MarketplaceProductEditPageComponent', () => {
     }
     spyOn(window as any, 'FileReader').and.returnValue(new FakeFileReader());
 
-    // Remember initial images count (from populateForm, expect 2 preloaded).
     const initialLength = component.images.length;
-    // Create an event and call onFileChange.
     const event = { target: inputElement } as unknown as Event;
     component.onFileChange(event);
     tick();
 
-    // Since there were 2 images already and max is 3, one new image should be added.
     expect(component.images.length).toEqual(initialLength + 1);
     expect(component.images[initialLength].preview).toEqual(dummyResult);
   }));
 
   // Test 3: removeImage should remove an image.
   it('should remove an image', () => {
-    // Initially, images array is preloaded with 2 images.
     expect(component.images.length).toBe(2);
-    // Remove the first image.
     component.removeImage(0);
     expect(component.images.length).toBe(1);
-    // Verify that the remaining image is the second one.
     expect(component.images[0].preview).toEqual(dummyProduct.secondImage);
   });
 
   // Test 4: onSubmit should set formErrors when form is valid but no images are present.
   it('should set formErrors on submit when form is valid but no images are present', () => {
-    // Patch form values with valid data.
     component.listingForm.patchValue({
       title: 'Valid Title',
       price: '$100.00',
@@ -214,9 +192,7 @@ describe('MarketplaceProductEditPageComponent', () => {
       used: false,
       quantity: 5,
     });
-    // Ensure product is loaded.
     component.product = dummyProduct;
-    // Clear the images array to simulate missing images.
     component.images = [];
 
     component.onSubmit();

@@ -5,15 +5,11 @@ import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.PostStatusDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
@@ -71,12 +67,12 @@ public class PostStatusController {
     @GET
     @Path("{" + PathParameter.POST_STATUS_ID + "}")
     public Response findPostStatus(
-            @PathParam(PathParameter.POST_STATUS_ID) @GenericIdConstraint Long postStatusId
+            @PathParam(PathParameter.POST_STATUS_ID) Long postStatusId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        PostStatus postStatus = PostStatus.fromId(postStatusId);
+        PostStatus postStatus = PostStatus.fromId(postStatusId).orElseThrow(NotFoundException::new);
         String postStatusHashCode = String.valueOf(postStatus.hashCode());
 
         // Cache Control

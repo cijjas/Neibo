@@ -22,7 +22,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   departmentList: Department[] = [];
   product: Product | null = null;
 
-  // For demonstration, we assume these are populated after loading product data
   selectedDepartmentSelf: string | null = null;
   selectedQuantity: number = 1;
 
@@ -55,7 +54,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   formErrors: string | null = null;
   images: { file: File; preview: string }[] = [];
 
-  showImageUpload: boolean = true; // Toggle if needed
+  showImageUpload: boolean = true; 
 
   constructor(
     private fb: FormBuilder,
@@ -88,7 +87,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   }
 
   populateForm(prod: Product): void {
-    // Set form values
     this.listingForm.patchValue({
       title: prod.name,
       price: '$' + Number(prod.price).toFixed(2),
@@ -98,13 +96,10 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       quantity: prod.stock,
     });
 
-    // Prefill department
     this.selectedDepartmentSelf = prod.department.self;
 
-    // Prefill quantity
     this.selectedQuantity = prod.stock;
 
-    // Prefill images if URLs exist
     this.images = [];
 
     const imageUrls = [
@@ -122,10 +117,8 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
 
-    // Calculate the number of remaining slots for images
     const remainingSlots = 3 - this.images.length;
 
-    // Only allow uploading up to the remaining number of slots
     const filesToAdd = Array.from(input.files).slice(0, remainingSlots);
 
     for (let i = 0; i < filesToAdd.length; i++) {
@@ -135,12 +128,11 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.images.push({ file, preview: e.target.result });
-        this.clearImageError(); // Clear error if images are selected
+        this.clearImageError(); 
       };
       reader.readAsDataURL(file);
     }
 
-    // Clear the file input to allow selecting the same file again if needed
     input.value = '';
   }
 
@@ -150,7 +142,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
 
   removeImage(index: number): void {
     this.images.splice(index, 1);
-    this.clearImageError(); // Clear error if there are still images left
+    this.clearImageError(); 
   }
 
   clearImageError(): void {
@@ -169,7 +161,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     let val = this.listingForm.get('price')?.value || '';
     if (!val) return;
 
-    // Remove all non-digit and non-dot characters except leading $
     val = val.replace(/[^0-9.]/g, '');
 
     let floatVal = parseFloat(val);
@@ -201,7 +192,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       return;
     }
 
-    // Check if at least one image exists
     if (this.images.length === 0) {
       this.formErrors = this.translate.instant(
         'MARKETPLACE-PRODUCT-EDIT-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT',
@@ -209,7 +199,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       return;
     }
 
-    // Extract form values
     const rawValue = this.listingForm.value;
     const userSelf = this.linkService.getLink(LinkKey.USER_SELF);
 
@@ -224,18 +213,15 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       images: [],
     };
 
-    // Separate new vs. existing images
     const newImageFiles = this.images.filter(img => !!img.file);
     const existingImageUrls = this.images
       .filter(img => !img.file)
       .map(img => img.preview);
 
-    // Build an observable that uploads only if there are new images
     const imageUploadObservables = newImageFiles.map(img =>
       this.imageService.createImage(img.file),
     );
 
-    // Use forkJoin if there's something to upload; otherwise emit []
     const upload$ = imageUploadObservables.length
       ? forkJoin(imageUploadObservables)
       : of<string[]>([]);
@@ -243,7 +229,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     upload$
       .pipe(
         map(newImageUrls => {
-          // Combine existing + newly uploaded
           productData.images = [...existingImageUrls, ...newImageUrls];
           return productData;
         }),
@@ -271,7 +256,6 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   }
 
   goBack(): void {
-    // Navigate back one step in the history or to a known route
     this.router.navigate(['/marketplace/products', this.product?.self]);
   }
 }

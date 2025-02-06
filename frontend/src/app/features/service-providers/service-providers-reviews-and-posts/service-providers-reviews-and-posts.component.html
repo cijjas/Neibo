@@ -1,5 +1,5 @@
 <div class="w-100 tabbed-box container">
-  <!-- Tabs -->
+
   <input
     id="tab1"
     type="radio"
@@ -18,10 +18,8 @@
   />
   <label for="tab2">{{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.POSTS" | translate }}</label>
 
-  <!-- Reviews Tab Content -->
   <section id="content1" *ngIf="selectedTab === 'reviews'">
     <div class="f-c-c-c g-0 w-100">
-      <!-- Only show the "Create Review" button if user is not a WORKER -->
       <button
         class="cool-action-button w-100 services-button mb-3"
         style="width: 200px"
@@ -74,7 +72,6 @@
     </div>
   </section>
 
-  <!-- Posts Tab Content -->
   <section id="content2" *ngIf="selectedTab === 'posts'">
     <div class="f-c-c-c g-0 w-100">
       <a

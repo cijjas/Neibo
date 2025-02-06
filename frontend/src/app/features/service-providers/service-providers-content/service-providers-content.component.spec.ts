@@ -14,10 +14,8 @@ import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { ServiceProvidersContentComponent } from './service-providers-content.component';
 import { environment } from 'environments/environment';
 
-// Dummy environment override for testing.
 const fakeEnvironment = { deployUrl: 'http://test.com/' };
 
-// Dummy data for User, Profession, and Worker.
 const dummyUser = {
   email: 'user@test.com',
   name: 'John',
@@ -57,9 +55,6 @@ const dummyWorker = {
   self: 'worker1',
 };
 
-//
-// Fake Translate Pipe (if your template uses it)
-//
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {
@@ -67,9 +62,6 @@ class FakeTranslatePipe implements PipeTransform {
   }
 }
 
-//
-// Create a complete dummy ActivatedRouteSnapshot:
-//
 const dummyActivatedRouteSnapshot: ActivatedRouteSnapshot = {
   url: [] as UrlSegment[],
   params: {} as Params,
@@ -90,9 +82,6 @@ const dummyActivatedRouteSnapshot: ActivatedRouteSnapshot = {
   pathFromRoot: [],
 };
 
-//
-// Create a full dummy ActivatedRoute using the snapshot:
-//
 const activatedRouteStub: ActivatedRoute = {
   snapshot: dummyActivatedRouteSnapshot,
   url: of([]),
@@ -128,7 +117,7 @@ describe('ServiceProvidersContentComponent', () => {
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
       ],
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements/pipes.
+      schemas: [NO_ERRORS_SCHEMA], 
     }).compileComponents();
   });
 
@@ -142,11 +131,9 @@ describe('ServiceProvidersContentComponent', () => {
 
   // Test 1: Getter behavior for background and profile image URLs.
   it('should return correct background and profile image URLs', () => {
-    // When worker has valid images.
     expect(component.backgroundImageUrl).toEqual(dummyWorker.backgroundImage);
     expect(component.profileImageUrl).toEqual(dummyWorker.user.image);
 
-    // Test fallback when images are missing.
     component.worker = {
       ...dummyWorker,
       backgroundImage: '',

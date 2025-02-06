@@ -23,7 +23,7 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private imageService: ImageService,
     private linkService: HateoasLinksService,
-    private router: Router, // Inject Router to handle navigation
+    private router: Router, 
   ) { }
 
   ngOnInit(): void {

@@ -6,7 +6,6 @@
 
     <div id="center-grid" class="column-center">
       <div style="position: relative">
-        <!-- Upper Marketplace Buttons Component -->
         <app-marketplace-control-bar [channel]="channel">
         </app-marketplace-control-bar>
 
@@ -16,7 +15,6 @@
           </div>
         </div>
 
-        <!-- No products found (once loaded) -->
         <div
           *ngIf="!isLoading && productList && productList.length === 0"
           class="cool-static-container w-100"
@@ -27,7 +25,6 @@
           </div>
         </div>
 
-        <!-- If products exist -->
         <div
           *ngIf="productList && productList.length > 0"
           class="row product-grid-row"
@@ -38,7 +35,6 @@
           ></app-marketplace-product-preview>
         </div>
 
-        <!-- Paginator -->
         <app-paginator
           [totalPages]="totalPages"
           [currentPage]="page"
@@ -50,6 +46,5 @@
     </div>
   </div>
 
-  <!-- Footer component if you have it -->
 </div>
 <app-wave-footer [theme]="'marketplace'"></app-wave-footer>

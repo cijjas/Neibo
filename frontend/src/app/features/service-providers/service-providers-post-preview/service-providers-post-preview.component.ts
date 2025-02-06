@@ -14,11 +14,9 @@ export class ServiceProvidersPostPreviewComponent implements OnInit, OnDestroy {
   private timer: any;
 
   ngOnInit(): void {
-    // Initialize the human-readable date
     this.updateHumanReadableDate();
 
-    // Set a timer to update the date every minute
-    this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); // 1-minute interval
+    this.timer = setInterval(() => this.updateHumanReadableDate(), 60000); 
   }
 
   private updateHumanReadableDate(): void {
@@ -28,7 +26,6 @@ export class ServiceProvidersPostPreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clear the timer to avoid memory leaks
     clearInterval(this.timer);
   }
 }

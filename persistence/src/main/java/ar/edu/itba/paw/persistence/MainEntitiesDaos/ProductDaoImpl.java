@@ -94,7 +94,7 @@ public class ProductDaoImpl implements ProductDao {
                         "OR " +
                         "p.sellerid = :userId ) ");
             } else {
-                switch (ProductStatus.fromId(productStatusId)) {
+                switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty optional
                     case BOUGHT:
                         nativeQuery.append("AND (p.productId IN (" +
                                 "SELECT DISTINCT r.productid FROM products_users_requests r " +
@@ -111,7 +111,7 @@ public class ProductDaoImpl implements ProductDao {
                 }
             }
         } else if (productStatusId != null) {
-            switch (ProductStatus.fromId(productStatusId)) {
+            switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty optional
                 case BOUGHT:
                 case SOLD:
                     nativeQuery.append("AND (p.productId IN (" +
@@ -165,7 +165,7 @@ public class ProductDaoImpl implements ProductDao {
                         "OR " +
                         "p.sellerid = :userId ) ");
             } else {
-                switch (ProductStatus.fromId(productStatusId)) {
+                switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty optional
                     case BOUGHT:
                         nativeQuery.append("AND (p.productId IN (" +
                                 "SELECT DISTINCT r.productid FROM products_users_requests r " +
@@ -182,7 +182,7 @@ public class ProductDaoImpl implements ProductDao {
                 }
             }
         } else if (productStatusId != null) {
-            switch (ProductStatus.fromId(productStatusId)) {
+            switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty Optional
                 case BOUGHT:
                 case SOLD:
                     nativeQuery.append("AND (p.productId IN (" +

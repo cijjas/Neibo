@@ -1,22 +1,17 @@
 <div class="container">
   <div class="row init">
-    <!-- Left Column -->
     <div class="column-left">
       <app-sidebar></app-sidebar>
     </div>
 
-    <!-- Center Grid -->
     <div id="center-grid" class="column-center ps-3">
-      <!-- Upper marketplace buttons -->
       <app-marketplace-control-bar
         [channel]="'SellerHub'"
       ></app-marketplace-control-bar>
 
       <div class="w-100 f-c-c-c g-05 cool-static-container">
-        <!-- Tabs row (similar to JSP structure) -->
         <div class="f-c-s-s w-100">
           <div class="f-r-c-c pt-2 pb-2">
-            <!-- My Listings button -->
             <a
               [routerLink]="['/marketplace/seller-hub', 'listings']"
               class="cool-action-button rounded marketplace-button font-weight-bold"
@@ -26,7 +21,6 @@
               <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.MY_LISTINGS" | translate }}</span>
             </a>
 
-            <!-- My Sales button -->
             <a
               [routerLink]="['/marketplace/seller-hub', 'sales']"
               class="cool-action-button rounded marketplace-button font-weight-bold"
@@ -39,17 +33,12 @@
         </div>
         <div class="divider mb-3"></div>
 
-        <!-- ============================= -->
-        <!-- LISTINGS SECTION (isListings) -->
-        <!-- ============================= -->
         <ng-container *ngIf="isListings; else showSales">
-          <!-- If no listings -->
           <div class="no-posts-found" *ngIf="listings.length === 0">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
             {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_NEW_REQUESTS" | translate }}
           </div>
 
-          <!-- Otherwise, show all listings -->
           <div class="w-100 f-c-c-c g-1" *ngIf="listings.length > 0">
             <div
               class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-3"
@@ -71,7 +60,6 @@
                   </div>
 
                   <div class="f-c-s-s w-100 p-4">
-                    <!-- Sold or In Stock -->
                     <div class="f-r-sb-c w-100 g-0">
                       <span class="font-weight-bold font-size-16">{{
                         product.name
@@ -89,9 +77,7 @@
                       </ng-template>
                     </div>
 
-                    <!-- Price & Department -->
                     <div class="f-r-sb-c g-0 w-100">
-                      <!-- Price block -->
                       <div class="f-r-c-c g-0">
                         <span class="price font-size-20 font-weight-normal">
                           {{
@@ -141,10 +127,8 @@
                       </div>
                     </div>
 
-                    <!-- Actions row -->
                     <div class="f-r-sb-c w-100">
                       <div class="f-r-sb-c g-05 w-50">
-                        <!-- View listing -->
                         <a
                           class="cool-button small-a marketplace-button square-radius w-50 font-weight-bold"
                           (click)="goToListingDetail(product.self)"
@@ -154,7 +138,6 @@
                           ></i>
                           {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.VIEW_LISTING" | translate }}
                         </a>
-                        <!-- Requests -->
                         <a
                           class="cool-button small-a marketplace-button square-radius w-50 font-weight-bold"
                           (click)="goToRequests(product.self)"
@@ -170,7 +153,6 @@
             </div>
           </div>
 
-          <!-- If totalPages > 1 then bottom paginator -->
           <app-paginator
             *ngIf="totalPages > 1"
             [totalPages]="totalPages"
@@ -181,23 +163,17 @@
           </app-paginator>
         </ng-container>
 
-        <!-- ========================= -->
-        <!-- SALES SECTION (isSales)  -->
-        <!-- ========================= -->
         <ng-template #showSales>
-          <!-- If no sales found -->
           <div class="no-posts-found" *ngIf="sales.length === 0">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
             {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.PURCHASES_NOT_FOUND" | translate }}
           </div>
 
-          <!-- Otherwise, show all sales -->
           <div class="w-100 f-c-c-c g-1" *ngIf="sales.length > 0">
             <div
               class="cool-static-container w-100 f-c-s-s g-0 p-0"
               *ngFor="let purchase of sales"
             >
-              <!-- Top row: date/time -->
               <div
                 class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2"
                 style="padding-left: 1em; padding-right: 1em"
@@ -207,7 +183,6 @@
               </div>
               <div class="divider m-0"></div>
 
-              <!-- Purchase details -->
               <div class="container">
                 <div class="f-r-c-c w-100 g-1">
                   <div class="ps-0">
@@ -248,11 +223,9 @@
                       </div>
                     </div>
 
-                    <!-- Quantity -->
                     <div class="f-r-c-c font-weight-normal">
                       {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.QUANTITY" | translate }}: {{ purchase.unitsRequested }}
                     </div>
-                    <!-- Buyer info -->
                     <div class="f-r-c-c g-05">
                       <span class="font-weight-normal">{{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.BOUGHT_BY" | translate }}</span>
                       <span style="color: var(--lila)">
@@ -262,7 +235,6 @@
                       </span>
                     </div>
 
-                    <!-- Price -->
                     <div class="f-r-c-c g-0">
                       <span class="price font-size-20 font-weight-normal">
                         {{
@@ -295,7 +267,6 @@
               </div>
             </div>
 
-            <!-- If totalPages > 1 then bottom paginator -->
             <app-paginator
               [totalPages]="totalPages"
               [currentPage]="page"
@@ -310,5 +281,4 @@
   </div>
 </div>
 
-<!-- Footer -->
 <app-wave-footer [theme]="'marketplace'"></app-wave-footer>

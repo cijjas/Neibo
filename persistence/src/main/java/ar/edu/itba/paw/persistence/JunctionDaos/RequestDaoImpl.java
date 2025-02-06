@@ -89,7 +89,7 @@ public class RequestDaoImpl implements RequestDao {
         }
 
         if (typeId != null && userId != null) {
-            TransactionType type = TransactionType.fromId(typeId);
+            TransactionType type = TransactionType.fromId(typeId).get(); // Controller layer guarantees non-empty Optional
             switch (type) {
                 case PURCHASE:
                     queryBuilder.append("AND r.user.userId = :userId ");
@@ -106,7 +106,7 @@ public class RequestDaoImpl implements RequestDao {
         // Set parameters for the query
         idQuery.setParameter("neighborhoodId", neighborhoodId);
         if (statusId != null) {
-            idQuery.setParameter("status", RequestStatus.fromId(statusId));
+            idQuery.setParameter("status", RequestStatus.fromId(statusId).get()); // Controller layer guarantees non-empty Optional
         }
         if (productId != null) {
             idQuery.setParameter("productId", productId);
@@ -148,7 +148,7 @@ public class RequestDaoImpl implements RequestDao {
         }
 
         if (typeId != null && userId != null) {
-            TransactionType type = TransactionType.fromId(typeId);
+            TransactionType type = TransactionType.fromId(typeId).get(); // Controller layer guarantees non-empty Optional
             switch (type) {
                 case PURCHASE:
                     queryBuilder.append("AND r.user.userId = :userId ");
@@ -165,7 +165,7 @@ public class RequestDaoImpl implements RequestDao {
         // Set parameters for the query
         idQuery.setParameter("neighborhoodId", neighborhoodId);
         if (statusId != null) {
-            idQuery.setParameter("status", RequestStatus.fromId(statusId));
+            idQuery.setParameter("status", RequestStatus.fromId(statusId).get()); // Controller layer guarantees non-empty Optional
         }
         if (productId != null) {
             idQuery.setParameter("productId", productId);

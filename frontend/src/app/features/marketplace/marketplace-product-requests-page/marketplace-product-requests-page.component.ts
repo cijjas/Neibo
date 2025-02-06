@@ -17,26 +17,21 @@ import { HateoasLinksService } from '@core/index';
 export class MarketplaceProductRequestsPageComponent implements OnInit {
   channel: string = 'SellerHub';
 
-  // Product & requests
   productSelf: string;
   product?: Product;
   requestList: Request[] = [];
 
-  // Dialog state (instead of showMarkAsSoldDialog boolean)
   markAsSoldDialogVisible: boolean = false;
   selectedUnitsRequested: number | undefined;
 
-  // For the “Respond to Request”/Mark as sold
   selectedBuyerId?: string;
   selectedRequestId?: string;
-  selectedQuantity: number = 1; // default
-  selectedRequesterName: string | undefined; // Holds the selected requester's name
+  selectedQuantity: number = 1; 
+  selectedRequesterName: string | undefined; 
 
-  // Pagination
   page: number = 1;
   totalPages: number = 1;
 
-  // Loader
   showLoader: boolean = false;
 
   constructor(
@@ -57,7 +52,6 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
       this.fetchRequests();
     });
 
-    // Watch for query params (pagination)
     this.route.queryParams.subscribe(params => {
       this.page = params['page'] ? +params['page'] : 1;
       this.fetchRequests();
@@ -85,7 +79,6 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
   }
 
   // ============ Dialog Logic ============
-  // Opening the dialog sets the boolean to true
   openMarkAsSoldDialog(
     buyerId?: string,
     requestId?: string,
@@ -99,14 +92,11 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     this.markAsSoldDialogVisible = true;
   }
 
-  // Closing the dialog sets the boolean to false
   closeMarkAsSoldDialog(): void {
     this.markAsSoldDialogVisible = false;
   }
 
-  // Submitting the dialog
   submitMarkAsSold(): void {
-    // Show loader
     this.showLoader = true;
 
     let requestStatusUrl: string = this.linkService.getLink(
@@ -148,7 +138,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
         next: () => {
           this.showLoader = false;
           this.closeMarkAsSoldDialog();
-          this.fetchRequests(); // Refresh the request list
+          this.fetchRequests(); 
         },
         error: err => {
           this.showLoader = false;

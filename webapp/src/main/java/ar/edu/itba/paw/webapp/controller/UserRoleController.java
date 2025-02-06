@@ -5,15 +5,11 @@ import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.UserRoleDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
@@ -71,12 +67,12 @@ public class UserRoleController {
     @GET
     @Path("{" + PathParameter.USER_ROLE_ID + "}")
     public Response findUserRole(
-            @PathParam(PathParameter.USER_ROLE_ID) @GenericIdConstraint Long userRoleId
+            @PathParam(PathParameter.USER_ROLE_ID) Long userRoleId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        UserRole userRole = UserRole.fromId(userRoleId);
+        UserRole userRole = UserRole.fromId(userRoleId).orElseThrow(NotFoundException::new);
         String userRoleHashCode = String.valueOf(userRole.hashCode());
 
         // Cache Control

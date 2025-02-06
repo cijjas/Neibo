@@ -3,6 +3,7 @@ package ar.edu.itba.paw.enums;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum UserRole {
     ADMINISTRATOR(1),
@@ -22,10 +23,9 @@ public enum UserRole {
         return id;
     }
 
-    public static UserRole fromId(long id) {
+    public static Optional<UserRole> fromId(long id) {
         return Arrays.stream(values())
-                .filter(ur -> ur.getId() == id)
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+                .filter(us -> us.getId() == id)
+                .findFirst();
     }
 }

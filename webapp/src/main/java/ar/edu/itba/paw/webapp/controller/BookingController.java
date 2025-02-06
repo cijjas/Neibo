@@ -2,15 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.AmenityURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.BookingParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,21 +52,18 @@ public class BookingController {
     }
 
     @GET
+    @PreAuthorize("@accessControlHelper.canListBookings(#bookingParams.user, #bookingParams.amenity)")
     public Response listBookings(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.BOOKED_BY) @UserURIConstraint String user,
-            @QueryParam(QueryParameter.FOR_AMENITY) @AmenityURIConstraint String amenity,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam BookingParams bookingParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(user);
-        Long amenityId = extractOptionalSecondId(amenity);
+        Long userId = extractOptionalFirstId(bookingParams.getUser());
+        Long amenityId = extractOptionalSecondId(bookingParams.getAmenity());
 
         // Content
-        final List<Booking> bookings = bs.getBookings(neighborhoodId, userId, amenityId, page, size);
+        final List<Booking> bookings = bs.getBookings(bookingParams.getNeighborhoodId(), userId, amenityId, bookingParams.getPage(), bookingParams.getSize());
         String bookingsHashCode = String.valueOf(bookings.hashCode());
 
         // Cache Control
@@ -90,10 +82,10 @@ public class BookingController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.BOOKINGS),
-                bs.calculateBookingPages(neighborhoodId, amenityId, userId, size),
-                page,
-                size
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(bookingParams.getNeighborhoodId())).path(Endpoint.BOOKINGS),
+                bs.calculateBookingPages(bookingParams.getNeighborhoodId(), amenityId, userId, bookingParams.getSize()),
+                bookingParams.getPage(),
+                bookingParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto) {
@@ -107,8 +99,8 @@ public class BookingController {
     @GET
     @Path("{" + PathParameter.BOOKING_ID + "}")
     public Response findBooking(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.BOOKING_ID) @GenericIdConstraint long bookingId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.BOOKING_ID) long bookingId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -132,8 +124,9 @@ public class BookingController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateBooking(#createForm.user, #createForm.amenity, #createForm.shift)")
     public Response createBooking(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
             @Valid @NotNull BookingDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -152,9 +145,9 @@ public class BookingController {
 
     @DELETE
     @Path("{" + PathParameter.BOOKING_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
+    @PreAuthorize("@accessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteBooking(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.BOOKING_ID) long bookingId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());

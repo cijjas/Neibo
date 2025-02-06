@@ -2,18 +2,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.dto.PostsCountDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ChannelURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.PostStatusURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.TagsURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.PostParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,25 +58,20 @@ public class PostController {
     }
 
     @GET
+    @PreAuthorize("@accessControlHelper.canListOrCountPosts(#postParams.user, #postParams.channel, #postParams.tags, #postParams.postStatus)")
     public Response listPosts(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam(QueryParameter.POSTED_BY) @UserURIConstraint String user,
-            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURIConstraint String channel,
-            @QueryParam(QueryParameter.WITH_TAG) @TagsURIConstraint List<String> tags,
-            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURIConstraint String postStatus,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam PostParams postParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(user);
-        Long channelId = extractOptionalSecondId(channel);
-        List<Long> tagIds = extractSecondIds(tags);
-        Long postStatusId = extractOptionalFirstId(postStatus);
+        Long userId = extractOptionalFirstId(postParams.getUser());
+        Long channelId = extractOptionalSecondId(postParams.getChannel());
+        List<Long> tagIds = extractSecondIds(postParams.getTags());
+        Long postStatusId = extractOptionalFirstId(postParams.getPostStatus());
 
         // Content
-        final List<Post> posts = ps.getPosts(neighborhoodId, userId, channelId, tagIds, postStatusId, page, size);
+        final List<Post> posts = ps.getPosts(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId, postParams.getPage(), postParams.getSize());
         String postsHashCode = String.valueOf(posts.hashCode());
 
         // Cache Control
@@ -102,10 +90,10 @@ public class PostController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS),
-                ps.calculatePostPages(neighborhoodId, userId, channelId, tagIds, postStatusId, size),
-                page,
-                size
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(postParams.getNeighborhoodId())).path(Endpoint.POSTS),
+                ps.calculatePostPages(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId, postParams.getSize()),
+                postParams.getPage(),
+                postParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<PostDto>>(postsDto) {
@@ -118,23 +106,20 @@ public class PostController {
 
     @GET
     @Path(Endpoint.COUNT)
+    @PreAuthorize("@accessControlHelper.canListOrCountPosts(#postParams.user, #postParams.channel, #postParams.tags, #postParams.postStatus)")
     public Response countPosts(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.POSTED_BY) @UserURIConstraint String user,
-            @QueryParam(QueryParameter.IN_CHANNEL) @ChannelURIConstraint String channel,
-            @QueryParam(QueryParameter.WITH_TAG) @TagsURIConstraint List<String> tags,
-            @QueryParam(QueryParameter.WITH_STATUS) @PostStatusURIConstraint String postStatus
+            @Valid @BeanParam PostParams postParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(user);
-        Long channelId = extractOptionalSecondId(channel);
-        List<Long> tagIds = extractSecondIds(tags);
-        Long postStatusId = extractOptionalFirstId(postStatus);
+        Long userId = extractOptionalFirstId(postParams.getUser());
+        Long channelId = extractOptionalSecondId(postParams.getChannel());
+        List<Long> tagIds = extractSecondIds(postParams.getTags());
+        Long postStatusId = extractOptionalFirstId(postParams.getPostStatus());
 
         // Content
-        int count = ps.countPosts(neighborhoodId, userId, channelId, tagIds, postStatusId);
+        int count = ps.countPosts(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId);
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -143,7 +128,7 @@ public class PostController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        PostsCountDto dto = PostsCountDto.fromPostsCount(count, neighborhoodId, user, channel, tags, postStatus, uriInfo);
+        PostsCountDto dto = PostsCountDto.fromPostsCount(count, postParams.getNeighborhoodId(), postParams.getUser(), postParams.getChannel(), postParams.getTags(), postParams.getPostStatus(), uriInfo);
 
         return Response.ok(new GenericEntity<PostsCountDto>(dto) {
                 })
@@ -155,8 +140,8 @@ public class PostController {
     @GET
     @Path("{" + PathParameter.POST_ID + "}")
     public Response findPost(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) @GenericIdConstraint long postId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) long postId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -178,8 +163,9 @@ public class PostController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreatePost(#createForm.user, #createForm.channel, #createForm.tags)")
     public Response createPost(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull PostDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -203,7 +189,7 @@ public class PostController {
 
     @DELETE
     @Path("{" + PathParameter.POST_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canDeletePost(#postId)")
+    @PreAuthorize("@accessControlHelper.canDeletePost(#postId)")
     public Response deletePost(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.POST_ID) long postId

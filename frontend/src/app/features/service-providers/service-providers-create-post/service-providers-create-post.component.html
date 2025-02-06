@@ -4,7 +4,6 @@
   </h2>
   <div class="divider"></div>
 
-  <!-- Post Creation Form -->
   <form
     [formGroup]="createWrokerPostForm"
     (ngSubmit)="onSubmit()"
@@ -12,11 +11,9 @@
   >
     <div class="form-column" style="margin-top: 1rem">
       <div class="form-group">
-        <!-- Hidden Channel Input -->
         <input type="hidden" formControlName="channel" [value]="channel" />
 
         <div class="form-row">
-          <!-- Subject Input -->
           <input
             type="text"
             formControlName="title"
@@ -42,7 +39,6 @@
       </div>
 
       <div class="form-group">
-        <!-- Message Textarea -->
         <textarea
           formControlName="body"
           class="cool-input textarea-min-max"
@@ -63,7 +59,6 @@
         </div>
       </div>
 
-      <!-- (UPDATED) Image File Input + Drag/Drop -->
       <div class="form-group w-50">
         <label
           for="images"
@@ -85,7 +80,6 @@
           />
         </label>
 
-        <!-- Remove Image button if an image is selected -->
         <div
           style="text-align: center; margin-top: 0.75rem"
           *ngIf="imageFileControl?.value"
@@ -95,12 +89,10 @@
           </button>
         </div>
 
-        <!-- Show any custom file upload error -->
         <app-form-error [centered]="true" [control]="imageFileControl">
         </app-form-error>
       </div>
 
-      <!-- (UPDATED) Image Preview Container -->
       <div class="preview-container" *ngIf="imagePreviewUrl">
         <img
           [src]="imagePreviewUrl"
@@ -109,16 +101,8 @@
         />
       </div>
 
-      <!-- 
-          Tag Section (only visible if not a WORKER)
-          Allows: 
-            1) Creating a new tag
-            2) Selecting from existing tags (paginated)
-            3) Viewing and removing applied tags
-        -->
     </div>
 
-    <!-- Submit Button -->
     <div class="d-flex justify-content-end mt-3">
       <button
         type="submit"

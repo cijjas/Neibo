@@ -4,8 +4,6 @@ import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
@@ -53,7 +51,7 @@ public class ContactController {
 
     @GET
     public Response listContacts(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -96,8 +94,8 @@ public class ContactController {
     @GET
     @Path("{" + PathParameter.CONTACT_ID + "}")
     public Response findContact(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.CONTACT_ID) long contactId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -121,7 +119,7 @@ public class ContactController {
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateSequence.class)
     public Response createContact(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull ContactDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -144,8 +142,8 @@ public class ContactController {
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(UpdateSequence.class)
     public Response updateContact(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.CONTACT_ID) long contactId,
             @Valid @NotNull ContactDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
@@ -163,8 +161,8 @@ public class ContactController {
     @Path("{" + PathParameter.CONTACT_ID + "}")
     @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response deleteContact(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.CONTACT_ID) @GenericIdConstraint long contactId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.CONTACT_ID) long contactId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

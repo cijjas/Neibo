@@ -20,14 +20,11 @@ describe('ServiceProvidersReviewDialogComponent', () => {
   });
 
   it('should initialize with default values and update worker when input is set', () => {
-    // By default, reviewDialogVisible is false.
     expect(component.reviewDialogVisible).toBeFalse();
 
-    // Set a dummy worker object.
     const dummyWorker = { name: 'Test Worker', id: 'worker1' };
     component.worker = dummyWorker;
 
-    // The getter should return the same dummy worker.
     expect(component.worker).toEqual(dummyWorker);
   });
 });

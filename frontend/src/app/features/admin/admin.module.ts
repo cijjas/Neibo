@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '@shared/index';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminCreateAnnouncementPageComponent } from './admin-create-announcement-page/admin-create-announcement-page.component';
-import { CalendarWidgetComponent } from '@features/index';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { AdminSidebarComponent } from './admin-sidebar/admin-sidebar.component';
 import { AdminNeighborsRequestsPageComponent } from './admin-neighbors-requests-page/admin-neighbors-requests-page.component';

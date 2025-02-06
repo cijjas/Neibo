@@ -5,7 +5,6 @@ import { BehaviorSubject, of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-// Import service types (adjust paths as needed)
 import { PostService, LinkKey, Post } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 

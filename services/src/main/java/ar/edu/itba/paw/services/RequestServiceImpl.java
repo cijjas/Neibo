@@ -71,14 +71,14 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int page, int size) {
+    public List<Request> getRequests(long neighborhoodId, Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int page, int size) {
         LOGGER.info("Getting Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
         return requestDao.getRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId, page, size);
     }
 
     @Override
-    public int countRequests(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId) {
+    public int countRequests(long neighborhoodId, Long userId, Long productId, Long transactionTypeId, Long requestStatusId) {
         LOGGER.info("Counting Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
         return requestDao.countRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId);
@@ -86,7 +86,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long requestStatusId, Long transactionTypeId, int size) {
+    public int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int size) {
         LOGGER.info("Calculating Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
 
         return PaginationUtils.calculatePages(requestDao.countRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId), size);
@@ -109,7 +109,7 @@ public class RequestServiceImpl implements RequestService {
                 request.setPurchaseDate(new Date(System.currentTimeMillis()));
                 p.setRemainingUnits(p.getRemainingUnits() - request.getUnits());
             }
-            request.setStatus(RequestStatus.fromId(requestStatusId));
+            request.setStatus(RequestStatus.fromId(requestStatusId).get()); // Controller layer guarantees non-empty Optional
         }
 
         return request;

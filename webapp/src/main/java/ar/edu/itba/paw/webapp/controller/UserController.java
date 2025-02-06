@@ -3,14 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.UserDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserRoleURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.UserParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
@@ -61,21 +57,18 @@ public class UserController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canListUsers(#neighborhood)")
+    @PreAuthorize("@accessControlHelper.canListUsers(#userParams.neighborhood, #userParams.userRole)")
     public Response listUsers(
-            @QueryParam(QueryParameter.IN_NEIGHBORHOOD) @NeighborhoodURIConstraint String neighborhood,
-            @QueryParam(QueryParameter.WITH_ROLE) @UserRoleURIConstraint String userRole,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam UserParams userParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userRoleId = extractOptionalFirstId(userRole);
-        Long neighborhoodId = extractOptionalFirstId(neighborhood);
+        Long neighborhoodId = extractOptionalFirstId(userParams.getNeighborhood());
+        Long userRoleId = extractOptionalFirstId(userParams.getUserRole());
 
         // Content
-        final List<User> users = us.getUsers(neighborhoodId, userRoleId, page, size);
+        final List<User> users = us.getUsers(neighborhoodId, userRoleId, userParams.getPage(), userParams.getSize());
         String usersHashCode = String.valueOf(users.hashCode());
 
         // Cache Control
@@ -92,9 +85,9 @@ public class UserController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS),
-                us.calculateUserPages(neighborhoodId, userRoleId, size),
-                page,
-                size
+                us.calculateUserPages(neighborhoodId, userRoleId, userParams.getSize()),
+                userParams.getPage(),
+                userParams.getSize()
         );
 
         final List<UserDto> usersDto = users.stream()
@@ -109,7 +102,7 @@ public class UserController {
 
     @GET
     @Path("{" + PathParameter.USER_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canFindUser(#userId)")
+    @PreAuthorize("@accessControlHelper.canFindUser(#userId)")
     public Response findUser(
             @PathParam(PathParameter.USER_ID) long userId
     ) {
@@ -133,6 +126,7 @@ public class UserController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateUser(#createForm.neighborhood, #createForm.userRole, #createForm.language)")
     public Response createUser(
             @Valid @NotNull UserDto createForm
     ) {
@@ -152,11 +146,10 @@ public class UserController {
 
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
-    // until we get an answer...
-//     @PreAuthorize("@pathAccessControlHelper.canUpdateUser(userId, #updateForm.neighborhood, #updateForm.userRole)")
     @Validated(UpdateSequence.class)
+     @PreAuthorize("@accessControlHelper.canUpdateUser(#updateForm.neighborhood, #updateForm.userRole, #updateForm.language, #updateForm.profilePicture, #userId)")
     public Response updateUser(
-            @PathParam(PathParameter.USER_ID) @GenericIdConstraint long userId,
+            @PathParam(PathParameter.USER_ID) long userId,
             @Valid @NotNull UserDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());

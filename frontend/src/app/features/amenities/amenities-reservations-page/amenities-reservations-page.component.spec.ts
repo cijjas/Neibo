@@ -67,7 +67,7 @@ describe('AmenitiesReservationsPageComponent', () => {
     getShifts: jasmine.createSpy('getShifts').and.returnValue(of(dummyShifts)),
   };
 
-  // Other services (we don’t use them in our logic tests)
+  // Other services
   const fakeBookingService = {};
   const fakeLinkService = {};
   const fakeTranslateService = {

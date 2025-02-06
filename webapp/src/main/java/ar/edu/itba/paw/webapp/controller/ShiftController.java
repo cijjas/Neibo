@@ -5,11 +5,11 @@ import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
-import ar.edu.itba.paw.webapp.dto.queryForms.ShiftForm;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.ShiftParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -50,13 +50,14 @@ public class ShiftController {
     }
 
     @GET
+    @PreAuthorize("@accessControlHelper.canListShifts(#shiftParams.amenity)")
     public Response getShifts(
-            @Valid @BeanParam ShiftForm shiftForm
+            @Valid @BeanParam ShiftParams shiftParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(shiftForm.getAmenity()), extractOptionalDate(shiftForm.getDate()));
+        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(shiftParams.getAmenity()), extractOptionalDate(shiftParams.getDate()));
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control
@@ -85,7 +86,7 @@ public class ShiftController {
     @GET
     @Path("{" + PathParameter.SHIFT_ID + "}")
     public Response findShift(
-            @PathParam(PathParameter.SHIFT_ID) @GenericIdConstraint long shiftId
+            @PathParam(PathParameter.SHIFT_ID) long shiftId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
