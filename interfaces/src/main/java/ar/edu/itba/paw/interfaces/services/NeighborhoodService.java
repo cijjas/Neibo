@@ -13,7 +13,7 @@ public interface NeighborhoodService {
 
     Optional<Neighborhood> findNeighborhood(long neighborhoodId);
 
-    List<Neighborhood> getNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int size, int page);
+    List<Neighborhood> getNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int page, int size);
 
     int calculateNeighborhoodPages(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int size);
 

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.enums;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum Language {
     ENGLISH(1),
@@ -18,10 +19,9 @@ public enum Language {
         return id;
     }
 
-    public static Language fromId(long id) {
+    public static Optional<Language> fromId(long id) {
         return Arrays.stream(values())
-                .filter(l -> l.getId() == id)
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+                .filter(l-> l.getId() == id)
+                .findFirst();
     }
 }

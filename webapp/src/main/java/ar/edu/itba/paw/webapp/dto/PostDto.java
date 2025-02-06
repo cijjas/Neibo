@@ -3,17 +3,12 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ChannelURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ImageURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.TagsURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.constraints.TagsURIConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -21,27 +16,27 @@ import java.util.Date;
 import java.util.List;
 
 public class PostDto {
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 100, groups = Basic.class)
+
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 100)
     private String title;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 2000, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 2000)
     private String body;
 
-    @TagsURIConstraint(groups = URI.class)
+    @TagsURIConstraint
     private List<String> tags;
 
-    @ImageURIConstraint(groups = URI.class)
+    @Pattern(regexp = URIValidator.IMAGE_URI_REGEX)
     private String image;
 
-    @NotNull(groups = Null.class)
-    @ChannelURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.CHANNEL_URI_REGEX)
     private String channel;
 
-    @NotNull(groups = Null.class)
-    @UserURIConstraint(groups = URI.class)
-    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
 
     private Date creationDate;

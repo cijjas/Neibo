@@ -3,6 +3,7 @@ package ar.edu.itba.paw.enums;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum RequestStatus {
     REQUESTED(1),
@@ -19,10 +20,9 @@ public enum RequestStatus {
         return id;
     }
 
-    public static RequestStatus fromId(long id) {
+    public static Optional<RequestStatus> fromId(long id) {
         return Arrays.stream(values())
                 .filter(rs -> rs.getId() == id)
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+                .findFirst();
     }
 }

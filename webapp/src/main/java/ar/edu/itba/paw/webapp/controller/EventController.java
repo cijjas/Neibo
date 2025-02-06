@@ -4,15 +4,12 @@ import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.EventDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.DateConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
+import ar.edu.itba.paw.webapp.validation.constraints.DateConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -61,7 +58,7 @@ public class EventController {
 
     @GET
     public Response listEvents(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @QueryParam(QueryParameter.FOR_DATE) @DateConstraint String date,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
@@ -108,8 +105,8 @@ public class EventController {
     @GET
     @Path("{" + PathParameter.EVENT_ID + "}")
     public Response findEvent(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.EVENT_ID) @GenericIdConstraint long eventId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.EVENT_ID) long eventId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -130,10 +127,9 @@ public class EventController {
     }
 
     @POST
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateSequence.class)
     public Response createEvent(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull EventDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -153,17 +149,16 @@ public class EventController {
     @PATCH
     @Path("{" + PathParameter.EVENT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(UpdateSequence.class)
     public Response updateEvent(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.EVENT_ID) @GenericIdConstraint long eventId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.EVENT_ID) long eventId,
             @Valid @NotNull EventDto updateForm
     ) {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final Event updatedEvent = es.updateEvent(neighborhoodId, eventId, updateForm.getName(), updateForm.getDescription(), extractDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
+        final Event updatedEvent = es.updateEvent(neighborhoodId, eventId, updateForm.getName(), updateForm.getDescription(), extractOptionalDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
         String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
         return Response.ok(EventDto.fromEvent(updatedEvent, null, uriInfo))
@@ -173,10 +168,9 @@ public class EventController {
 
     @DELETE
     @Path("{" + PathParameter.EVENT_ID + "}")
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response deleteEvent(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @PathParam(PathParameter.EVENT_ID) @GenericIdConstraint long eventId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.EVENT_ID) long eventId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

@@ -6,13 +6,10 @@ import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.dto.ReviewsAverageDto;
 import ar.edu.itba.paw.webapp.dto.ReviewsCountDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.WorkerIdConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -56,7 +53,7 @@ public class ReviewController {
 
     @GET
     public Response listReviews(
-            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
+            @PathParam(PathParameter.WORKER_ID) long workerId,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -99,7 +96,7 @@ public class ReviewController {
     @GET
     @Path(Endpoint.COUNT)
     public Response countReviews(
-            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId
+            @PathParam(PathParameter.WORKER_ID) long workerId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -125,7 +122,7 @@ public class ReviewController {
     @GET
     @Path(Endpoint.AVERAGE)
     public Response averageReviews(
-            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId
+            @PathParam(PathParameter.WORKER_ID) long workerId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -151,8 +148,8 @@ public class ReviewController {
     @GET
     @Path("{" + PathParameter.REVIEW_ID + "}")
     public Response findReview(
-            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
-            @PathParam(PathParameter.REVIEW_ID) @GenericIdConstraint long reviewId
+            @PathParam(PathParameter.WORKER_ID) long workerId,
+            @PathParam(PathParameter.REVIEW_ID) long reviewId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -173,29 +170,12 @@ public class ReviewController {
     }
 
     @POST
-    @Secured({UserRole.NEIGHBOR, UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateSequence.class)
-    @PreAuthorize("@pathAccessControlHelper.canCreateReview(#workerId, #createForm.user)")
+    @PreAuthorize("@accessControlHelper.canCreateReview(#createForm.user, #workerId)")
     public Response createReview(
-            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
+            @PathParam(PathParameter.WORKER_ID) long workerId,
             @Valid @NotNull ReviewDto createForm
     ) {
-        /*
-        1) Primero Path Param Constraint
-        2) Preauthorize
-        3) Form Constraint
-
-
-        Authentication is being executed before validations
-        when the validation is using path params the validation goes first :D
-        when the validation is using NOT object query params the validation validation goes second D:, but doesnt really matter apparently a forbidden catches the issue
-        before it could cause a null pointer exception
-        however when the authentication is accessing an internal attribute of the object it goes after and is not caught by the forbidden so it produces a Null Pointer
-        only solution i can think of is to transition the authentication into a cross attribute authentication in the form, not possible because the form cant access the workerId
-        maybe the proxy can be interchanged to the authentication goes after the validation
-        the authentication can be changed to let go the null but i really dont like that option
-        programatically transitioning the call to within th controller or within the service is another option i dont like
-         */
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
@@ -212,10 +192,10 @@ public class ReviewController {
 
     @DELETE
     @Path("{" + PathParameter.REVIEW_ID + "}")
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
+    @PreAuthorize("@accessControlHelper.canDeleteReview(#workerId, #reviewId)")
     public Response deleteReview(
-            @PathParam(PathParameter.WORKER_ID) @WorkerIdConstraint long workerId,
-            @PathParam(PathParameter.REVIEW_ID) @GenericIdConstraint long reviewId
+            @PathParam(PathParameter.WORKER_ID) long workerId,
+            @PathParam(PathParameter.REVIEW_ID) long reviewId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

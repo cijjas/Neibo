@@ -4,15 +4,11 @@ import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.LanguageDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
 import java.util.List;
@@ -70,12 +66,12 @@ public class LanguageController {
     @GET
     @Path("{" + PathParameter.LANGUAGE_ID + "}")
     public Response findLanguage(
-            @PathParam(PathParameter.LANGUAGE_ID) @GenericIdConstraint long languageId
+            @PathParam(PathParameter.LANGUAGE_ID) long languageId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        Language language = Language.fromId(languageId);
+        Language language = Language.fromId(languageId).orElseThrow(NotFoundException::new);
         String languageHashCode = String.valueOf(language.hashCode());
 
         // Cache Control
@@ -84,8 +80,6 @@ public class LanguageController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(languageHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-
-        // Content
 
         return Response.ok(LanguageDto.fromLanguage(language, uriInfo))
                 .cacheControl(cacheControl)

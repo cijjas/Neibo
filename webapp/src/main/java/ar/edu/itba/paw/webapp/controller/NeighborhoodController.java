@@ -4,8 +4,7 @@ import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.WorkerURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.NeighborhoodParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,22 +54,18 @@ public class NeighborhoodController {
     }
 
     @GET
-    @PreAuthorize("@pathAccessControlHelper.canUseWorkerQPInNeighborhoods(#withWorker, #withoutWorker)")
+    @PreAuthorize("@accessControlHelper.canListNeighborhoods(#neighborhoodParams.withWorker, #neighborhoodParams.withoutWorker)")
     public Response listNeighborhoods(
-            @QueryParam(QueryParameter.IS_BASE) Boolean isBase,
-            @QueryParam(QueryParameter.WITH_WORKER) @WorkerURIConstraint String withWorker,
-            @QueryParam(QueryParameter.WITHOUT_WORKER) @WorkerURIConstraint String withoutWorker,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam NeighborhoodParams neighborhoodParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long withWorkerId = extractOptionalFirstId(withWorker);
-        Long withoutWorkerId = extractOptionalFirstId(withoutWorker);
+        Long withWorkerId = extractOptionalFirstId(neighborhoodParams.getWithWorker());
+        Long withoutWorkerId = extractOptionalFirstId(neighborhoodParams.getWithoutWorker());
 
         // Content
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(isBase, withWorkerId, withoutWorkerId, size, page);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(neighborhoodParams.getBase(), withWorkerId, withoutWorkerId, neighborhoodParams.getPage(), neighborhoodParams.getSize());
         String neighborhoodsHashCode = String.valueOf(neighborhoods.hashCode());
 
         // Cache Control
@@ -90,9 +85,9 @@ public class NeighborhoodController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS),
-                ns.calculateNeighborhoodPages(isBase, withWorkerId, withoutWorkerId, size),
-                page,
-                size
+                ns.calculateNeighborhoodPages(neighborhoodParams.getBase(), withWorkerId, withoutWorkerId, neighborhoodParams.getSize()),
+                neighborhoodParams.getPage(),
+                neighborhoodParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto) {
@@ -106,7 +101,7 @@ public class NeighborhoodController {
     @GET
     @Path("{" + PathParameter.NEIGHBORHOOD_ID + "}")
     public Response findNeighborhood(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -154,7 +149,7 @@ public class NeighborhoodController {
     @Path("{" + PathParameter.NEIGHBORHOOD_ID + "}")
     @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteNeighborhood(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

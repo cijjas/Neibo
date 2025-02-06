@@ -3,6 +3,7 @@ package ar.edu.itba.paw.enums;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum WorkerStatus {
     HOT(1),
@@ -18,10 +19,9 @@ public enum WorkerStatus {
         return id;
     }
 
-    public static WorkerStatus fromId(long id) {
+    public static Optional<WorkerStatus> fromId(long id) {
         return Arrays.stream(values())
                 .filter(ws -> ws.getId() == id)
-                .findFirst()
-                .orElseThrow(NotFoundException::new);
+                .findFirst();
     }
 }

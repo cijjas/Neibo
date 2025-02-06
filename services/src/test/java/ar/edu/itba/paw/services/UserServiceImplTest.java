@@ -53,8 +53,8 @@ public class UserServiceImplTest {
         long userRoleId = 1L;
         Integer identification = 123;
 
-        Language expectedLanguage = Language.fromId(languageId);
-        UserRole expectedUserRole = UserRole.fromId(userRoleId);
+        Language expectedLanguage = Language.fromId(languageId).get();
+        UserRole expectedUserRole = UserRole.fromId(userRoleId).get();
         User mockUser = mock(User.class);
 
         when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(expectedLanguage),
@@ -88,7 +88,7 @@ public class UserServiceImplTest {
         Integer identification = 1234;
 
         Language defaultLanguage = Language.ENGLISH;
-        UserRole expectedUserRole = UserRole.fromId(userRoleId);
+        UserRole expectedUserRole = UserRole.fromId(userRoleId).get();
         User mockUser = mock(User.class);
 
         when(userDao.createUser(eq(neighborhoodId), eq(email), eq(name), eq(surname), anyString(), eq(identification), eq(defaultLanguage),
@@ -121,7 +121,7 @@ public class UserServiceImplTest {
         long languageId = 1L;
         Integer identification = 1234;
 
-        Language expectedLanguage = Language.fromId(languageId);
+        Language expectedLanguage = Language.fromId(languageId).get();
         UserRole defaultUserRole = UserRole.UNVERIFIED_NEIGHBOR;
         User mockUser = mock(User.class);
 
@@ -280,8 +280,8 @@ public class UserServiceImplTest {
         assertEquals(phoneNumber, user.getPhoneNumber());
         assertEquals(profilePicture, user.getProfilePicture());
         assertEquals(identification, user.getIdentification().longValue());
-        assertEquals(Language.fromId(languageId), user.getLanguage());
-        assertEquals(UserRole.fromId(userRoleId), user.getRole());
+        assertEquals(Language.fromId(languageId).get(), user.getLanguage());
+        assertEquals(UserRole.fromId(userRoleId).get(), user.getRole());
 
         verify(userDao, times(1)).findUser(userId);
         verify(imageDao, times(1)).findImage(profilePictureId);

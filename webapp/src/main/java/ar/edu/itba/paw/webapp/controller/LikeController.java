@@ -2,16 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.PostURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.LikeParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
+import ar.edu.itba.paw.webapp.validation.groups.sequences.DeleteSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,21 +51,18 @@ public class LikeController {
     }
 
     @GET
+    @PreAuthorize("@accessControlHelper.canListLikes(#likeParams.user, #likeParams.post)")
     public Response listLikes(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.LIKED_BY) @UserURIConstraint String user,
-            @QueryParam(QueryParameter.ON_POST) @PostURIConstraint String post,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam LikeParams likeParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(user);
-        Long postId = extractOptionalSecondId(post);
+        Long userId = extractOptionalFirstId(likeParams.getUser());
+        Long postId = extractOptionalSecondId(likeParams.getPost());
 
         // Content
-        final List<Like> likes = ls.getLikes(neighborhoodId, userId, postId, page, size);
+        final List<Like> likes = ls.getLikes(likeParams.getNeighborhoodId(), userId, postId, likeParams.getPage(), likeParams.getSize());
         String likesHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -96,9 +90,9 @@ public class LikeController {
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.LIKES),
-                ls.calculateLikePages(neighborhoodId, userId, postId, size),
-                page,
-                size);
+                ls.calculateLikePages(likeParams.getNeighborhoodId(), userId, postId, likeParams.getSize()),
+                likeParams.getPage(),
+                likeParams.getSize());
 
         return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {
                 })
@@ -110,15 +104,14 @@ public class LikeController {
 
     @GET
     @Path(Endpoint.COUNT)
+    @PreAuthorize("@accessControlHelper.canCountLikes(#likeParams.user, #likeParams.post)")
     public Response countLikes(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.LIKED_BY) @UserURIConstraint String user,
-            @QueryParam(QueryParameter.ON_POST) @PostURIConstraint String post
+            @Valid @BeanParam LikeParams likeParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        int count = ls.countLikes(neighborhoodId, extractOptionalFirstId(user), extractOptionalSecondId(post));
+        int count = ls.countLikes(likeParams.getNeighborhoodId(), extractOptionalFirstId(likeParams.getUser()), extractOptionalSecondId(likeParams.getPost()));
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -127,7 +120,7 @@ public class LikeController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        LikeCountDto dto = LikeCountDto.fromLikeCount(count, neighborhoodId, post, user, uriInfo);
+        LikeCountDto dto = LikeCountDto.fromLikeCount(count, likeParams.getNeighborhoodId(), likeParams.getPost(), likeParams.getUser(), uriInfo);
 
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {
                 })
@@ -138,8 +131,9 @@ public class LikeController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateLike(#createForm.user, #createForm.post)")
     public Response createLike(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
             @Valid @NotNull LikeDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -157,15 +151,14 @@ public class LikeController {
     }
 
     @DELETE
-    @PreAuthorize("@pathAccessControlHelper.canDeleteLike(#user)")
+    @PreAuthorize("@accessControlHelper.canDeleteLike(#likeParams.user, #likeParams.post)")
+    @Validated(DeleteSequence.class)
     public Response deleteLike(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint Long neighborhoodId,
-            @QueryParam(QueryParameter.LIKED_BY) @NotNull @UserURIConstraint String user,
-            @QueryParam(QueryParameter.ON_POST) @NotNull @PostURIConstraint String post
+            @Valid @BeanParam LikeParams likeParams
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
-        if (ls.deleteLike(extractOptionalFirstId(user), extractOptionalSecondId(post)))
+        if (ls.deleteLike(extractOptionalFirstId(likeParams.getUser()), extractOptionalSecondId(likeParams.getPost())))
             return Response.noContent()
                     .build();
 

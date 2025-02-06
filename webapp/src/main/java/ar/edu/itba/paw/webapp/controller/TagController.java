@@ -4,14 +4,12 @@ import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.controller.constants.*;
 import ar.edu.itba.paw.webapp.dto.TagDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.PostURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.TagParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -52,19 +50,17 @@ public class TagController {
     }
 
     @GET
+    @PreAuthorize("@accessControlHelper.canListTags(#tagParams.post)")
     public Response listTags(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam(QueryParameter.ON_POST) @PostURIConstraint String post,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
+            @Valid @BeanParam TagParams tagParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long postId = extractOptionalSecondId(post);
+        Long postId = extractOptionalSecondId(tagParams.getPost());
 
         // Content
-        List<Tag> tags = ts.getTags(neighborhoodId, postId, page, size);
+        List<Tag> tags = ts.getTags(tagParams.getNeighborhoodId(), postId, tagParams.getPage(), tagParams.getSize());
         String tagsHashCode = String.valueOf(tags.hashCode());
 
         // Cache Control
@@ -79,14 +75,14 @@ public class TagController {
                     .build();
 
         List<TagDto> tagsDto = tags.stream()
-                .map(t -> TagDto.fromTag(t, neighborhoodId, uriInfo)).collect(Collectors.toList());
+                .map(t -> TagDto.fromTag(t, tagParams.getNeighborhoodId(), uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.TAGS),
-                ts.calculateTagPages(neighborhoodId, postId, size),
-                page,
-                size
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(tagParams.getNeighborhoodId())).path(Endpoint.TAGS),
+                ts.calculateTagPages(tagParams.getNeighborhoodId(), postId, tagParams.getSize()),
+                tagParams.getPage(),
+                tagParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto) {
@@ -100,8 +96,8 @@ public class TagController {
     @GET
     @Path("{" + PathParameter.TAG_ID + "}")
     public Response findTag(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.TAG_ID) @GenericIdConstraint long tagId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.TAG_ID) long tagId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
@@ -124,7 +120,7 @@ public class TagController {
     @POST
     @Validated(CreateSequence.class)
     public Response createTag(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull TagDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -147,10 +143,9 @@ public class TagController {
 
     @DELETE
     @Path("{" + PathParameter.TAG_ID + "}")
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteTag(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.TAG_ID) @GenericIdConstraint long tagId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.TAG_ID) long tagId
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 

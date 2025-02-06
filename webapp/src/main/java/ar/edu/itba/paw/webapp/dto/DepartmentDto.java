@@ -2,8 +2,7 @@ package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -13,9 +12,9 @@ import javax.ws.rs.core.UriInfo;
 
 public class DepartmentDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 0, max = 64, groups = Basic.class)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*", groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 0, max = 64)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String name;
 
     private Links _links;

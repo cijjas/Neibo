@@ -6,16 +6,9 @@ import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.UserCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.EmailConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ImageURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.LanguageURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.NeighborhoodURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserRoleURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.Specific;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.constraints.EmailConstraint;
+import ar.edu.itba.paw.webapp.validation.groups.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -25,53 +18,47 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
-@UserCreationConstraint(groups = Specific.class)
-//@UserUpdateConstraint(groups = Specific.class)
 public class UserDto {
 
-//    @PathParam(PathParameter.USER_ID)
-//    @GenericIdConstraint
-//    long userId;
-
-    @NotNull(groups = Null.class)
-    @NeighborhoodURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.NEIGHBORHOOD_URI_REGEX)
     private String neighborhood;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 1, max = 64, groups = Basic.class)
-    @Pattern(regexp = "^[a-zA-Z ]*", groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 64)
+    @Pattern(regexp = "^[a-zA-Z ]*")
     private String name;
 
-    @NotNull(groups = Null.class)
-    @Pattern(regexp = "^[a-zA-Z ]*", groups = Basic.class)
-    @Size(min = 1, max = 64, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = "^[a-zA-Z ]*")
+    @Size(min = 1, max = 64)
     private String surname;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 6, max = 128, groups = Basic.class)
-    @Email(groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 6, max = 128)
+    @Email
     @EmailConstraint(groups = Specific.class)
     private String mail;
 
-    @NotNull(groups = Null.class)
-    @Size(min = 1, max = 50, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 50)
     private String password;
 
-    @NotNull(groups = Null.class)
+    @NotNull(groups = OnCreate.class)
     private Integer identification;
 
-    @LanguageURIConstraint(groups = URI.class)
+    @Pattern(regexp = URIValidator.LANGUAGE_URI_REGEX)
     private String language;
 
-    @NotNull(groups = Null.class)
-    @UserRoleURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_ROLE_URI_REGEX)
     private String userRole;
 
-    @Size(min = 1, max = 50, groups = Basic.class)
-    @Pattern(regexp = "^[0-9]*", groups = Basic.class)
+    @Size(min = 1, max = 50)
+    @Pattern(regexp = "^[0-9]*")
     private String phoneNumber;
 
-    @ImageURIConstraint(groups = URI.class)
+    @Pattern(regexp = URIValidator.IMAGE_URI_REGEX)
     private String profilePicture;
 
     private Boolean darkMode;

@@ -3,27 +3,23 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.constraints.authorization.UserURIReferenceInCreationConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.EventURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.Authorization;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
-import ar.edu.itba.paw.webapp.validation.groups.URI;
+import ar.edu.itba.paw.webapp.validation.URIValidator;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 public class AttendanceDto {
 
-    @NotNull(groups = Null.class)
-    @UserURIConstraint(groups = URI.class)
-    @UserURIReferenceInCreationConstraint(groups = Authorization.class)
-    private String user;
-
-    @NotNull(groups = Null.class)
-    @EventURIConstraint(groups = URI.class)
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.EVENT_URI_REGEX)
     private String event;
+
+    @NotNull(groups = OnCreate.class)
+    @Pattern(regexp = URIValidator.USER_URI_REGEX)
+    private String user;
 
     private Links _links;
 

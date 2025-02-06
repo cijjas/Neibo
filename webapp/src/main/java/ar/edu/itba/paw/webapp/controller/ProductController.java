@@ -2,16 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.controller.constants.Constant;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.GenericIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.specific.NeighborhoodIdConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.DepartmentURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.ProductStatusURIConstraint;
-import ar.edu.itba.paw.webapp.validation.constraints.uri.UserURIConstraint;
+import ar.edu.itba.paw.webapp.dto.queryForms.ProductParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
@@ -62,23 +56,19 @@ public class ProductController {
     }
 
     @GET
+    @PreAuthorize("@accessControlHelper.canListProducts(#productParams.user, #productParams.department, #productParams.productStatus)")
     public Response listProducts(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @QueryParam(QueryParameter.FOR_USER) @UserURIConstraint String user,
-            @QueryParam(QueryParameter.IN_DEPARTMENT) @DepartmentURIConstraint String department,
-            @QueryParam(QueryParameter.WITH_STATUS) @ProductStatusURIConstraint String productStatus,
-            @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
-            @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
-    ) {
+            @Valid @BeanParam ProductParams productParams
+            ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(user);
-        Long departmentId = extractOptionalFirstId(department);
-        Long productStatusId = extractOptionalFirstId(productStatus);
+        Long userId = extractOptionalFirstId(productParams.getUser());
+        Long departmentId = extractOptionalFirstId(productParams.getDepartment());
+        Long productStatusId = extractOptionalFirstId(productParams.getProductStatus());
 
         // Content
-        final List<Product> products = ps.getProducts(neighborhoodId, userId, departmentId, productStatusId, page, size);
+        final List<Product> products = ps.getProducts(productParams.getNeighborhoodId(), userId, departmentId, productStatusId, productParams.getPage(), productParams.getSize());
         String productsHashCode = String.valueOf(products.hashCode());
 
         // Cache Control
@@ -97,10 +87,10 @@ public class ProductController {
 
         // Pagination Links
         Link[] links = createPaginationLinks(
-                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.PRODUCTS),
-                ps.calculateProductPages(neighborhoodId, userId, departmentId, productStatusId, size),
-                page,
-                size
+                uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(productParams.getNeighborhoodId())).path(Endpoint.PRODUCTS),
+                ps.calculateProductPages(productParams.getNeighborhoodId(), userId, departmentId, productStatusId, productParams.getSize()),
+                productParams.getPage(),
+                productParams.getSize()
         );
 
         return Response.ok(new GenericEntity<List<ProductDto>>(productsDto) {
@@ -114,8 +104,8 @@ public class ProductController {
     @GET
     @Path("{" + PathParameter.PRODUCT_ID + "}")
     public Response findProduct(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
-            @PathParam(PathParameter.PRODUCT_ID) @GenericIdConstraint long productId
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.PRODUCT_ID) long productId
     ) {
         LOGGER.info("GET request arrived '{}'", uriInfo.getRequestUri());
 
@@ -137,8 +127,9 @@ public class ProductController {
 
     @POST
     @Validated(CreateSequence.class)
+    @PreAuthorize("@accessControlHelper.canCreateProduct(#createForm.user, #createForm.department)")
     public Response createProduct(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) @NeighborhoodIdConstraint long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull ProductDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -158,7 +149,7 @@ public class ProductController {
     @PATCH
     @Path("{" + PathParameter.PRODUCT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@pathAccessControlHelper.canUpdateProduct(#productId)")
+    @PreAuthorize("@accessControlHelper.canUpdateProduct(#updateForm.user, #updateForm.department, #productId)")
     @Validated(UpdateSequence.class)
     public Response updateProduct(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -187,7 +178,7 @@ public class ProductController {
 
     @DELETE
     @Path("{" + PathParameter.PRODUCT_ID + "}")
-    @PreAuthorize("@pathAccessControlHelper.canDeleteProduct(#productId)")
+    @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
     public Response deleteProduct(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.PRODUCT_ID) long productId

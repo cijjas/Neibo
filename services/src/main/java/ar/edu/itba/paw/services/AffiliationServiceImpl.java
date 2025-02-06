@@ -56,11 +56,11 @@ public class AffiliationServiceImpl implements AffiliationService {
 
     @Override
     public Affiliation updateAffiliation(long neighborhoodId, long workerId, Long workerRoleId) {
-        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerId, neighborhoodId, workerRoleId);
+        LOGGER.info("Updating Affiliation between Worker {} and Neighborhood {} to Role {}", workerId, neighborhoodId, workerRoleId);
 
         Affiliation affiliation = affiliationDao.findAffiliation(neighborhoodId, workerId).orElseThrow(NotFoundException::new);
         if (workerRoleId != null)
-            affiliation.setRole(WorkerRole.fromId(workerRoleId));
+            affiliation.setRole(WorkerRole.fromId(workerRoleId).get()); // Optional not empty, checked in authorization
 
         return affiliation;
     }

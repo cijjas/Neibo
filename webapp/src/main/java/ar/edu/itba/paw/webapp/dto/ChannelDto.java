@@ -3,8 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.validation.groups.Basic;
-import ar.edu.itba.paw.webapp.validation.groups.Null;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,8 +12,8 @@ import javax.ws.rs.core.UriInfo;
 
 public class ChannelDto {
 
-    @NotNull(groups = Null.class)
-    @Size(min = 1, max = 20, groups = Basic.class)
+    @NotNull(groups = OnCreate.class)
+    @Size(min = 1, max = 20)
     private String name;
 
     private Links _links;
