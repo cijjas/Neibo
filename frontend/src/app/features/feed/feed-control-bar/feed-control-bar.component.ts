@@ -37,7 +37,7 @@ export class FeedControlBarComponent implements OnInit {
   trendingUrl: string;
 
   currentUser: User;
-  isNotAdmin: boolean;
+  isNotAdmin: boolean = true;
 
   constructor(
     private route: ActivatedRoute,

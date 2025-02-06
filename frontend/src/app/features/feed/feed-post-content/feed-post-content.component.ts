@@ -14,6 +14,8 @@ import {
 } from '@core/index';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { environment } from 'environments/environment';
+
 @Component({
   selector: 'app-feed-post-content',
   templateUrl: './feed-post-content.component.html',
@@ -37,6 +39,8 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   tags: Tag[] = [];
   isLiked: boolean = false; // Like status
   likesUrl: string | undefined;
+  environment = environment;
+
   constructor(
     private fb: FormBuilder,
     private imageService: ImageService,
