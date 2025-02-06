@@ -2763,6 +2763,7 @@ input[type='time'] {
   height: 300px;
   background-color: var(--onbackground);
   border-radius: var(--border-radius);
+  border: 1px solid var(--bordercolor);
   transition: all 0.3s ease-in-out;
   overflow: hidden;
   transform: translateY(0);
@@ -2803,7 +2804,7 @@ input[type='time'] {
   & .footer {
     height: 40%;
     border-top: 1px solid var(--lightertext);
-    background-color: var(--on-onbackground);
+    background-color: var(--onbackground);
 
     & .product-title {
       overflow: hidden;
