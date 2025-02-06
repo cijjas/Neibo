@@ -16,7 +16,7 @@ import { UserService } from '@shared/services/domain/user.service';
 export class MainLayoutComponent implements OnInit {
   neighborhoodName: string;
   isDarkMode: boolean = false;
-  currentLanguage: string = ''; // Current language link
+  currentLanguage: string = '';
   englishLanguageLink: string;
   spanishLanguageLink: string;
   private currentUser: User | null = null;
@@ -27,9 +27,8 @@ export class MainLayoutComponent implements OnInit {
     private preferencesService: PreferencesService,
     private userService: UserService,
     private linkService: HateoasLinksService,
-    private translate: TranslateService, // Add TranslateService
+    private translate: TranslateService,
   ) {
-    // Precompute language links
     this.englishLanguageLink = this.linkService.getLink(
       LinkKey.ENGLISH_LANGUAGE,
     );

@@ -7,30 +7,28 @@ import { HateoasLinksService } from '@core/index';
 
 @Injectable({ providedIn: 'root' })
 export class DepartmentService {
-    constructor(
-        private http: HttpClient,
-        private linkService: HateoasLinksService
-    ) { }
+  constructor(
+    private http: HttpClient,
+    private linkService: HateoasLinksService,
+  ) {}
 
-    public getDepartment(url: string): Observable<Department> {
-        return this.http.get<DepartmentDto>(url).pipe(
-            map(mapDepartment)
-        );
-    }
+  public getDepartment(url: string): Observable<Department> {
+    return this.http.get<DepartmentDto>(url).pipe(map(mapDepartment));
+  }
 
-    public getDepartments(): Observable<Department[]> {
-        const url = this.linkService.getLink(LinkKey.DEPARTMENTS)
+  public getDepartments(): Observable<Department[]> {
+    const url = this.linkService.getLink(LinkKey.DEPARTMENTS);
 
-        return this.http.get<DepartmentDto[]>(url).pipe(
-            map((departmentDtos) => departmentDtos.map(mapDepartment))
-        );
-    }
+    return this.http
+      .get<DepartmentDto[]>(url)
+      .pipe(map(departmentDtos => departmentDtos.map(mapDepartment)));
+  }
 }
 
 export function mapDepartment(departmentDto: DepartmentDto): Department {
-    return {
-        name: departmentDto.name,
-        displayName: formatName(departmentDto.name), // Add formatted name
-        self: departmentDto._links.self
-    };
+  return {
+    name: departmentDto.name,
+    displayName: formatName(departmentDto.name),
+    self: departmentDto._links.self,
+  };
 }

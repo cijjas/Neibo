@@ -11,16 +11,17 @@ import { environment } from 'environments/environment';
   providedIn: 'root',
 })
 export class ImageService {
-  private fallbackImage = environment.deployUrl + 'assets/images/default-profile.png';
+  private fallbackImage =
+    environment.deployUrl + 'assets/images/default-profile.png';
 
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
   ) {}
 
   fetchImage(
-    url: string | undefined | null
+    url: string | undefined | null,
   ): Observable<{ safeUrl: SafeUrl; isFallback: boolean }> {
     if (!url) {
       return of({
@@ -29,12 +30,12 @@ export class ImageService {
       });
     }
     return this.http.get(url, { responseType: 'blob' }).pipe(
-      map((blob) => {
+      map(blob => {
         const reader = new FileReader();
         const readerObservable = new Observable<{
           safeUrl: SafeUrl;
           isFallback: boolean;
-        }>((observer) => {
+        }>(observer => {
           reader.onloadend = () => {
             const dataUrl = reader.result as string;
             observer.next({
@@ -46,7 +47,7 @@ export class ImageService {
           reader.onerror = () => {
             observer.next({
               safeUrl: this.sanitizer.bypassSecurityTrustUrl(
-                this.fallbackImage
+                this.fallbackImage,
               ),
               isFallback: true,
             });
@@ -56,14 +57,13 @@ export class ImageService {
         });
         return readerObservable;
       }),
-      // Flatten the nested Observable
-      switchMap((innerObservable) => innerObservable),
+      switchMap(innerObservable => innerObservable),
       catchError(() =>
         of({
           safeUrl: this.sanitizer.bypassSecurityTrustUrl(this.fallbackImage),
           isFallback: true,
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -74,14 +74,14 @@ export class ImageService {
     formData.append('imageFile', image, image.name);
 
     return this.http.post(uploadUrl, formData, { observe: 'response' }).pipe(
-      map((response) => {
+      map(response => {
         const locationHeader = response.headers.get('Location');
         if (locationHeader) {
           return locationHeader;
         } else {
           throw new Error('Location header not found in the response');
         }
-      })
+      }),
     );
   }
 }

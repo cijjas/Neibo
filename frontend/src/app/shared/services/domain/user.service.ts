@@ -18,13 +18,13 @@ export class UserService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService,
-    private imageService: ImageService
+    private imageService: ImageService,
   ) {}
 
   public getUser(userUrl: string): Observable<User> {
     return this.http
       .get<UserDto>(userUrl)
-      .pipe(mergeMap((userDto) => mapUser(this.http, userDto)));
+      .pipe(mergeMap(userDto => mapUser(this.http, userDto)));
   }
 
   public getUsers(
@@ -32,7 +32,7 @@ export class UserService {
       userRole?: string;
       page?: number;
       size?: number;
-    } = {}
+    } = {},
   ): Observable<{ users: User[]; totalPages: number; currentPage: number }> {
     let userUrl: string = this.linkService.getLink(LinkKey.NEIGHBORHOOD_USERS);
 
@@ -48,23 +48,23 @@ export class UserService {
     return this.http
       .get<UserDto[]>(userUrl, { params, observe: 'response' })
       .pipe(
-        mergeMap((response) => {
+        mergeMap(response => {
           const usersDto = response.body || [];
           const linkHeader = response.headers.get('Link');
           const paginationInfo = parseLinkHeader(linkHeader);
 
-          const userObservables = usersDto.map((userDto) =>
-            mapUser(this.http, userDto)
+          const userObservables = usersDto.map(userDto =>
+            mapUser(this.http, userDto),
           );
 
           return forkJoin(userObservables).pipe(
-            map((users) => ({
+            map(users => ({
               users,
               totalPages: paginationInfo.totalPages,
               currentPage: paginationInfo.currentPage,
-            }))
+            })),
           );
-        })
+        }),
       );
   }
 
@@ -76,11 +76,11 @@ export class UserService {
     password: string,
     mail: string,
     language: string,
-    identification: number
+    identification: number,
   ): Observable<string | null> {
     let usersUrl: string = this.linkService.getLink(LinkKey.USERS);
     let unverifiedUserRole: string = this.linkService.getLink(
-      LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE
+      LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE,
     );
 
     const body: UserDto = {
@@ -95,7 +95,7 @@ export class UserService {
     };
 
     return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
-      map((response) => {
+      map(response => {
         const locationHeader = response.headers.get('Location');
         if (locationHeader) {
           return locationHeader;
@@ -104,10 +104,10 @@ export class UserService {
           return null;
         }
       }),
-      catchError((error) => {
+      catchError(error => {
         console.error('Error creating User', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -117,14 +117,14 @@ export class UserService {
     password: string,
     mail: string,
     language: string,
-    identification: number
+    identification: number,
   ): Observable<string | null> {
     let usersUrl: string = this.linkService.getLink(LinkKey.USERS);
     let workerUserRole: string = this.linkService.getLink(
-      LinkKey.WORKER_USER_ROLE
+      LinkKey.WORKER_USER_ROLE,
     );
     let workersNeighborhoodUrl: string = this.linkService.getLink(
-      LinkKey.WORKERS_NEIGHBORHOOD
+      LinkKey.WORKERS_NEIGHBORHOOD,
     );
 
     const body: UserDto = {
@@ -139,7 +139,7 @@ export class UserService {
     };
 
     return this.http.post(usersUrl, body, { observe: 'response' }).pipe(
-      map((response) => {
+      map(response => {
         const locationHeader = response.headers.get('Location');
         if (locationHeader) {
           return locationHeader;
@@ -148,10 +148,10 @@ export class UserService {
           return null;
         }
       }),
-      catchError((error) => {
+      catchError(error => {
         console.error('Error creating User', error);
         return of(null);
-      })
+      }),
     );
   }
 
@@ -162,11 +162,11 @@ export class UserService {
     return this.http
       .patch<UserDto>(updateUrl, { darkMode: updatedDarkMode })
       .pipe(
-        mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)),
-        catchError((error) => {
+        mergeMap(updatedUserDto => mapUser(this.http, updatedUserDto)),
+        catchError(error => {
           console.error('Failed to toggle dark mode:', error);
           return of(user);
-        })
+        }),
       );
   }
 
@@ -185,27 +185,27 @@ export class UserService {
     const updateUrl = user.self;
 
     return this.http.patch<UserDto>(updateUrl, { language: newLanguage }).pipe(
-      mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)),
-      catchError((error) => {
+      mergeMap(updatedUserDto => mapUser(this.http, updatedUserDto)),
+      catchError(error => {
         console.error('Failed to toggle language:', error);
         return of(user);
-      })
+      }),
     );
   }
 
   public updatePhoneNumber(
     userUrl: string,
-    phoneNumber: string
+    phoneNumber: string,
   ): Observable<User> {
     return this.http
       .patch<UserDto>(userUrl, { phoneNumber: phoneNumber })
-      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+      .pipe(mergeMap(updatedUserDto => mapUser(this.http, updatedUserDto)));
   }
 
   public requestNeighborhood(newNeighborhoodUrl: string): Observable<User> {
     let userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     let unverifiedUserRole: string = this.linkService.getLink(
-      LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE
+      LinkKey.UNVERIFIED_NEIGHBOR_USER_ROLE,
     );
 
     let body: UserDto = {
@@ -215,7 +215,7 @@ export class UserService {
 
     return this.http
       .patch<UserDto>(userUrl, body)
-      .pipe(mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto)));
+      .pipe(mergeMap(updatedUserDto => mapUser(this.http, updatedUserDto)));
   }
 
   public uploadProfilePicture(user: User, file: File): Observable<User> {
@@ -224,29 +224,27 @@ export class UserService {
         const updateUrl = user.self;
         return this.http
           .patch<UserDto>(updateUrl, { profilePicture: imageUrl })
-          .pipe(
-            mergeMap((updatedUserDto) => mapUser(this.http, updatedUserDto))
-          );
-      })
+          .pipe(mergeMap(updatedUserDto => mapUser(this.http, updatedUserDto)));
+      }),
     );
   }
 
   public verifyUser(user: User): Observable<User> {
     let neighborUserRoleUrl: string = this.linkService.getLink(
-      LinkKey.NEIGHBOR_USER_ROLE
+      LinkKey.NEIGHBOR_USER_ROLE,
     );
     return this.http
       .patch<UserDto>(user.self, { userRole: neighborUserRoleUrl })
-      .pipe(mergeMap((newUser) => mapUser(this.http, newUser)));
+      .pipe(mergeMap(newUser => mapUser(this.http, newUser)));
   }
 
   public rejectUser(user: User): Observable<User> {
     let rejectedUserRoleUrl: string = this.linkService.getLink(
-      LinkKey.REJECTED_USER_ROLE
+      LinkKey.REJECTED_USER_ROLE,
     );
     return this.http
       .patch<UserDto>(user.self, { userRole: rejectedUserRoleUrl })
-      .pipe(mergeMap((newUser) => mapUser(this.http, newUser)));
+      .pipe(mergeMap(newUser => mapUser(this.http, newUser)));
   }
 }
 
@@ -276,10 +274,10 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
         creationDate: userDto.creationDate,
         language: language._links.self,
         userRole: userRole.role,
-        userRoleDisplay: roleDisplayMapping[roleEnum] || 'Unknown Role', // Map to display-friendly name
-        userRoleEnum: roleEnum, // Add enum
+        userRoleDisplay: roleDisplayMapping[roleEnum] || 'Unknown Role',
+        userRoleEnum: roleEnum,
         self: userDto._links.self,
       } as User;
-    })
+    }),
   );
 }

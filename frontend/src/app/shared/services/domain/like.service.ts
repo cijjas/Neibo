@@ -16,7 +16,7 @@ import { HateoasLinksService } from '@core/index';
 export class LikeService {
   constructor(
     private http: HttpClient,
-    private linksService: HateoasLinksService
+    private linksService: HateoasLinksService,
   ) {}
 
   public getLike(url: string): Observable<Like> {
@@ -33,7 +33,7 @@ export class LikeService {
       onPost?: string;
       likedBy?: string;
     } = {},
-    expandPost = false
+    expandPost = false,
   ): Observable<{ likes: Like[]; totalPages: number; currentPage: number }> {
     let params = new HttpParams();
 
@@ -46,30 +46,30 @@ export class LikeService {
       params = params.set('likedBy', queryParams.likedBy);
 
     return this.http.get<LikeDto[]>(url, { params, observe: 'response' }).pipe(
-      mergeMap((response) => {
+      mergeMap(response => {
         const likesDto: LikeDto[] = response.body || [];
         const pagination = parseLinkHeader(response.headers.get('Link'));
 
-        const likeObservables = likesDto.map((likeDto) =>
+        const likeObservables = likesDto.map(likeDto =>
           expandPost
-            ? mapLike(this.http, likeDto) // Expand the full post details
+            ? mapLike(this.http, likeDto)
             : of({
                 date: likeDto.likeDate,
-                post: { self: likeDto._links.post }, // Only use the self link
+                post: { self: likeDto._links.post },
                 self: likeDto._links.self,
-              } as Like)
+              } as Like),
         );
 
         return forkJoin(likeObservables).pipe(
-          map((likes) => {
+          map(likes => {
             return {
               likes,
               totalPages: pagination.totalPages,
               currentPage: pagination.currentPage,
             };
-          })
+          }),
         );
-      })
+      }),
     );
   }
 
@@ -77,29 +77,27 @@ export class LikeService {
     const likesUrl = this.linksService.getLink(LinkKey.NEIGHBORHOOD_LIKES);
 
     return this.http.post(likesUrl, likeDto, { observe: 'response' }).pipe(
-      map((response) => {
+      map(response => {
         const locationHeader = response.headers.get('Location');
         if (!locationHeader) {
           throw new Error('Location header not found in response.');
         }
         return locationHeader;
       }),
-      catchError((error) => {
+      catchError(error => {
         console.error('Error creating like:', error);
         return throwError(() => new Error('Failed to create like.'));
-      })
+      }),
     );
   }
 
   public deleteLike(onPost: string, likedBy: string): Observable<void> {
     const likesUrl = this.linksService.getLink(LinkKey.NEIGHBORHOOD_LIKES);
 
-    // Set up the query parameters for the DELETE request
     const params = new HttpParams()
       .set('onPost', onPost)
       .set('likedBy', likedBy);
 
-    // Send the DELETE request
     return this.http.delete<void>(likesUrl, { params });
   }
 }
@@ -108,7 +106,7 @@ export function mapLike(http: HttpClient, likeDto: LikeDto): Observable<Like> {
   return forkJoin([
     http
       .get<PostDto>(likeDto._links.post)
-      .pipe(mergeMap((postDto) => mapPost(http, postDto))),
+      .pipe(mergeMap(postDto => mapPost(http, postDto))),
   ]).pipe(
     map(([post]) => {
       return {
@@ -116,6 +114,6 @@ export function mapLike(http: HttpClient, likeDto: LikeDto): Observable<Like> {
         post: post,
         self: likeDto._links.self,
       } as Like;
-    })
+    }),
   );
 }

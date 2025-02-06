@@ -11,7 +11,7 @@ export const appRoutes: Routes = [
   // Redirect root to login
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 
-  // Authentication
+  // Pubilc layout viewers
   {
     path: '',
     component: PublicLayoutComponent,
@@ -66,6 +66,7 @@ export const appRoutes: Routes = [
     ],
   },
 
+  // Main layout viewers
   {
     path: '',
     component: MainLayoutComponent,

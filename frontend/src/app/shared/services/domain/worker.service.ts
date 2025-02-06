@@ -8,14 +8,12 @@ import {
   UserDto,
   NeighborhoodDto,
   ProfessionDto,
-  ImageDto,
   ReviewsAverageDto,
   mapUser,
   parseLinkHeader,
   mapProfession,
   ReviewsCountDto,
   PostsCountDto,
-  Affiliation,
   UserService,
   LinkKey,
 } from '@shared/index';
@@ -138,7 +136,7 @@ export class WorkerService {
         switchMap(createdUserUrl => {
           if (!createdUserUrl) {
             console.error('User creation failed.');
-            return of(null); // Exit early if user creation fails
+            return of(null);
           }
 
           const body: WorkerDto = {

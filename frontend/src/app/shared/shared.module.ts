@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // For directives like routerLink
+import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from 'environments/environment';
 
@@ -8,7 +8,6 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-// Import shared components and pipes
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { SuccessToastComponent } from './components/success-toast/success-toast.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -76,7 +75,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   exports: [
     CommonModule,
-    RouterModule, // Export this to make router directives available in other modules
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
     NavbarComponent,

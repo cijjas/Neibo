@@ -44,7 +44,6 @@ export class PostService {
       .get<PostDto[] | PostDto>(workerPostsUrl, { params, observe: 'response' })
       .pipe(
         mergeMap(response => {
-          // Handle 204 No Content or empty body
           if (response.status === 204 || !response.body) {
             return of({
               posts: [],
@@ -53,7 +52,6 @@ export class PostService {
             });
           }
 
-          // Ensure postsDto is always an array
           let postsDto = response.body;
           if (!Array.isArray(postsDto)) {
             postsDto = [postsDto];
@@ -107,7 +105,6 @@ export class PostService {
       .get<PostDto[]>(workerPostsUrl, { params, observe: 'response' })
       .pipe(
         mergeMap(response => {
-          // Handle 204 No Content response
           if (response.status === 204 || !response.body) {
             return of({
               posts: [],
@@ -116,14 +113,12 @@ export class PostService {
             });
           }
 
-          // Parse the response for normal cases
           const postsDto = response.body || [];
           const linkHeader = response.headers.get('Link');
           const paginationInfo = linkHeader
             ? parseLinkHeader(linkHeader)
             : { totalPages: 0, currentPage: 0 };
 
-          // Process the posts
           const postObservables = postsDto.map(postDto =>
             mapWorkerPost(this.http, postDto),
           );
@@ -148,7 +143,7 @@ export class PostService {
       page?: number;
       size?: number;
       inChannel?: string;
-      withTag?: string[]; // Array of tags
+      withTag?: string[];
       withStatus?: string;
       postedBy?: string;
     } = {},
@@ -168,7 +163,7 @@ export class PostService {
     if (queryParams.postedBy)
       params = params.set('postedBy', queryParams.postedBy);
 
-    // Add each withTag as a separate query parameter
+    // Each withTag as a separate query parameter
     if (queryParams.withTag && queryParams.withTag.length > 0) {
       queryParams.withTag.forEach(tag => {
         params = params.append('withTag', tag);
@@ -179,7 +174,6 @@ export class PostService {
       .get<PostDto[]>(postsUrl, { params, observe: 'response' })
       .pipe(
         mergeMap(response => {
-          // Handle 204 No Content response
           if (response.status === 204 || !response.body) {
             return of({
               posts: [],
@@ -188,7 +182,6 @@ export class PostService {
             });
           }
 
-          // Parse the response for normal cases
           const postsDto = response.body || [];
           const linkHeader = response.headers.get('Link');
           const paginationInfo = linkHeader

@@ -16,7 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private userSessionService: UserSessionService,
     private preferencesService: PreferencesService,
     private router: Router,
-    private translate: TranslateService, // Add TranslateService
+    private translate: TranslateService,
   ) {
     this.channel = new BroadcastChannel('auth_channel');
   }

@@ -12,7 +12,6 @@ export function atLeastOneTagSelected(
 
 /**
  * Factory function for validating an image file’s size and format.
- * Returns error objects with keys only.
  */
 export function imageSizeAndFormatValidator(
   maxSizeMB: number = 2,
@@ -38,9 +37,8 @@ export function imageSizeAndFormatValidator(
   };
 }
 
-// validation-config.ts
 export const VALIDATION_CONFIG = {
-  // Amenity create
+  // constants
   name: {
     maxLength: 50,
     required: true,
@@ -50,18 +48,7 @@ export const VALIDATION_CONFIG = {
     required: true,
   },
 
-  // Announcements
-  subject: {
-    required: true,
-    maxLength: 100,
-  },
-  message: {
-    required: true,
-    maxLength: 500,
-  },
-
-  // General
-
+  // function validators
   atLeastOneTagSelected,
   imageValidator: imageSizeAndFormatValidator(2, [
     'image/jpeg',

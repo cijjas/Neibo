@@ -9,7 +9,7 @@ import { HateoasLinksService } from '@core/index';
 export class ProfessionService {
   constructor(
     private http: HttpClient,
-    private linkService: HateoasLinksService
+    private linkService: HateoasLinksService,
   ) {}
 
   public getProfession(url: string): Observable<Profession> {
@@ -19,7 +19,7 @@ export class ProfessionService {
   public getProfessions(
     queryParams: {
       forWorker?: string;
-    } = {}
+    } = {},
   ): Observable<Profession[]> {
     let params = new HttpParams();
 
@@ -30,7 +30,7 @@ export class ProfessionService {
 
     return this.http
       .get<ProfessionDto[]>(url, { params })
-      .pipe(map((professionDtos) => professionDtos.map(mapProfession)));
+      .pipe(map(professionDtos => professionDtos.map(mapProfession)));
   }
 }
 

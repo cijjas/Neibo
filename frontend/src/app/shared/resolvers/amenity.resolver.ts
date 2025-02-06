@@ -6,7 +6,7 @@ import {
   RouterStateSnapshot,
   Router,
 } from '@angular/router';
-import { AmenityService, Amenity } from '@shared/index'; // Adjust imports as needed
+import { AmenityService, Amenity } from '@shared/index';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
