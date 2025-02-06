@@ -65,10 +65,8 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
 
-    // Calculate the number of remaining slots for images
     const remainingSlots = 3 - this.images.length;
 
-    // Only allow uploading up to the remaining number of slots
     const filesToAdd = Array.from(input.files).slice(0, remainingSlots);
 
     for (let i = 0; i < filesToAdd.length; i++) {
@@ -78,12 +76,11 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.images.push({ file, preview: e.target.result });
-        this.clearImageError(); // Clear error if images are selected
+        this.clearImageError(); 
       };
       reader.readAsDataURL(file);
     }
 
-    // Clear the file input to allow selecting the same file again if needed
     input.value = '';
   }
 
@@ -93,7 +90,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
 
   removeImage(index: number): void {
     this.images.splice(index, 1);
-    this.clearImageError(); // Clear error if there are still images left
+    this.clearImageError(); 
   }
 
   clearImageError(): void {
@@ -111,16 +108,13 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     let val = this.listingForm.get('price')?.value || '';
     if (!val) return;
 
-    // Remove all non-digit and non-dot characters
     val = val.replace(/[^\d.]/g, '');
 
-    // Parse value
     let floatVal = parseFloat(val);
     if (isNaN(floatVal)) {
       floatVal = 0.0;
     }
 
-    // Format as currency
     let formatted =
       '$' +
       floatVal.toLocaleString('en-US', {
@@ -138,7 +132,6 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       return;
     }
 
-    // Ensure at least one image exists
     if (this.images.length === 0) {
       this.formErrors = this.translate.instant(
         'MARKETPLACE-PRODUCT-SELL-PAGE.PLEASE_UPLOAD_AT_LEAST_ONE_IMAGE_FOR_THE_PRODUCT',
@@ -146,12 +139,10 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       return;
     }
 
-    // Extract and clean form data
     const rawValue = this.listingForm.value;
     const userSelf = this.linkService.getLink(LinkKey.USER_SELF);
 
-    // Clean the price value by removing currency formatting
-    const priceString = rawValue.price.replace(/[^0-9.]/g, ''); // Remove all non-numeric characters except `.`.
+    const priceString = rawValue.price.replace(/[^0-9.]/g, ''); 
     const price = parseFloat(priceString);
 
     if (isNaN(price)) {
@@ -161,11 +152,10 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       return;
     }
 
-    // Prepare product data
     const productData: any = {
       name: rawValue.title,
       description: rawValue.description,
-      price: price, // Send the price as a double
+      price: price, 
       used: rawValue.used,
       department: rawValue.departmentId,
       remainingUnits: rawValue.quantity,
@@ -173,7 +163,6 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       images: [],
     };
 
-    // Upload images
     const imageUploadObservables = this.images.map(img =>
       this.imageService.createImage(img.file),
     );

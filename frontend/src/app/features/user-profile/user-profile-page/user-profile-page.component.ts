@@ -108,11 +108,9 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     if (fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
 
-      // Set the file on the FormControl so that validation is triggered.
       this.profileImageControl.setValue(file);
       this.profileImageControl.updateValueAndValidity();
 
-      // If the file does not meet the validation requirements, show error messages.
       if (this.profileImageControl.errors) {
         if (this.profileImageControl.errors['fileSize']) {
           this.toastService.showToast(
@@ -129,7 +127,6 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // If the file passes validation, use FileReader to create a preview and upload.
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.profileImageSafeUrl = e.target.result;

@@ -13,15 +13,12 @@ import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
   templateUrl: './service-providers-create-post.component.html',
 })
 export class ServiceProvidersCreatePostComponent {
-  // Reactive form
   createWrokerPostForm: FormGroup;
 
-  // Channel data
   channelList: Channel[] = [];
   channel: string;
   workerId: string;
 
-  // For image preview, etc.
   imagePreviewUrl: string | ArrayBuffer | null = null;
   fileUploadError: string | null = null;
 
@@ -37,17 +34,14 @@ export class ServiceProvidersCreatePostComponent {
   ) {}
 
   ngOnInit(): void {
-    // Build form
     this.createWrokerPostForm = this.fb.group({
       title: ['', Validators.required],
       body: ['', Validators.required],
-      // Keep image optional or add a custom validator if you want
       imageFile: [null, VALIDATION_CONFIG.imageValidator],
       channel: [''],
       user: [''],
     });
 
-    // Listen to route queryParams
     this.route.queryParams.subscribe(params => {
       this.channel = params['inChannel'];
       this.workerId = params['forWorker'];
@@ -63,7 +57,6 @@ export class ServiceProvidersCreatePostComponent {
   onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
-    // Optionally add a highlight class in CSS
   }
 
   onDrop(event: DragEvent) {
@@ -79,14 +72,6 @@ export class ServiceProvidersCreatePostComponent {
     this.createWrokerPostForm.patchValue({ imageFile: file });
     this.imageFileControl?.markAsTouched();
 
-    // If you want to do validation checks, do them here
-    // If there's an error, remove the preview:
-    // if (this.imageFileControl?.errors) {
-    //   this.imagePreviewUrl = null;
-    //   return;
-    // }
-
-    // Else show preview
     const reader = new FileReader();
     reader.onload = () => {
       this.imagePreviewUrl = reader.result;
@@ -99,17 +84,9 @@ export class ServiceProvidersCreatePostComponent {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Patch into form
     this.createWrokerPostForm.patchValue({ imageFile: file });
     this.imageFileControl?.markAsTouched();
 
-    // If invalid, remove preview (only if you have a validator)
-    // if (this.imageFileControl?.errors) {
-    //   this.imagePreviewUrl = null;
-    //   return;
-    // }
-
-    // Show preview
     const reader = new FileReader();
     reader.onload = e => (this.imagePreviewUrl = reader.result);
     reader.readAsDataURL(file);
@@ -119,7 +96,6 @@ export class ServiceProvidersCreatePostComponent {
   removeImage(): void {
     this.imagePreviewUrl = null;
 
-    // Reset the form control
     const imageControl = this.createWrokerPostForm.get('imageFile');
     if (imageControl) {
       imageControl.patchValue(null);
@@ -128,7 +104,6 @@ export class ServiceProvidersCreatePostComponent {
       imageControl.markAsUntouched();
     }
 
-    // Clear the native <input type="file">
     const input = document.getElementById('images') as HTMLInputElement;
     if (input) {
       input.value = '';
@@ -144,7 +119,6 @@ export class ServiceProvidersCreatePostComponent {
 
     const formValue = { ...this.createWrokerPostForm.value };
 
-    // Get the current user and create the post
     this.userSessionService
       .getCurrentUser()
       .pipe(
@@ -153,7 +127,6 @@ export class ServiceProvidersCreatePostComponent {
           formValue.user = user.self;
           formValue.channel = this.channel;
 
-          // Upload image if present
           return this.createImageObservable(formValue.imageFile).pipe(
             switchMap(imageUrl => {
               if (imageUrl) {
@@ -172,7 +145,6 @@ export class ServiceProvidersCreatePostComponent {
             ),
             'success',
           );
-          // Navigate to the worker's posts
           this.router.navigate(['/services', 'profiles', this.workerId], {
             queryParams: { tab: 'posts' },
           });
@@ -189,9 +161,6 @@ export class ServiceProvidersCreatePostComponent {
       });
   }
 
-  /**
-   * Uploads the image if present, returns image URL or null.
-   */
   private createImageObservable(imageFile: File | null) {
     if (!imageFile) {
       return of(null);

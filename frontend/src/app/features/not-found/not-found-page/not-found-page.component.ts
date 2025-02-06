@@ -6,13 +6,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './not-found-page.component.html',
 })
 export class NotFoundPageComponent implements OnInit {
-  errorCode: string = '404'; // Default code for unmatched routes
+  errorCode: string = '404'; 
   errorMessage: string = '';
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    // Check for query parameters (HTTP errors)
     this.route.queryParams.subscribe(params => {
       if (params['code']) {
         this.errorCode = params['code'];

@@ -20,7 +20,6 @@ import {
 } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 
-// ----- Fake Translate Pipe -----
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {
@@ -28,15 +27,12 @@ class FakeTranslatePipe implements PipeTransform {
   }
 }
 
-// ----- Create a complete dummy ActivatedRoute -----
 const fakeActivatedRoute = {
   queryParams: of({ inChannel: 'channelTest', forWorker: 'worker123' }),
 } as unknown as ActivatedRoute;
 
-// ----- Dummy user (minimal) -----
 const dummyUser = { self: 'user_self' };
 
-// ----- Service Spies / Stubs -----
 const postServiceSpy = jasmine.createSpyObj('PostService', ['createPost']);
 const imageServiceSpy = jasmine.createSpyObj('ImageService', ['createImage']);
 const toastServiceSpy = jasmine.createSpyObj('ToastService', ['showToast']);
@@ -48,10 +44,8 @@ const hateoasLinksServiceSpy = jasmine.createSpyObj('HateoasLinksService', [
 ]);
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-// Stub for user session: returns a dummy user.
 userSessionSpy.getCurrentUser.and.returnValue(of(dummyUser));
 
-// Stub for link lookup: when asked for 'USER_SELF', return dummy value.
 hateoasLinksServiceSpy.getLink.and.callFake((key: string) => {
   if (key === 'USER_SELF') {
     return 'user_self';
@@ -94,7 +88,6 @@ describe('ServiceProvidersCreatePostComponent', () => {
   // Test 1: Initialization – verify that the reactive form is built and query parameters are read.
   it('should initialize the form and set channel and workerId from query params', () => {
     expect(component.createWrokerPostForm).toBeDefined();
-    // Our fakeActivatedRoute provides queryParams { inChannel: 'channelTest', forWorker: 'worker123' }.
     expect(component.channel).toEqual('channelTest');
     expect(component.workerId).toEqual('worker123');
   });
@@ -105,7 +98,6 @@ describe('ServiceProvidersCreatePostComponent', () => {
     const dummyFile = new File(['dummy content'], 'test.png', {
       type: 'image/png',
     });
-    // Use DataTransfer to create a valid FileList.
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(dummyFile);
     const inputElement = document.createElement('input');
@@ -113,7 +105,7 @@ describe('ServiceProvidersCreatePostComponent', () => {
     inputElement.files = dataTransfer.files;
 
     const dummyResult = 'data:image/png;base64,dummy';
-    // Create a fake FileReader that returns a dummy data URL.
+
     class FakeFileReader {
       public result: any;
       public onload: any;
@@ -134,35 +126,29 @@ describe('ServiceProvidersCreatePostComponent', () => {
 
   // Test 3: onSubmit – simulate a valid form submission (with image) and verify navigation and toast.
   it('should submit the form and navigate on success', fakeAsync(() => {
-    // Patch the form with valid values.
     component.createWrokerPostForm.patchValue({
       title: 'Test Title',
       body: 'Test Body',
       channel: '',
       user: '',
     });
-    // Also, set an image file.
     const dummyFile = new File(['dummy content'], 'test.png', {
       type: 'image/png',
     });
     component.createWrokerPostForm.patchValue({ imageFile: dummyFile });
 
-    // Stub imageService.createImage to return an observable of a dummy URL.
     imageServiceSpy.createImage.and.returnValue(
       of('http://dummyimage.com/img.png'),
     );
-    // Stub postService.createPost to return an observable (simulate a successful creation).
     postServiceSpy.createPost.and.returnValue(of('post_created_url'));
 
     component.onSubmit();
     tick();
 
-    // Verify that the toastService is called with success message.
     expect(toastServiceSpy.showToast).toHaveBeenCalledWith(
       'SERVICE-PROVIDERS-CREATE-POST.YOUR_POST_WAS_CREATED_SUCCESSFULLY',
       'success',
     );
-    // Verify that the router navigates to the expected URL.
     expect(routerSpy.navigate).toHaveBeenCalledWith(
       ['/services', 'profiles', 'worker123'],
       { queryParams: { tab: 'posts' } },

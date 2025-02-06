@@ -43,7 +43,6 @@ export class ServiceProvidersReviewDialogComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Clean up BehaviorSubject
     this.workerSubject.complete();
   }
 }

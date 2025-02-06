@@ -1,24 +1,17 @@
-<!-- Navbar -->
-
 <div class="container">
   <div class="row init">
-    <!-- Left Column -->
     <div class="column-left">
       <app-sidebar></app-sidebar>
     </div>
 
-    <!-- Center Grid -->
     <div id="center-grid" class="column-center ps-3">
-      <!-- Upper marketplace buttons -->
       <app-marketplace-control-bar
         [channel]="'BuyerHub'"
       ></app-marketplace-control-bar>
 
       <div class="cool-static-container w-100 f-c-c-c g-05">
-        <!-- Buttons row (matching JSP structure) -->
         <div class="f-c-s-s w-100">
           <div class="f-r-c-c pt-2 pb-2">
-            <!-- "My requests" button -->
             <a
               [routerLink]="['/marketplace/buyer-hub', 'requests']"
               class="cool-action-button rounded marketplace-button font-weight-bold"
@@ -27,7 +20,6 @@
               <i class="fa-solid fa-basket-shopping"></i>
               <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.MY_REQUESTS" | translate }}</span>
             </a>
-            <!-- "My purchases" button -->
             <a
               [routerLink]="['/marketplace/buyer-hub', 'purchases']"
               class="cool-action-button rounded marketplace-button font-weight-bold"
@@ -40,9 +32,7 @@
         </div>
         <div class="divider mb-3"></div>
 
-        <!-- Purchases Section -->
         <ng-container *ngIf="isPurchases; else showRequests">
-          <!-- If no purchases -->
           <div
             class="no-posts-found"
             *ngIf="purchaseList && purchaseList.length === 0"
@@ -51,7 +41,6 @@
             {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.PURCHASES_NOT_FOUND" | translate }}
           </div>
 
-          <!-- Otherwise, show all purchases -->
           <div
             class="w-100 f-c-c-c g-1"
             *ngIf="purchaseList && purchaseList.length > 0"
@@ -60,14 +49,12 @@
               class="cool-static-container w-100 f-c-s-s g-0 p-0"
               *ngFor="let purchase of purchaseList"
             >
-              <!-- Top row: date/time -->
               <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2">
                 <div>{{ purchase.fulfilledAt | date : "dd MMM yyyy" }}</div>
                 <div>{{ purchase.fulfilledAt | date : "HH:mm" }}</div>
               </div>
               <div class="divider m-0"></div>
 
-              <!-- Purchase details -->
               <div class="container">
                 <div class="f-r-c-c w-100 g-1">
                   <div class="ps-0">
@@ -96,7 +83,6 @@
                         >
                           {{ purchase.product.department?.name }}
                         </div>
-                        <!-- Used / New -->
                         <div
                           *ngIf="purchase.product.used; else newPurchase"
                           class="used-tag used font-weight-normal"
@@ -151,7 +137,6 @@
               </div>
             </div>
 
-            <!-- Bottom paginator if totalPages > 1 -->
             <app-paginator
               [totalPages]="totalPages"
               [currentPage]="page"
@@ -162,9 +147,7 @@
           </div>
         </ng-container>
 
-        <!-- Requests Section -->
         <ng-template #showRequests>
-          <!-- If no requests -->
           <div
             class="no-posts-found"
             *ngIf="requestList && requestList.length === 0"
@@ -173,7 +156,6 @@
             {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.NO_NEW_REQUESTS" | translate }}
           </div>
 
-          <!-- Otherwise, show all requests -->
           <div
             class="w-100 f-c-c-c g-1"
             *ngIf="requestList && requestList.length > 0"
@@ -182,7 +164,6 @@
               class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-2"
               *ngFor="let request of requestList"
             >
-              <!-- Top row with date/time -->
               <div
                 class="f-r-sb-c w-100 pb-0 pt-2"
                 style="padding-left: 1em; padding-right: 1em"
@@ -192,7 +173,6 @@
               </div>
               <div class="divider"></div>
 
-              <!-- Inner container for product details -->
               <div class="container">
                 <div class="f-r-c-c w-100 g-1">
                   <div class="ps-0">
@@ -215,14 +195,12 @@
                         {{ request.product.name }}
                       </span>
                       <div class="f-r-c-c g-05">
-                        <!-- Department tag -->
                         <div
                           class="department-tag"
                           (click)="goToDepartment(request.product.department)"
                         >
                           {{ request.product.department?.name }}
                         </div>
-                        <!-- Used/New condition -->
                         <div
                           *ngIf="request.product.used; else newTag"
                           class="used-tag used font-weight-normal"
@@ -283,7 +261,6 @@
             </div>
           </div>
 
-          <!-- Page selector at bottom if totalPages > 1 -->
           <app-paginator
             [totalPages]="totalPages"
             [currentPage]="page"
@@ -297,5 +274,4 @@
   </div>
 </div>
 
-<!-- Footer -->
 <app-wave-footer [theme]="'marketplace'"></app-wave-footer>

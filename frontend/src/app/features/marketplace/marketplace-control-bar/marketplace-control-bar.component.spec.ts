@@ -18,7 +18,7 @@ describe('MarketplaceControlBarComponent', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        TranslateModule.forRoot(), // Provides the translate pipe.
+        TranslateModule.forRoot(), 
       ],
       declarations: [MarketplaceControlBarComponent],
       providers: [
@@ -28,10 +28,8 @@ describe('MarketplaceControlBarComponent', () => {
           useValue: { queryParams: of({ inDepartment: 'dept1' }) },
         },
       ],
-      // NO_ERRORS_SCHEMA to ignore any unknown elements.
       schemas: [NO_ERRORS_SCHEMA],
     })
-      // Override the template to avoid processing the actual template that uses routerLink etc.
       .overrideTemplate(
         MarketplaceControlBarComponent,
         `<div>Dummy Template</div>`,
@@ -45,17 +43,15 @@ describe('MarketplaceControlBarComponent', () => {
   });
 
   it('should create and initialize with default department', () => {
-    // Provide a dummy department list.
     const mockDepartments: Department[] = [
       { name: 'Electronics', displayName: 'Electronics', self: 'dept1' },
       { name: 'Clothing', displayName: 'Clothing', self: 'dept2' },
     ];
     departmentServiceSpy.getDepartments.and.returnValue(of(mockDepartments));
 
-    fixture.detectChanges(); // Triggers ngOnInit
+    fixture.detectChanges(); 
 
     expect(component).toBeTruthy();
-    // The ActivatedRoute query param 'inDepartment' equals 'dept1' so the component should pick the department with self 'dept1'
     expect(component.departmentName).toEqual('Electronics');
   });
 });

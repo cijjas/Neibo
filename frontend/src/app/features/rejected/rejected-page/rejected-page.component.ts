@@ -38,7 +38,6 @@ export class RejectedPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Initializations if needed
   }
 
   fetchNeighborhoods = (page: number, size: number): Observable<any> => {
@@ -55,9 +54,6 @@ export class RejectedPageComponent implements OnInit {
     return neighborhood.name;
   };
 
-  /**
-   * Handle form submission.
-   */
   onSubmit(): void {
     this.submitted = true;
 
@@ -69,7 +65,6 @@ export class RejectedPageComponent implements OnInit {
         .requestNeighborhood(selectedNeighborhood.self)
         .subscribe({
           next: () => {
-            // Update the user role to "UNVERIFIED"
             this.userSessionService.updateUserProperty(
               'userRole',
               Role.UNVERIFIED_NEIGHBOR
@@ -83,16 +78,13 @@ export class RejectedPageComponent implements OnInit {
               'Unverified'
             );
 
-            // Update standalone currentUserRole in local storage
             this.userSessionService.setUserRole(Role.UNVERIFIED_NEIGHBOR);
 
-            // Show success message
             this.toastService.showToast(
               this.translate.instant('REJECTED-PAGE.SUCCESSFULLY_REQUESTED'),
               'success'
             );
 
-            // Optional: Reload or navigate as needed
             this.router.navigate(['/unverified']);
           },
           error: () => {
@@ -107,9 +99,6 @@ export class RejectedPageComponent implements OnInit {
     }
   }
 
-  /**
-   * Navigate back to the main page or login.
-   */
   goBackToMainPage(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

@@ -26,7 +26,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   department: string;
   productImages: string[] = [];
   currentBigImage: string = '';
-  selectedImageIndex: number = 0; // Default to the first image
+  selectedImageIndex: number = 0; 
 
   channel: string = 'Marketplace';
 
@@ -36,14 +36,13 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   questions: Inquiry[] = [];
   totalPages: number = 1;
   page: number = 1;
-  size: number = 10; // Default size for inquiries
+  size: number = 10; 
   requestError: boolean = false;
 
   phoneNumber: string = '';
   requestMessage: string = '';
   phoneRequestMessage: string = '';
 
-  // Controls for dialogs
   requestDialogVisible: boolean = false;
   replyDialogVisible: boolean = false;
   questionForReply: any;
@@ -51,7 +50,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   replyMessage: string = '';
   questionMessage: string = '';
 
-  // toast
   toastVisible: boolean = false;
   toastMessage: string = '';
   toastType: 'success' | 'error' = 'success';
@@ -69,7 +67,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get resolved product from route data
     this.route.data.subscribe(({ product }) => {
       if (!product) {
         console.error('Product not found or failed to resolve');
@@ -81,14 +78,12 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
       this.loadInquiries();
     });
 
-    // Get current user
     this.userService
       .getUser(this.linkService.getLink(LinkKey.USER_SELF))
       .subscribe(user => {
         this.loggedUser = user;
       });
 
-    // Watch for questions query params (pagination)
     this.route.queryParams.subscribe(params => {
       this.page = params['page'] ? +params['page'] : 1;
       this.size = params['size'] ? +params['size'] : 10;
@@ -121,7 +116,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     ].filter(image => !!image);
   }
 
-  // Methods to show/hide dialogs
   openRequestDialog() {
     this.requestDialogVisible = true;
     this.cdr.detectChanges();
@@ -142,7 +136,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     this.replyMessage = '';
   }
 
-  // Create inquiry
   submitQuestionForm() {
     if (!this.loggedUser || !this.product) {
       console.error('User or product not loaded');
@@ -150,7 +143,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     }
 
     if (!this.questionMessage.trim()) {
-      return; // Prevent submitting empty questions
+      return; 
     }
 
     this.inquiryService
@@ -267,7 +260,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   }
 
   getAmountOptions(): number[] {
-    const stock = this.product?.stock || 1; // Default to 1 if product.stock is undefined
+    const stock = this.product?.stock || 1; 
     return Array.from({ length: stock }, (_, i) => i + 1);
   }
 
@@ -327,7 +320,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: this.page, size: this.size },
-      queryParamsHandling: 'merge', // Merge with other existing query params
+      queryParamsHandling: 'merge', 
     });
   }
 }

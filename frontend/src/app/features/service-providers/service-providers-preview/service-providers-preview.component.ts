@@ -26,10 +26,8 @@ export class ServiceProvidersPreviewComponent implements OnInit {
   }
 
   onProfessionClick(event: MouseEvent, profession: Profession) {
-    // Prevent the click from reaching the parent <a> tag
     event.stopPropagation();
 
-    // Now call your filtering function
     this.setProfession(profession);
   }
   setProfession(prof: Profession | null): void {

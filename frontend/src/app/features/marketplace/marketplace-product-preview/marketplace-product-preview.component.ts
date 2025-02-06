@@ -17,7 +17,6 @@ export class MarketplaceProductPreviewComponent {
 
 
   onProductClick(): void {
-    // Navigate to product detail page
 
     this.router.navigate(['/marketplace/products', this.product.self]);
   }

@@ -20,9 +20,6 @@ import {
 } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 
-//
-// Fake Translate Pipe
-//
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {
@@ -30,17 +27,11 @@ class FakeTranslatePipe implements PipeTransform {
   }
 }
 
-//
-// Stub for TranslateService
-//
 const fakeTranslateService = {
   instant: (key: string) => key,
   get: (key: string) => of(key),
 };
 
-//
-// Dummy departments data
-//
 const dummyDepartments = [
   { self: 'dept1', name: 'Dept 1', displayName: 'Department 1' },
   { self: 'dept2', name: 'Dept 2', displayName: 'Department 2' },
@@ -70,9 +61,7 @@ describe('MarketplaceProductSellPageComponent', () => {
     ]);
     userSessionServiceStub = {};
 
-    // Stub departmentService.getDepartments to return dummy departments.
     departmentServiceSpy.getDepartments.and.returnValue(of(dummyDepartments));
-    // Stub linkService.getLink: when asked for LinkKey.USER_SELF, return a dummy value.
     linkServiceSpy.getLink.and.callFake((key: string) => {
       if (key === 'USER_SELF') {
         return 'userSelf';
@@ -110,18 +99,15 @@ describe('MarketplaceProductSellPageComponent', () => {
 
   // Test 2: onFileChange – when a valid image file is selected, it should be read and added.
   it('should add new image on file change', fakeAsync(() => {
-    // Create a valid File instance.
     const dummyFile = new File(['dummy content'], 'test.png', {
       type: 'image/png',
     });
-    // Use DataTransfer to simulate a valid FileList.
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(dummyFile);
     const inputElement = document.createElement('input');
     inputElement.type = 'file';
     inputElement.files = dataTransfer.files;
 
-    // Create a fake FileReader that returns a dummy data URL.
     const dummyResult = 'data:image/png;base64,dummy';
     class FakeFileReader {
       public onload: any;
@@ -131,7 +117,6 @@ describe('MarketplaceProductSellPageComponent', () => {
     }
     spyOn(window as any, 'FileReader').and.returnValue(new FakeFileReader());
 
-    // Simulate the file input change event.
     const event = { target: inputElement } as unknown as Event;
     component.onFileChange(event);
     tick();
@@ -142,7 +127,6 @@ describe('MarketplaceProductSellPageComponent', () => {
 
   // Test 3: onSubmit – if the form is valid but no images exist, it should set formErrors.
   it('should set formErrors on submit when no images exist', () => {
-    // Patch the form with valid values.
     component.listingForm.patchValue({
       title: 'Test Title',
       price: '$100.00',
@@ -151,7 +135,6 @@ describe('MarketplaceProductSellPageComponent', () => {
       used: false,
       quantity: 10,
     });
-    // Ensure the images array is empty.
     component.images = [];
     component.onSubmit();
     expect(component.formErrors).toEqual(

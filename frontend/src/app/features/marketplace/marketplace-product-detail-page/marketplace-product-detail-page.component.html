@@ -1,13 +1,10 @@
 <div class="container">
   <div class="row init">
     <div class="column-left">
-      <!-- Left column widgets: Replace this comment with Angular components or *ngIf sections -->
       <app-sidebar></app-sidebar>
     </div>
 
     <div id="center-grid" class="column-center ps-3">
-      <!-- Replace with a component or code block for upperMarketplaceButtons -->
-      <!-- <app-marketplace-control-bar></app-marketplace-control-bar> -->
       <app-marketplace-control-bar
         [channel]="channel"
       ></app-marketplace-control-bar>
@@ -15,10 +12,8 @@
       <div class="cool-static-container w-100 p-0">
         <div class="container">
           <div class="d-flex">
-            <!-- LEFT SIDE -->
             <div class="col-8 pt-3 pb-3 pe-0">
               <div class="d-flex w-100 h-100">
-                <!-- Small Images -->
                 <div
                   class="col-3 product-small-img d-flex flex-column align-items-start"
                 >
@@ -38,7 +33,6 @@
                   </ng-container>
                 </div>
 
-                <!-- Big Image -->
                 <div
                   class="col-9 p-0 d-flex align-items-center justify-content-center big-image-container"
                 >
@@ -52,7 +46,6 @@
               </div>
             </div>
 
-            <!-- RIGHT SIDE -->
             <div class="col-4 pt-3 pb-3">
               <div
                 class="f-c-s-s w-100 g-05 p-3 pt-4"
@@ -62,7 +55,6 @@
                   box-shadow: -2px 4px 0 0 var(--lila);
                 "
               >
-                <!-- Condition for product.used -->
                 <span class="font-weight-normal font-size-16 f-r-sb-c w-100">
                   <span>{{ product?.used ? ('MARKETPLACE-PRODUCT-DETAIL-PAGE.USED' | translate) : ('MARKETPLACE-PRODUCT-DETAIL-PAGE.NEW' | translate) }}</span>
 
@@ -121,7 +113,6 @@
                   >
                 </div>
 
-                <!-- If loggedUser different from product.seller -->
                 <ng-container
                   *ngIf="
                     loggedUser?.self !== product?.seller?.self;
@@ -137,7 +128,6 @@
                   </button>
                 </ng-container>
                 <ng-template #editListing>
-                  <!-- If same user, show edit link -->
                   <a
                     [routerLink]="[
                       '/marketplace/products',
@@ -153,7 +143,6 @@
             </div>
           </div>
 
-          <!-- Description -->
           <div
             class="row pt-2 ps-2 pe-2"
             style="background-color: var(--on-onbackground)"
@@ -169,12 +158,10 @@
               <div class="divider w-100 mt-3 mb-3"></div>
 
               <div class="f-c-s-s">
-                <!-- Ask the seller if loggedUser != product.seller -->
                 <ng-container
                   *ngIf="loggedUser?.self !== product?.seller?.self"
                 >
                   <span class="c-text font-size-16 g-05">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_THE_SELLER" | translate }}</span>
-                  <!-- Implement Angular form or template-driven form here -->
                   <form #questionForm="ngForm" class="f-r-sb-c w-100">
                     <input
                       name="questionMessage"
@@ -193,7 +180,6 @@
                   </form>
                 </ng-container>
 
-                <!-- Show questions if any -->
                 <ng-container *ngIf="questions?.length > 0; else noQuestions">
                   <div>{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.RECENTLY_ASKED_QUESTIONS" | translate }}</div>
                   <div
@@ -204,7 +190,6 @@
                       <span class="font-weight-normal c-text font-size-14">
                         {{ question.inquiryMessage }}
                       </span>
-                      <!-- If loggedUser is the seller and no reply yet -->
                       <ng-container
                         *ngIf="
                           loggedUser?.self == product?.seller?.self &&
@@ -227,7 +212,6 @@
                         </a>
                       </ng-container>
                     </div>
-                    <!-- If replied -->
                     <div
                       *ngIf="question.responseMessage"
                       class="f-r-s-s w-100 g-05"
@@ -241,8 +225,6 @@
                     </div>
                   </div>
                 </ng-container>
-
-                <!-- Paginator -->
 
                 <ng-template #noQuestions>
                   <div class="f-c-s-s w-100">
@@ -277,19 +259,14 @@
         </div>
       </div>
     </div>
-    <!-- center-grid -->
   </div>
-  <!-- row init -->
 </div>
-<!-- container -->
 
-<!-- REQUEST DIALOG -->
 <div
   id="request-dialog"
   class="dialog"
   [ngClass]="{ 'show-dialog': requestDialogVisible }"
 >
-  <!-- If loggedUser has no phoneNumber -->
   <ng-container *ngIf="true; else hasPhoneNumber">
     <div class="dialog-content marketplace">
       <div class="dialog-header">
@@ -394,7 +371,6 @@
               </defs>
             </svg>
           </div>
-          <!-- Overlay Text -->
           <div class="reply-dialog-text">
             <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST" | translate }}</h3>
             <p class="font-weight-normal font-size-14">
@@ -403,7 +379,6 @@
           </div>
         </div>
       </div>
-      <!-- Close Button -->
       <a class="close-button marketplace" (click)="closeRequestDialog()">
         <i class="fas fa-close"></i>
       </a>
@@ -597,7 +572,6 @@
               </defs>
             </svg>
           </div>
-          <!-- Overlay Text -->
           <div class="reply-dialog-text">
             <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST" | translate }}</h3>
             <p class="font-weight-normal font-size-14">
@@ -607,19 +581,16 @@
         </div>
       </div>
 
-      <!-- Close Button -->
       <a class="close-button marketplace" (click)="closeRequestDialog()">
         <i class="fas fa-close"></i>
       </a>
 
-      <!-- Action Form -->
       <form
         #requestForm="ngForm"
         class="f-c-c-c w-100"
         (ngSubmit)="submitRequestForm(requestForm)"
       >
         <div class="form-group w-75">
-          <!-- Message Field -->
           <textarea
             name="message"
             ngModel
@@ -644,7 +615,6 @@
             >
           </div>
 
-          <!-- Amount Field -->
           <select
             name="amount"
             ngModel="1"
@@ -676,7 +646,6 @@
   </ng-template>
 </div>
 
-<!-- Reply Dialog -->
 <div
   id="reply-dialog"
   class="dialog"
@@ -785,7 +754,6 @@
             </defs>
           </svg>
         </div>
-        <!-- Overlay Text -->
         <div class="reply-dialog-text">
           <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY_TO_INQUIRY" | translate }}</h3>
           <p class="font-weight-normal font-size-14">
@@ -794,11 +762,9 @@
         </div>
       </div>
     </div>
-    <!-- Close Button -->
     <a class="close-button marketplace" (click)="closeReplyDialog()">
       <i class="fas fa-close"></i>
     </a>
-    <!-- Action Buttons -->
     <form class="f-c-c-c w-100" (ngSubmit)="submitReplyForm()">
       <div class="form-group w-75">
         <textarea

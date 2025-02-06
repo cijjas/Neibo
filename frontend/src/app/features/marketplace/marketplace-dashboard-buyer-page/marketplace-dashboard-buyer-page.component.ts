@@ -15,12 +15,10 @@ import { environment } from 'environments/environment';
   templateUrl: './marketplace-dashboard-buyer-page.component.html',
 })
 export class MarketplaceDashboardBuyerPageComponent implements OnInit {
-  // Pagination
   page: number = 1;
   totalPages: number = 1;
   size: number = 10;
 
-  // Lists for requests & purchases
   requestList: Request[] = [];
   purchaseList: Request[] = [];
 
@@ -36,17 +34,14 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   }
 
   get isRequests(): boolean {
-    // If it's not 'purchases', we consider it 'requests'.
     return this.route.snapshot.paramMap.get('mode') !== 'purchases';
   }
 
   ngOnInit(): void {
-    // Subscribe to route changes
     this.route.paramMap.subscribe((params: ParamMap) => {
       const mode = params.get('mode');
       this.clearLists();
 
-      // Load the correct list based on the current route
       if (mode === 'purchases') {
         this.loadPurchases();
       } else {
@@ -54,12 +49,10 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
       }
     });
 
-    // Also handle query params for pagination
     this.route.queryParams.subscribe(queryParams => {
       this.page = queryParams['page'] ? +queryParams['page'] : 1;
       this.size = queryParams['size'] ? +queryParams['size'] : 10;
 
-      // Reload data when page changes
       if (this.isPurchases) {
         this.loadPurchases();
       } else {
@@ -69,7 +62,6 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   }
 
   clearLists(): void {
-    // Clear the lists before reloading new data
     this.requestList = [];
     this.purchaseList = [];
   }
@@ -130,7 +122,6 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
     this.page = newPage;
     this.updateQueryParams();
 
-    // Re-fetch based on current mode
     if (this.isPurchases) {
       this.loadPurchases();
     } else {
@@ -152,7 +143,6 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
           environment.deployUrl +
           'assets/images/default-product.png';
   }
-  /** Department navigation (shared by both requests and purchases) */
   goToDepartment(department: Department): void {
     this.router.navigate(['/marketplace'], {
       queryParams: { inDepartment: department.self },

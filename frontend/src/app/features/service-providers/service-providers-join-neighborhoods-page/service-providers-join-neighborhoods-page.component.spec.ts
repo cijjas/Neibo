@@ -15,7 +15,6 @@ import { HateoasLinksService, ToastService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 import { Affiliation, Neighborhood, LinkKey } from '@shared/models';
 
-// ----- Fake Translate Pipe -----
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {
@@ -23,7 +22,6 @@ class FakeTranslatePipe implements PipeTransform {
   }
 }
 
-// ----- Service Spies / Stubs -----
 const affiliationServiceSpy = jasmine.createSpyObj('AffiliationService', [
   'getAffiliations',
   'deleteAffiliation',
@@ -36,7 +34,6 @@ const linkServiceSpy = jasmine.createSpyObj('HateoasLinksService', ['getLink']);
 const toastServiceSpy = jasmine.createSpyObj('ToastService', ['showToast']);
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-// Dummy data for affiliations and neighborhoods
 const dummyAffiliations: Affiliation[] = [
   {
     neighborhood: { self: 'n1', name: 'Neighborhood 1' } as Neighborhood,
@@ -57,7 +54,6 @@ const dummyNeighborhoods: Neighborhood[] = [
   { self: 'n4', name: 'Neighborhood 4' },
 ];
 
-// Stub methods with all required properties.
 affiliationServiceSpy.getAffiliations.and.returnValue(
   of({ affiliations: dummyAffiliations, totalPages: 3, currentPage: 2 }),
 );
@@ -65,10 +61,8 @@ neighborhoodServiceSpy.getNeighborhoods.and.returnValue(
   of({ neighborhoods: dummyNeighborhoods, totalPages: 5, currentPage: 1 }),
 );
 
-// For our test, we force getLink to always return 'worker_self_link'
 linkServiceSpy.getLink.and.returnValue('worker_self_link');
 
-// Stub ActivatedRoute: we use simple queryParams and cast to ActivatedRoute.
 const fakeActivatedRoute = {
   queryParams: of({ page: '2', size: '5' }),
 } as unknown as ActivatedRoute;
@@ -109,7 +103,6 @@ describe('ServiceProvidersJoinNeighborhoodsPageComponent', () => {
     expect(component.currentAssociatedPage).toEqual(2);
     expect(component.pageSize).toEqual(5);
 
-    // Verify getAffiliations was called with forWorker set to worker_self_link.
     expect(affiliationServiceSpy.getAffiliations).toHaveBeenCalledWith({
       forWorker: 'worker_self_link',
       page: 2,

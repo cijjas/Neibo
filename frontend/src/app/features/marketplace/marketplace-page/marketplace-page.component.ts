@@ -12,10 +12,9 @@ export class MarketplacePageComponent implements OnInit {
   channel: string = 'Marketplace';
   selectedDepartment: string | null = null;
 
-  // Pagination properties
   page: number = 1;
   totalPages: number = 1;
-  size: number = 30; // Default page size
+  size: number = 30; 
 
   isLoading: boolean = true;
   placeholderItems = Array.from({ length: 20 }, (_, i) => i);
@@ -27,7 +26,6 @@ export class MarketplacePageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Read query params for page and size
     this.route.queryParams.subscribe(params => {
       this.page = params['page'] ? +params['page'] : 1;
       this.size = params['size'] ? +params['size'] : 20;

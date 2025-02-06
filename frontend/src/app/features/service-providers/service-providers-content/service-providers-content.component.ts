@@ -8,13 +8,13 @@ import { environment } from 'environments/environment';
   templateUrl: './service-providers-content.component.html',
 })
 export class ServiceProvidersContentComponent {
-  @Input() worker: Worker | null = null; // Input for worker data
-  @Input() averageRating: number = 0; // Input for average rating
-  @Input() reviewsCount: number = 0; // Input for reviews count
-  @Input() postCount: number = 0; // Input for post count
-  @Input() isTheWorker: boolean = false; // Input to indicate if logged user is the worker
+  @Input() worker: Worker | null = null; 
+  @Input() averageRating: number = 0; 
+  @Input() reviewsCount: number = 0; 
+  @Input() postCount: number = 0; 
+  @Input() isTheWorker: boolean = false; 
 
-  @Output() openEditProfile = new EventEmitter<void>(); // EventEmitter to notify parent
+  @Output() openEditProfile = new EventEmitter<void>(); 
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 

@@ -24,7 +24,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
   let component: MarketplaceProductDetailPageComponent;
   let fixture: ComponentFixture<MarketplaceProductDetailPageComponent>;
 
-  // Create spies for the injected services
   const inquiryServiceSpy = jasmine.createSpyObj('InquiryService', [
     'getInquiries',
     'createInquiry',
@@ -40,7 +39,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
     'getLink',
   ]);
   const toastServiceSpy = jasmine.createSpyObj('ToastService', ['showToast']);
-  // Not used directly in these tests, so use empty stubs:
   const productServiceSpy = jasmine.createSpyObj('ProductService', [
     'dummyMethod',
   ]);
@@ -48,12 +46,10 @@ describe('MarketplaceProductDetailPageComponent', () => {
     'createRequest',
   ]);
   const userSessionSpy = {};
-  const departmentServiceSpy = {}; // Provide an empty stub or mock as needed
+  const departmentServiceSpy = {}; 
 
-  // Stub ChangeDetectorRef
   const changeDetectorRefStub = { detectChanges: () => {} };
 
-  // Use BehaviorSubjects to simulate queryParams and route data
   const queryParamsSubject = new BehaviorSubject<any>({
     page: '1',
     size: '10',
@@ -77,7 +73,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
     },
   });
 
-  // Fake ActivatedRoute that uses the BehaviorSubjects
   const fakeActivatedRoute = {
     data: dataSubject.asObservable(),
     queryParams: queryParamsSubject.asObservable(),
@@ -93,7 +88,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      // Import HttpClientTestingModule to satisfy HttpClient dependencies
       imports: [HttpClientTestingModule],
       declarations: [MarketplaceProductDetailPageComponent],
       providers: [
@@ -112,7 +106,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })
-      // Override the template to avoid errors with unknown elements/pipes.
       .overrideTemplate(
         MarketplaceProductDetailPageComponent,
         `<div>Dummy Template</div>`,
@@ -124,7 +117,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
     fixture = TestBed.createComponent(MarketplaceProductDetailPageComponent);
     component = fixture.componentInstance;
 
-    // Stub the default behaviors for the spies
     userServiceSpy.getUser.and.returnValue(
       of({
         self: 'userSelf',
@@ -148,7 +140,7 @@ describe('MarketplaceProductDetailPageComponent', () => {
     hateoasLinksServiceSpy.getLink.and.callFake((key: string) =>
       key === 'USER_SELF' ? 'userSelf' : '',
     );
-    fixture.detectChanges(); // Triggers ngOnInit and sets up the component.
+    fixture.detectChanges(); 
   });
 
   /**
@@ -156,7 +148,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
    */
   it('should create the component and load inquiries on init', () => {
     expect(component).toBeTruthy();
-    // When ngOnInit is triggered, loadInquiries() is called using the product.inquiries URL.
     expect(inquiryServiceSpy.getInquiries).toHaveBeenCalledWith(
       'productInquiriesUrl',
       { page: 1, size: 10 },
@@ -183,7 +174,6 @@ describe('MarketplaceProductDetailPageComponent', () => {
    * 3) Inquiry submission: Should submit a valid inquiry question.
    */
   it('should submit a valid inquiry question', fakeAsync(() => {
-    // Set up a logged-in user (ensure you provide all required properties)
     component.loggedUser = {
       email: 'test@example.com',
       name: 'Test User',
@@ -194,13 +184,12 @@ describe('MarketplaceProductDetailPageComponent', () => {
       creationDate: new Date(),
       language: 'en',
       userRole: 'buyer',
-      userRoleEnum: null, // replace with actual enum value if needed
+      userRoleEnum: null, 
       userRoleDisplay: 'Buyer',
       image: 'test-image.jpg',
       self: 'userSelf',
     };
 
-    // Ensure that the product is available.
     dataSubject.next({
       product: {
         name: 'Test Product',
@@ -219,10 +208,8 @@ describe('MarketplaceProductDetailPageComponent', () => {
         self: 'productSelf',
       },
     });
-    // Provide a valid question message.
     component.questionMessage = 'Is it available?';
 
-    // Stub the inquiry creation calls.
     inquiryServiceSpy.createInquiry.and.returnValue(of('inquiryUrl'));
     inquiryServiceSpy.getInquiry.and.returnValue(
       of({

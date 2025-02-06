@@ -41,7 +41,6 @@ export class ServiceProvidersReviewsAndPostsComponent
 
   worker: Worker = null;
 
-  // Track which tab is selected. Possible values: 'reviews' or 'posts'.
   selectedTab: 'reviews' | 'posts' = 'reviews';
 
   constructor(
@@ -57,32 +56,26 @@ export class ServiceProvidersReviewsAndPostsComponent
     const workerId = this.route.snapshot.paramMap.get('id');
     if (workerId) {
       this.loadWorker(workerId).then(() => {
-        // Execute only after worker is loaded
         this.isTheWorker =
           this.linkService.getLink(LinkKey.USER_WORKER) === this.worker.self;
         this.isWorker =
           this.linkService.getLink(LinkKey.USER_USER_ROLE) ===
           this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
 
-        // Subscribe to query parameters for pagination *and* for tab selection
         this.subscriptions.add(
           this.route.queryParams.subscribe(params => {
-            // Pagination params
             this.reviewCurrentPage = +params['reviewPage'] || 1;
             this.reviewPageSize = +params['reviewSize'] || 10;
             this.postCurrentPage = +params['postPage'] || 1;
             this.postPageSize = +params['postSize'] || 10;
 
-            // Tab param (default to "reviews" if not set)
             this.selectedTab = params['tab'] === 'posts' ? 'posts' : 'reviews';
 
-            // Reload data after query params change
             this.loadReviews();
             this.loadPosts();
           }),
         );
 
-        // Reactively load data when the worker changes
         this.subscriptions.add(
           this.workerSubject
             .pipe(
@@ -105,7 +98,7 @@ export class ServiceProvidersReviewsAndPostsComponent
       this.workerService.getWorker(id).subscribe({
         next: worker => {
           this.worker = worker;
-          this.workerSubject.next(worker); // Update workerSubject
+          this.workerSubject.next(worker); 
           resolve();
         },
         error: err => {
@@ -116,12 +109,9 @@ export class ServiceProvidersReviewsAndPostsComponent
     });
   }
 
-  /**
-   * Called when the user switches tabs (e.g., from Reviews to Posts).
-   */
+
   onTabChange(tab: 'reviews' | 'posts'): void {
     this.selectedTab = tab;
-    // Update just the `tab` param in the URL, merging with existing params
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { tab },
@@ -147,7 +137,6 @@ export class ServiceProvidersReviewsAndPostsComponent
   }
 
   loadPosts(): void {
-    // Suppose you've got a URL from somewhere (like from linkService or another param)
     const workerPostsUrl = this.worker.posts;
 
     this.postService

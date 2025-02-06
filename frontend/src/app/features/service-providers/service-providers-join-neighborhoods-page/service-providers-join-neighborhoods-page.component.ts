@@ -23,29 +23,23 @@ import { TranslateService } from '@ngx-translate/core';
 export class ServiceProvidersJoinNeighborhoodsPageComponent
   implements OnInit, AfterViewInit
 {
-  // Simulates the data from your JSP
   associatedNeighborhoods: Affiliation[] = [];
   otherNeighborhoods: Neighborhood[] = [];
 
-  // Tracks the neighborhood IDs that the user selects
   selectedNeighborhoodIds: string[] = [];
 
-  // Whether the drop-down is open or not
   isSelectOpen = false;
 
-  // --- NEW: for pagination ---
-  page = 1; // current page
-  size = 10; // items to fetch per page
-  hasMore = true; // indicates if more pages are available
-  isLoading = false; // to prevent multiple simultaneous fetches
+  page = 1; 
+  size = 10; 
+  hasMore = true; 
+  isLoading = false; 
 
-  currentAssociatedPage = 1; // Current page for affiliated neighborhoods
-  totalAssociatedPages = 1; // Total pages available
-  pageSize = 10; // Page size (items per page)
+  currentAssociatedPage = 1; 
+  totalAssociatedPages = 1; 
+  pageSize = 10; 
 
-  // For referencing DOM elements
   @ViewChild('selectBtn') selectBtnRef!: ElementRef;
-  // --- NEW: reference to the scrollable UL ---
   @ViewChild('listItems', { static: false })
   listItemsRef!: ElementRef<HTMLUListElement>;
   isListenerAttached = false;
@@ -62,14 +56,13 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.currentAssociatedPage = +params['page'] || 1; // Default to page 1
-      this.pageSize = +params['size'] || 10; // Default to size 10
+      this.currentAssociatedPage = +params['page'] || 1; 
+      this.pageSize = +params['size'] || 10; 
       this.loadAssociatedNeighborhoods();
       this.loadOtherNeighborhoods(true);
     });
   }
 
-  // --- NEW: attach the scroll listener after view init ---
   ngAfterViewInit(): void {
     if (this.listItemsRef) {
       this.listItemsRef.nativeElement.addEventListener(
@@ -89,11 +82,10 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
         'scroll',
         this.onListScroll.bind(this),
       );
-      this.isListenerAttached = true; // Prevent reattaching
+      this.isListenerAttached = true; 
     }
   }
 
-  // --- Existing logic (unchanged) ---
   loadAssociatedNeighborhoods(): void {
     const queryParams = {
       forWorker: this.linkService.getLink(LinkKey.USER_WORKER),
@@ -104,8 +96,8 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     this.affiliationService.getAffiliations(queryParams).subscribe({
       next: response => {
         this.associatedNeighborhoods = response.affiliations;
-        this.totalAssociatedPages = response.totalPages || 1; // Total pages from API response
-        this.updateQueryParams(); // Persist the current page in the URL
+        this.totalAssociatedPages = response.totalPages || 1; 
+        this.updateQueryParams(); 
       },
       error: () => {
         this.toastService.showToast(
@@ -122,7 +114,7 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: this.currentAssociatedPage, size: this.pageSize },
-      queryParamsHandling: 'merge', // Preserve other query params
+      queryParamsHandling: 'merge', 
     });
   }
 
@@ -132,17 +124,14 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     this.loadAssociatedNeighborhoods();
   }
 
-  // --- Modified to handle paging ---
   loadOtherNeighborhoods(isFirstPage = false): void {
     if (isFirstPage) {
-      // Reset state for new
       this.resetScrollState();
       this.page = 1;
       this.otherNeighborhoods = [];
       this.hasMore = true;
     }
 
-    // If we have no more results or are already loading, do nothing
     if (!this.hasMore || this.isLoading) return;
 
     this.isLoading = true;
@@ -156,10 +145,8 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     this.neighborhoodService.getNeighborhoods(queryParams).subscribe({
       next: response => {
         const newItems = response.neighborhoods ?? [];
-        // Append new items to existing
         this.otherNeighborhoods.push(...newItems);
 
-        // If we got fewer items than 'size', assume we're at the last page
         if (newItems.length < this.size) {
           this.hasMore = false;
         } else {
@@ -180,12 +167,10 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     });
   }
 
-  // --- NEW: Handler for the scroll event on UL .list-items.n-workers ---
   onListScroll(event: Event): void {
     const element = event.target as HTMLElement;
 
-    // If the user is near the bottom, attempt to load more
-    const threshold = 30; // adjust to your liking
+    const threshold = 30; 
     const position =
       element.scrollHeight - element.scrollTop - element.clientHeight;
 
@@ -200,7 +185,6 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
         this.associatedNeighborhoods = this.associatedNeighborhoods.filter(
           affiliation => affiliation.neighborhood.self !== neighborhood.self,
         );
-        // After removal, reload the list (optional if you prefer)
         this.loadOtherNeighborhoods(true);
         this.toastService.showToast(
           this.translate.instant(
@@ -229,29 +213,20 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     });
   }
 
-  /**
-   * Handles toggling an item in the "otherNeighborhoods" drop-down
-   */
   toggleItem(neighborhoodId: string, name: string, event: MouseEvent): void {
-    event.stopPropagation(); // So we don’t also trigger toggleSelect()
+    event.stopPropagation(); 
 
     if (this.selectedNeighborhoodIds.includes(neighborhoodId)) {
-      // Remove it
       this.selectedNeighborhoodIds = this.selectedNeighborhoodIds.filter(
         id => id !== neighborhoodId,
       );
     } else {
-      // Add it
       this.selectedNeighborhoodIds.push(neighborhoodId);
     }
 
-    // Update the displayed text with newly selected items
     this.updateDisplayText();
   }
 
-  /**
-   * Displays text for selected neighborhoods
-   */
   get displayText(): string {
     if (this.selectedNeighborhoodIds.length === 0) {
       return this.translate.instant(
@@ -270,12 +245,8 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
   }
 
   updateDisplayText(): void {
-    // Forces the template to recompute 'displayText'
   }
 
-  /**
-   * Opens/closes the drop-down list
-   */
   toggleSelect(): void {
     this.isSelectOpen = !this.isSelectOpen;
   }
@@ -292,17 +263,13 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
             'success',
           );
 
-          // Reload associated neighborhoods
           this.loadAssociatedNeighborhoods();
 
-          // Reset and reload other neighborhoods
           this.resetScrollState();
           this.loadOtherNeighborhoods(true);
 
-          // Clear selected IDs
           this.selectedNeighborhoodIds = [];
 
-          // Reinitialize scroll listener after reload
           this.reinitializeScrollListener();
         },
         error: () => {
@@ -334,17 +301,14 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
           'scroll',
           this.onListScroll.bind(this),
         );
-        this.isListenerAttached = true; // Prevent duplicate listeners
+        this.isListenerAttached = true; 
       }
-    }, 0); // Delay to ensure DOM is updated
+    }, 0); 
   }
 
-  /**
-   * Clicking outside the drop-down will close it, similar to your JSP script logic
-   */
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // If the click is outside the .select-btn or its children, close the list
     if (
       this.isSelectOpen &&
       this.selectBtnRef &&

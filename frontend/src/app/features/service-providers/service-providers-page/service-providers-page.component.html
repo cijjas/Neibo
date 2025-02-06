@@ -1,4 +1,3 @@
-<!-- If data is still loading, show placeholders -->
 <ng-container *ngIf="isLoading; else workersLoaded">
   <div class="f-c-c-c w-100">
     <div class="w-100 mb-3" *ngFor="let i of placeholderItems">
@@ -7,7 +6,6 @@
   </div>
 </ng-container>
 
-<!-- Real data once loaded -->
 <ng-template #workersLoaded>
   <ng-container
     *ngIf="workersList && workersList.length > 0; else noWorkersFound"
@@ -20,7 +18,6 @@
       </div>
     </div>
 
-    <!-- Paginator -->
     <app-paginator
       [currentPage]="currentPage"
       [totalPages]="totalPages"
@@ -31,7 +28,6 @@
   </ng-container>
 </ng-template>
 
-<!-- If no workers found -->
 <ng-template #noWorkersFound>
   <div
     class="cool-static-container m-b-20"

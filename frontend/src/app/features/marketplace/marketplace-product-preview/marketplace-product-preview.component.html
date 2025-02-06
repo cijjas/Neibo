@@ -1,6 +1,4 @@
 <div class="product-card">
-    <!-- "information corner" replaced by a hover or click behavior -->
-    <!-- In Angular, we can add a click event and show/hide info -->
     <div class="inside" (click)="onProductClick()">
         <div class="icon">
             <i class="fa-solid fa-circle-info"></i>
@@ -24,8 +22,6 @@
             </div>
 
             <div class="img-product placeholder-glow" (click)="onProductClick()">
-                <!-- Replace with actual image fetching logic if needed -->
-                <!-- class="placeholder" -->
                 <img [src]="getProductImage()" />
             </div>
         </div>

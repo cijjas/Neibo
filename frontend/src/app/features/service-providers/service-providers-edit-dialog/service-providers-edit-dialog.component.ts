@@ -14,7 +14,7 @@ import { ImageService } from '@core/index';
 })
 export class ServiceProvidersEditDialogComponent implements OnChanges {
   @Input() editDialogVisible = false;
-  @Input() worker: any; // The fully mapped Worker from parent component
+  @Input() worker: any; 
   @Output() closeDialog = new EventEmitter<void>();
   @Output() saveProfile = new EventEmitter<any>();
 
@@ -23,15 +23,8 @@ export class ServiceProvidersEditDialogComponent implements OnChanges {
   phoneNumber = '';
   address = '';
 
-  /**
-   * Keep track of the existing background image link
-   * (from worker.backgroundImage).
-   */
   existingBackgroundImage = '';
 
-  /**
-   * For file upload
-   */
   imageFile: File | null = null;
 
   constructor(private imageService: ImageService) {}
@@ -44,7 +37,6 @@ export class ServiceProvidersEditDialogComponent implements OnChanges {
       this.phoneNumber = worker.phoneNumber || '';
       this.address = worker.address || '';
 
-      // Save the existing background image link (if any)
       this.existingBackgroundImage = worker.backgroundImage || '';
     }
   }
@@ -61,7 +53,6 @@ export class ServiceProvidersEditDialogComponent implements OnChanges {
   }
 
   submitEditProfileForm(): void {
-    // If no new image is selected, just emit the data directly
     if (!this.imageFile) {
       const updatedWorkerDto = {
         businessName: this.businessName,
@@ -74,25 +65,21 @@ export class ServiceProvidersEditDialogComponent implements OnChanges {
       return;
     }
 
-    // Otherwise, upload the image first to get the URL
     this.imageService.createImage(this.imageFile).subscribe({
       next: (uploadedImageUrl) => {
-        // Construct the WorkerDto
         const updatedWorkerDto = {
           businessName: this.businessName,
           bio: this.bio,
           phoneNumber: this.phoneNumber,
           address: this.address,
-          backgroundImage: uploadedImageUrl, // <--- set the new image URL
+          backgroundImage: uploadedImageUrl, 
         };
 
-        // Emit it to the parent
         this.saveProfile.emit(updatedWorkerDto);
         this.closeEditDialog();
       },
       error: (err) => {
         console.error('Error uploading image', err);
-        // Optionally handle errors in the UI
       },
     });
   }

@@ -12,11 +12,9 @@ describe('ServiceProvidersPreviewComponent', () => {
   let component: ServiceProvidersPreviewComponent;
   let fixture: ComponentFixture<ServiceProvidersPreviewComponent>;
   let routerSpy: jasmine.SpyObj<Router>;
-  // We'll use a simple stub for ActivatedRoute since the component only uses it as relativeTo.
   const activatedRouteStub = {} as ActivatedRoute;
 
   beforeEach(waitForAsync(() => {
-    // Set a known deployUrl for testing.
     (environment as any).deployUrl = 'http://test.com/';
 
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
@@ -28,7 +26,7 @@ describe('ServiceProvidersPreviewComponent', () => {
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // ignore unknown elements like <app-sidebar>
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], 
     }).compileComponents();
   }));
 
@@ -39,7 +37,6 @@ describe('ServiceProvidersPreviewComponent', () => {
   });
 
   it('should set profileImageUrl and backgroundImageUrl based on worker input', () => {
-    // Create a dummy User.
     const dummyUser: User = {
       email: 'user@test.com',
       name: 'User',
@@ -56,7 +53,6 @@ describe('ServiceProvidersPreviewComponent', () => {
       self: 'user1',
     };
 
-    // Create a dummy Worker with images.
     const dummyWorkerWithImages: Worker = {
       phoneNumber: '111-222-3333',
       businessName: 'Business',
@@ -74,13 +70,11 @@ describe('ServiceProvidersPreviewComponent', () => {
       self: 'worker1',
     };
 
-    // When the worker has valid images:
     component.worker = dummyWorkerWithImages;
     component.ngOnInit();
     expect(component.profileImageUrl).toEqual('profile.jpg');
     expect(component.backgroundImageUrl).toEqual('bg.jpg');
 
-    // Create a dummy Worker without images.
     const dummyWorkerNoImages: Worker = {
       ...dummyWorkerWithImages,
       user: { ...dummyUser, image: '' },
@@ -103,17 +97,14 @@ describe('ServiceProvidersPreviewComponent', () => {
       self: 'prof1',
     };
 
-    // Call with a non-null profession.
     component.setProfession(dummyProfession);
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/services'], {
       relativeTo: activatedRouteStub,
       queryParams: { withProfession: 'prof1' },
     });
 
-    // Reset the spy before testing the null case.
     routerSpy.navigate.calls.reset();
 
-    // Call with null.
     component.setProfession(null);
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/services'], {
       relativeTo: activatedRouteStub,
@@ -128,11 +119,9 @@ describe('ServiceProvidersPreviewComponent', () => {
       self: 'prof2',
     };
 
-    // Create a fake MouseEvent with a spy on stopPropagation.
     const fakeEvent = new MouseEvent('click');
     spyOn(fakeEvent, 'stopPropagation');
 
-    // Spy on setProfession.
     spyOn(component, 'setProfession');
 
     component.onProfessionClick(fakeEvent, dummyProfession);

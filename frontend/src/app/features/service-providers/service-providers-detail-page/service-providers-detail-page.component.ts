@@ -79,7 +79,6 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
       user: this.linkService.getLink(LinkKey.USER_SELF),
     };
 
-    // Let's assume this.worker exists
     this.reviewService.createReview(this.worker?.reviews, newReview).subscribe({
       next: () => {
         this.toastService.showToast(
@@ -89,7 +88,6 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
           'success',
         );
 
-        // 2) Directly call child's reload method
         if (this.tabbedBox) {
           this.tabbedBox.reloadReviews();
         }
@@ -115,7 +113,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
           'success',
         );
         if (this.worker?.self) {
-          this.loadWorker(this.worker.self); // Refresh the worker data
+          this.loadWorker(this.worker.self); 
         }
       },
       error: err => {

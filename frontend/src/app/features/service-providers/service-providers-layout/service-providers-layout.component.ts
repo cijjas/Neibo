@@ -11,7 +11,6 @@ export class ServiceProvidersLayoutComponent {
   constructor(private router: Router) { }
 
   ngOnInit() {
-    // Update `isServicesRoute` whenever the route changes
     this.router.events.subscribe(() => {
       const url = this.router.url;
       this.isServicesRoute = url === '/services' || url.startsWith('/services?');
