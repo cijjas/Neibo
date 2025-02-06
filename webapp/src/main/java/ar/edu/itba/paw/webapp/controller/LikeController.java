@@ -51,15 +51,15 @@ public class LikeController {
     }
 
     @GET
-    @PreAuthorize("@accessControlHelper.canListLikes(#likeParams.user, #likeParams.post)")
+    @PreAuthorize("@accessControlHelper.canListOrCountLikes(#likeParams.user, #likeParams.post)")
     public Response listLikes(
             @Valid @BeanParam LikeParams likeParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(likeParams.getUser());
-        Long postId = extractOptionalSecondId(likeParams.getPost());
+        Long userId = extractNullableFirstId(likeParams.getUser());
+        Long postId = extractNullableSecondId(likeParams.getPost());
 
         // Content
         final List<Like> likes = ls.getLikes(likeParams.getNeighborhoodId(), userId, postId, likeParams.getPage(), likeParams.getSize());
@@ -104,14 +104,14 @@ public class LikeController {
 
     @GET
     @Path(Endpoint.COUNT)
-    @PreAuthorize("@accessControlHelper.canCountLikes(#likeParams.user, #likeParams.post)")
+    @PreAuthorize("@accessControlHelper.canListOrCountLikes(#likeParams.user, #likeParams.post)")
     public Response countLikes(
             @Valid @BeanParam LikeParams likeParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        int count = ls.countLikes(likeParams.getNeighborhoodId(), extractOptionalFirstId(likeParams.getUser()), extractOptionalSecondId(likeParams.getPost()));
+        int count = ls.countLikes(likeParams.getNeighborhoodId(), extractNullableFirstId(likeParams.getUser()), extractNullableSecondId(likeParams.getPost()));
         String countHashCode = String.valueOf(count);
 
         // Cache Control
@@ -131,9 +131,9 @@ public class LikeController {
 
     @POST
     @Validated(CreateSequence.class)
-    @PreAuthorize("@accessControlHelper.canCreateLike(#createForm.user, #createForm.post)")
+    @PreAuthorize("@accessControlHelper.canCreateOrDeleteLike(#createForm.user, #createForm.post)")
     public Response createLike(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull LikeDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -151,14 +151,14 @@ public class LikeController {
     }
 
     @DELETE
-    @PreAuthorize("@accessControlHelper.canDeleteLike(#likeParams.user, #likeParams.post)")
+    @PreAuthorize("@accessControlHelper.canCreateOrDeleteLike(#likeParams.user, #likeParams.post)")
     @Validated(DeleteSequence.class)
     public Response deleteLike(
             @Valid @BeanParam LikeParams likeParams
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
-        if (ls.deleteLike(extractOptionalFirstId(likeParams.getUser()), extractOptionalSecondId(likeParams.getPost())))
+        if (ls.deleteLike(extractNullableFirstId(likeParams.getUser()), extractNullableSecondId(likeParams.getPost())))
             return Response.noContent()
                     .build();
 

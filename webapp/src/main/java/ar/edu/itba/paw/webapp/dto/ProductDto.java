@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.validation.constraints.ImagesURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -26,6 +27,8 @@ public class ProductDto {
     @NotNull(groups = OnCreate.class)
     private Double price;
 
+    @NotNull(groups = OnCreate.class)
+    @NotEmpty(groups = OnCreate.class)
     @ImagesURIConstraint
     private List<String> images;
 

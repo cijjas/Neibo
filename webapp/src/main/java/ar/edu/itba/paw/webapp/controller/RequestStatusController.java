@@ -66,7 +66,7 @@ public class RequestStatusController {
     @GET
     @Path("{" + PathParameter.REQUEST_STATUS_ID + "}")
     public Response findRequestStatus(
-            @PathParam(PathParameter.REQUEST_STATUS_ID) Long requestStatusId
+            @PathParam(PathParameter.REQUEST_STATUS_ID) long requestStatusId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 

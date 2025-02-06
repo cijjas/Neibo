@@ -66,7 +66,7 @@ public class WorkerStatusController {
     @GET
     @Path("{" + PathParameter.WORKER_STATUS_ID + "}")
     public Response findWorkerStatus(
-            @PathParam(PathParameter.WORKER_STATUS_ID) Long workerStatusId
+            @PathParam(PathParameter.WORKER_STATUS_ID) long workerStatusId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 

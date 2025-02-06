@@ -67,7 +67,7 @@ public class WorkerRoleController {
     @GET
     @Path("{" + PathParameter.WORKER_ROLE_ID + "}")
     public Response findWorkerRole(
-            @PathParam(PathParameter.WORKER_ROLE_ID) Long workerRoleId
+            @PathParam(PathParameter.WORKER_ROLE_ID) long workerRoleId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 

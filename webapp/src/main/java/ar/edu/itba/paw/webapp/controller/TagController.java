@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableSecondId;
 
 /*
  * # Summary
@@ -57,7 +57,7 @@ public class TagController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long postId = extractOptionalSecondId(tagParams.getPost());
+        Long postId = extractNullableSecondId(tagParams.getPost());
 
         // Content
         List<Tag> tags = ts.getTags(tagParams.getNeighborhoodId(), postId, tagParams.getPage(), tagParams.getSize());

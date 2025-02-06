@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
 /*
  * # Summary
@@ -61,8 +61,8 @@ public class NeighborhoodController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long withWorkerId = extractOptionalFirstId(neighborhoodParams.getWithWorker());
-        Long withoutWorkerId = extractOptionalFirstId(neighborhoodParams.getWithoutWorker());
+        Long withWorkerId = extractNullableFirstId(neighborhoodParams.getWithWorker());
+        Long withoutWorkerId = extractNullableFirstId(neighborhoodParams.getWithoutWorker());
 
         // Content
         final List<Neighborhood> neighborhoods = ns.getNeighborhoods(neighborhoodParams.getBase(), withWorkerId, withoutWorkerId, neighborhoodParams.getPage(), neighborhoodParams.getSize());

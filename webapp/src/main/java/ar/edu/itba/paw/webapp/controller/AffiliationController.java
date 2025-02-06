@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
 /*
  * # Summary
@@ -67,8 +67,8 @@ public class AffiliationController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long neighborhoodId = extractOptionalFirstId(affiliationParams.getNeighborhood());
-        Long workerId = extractOptionalFirstId(affiliationParams.getWorker());
+        Long neighborhoodId = extractNullableFirstId(affiliationParams.getNeighborhood());
+        Long workerId = extractNullableFirstId(affiliationParams.getWorker());
 
         // Content
         List<Affiliation> affiliations = nws.getAffiliations(neighborhoodId, workerId, affiliationParams.getPage(), affiliationParams.getSize());
