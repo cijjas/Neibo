@@ -14,11 +14,9 @@ describe('AdminAmenityCreatePageComponent', () => {
   let component: AdminAmenityCreatePageComponent;
   let fixture: ComponentFixture<AdminAmenityCreatePageComponent>;
 
-  // Optional: if you want to verify or spy on service calls
   let mockShiftService: jasmine.SpyObj<ShiftService>;
   let mockAmenityService: jasmine.SpyObj<AmenityService>;
 
-  // If verifying no extraneous HTTP requests:
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
@@ -52,13 +50,12 @@ describe('AdminAmenityCreatePageComponent', () => {
       ]),
     );
 
-    // 3) Mock createAmenity as well if you want to prevent real HTTP requests
+    // 3) Mock createAmenity as well to prevent real HTTP requests
     mockAmenityService.createAmenity.and.returnValue(of(''));
 
     await TestBed.configureTestingModule({
       declarations: [AdminAmenityCreatePageComponent],
       imports: [
-        // Your AdminModule might already import ReactiveFormsModule, etc.
         AdminModule,
         HttpClientTestingModule, // Helps mock out HTTP requests
         TranslateModule.forRoot(), // Provide translation store
@@ -66,7 +63,7 @@ describe('AdminAmenityCreatePageComponent', () => {
       providers: [
         { provide: ShiftService, useValue: mockShiftService },
         { provide: AmenityService, useValue: mockAmenityService },
-        provideRouter([]), // Replaces RouterTestingModule (deprecated)
+        provideRouter([]), 
       ],
     }).compileComponents();
 
@@ -77,11 +74,9 @@ describe('AdminAmenityCreatePageComponent', () => {
     // 5) Trigger Angular’s change detection, calling ngOnInit() inside the component
     fixture.detectChanges();
 
-    // (Optional) If you want to verify no unexpected HTTP calls:
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  // (Optional) Verify no leftover HTTP requests:
   afterEach(() => {
     httpMock.verify();
   });

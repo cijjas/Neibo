@@ -121,7 +121,6 @@ export class InfiniteScrollSelectComponent<T>
       },
       error: (error) => {
         console.error('Error fetching data:', error);
-        // Optionally handle errors (e.g., show a notification)
         this.isLoading = false;
       },
     });
@@ -195,6 +194,5 @@ export class InfiniteScrollSelectComponent<T>
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    // Optionally implement disabled state
   }
 }

@@ -19,7 +19,6 @@ export class CalendarEventsColumnComponent implements OnInit {
   isLoading = true;
   placeholders = [1, 2, 3];
   isAdmin = false;
-  // Pagination properties
   currentPage: number = 1;
   totalPages: number = 1;
   pageSize: number = 5; // Adjust the number of events per page

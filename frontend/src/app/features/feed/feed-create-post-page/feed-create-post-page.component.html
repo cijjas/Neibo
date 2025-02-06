@@ -112,10 +112,6 @@
 
             <!-- 
               Tag Section (only visible if not a WORKER)
-              Allows:
-                1) Creating a new tag
-                2) Selecting from existing tags
-                3) Viewing and removing applied tags
             -->
             <div
               *ngIf="notWorker"
@@ -208,7 +204,6 @@
       </div>
     </div>
 
-    <!-- If you have a calendar widget -->
     <div class="column-info">
       <app-calendar-widget></app-calendar-widget>
     </div>

@@ -110,7 +110,6 @@ export class SignupDialogComponent implements OnInit {
         [
           Validators.required,
           // Validators.minLength(8),
-          // Simple example pattern:
           // At least one uppercase, one lowercase, and a digit
           // Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'),
         ],
@@ -165,8 +164,6 @@ export class SignupDialogComponent implements OnInit {
         '',
         [
           Validators.required,
-          // Example pattern for phone: +54 9 11 1234 5678
-          // This is just an example - adapt to your country or remove if not needed
           Validators.pattern(VALIDATION_CONFIG.PATTERN_PHONE_NUMBER),
         ],
       ],
@@ -179,7 +176,7 @@ export class SignupDialogComponent implements OnInit {
   trySignup(): void {
     if (this.signupForm.invalid) {
       this.toastService.showToast(
-        'Please fill out all required fields.',
+        this.translate.instant('SIGNUP-DIALOG.PLEASE_FILL_OUT_ALL_REQUIRED_FIELDS'),
         'error',
       );
       return;

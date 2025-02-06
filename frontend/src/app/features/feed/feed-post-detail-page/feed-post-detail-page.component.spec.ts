@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-// Assume these types come from your shared code.
 import { Post, Role } from '@shared/index';
 
 // Create a dummy post with all required properties. Use a cast to bypass type issues.

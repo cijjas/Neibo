@@ -195,7 +195,6 @@ describe('CalendarEventsColumnComponent', () => {
     tick();
 
     expect(eventServiceSpy.deleteEvent).toHaveBeenCalledWith(dummyEvent.self);
-    // On error, a toast is shown with 'CALENDAR-EVENTS-COLUMN.FAILED_TO_DELETE_EVENT'
     expect(toastServiceSpy.showToast).toHaveBeenCalledWith(
       'CALENDAR-EVENTS-COLUMN.FAILED_TO_DELETE_EVENT',
       'error',

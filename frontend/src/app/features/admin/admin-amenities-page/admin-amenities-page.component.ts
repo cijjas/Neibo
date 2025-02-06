@@ -178,18 +178,12 @@ export class AdminAmenitiesPageComponent implements OnInit {
     });
   }
 
-  /**
-   * (Optional) formatting for "HH:mm:ss" -> "HH:mm"
-   */
   formatTime(time: string): string {
     const [hours, minutes] = time.split(':');
     return `${hours}:${minutes}`;
   }
 }
 
-/**
- * Example sort for days – so they appear Monday, Tuesday, etc.
- */
 function sortDays(a: string, b: string) {
   const order = [
     'Monday',
@@ -203,9 +197,6 @@ function sortDays(a: string, b: string) {
   return order.indexOf(a) - order.indexOf(b);
 }
 
-/**
- * Example sort for times as strings "HH:mm:ss".
- */
 function sortTimes(a: string, b: string) {
   const aH = parseInt(a.split(':')[0], 10);
   const bH = parseInt(b.split(':')[0], 10);

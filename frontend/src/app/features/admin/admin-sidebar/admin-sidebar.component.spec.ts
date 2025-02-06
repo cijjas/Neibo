@@ -12,7 +12,7 @@ describe('AdminSidebarComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [AdminSidebarComponent],
       imports: [
-        RouterTestingModule, // despite the deprecation warning, this is still fully functional.
+        RouterTestingModule, 
         TranslateModule.forRoot(),
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],

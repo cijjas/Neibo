@@ -141,7 +141,7 @@ describe('CalendarEventPageComponent', () => {
   it('should reload attendance if query param attendancePage changes', fakeAsync(() => {
     // Suppose the route param changes from page=1 to page=2
     const dummyAttendeePage2 = {
-      attendances: [dummyAttendances[0]], // e.g. just 1 attendance
+      attendances: [dummyAttendances[0]],
       currentPage: 2,
       totalPages: 2,
     };

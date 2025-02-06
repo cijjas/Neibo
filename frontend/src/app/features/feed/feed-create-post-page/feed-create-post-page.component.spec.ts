@@ -5,7 +5,6 @@ import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 import { of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
-// Import your service types (adjust paths as needed).
 import { TagService, LinkKey, Role, Tag } from '@shared/index';
 import {
   HateoasLinksService,

@@ -42,7 +42,7 @@ describe('CalendarWidgetComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CalendarWidgetComponent], // It's standalone, so import it.
+      imports: [CalendarWidgetComponent], 
       providers: [
         { provide: EventService, useValue: eventServiceSpy },
         { provide: HateoasLinksService, useValue: linkStorageSpy },
@@ -91,8 +91,6 @@ describe('CalendarWidgetComponent', () => {
     // The date’s month should be oldMonth + 1
     expect(component.date.getMonth()).toBe(oldMonth + 1);
 
-    // Also, changeMonth calls loadEventTimestamps and renderCalendar
-    // We can spy on them if we want even more detail:
     expect(component.renderCalendar).toHaveBeenCalled();
   });
 
