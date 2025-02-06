@@ -90,7 +90,6 @@
     "POST": "Post",
     "RXJS": "rxjs",
     "APPADMINCREATEANNOUNCEMENTPAGE": "app-admin-create-announcement-page",
-    "ADMINCREATEANNOUNCEMENTPAGECOMPONENTHTML": "./admin-create-announcement-page.component.html",
     "SELF_NULL": "self: null",
     "EVENT": "Event",
     "NOTICE": "Notice",
@@ -150,7 +149,6 @@
     "START_TIME_MUST_BE_EARLIER_THAN_END_TIME": "Start Time must be earlier than End Time",
     "CREATE": "Create",
     "APPADMINCREATEEVENT": "app-admin-create-event",
-    "ADMINCREATEEVENTCOMPONENTHTML": "./admin-create-event.component.html",
     "STARTTIME": "startTime",
     "ENDTIME": "endTime",
     "EVENT_CREATED_SUCCESSFULLY": "Event created successfully!",
@@ -189,7 +187,6 @@
     "OR": "Or",
     "DROP_FILES": "Drop files",
     "APPADMININFORMATIONPAGE": "app-admin-information-page",
-    "ADMININFORMATIONPAGECOMPONENTHTML": "./admin-information-page.component.html",
     "CONTACTSPAGE": "contactsPage",
     "RESOURCESPAGE": "resourcesPage",
     "CONTACTNAME": "contactName",
@@ -225,10 +222,7 @@
     "ERROR_DELETING_RESOURCE": "Error deleting resource:",
     "FAILED_TO_DELETE_RESOURCE": "Failed to delete resource."
   },
-  "ADMIN-LAYOUT": {
-    "APPADMINLAYOUT": "app-admin-layout",
-    "ADMINLAYOUTCOMPONENTHTML": "./admin-layout.component.html"
-  },
+
   "ADMIN-NEIGHBORS-REQUESTS-PAGE": {
     "_NEIGHBORS__PENDING_NEIGHBOR_REQUESTS__CURRENT_NEI": "{{ !neighbors ? \"Pending Neighbor Requests\" : \"Current Neighbors\" }}",
     "PENDING_NEIGHBOR_REQUESTS": "Pending Neighbor Requests",
@@ -247,10 +241,8 @@
     "REJECT": "Reject",
     "ACCEPT": "Accept",
     "APPADMINNEIGHBORSREQUESTSPAGE": "app-admin-neighbors-requests-page",
-    "ADMINNEIGHBORSREQUESTSPAGECOMPONENTHTML": "./admin-neighbors-requests-page.component.html",
     "PAGE": "page",
     "SIZE": "size",
-    "NEIGHBORSREQUESTS": "neighbors/requests",
     "NEIGHBORS": "neighbors",
     "ERROR_LOADING_USERS": "Error loading users:",
     "REMOVE_NEIGHBOR": "Remove Neighbor",
@@ -269,29 +261,6 @@
     "USER_USERNAME_HAS_BEEN_SUCCESSFULLY_VERIFIED_AS_A_": "User {{userName}} has been successfully verified as a neighbor.",
     "VERIFICATION_FOR_USER_USERNAME_FAILED_PLEASE_TRY_A": "Verification for user {{userName}} failed. Please try again later.",
     "MERGE": "merge"
-  },
-  "ADMIN-ROUTING.MODULE.TS": {
-    "ADMINCREATEANNOUNCEMENTPAGEADMINCREATEANNOUNCEMENT": "./admin-create-announcement-page/admin-create-announcement-page.component",
-    "ADMINLAYOUTADMINLAYOUTCOMPONENT": "./admin-layout/admin-layout.component",
-    "ADMINNEIGHBORSREQUESTSPAGEADMINNEIGHBORSREQUESTSPA": "./admin-neighbors-requests-page/admin-neighbors-requests-page.component",
-    "ADMINAMENITYEDITPAGEADMINAMENITYEDITPAGECOMPONENT": "./admin-amenity-edit-page/admin-amenity-edit-page.component",
-    "ADMINSERVICEPROVIDERSREQUESTSPAGEADMINSERVICEPROVI": "./admin-service-providers-requests-page/admin-service-providers-requests-page.component",
-    "ADMININFORMATIONPAGEADMININFORMATIONPAGECOMPONENT": "./admin-information-page/admin-information-page.component",
-    "ADMINCREATEEVENTADMINCREATEEVENTCOMPONENT": "./admin-create-event/admin-create-event.component",
-    "ADMINAMENITIESPAGEADMINAMENITIESPAGECOMPONENT": "./admin-amenities-page/admin-amenities-page.component",
-    "ADMINAMENITYCREATEPAGEADMINAMENITYCREATEPAGECOMPON": "./admin-amenity-create-page/admin-amenity-create-page.component",
-    "_REDIRECTTO": ", redirectTo:",
-    "_PATHMATCH": ", pathMatch:",
-    "ANNOUNCEMENTNEW": "announcement/new",
-    "NEIGHBORSREQUESTS": "neighbors/requests",
-    "NEIGHBORS": "neighbors",
-    "SERVICEPROVIDERSREQUESTS": "service-providers/requests",
-    "SERVICEPROVIDERS": "service-providers",
-    "AMENITIES": "amenities",
-    "AMENITIESNEW": "amenities/new",
-    "AMENITIESIDEDIT": "amenities/:id/edit",
-    "CALENDAREVENTSCREATE": "calendar/events/create",
-    "INFORMATION": "information"
   },
   "ADMIN-SERVICE-PROVIDERS-REQUESTS-PAGE": {
     "_SERVICEPROVIDERS__PENDING_REQUESTS__CURRENT_SERVI": "{{ !serviceProviders ? \"Pending Requests\" : \"Current Service Providers\" }}",
@@ -313,10 +282,8 @@
     "_SERVICEPROVIDERS__REMOVE__REJECT_": "{{ serviceProviders ? \"Remove\" : \"Reject\" }}",
     "ACCEPT": "Accept",
     "APPADMINSERVICEPROVIDERSREQUESTSPAGE": "app-admin-service-providers-requests-page",
-    "ADMINSERVICEPROVIDERSREQUESTSPAGECOMPONENTHTML": "./admin-service-providers-requests-page.component.html",
     "PAGE": "page",
     "SIZE": "size",
-    "SERVICEPROVIDERSREQUESTS": "service-providers/requests",
     "SERVICEPROVIDERS": "service-providers",
     "ERROR_LOADING_WORKERS": "Error loading workers:",
     "REMOVE_SERVICE_PROVIDER": "Remove Service Provider",
@@ -349,23 +316,9 @@
     "PROVIDER_LIST": "Provider List",
     "AMENITIES": "Amenities",
     "INFORMATION": "Information",
-    "CREATE_EVENT": "Create Event",
-    "APPADMINSIDEBAR": "app-admin-sidebar",
-    "ADMINSIDEBARCOMPONENTHTML": "./admin-sidebar.component.html"
+    "CREATE_EVENT": "Create Event"
   },
-  "ADMIN.MODULE.TS": {
-    "ADMINROUTINGMODULE": "./admin-routing.module",
-    "ADMINCREATEANNOUNCEMENTPAGEADMINCREATEANNOUNCEMENT": "./admin-create-announcement-page/admin-create-announcement-page.component",
-    "ADMINLAYOUTADMINLAYOUTCOMPONENT": "./admin-layout/admin-layout.component",
-    "ADMINSIDEBARADMINSIDEBARCOMPONENT": "./admin-sidebar/admin-sidebar.component",
-    "ADMINNEIGHBORSREQUESTSPAGEADMINNEIGHBORSREQUESTSPA": "./admin-neighbors-requests-page/admin-neighbors-requests-page.component",
-    "ADMINAMENITYEDITPAGEADMINAMENITYEDITPAGECOMPONENT": "./admin-amenity-edit-page/admin-amenity-edit-page.component",
-    "ADMINAMENITYCREATEPAGEADMINAMENITYCREATEPAGECOMPON": "./admin-amenity-create-page/admin-amenity-create-page.component",
-    "ADMININFORMATIONPAGEADMININFORMATIONPAGECOMPONENT": "./admin-information-page/admin-information-page.component",
-    "ADMINCREATEEVENTADMINCREATEEVENTCOMPONENT": "./admin-create-event/admin-create-event.component",
-    "ADMINSERVICEPROVIDERSREQUESTSPAGEADMINSERVICEPROVI": "./admin-service-providers-requests-page/admin-service-providers-requests-page.component",
-    "ADMINAMENITIESPAGEADMINAMENITIESPAGECOMPONENT": "./admin-amenities-page/admin-amenities-page.component"
-  },
+
   "AMENITIES-CHOOSE-TIME-PAGE": {
     "START_TIME": "Start Time",
     "END_TIME": "End Time",
@@ -391,13 +344,8 @@
     "GO_TO_AMENITIES": "Go to Amenities",
     "RXJS": "rxjs",
     "APPAMENITIESCHOOSETIMEPAGE": "app-amenities-choose-time-page",
-    "AMENITIESCHOOSETIMEPAGECOMPONENTHTML": "./amenities-choose-time-page.component.html",
     "AMENITYURL": "amenityUrl",
-    "SELECTEDSHIFTS": "selectedShifts",
-    "PFORMATTEDSTARTTIME__FORMATTEDENDTIMEP": "<p>${formattedStartTime} - ${formattedEndTime}</p>",
-    "BR": "<br>",
-    "NOTFOUND": "/not-found",
-    "AMENITIES": "/amenities"
+    "SELECTEDSHIFTS": "selectedShifts"
   },
   "AMENITIES-RESERVATIONS-LIST": {
     "MY_RESERVATIONS": "My Reservations",
@@ -414,7 +362,6 @@
     "_RESERVATIONSHIFTENDTIME_": "{{ reservation.shift?.endTime }}",
     "PAGE__CURRENTPAGE__OF__TOTALPAGES_": "Page {{currentPage}} of {{totalPages}}",
     "APPAMENITIESRESERVATIONSLIST": "app-amenities-reservations-list",
-    "AMENITIESRESERVATIONSLISTCOMPONENTHTML": "./amenities-reservations-list.component.html",
     "RESERVATIONSPAGE": "reservationsPage",
     "THERE_WAS_A_PROBLEM_GETTING_YOUR_RESERVATIONS": "There was a problem getting your reservations.",
     "ERROR": "error",
@@ -447,7 +394,6 @@
     "ERROR_LOADING_AMENITIES": "Error loading amenities:",
     "AMENITY": "amenity",
     "DATE": "date",
-    "AMENITIESCHOOSETIME": "/amenities/choose-time",
     "HHMMSS": "HH:mm:ss",
     "HHMM": "HH:mm",
     "HOURSMINUTES": "${hours}:${minutes}",
@@ -466,21 +412,7 @@
     "SAT": "Sat",
     "SUN": "Sun"
   },
-  "AMENITIES-ROUTING.MODULE.TS": {
-    "CHOOSETIME": "choose-time"
-  },
-  "AMENITIES.MODULE.TS": {
-    "AMENITIESROUTINGMODULE": "./amenities-routing.module"
-  },
-  "AUTH-ROUTING.MODULE.TS": {
-    "LOGINPAGELOGINPAGECOMPONENT": "./login-page/login-page.component"
-  },
-  "AUTH.MODULE.TS": {
-    "LOGINDIALOGLOGINDIALOGCOMPONENT": "./login-dialog/login-dialog.component",
-    "LOGINPAGELOGINPAGECOMPONENT": "./login-page/login-page.component",
-    "SIGNUPDIALOGSIGNUPDIALOGCOMPONENT": "./signup-dialog/signup-dialog.component",
-    "AUTHROUTINGMODULE": "./auth-routing.module"
-  },
+
   "LOGIN-DIALOG": {
     "LOGGING_YOU_IN_PLEASE_WAIT": "Logging you in. Please wait...",
     "WELCOME_TO_NEIBO": "Welcome to Neibo",
@@ -492,7 +424,6 @@
     "NOT_A_MEMBER_YET": "Not a member yet?",
     "SIGN_UP_NOW": "Sign up now",
     "APPLOGINDIALOG": "app-login-dialog",
-    "LOGINDIALOGCOMPONENTHTML": "./login-dialog.component.html",
     "SERVICES": "services",
     "PROFILE": "profile",
     "POSTS": "posts",
@@ -507,10 +438,7 @@
     "A_PLATFORM_FOR_GATED_COMMUNITIES_THAT_ALLOWS_YOU_T": "A platform for gated communities that allows you to share news, book\n      courts, and stay connected with your neighbors at all times.",
     "LOGIN": "Login",
     "NOT_A_MEMBER": "Not a member?",
-    "SIGNUP_NOW": "Sign up now",
-    "ANGULARCORE": "@angular/core",
-    "APPLOGINPAGE": "app-login-page",
-    "LOGINPAGECOMPONENTHTML": "./login-page.component.html"
+    "SIGNUP_NOW": "Sign up now"
   },
   "SIGNUP-DIALOG": {
     "190967": "^[1-9][0-9]{6,7}$",
@@ -542,14 +470,8 @@
     "ADDRESS_IS_REQUIRED": "*Address is required.",
     "PHONE_NUMBER_IS_REQUIRED": "*Phone number is required.",
     "INVALID_PHONE_FORMAT_EG_54_9_11_1234_5678": "*Invalid phone format. E.g. +54 9 11 1234 5678",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARFORMS": "@angular/forms",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
-    "ANGULARROUTER": "@angular/router",
     "RXJS": "rxjs",
     "APPSIGNUPDIALOG": "app-signup-dialog",
-    "SIGNUPDIALOGCOMPONENTHTML": "./signup-dialog.component.html",
     "SERVICE": "service",
     "PROFESSIONSELECTBTN": "professionSelectBtn",
     "AZAZS": "^[a-zA-ZÀ-ž\\\\s]+$",
@@ -582,12 +504,7 @@
     "_DAY_": "{{ day }}",
     "_DAYDATE_": "{{ day.date }}",
     "CREATE_NEW_EVENT": "Create New Event",
-    "ANGULARCORE": "@angular/core",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
-    "ANGULARROUTER": "@angular/router",
     "APPCALENDARBOX": "app-calendar-box",
-    "CALENDARBOXCOMPONENTHTML": "./calendar-box.component.html",
     "SUNDAY": "Sunday",
     "MONDAY": "Monday",
     "TUESDAY": "Tuesday",
@@ -609,7 +526,6 @@
     "NOVEMBER": "November",
     "DECEMBER": "December",
     "MONTHSMONTH_YEAR": "${months[month]} ${year}",
-    "CALENDAR": "/calendar",
     "YEARMONTHDAYDATE": "${year}-${month}-${dayDate}"
   },
   "CALENDAR-EVENT-PAGE": {
@@ -626,12 +542,7 @@
     "ATTENDEES__EVENTATTENDEESCOUNT_": "Attendees ({{attendeesCount}})",
     "NO_ATTENDEES_HAVE_REGISTERED_FOR_THIS_EVENT_YET": "No attendees have registered for this event yet.",
     "_ATTENDEEUSERNAME___ATTENDEEUSERSURNAME_": "{{ attendee.user.name }} {{ attendee.user.surname }}",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
     "APPCALENDAREVENTPAGE": "app-calendar-event-page",
-    "CALENDAREVENTPAGECOMPONENTHTML": "./calendar-event-page.component.html",
     "ATTENDANCE": "Attendance",
     "ATTENDANCEPAGE": "attendancePage",
     "ERROR_GETTING_ATTENDANCE": "Error getting attendance",
@@ -646,12 +557,7 @@
     "_EVENTDURATION__MINUTES": "{{eventDuration}} Minutes",
     "_EVENTATTENDEESCOUNT__PEOPLE_WILL_ATTEND": "{{ eventAttendeesCount }} People will Attend",
     "_EVENTDESCRIPTION_": "{{ event.description }}",
-    "ANGULARCORE": "@angular/core",
-    "COREINDEX": "@core/index",
-    "ANGULARROUTER": "@angular/router",
-    "SHAREDINDEX": "@shared/index",
     "APPCALENDAREVENTSCOLUMN": "app-calendar-events-column",
-    "CALENDAREVENTSCOLUMNCOMPONENTHTML": "./calendar-events-column.component.html",
     "DATE": "date",
     "PAGE": "page",
     "NO_SELECTED_DATE_PROVIDED": "No selected date provided",
@@ -668,32 +574,17 @@
   "CALENDAR-PAGE": {
     "EVENTS": "Events",
     "_FORMATTEDSELECTEDDATE_": "{{ formattedSelectedDate }}",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
     "APPCALENDARPAGE": "app-calendar-page",
-    "CALENDARPAGECOMPONENTHTML": "./calendar-page.component.html",
     "DATE": "date",
     "NUMERIC": "numeric",
     "LONG": "long",
     "ENUS": "en-US"
   },
-  "CALENDAR-ROUTING.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "FEATURESINDEX": "@features/index",
-    "EVENTSID": "events/:id"
-  },
   "CALENDAR-WIDGET": {
     "_CURRENTDATE_": "{{ currentDate }}",
     "_DAY_": "{{ day }}",
     "_DAYDATE_": "{{ day.date }}",
-    "ANGULARCORE": "@angular/core",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
-    "ANGULARCOMMON": "@angular/common",
-    "ANGULARROUTER": "@angular/router",
     "APPCALENDARWIDGET": "app-calendar-widget",
-    "CALENDARWIDGETCOMPONENTHTML": "./calendar-widget.component.html",
     "ERROR_FETCHING_EVENT_TIMESTAMPS": "Error fetching event timestamps:",
     "JANUARY": "January",
     "FEBRUARY": "February",
@@ -706,15 +597,7 @@
     "OCTOBER": "October",
     "NOVEMBER": "November",
     "DECEMBER": "December",
-    "CALENDAR": "/calendar",
     "YEARMONTHDAYDATE": "${year}-${month}-${dayDate}"
-  },
-  "CALENDAR.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDSHAREDMODULE": "@shared/shared.module",
-    "CALENDARROUTINGMODULE": "./calendar-routing.module"
   },
   "FEED-CONTROL-BAR": {
     "LATEST": "Latest",
@@ -722,19 +605,12 @@
     "HOT": "Hot",
     "CREATE_POST": "Create Post",
     "CREATE_COMPLAINT": "Create Complaint",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "COREINDEX": "@core/index",
-    "SHAREDINDEX": "@shared/index",
     "APPFEEDCONTROLBAR": "app-feed-control-bar",
-    "FEEDCONTROLBARCOMPONENTHTML": "./feed-control-bar.component.html",
     "WITHSTATUS": "withStatus",
     "INCHANNEL": "inChannel",
     "FEED": "Feed",
     "ANNOUNCEMENTS": "Announcements",
-    "COMPLAINTS": "Complaints",
-    "MERGE": "merge",
-    "POSTSNEW": "/posts/new"
+    "COMPLAINTS": "Complaints"
   },
   "FEED-CREATE-POST-PAGE": {
     "REMOVE_IMAGE": "Remove Image",
@@ -750,14 +626,8 @@
     "_TAGNAME_": "{{ tag.name }}",
     "PAGE__CURRENTPAGE__OF__TOTALPAGES_": "Page {{currentPage}} of {{totalPages}}",
     "POST": "Post",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARFORMS": "@angular/forms",
-    "ANGULARROUTER": "@angular/router",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
     "RXJS": "rxjs",
     "APPCREATEPOSTPAGE": "app-create-post-page",
-    "FEEDCREATEPOSTPAGECOMPONENTHTML": "./feed-create-post-page.component.html",
     "INCHANNEL": "inChannel",
     "CREATE_POST": "Create Post",
     "CREATE_ANNOUNCEMENT": "Create Announcement",
@@ -774,7 +644,6 @@
     "ERROR_CREATING_TAG": "Error creating tag:",
     "YOUR_CONTENTTYPE_WAS_CREATED_SUCCESSFULLY": "Your {{contentType}} was created successfully!",
     "SUCCESS": "success",
-    "POSTS": "/posts",
     "THERE_WAS_A_PROBLEM_CREATING_YOUR_CONTENTTYPE": "There was a problem creating your {{contentType}}.",
     "ERROR": "error",
     "ERROR_CREATING_POST": "Error creating post:",
@@ -788,14 +657,8 @@
   "FEED-PAGE": {
     "POSTS_NOT_FOUND": "Posts not found",
     "FUNCTION_SHOWPOSTSAFTERDELAY__DOCUMENTGETELEMENTBY": "function showPostsAfterDelay() {\n          document.getElementById(\"placeholder-posts-container\").style.display =\n            \"none\";\n          document.getElementById(\"actual-posts-container\").style.display =\n            \"block\";\n        }\n\n        setTimeout(showPostsAfterDelay, 300);",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
     "RXJS": "rxjs",
-    "RXJSOPERATORS": "rxjs/operators",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
     "APPFEEDPAGE": "app-feed-page",
-    "FEEDPAGECOMPONENTHTML": "./feed-page.component.html",
     "PAGE": "page",
     "SIZE": "size",
     "INCHANNEL": "inChannel",
@@ -821,16 +684,9 @@
     "_COMMENTHUMANREADABLEDATE_": "{{ comment.humanReadableDate }}",
     "_COMMENTMESSAGE_": "{{ comment.message }}",
     "NO_COMMENTS": "No comments",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
     "DATEFNS": "date-fns",
-    "SHAREDINDEX": "@shared/index",
-    "ANGULARPLATFORMBROWSER": "@angular/platform-browser",
     "RXJS": "rxjs",
-    "COREINDEX": "@core/index",
-    "ANGULARFORMS": "@angular/forms",
     "APPFEEDPOSTCONTENT": "app-feed-post-content",
-    "FEEDPOSTCONTENTCOMPONENTHTML": "./feed-post-content.component.html",
     "PAGE": "page",
     "SIZE": "size",
     "ERROR_FETCHING_LIKE_STATUS": "Error fetching like status:",
@@ -842,17 +698,10 @@
     "ERROR_FETCHING_COMMENTS": "Error fetching comments:",
     "MERGE": "merge",
     "INCHANNEL": "inChannel",
-    "WITHTAG": "withTag",
-    "POSTS": "/posts"
+    "WITHTAG": "withTag"
   },
   "FEED-POST-DETAIL-PAGE": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMONHTTP": "@angular/common/http",
-    "ANGULARROUTER": "@angular/router",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
     "APPFEEDPOSTDETAILPAGE": "app-feed-post-detail-page",
-    "FEEDPOSTDETAILPAGECOMPONENTHTML": "./feed-post-detail-page.component.html",
     "ERROR_RETRIEVING_LOGGED_USER_URN": "Error retrieving logged user URN:",
     "ERROR_FETCHING_POST": "Error fetching post:"
   },
@@ -864,15 +713,9 @@
     "_POSTTITLE_": "{{ post.title }}",
     "_POSTBODY_": "{{ post.body }}",
     "_TAGNAME_": "{{ tag.name }}",
-    "ANGULARCORE": "@angular/core",
     "DATEFNS": "date-fns",
-    "ANGULARPLATFORMBROWSER": "@angular/platform-browser",
     "RXJS": "rxjs",
-    "COREINDEX": "@core/index",
-    "SHAREDINDEX": "@shared/index",
-    "ANGULARROUTER": "@angular/router",
     "APPFEEDPOSTPREVIEW": "app-feed-post-preview",
-    "FEEDPOSTPREVIEWCOMPONENTHTML": "./feed-post-preview.component.html",
     "INCHANNEL": "inChannel",
     "ERROR_FETCHING_TAGS": "Error fetching tags:",
     "ERROR_FETCHING_LIKE_STATUS": "Error fetching like status:",
@@ -882,83 +725,7 @@
     "WITHTAG": "withTag",
     "MERGE": "merge"
   },
-  "FEED-ROUTING.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "FEATURESINDEX": "@features/index"
-  },
-  "FEED.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDSHAREDMODULE": "@shared/shared.module",
-    "FEEDROUTINGMODULE": "./feed-routing.module"
-  },
-  "INDEX.TS": {
-    "TS": "./**/*.ts",
-    "EXPORT__FROM_FPATH": "export * from '${f.path}'",
-    "FEATURESADMINADMINCREATEANNOUNCEMENTPAGEADMINCREAT": "@features/admin/admin-create-announcement-page/admin-create-announcement-page.component",
-    "AMENITIESAMENITIESCHOOSETIMEPAGEAMENITIESCHOOSETIM": "./amenities/amenities-choose-time-page/amenities-choose-time-page.component",
-    "AMENITIESAMENITIESRESERVATIONSLISTAMENITIESRESERVA": "./amenities/amenities-reservations-list/amenities-reservations-list.component",
-    "AMENITIESAMENITIESRESERVATIONSPAGEAMENITIESRESERVA": "./amenities/amenities-reservations-page/amenities-reservations-page.component",
-    "AMENITIESAMENITIESROUTINGMODULE": "./amenities/amenities-routing.module",
-    "AMENITIESAMENITIESMODULE": "./amenities/amenities.module",
-    "AUTHAUTHROUTINGMODULE": "./auth/auth-routing.module",
-    "AUTHAUTHMODULE": "./auth/auth.module",
-    "AUTHLOGINDIALOGLOGINDIALOGCOMPONENT": "./auth/login-dialog/login-dialog.component",
-    "AUTHLOGINPAGELOGINPAGECOMPONENT": "./auth/login-page/login-page.component",
-    "AUTHSIGNUPDIALOGSIGNUPDIALOGCOMPONENT": "./auth/signup-dialog/signup-dialog.component",
-    "CALENDARCALENDARBOXCALENDARBOXCOMPONENT": "./calendar/calendar-box/calendar-box.component",
-    "CALENDARCALENDAREVENTPAGECALENDAREVENTPAGECOMPONEN": "./calendar/calendar-event-page/calendar-event-page.component",
-    "CALENDARCALENDAREVENTSCOLUMNCALENDAREVENTSCOLUMNCO": "./calendar/calendar-events-column/calendar-events-column.component",
-    "CALENDARCALENDARPAGECALENDARPAGECOMPONENT": "./calendar/calendar-page/calendar-page.component",
-    "CALENDARCALENDARROUTINGMODULE": "./calendar/calendar-routing.module",
-    "CALENDARCALENDARWIDGETCALENDARWIDGETCOMPONENT": "./calendar/calendar-widget/calendar-widget.component",
-    "CALENDARCALENDARMODULE": "./calendar/calendar.module",
-    "FEEDFEEDCONTROLBARFEEDCONTROLBARCOMPONENT": "./feed/feed-control-bar/feed-control-bar.component",
-    "FEEDFEEDCREATEPOSTPAGEFEEDCREATEPOSTPAGECOMPONENT": "./feed/feed-create-post-page/feed-create-post-page.component",
-    "FEEDFEEDPAGEFEEDPAGECOMPONENT": "./feed/feed-page/feed-page.component",
-    "FEEDFEEDPOSTCONTENTFEEDPOSTCONTENTCOMPONENT": "./feed/feed-post-content/feed-post-content.component",
-    "FEEDFEEDPOSTDETAILPAGEFEEDPOSTDETAILPAGECOMPONENT": "./feed/feed-post-detail-page/feed-post-detail-page.component",
-    "FEEDFEEDPOSTPREVIEWFEEDPOSTPREVIEWCOMPONENT": "./feed/feed-post-preview/feed-post-preview.component",
-    "FEEDFEEDROUTINGMODULE": "./feed/feed-routing.module",
-    "FEEDFEEDMODULE": "./feed/feed.module",
-    "INFORMATIONINFORMATIONPAGEINFORMATIONPAGECOMPONENT": "./information/information-page/information-page.component",
-    "INFORMATIONINFORMATIONROUTINGMODULE": "./information/information-routing.module",
-    "INFORMATIONINFORMATIONMODULE": "./information/information.module",
-    "MARKETPLACEMARKETPLACECONTROLBARMARKETPLACECONTROL": "./marketplace/marketplace-control-bar/marketplace-control-bar.component",
-    "MARKETPLACEMARKETPLACEDASHBOARDBUYERPAGEMARKETPLAC": "./marketplace/marketplace-dashboard-buyer-page/marketplace-dashboard-buyer-page.component",
-    "MARKETPLACEMARKETPLACEDASHBOARDSELLERPAGEMARKETPLA": "./marketplace/marketplace-dashboard-seller-page/marketplace-dashboard-seller-page.component",
-    "MARKETPLACEMARKETPLACEPAGEMARKETPLACEPAGECOMPONENT": "./marketplace/marketplace-page/marketplace-page.component",
-    "MARKETPLACEMARKETPLACEPRODUCTDETAILPAGEMARKETPLACE": "./marketplace/marketplace-product-detail-page/marketplace-product-detail-page.component",
-    "MARKETPLACEMARKETPLACEPRODUCTEDITPAGEMARKETPLACEPR": "./marketplace/marketplace-product-edit-page/marketplace-product-edit-page.component",
-    "MARKETPLACEMARKETPLACEPRODUCTPREVIEWMARKETPLACEPRO": "./marketplace/marketplace-product-preview/marketplace-product-preview.component",
-    "MARKETPLACEMARKETPLACEPRODUCTREQUESTSPAGEMARKETPLA": "./marketplace/marketplace-product-requests-page/marketplace-product-requests-page.component",
-    "MARKETPLACEMARKETPLACEPRODUCTSELLPAGEMARKETPLACEPR": "./marketplace/marketplace-product-sell-page/marketplace-product-sell-page.component",
-    "MARKETPLACEMARKETPLACEROUTINGMODULE": "./marketplace/marketplace-routing.module",
-    "MARKETPLACEMARKETPLACEMODULE": "./marketplace/marketplace.module",
-    "NOTFOUNDNOTFOUNDPAGENOTFOUNDPAGECOMPONENT": "./not-found/not-found-page/not-found-page.component",
-    "NOTFOUNDNOTFOUNDROUTINGMODULE": "./not-found/not-found-routing.module",
-    "NOTFOUNDNOTFOUNDMODULE": "./not-found/not-found.module",
-    "SERVICEPROVIDERSSERVICEPROVIDERSCONTENTSERVICEPROV": "./service-providers/service-providers-content/service-providers-content.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSCONTROLBARSERVICEP": "./service-providers/service-providers-control-bar/service-providers-control-bar.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSDETAILPAGESERVICEP": "./service-providers/service-providers-detail-page/service-providers-detail-page.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSEDITDIALOGSERVICEP": "./service-providers/service-providers-edit-dialog/service-providers-edit-dialog.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSJOINNEIGHBORHOODSP": "./service-providers/service-providers-join-neighborhoods-page/service-providers-join-neighborhoods-page.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSPAGESERVICEPROVIDE": "./service-providers/service-providers-page/service-providers-page.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSPOSTPREVIEWSERVICE": "./service-providers/service-providers-post-preview/service-providers-post-preview.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSPREVIEWSERVICEPROV": "./service-providers/service-providers-preview/service-providers-preview.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSREVIEWDIALOGSERVIC": "./service-providers/service-providers-review-dialog/service-providers-review-dialog.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSREVIEWSANDPOSTSSER": "./service-providers/service-providers-reviews-and-posts/service-providers-reviews-and-posts.component",
-    "SERVICEPROVIDERSSERVICEPROVIDERSROUTINGMODULE": "./service-providers/service-providers-routing.module",
-    "SERVICEPROVIDERSSERVICEPROVIDERSMODULE": "./service-providers/service-providers.module",
-    "REJECTEDREJECTEDPAGEREJECTEDPAGECOMPONENT": "./rejected/rejected-page/rejected-page.component",
-    "UNVERIFIEDUNVERIFIEDPAGEUNVERIFIEDPAGECOMPONENT": "./unverified/unverified-page/unverified-page.component",
-    "USERPROFILEUSERPROFILEPAGEUSERPROFILEPAGECOMPONENT": "./user-profile/user-profile-page/user-profile-page.component",
-    "USERPROFILEUSERPROFILEROUTINGMODULE": "./user-profile/user-profile-routing.module",
-    "USERPROFILEUSERPROFILEWIDGETUSERPROFILEWIDGETCOMPO": "./user-profile/user-profile-widget/user-profile-widget.component",
-    "USERPROFILEUSERPROFILEMODULE": "./user-profile/user-profile.module"
-  },
+
   "INFORMATION-PAGE": {
     "CONTACT_INFORMATION": "Contact Information",
     "INFORMATION_NOT_FOUND": "Information not found",
@@ -970,26 +737,10 @@
     "_CONTACTPHONENUMBER_": "{{ contact.phoneNumber }}",
     "_RESOURCETITLE_": "{{ resource.title }}",
     "_RESOURCEDESCRIPTION_": "{{ resource.description }}",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "SHAREDINDEX": "@shared/index",
-    "COREINDEX": "@core/index",
     "APPINFORMATIONPAGE": "app-information-page",
-    "INFORMATIONPAGECOMPONENTHTML": "./information-page.component.html",
     "CONTACTSPAGE": "contactsPage",
     "RESOURCESPAGE": "resourcesPage",
     "MERGE": "merge"
-  },
-  "INFORMATION-ROUTING.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "FEATURESINDEX": "@features/index"
-  },
-  "INFORMATION.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDSHAREDMODULE": "@shared/shared.module"
   },
   "MARKETPLACE-CONTROL-BAR": {
     "MARKETPLACE": "Marketplace",
@@ -1134,48 +885,15 @@
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "There was a problem creating the listing.",
     "INVALID_PRICE_FORMAT": "Invalid price format."
   },
-  "MARKETPLACE-ROUTING.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "FEATURESINDEX": "@features/index",
-    "BUYERHUBMODE": "buyer-hub/:mode",
-    "SELLERHUBMODE": "seller-hub/:mode",
-    "PRODUCTSNEW": "products/new",
-    "PRODUCTSID": "products/:id",
-    "PRODUCTSIDEDIT": "products/:id/edit",
-    "PRODUCTSIDREQUESTS": "products/:id/requests"
-  },
-  "MARKETPLACE.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDSHAREDMODULE": "@shared/shared.module",
-    "MARKETPLACEROUTINGMODULE": "./marketplace-routing.module"
-  },
   "NOT-FOUND-PAGE": {
     "OOPS__ERRORCODE_": "Oops! {{ errorCode }}",
     "_ERRORMESSAGE_": "{{ errorMessage }}",
     "GO_BACK_TO_HOME": "Go back to home",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
     "APPNOTFOUNDPAGE": "app-not-found-page",
-    "NOTFOUNDPAGECOMPONENTHTML": "./not-found-page.component.html",
     "THE_PAGE_YOU_ARE_LOOKING_FOR_CANNOT_BE_FOUND": "The page you are looking for cannot be found.",
     "RETRY": "Retry",
     "CODE": "code",
     "MESSAGE": "message"
-  },
-  "NOT-FOUND-ROUTING.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "FEATURESINDEX": "@features/index"
-  },
-  "NOT-FOUND.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDSHAREDMODULE": "@shared/shared.module",
-    "NOTFOUNDROUTINGMODULE": "./not-found-routing.module"
   },
   "REJECTED-PAGE": {
     "HEY_THERE": "Hey there!",
@@ -1186,29 +904,13 @@
     "OR": "or",
     "GO_BACK_TO_LOGIN": "Go Back to Login",
     "LOADING": "Loading...",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARFORMS": "@angular/forms",
-    "ANGULARROUTER": "@angular/router",
-    "COREINDEX": "@core/index",
-    "SHAREDINDEX": "@shared/index",
     "RXJS": "rxjs",
-    "RXJSOPERATORS": "rxjs/operators",
     "APPREJECTEDPAGE": "app-rejected-page",
-    "REJECTEDPAGECOMPONENTHTML": "./rejected-page.component.html",
     "FORM_SUBMITTED": "Form Submitted:",
     "PLEASE_SELECT_A_NEIGHBORHOOD": "Please select a neighborhood.",
     "ERROR": "error",
-    "LOGIN": "/login",
     "SUCCESSFULLY_REQUESTED": "Successfully requested neighborhood to join! Wait until an administrator approves your request.",
     "ERROR_REQUESTED": "There was an error sending your requested neighborhood to join!"
-  },
-  "REJECTED.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "ANGULARROUTER": "@angular/router",
-    "SHAREDSHAREDMODULE": "@shared/shared.module",
-    "REJECTEDREJECTEDPAGEREJECTEDPAGECOMPONENT": "../rejected/rejected-page/rejected-page.component",
-    "SHAREDINDEX": "@shared/index"
   },
   "SERVICE-PROVIDERS-CONTENT": {
     "EDIT_PROFILE": "Edit Profile",
@@ -1274,14 +976,7 @@
     "LISTITEMSREF_NOT_YET_DEFINED_FOR_REINITIALIZATION": "ListItemsRef not yet defined for reinitialization",
     "REATTACHING_SCROLL_LISTENER_TO_LISTITEMSREF": "Reattaching scroll listener to listItemsRef"
   },
-  "SERVICE-PROVIDERS-LAYOUT": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "APPSERVICEPROVIDERSLAYOUT": "app-service-providers-layout",
-    "SERVICEPROVIDERSLAYOUTCOMPONENTHTML": "./service-providers-layout.component.html",
-    "ISSERVICESROUTE": "isServicesRoute",
-    "SERVICES": "/services"
-  },
+
   "SERVICE-PROVIDERS-PAGE": {
     "COULD_NOT_FIND": "We could not find service provider in you neighborhood yet!",
     "ERROR_LOADING_WORKERS": "Error loading workers:"
@@ -1293,12 +988,7 @@
     "_PROFESSIONDISPLAYNAME_": "{{ profession.displayName }}",
     "_WORKERUSERNAME_": "{{ worker?.user?.name }}",
     "_WORKERBIO_": "{{ worker?.bio }}",
-    "ANGULARCORE": "@angular/core",
-    "SHAREDINDEX": "@shared/index",
-    "APPSERVICEPROVIDERSPREVIEW": "app-service-providers-preview",
-    "SERVICEPROVIDERSPREVIEWCOMPONENTHTML": "./service-providers-preview.component.html",
-    "ASSETSIMAGESDEFAULTPROFILEPNG": "assets/images/default-profile.png",
-    "ASSETSIMAGESDEFAULTBACKGROUNDPNG": "assets/images/default-background.png"
+    "APPSERVICEPROVIDERSPREVIEW": "app-service-providers-preview"
   },
   "SERVICE-PROVIDERS-REVIEW-DIALOG": {
     "LEAVE_A_REVIEW": "Leave a Review",
@@ -1319,47 +1009,13 @@
     "ERROR_LOADING_REVIEWS": "Error loading reviews:",
     "ERROR_LOADING_POSTS": "Error loading posts:"
   },
-  "SERVICE-PROVIDERS-ROUTING.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "COREINDEX": "@core/index",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDMODELS": "@shared/models",
-    "SERVICEPROVIDERSLAYOUTSERVICEPROVIDERSLAYOUTCOMPON": "./service-providers-layout/service-providers-layout.component",
-    "SERVICEPROVIDERSCREATEPOSTSERVICEPROVIDERSCREATEPO": "./service-providers-create-post/service-providers-create-post.component",
-    "PROFILEID": "profile/:id",
-    "JOINNEIGHBORHOODS": "join-neighborhoods",
-    "POSTSNEW": "posts/new"
-  },
-  "SERVICE-PROVIDERS.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDSHAREDMODULE": "@shared/shared.module",
-    "SERVICEPROVIDERSROUTINGMODULE": "./service-providers-routing.module",
-    "SERVICEPROVIDERSLAYOUTSERVICEPROVIDERSLAYOUTCOMPON": "./service-providers-layout/service-providers-layout.component",
-    "ANGULARFORMS": "@angular/forms",
-    "SERVICEPROVIDERSCREATEPOSTSERVICEPROVIDERSCREATEPO": "./service-providers-create-post/service-providers-create-post.component"
-  },
   "UNVERIFIED-PAGE": {
     "HELLO_THERE": "Hello there!",
     "YOURE_ONE_STEP_AWAY_FROM_BECOMING_A_NEIGHBOR": "You're one step away from becoming a neighbor!",
     "WEVE_ALREADY_SENT_YOUR_REQUEST_TO_THE_ADMINISTRATI": "We've already sent your request to the administration,",
     "WE_ARE_CONFIGURING_YOUR_ACCOUNT_TO_PROVIDE_YOU_WIT": "we are configuring your account to provide you with the best\n          experience.",
     "WE_WILL_NOTIFY_YOU_WHEN_YOUR_ACCOUNT_IS_READY": "We will notify you when your account is ready.",
-    "GO_BACK_TO_LOGIN": "Go back to login",
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "COREINDEX": "@core/index",
-    "APPUNVERIFIEDPAGE": "app-unverified-page",
-    "UNVERIFIEDPAGECOMPONENTHTML": "./unverified-page.component.html"
-  },
-  "UNVERIFIED.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "ANGULARROUTER": "@angular/router",
-    "UNVERIFIEDPAGEUNVERIFIEDPAGECOMPONENT": "./unverified-page/unverified-page.component",
-    "SHAREDSHAREDMODULE": "@shared/shared.module"
+    "GO_BACK_TO_LOGIN": "Go back to login"
   },
   "USER-PROFILE-PAGE": {
     "CHANGE_PROFILE_IMAGE": "Change Profile Image",
@@ -1380,14 +1036,8 @@
     "ENGLISH": "English",
     "SPANISH": "Spanish",
     "LOGOUT": "Logout",
-    "ANGULARCORE": "@angular/core",
-    "SHAREDINDEX": "@shared/index",
-    "ANGULARPLATFORMBROWSER": "@angular/platform-browser",
-    "COREINDEX": "@core/index",
     "RXJS": "rxjs",
-    "ANGULARROUTER": "@angular/router",
     "USERUSERPROFILEPAGE": "user-user-profile-page",
-    "USERPROFILEPAGECOMPONENTHTML": "./user-profile-page.component.html",
     "DEFAULT": "default",
     "MARKETPLACE": "marketplace",
     "SERVICES": "services",
@@ -1396,32 +1046,12 @@
     "SUCCESSFULLY_LOGGED_OUT": "Successfully logged out.",
     "SUCCESS": "success"
   },
-  "USER-PROFILE-ROUTING.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARROUTER": "@angular/router",
-    "FEATURESINDEX": "@features/index"
-  },
   "USER-PROFILE-WIDGET": {
     "_CURRENTUSERNAME_": "{{ currentUser?.name }}",
     "_CURRENTUSERSURNAME_": "{{ currentUser?.surname }}",
-    "ANGULARCORE": "@angular/core",
-    "COREINDEX": "@core/index",
-    "SHAREDINDEX": "@shared/index",
-    "ANGULARPLATFORMBROWSER": "@angular/platform-browser",
     "RXJS": "rxjs",
-    "ANGULARROUTER": "@angular/router",
-    "ANGULARCOMMON": "@angular/common",
     "APPUSERPROFILEWIDGET": "app-user-profile-widget",
-    "USERPROFILEWIDGETCOMPONENTHTML": "./user-profile-widget.component.html",
-    "ERROR_FETCHING_PROFILE_IMAGE": "Error fetching profile image:",
-    "USER": "/user"
-  },
-  "USER-PROFILE.MODULE.TS": {
-    "ANGULARCORE": "@angular/core",
-    "ANGULARCOMMON": "@angular/common",
-    "FEATURESINDEX": "@features/index",
-    "SHAREDSHAREDMODULE": "@shared/shared.module",
-    "USERPROFILEROUTINGMODULE": "./user-profile-routing.module"
+    "ERROR_FETCHING_PROFILE_IMAGE": "Error fetching profile image:"
   },
   "CONFIRMATION-DIALOG": {
     "TITLE": "Confirm",

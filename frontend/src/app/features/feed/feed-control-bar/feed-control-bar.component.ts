@@ -78,6 +78,7 @@ export class FeedControlBarComponent implements OnInit {
       this.status = this.statusMapping[paramStatus] || FeedStatus.LATEST;
       this.channel = params['inChannel'];
       this.updateStatusClass();
+      this.updateChannelClass();
     });
   }
 
@@ -88,6 +89,16 @@ export class FeedControlBarComponent implements OnInit {
       this.statusClass = 'Hot';
     } else if (this.status === this.trendingUrl) {
       this.statusClass = 'Trending';
+    }
+  }
+
+  updateChannelClass() {
+    if (this.channel === this.feedChannelUrl) {
+      this.channelClass = 'Feed';
+    } else if (this.channel === this.announcementsChannelUrl) {
+      this.channelClass = 'Announcements';
+    } else if (this.channel === this.complaintsChannelUrl) {
+      this.channelClass = 'Complaints';
     }
   }
 

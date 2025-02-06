@@ -105,10 +105,12 @@ export class FeedCreatePostPageComponent implements OnInit {
       LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL,
     );
 
-    // Listen to route queryParams for channel
-    this.route.queryParams.subscribe(params => {
-      this.channel = params['inChannel'];
-      this.updateChannelTitle();
+    this.translate.getTranslation(this.translate.currentLang).subscribe(() => {
+      // Listen to route queryParams for channel
+      this.route.queryParams.subscribe(params => {
+        this.channel = params['inChannel'];
+        this.updateChannelTitle();
+      });
     });
 
     // If user is not a worker, load tags
@@ -202,21 +204,22 @@ export class FeedCreatePostPageComponent implements OnInit {
 
   // Determine the title based on channel
   updateChannelTitle() {
+    let key = '';
+
     if (this.channel === this.feedChannelUrl) {
-      this.title = this.translate.instant('FEED-CREATE-POST-PAGE.CREATE_POST');
+      key = 'FEED-CREATE-POST-PAGE.CREATE_POST';
     } else if (this.channel === this.announcementsChannelUrl) {
-      this.title = this.translate.instant(
-        'FEED-CREATE-POST-PAGE.CREATE_ANNOUNCEMENT',
-      );
+      key = 'FEED-CREATE-POST-PAGE.CREATE_ANNOUNCEMENT';
     } else if (this.channel === this.complaintsChannelUrl) {
-      this.title = this.translate.instant(
-        'FEED-CREATE-POST-PAGE.CREATE_COMPLAINT',
-      );
+      key = 'FEED-CREATE-POST-PAGE.CREATE_COMPLAINT';
     } else {
-      this.title = this.translate.instant(
-        'FEED-CREATE-POST-PAGE.CREATE_CONTENT',
-      );
+      key = 'FEED-CREATE-POST-PAGE.CREATE_CONTENT';
     }
+
+    this.translate.get(key).subscribe(translated => {
+      this.title = translated;
+      console.log(this.title);
+    });
   }
 
   // ---- TAGS & PAGINATION ----
