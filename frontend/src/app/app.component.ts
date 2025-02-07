@@ -1,8 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { AuthService, UserSessionService } from '@core/index';
 import { PreferencesService } from '@core/services/preferences.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { DOCUMENT } from '@angular/common';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +13,13 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements OnInit, OnDestroy {
   private channel: BroadcastChannel;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    @Inject(DOCUMENT) private document: Document,
+  ) {
     this.channel = new BroadcastChannel('auth_channel');
+    this.setFavicon(environment.deployUrl + 'favicon.ico');
   }
 
   ngOnInit(): void {
@@ -27,6 +34,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // Listen to storage events
     window.addEventListener('storage', this.handleStorageEvent.bind(this));
+  }
+
+  setFavicon(faviconUrl: string) {
+    const link: HTMLLinkElement =
+      this.document.querySelector("link[rel*='icon']") ||
+      this.document.createElement('link');
+
+    link.type = 'image/x-icon';
+    link.rel = 'icon';
+    link.href = faviconUrl;
+    this.document.head.appendChild(link);
   }
 
   ngOnDestroy(): void {

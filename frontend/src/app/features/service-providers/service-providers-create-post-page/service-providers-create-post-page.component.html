@@ -19,7 +19,7 @@
             formControlName="title"
             class="cool-input"
             style="border-radius: var(--border-radius)"
-            placeholder="Title"
+            [attr.placeholder]="'SERVICE-PROVIDERS-CREATE-POST.TITLE' | translate"
           />
           <div
             *ngIf="
@@ -43,7 +43,7 @@
           formControlName="body"
           class="cool-input textarea-min-max"
           rows="5"
-          placeholder="Body"
+          [attr.placeholder]="'SERVICE-PROVIDERS-CREATE-POST.BODY' | translate"
         ></textarea>
         <div
           *ngIf="

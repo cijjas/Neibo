@@ -1,5 +1,5 @@
 <div class="cool-static-container">
-  <h2 class="card-title">Create an Announcement</h2>
+  <h2 class="card-title">{{ 'ADMIN-CREATE-ANNOUNCEMENT-PAGE.CREATE_AN_ANNOUNCEMENT' | translate }}</h2>
   <div class="divider mb-3 mt-3"></div>
 
   <!-- Announcement Form -->
@@ -14,7 +14,7 @@
         <input
           formControlName="subject"
           class="cool-input"
-          placeholder="Subject"
+          [attr.placeholder]="'ADMIN-CREATE-ANNOUNCEMENT-PAGE.SUBJECT' | translate"
           type="text"
         />
         <app-form-error
@@ -30,7 +30,7 @@
           formControlName="message"
           class="cool-input textarea-min-max"
           rows="5"
-          placeholder="Message"
+          [attr.placeholder]="'ADMIN-CREATE-ANNOUNCEMENT-PAGE.MESSAGE' | translate"
         ></textarea>
         <app-form-error
           class="w-100"

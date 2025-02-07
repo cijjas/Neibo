@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalDate;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalSecondId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableDate;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableSecondId;
 
 /*
  * # Summary
@@ -57,7 +57,7 @@ public class ShiftController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Content
-        List<Shift> shifts = ss.getShifts(extractOptionalSecondId(shiftParams.getAmenity()), extractOptionalDate(shiftParams.getDate()));
+        List<Shift> shifts = ss.getShifts(extractNullableSecondId(shiftParams.getAmenity()), extractNullableDate(shiftParams.getDate()));
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control

@@ -79,7 +79,7 @@ public class DepartmentController {
     @GET
     @Path("{" + PathParameter.DEPARTMENT_ID + "}")
     public Response findDepartment(
-            @PathParam(PathParameter.DEPARTMENT_ID) Long departmentId
+            @PathParam(PathParameter.DEPARTMENT_ID) long departmentId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 

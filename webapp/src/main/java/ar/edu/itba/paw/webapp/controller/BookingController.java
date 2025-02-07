@@ -59,8 +59,8 @@ public class BookingController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(bookingParams.getUser());
-        Long amenityId = extractOptionalSecondId(bookingParams.getAmenity());
+        Long userId = extractNullableFirstId(bookingParams.getUser());
+        Long amenityId = extractNullableSecondId(bookingParams.getAmenity());
 
         // Content
         final List<Booking> bookings = bs.getBookings(bookingParams.getNeighborhoodId(), userId, amenityId, bookingParams.getPage(), bookingParams.getSize());
@@ -126,7 +126,7 @@ public class BookingController {
     @Validated(CreateSequence.class)
     @PreAuthorize("@accessControlHelper.canCreateBooking(#createForm.user, #createForm.amenity, #createForm.shift)")
     public Response createBooking(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull BookingDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());

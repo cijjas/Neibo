@@ -89,7 +89,7 @@
             formControlName="comment"
             class="cool-input grey-input textarea-min-max"
             rows="3"
-            placeholder="Add a comment"
+            [attr.placeholder]="'FEED-POST-CONTENT.ADD_A_COMMENT' | translate"
             (focus)="isFocused = true"
           ></textarea>
 

@@ -63,8 +63,8 @@ public class WorkerController {
         // ID Extraction
         List<Long> neighborhoodIds = extractFirstIds(workerParams.getNeighborhoods());
         List<Long> professionIds = extractFirstIds(workerParams.getProfessions());
-        Long workerRoleId = extractOptionalFirstId(workerParams.getWorkerRole());
-        Long workerStatusId = extractOptionalFirstId(workerParams.getWorkerStatus());
+        Long workerRoleId = extractNullableFirstId(workerParams.getWorkerRole());
+        Long workerStatusId = extractNullableFirstId(workerParams.getWorkerStatus());
 
         // Content
         List<Worker> workers = ws.getWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId, workerParams.getPage(), workerParams.getSize());
@@ -102,6 +102,7 @@ public class WorkerController {
 
     @GET
     @Path("{" + PathParameter.WORKER_ID + "}")
+    @PreAuthorize("@accessControlHelper.canFindWorker(#workerId)")
     public Response findWorker(
             @PathParam(PathParameter.WORKER_ID) long workerId
     ) {
@@ -154,7 +155,7 @@ public class WorkerController {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final Worker updatedWorker = ws.updateWorker(workerId, updateForm.getBusinessName(), updateForm.getAddress(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getBackgroundImage()), updateForm.getBio());
+        final Worker updatedWorker = ws.updateWorker(workerId, updateForm.getBusinessName(), updateForm.getAddress(), updateForm.getPhoneNumber(), extractNullableFirstId(updateForm.getBackgroundImage()), updateForm.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
         return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))

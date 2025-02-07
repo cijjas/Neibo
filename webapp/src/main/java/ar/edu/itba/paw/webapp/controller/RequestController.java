@@ -63,10 +63,10 @@ public class RequestController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(requestParams.getUser());
-        Long productId = extractOptionalSecondId(requestParams.getProduct());
-        Long transactionTypeId = extractOptionalFirstId(requestParams.getTransactionType());
-        Long requestStatusId = extractOptionalFirstId(requestParams.getRequestStatus());
+        Long userId = extractNullableSecondId(requestParams.getUser());
+        Long productId = extractNullableSecondId(requestParams.getProduct());
+        Long transactionTypeId = extractNullableFirstId(requestParams.getTransactionType());
+        Long requestStatusId = extractNullableFirstId(requestParams.getRequestStatus());
 
         // Content
         final List<Request> requests = rs.getRequests(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId,
@@ -115,10 +115,10 @@ public class RequestController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalSecondId(requestParams.getUser());
-        Long productId = extractOptionalSecondId(requestParams.getProduct());
-        Long requestStatusId = extractOptionalFirstId(requestParams.getRequestStatus());
-        Long transactionTypeId = extractOptionalFirstId(requestParams.getTransactionType());
+        Long userId = extractNullableSecondId(requestParams.getUser());
+        Long productId = extractNullableSecondId(requestParams.getProduct());
+        Long requestStatusId = extractNullableFirstId(requestParams.getRequestStatus());
+        Long transactionTypeId = extractNullableFirstId(requestParams.getTransactionType());
 
         // Content
         int count = rs.countRequests(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId);
@@ -198,7 +198,7 @@ public class RequestController {
         LOGGER.info("PATCH request arrived at '{}", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final Request updatedRequest = rs.updateRequest(neighborhoodId, requestId, extractOptionalFirstId(updateForm.getRequestStatus()));
+        final Request updatedRequest = rs.updateRequest(neighborhoodId, requestId, extractNullableFirstId(updateForm.getRequestStatus()));
         String requestHashCode = String.valueOf(updatedRequest.hashCode());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))

@@ -10,7 +10,6 @@ import ar.edu.itba.paw.webapp.validation.URIValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,13 +43,14 @@ public class AccessControlHelper {
     private final DepartmentService ds;
     private final ImageService ims;
     private final ProfessionService pros;
+    private final AffiliationService afs;
     private final AuthHelper authHelper;
 
     @Autowired
     public AccessControlHelper(ProductService prs, PostService ps, InquiryService is, RequestService rs, CommentService cs, BookingService bs,
                                ReviewService res, UserService us, NeighborhoodService ns, WorkerService ws, ShiftService ss, EventService es,
                                AmenityService as, AvailabilityService avs, ChannelService chs, TagService ts, DepartmentService ds, ImageService ims,
-                               ProfessionService pros) {
+                               ProfessionService pros, AffiliationService afs) {
         this.prs = prs;
         this.ps = ps;
         this.is = is;
@@ -71,6 +71,7 @@ public class AccessControlHelper {
         this.ims = ims;
         this.pros = pros;
         this.authHelper = new AuthHelper();
+        this.afs = afs;
     }
 
     // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
@@ -87,6 +88,8 @@ public class AccessControlHelper {
             return false;
 
         // Reference Authorization
+        if (authHelper.isAnonymous())
+            return false;
         if (authHelper.isSuperAdministrator())
             return true;
         if (authHelper.isAdministrator() || authHelper.isNeighbor())
@@ -106,6 +109,8 @@ public class AccessControlHelper {
             return false;
 
         // Reference Authorization
+        if (authHelper.isAnonymous())
+            return false;
         if (authHelper.isSuperAdministrator())
             return true;
         return authHelper.getRequestingUserId() == extractFirstId(workerURI) && extractFirstId(workerRoleURI) == WorkerRole.UNVERIFIED_WORKER.getId(); // Is a worker
@@ -123,6 +128,8 @@ public class AccessControlHelper {
             return false;
 
         // Reference Authorization
+        if (authHelper.isAnonymous())
+            return false;
         if (authHelper.isSuperAdministrator())
             return true;
         if (authHelper.isAdministrator())
@@ -143,6 +150,8 @@ public class AccessControlHelper {
             return false;
 
         // Reference Authorization
+        if (authHelper.isAnonymous())
+            return false;
         if (authHelper.isSuperAdministrator())
             return true;
         return authHelper.getRequestingUserId() == extractFirstId(workerURI) && ns.findNeighborhood(extractFirstId(neighborhoodURI)).isPresent();
@@ -157,67 +166,68 @@ public class AccessControlHelper {
     public boolean isNeighborhoodMember(HttpServletRequest request) {
         LOGGER.info("Neighborhood Belonging Bind");
 
-        Authentication authentication = authHelper.getAuthentication();
-
-        if (authHelper.isSuperAdministrator(authentication)) {
+        if (authHelper.isSuperAdministrator())
             return true;
-        }
 
         String requestURI = request.getRequestURI();
-
         try {
             if (ExtractionUtils.isNeighborhoodPath(requestURI)) {
                 long neighborhoodId = ExtractionUtils.extractNeighborhoodId(requestURI);
-                return authHelper.getRequestingUserNeighborhoodId(authentication) == neighborhoodId ||
+                return authHelper.getRequestingUserNeighborhoodId() == neighborhoodId ||
                         neighborhoodId == BaseNeighborhood.WORKERS.getId();
             }
         } catch (IllegalArgumentException e) {
             LOGGER.warn("Failed to validate neighborhood membership", e);
             return false;
         }
-
         return false;
     }
 
-    public boolean canListNeighborhoods(String withWorker, String withoutWorker) {
+    public boolean canListNeighborhoods(String withWorkerURI, String withoutWorkerURI) {
         LOGGER.info("Verifying List Neighborhoods Accessibility");
 
         // Structure Validation
-        if (!URIValidator.validateOptionalURI(withWorker, Endpoint.WORKERS) || !URIValidator.validateOptionalURI(withoutWorker, Endpoint.WORKERS))
+        if (!URIValidator.validateOptionalURI(withWorkerURI, Endpoint.WORKERS) || !URIValidator.validateOptionalURI(withoutWorkerURI, Endpoint.WORKERS))
             return true; // Constraints handle the error
 
         // Entity Existence
-        Optional<Worker> optionalWorker = Optional.empty();
-        if (withWorker != null){
-            optionalWorker = ws.findWorker(extractFirstId(withWorker));
-            if (!optionalWorker.isPresent())
+        Optional<Worker> optionalWithWorker = Optional.empty();
+        if (withWorkerURI != null){
+            optionalWithWorker = ws.findWorker(extractFirstId(withWorkerURI));
+            if (!optionalWithWorker.isPresent())
                 return false;
         }
-        Optional<Worker> optionalWorker2 = Optional.empty();
-        if (withoutWorker != null){
-            optionalWorker2 = ws.findWorker(extractFirstId(withoutWorker));
-            if (!optionalWorker2.isPresent())
+        Optional<Worker> optionalWithoutWorker = Optional.empty();
+        if (withoutWorkerURI != null){
+            optionalWithoutWorker = ws.findWorker(extractFirstId(withoutWorkerURI));
+            if (!optionalWithoutWorker.isPresent())
                 return false;
         }
 
         // Reference Authorization
-        return (!optionalWorker.isPresent() && !optionalWorker2.isPresent()) || (authHelper.isAnonymous() && !authHelper.isUnverifiedOrRejected());
+        return (!optionalWithWorker.isPresent() && !optionalWithoutWorker.isPresent()) || (authHelper.isAnonymous() && !authHelper.isUnverifiedOrRejected());
     }
 
     // --------------------------------------------- PROFESSION --------------------------------------------------------
 
-    // Worker Query Param in '/professions' can only be used by Neighbors, Workers and Administrators
     public boolean canUseWorkerQPInProfessions(String workerURI) {
         LOGGER.info("Verifying Query Params Accessibility");
 
-        if (workerURI == null)
-            return true;
+        // Structure Validation
+        if (!URIValidator.validateOptionalURI(workerURI, Endpoint.WORKERS))
+            return true; // Constraints handle the error
 
-        Authentication authentication = authHelper.getAuthentication();
+        // Entity Existence
+        Optional<Worker> optionalWorker = Optional.empty();
+        if (workerURI != null){
+            optionalWorker = ws.findWorker(extractFirstId(workerURI));
+            if (!optionalWorker.isPresent())
+                return false;
+        }
 
-        return !authHelper.isAnonymous(authentication) && !authHelper.isUnverifiedOrRejected(authentication);
+        // Reference Authorization
+        return (!optionalWorker.isPresent() || (!authHelper.isAnonymous() && !authHelper.isUnverifiedOrRejected()));
     }
-
 
     // ----------------------------------------------- REVIEWS ---------------------------------------------------------
 
@@ -234,9 +244,12 @@ public class AccessControlHelper {
             return false;
 
         // Reference Authorization
+        if (authHelper.isAnonymous() || authHelper.isUnverifiedOrRejected() || authHelper.isWorker())
+            return false;
         if (authHelper.isSuperAdministrator())
             return true;
         Optional<Review> latestReview = res.findLatestReview(workerId, optionalUser.get().getUserId());
+        // Neighbors & Admins
         return optionalUser.get().getUserId() == authHelper.getRequestingUserId()
             && latestReview.map(review -> ChronoUnit.HOURS.between(review.getDate().toInstant(), Instant.now()) >= 24).orElse(true); // Spam Prevention
     }
@@ -250,6 +263,8 @@ public class AccessControlHelper {
             return true; // Not Found is handled by the controller
 
         // Reference Authorization
+        if (authHelper.isAnonymous())
+            return false;
         if (authHelper.isSuperAdministrator())
             return true;
         return optionalReview.get().getUser().getUserId() == authHelper.getRequestingUserId();
@@ -279,9 +294,12 @@ public class AccessControlHelper {
         }
 
         // Reference Authorization
-        if (authHelper.isAnonymous()) return false;
-        if (authHelper.isSuperAdministrator()) return true;
-        if (authHelper.isUnverifiedOrRejected()) return false;
+        if (authHelper.isAnonymous())
+            return false;
+        if (authHelper.isSuperAdministrator())
+            return true;
+        if (authHelper.isUnverifiedOrRejected())
+            return false;
         // Workers, Neighbors & Administrators
         return optionalNeighborhood.isPresent()
                 && (optionalNeighborhood.get().getNeighborhoodId() == BaseNeighborhood.WORKERS.getId()
@@ -294,12 +312,15 @@ public class AccessControlHelper {
         // Entity Existence
         Optional<User> optionalUser = us.findUser(userId);
         if (!optionalUser.isPresent())
-            return true; // Not Found handled by controller
+            return true; // Not Found is handled by controller
 
         // Reference Authorization
-        if (authHelper.isAnonymous()) return false;
-        if (authHelper.isSuperAdministrator()) return true;
-        if (authHelper.isUnverifiedOrRejected()) return authHelper.getRequestingUserId() == userId;
+        if (authHelper.isAnonymous())
+            return false;
+        if (authHelper.isSuperAdministrator())
+            return true;
+        if (authHelper.isUnverifiedOrRejected())
+            return authHelper.getRequestingUserId() == userId;
         // Workers, Neighbors & Admins
         return optionalUser.get().getNeighborhood().getNeighborhoodId() == BaseNeighborhood.WORKERS.getId()
                 || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUser().getNeighborhoodId();
@@ -341,7 +362,7 @@ public class AccessControlHelper {
         // Entity Existence
         Optional<User> user = us.findUser(userId);
         if (!user.isPresent())
-            return true; // Not Found handled by controller
+            return true; // Not Found is handled by controller
         Optional<Neighborhood> neighborhood = Optional.empty();
         if (neighborhoodURI != null){
             neighborhood = ns.findNeighborhood(extractFirstId(neighborhoodURI));
@@ -368,8 +389,10 @@ public class AccessControlHelper {
         }
 
         // Reference Authorization
-        if (authHelper.isAnonymous()) return false;
-        if (authHelper.isSuperAdministrator()) return true;
+        if (authHelper.isAnonymous())
+            return false;
+        if (authHelper.isSuperAdministrator())
+            return true;
         if (authHelper.isAdministrator()) {
             return (
                         !neighborhood.isPresent() && !userRole.isPresent()
@@ -486,7 +509,7 @@ public class AccessControlHelper {
             for (String neighborhoodURI : neighborhoodURIs) {
                 // Structure Validation
                 if (!URIValidator.validateURI(neighborhoodURI, Endpoint.NEIGHBORHOODS))
-                    return true; // Handled by Constraints
+                    return true; // Constraints handle the error
                 // Entity Existence
                 if (!ns.findNeighborhood(extractFirstId(neighborhoodURI)).isPresent())
                     return false;
@@ -496,7 +519,7 @@ public class AccessControlHelper {
             for (String professionURI : professionURIs) {
                 // Structure Validation
                 if (!URIValidator.validateURI(professionURI, Endpoint.PROFESSIONS))
-                    return true; // Handled by Constraints
+                    return true; // Constraints handle the error
                 // Entity Existence
                 if (!pros.findProfession(extractFirstId(professionURI)).isPresent())
                     return false;
@@ -504,16 +527,44 @@ public class AccessControlHelper {
         }
 
         // Reference Authorization
-        if (authHelper.isAnonymous()) return false;
-        if (authHelper.isSuperAdministrator()) return true;
+        if (authHelper.isAnonymous())
+            return false;
+        if (authHelper.isSuperAdministrator())
+            return true;
         if (authHelper.isNeighbor() || authHelper.isAdministrator()){
             if (neighborhoodURIs == null || neighborhoodURIs.isEmpty())
                 return true;
-            if (neighborhoodURIs.size() == 1)
-               return ns.findNeighborhood(extractFirstId(neighborhoodURIs.get(0))).get().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId(); // Already verified structure and existence
+            if (neighborhoodURIs.size() == 1) {
+                Optional<Neighborhood> neighborhoodOpt = ns.findNeighborhood(extractFirstId(neighborhoodURIs.get(0)));
+                return neighborhoodOpt.map(neighborhood ->
+                        neighborhood.getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId()
+                ).orElse(false);
+            }
         }
         if (authHelper.isWorker())
             return neighborhoodURIs == null || neighborhoodURIs.isEmpty();
+        // Unverified, Rejected
+        return false;
+    }
+
+    public boolean canFindWorker(long workerId) {
+        LOGGER.info("Verifying Find Worker Accessibility");
+
+        // Entity Existence
+        Optional<Worker> optionalWorker = ws.findWorker(workerId);
+        if (!optionalWorker.isPresent())
+            return false;
+
+        // Reference Authorization
+        if (authHelper.isAnonymous())
+            return false;
+        if (authHelper.isSuperAdministrator())
+            return true;
+        if (authHelper.isWorker())
+            return true;
+        if (authHelper.isNeighbor() || authHelper.isAdministrator()){
+            return !afs.getAffiliations(authHelper.getRequestingUserNeighborhoodId(), workerId, 1, 1).isEmpty();
+        }
         // Unverified, Rejected
         return false;
     }
@@ -537,7 +588,7 @@ public class AccessControlHelper {
         for (String professionURI : professionURIs) {
             // Structure Validation
             if (!URIValidator.validateURI(professionURI, Endpoint.PROFESSIONS))
-                return true; // Handled by Constraints
+                return true; // Constraints handle the error
             // Entity Existence
             if (!pros.findProfession(extractFirstId(professionURI)).isPresent())
                 return false;
@@ -550,7 +601,6 @@ public class AccessControlHelper {
 
     public boolean canUpdateWorker(String userURI, List<String> professionURIs, String imageURI, long workerId) {
         LOGGER.info("Verifying Worker Update Accessibility");
-        Authentication authentication = authHelper.getAuthentication();
 
         // Structure Validation
         if (!URIValidator.validateOptionalURI(userURI, Endpoint.USERS) || !URIValidator.validateOptionalURI(imageURI, Endpoint.IMAGES))
@@ -573,7 +623,7 @@ public class AccessControlHelper {
             for (String professionURI : professionURIs) {
                 // Structure Validation
                 if (!URIValidator.validateURI(professionURI, Endpoint.PROFESSIONS))
-                    return true; // Handled by Constraints
+                    return true; // Constraints handle the error
                 // Entity Existence
                 if (!pros.findProfession(extractFirstId(professionURI)).isPresent())
                     return false;
@@ -581,47 +631,28 @@ public class AccessControlHelper {
         }
 
         // Reference Authorization
-        if (authHelper.isSuperAdministrator(authentication))
+        if (authHelper.isAnonymous())
+            return false;
+        if (authHelper.isSuperAdministrator())
             return true;
-
-        return (!optionalUser.isPresent() || optionalUser.get().getUserId() == authHelper.getRequestingUserId()) && workerId == authHelper.getRequestingUserId(authentication);
+        return (!optionalUser.isPresent() || optionalUser.get().getUserId() == authHelper.getRequestingUserId()) && workerId == authHelper.getRequestingUserId();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     // --------------------------------------- NEIGHBORHOOD NESTED ENTITIES --------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
 
-    /// In neighborhood nested entities the neighborhood biding ensures the requesting user belongs to that neighborhood
-    /// so if the user has role Administrator we can be sure that it is that neighborhood's Administrator.
-    /// Same applies for Users, we can always be sure that the requesting user belongs to the correct Neighborhood.
-
     // ----------------------------------------------- AMENITIES -------------------------------------------------------
 
-    public boolean canCreateAmenity(List<String> shiftURIs) {
-        LOGGER.info("Verifying Create Amenity Accessibility");
+    public boolean canCreateOrUpdateAmenity(List<String> shiftURIs) {
+        LOGGER.info("Verifying Create or Update Amenity Accessibility");
 
         if (shiftURIs == null || shiftURIs.isEmpty())
-            return true;
+            return true; // Valid use case
         for (String shiftURI : shiftURIs) {
             // Structure Validation
             if (!URIValidator.validateURI(shiftURI, Endpoint.SHIFTS))
-                return true; // Handled by Constraints
-            // Entity Existence
-            if (!ss.findShift(extractFirstId(shiftURI)).isPresent())
-                return false;
-        }
-        return true;
-    }
-
-    public boolean canUpdateAmenity(List<String> shiftURIs) {
-        LOGGER.info("Verifying Update Amenity Accessibility");
-
-        if (shiftURIs == null || shiftURIs.isEmpty())
-            return true;
-        for (String shiftURI : shiftURIs) {
-            // Structure Validation
-            if (!URIValidator.validateURI(shiftURI, Endpoint.SHIFTS))
-                return true; // Handled by Constraints
+                return true; // Constraints handle the error
             // Entity Existence
             if (!ss.findShift(extractFirstId(shiftURI)).isPresent())
                 return false;
@@ -631,8 +662,8 @@ public class AccessControlHelper {
 
     // ---------------------------------------------- ATTENDANCES ------------------------------------------------------
 
-    public boolean canListAttendance(String eventURI, String userURI) {
-        LOGGER.info("Verifying List Attendance Accessibility");
+    public boolean canListOrCountAttendance(String eventURI, String userURI) {
+        LOGGER.info("Verifying List or Count Attendance Accessibility");
 
         // Structure
         if (!URIValidator.validateOptionalURI(eventURI, Endpoint.EVENTS) || !URIValidator.validateOptionalURI(userURI, Endpoint.USERS))
@@ -661,62 +692,8 @@ public class AccessControlHelper {
                 && (!optionalUser.isPresent() || authHelper.getRequestingUserNeighborhoodId() == optionalUser.get().getNeighborhood().getNeighborhoodId());
     }
 
-    public boolean canCountAttendance(String eventURI, String userURI) {
-        LOGGER.info("Verifying Count Attendance Accessibility");
-
-        // Structure
-        if (!URIValidator.validateOptionalURI(eventURI, Endpoint.EVENTS) || !URIValidator.validateOptionalURI(userURI, Endpoint.USERS))
-            return true; // Constraints handle the error
-
-        // Entity Existence
-        TwoId twoId;
-        Optional<Event> optionalEvent = Optional.empty();
-        if (eventURI != null){
-            twoId = extractTwoId(eventURI);
-            optionalEvent = es.findEvent(twoId.getFirstId(), twoId.getSecondId());
-            if (!optionalEvent.isPresent())
-                return false;
-        }
-        Optional<User> optionalUser = Optional.empty();
-        if (userURI != null) {
-            optionalUser = us.findUser(extractFirstId(userURI));
-            if (!optionalUser.isPresent())
-                return false;
-        }
-
-        // Reference Authorization
-        if (authHelper.isSuperAdministrator())
-            return true;
-        return (!optionalEvent.isPresent() || authHelper.getRequestingUserNeighborhoodId() == optionalEvent.get().getNeighborhood().getNeighborhoodId())
-                && (!optionalUser.isPresent() || authHelper.getRequestingUserNeighborhoodId() == optionalUser.get().getNeighborhood().getNeighborhoodId());
-    }
-
-    public boolean canCreateAttendance(String eventURI, String userURI) {
-        LOGGER.info("Verifying Create Attendance Accessibility");
-
-        // Structure Validation
-        if (!URIValidator.validateURI(eventURI, Endpoint.EVENTS) || !URIValidator.validateURI(userURI, Endpoint.USERS))
-            return true; // Constraints handle the error
-
-        // Entity Existence
-        Optional<User> userOptional = us.findUser(extractFirstId(userURI));
-        if (!userOptional.isPresent())
-            return false;
-        TwoId twoId = extractTwoId(eventURI);
-        Optional<Event> eventOptional = es.findEvent(twoId.getFirstId(), twoId.getSecondId());
-        if (!eventOptional.isPresent())
-            return false;
-
-        // Reference Authorization
-        if (authHelper.isSuperAdministrator())
-            return true;
-        if (authHelper.isAdministrator())
-            return authHelper.getRequestingUserNeighborhoodId() == eventOptional.get().getNeighborhood().getNeighborhoodId() && authHelper.getRequestingUserNeighborhoodId() == userOptional.get().getNeighborhood().getNeighborhoodId();
-        return authHelper.getRequestingUserNeighborhoodId() == eventOptional.get().getNeighborhood().getNeighborhoodId() && authHelper.getRequestingUserId() == userOptional.get().getUserId();
-    }
-
-    public boolean canDeleteAttendance(String eventURI, String userURI) {
-        LOGGER.info("Verifying Delete Attendance Accessibility");
+    public boolean canCreateOrDeleteAttendance(String eventURI, String userURI) {
+        LOGGER.info("Verifying Create or Delete Attendance Accessibility");
 
         // Structure Validation
         if (!URIValidator.validateURI(eventURI, Endpoint.EVENTS) || !URIValidator.validateURI(userURI, Endpoint.USERS))
@@ -807,7 +784,7 @@ public class AccessControlHelper {
         // Entity Existence
         Optional<Booking> optionalBooking = bs.findBooking(neighborhoodId, bookingId);
         if (!optionalBooking.isPresent())
-            return true; // Controller will handle the Not Found
+            return true; // Not Found is handled by the controller
 
         // Reference Authorization
         if (authHelper.isSuperAdministrator())
@@ -846,7 +823,7 @@ public class AccessControlHelper {
         // Entity Existence
         Optional<Comment> optionalComment = cs.findComment(neighborhoodId, postId, commentId);
         if (!optionalComment.isPresent())
-            return true; // Controller will handle the Not Found
+            return true; // Not Found is handled by the controller
 
         if (authHelper.isSuperAdministrator())
             return true;
@@ -899,14 +876,13 @@ public class AccessControlHelper {
         }
         Optional<Inquiry> optionalInquiry = is.findInquiry(inquiryId);
         if (!optionalInquiry.isPresent())
-            return true; // Not Found handled by controller
+            return true; // Not Found is handled by controller
 
+        // Reference Authorization
         if (authHelper.isSuperAdministrator())
             return true;
-
         if (authHelper.isAdministrator())
             return !optionalUser.isPresent() || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId();
-
         return ((!optionalUser.isPresent())
                 || (optionalUser.get().getUserId() == authHelper.getRequestingUserId()))
                 && optionalInquiry.get().getProduct().getSeller().getUserId() == authHelper.getRequestingUserId();
@@ -918,7 +894,7 @@ public class AccessControlHelper {
         // Entity Existence
         Optional<Inquiry> optionalInquiry = is.findInquiry(inquiryId);
         if (!optionalInquiry.isPresent())
-            return true; // Not Found handled by controller
+            return true; // Not Found is handled by controller
 
         // Reference Authorization
         if (authHelper.isSuperAdministrator())
@@ -930,8 +906,8 @@ public class AccessControlHelper {
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
 
-    public boolean canListLikes(String userURI, String postURI) {
-        LOGGER.info("Verifying List Like Accessibility");
+    public boolean canListOrCountLikes(String userURI, String postURI) {
+        LOGGER.info("Verifying List or Count Like Accessibility");
 
         // Structure Validation
         if (!URIValidator.validateOptionalURI(userURI, Endpoint.USERS) || !URIValidator.validateOptionalURI(postURI, Endpoint.POSTS))
@@ -960,99 +936,30 @@ public class AccessControlHelper {
             && (!optionalPost.isPresent() || optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
     }
 
-    public boolean canCountLikes(String userURI, String postURI) {
-        LOGGER.info("Verifying Count Like Accessibility");
+    public boolean canCreateOrDeleteLike(String userURI, String postURI) {
+        LOGGER.info("Verifying Create or Delete Like Accessibility");
 
         // Structure Validation
-        if (!URIValidator.validateOptionalURI(userURI, Endpoint.USERS) || !URIValidator.validateOptionalURI(postURI, Endpoint.POSTS))
+        if (!URIValidator.validateURI(userURI, Endpoint.USERS) || !URIValidator.validateURI(postURI, Endpoint.POSTS))
             return true; // Constraints handle the error
 
         // Entity Existence
-        Optional<User> optionalUser = Optional.empty();
-        if (userURI != null) {
-            optionalUser = us.findUser(extractFirstId(userURI));
-            if (!optionalUser.isPresent())
-                return false;
-        }
-        Optional<Post> optionalPost = Optional.empty();
-        TwoId twoId;
-        if (postURI != null) {
-            twoId = extractTwoId(postURI);
-            optionalPost= ps.findPost(twoId.getFirstId(), twoId.getSecondId());
-            if (!optionalPost.isPresent())
-                return false;
-        }
+        Optional<User> optionalUser = us.findUser(extractFirstId(userURI));
+        if (!optionalUser.isPresent())
+            return false;
+        TwoId twoId = extractTwoId(postURI);
+        Optional<Post> optionalPost = optionalPost= ps.findPost(twoId.getFirstId(), twoId.getSecondId());
+        if (!optionalPost.isPresent())
+            return false;
 
         // Reference Authorization
         if (authHelper.isSuperAdministrator())
             return true;
-        return (!optionalUser.isPresent() || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId())
-                && (!optionalPost.isPresent() || optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
-    }
-
-    public boolean canCreateLike(String userURI, String postURI) {
-        LOGGER.info("Verifying Create Like Accessibility");
-
-        // Structure Validation
-        if (!URIValidator.validateURI(userURI, Endpoint.USERS) || !URIValidator.validateURI(postURI, Endpoint.POSTS))
-            return true; // Constraints handle the error
-
-        // Entity Existence
-        Optional<User> optionalUser = Optional.empty();
-        if (userURI != null) {
-            optionalUser = us.findUser(extractFirstId(userURI));
-            if (!optionalUser.isPresent())
-                return false;
-        }
-        Optional<Post> optionalPost = Optional.empty();
-        TwoId twoId;
-        if (postURI != null) {
-            twoId = extractTwoId(postURI);
-            optionalPost= ps.findPost(twoId.getFirstId(), twoId.getSecondId());
-            if (!optionalPost.isPresent())
-                return false;
-        }
-
-        if (authHelper.isSuperAdministrator())
-            return true;
         if (authHelper.isAdministrator())
-            return (!optionalUser.isPresent() || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId())
-                && (!optionalPost.isPresent() || optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
-        return (!optionalUser.isPresent() || optionalUser.get().getUserId() == authHelper.getRequestingUserId())
-                && (!optionalPost.isPresent() || optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
-    }
-
-
-    public boolean canDeleteLike(String userURI, String postURI) {
-        LOGGER.info("Verifying Delete Like accessibility");
-
-        // Structure Validation
-        if (!URIValidator.validateURI(userURI, Endpoint.USERS) || !URIValidator.validateURI(postURI, Endpoint.POSTS))
-            return true; // Constraints handle the error
-
-        // Entity Existence
-        Optional<User> optionalUser = Optional.empty();
-        if (userURI != null) {
-            optionalUser = us.findUser(extractFirstId(userURI));
-            if (!optionalUser.isPresent())
-                return false;
-        }
-        Optional<Post> optionalPost = Optional.empty();
-        TwoId twoId;
-        if (postURI != null) {
-            twoId = extractTwoId(postURI);
-            optionalPost= ps.findPost(twoId.getFirstId(), twoId.getSecondId());
-            if (!optionalPost.isPresent())
-                return false;
-        }
-
-        if (authHelper.isSuperAdministrator())
-            return true;
-        if (authHelper.isAdministrator())
-            return (!optionalUser.isPresent() || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId())
-                    && (!optionalPost.isPresent() || optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
-        return (!optionalUser.isPresent() || optionalUser.get().getUserId() == authHelper.getRequestingUserId())
-                && (!optionalPost.isPresent() || optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
+            return (optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId())
+                && (optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
+        return (optionalUser.get().getUserId() == authHelper.getRequestingUserId())
+                && (optionalPost.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
     }
 
     // ------------------------------------------------ POSTS ----------------------------------------------------------
@@ -1085,12 +992,11 @@ public class AccessControlHelper {
             if (!optionalPostStatus.isPresent())
                 return false;
         }
-
         if (tagURIs != null && !tagURIs.isEmpty()) {
             for (String tagURI : tagURIs) {
                 // Structure Validation
                 if (!URIValidator.validateURI(tagURI, Endpoint.TAGS))
-                    return true; // Handled by Constraints
+                    return true; // Constraints handle the error
                 // Entity Existence
                 TwoId twoId = extractTwoId(tagURI);
                 if (!ts.findTag(twoId.getFirstId(), twoId.getSecondId()).isPresent())
@@ -1123,12 +1029,11 @@ public class AccessControlHelper {
         Optional<Channel> optionalChannel = chs.findChannel(channelTwoId.getFirstId(), channelTwoId.getSecondId());
         if (!optionalChannel.isPresent())
             return false;
-
         if (tagURIs != null && !tagURIs.isEmpty()) {
             for (String tagURI : tagURIs) {
                 // Structure Validation
                 if (!URIValidator.validateURI(tagURI, Endpoint.TAGS))
-                    return true; // Handled by Constraints
+                    return true; // Constraints handle the error
                 // Entity Existence
                 TwoId twoId = extractTwoId(tagURI);
                 if (!ts.findTag(twoId.getFirstId(), twoId.getSecondId()).isPresent())
@@ -1148,7 +1053,6 @@ public class AccessControlHelper {
         return (optionalUser.get().getUserId() == authHelper.getRequestingUserId())&& (channelTwoId.getFirstId() == authHelper.getRequestingUserNeighborhoodId()); // I have to use the URI instead of the optional to avoid extra logic, channels have N:M relationship with neighborhoods
     }
 
-    // Neighbors can delete their own Post
     public boolean canDeletePost(long postId) {
         LOGGER.info("Verifying Post Delete Accessibility");
 
@@ -1233,7 +1137,7 @@ public class AccessControlHelper {
         // Entity Existence
         Optional<Product> optionalProduct = prs.findProduct(productId);
         if (!optionalProduct.isPresent())
-            return true; // Not Found handled by the controller
+            return true; // Not Found is handled by the controller
         Optional<User> optionalUser = Optional.empty();
         if (userURI != null) {
             optionalUser = us.findUser(extractFirstId(userURI));
@@ -1262,7 +1166,7 @@ public class AccessControlHelper {
         // Entity Existence
         Optional<Product> optionalProduct = prs.findProduct(productId);
         if (!optionalProduct.isPresent())
-            return true; // Not Found handled by the controller
+            return true; // Not Found is handled by the controller
 
         // Reference Authorization
         if (authHelper.isSuperAdministrator())
@@ -1314,7 +1218,6 @@ public class AccessControlHelper {
         if (authHelper.isAdministrator())
             return (!optionalProduct.isPresent() || optionalProduct.get().getSeller().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId())
                 && (!optionalUser.isPresent() || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
-        // HERE
         return (optionalProduct.isPresent() && optionalProduct.get().getSeller().getUserId() == authHelper.getRequestingUserId())
                 || (optionalUser.isPresent() && optionalUser.get().getUserId() == authHelper.getRequestingUserId());
     }
@@ -1333,7 +1236,6 @@ public class AccessControlHelper {
         if (authHelper.isAdministrator())
             return (optionalRequest.get().getProduct().getSeller().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId())
                     && (optionalRequest.get().getUser().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId());
-        // HERE
         return (optionalRequest.get().getProduct().getSeller().getUserId() == authHelper.getRequestingUserId())
                 || (optionalRequest.get().getUser().getUserId() == authHelper.getRequestingUserId());
     }
@@ -1365,7 +1267,6 @@ public class AccessControlHelper {
 
     }
 
-    // Sellers can update their own Products
     public boolean canUpdateRequest(String userURI, String productURI, String requestStatusURI, long requestId) {
         LOGGER.info("Verifying Update Request Accessibility");
 
@@ -1408,7 +1309,6 @@ public class AccessControlHelper {
                 && optionalRequest.get().getProduct().getSeller().getUserId() == authHelper.getRequestingUserId();
     }
 
-    // Requesters can delete their own Requests
     public boolean canDeleteRequest(long requestId) {
         LOGGER.info("Verifying List Transactions Accessibility");
 

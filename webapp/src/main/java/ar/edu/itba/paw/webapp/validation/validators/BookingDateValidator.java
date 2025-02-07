@@ -48,7 +48,7 @@ public class BookingDateValidator implements ConstraintValidator<BookingDateCons
         DayOfWeek reservationDay = reservationDate.getDayOfWeek();
         String reservationDayName = reservationDay.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
-        // PreAuthorize guarantees availability existence
+        // PreAuthorize and Validation Sequence guarantee non-empty Optional
         if (!reservationDayName.equalsIgnoreCase(availabilityService.findAvailability(extractFirstId(bookingDto.getShift()), extractSecondId(bookingDto.getAmenity())).get().getShift().getDay().getDayName())) {
             context.buildConstraintViolationWithTemplate(
                             "The reservation date does not match the shift's available weekday")

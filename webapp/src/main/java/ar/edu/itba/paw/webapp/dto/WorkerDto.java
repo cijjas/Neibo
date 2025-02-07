@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.validation.URIValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.ProfessionsURIConstraint;
 import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -21,6 +22,7 @@ public class WorkerDto {
     private String user;
 
     @NotNull(groups = OnCreate.class)
+    @NotEmpty(groups = OnCreate.class)
     @ProfessionsURIConstraint
     private List<String> professions;
 

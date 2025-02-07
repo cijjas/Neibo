@@ -67,7 +67,7 @@ public class UserRoleController {
     @GET
     @Path("{" + PathParameter.USER_ROLE_ID + "}")
     public Response findUserRole(
-            @PathParam(PathParameter.USER_ROLE_ID) Long userRoleId
+            @PathParam(PathParameter.USER_ROLE_ID) long userRoleId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 

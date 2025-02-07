@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
 /*
  * # Summary
@@ -126,7 +126,7 @@ public class ResourceController {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & ETag Generation
-        final Resource resource = rs.createResource(neighborhoodId, createForm.getTitle(), createForm.getDescription(), extractOptionalFirstId(createForm.getImage()));
+        final Resource resource = rs.createResource(neighborhoodId, createForm.getTitle(), createForm.getDescription(), extractNullableFirstId(createForm.getImage()));
         String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Resource URI
@@ -149,7 +149,7 @@ public class ResourceController {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final Resource updatedResource = rs.updateResource(neighborhoodId, resourceId, updateForm.getTitle(), updateForm.getDescription(), extractOptionalFirstId(updateForm.getImage()));
+        final Resource updatedResource = rs.updateResource(neighborhoodId, resourceId, updateForm.getTitle(), updateForm.getDescription(), extractNullableFirstId(updateForm.getImage()));
         String resourceHashCode = String.valueOf(updatedResource.hashCode());
 
         return Response.ok(ResourceDto.fromResource(updatedResource, uriInfo))

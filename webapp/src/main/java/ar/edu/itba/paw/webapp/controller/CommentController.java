@@ -62,8 +62,8 @@ public class CommentController {
 
     @GET
     public Response listComments(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) Long postId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) long postId,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
     ) {
@@ -108,8 +108,8 @@ public class CommentController {
     @GET
     @Path("{" + PathParameter.COMMENT_ID + "}")
     public Response findComment(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) Long postId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) long postId,
             @PathParam(PathParameter.COMMENT_ID) long commentId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
@@ -134,8 +134,8 @@ public class CommentController {
     @Validated(CreateSequence.class)
     @PreAuthorize("@accessControlHelper.canCreateComment(#createForm.user)")
     public Response createComment(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
-            @PathParam(PathParameter.POST_ID) Long postId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
+            @PathParam(PathParameter.POST_ID) long postId,
             @Valid @NotNull CommentDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());

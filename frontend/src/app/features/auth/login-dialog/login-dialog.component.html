@@ -34,7 +34,7 @@
             <input
               id="login-email"
               type="email"
-              placeholder="Email"
+              [attr.placeholder]="'LOGIN-DIALOG.EMAIL' | translate"
               class="input"
               formControlName="email"
               autocomplete="email"
@@ -51,7 +51,7 @@
             <input
               id="login-password"
               type="password"
-              placeholder="Password"
+              [attr.placeholder]="'LOGIN-DIALOG.PASSWORD' | translate"
               class="input"
               formControlName="password"
               autocomplete="current-password"
