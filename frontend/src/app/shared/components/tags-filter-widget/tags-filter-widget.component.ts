@@ -125,7 +125,8 @@ export class TagsFilterWidgetComponent implements OnInit {
     this.professionService.getProfessions().subscribe({
       next: (professions: Profession[]) => {
         this.itemList = professions.map(profession => ({
-          name: profession.displayName,
+          displayName: profession.displayName,
+          name: profession.name,
           self: profession.self,
         }));
       },

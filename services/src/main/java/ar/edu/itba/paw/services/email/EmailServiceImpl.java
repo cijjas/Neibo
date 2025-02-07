@@ -156,13 +156,14 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Scheduled(cron = "0 0 9 ? * MON") // CRON expression for weekly on Mondays at 8 PM
     public void sendWeeklyEventNotifications() {
-        // Fetch the list of neighborhoods
-        List<Long> neighborhoodIds = neighborhoodDao.getNeighborhoodIds();
+        int page = 1;
+        int size = 10;
+        List<Neighborhood> neighborhoods;
 
-        for (Long neighborhoodId : neighborhoodIds) {
+        do {
+            neighborhoods = neighborhoodDao.getNeighborhoods(null, null, null, page, size);
 
             // Fetch events for the specified neighborhood within the upcoming week
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date currentDate = new Date(System.currentTimeMillis());
 
             // Calculate one day in milliseconds
@@ -174,16 +175,17 @@ public class EmailServiceImpl implements EmailService {
             for (int i = 0; i < 7; i++) {
                 Date date = new Date(currentDate.getTime() + i * oneDayInMillis);
 
-                int page = 1;
-                int size = 10;
-                List<Event> dayEvents;
-
-                do {
-                    // Fetch events for the specified day with pagination
-                    dayEvents = eventDao.getEvents(neighborhoodId, date, page, size);
-                    allEvents.addAll(eventDao.getEvents(neighborhoodId, date, page, size));
-                    page++;
-                } while (dayEvents.size() == size); // Continue fetching next page if the current page is full
+                for (Neighborhood neighborhood : neighborhoods) {
+                    List<Event> dayEvents;
+                    int eventPage = 1;
+                    int eventSize = 10;
+                    do {
+                        // Fetch events for the specified day with pagination
+                        dayEvents = eventDao.getEvents(neighborhood.getNeighborhoodId(), date, eventPage, eventSize);
+                        allEvents.addAll(dayEvents);
+                        eventPage++;
+                    } while (dayEvents.size() == eventSize); // Continue fetching next page if the current page is full
+                }
             }
 
             // Create a map to accumulate events for each subscribed user
@@ -208,8 +210,6 @@ public class EmailServiceImpl implements EmailService {
                 boolean isEnglish = user.getLanguage() == Language.ENGLISH;
 
                 String to = user.getMail(); // Get the user's email
-                String subject;
-                String template;
                 StringBuilder message = new StringBuilder("\n");
 
                 // Append event details for all subscribed events
@@ -233,20 +233,21 @@ public class EmailServiceImpl implements EmailService {
                 variables.put("eventsPath", BASE_URL + "calendar");
 
                 sendMessageUsingThymeleafTemplate(to, "subject.upcoming.events", "events-template_en.html", variables, user.getLanguage());
-
             }
-        }
+            page++;
+        } while (neighborhoods.size() == size);
     }
 
     @Override
     @Async
     @Scheduled(cron = "0 0 9 ? * *") // CRON expression for weekly on Mondays at 8 PM
     public void sendDailyEventNotifications() {
-        // Fetch the list of neighborhoods
-        List<Long> neighborhoodIds = neighborhoodDao.getNeighborhoodIds();
+        int page = 1;
+        int size = 10;
+        List<Neighborhood> neighborhoods;
 
-        for (Long neighborhoodId : neighborhoodIds) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        do {
+            neighborhoods = neighborhoodDao.getNeighborhoods(null, null, null, page, size);
 
             // Calculate the date for the next day
             Date today = new Date(System.currentTimeMillis());
@@ -254,33 +255,32 @@ public class EmailServiceImpl implements EmailService {
             Date nextDay = new Date(today.getTime() + oneDayInMillis);
 
             List<Event> allEvents = new ArrayList<>();
-
-            int page = 1;
-            int size = 10;
             List<Event> events;
 
-            do {
-                // Fetch events for the next day with pagination
-                events = eventDao.getEvents(neighborhoodId, nextDay, page, size);
-                allEvents.addAll(events);
-                page++;
-            } while (events.size() == size); // Continue fetching next page if the current page is full
-
+            for (Neighborhood neighborhood : neighborhoods) {
+                int eventPage = 1;
+                int eventSize = 10;
+                do {
+                    // Fetch events for the next day with pagination
+                    events = eventDao.getEvents(neighborhood.getNeighborhoodId(), nextDay, eventPage, eventSize);
+                    allEvents.addAll(events);
+                    eventPage++;
+                } while (events.size() == eventSize); // Continue fetching next page if the current page is full
+            }
 
             // Create a map to accumulate events for each subscribed user
             Map<User, Set<Event>> userEventsMap = new HashMap<>();
 
             // Iterate through the events and collect them for each subscribed user
             for (Event event : allEvents) {
-                List<User> subscribedUsers = userDao.getEventUsers(event.getEventId());
+                Set<User> attendees = event.getAttendees();
 
-                for (User user : subscribedUsers) {
+                for (User user : attendees) {
                     userEventsMap
                             .computeIfAbsent(user, k -> new HashSet<>())
                             .add(event);
                 }
             }
-
 
             // Iterate through users and send a single email with all their subscribed events
             for (Map.Entry<User, Set<Event>> entry : userEventsMap.entrySet()) {
@@ -315,7 +315,8 @@ public class EmailServiceImpl implements EmailService {
 
                 sendMessageUsingThymeleafTemplate(user.getMail(), "subject.tomorrows.events", "events-template_en.html", variables, user.getLanguage());
             }
-        }
+            page++;
+        } while (neighborhoods.size() == size);
     }
 
     @Override

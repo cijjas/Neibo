@@ -222,9 +222,9 @@
     "RESOURCE_DELETED_SUCCESSFULLY": "¡Recurso eliminado exitosamente!",
     "ERROR_DELETING_RESOURCE": "Error al eliminar el recurso:",
     "FAILED_TO_DELETE_RESOURCE": "No se pudo eliminar el recurso.",
-    "CONTACT_NAME" : "Name de Contacto",
-    "CONTACT_ADDRESS" : "Dirección de Contacto",
-    "CONTACT_PHONE" : "Teléfono de Contacto"
+    "CONTACT_NAME": "Name de Contacto",
+    "CONTACT_ADDRESS": "Dirección de Contacto",
+    "CONTACT_PHONE": "Teléfono de Contacto"
   },
   "ADMIN-NEIGHBORS-REQUESTS-PAGE": {
     "_NEIGHBORS__PENDING_NEIGHBOR_REQUESTS__CURRENT_NEI": "{{ !neighbors ? \"Solicitudes Pendientes de Vecinos\" : \"Vecinos Actuales\" }}",
@@ -750,7 +750,30 @@
     "BUYER_DASHBOARD": "Panel del Comprador",
     "SELLER_DASHBOARD": "Panel del Vendedor",
     "ALL": "Todos",
-    "SELL": "Vender"
+    "SELL": "Vender",
+    "DEPARTMENTS": {
+      "ELECTRONICS": "Electrónica",
+      "APPLIANCES": "Electrodomésticos",
+      "HOME_FURNITURE": "Muebles para el hogar",
+      "CLOTHING_FASHION": "Ropa y moda",
+      "HEALTH_BEAUTY": "Salud y belleza",
+      "SPORTS_OUTDOORS": "Deportes y aire libre",
+      "BOOKS_MEDIA": "Libros y medios",
+      "TOYS_GAMES": "Juguetes y juegos",
+      "JEWELRY_ACCESSORIES": "Joyería y accesorios",
+      "AUTOMOTIVE": "Automoción",
+      "GROCERIES_FOOD": "Comestibles y alimentos",
+      "PETS_SUPPLIES": "Mascotas y suministros",
+      "HOME_IMPROVEMENT": "Mejoras para el hogar",
+      "GARDEN_OUTDOOR": "Jardín y exterior",
+      "OFFICE_SUPPLIES": "Útiles de oficina",
+      "BABY_KIDS": "Bebés y niños",
+      "ARTS_CRAFTS": "Artes y manualidades",
+      "TRAVEL_LUGGAGE": "Viajes y equipaje",
+      "MUSIC_INSTRUMENTS": "Instrumentos musicales",
+      "TECHNOLOGY": "Tecnología",
+      "OTHER": "Otro"
+    }
   },
   "MARKETPLACE-DASHBOARD-BUYER-PAGE": {
     "MY_REQUESTS": "Mis solicitudes",
@@ -819,8 +842,8 @@
     "UNIT": "Unidad",
     "UNITS": "Unidades",
     "ASK_A_QUESTION": "Hacer una pregunta",
-    "PHONE_NUMBER_EX":"Número de Teléfono (e.g. +54 9 11 1234 5678)",
-    "MESSAGE" : "Mensaje",
+    "PHONE_NUMBER_EX": "Número de Teléfono (e.g. +54 9 11 1234 5678)",
+    "MESSAGE": "Mensaje",
     "YOUR_REPLY": "Su respuesta..."
   },
   "MARKETPLACE-PRODUCT-EDIT-PAGE": {
@@ -846,8 +869,8 @@
     "LISTING_UPDATED_SUCCESSFULLY": "Publicación actualizada con éxito",
     "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "Hubo un problema al actualizar la publicación.",
     "TITTLE": "Título",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Descripción"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Descripción"
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Usado",
@@ -895,8 +918,8 @@
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "Hubo un problema al crear la publicación.",
     "INVALID_PRICE_FORMAT": "Formato de precio inválido.",
     "TITTLE": "Título",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Descripción"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Descripción"
   },
   "NOT-FOUND-PAGE": {
     "OOPS__ERRORCODE_": "¡Ups! {{ errorCode }}",
@@ -1098,7 +1121,14 @@
   },
   "TAGS-FILTER-WIDGET": {
     "TAGS": "Filtrar por Etiquetas",
-    "PROFESSIONS": "Filtrar por Profesión"
+    "FILTER_BY_PROFESSIONS": "Filtrar por Profesión",
+    "PROFESSIONS": {
+      "PLUMBER": "Plomero",
+      "ELECTRICIAN": "Electricista",
+      "POOL_MAINTENANCE": "Mantenimiento de Piscina",
+      "GARDENER": "Jardinero",
+      "CARPENTER": "Carpintero"
+    }
   },
   "WAVE-FOOTER": {
     "SLOGAN": "Tu tranquilidad es nuestra prioridad. Seguro, protegido y sereno.",

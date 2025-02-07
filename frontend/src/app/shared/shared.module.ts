@@ -16,7 +16,6 @@ import { BackgroundCloudsComponent } from './components/background-clouds/backgr
 import { LandingPageNavbarComponent } from './components/landing-page-navbar/landing-page-navbar.component';
 import { BackgroundDrawingComponent } from './components/background-drawing/background-drawing.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
-import { RightColumnComponent } from './components/right-column/right-column.component';
 import { TagsFilterWidgetComponent } from './components/tags-filter-widget/tags-filter-widget.component';
 import { InfiniteScrollSelectComponent } from './components/infinite-scroll-select/infinite-scroll-select.component';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
@@ -46,7 +45,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     WaveFooterComponent,
     BackgroundCloudsComponent,
     LandingPageNavbarComponent,
-    RightColumnComponent,
     BackgroundDrawingComponent,
     TagsFilterWidgetComponent,
     ConfirmationDialogComponent,
@@ -85,7 +83,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     WaveFooterComponent,
     BackgroundCloudsComponent,
     LandingPageNavbarComponent,
-    RightColumnComponent,
     BackgroundDrawingComponent,
     TagsFilterWidgetComponent,
     InfiniteScrollSelectComponent,

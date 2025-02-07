@@ -30,11 +30,11 @@ export function initApp(appInitService: AppInitService) {
       useClass: ErrorInterceptor,
       multi: true,
     },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: CachingInterceptor,
-      multi: true,
-    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: CachingInterceptor,
+    //   multi: true,
+    // },
     {
       provide: APP_INITIALIZER,
       useFactory: initApp,

@@ -1,10 +1,23 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { InformationPageComponent } from './information-page.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 import { ContactService, ResourceService, LinkKey } from '@shared/index';
+import { TranslateService } from '@ngx-translate/core';
+
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
 
 describe('InformationPageComponent - Initialization', () => {
   let component: InformationPageComponent;
@@ -70,6 +83,7 @@ describe('InformationPageComponent - Initialization', () => {
     TestBed.configureTestingModule({
       declarations: [InformationPageComponent],
       providers: [
+        { provide: TranslateService, useClass: FakeTranslateService },
         { provide: ActivatedRoute, useValue: fakeActivatedRoute },
         { provide: Router, useValue: routerSpy },
         { provide: HateoasLinksService, useValue: linkServiceSpy },

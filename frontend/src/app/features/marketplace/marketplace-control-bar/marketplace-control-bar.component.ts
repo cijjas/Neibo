@@ -9,33 +9,28 @@ import { Department, DepartmentService } from '@shared/index';
 export class MarketplaceControlBarComponent implements OnInit {
   @Input() channel!: string;
   @Input() departmentList: Department[] = [];
+  // When no department is selected, we'll set this to "All"
   departmentName: string = 'All';
 
   constructor(
     private route: ActivatedRoute,
-    private departmentService: DepartmentService
-
-  ) { }
+    private departmentService: DepartmentService,
+  ) {}
 
   ngOnInit() {
-
     this.departmentService.getDepartments().subscribe({
-      next: (departments) => {
+      next: departments => {
         this.departmentList = departments;
 
-        this.route.queryParams.subscribe((params) => {
+        this.route.queryParams.subscribe(params => {
           const selectedDepartment = params['inDepartment'];
           this.departmentName = selectedDepartment
-            ? this.departmentList.find((dept) => dept.self === selectedDepartment)?.displayName
+            ? this.departmentList.find(dept => dept.self === selectedDepartment)
+                ?.name || 'All'
             : 'All';
         });
       },
-      error: (err) => console.error(err)
+      error: err => console.error(err),
     });
-
-
-
-
-
   }
 }

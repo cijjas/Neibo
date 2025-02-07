@@ -32,7 +32,7 @@ export class CalendarWidgetComponent implements OnInit {
     private eventService: EventService,
     private linkStorage: HateoasLinksService,
     private router: Router,
-    private calendarService: CalendarService
+    private calendarService: CalendarService,
   ) {}
 
   ngOnInit() {
@@ -48,21 +48,21 @@ export class CalendarWidgetComponent implements OnInit {
     const eventUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_EVENTS);
     const datesInMonth = this.getDatesInMonth(
       this.date.getFullYear(),
-      this.date.getMonth()
+      this.date.getMonth(),
     );
 
-    const dateStrings = datesInMonth.map((date) => {
+    const dateStrings = datesInMonth.map(date => {
       return date.toISOString().split('T')[0];
     });
 
     this.eventService.getEventsForDateRange(eventUrl, dateStrings).subscribe({
-      next: (allEvents) => {
-        this.eventTimestamps = allEvents.map((e) =>
-          new Date(e.eventDate).getTime()
+      next: allEvents => {
+        this.eventTimestamps = allEvents.map(e =>
+          new Date(e.eventDate).getTime(),
         );
         this.updateEventDays();
       },
-      error: (error) => {
+      error: error => {
         console.error('Error fetching event timestamps:', error);
       },
       complete: () => {
@@ -82,12 +82,12 @@ export class CalendarWidgetComponent implements OnInit {
   }
 
   private updateEventDays(): void {
-    this.days = this.days.map((day) => {
+    this.days = this.days.map(day => {
       // Create a date at midnight in UTC for the calendar day
       const dayDate = new Date(Date.UTC(day.year, day.month, day.date));
 
       // Check if there is an event on this exact day
-      const isEvent = this.eventTimestamps.some((timestamp) => {
+      const isEvent = this.eventTimestamps.some(timestamp => {
         const eventDate = new Date(timestamp);
         // Compare only the date parts
         return (
@@ -120,22 +120,22 @@ export class CalendarWidgetComponent implements OnInit {
     const firstDayOfMonth = new Date(
       this.date.getFullYear(),
       this.date.getMonth(),
-      1
+      1,
     ).getDay();
     const lastDateOfMonth = new Date(
       this.date.getFullYear(),
       this.date.getMonth() + 1,
-      0
+      0,
     ).getDate();
     const lastDayOfMonth = new Date(
       this.date.getFullYear(),
       this.date.getMonth(),
-      lastDateOfMonth
+      lastDateOfMonth,
     ).getDay();
     const lastDateOfLastMonth = new Date(
       this.date.getFullYear(),
       this.date.getMonth(),
-      0
+      0,
     ).getDate();
 
     this.days = [];
@@ -163,7 +163,7 @@ export class CalendarWidgetComponent implements OnInit {
       const currentDay = new Date(
         this.date.getFullYear(),
         this.date.getMonth(),
-        i
+        i,
       );
       const isToday = currentDay.toDateString() === new Date().toDateString();
       this.days.push({

@@ -7,6 +7,20 @@ import { map } from 'rxjs/operators';
 
 import { PostService, LinkKey, Post } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
+
+// Define a simple fake TranslateService.
+class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): any {
+    return of(lang);
+  }
+  instant(key: string): string {
+    // For testing, simply return the key or a modified version.
+    return key;
+  }
+}
 
 describe('FeedPageComponent - Initialization', () => {
   let component: FeedPageComponent;
@@ -30,7 +44,7 @@ describe('FeedPageComponent - Initialization', () => {
 
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-  // Stub HateoasLinksService (fallback values not used here)
+  // Stub HateoasLinksService (fallback values not used here).
   const linkServiceSpy = jasmine.createSpyObj('HateoasLinksService', [
     'getLink',
   ]);
@@ -71,6 +85,8 @@ describe('FeedPageComponent - Initialization', () => {
         { provide: Router, useValue: routerSpy },
         { provide: HateoasLinksService, useValue: linkServiceSpy },
         { provide: PostService, useValue: postServiceSpy },
+        // Provide our FakeTranslateService so the component can call its methods.
+        { provide: TranslateService, useClass: FakeTranslateService },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     })

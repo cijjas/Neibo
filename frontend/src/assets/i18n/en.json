@@ -222,9 +222,9 @@
     "RESOURCE_DELETED_SUCCESSFULLY": "Resource deleted successfully.",
     "ERROR_DELETING_RESOURCE": "Error deleting resource:",
     "FAILED_TO_DELETE_RESOURCE": "Failed to delete resource.",
-    "CONTACT_NAME" : "Contact Name",
-    "CONTACT_ADDRESS" : "Contact Address",
-    "CONTACT_PHONE" : "Contact Phone"
+    "CONTACT_NAME": "Contact Name",
+    "CONTACT_ADDRESS": "Contact Address",
+    "CONTACT_PHONE": "Contact Phone"
   },
 
   "ADMIN-NEIGHBORS-REQUESTS-PAGE": {
@@ -758,7 +758,30 @@
     "BUYER_DASHBOARD": "Buyer Dashboard",
     "SELLER_DASHBOARD": "Seller Dashboard",
     "ALL": "All",
-    "SELL": "Sell"
+    "SELL": "Sell",
+    "DEPARTMENTS": {
+      "ELECTRONICS": "Electronics",
+      "APPLIANCES": "Appliances",
+      "HOME_FURNITURE": "Home Furniture",
+      "CLOTHING_FASHION": "Clothing & Fashion",
+      "HEALTH_BEAUTY": "Health & Beauty",
+      "SPORTS_OUTDOORS": "Sports & Outdoors",
+      "BOOKS_MEDIA": "Books & Media",
+      "TOYS_GAMES": "Toys & Games",
+      "JEWELRY_ACCESSORIES": "Jewelry & Accessories",
+      "AUTOMOTIVE": "Automotive",
+      "GROCERIES_FOOD": "Groceries & Food",
+      "PETS_SUPPLIES": "Pets & Supplies",
+      "HOME_IMPROVEMENT": "Home Improvement",
+      "GARDEN_OUTDOOR": "Garden & Outdoor",
+      "OFFICE_SUPPLIES": "Office Supplies",
+      "BABY_KIDS": "Baby & Kids",
+      "ARTS_CRAFTS": "Arts & Crafts",
+      "TRAVEL_LUGGAGE": "Travel & Luggage",
+      "MUSIC_INSTRUMENTS": "Music Instruments",
+      "TECHNOLOGY": "Technology",
+      "OTHER": "Other"
+    }
   },
   "MARKETPLACE-DASHBOARD-BUYER-PAGE": {
     "MY_REQUESTS": "My requests",
@@ -827,8 +850,8 @@
     "UNIT": "Unit",
     "UNITS": "Units",
     "ASK_A_QUESTION": "Ask a question",
-    "PHONE_NUMBER_EX":"Phone Number (e.g. +54 9 11 1234 5678)",
-    "MESSAGE" : "Message",
+    "PHONE_NUMBER_EX": "Phone Number (e.g. +54 9 11 1234 5678)",
+    "MESSAGE": "Message",
     "YOUR_REPLY": "Your reply..."
   },
   "MARKETPLACE-PRODUCT-EDIT-PAGE": {
@@ -854,8 +877,8 @@
     "LISTING_UPDATED_SUCCESSFULLY": "Listing updated successfully",
     "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "There was a problem updating the listing.",
     "TITTLE": "Title",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Description"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Description"
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Used",
@@ -903,8 +926,8 @@
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "There was a problem creating the listing.",
     "INVALID_PRICE_FORMAT": "Invalid price format.",
     "TITTLE": "Title",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Description"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Description"
   },
   "NOT-FOUND-PAGE": {
     "OOPS__ERRORCODE_": "Oops! {{ errorCode }}",
@@ -1104,7 +1127,14 @@
   },
   "TAGS-FILTER-WIDGET": {
     "TAGS": "Filter by Tags",
-    "PROFESSIONS": "Filter by Profession"
+    "FILTER_BY_PROFESSIONS": "Filter by Profession",
+    "PROFESSIONS": {
+      "PLUMBER": "Plumber",
+      "ELECTRICIAN": "Electrician",
+      "POOL_MAINTENANCE": "Pool Maintenance",
+      "GARDENER": "Gardener",
+      "CARPENTER": "Carpenter"
+    }
   },
   "WAVE-FOOTER": {
     "SLOGAN": "Your peace of mind is our priority. Safe, secure, and serene.",
