@@ -13,6 +13,21 @@ import {
 import { HateoasLinksService, UserSessionService } from '@core/index';
 import { CUSTOM_ELEMENTS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
+import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
+
 // Fake translate pipe so that the template does not complain about the missing translate pipe.
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
@@ -95,6 +110,7 @@ describe('AmenitiesChooseTimePageComponent', () => {
       declarations: [AmenitiesChooseTimePageComponent, FakeTranslatePipe],
       providers: [
         FormBuilder,
+        { provide: TranslateService, useClass: FakeTranslateService },
         { provide: AmenityService, useValue: mockAmenityService },
         { provide: ShiftService, useValue: mockShiftService },
         { provide: BookingService, useValue: mockBookingService },

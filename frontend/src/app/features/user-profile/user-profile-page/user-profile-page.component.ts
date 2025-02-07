@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService, User, Role, LinkKey } from '@shared/index';
-import { SafeUrl } from '@angular/platform-browser';
+import { SafeUrl, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import {
   ImageService,
@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { FormControl } from '@angular/forms';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'user-user-profile-page',
@@ -41,9 +42,13 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private translate: TranslateService,
     private linkService: HateoasLinksService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.USER_PROFILE_PAGE);
+    this.titleService.setTitle(title);
+
     const userSub = this.userSessionService
       .getCurrentUser()
       .subscribe((user: User | null) => {

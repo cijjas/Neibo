@@ -1,8 +1,21 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CalendarPageComponent } from './calendar-page.component';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
 
 describe('CalendarPageComponent', () => {
   let component: CalendarPageComponent;
@@ -16,7 +29,10 @@ describe('CalendarPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [CalendarPageComponent],
-      providers: [{ provide: ActivatedRoute, useValue: fakeActivatedRoute }],
+      providers: [
+        { provide: ActivatedRoute, useValue: fakeActivatedRoute },
+        { provide: TranslateService, useClass: FakeTranslateService },
+      ],
       // Use NO_ERRORS_SCHEMA to ignore unknown elements and pipes.
       schemas: [NO_ERRORS_SCHEMA],
     })
