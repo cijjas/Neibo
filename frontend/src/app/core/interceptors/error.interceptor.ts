@@ -26,7 +26,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.showNotification('Network error: Please check your connection.');
         } else {
           // Backend error
-          console.log(error.status);
           switch (error.status) {
             // case 403:
             case 404:

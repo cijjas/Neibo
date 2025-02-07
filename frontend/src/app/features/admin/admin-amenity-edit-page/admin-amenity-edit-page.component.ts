@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 import { ShiftService, Shift, AmenityService } from '@shared/index';
 
@@ -45,6 +47,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
     private toastService: ToastService,
     private router: Router,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +79,14 @@ export class AdminAmenityEditPageComponent implements OnInit {
         name: amenity.name,
         description: amenity.description,
       });
+
+      this.translate
+        .get(AppTitleKeys.ADMIN_AMENITY_EDIT_PAGE, {
+          amenityName: this.amenityName,
+        })
+        .subscribe((translatedTitle: string) => {
+          this.titleService.setTitle(translatedTitle);
+        });
 
       this.amenityShiftRefs = amenity.availableShifts.map((s: Shift) => s.self);
       // 2) Load all Shifts

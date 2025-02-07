@@ -9,6 +9,9 @@ import {
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { environment } from 'environments/environment';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-marketplace-dashboard-buyer-page',
@@ -27,6 +30,8 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
     private router: Router,
     private linkService: HateoasLinksService,
     private requestService: RequestService,
+    private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   get isPurchases(): boolean {
@@ -38,6 +43,11 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.MARKETPLACE_DASHBOARD_BUYER_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     this.route.paramMap.subscribe((params: ParamMap) => {
       const mode = params.get('mode');
       this.clearLists();

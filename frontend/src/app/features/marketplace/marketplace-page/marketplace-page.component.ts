@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, DepartmentService, Product } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-marketplace-page',
@@ -14,7 +17,7 @@ export class MarketplacePageComponent implements OnInit {
 
   page: number = 1;
   totalPages: number = 1;
-  size: number = 30; 
+  size: number = 30;
 
   isLoading: boolean = true;
   placeholderItems = Array.from({ length: 20 }, (_, i) => i);
@@ -23,9 +26,14 @@ export class MarketplacePageComponent implements OnInit {
     private productService: ProductService,
     private route: ActivatedRoute,
     private router: Router,
+    private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.MARKETPLACE_PAGE);
+    this.titleService.setTitle(title);
+
     this.route.queryParams.subscribe(params => {
       this.page = params['page'] ? +params['page'] : 1;
       this.size = params['size'] ? +params['size'] : 20;

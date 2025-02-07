@@ -7,7 +7,7 @@ import { AdminNeighborsRequestsPageComponent } from './admin-neighbors-requests-
 import { AdminAmenityEditPageComponent } from './admin-amenity-edit-page/admin-amenity-edit-page.component';
 import { AdminServiceProvidersRequestsPageComponent } from './admin-service-providers-requests-page/admin-service-providers-requests-page.component';
 import { AdminInformationPageComponent } from './admin-information-page/admin-information-page.component';
-import { AdminCreateEventComponent } from './admin-create-event/admin-create-event.component';
+import { AdminCreateEventPageComponent } from '@features/admin/admin-create-event-page/admin-create-event-page.component';
 import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenities-page.component';
 import { AdminAmenityCreatePageComponent } from './admin-amenity-create-page/admin-amenity-create-page.component';
 import { amenityResolver } from '@shared/resolvers/amenity.resolver';
@@ -44,7 +44,7 @@ const routes: Routes = [
         resolve: { amenity: amenityResolver },
       },
       // calendar
-      { path: 'calendar/events/create', component: AdminCreateEventComponent },
+      { path: 'calendar/events/create', component: AdminCreateEventPageComponent },
       // information
       { path: 'information', component: AdminInformationPageComponent },
     ],

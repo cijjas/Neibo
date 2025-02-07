@@ -11,13 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements OnInit, OnDestroy {
   private channel: BroadcastChannel;
 
-  constructor(
-    private authService: AuthService,
-    private userSessionService: UserSessionService,
-    private preferencesService: PreferencesService,
-    private router: Router,
-    private translate: TranslateService,
-  ) {
+  constructor(private authService: AuthService, private router: Router) {
     this.channel = new BroadcastChannel('auth_channel');
   }
 

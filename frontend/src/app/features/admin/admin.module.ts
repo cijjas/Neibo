@@ -10,7 +10,7 @@ import { AdminNeighborsRequestsPageComponent } from './admin-neighbors-requests-
 import { AdminAmenityEditPageComponent } from './admin-amenity-edit-page/admin-amenity-edit-page.component';
 import { AdminAmenityCreatePageComponent } from './admin-amenity-create-page/admin-amenity-create-page.component';
 import { AdminInformationPageComponent } from './admin-information-page/admin-information-page.component';
-import { AdminCreateEventComponent } from './admin-create-event/admin-create-event.component';
+import { AdminCreateEventPageComponent } from '@features/admin/admin-create-event-page/admin-create-event-page.component';
 import { AdminServiceProvidersRequestsPageComponent } from './admin-service-providers-requests-page/admin-service-providers-requests-page.component';
 import { AdminAmenitiesPageComponent } from './admin-amenities-page/admin-amenities-page.component';
 import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
@@ -25,7 +25,7 @@ import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module'
     AdminAmenityCreatePageComponent,
     AdminAmenitiesPageComponent,
     AdminInformationPageComponent,
-    AdminCreateEventComponent,
+    AdminCreateEventPageComponent,
     AdminServiceProvidersRequestsPageComponent,
   ],
   imports: [

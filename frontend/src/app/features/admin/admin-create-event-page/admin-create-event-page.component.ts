@@ -11,12 +11,14 @@ import { ToastService } from '@core/index';
 import { CalendarService, EventService } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-admin-create-event',
-  templateUrl: './admin-create-event.component.html',
+  templateUrl: './admin-create-event-page.component.html',
 })
-export class AdminCreateEventComponent {
+export class AdminCreateEventPageComponent {
   eventForm: FormGroup;
 
   constructor(
@@ -25,19 +27,13 @@ export class AdminCreateEventComponent {
     private toastService: ToastService,
     private calendarService: CalendarService,
     private translate: TranslateService,
-  ) {
-    // Inline definition of the validator function
-    const startBeforeEndValidator: ValidatorFn = (
-      control: AbstractControl,
-    ): ValidationErrors | null => {
-      const group = control as FormGroup;
-      const start = group.get('startTime')?.value;
-      const end = group.get('endTime')?.value;
-      if (!start || !end) return null;
-      return start >= end ? { startBeforeEnd: true } : null;
-    };
+    private titleService: Title,
+  ) {}
 
-    // Now define the form and pass the validator
+  ngOnInit() {
+    const title = this.translate.instant(AppTitleKeys.ADMIN_CREATE_EVENT_PAGE);
+    this.titleService.setTitle(title);
+
     this.eventForm = this.fb.group(
       {
         name: ['', [Validators.required]],

@@ -29,6 +29,7 @@ export class PublicLayoutComponent implements OnInit {
     private linkService: HateoasLinksService,
     private translate: TranslateService,
   ) {
+    // Get language links using the link service
     this.englishLanguageLink = this.linkService.getLink(
       LinkKey.ENGLISH_LANGUAGE,
     );
@@ -36,6 +37,7 @@ export class PublicLayoutComponent implements OnInit {
       LinkKey.SPANISH_LANGUAGE,
     );
 
+    // Set a default language for TranslateService (fallback)
     this.translate.setDefaultLang('en');
   }
 
@@ -44,22 +46,36 @@ export class PublicLayoutComponent implements OnInit {
       next: user => {
         this.currentUser = user;
 
-        // Initialize preferences
+        // Initialize preferences from user info
         this.isDarkMode = user?.darkMode || false;
-        this.currentLanguage = user?.language || this.englishLanguageLink;
+        // Assume user.language holds the API language link (e.g., "http://.../languages/1")
+        const userLanguageLink = user?.language || this.englishLanguageLink;
 
-        // Apply preferences
+        // Use the languageMap to convert the API language link into a language code.
+        if (userLanguageLink === this.preferencesService.languageMap['en']) {
+          this.currentLanguage = 'en';
+        } else if (
+          userLanguageLink === this.preferencesService.languageMap['es']
+        ) {
+          this.currentLanguage = 'es';
+        } else {
+          // Fallback if the link does not match; default to English.
+          this.currentLanguage = 'en';
+        }
+
+        // Apply and store preferences
         this.preferencesService.applyDarkMode(this.isDarkMode);
         this.preferencesService.applyLanguage(this.currentLanguage);
 
-        // Apply translation based on the current language
-        this.translate.use(
-          this.currentLanguage === this.englishLanguageLink ? 'en' : 'es',
-        );
+        // Update TranslateService with the determined language
+        if (this.translate.currentLang !== this.currentLanguage) {
+          this.translate.use(this.currentLanguage);
+        }
       },
       error: () => {
+        // Fallback if user information cannot be fetched
         this.isDarkMode = false;
-        this.translate.setDefaultLang('en');
+        this.preferencesService.applyLanguage('en');
         this.translate.use('en');
         console.error('Error fetching user information');
       },

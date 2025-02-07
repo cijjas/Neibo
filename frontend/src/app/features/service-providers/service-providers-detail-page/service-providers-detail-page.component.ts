@@ -15,6 +15,8 @@ import {
 } from '@shared/index';
 import { ServiceProvidersReviewsAndPostsComponent } from '../service-providers-reviews-and-posts/service-providers-reviews-and-posts.component';
 import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-service-providers-detail-page',
@@ -34,6 +36,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
     private toastService: ToastService,
     private linkService: HateoasLinksService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +45,12 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
         console.error('Service Provider not found or failed to resolve');
       }
       this.worker = worker;
+
+      const title = this.translate.instant(
+        AppTitleKeys.SERVICE_PROVIDERS_DETAIL_PAGE,
+        { businessName: this.worker.businessName },
+      );
+      this.titleService.setTitle(title);
     });
   }
 
@@ -113,7 +122,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
           'success',
         );
         if (this.worker?.self) {
-          this.loadWorker(this.worker.self); 
+          this.loadWorker(this.worker.self);
         }
       },
       error: err => {

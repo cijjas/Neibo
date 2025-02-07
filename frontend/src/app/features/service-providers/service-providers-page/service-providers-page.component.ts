@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 import { Worker, WorkerService } from '@shared/index';
-import { switchMap } from 'rxjs';
-import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-service-providers-page',
@@ -14,18 +14,23 @@ export class ServiceProvidersPageComponent implements OnInit {
   currentPage: number = 1;
   totalPages: number = 0;
   pageSize: number = 10;
-  professions: string[] = []; 
+  professions: string[] = [];
 
-  isLoading: boolean = true; 
+  isLoading: boolean = true;
   placeholderItems = Array.from({ length: 10 }, (_, i) => i);
 
   constructor(
     private workerService: WorkerService,
     private route: ActivatedRoute,
     private router: Router,
+    private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.SERVICE_PROVIDERS_PAGE);
+    this.titleService.setTitle(title);
+
     this.route.queryParams.subscribe(params => {
       this.currentPage = +params['page'] || 1;
       this.pageSize = +params['size'] || 10;
@@ -88,7 +93,7 @@ export class ServiceProvidersPageComponent implements OnInit {
       queryParams: {
         page: this.currentPage,
         size: this.pageSize,
-        withProfession: this.professions, 
+        withProfession: this.professions,
       },
       queryParamsHandling: 'merge',
     });

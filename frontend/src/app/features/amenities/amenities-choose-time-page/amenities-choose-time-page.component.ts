@@ -12,6 +12,9 @@ import {
   LinkKey,
 } from '@shared/index';
 import { Subscription } from 'rxjs';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
 
 interface ShiftTime {
   start: string;
@@ -47,7 +50,8 @@ export class AmenitiesChooseTimePageComponent implements OnInit, OnDestroy {
     private bookingService: BookingService,
     private shiftService: ShiftService,
     private linkService: HateoasLinksService,
-    private userSessionService: UserSessionService,
+    private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -68,8 +72,19 @@ export class AmenitiesChooseTimePageComponent implements OnInit, OnDestroy {
     this.amenityService.getAmenity(this.amenityUrl).subscribe({
       next: (amenity: Amenity) => {
         this.amenityName = amenity.name;
+        this.translate
+          .get(AppTitleKeys.AMENITIES_CHOOSE_TIME_PAGE, {
+            amenityName: this.amenityName,
+          })
+          .subscribe((translatedTitle: string) => {
+            this.titleService.setTitle(translatedTitle);
+          });
       },
       error: err => {
+        const title = this.translate.instant(
+          AppTitleKeys.AMENITIES_CHOOSE_TIME_PAGE,
+        );
+        this.titleService.setTitle(title);
         console.error(err);
       },
     });

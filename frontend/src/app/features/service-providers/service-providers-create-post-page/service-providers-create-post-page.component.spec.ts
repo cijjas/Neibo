@@ -10,7 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
 
-import { ServiceProvidersCreatePostComponent } from './service-providers-create-post.component';
+import { ServiceProvidersCreatePostPageComponent } from './service-providers-create-post-page.component';
 import { PostService } from '@shared/index';
 import {
   ImageService,
@@ -54,12 +54,12 @@ hateoasLinksServiceSpy.getLink.and.callFake((key: string) => {
 });
 
 describe('ServiceProvidersCreatePostComponent', () => {
-  let component: ServiceProvidersCreatePostComponent;
-  let fixture: ComponentFixture<ServiceProvidersCreatePostComponent>;
+  let component: ServiceProvidersCreatePostPageComponent;
+  let fixture: ComponentFixture<ServiceProvidersCreatePostPageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ServiceProvidersCreatePostComponent, FakeTranslatePipe],
+      declarations: [ServiceProvidersCreatePostPageComponent, FakeTranslatePipe],
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
@@ -80,7 +80,7 @@ describe('ServiceProvidersCreatePostComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ServiceProvidersCreatePostComponent);
+    fixture = TestBed.createComponent(ServiceProvidersCreatePostPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,6 +9,9 @@ import {
   LinkKey,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-marketplace-product-requests-page',
@@ -26,8 +29,8 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
 
   selectedBuyerId?: string;
   selectedRequestId?: string;
-  selectedQuantity: number = 1; 
-  selectedRequesterName: string | undefined; 
+  selectedQuantity: number = 1;
+  selectedRequesterName: string | undefined;
 
   page: number = 1;
   totalPages: number = 1;
@@ -38,8 +41,9 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private linkService: HateoasLinksService,
-    private productService: ProductService,
     private requestService: RequestService,
+    private titleService: Title,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +53,15 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
         return;
       }
       this.product = product;
+
+      const title = this.translate.instant(
+        AppTitleKeys.MARKETPLACE_PRODUCT_REQUESTS_PAGE,
+        {
+          productName: this.product.name,
+        },
+      );
+      this.titleService.setTitle(title);
+
       this.fetchRequests();
     });
 
@@ -138,7 +151,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
         next: () => {
           this.showLoader = false;
           this.closeMarkAsSoldDialog();
-          this.fetchRequests(); 
+          this.fetchRequests();
         },
         error: err => {
           this.showLoader = false;

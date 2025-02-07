@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HateoasLinksService, UserSessionService } from '@core/index';
 import { LinkKey, User, ImageService } from '@shared/index';
-import { SafeUrl } from '@angular/platform-browser';
+import { SafeUrl, Title } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { environment } from "../../../../environments/environment";
+import { environment } from '../../../../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-user-profile-widget',
@@ -22,11 +24,15 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
   constructor(
     private userSessionService: UserSessionService,
     private imageService: ImageService,
-    private linkService: HateoasLinksService,
-    private router: Router, 
-  ) { }
+    private router: Router,
+    private translate: TranslateService,
+    private titleService: Title,
+  ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.USER_PROFILE_PAGE);
+    this.titleService.setTitle(title);
+
     const userSub = this.userSessionService
       .getCurrentUser()
       .subscribe((user: User | null) => {

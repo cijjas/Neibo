@@ -24,7 +24,7 @@ export class FeedControlBarComponent implements OnInit {
   announcementsChannelUrl: string;
   complaintsChannelUrl: string;
 
-  channelClass: string = '';
+  channelClass: string = 'Announcements';
   channel: string;
 
   // STATUSES

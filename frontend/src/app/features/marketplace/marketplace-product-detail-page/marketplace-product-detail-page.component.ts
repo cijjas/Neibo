@@ -15,6 +15,8 @@ import {
   HateoasLinksService,
   UserSessionService,
 } from '@core/index';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-marketplace-product-detail-page',
@@ -26,7 +28,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   department: string;
   productImages: string[] = [];
   currentBigImage: string = '';
-  selectedImageIndex: number = 0; 
+  selectedImageIndex: number = 0;
 
   channel: string = 'Marketplace';
 
@@ -36,7 +38,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   questions: Inquiry[] = [];
   totalPages: number = 1;
   page: number = 1;
-  size: number = 10; 
+  size: number = 10;
   requestError: boolean = false;
 
   phoneNumber: string = '';
@@ -64,6 +66,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private toastService: ToastService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +77,15 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
       }
       this.product = product;
       this.currentBigImage = product.firstImage;
+
+      const title = this.translate.instant(
+        AppTitleKeys.MARKETPLACE_PRODUCT_DETAIL_PAGE,
+        {
+          productName: this.product.name,
+        },
+      );
+      this.titleService.setTitle(title);
+
       this.loadProductImages();
       this.loadInquiries();
     });
@@ -143,7 +155,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     }
 
     if (!this.questionMessage.trim()) {
-      return; 
+      return;
     }
 
     this.inquiryService
@@ -260,7 +272,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   }
 
   getAmountOptions(): number[] {
-    const stock = this.product?.stock || 1; 
+    const stock = this.product?.stock || 1;
     return Array.from({ length: stock }, (_, i) => i + 1);
   }
 
@@ -320,7 +332,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: this.page, size: this.size },
-      queryParamsHandling: 'merge', 
+      queryParamsHandling: 'merge',
     });
   }
 }

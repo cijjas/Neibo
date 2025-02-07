@@ -7,12 +7,14 @@ import { Channel } from '@shared/models';
 import { catchError, of, switchMap, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-service-providers-create-post',
-  templateUrl: './service-providers-create-post.component.html',
+  templateUrl: './service-providers-create-post-page.component.html',
 })
-export class ServiceProvidersCreatePostComponent {
+export class ServiceProvidersCreatePostPageComponent {
   createWrokerPostForm: FormGroup;
 
   channelList: Channel[] = [];
@@ -31,9 +33,15 @@ export class ServiceProvidersCreatePostComponent {
     private userSessionService: UserSessionService,
     private toastService: ToastService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.SERVICE_PROVIDERS_CREATE_POST_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     this.createWrokerPostForm = this.fb.group({
       title: ['', Validators.required],
       body: ['', Validators.required],

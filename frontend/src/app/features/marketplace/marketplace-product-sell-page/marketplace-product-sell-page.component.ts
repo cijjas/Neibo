@@ -13,6 +13,8 @@ import {
 } from '@core/index';
 
 import { DepartmentService, ProductService } from '@shared/index';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-marketplace-product-sell-page',
@@ -44,15 +46,20 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private productService: ProductService,
-    private userSessionService: UserSessionService,
     private imageService: ImageService,
     private linkService: HateoasLinksService,
     private departmentService: DepartmentService,
     private toastService: ToastService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.MARKETPLACE_PRODUCT_SELL_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     this.departmentService.getDepartments().subscribe({
       next: (departments: Department[]) => {
         this.departmentList = departments;
@@ -76,7 +83,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.images.push({ file, preview: e.target.result });
-        this.clearImageError(); 
+        this.clearImageError();
       };
       reader.readAsDataURL(file);
     }
@@ -90,7 +97,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
 
   removeImage(index: number): void {
     this.images.splice(index, 1);
-    this.clearImageError(); 
+    this.clearImageError();
   }
 
   clearImageError(): void {
@@ -142,7 +149,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     const rawValue = this.listingForm.value;
     const userSelf = this.linkService.getLink(LinkKey.USER_SELF);
 
-    const priceString = rawValue.price.replace(/[^0-9.]/g, ''); 
+    const priceString = rawValue.price.replace(/[^0-9.]/g, '');
     const price = parseFloat(priceString);
 
     if (isNaN(price)) {
@@ -155,7 +162,7 @@ export class MarketplaceProductSellPageComponent implements OnInit {
     const productData: any = {
       name: rawValue.title,
       description: rawValue.description,
-      price: price, 
+      price: price,
       used: rawValue.used,
       department: rawValue.departmentId,
       remainingUnits: rawValue.quantity,
