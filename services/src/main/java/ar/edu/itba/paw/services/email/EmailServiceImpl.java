@@ -26,6 +26,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @EnableScheduling
@@ -415,30 +416,26 @@ public class EmailServiceImpl implements EmailService {
         sendMessageUsingThymeleafTemplate(user.getMail(), "subject.verification", "verification-template_en.html", vars, user.getLanguage());
     }
 
-    // todo: this function should be refactored into using count instead of the .size() the conditional is wrong
-    // Something like this would be the right implementation
-    /*
-        int size = 500;
-        int totalPages = PaginationUtils.calculatePages(userDao.countUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId), size);
-        for (int page = 1; page <= totalPages; page++) {
-            List<User> users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
-            if (!users.isEmpty())
-                emailService.sendNewAmenityMail(neighborhoodId, name, description, users);
-        }
-    */
     private void sendBatchEmails(long neighborhoodId, Consumer<List<User>> emailSender) {
-        List<User> users;
         int page = DEFAULT_PAGE;
         int size = DEFAULT_SIZE;
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        List<User> users;
         do {
-            // Fetch users in batches
             users = userDao.getUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId(), page, size);
 
-            // Send email with the current batch of users
             if (!users.isEmpty()) {
-                emailSender.accept(users);
+                // Create a final copy of users to use inside the lambda
+                final List<User> batch = new ArrayList<>(users);
+
+                CompletableFuture<Void> future = CompletableFuture.runAsync(() -> emailSender.accept(batch));
+                futures.add(future);
             }
             page++;
-        } while (users.size() == size); // Continue fetching next page if the current page is full
+        } while (users.size() == size);
+
+        // Wait for all batches to complete asynchronously
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
     }
 }
