@@ -5,7 +5,7 @@ import { ServiceProvidersDetailPageComponent } from './service-providers-detail-
 import { ServiceProvidersPageComponent } from './service-providers-page/service-providers-page.component';
 import { ServiceProvidersJoinNeighborhoodsPageComponent } from './service-providers-join-neighborhoods-page/service-providers-join-neighborhoods-page.component';
 import { ServiceProvidersLayoutComponent } from './service-providers-layout/service-providers-layout.component';
-import { ServiceProvidersCreatePostComponent } from './service-providers-create-post/service-providers-create-post.component';
+import { ServiceProvidersCreatePostPageComponent } from '@features/service-providers/service-providers-create-post-page/service-providers-create-post-page.component';
 
 import { Role } from '@shared/models';
 import { serviceProviderResolver } from '@shared/resolvers/service-provider.resolver';
@@ -34,7 +34,7 @@ const routes: Routes = [
       },
       {
         path: 'posts/new',
-        component: ServiceProvidersCreatePostComponent,
+        component: ServiceProvidersCreatePostPageComponent,
         canActivate: [RoleGuard],
         data: { roles: [Role.WORKER] },
       },

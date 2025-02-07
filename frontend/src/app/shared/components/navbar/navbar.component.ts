@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
     private preferencesService: PreferencesService,
     private userService: UserService,
     private linkService: HateoasLinksService,
-    private translate: TranslateService, 
+    private translate: TranslateService,
   ) {
     // Precompute language links
     this.englishLanguageLink = this.linkService.getLink(
@@ -87,38 +87,6 @@ export class NavbarComponent implements OnInit {
       error: error => {
         console.error('Failed to toggle dark mode:', error);
         this.preferencesService.applyDarkMode(this.isDarkMode); // Revert
-      },
-    });
-  }
-
-  onLanguageToggle(): void {
-    if (!this.currentUser) {
-      console.error('No user is currently logged in.');
-      return;
-    }
-
-    const newLanguage =
-      this.currentLanguage === this.englishLanguageLink
-        ? this.spanishLanguageLink
-        : this.englishLanguageLink;
-
-    this.preferencesService.applyLanguage(newLanguage);
-    this.translate.use(newLanguage === this.englishLanguageLink ? 'en' : 'es'); // Update translation
-
-    // Update the backend
-    this.userService.toggleLanguage(this.currentUser).subscribe({
-      next: updatedUser => {
-        if (updatedUser) {
-          this.userSessionService.setUserInformation(updatedUser);
-          this.currentLanguage = updatedUser.language;
-        }
-      },
-      error: error => {
-        console.error('Failed to toggle language:', error);
-        this.preferencesService.applyLanguage(this.currentLanguage); // Revert
-        this.translate.use(
-          this.currentLanguage === this.englishLanguageLink ? 'en' : 'es',
-        ); // Revert translation
       },
     });
   }

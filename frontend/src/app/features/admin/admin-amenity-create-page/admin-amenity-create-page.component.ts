@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ToastService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 import { ShiftService, Shift, AmenityService } from '@shared/index';
 
@@ -45,9 +47,15 @@ export class AdminAmenityCreatePageComponent implements OnInit {
     private toastService: ToastService,
     private router: Router,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.ADMIN_AMENITY_CREATE_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     this.amenityForm = this.fb.group({
       name: [
         '',

@@ -155,7 +155,9 @@
     "FAILED_CREATING_EVENT": "Failed creating event.",
     "ERROR": "error",
     "TIME00": "'{{time}}':00",
-    "HHMMSS": "HH:mm:ss"
+    "HHMMSS": "HH:mm:ss",
+    "ENTER_EVENT_NAME": "Enter event name",
+    "ENTER_EVENT_DESCRIPTION": "Enter event description"
   },
   "ADMIN-INFORMATION-PAGE": {
     "REMOVE_IMAGE": "Remove Image",
@@ -219,7 +221,10 @@
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_RESOURCE_THIS": "Are you sure you want to delete this resource? This action cannot be undone.",
     "RESOURCE_DELETED_SUCCESSFULLY": "Resource deleted successfully.",
     "ERROR_DELETING_RESOURCE": "Error deleting resource:",
-    "FAILED_TO_DELETE_RESOURCE": "Failed to delete resource."
+    "FAILED_TO_DELETE_RESOURCE": "Failed to delete resource.",
+    "CONTACT_NAME" : "Contact Name",
+    "CONTACT_ADDRESS" : "Contact Address",
+    "CONTACT_PHONE" : "Contact Phone"
   },
 
   "ADMIN-NEIGHBORS-REQUESTS-PAGE": {
@@ -429,7 +434,8 @@
     "REJECTED": "rejected",
     "NOTFOUND": "not-found",
     "LOGIN_FAILED": "Login failed:",
-    "PASSWORD": "password"
+    "PASSWORD": "password",
+    "EMAIL": "email"
   },
   "LOGIN-PAGE": {
     "NEIBO": "Neibo",
@@ -494,7 +500,15 @@
     "ERROR_GETTING_NEIGHBORHOODS": "Error getting neighborhoods:",
     "THERE_WAS_A_PROBLEM_FETCHING_THE_NEIGHBORHOODS_TRY": "There was a problem fetching the neighborhoods. Try again.",
     "ERROR_GETTING_LANGUAGES": "Error getting languages:",
-    "COULD_NOT_RETRIEVE_AVAILABLE_LANGUAGES_TRY_AGAIN": "Could not retrieve available languages. Try Again."
+    "COULD_NOT_RETRIEVE_AVAILABLE_LANGUAGES_TRY_AGAIN": "Could not retrieve available languages. Try Again.",
+    "FIRST_NAME": "First name",
+    "SURNAME": "Surname",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "IDENTIFICATION": "Identification",
+    "BUSINESS_NAME": "Business name",
+    "PHONE_NUMBER_EX": "Phone Number (e.g. +54 9 11 1234 5678)",
+    "ADDRESS": "Address"
   },
   "CALENDAR-BOX": {
     "_CURRENTDATE_": "{{ currentDate }}",
@@ -648,7 +662,10 @@
     "COMPLAINT": "complaint",
     "CONTENT": "content",
     "ERROR_UPLOADING_IMAGE": "Error uploading image:",
-    "ENTER": "Enter"
+    "ENTER": "Enter",
+    "TITLE": "Title",
+    "BODY": "Body",
+    "CREATE_A_TAG": "Create a tag (e.g., ThisIsATag)"
   },
   "FEED-PAGE": {
     "POSTS_NOT_FOUND": "Posts not found",
@@ -692,7 +709,8 @@
     "ERROR_FETCHING_COMMENTS": "Error fetching comments:",
     "MERGE": "merge",
     "INCHANNEL": "inChannel",
-    "WITHTAG": "withTag"
+    "WITHTAG": "withTag",
+    "ADD_A_COMMENT": "Add a comment"
   },
   "FEED-POST-DETAIL-PAGE": {
     "APPFEEDPOSTDETAILPAGE": "app-feed-post-detail-page",
@@ -830,7 +848,11 @@
     "NEW": "New",
     "USED": "Used",
     "UNIT": "Unit",
-    "UNITS": "Units"
+    "UNITS": "Units",
+    "ASK_A_QUESTION": "Ask a question",
+    "PHONE_NUMBER_EX":"Phone Number (e.g. +54 9 11 1234 5678)",
+    "MESSAGE" : "Message",
+    "YOUR_REPLY": "Your reply..."
   },
   "MARKETPLACE-PRODUCT-EDIT-PAGE": {
     "EDIT_LISTING": "Edit Listing",
@@ -853,7 +875,10 @@
     "PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY": "Please fill in all required fields correctly.",
     "NO_PRODUCT_LOADED": "No product loaded.",
     "LISTING_UPDATED_SUCCESSFULLY": "Listing updated successfully",
-    "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "There was a problem updating the listing."
+    "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "There was a problem updating the listing.",
+    "TITTLE": "Title",
+    "MONEY":"$1,000.00",
+    "DESCRIPTION":"Description"
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Used",
@@ -899,7 +924,10 @@
     "PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY": "Please fill in all required fields correctly.",
     "LISTING_CREATED_SUCCESSFULLY": "Listing created successfully",
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "There was a problem creating the listing.",
-    "INVALID_PRICE_FORMAT": "Invalid price format."
+    "INVALID_PRICE_FORMAT": "Invalid price format.",
+    "TITTLE": "Title",
+    "MONEY":"$1,000.00",
+    "DESCRIPTION":"Description"
   },
   "NOT-FOUND-PAGE": {
     "OOPS__ERRORCODE_": "Oops! {{ errorCode }}",
@@ -948,7 +976,9 @@
     "YOUR_POST_WAS_CREATED_SUCCESSFULLY": "Your post was created successfully!",
     "THERE_WAS_A_PROBLEM_CREATING_YOUR_POST": "There was a problem creating your post.",
     "ERROR_CREATING_POST": "Error creating post:",
-    "ERROR_UPLOADING_IMAGE": "Error uploading image:"
+    "ERROR_UPLOADING_IMAGE": "Error uploading image:",
+    "TITLE": "Title",
+    "BODY": "Body"
   },
   "SERVICE-PROVIDERS-DETAIL-PAGE": {
     "ERROR_LOADING_WORKER": "Error loading worker:",
@@ -966,7 +996,11 @@
     "ADDRESS_IS_REQUIRED": "Address is required.",
     "BACKGROUND_IMAGE": "Background Image",
     "SAVE_CHANGES": "Save Changes",
-    "ERROR_UPLOADING_IMAGE": "Error uploading image"
+    "ERROR_UPLOADING_IMAGE": "Error uploading image",
+    "BUSINESS_NAME": "Business Name",
+    "DESCRIPTION": "Description",
+    "PHONE_NUMBER": "Phone Number",
+    "ADDRESS": "Address"
   },
   "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE": {
     "NO_ASSOCIATED_NEIGHBORHOODS": "No associated neighborhoods",
@@ -1010,7 +1044,8 @@
     "SHARE_YOUR_EXPERIENCE_WITH": "Share your experience with",
     "PLEASE_SELECT_A_STAR_RATING": "*Please select a star rating.",
     "REVIEW_MUST_BE_AT_LEAST": "*Review must be at least 10 characters long.",
-    "SUBMIT_REVIEW": "Submit Review"
+    "SUBMIT_REVIEW": "Submit Review",
+    "YOUR_REVIEW": "Your review..."
   },
   "SERVICE-PROVIDERS-REVIEWS-AND-POSTS": {
     "REVIEWS": "Reviews",
@@ -1109,5 +1144,56 @@
     "noTagsSelected": "Please select at least one tag.",
     "startBeforeEnd": "Start time should be before end time.",
     "email": "Entered email is not valid"
+  },
+
+  "TITLES": {
+    "ADMIN_AMENITIES_PAGE": "Admin Amenities | Neibo",
+    "ADMIN_AMENITY_CREATE_PAGE": "Create Amenity | Neibo",
+    "ADMIN_AMENITY_EDIT_PAGE": "Editing '{{amenityName}}' | Neibo",
+    "ADMIN_CREATE_ANNOUNCEMENT_PAGE": "Create Announcement | Neibo",
+    "ADMIN_CREATE_EVENT_PAGE": "Create Event | Neibo",
+    "ADMIN_INFORMATION_PAGE": "Admin Information | Neibo",
+    "ADMIN_NEIGHBORS_REQUESTS_PAGE": "Neighbor Requests | Neibo",
+    "ADMIN_SERVICE_PROVIDERS_REQUESTS_PAGE": "Service Providers Requests | Neibo",
+    "ADMIN_NEIGHBORS_LIST_PAGE": "Neighbor List | Neibo",
+    "ADMIN_SERVICE_PROVIDERS_LIST_PAGE": "Service Providers List | Neibo",
+
+    "AMENITIES_CHOOSE_TIME_PAGE": "Choose Time for '{{amenityName}}' Reservation | Neibo",
+    "AMENITIES_RESERVATIONS_PAGE": "Amenities Reservations | Neibo",
+
+    "LOGIN_PAGE": "Login | Neibo",
+
+    "CALENDAR_PAGE": "Calendar | Neibo",
+    "CALENDAR_EVENT_PAGE": "{{eventName}} : Event Details | Neibo",
+
+    "FEED_CREATE_POST_PAGE": "Create Post | Neibo",
+    "FEED_PAGE": "Feed | Neibo",
+    "ANNOUNCEMENTS_PAGE": "Announcements | Neibo",
+    "COMPLAINTS_PAGE": "Complaints | Neibo",
+    "FEED_POST_DETAIL_PAGE": "{{postTitle}} : Post Details | Neibo",
+
+    "INFORMATION_PAGE": "Information | Neibo",
+
+    "MARKETPLACE_DASHBOARD_BUYER_PAGE": "Marketplace Dashboard (Buyer) | Neibo",
+    "MARKETPLACE_DASHBOARD_SELLER_PAGE": "Marketplace Dashboard (Seller) | Neibo",
+    "MARKETPLACE_PAGE": "Marketplace | Neibo",
+    "MARKETPLACE_PRODUCT_DETAIL_PAGE": "{{productName}} : Product Details | Neibo",
+    "MARKETPLACE_PRODUCT_EDIT_PAGE": "{{productName}} : Edit Product | Neibo",
+    "MARKETPLACE_PRODUCT_REQUESTS_PAGE": "{{productName}} : Product Requests | Neibo",
+    "MARKETPLACE_PRODUCT_SELL_PAGE": "Sell Product | Neibo",
+
+    "NOT_FOUND_PAGE": "Page Not Found | Neibo",
+    "REJECTED_PAGE": "Access Rejected | Neibo",
+
+    "SERVICE_PROVIDERS_CREATE_POST_PAGE": "Create Post | Neibo",
+    "SERVICE_PROVIDERS_DETAIL_PAGE": "{{businessName}} : Service Provider Details | Neibo",
+    "SERVICE_PROVIDERS_JOIN_NEIGHBORHOODS_PAGE": "Join Neighborhoods | Neibo",
+    "SERVICE_PROVIDERS_PAGE": "Service Providers | Neibo",
+
+    "SUPER_ADMIN_PAGE": "Super Admin | Neibo",
+
+    "UNVERIFIED_PAGE": "Unverified | Neibo",
+
+    "USER_PROFILE_PAGE": "Profile | Neibo"
   }
 }

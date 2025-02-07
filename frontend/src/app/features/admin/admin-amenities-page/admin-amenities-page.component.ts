@@ -8,6 +8,8 @@ import {
 } from '@core/index';
 
 import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-admin-amenities-page',
@@ -40,15 +42,19 @@ export class AdminAmenitiesPageComponent implements OnInit {
 
   constructor(
     private amenityService: AmenityService,
-    private shiftService: ShiftService, // 1) Inject shift service
+    private shiftService: ShiftService,
     private router: Router,
     private route: ActivatedRoute,
     private toastService: ToastService,
     private confirmationService: ConfirmationService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.ADMIN_AMENITIES_PAGE);
+    this.titleService.setTitle(title);
+
     // Get initial page/size from query params
     this.route.queryParams.subscribe(params => {
       this.currentPage = +params['page'] || 1;

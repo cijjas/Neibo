@@ -16,6 +16,8 @@ import { PostService, TagService, LinkKey, Tag } from '@shared/index';
 import { catchError, forkJoin, of, switchMap, take } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-admin-create-announcement-page',
@@ -76,14 +78,20 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
     private userSessionService: UserSessionService,
     private toastService: ToastService,
     private translate: TranslateService,
-  ) {
+    private titleService: Title,
+  ) {}
+
+  ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.ADMIN_CREATE_ANNOUNCEMENT_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     // Get the link to your announcements channel
     this.channel = this.linkService.getLink(
       LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
     );
-  }
 
-  ngOnInit(): void {
     this.announcementForm = this.fb.group({
       subject: ['', Validators.required],
       message: ['', Validators.required],

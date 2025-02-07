@@ -155,7 +155,9 @@
     "FAILED_CREATING_EVENT": "Error al crear el evento.",
     "ERROR": "Error",
     "TIME00": "${time}:00",
-    "HHMMSS": "HH:mm:ss"
+    "HHMMSS": "HH:mm:ss",
+    "ENTER_EVENT_NAME": "Ingrese nombre del evento",
+    "ENTER_EVENT_DESCRIPTION": "Ingrese descripción del evento"
   },
   "ADMIN-INFORMATION-PAGE": {
     "REMOVE_IMAGE": "Sacar imagen",
@@ -219,7 +221,10 @@
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE_THIS_RESOURCE_THIS": "¿Estás seguro de que deseas eliminar este recurso? Esta acción no puede deshacerse.",
     "RESOURCE_DELETED_SUCCESSFULLY": "¡Recurso eliminado exitosamente!",
     "ERROR_DELETING_RESOURCE": "Error al eliminar el recurso:",
-    "FAILED_TO_DELETE_RESOURCE": "No se pudo eliminar el recurso."
+    "FAILED_TO_DELETE_RESOURCE": "No se pudo eliminar el recurso.",
+    "CONTACT_NAME" : "Name de Contacto",
+    "CONTACT_ADDRESS" : "Dirección de Contacto",
+    "CONTACT_PHONE" : "Teléfono de Contacto"
   },
   "ADMIN-NEIGHBORS-REQUESTS-PAGE": {
     "_NEIGHBORS__PENDING_NEIGHBOR_REQUESTS__CURRENT_NEI": "{{ !neighbors ? \"Solicitudes Pendientes de Vecinos\" : \"Vecinos Actuales\" }}",
@@ -427,7 +432,8 @@
     "REJECTED": "rechazado",
     "NOTFOUND": "no encontrado",
     "LOGIN_FAILED": "Error al iniciar sesión:",
-    "PASSWORD": "contraseña"
+    "PASSWORD": "contraseña",
+    "EMAIL": "email"
   },
   "LOGIN-PAGE": {
     "NEIBO": "Neibo",
@@ -492,7 +498,15 @@
     "ERROR_GETTING_NEIGHBORHOODS": "Error al obtener los vecindarios:",
     "THERE_WAS_A_PROBLEM_FETCHING_THE_NEIGHBORHOODS_TRY": "Hubo un problema al obtener los vecindarios. Intenta nuevamente.",
     "ERROR_GETTING_LANGUAGES": "Error al obtener los idiomas:",
-    "COULD_NOT_RETRIEVE_AVAILABLE_LANGUAGES_TRY_AGAIN": "No se pudieron recuperar los idiomas disponibles. Intenta nuevamente."
+    "COULD_NOT_RETRIEVE_AVAILABLE_LANGUAGES_TRY_AGAIN": "No se pudieron recuperar los idiomas disponibles. Intenta nuevamente.",
+    "FIRST_NAME": "Nombre",
+    "SURNAME": "Apellido",
+    "EMAIL": "Email",
+    "PASSWORD": "Contraseña",
+    "IDENTIFICATION": "Identificación",
+    "BUSINESS_NAME": "Nombre de empresa",
+    "PHONE_NUMBER_EX": "Número de Teléfono (e.g. +54 9 11 1234 5678)",
+    "ADDRESS": "Dirección"
   },
   "CALENDAR-BOX": {
     "_CURRENTDATE_": "{{ currentDate }}",
@@ -639,7 +653,10 @@
     "COMPLAINT": "queja",
     "CONTENT": "contenido",
     "ERROR_UPLOADING_IMAGE": "Error al subir la imagen:",
-    "ENTER": "Ingresar"
+    "ENTER": "Ingresar",
+    "TITLE": "Título",
+    "BODY": "Mensaje",
+    "CREATE_A_TAG": "Creare una Etiqueta (e.g., EstoEsUnaEtiqueta)"
   },
   "FEED-PAGE": {
     "POSTS_NOT_FOUND": "No se encontraron publicaciones",
@@ -683,7 +700,8 @@
     "ERROR_FETCHING_COMMENTS": "Error al obtener comentarios:",
     "MERGE": "fusionar",
     "INCHANNEL": "enCanal",
-    "WITHTAG": "conEtiqueta"
+    "WITHTAG": "conEtiqueta",
+    "ADD_A_COMMENT": "Añadir un comentario"
   },
 
   "FEED-POST-DETAIL-PAGE": {
@@ -822,7 +840,11 @@
     "NEW": "Nuevo",
     "USED": "Usado",
     "UNIT": "Unidad",
-    "UNITS": "Unidades"
+    "UNITS": "Unidades",
+    "ASK_A_QUESTION": "Hacer una pregunta",
+    "PHONE_NUMBER_EX":"Número de Teléfono (e.g. +54 9 11 1234 5678)",
+    "MESSAGE" : "Mensaje",
+    "YOUR_REPLY": "Su respuesta..."
   },
   "MARKETPLACE-PRODUCT-EDIT-PAGE": {
     "EDIT_LISTING": "Editar publicación",
@@ -845,7 +867,10 @@
     "PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY": "Por favor, completa todos los campos obligatorios correctamente.",
     "NO_PRODUCT_LOADED": "Ningún producto cargado.",
     "LISTING_UPDATED_SUCCESSFULLY": "Publicación actualizada con éxito",
-    "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "Hubo un problema al actualizar la publicación."
+    "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "Hubo un problema al actualizar la publicación.",
+    "TITTLE": "Título",
+    "MONEY":"$1,000.00",
+    "DESCRIPTION":"Descripción"
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Usado",
@@ -891,7 +916,10 @@
     "PLEASE_FILL_IN_ALL_REQUIRED_FIELDS_CORRECTLY": "Por favor, completa todos los campos obligatorios correctamente.",
     "LISTING_CREATED_SUCCESSFULLY": "Publicación creada con éxito",
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "Hubo un problema al crear la publicación.",
-    "INVALID_PRICE_FORMAT": "Formato de precio inválido."
+    "INVALID_PRICE_FORMAT": "Formato de precio inválido.",
+    "TITTLE": "Título",
+    "MONEY":"$1,000.00",
+    "DESCRIPTION":"Descripción"
   },
   "NOT-FOUND-PAGE": {
     "OOPS__ERRORCODE_": "¡Ups! {{ errorCode }}",
@@ -938,7 +966,9 @@
     "YOUR_POST_WAS_CREATED_SUCCESSFULLY": "¡Tu publicación se creó exitosamente!",
     "THERE_WAS_A_PROBLEM_CREATING_YOUR_POST": "Hubo un problema al crear tu publicación.",
     "ERROR_CREATING_POST": "Error al crear la publicación:",
-    "ERROR_UPLOADING_IMAGE": "Error al subir la imagen:"
+    "ERROR_UPLOADING_IMAGE": "Error al subir la imagen:",
+    "TITLE": "Título",
+    "BODY": "Mensaje"
   },
   "SERVICE-PROVIDERS-DETAIL-PAGE": {
     "ERROR_LOADING_WORKER": "Error al cargar el trabajador:",
@@ -956,7 +986,11 @@
     "ADDRESS_IS_REQUIRED": "La dirección es obligatoria.",
     "BACKGROUND_IMAGE": "Imagen de fondo",
     "SAVE_CHANGES": "Guardar cambios",
-    "ERROR_UPLOADING_IMAGE": "Error al subir la imagen"
+    "ERROR_UPLOADING_IMAGE": "Error al subir la imagen",
+    "BUSINESS_NAME": "Nombre de empresa",
+    "DESCRIPTION": "Descripción",
+    "PHONE_NUMBER": "Número de teléfono",
+    "ADDRESS": "Dirección"
   },
   "SERVICE-PROVIDERS-JOIN-NEIGHBORHOODS-PAGE": {
     "NO_ASSOCIATED_NEIGHBORHOODS": "No hay vecindarios asociados",
@@ -1003,7 +1037,8 @@
     "SHARE_YOUR_EXPERIENCE_WITH": "Comparte tu experiencia con",
     "PLEASE_SELECT_A_STAR_RATING": "*Por favor, selecciona una calificación con estrellas.",
     "REVIEW_MUST_BE_AT_LEAST": "*La reseña debe tener al menos 10 caracteres.",
-    "SUBMIT_REVIEW": "Enviar reseña"
+    "SUBMIT_REVIEW": "Enviar reseña",
+    "YOUR_REVIEW": "Su reseña..."
   },
   "SERVICE-PROVIDERS-REVIEWS-AND-POSTS": {
     "REVIEWS": "Reseñas",
@@ -1103,5 +1138,56 @@
     "noTagsSelected": "Por favor, selecciona al menos una etiqueta.",
     "startBeforeEnd": "La hora de inicio debe ser anterior a la hora de finalización.",
     "email": "El correo electrónico ingresado no es válido"
+  },
+
+  "TITLES": {
+    "ADMIN_AMENITIES_PAGE": "Admin Amenities | Neibo",
+    "ADMIN_AMENITY_CREATE_PAGE": "Create Amenity | Neibo",
+    "ADMIN_AMENITY_EDIT_PAGE": "Editing '{{amenityName}}' | Neibo",
+    "ADMIN_CREATE_ANNOUNCEMENT_PAGE": "Create Announcement | Neibo",
+    "ADMIN_CREATE_EVENT_PAGE": "Create Event | Neibo",
+    "ADMIN_INFORMATION_PAGE": "Admin Information | Neibo",
+    "ADMIN_NEIGHBORS_REQUESTS_PAGE": "Neighbor Requests | Neibo",
+    "ADMIN_SERVICE_PROVIDERS_REQUESTS_PAGE": "Service Providers Requests | Neibo",
+    "ADMIN_NEIGHBORS_LIST_PAGE": "Neighbor List | Neibo",
+    "ADMIN_SERVICE_PROVIDERS_LIST_PAGE": "Service Providers List | Neibo",
+
+    "AMENITIES_CHOOSE_TIME_PAGE": "Choose Time for '{{amenityName}}' Reservation | Neibo",
+    "AMENITIES_RESERVATIONS_PAGE": "Amenities Reservations | Neibo",
+
+    "LOGIN_PAGE": "Login | Neibo",
+
+    "CALENDAR_PAGE": "Calendar | Neibo",
+    "CALENDAR_EVENT_PAGE": "{{eventName}} : Event Details | Neibo",
+
+    "FEED_CREATE_POST_PAGE": "Create Post | Neibo",
+    "FEED_PAGE": "Feed | Neibo",
+    "ANNOUNCEMENTS_PAGE": "Announcements | Neibo",
+    "COMPLAINTS_PAGE": "Complaints | Neibo",
+    "FEED_POST_DETAIL_PAGE": "{{postTitle}} : Post Details | Neibo",
+
+    "INFORMATION_PAGE": "Information | Neibo",
+
+    "MARKETPLACE_DASHBOARD_BUYER_PAGE": "Marketplace Dashboard (Buyer) | Neibo",
+    "MARKETPLACE_DASHBOARD_SELLER_PAGE": "Marketplace Dashboard (Seller) | Neibo",
+    "MARKETPLACE_PAGE": "Marketplace | Neibo",
+    "MARKETPLACE_PRODUCT_DETAIL_PAGE": "{{productName}} : Product Details | Neibo",
+    "MARKETPLACE_PRODUCT_EDIT_PAGE": "{{productName}} : Edit Product | Neibo",
+    "MARKETPLACE_PRODUCT_REQUESTS_PAGE": "{{productName}} : Product Requests | Neibo",
+    "MARKETPLACE_PRODUCT_SELL_PAGE": "Sell Product | Neibo",
+
+    "NOT_FOUND_PAGE": "Page Not Found | Neibo",
+    "REJECTED_PAGE": "Access Rejected | Neibo",
+
+    "SERVICE_PROVIDERS_CREATE_POST_PAGE": "Create Post | Neibo",
+    "SERVICE_PROVIDERS_DETAIL_PAGE": "{{businessName}} : Service Provider Details | Neibo",
+    "SERVICE_PROVIDERS_JOIN_NEIGHBORHOODS_PAGE": "Join Neighborhoods | Neibo",
+    "SERVICE_PROVIDERS_PAGE": "Service Providers | Neibo",
+
+    "SUPER_ADMIN_PAGE": "Super Admin | Neibo",
+
+    "UNVERIFIED_PAGE": "Unverified | Neibo",
+
+    "USER_PROFILE_PAGE": "Profile | Neibo"
   }
 }

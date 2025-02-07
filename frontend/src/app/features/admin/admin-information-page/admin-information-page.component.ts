@@ -6,6 +6,8 @@ import { ContactService, ResourceService, ImageService } from '@shared/index';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-admin-information-page',
@@ -42,9 +44,13 @@ export class AdminInformationPageComponent implements OnInit {
     private imageService: ImageService,
     private confirmationService: ConfirmationService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.ADMIN_INFORMATION_PAGE);
+    this.titleService.setTitle(title);
+
     // ------------------ Contact Form ------------------
     this.contactForm = this.fb.group({
       contactName: [

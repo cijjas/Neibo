@@ -12,6 +12,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-amenities-reservations-page',
@@ -48,15 +50,19 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private amenityService: AmenityService,
-    private linkService: HateoasLinksService,
-    private bookingService: BookingService,
     private router: Router,
     private route: ActivatedRoute,
     private shiftService: ShiftService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.AMENITIES_RESERVATIONS_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     this.reservationForm = this.fb.group({
       amenity: ['', Validators.required],
       date: ['', Validators.required],

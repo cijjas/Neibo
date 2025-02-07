@@ -15,7 +15,7 @@ import { ServiceProvidersReviewDialogComponent } from './service-providers-revie
 import { ServiceProvidersReviewsAndPostsComponent } from './service-providers-reviews-and-posts/service-providers-reviews-and-posts.component';
 import { ServiceProvidersJoinNeighborhoodsPageComponent } from '@features/index';
 import { ServiceProvidersLayoutComponent } from './service-providers-layout/service-providers-layout.component';
-import { ServiceProvidersCreatePostComponent } from './service-providers-create-post/service-providers-create-post.component';
+import { ServiceProvidersCreatePostPageComponent } from '@features/service-providers/service-providers-create-post-page/service-providers-create-post-page.component';
 import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 
 @NgModule({
@@ -30,7 +30,7 @@ import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module'
     ServiceProvidersReviewDialogComponent,
     ServiceProvidersReviewsAndPostsComponent,
     ServiceProvidersJoinNeighborhoodsPageComponent,
-    ServiceProvidersCreatePostComponent,
+    ServiceProvidersCreatePostPageComponent,
   ],
   imports: [
     CommonModule,

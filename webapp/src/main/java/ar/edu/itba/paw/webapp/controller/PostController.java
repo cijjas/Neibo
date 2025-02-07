@@ -65,10 +65,10 @@ public class PostController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(postParams.getUser());
-        Long channelId = extractOptionalSecondId(postParams.getChannel());
+        Long userId = extractNullableFirstId(postParams.getUser());
+        Long channelId = extractNullableSecondId(postParams.getChannel());
         List<Long> tagIds = extractSecondIds(postParams.getTags());
-        Long postStatusId = extractOptionalFirstId(postParams.getPostStatus());
+        Long postStatusId = extractNullableFirstId(postParams.getPostStatus());
 
         // Content
         final List<Post> posts = ps.getPosts(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId, postParams.getPage(), postParams.getSize());
@@ -113,10 +113,10 @@ public class PostController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(postParams.getUser());
-        Long channelId = extractOptionalSecondId(postParams.getChannel());
+        Long userId = extractNullableFirstId(postParams.getUser());
+        Long channelId = extractNullableSecondId(postParams.getChannel());
         List<Long> tagIds = extractSecondIds(postParams.getTags());
-        Long postStatusId = extractOptionalFirstId(postParams.getPostStatus());
+        Long postStatusId = extractNullableFirstId(postParams.getPostStatus());
 
         // Content
         int count = ps.countPosts(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId);
@@ -171,7 +171,7 @@ public class PostController {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(neighborhoodId, extractFirstId(createForm.getUser()), createForm.getTitle(), createForm.getBody(), extractSecondId(createForm.getChannel()), extractSecondIds(createForm.getTags()), extractOptionalFirstId(createForm.getImage()));
+        final Post post = ps.createPost(neighborhoodId, extractFirstId(createForm.getUser()), createForm.getTitle(), createForm.getBody(), extractSecondId(createForm.getChannel()), extractSecondIds(createForm.getTags()), extractNullableFirstId(createForm.getImage()));
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URI

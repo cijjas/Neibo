@@ -10,6 +10,9 @@ import {
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { environment } from 'environments/environment';
+import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-marketplace-dashboard-seller-page',
@@ -29,6 +32,8 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     private linkService: HateoasLinksService,
     private requestService: RequestService,
     private productService: ProductService,
+    private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   get isListings(): boolean {
@@ -40,6 +45,11 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.MARKETPLACE_DASHBOARD_SELLER_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     this.route.paramMap.subscribe((params: ParamMap) => {
       const mode = params.get('mode');
       this.clearLists();

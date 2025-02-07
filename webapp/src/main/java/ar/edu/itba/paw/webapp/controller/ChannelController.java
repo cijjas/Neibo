@@ -49,7 +49,7 @@ public class ChannelController {
 
     @GET
     public Response listChannels(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @QueryParam(QueryParameter.IS_BASE) Boolean isBase,
             @QueryParam(QueryParameter.PAGE) @DefaultValue(Constant.DEFAULT_PAGE) int page,
             @QueryParam(QueryParameter.SIZE) @DefaultValue(Constant.DEFAULT_SIZE) int size
@@ -93,7 +93,7 @@ public class ChannelController {
     @GET
     @Path("{" + PathParameter.CHANNEL_ID + "}")
     public Response findChannel(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.CHANNEL_ID) long channelId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
@@ -117,7 +117,7 @@ public class ChannelController {
     @POST
     @Validated(CreateSequence.class)
     public Response createChannel(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull ChannelDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());

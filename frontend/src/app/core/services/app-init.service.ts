@@ -1,19 +1,16 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { catchError, firstValueFrom, of } from "rxjs";
-import { AuthService, HateoasLinksService } from "@core/index";
-import { environment } from "../../../environments/environment";
-import { TokenService } from "./token.service";
-import { Router } from "@angular/router";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { catchError, firstValueFrom, of } from 'rxjs';
+import { AuthService, HateoasLinksService } from '@core/index';
+import { environment } from '../../../environments/environment';
+import { TokenService } from './token.service';
+import { Router } from '@angular/router';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class AppInitService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService,
-    private tokenService: TokenService,
-    private authService: AuthService,
-    private router: Router
   ) {}
 
   private readonly apiServerUrl = environment.apiBaseUrl;
@@ -25,17 +22,17 @@ export class AppInitService {
         this.http
           .get<{ _links: Record<string, string> }>(this.apiServerUrl)
           .pipe(
-            catchError((error) => {
-              console.error("Failed to load initial links:", error);
+            catchError(error => {
+              console.error('Failed to load initial links:', error);
               return of({ _links: {} }); // Return empty links in case of an error
-            })
-          )
+            }),
+          ),
       );
 
       // Register the links if any were successfully fetched
-      this.linkService.registerLinks(response._links, "root:");
+      this.linkService.registerLinks(response._links, 'root:');
     } catch (error) {
-      console.error("Unhandled error during app initialization:", error);
+      console.error('Unhandled error during app initialization:', error);
     }
   }
 }

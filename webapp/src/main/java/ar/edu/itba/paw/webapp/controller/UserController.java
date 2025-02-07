@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalFirstId;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
 /*
  * # Summary
@@ -64,8 +64,8 @@ public class UserController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long neighborhoodId = extractOptionalFirstId(userParams.getNeighborhood());
-        Long userRoleId = extractOptionalFirstId(userParams.getUserRole());
+        Long neighborhoodId = extractNullableFirstId(userParams.getNeighborhood());
+        Long userRoleId = extractNullableFirstId(userParams.getUserRole());
 
         // Content
         final List<User> users = us.getUsers(neighborhoodId, userRoleId, userParams.getPage(), userParams.getSize());
@@ -133,7 +133,7 @@ public class UserController {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & ETag Generation
-        final User user = us.createUser(extractFirstId(createForm.getNeighborhood()), createForm.getMail(), createForm.getName(), createForm.getSurname(), createForm.getPassword(), createForm.getIdentification(), extractOptionalFirstId(createForm.getLanguage()), extractOptionalFirstId(createForm.getUserRole()));
+        final User user = us.createUser(extractFirstId(createForm.getNeighborhood()), createForm.getMail(), createForm.getName(), createForm.getSurname(), createForm.getPassword(), createForm.getIdentification(), extractNullableFirstId(createForm.getLanguage()), extractNullableFirstId(createForm.getUserRole()));
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URI
@@ -155,7 +155,7 @@ public class UserController {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(userId, extractOptionalFirstId(updateForm.getNeighborhood()), updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractOptionalFirstId(updateForm.getLanguage()), extractOptionalFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractOptionalFirstId(updateForm.getUserRole()));
+        final User updatedUser = us.updateUser(userId, extractNullableFirstId(updateForm.getNeighborhood()), updateForm.getMail(), updateForm.getName(), updateForm.getSurname(), updateForm.getPassword(), updateForm.getIdentification(), extractNullableFirstId(updateForm.getLanguage()), extractNullableFirstId(updateForm.getProfilePicture()), updateForm.getDarkMode(), updateForm.getPhoneNumber(), extractNullableFirstId(updateForm.getUserRole()));
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.validation;
 
-import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.TwoId;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 
@@ -103,20 +102,12 @@ public class ExtractionUtils {
         return Long.parseLong(segments[2]);
     }
 
-    public static Long extractOptionalFirstId(String uri) {
+    public static Long extractNullableFirstId(String uri) {
         try {
             return extractFirstId(uri);
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public static Long extractSecondId(String uri) {
-        String[] segments = getRelativePathSegments(uri);
-        if (segments.length < 5) {
-            throw new IllegalArgumentException("URI does not contain second ID");
-        }
-        return Long.parseLong(segments[4]);
     }
 
     public static List<Long> extractFirstIds(List<String> URIs) {
@@ -128,6 +119,14 @@ public class ExtractionUtils {
         return ids;
     }
 
+    public static Long extractSecondId(String uri) {
+        String[] segments = getRelativePathSegments(uri);
+        if (segments.length < 5) {
+            throw new IllegalArgumentException("URI does not contain second ID");
+        }
+        return Long.parseLong(segments[4]);
+    }
+
     public static List<Long> extractSecondIds(List<String> URIs) {
         if (URIs == null || URIs.isEmpty()) return Collections.emptyList();
         List<Long> ids = new ArrayList<>();
@@ -135,6 +134,14 @@ public class ExtractionUtils {
             ids.add(ExtractionUtils.extractSecondId(URI));
         }
         return ids;
+    }
+
+    public static Long extractNullableSecondId(String uri) {
+        try {
+            return extractSecondId(uri);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static TwoId extractTwoId(String uri) {
@@ -152,15 +159,7 @@ public class ExtractionUtils {
         }
     }
 
-    public static Long extractOptionalSecondId(String uri) {
-        try {
-            return extractSecondId(uri);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static Date extractOptionalDate(String date) {
+    public static Date extractNullableDate(String date) {
         if (date == null)
             return null;
         return extractDate(date);

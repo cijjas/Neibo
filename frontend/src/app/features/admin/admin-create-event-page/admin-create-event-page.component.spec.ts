@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AdminCreateEventComponent } from './admin-create-event.component';
+import { AdminCreateEventPageComponent } from './admin-create-event-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -9,8 +9,8 @@ import { ToastService } from '@core/index';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AdminCreateEventComponent', () => {
-  let component: AdminCreateEventComponent;
-  let fixture: ComponentFixture<AdminCreateEventComponent>;
+  let component: AdminCreateEventPageComponent;
+  let fixture: ComponentFixture<AdminCreateEventPageComponent>;
 
   // Create spies for the dependencies
   let mockEventService: jasmine.SpyObj<EventService>;
@@ -26,7 +26,7 @@ describe('AdminCreateEventComponent', () => {
     mockEventService.createEvent.and.returnValue(of(''));
 
     await TestBed.configureTestingModule({
-      declarations: [AdminCreateEventComponent],
+      declarations: [AdminCreateEventPageComponent],
       imports: [
         ReactiveFormsModule,
         TranslateModule.forRoot(), // Provide a basic translate service
@@ -40,7 +40,7 @@ describe('AdminCreateEventComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdminCreateEventComponent);
+    fixture = TestBed.createComponent(AdminCreateEventPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

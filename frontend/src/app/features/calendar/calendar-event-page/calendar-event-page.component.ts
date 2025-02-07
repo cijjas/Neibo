@@ -11,6 +11,8 @@ import {
   LinkKey,
 } from '@shared/index';
 import { HateoasLinksService, ToastService } from '@core/index';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-calendar-event-page',
   templateUrl: './calendar-event-page.component.html',
@@ -35,17 +37,25 @@ export class CalendarEventPageComponent implements OnInit {
     private eventService: EventService,
     private attendanceService: AttendanceService,
     private toastService: ToastService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
-    // 1) Get the Event ID from the URL (/events/:id)
     this.route.data.subscribe(({ event }) => {
       if (!event) {
         console.error('Event not found or failed to resolve');
         return;
       }
       this.event = event;
+
+      this.translate
+        .get(AppTitleKeys.CALENDAR_EVENT_PAGE, {
+          eventName: event.name,
+        })
+        .subscribe((translatedTitle: string) => {
+          this.titleService.setTitle(translatedTitle);
+        });
 
       // Load attendees after event is available
       this.loadAttendance();
@@ -114,7 +124,12 @@ export class CalendarEventPageComponent implements OnInit {
       // Manually increment the count in your local event object
       this.event.attendeesCount = (this.event.attendeesCount ?? 0) + 1;
 
-      this.toastService.showToast(this.translate.instant('CALENDAR-EVENT-PAGE.ATTENDANCE_TO_EVENT_CONFIRMED'), 'success');
+      this.toastService.showToast(
+        this.translate.instant(
+          'CALENDAR-EVENT-PAGE.ATTENDANCE_TO_EVENT_CONFIRMED',
+        ),
+        'success',
+      );
       this.loadAttendance(); // Refresh the list of attendees
     });
   }
@@ -129,8 +144,10 @@ export class CalendarEventPageComponent implements OnInit {
       );
 
       this.toastService.showToast(
-        this.translate.instant('CALENDAR-EVENT-PAGE.YOU_WERE_UNLISTED_FROM_THE_EVENT'),
-        'success'
+        this.translate.instant(
+          'CALENDAR-EVENT-PAGE.YOU_WERE_UNLISTED_FROM_THE_EVENT',
+        ),
+        'success',
       );
       this.loadAttendance(); // Refresh the list of attendees
     });

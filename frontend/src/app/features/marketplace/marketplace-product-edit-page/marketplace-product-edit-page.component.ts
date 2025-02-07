@@ -12,6 +12,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, forkJoin, map, of, switchMap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-marketplace-product-edit-page',
@@ -54,7 +56,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   formErrors: string | null = null;
   images: { file: File; preview: string }[] = [];
 
-  showImageUpload: boolean = true; 
+  showImageUpload: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -66,6 +68,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     private toastService: ToastService,
     private linkService: HateoasLinksService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -82,6 +85,15 @@ export class MarketplaceProductEditPageComponent implements OnInit {
         return;
       }
       this.product = product;
+
+      const title = this.translate.instant(
+        AppTitleKeys.MARKETPLACE_PRODUCT_EDIT_PAGE,
+        {
+          productName: this.product.name,
+        },
+      );
+      this.titleService.setTitle(title);
+
       this.populateForm(product);
     });
   }
@@ -128,7 +140,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.images.push({ file, preview: e.target.result });
-        this.clearImageError(); 
+        this.clearImageError();
       };
       reader.readAsDataURL(file);
     }
@@ -142,7 +154,7 @@ export class MarketplaceProductEditPageComponent implements OnInit {
 
   removeImage(index: number): void {
     this.images.splice(index, 1);
-    this.clearImageError(); 
+    this.clearImageError();
   }
 
   clearImageError(): void {

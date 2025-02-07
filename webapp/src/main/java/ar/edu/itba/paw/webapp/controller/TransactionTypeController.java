@@ -66,7 +66,7 @@ public class TransactionTypeController {
     @GET
     @Path("{" + PathParameter.TRANSACTION_TYPE_ID + "}")
     public Response findTransactionType(
-            @PathParam(PathParameter.TRANSACTION_TYPE_ID) Long transactionTypeId
+            @PathParam(PathParameter.TRANSACTION_TYPE_ID) long transactionTypeId
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 

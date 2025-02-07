@@ -8,7 +8,7 @@
             {{ post.channel }}
           </span>
           <span style="font-size: 12px; font-weight: normal" class="ms-1">
-            {{ "FEED-POST-CONTENT._POSTED_BY" | translate }}
+            {{ 'FEED-POST-CONTENT._POSTED_BY' | translate }}
             <img
               [src]="authorImageSafeUrl"
               class="small-profile-picture mb-1"
@@ -89,7 +89,7 @@
             formControlName="comment"
             class="cool-input grey-input textarea-min-max"
             rows="3"
-            placeholder="Add a comment"
+            [attr.placeholder]="'FEED-POST-CONTENT.ADD_A_COMMENT' | translate"
             (focus)="isFocused = true"
           ></textarea>
 
@@ -105,7 +105,7 @@
               class="cool-action-button rounded cancel-button p-2"
               (click)="onCancel()"
             >
-            {{ "FEED-POST-CONTENT.CANCEL" | translate }}
+              {{ 'FEED-POST-CONTENT.CANCEL' | translate }}
             </button>
 
             <button
@@ -113,7 +113,7 @@
               class="cool-action-button rounded comment-button ms-1"
               [disabled]="commentForm.invalid"
             >
-            {{ "FEED-POST-CONTENT.COMMENT" | translate }}
+              {{ 'FEED-POST-CONTENT.COMMENT' | translate }}
             </button>
           </div>
         </div>
@@ -126,7 +126,10 @@
         <div class="comment-header f-r-sb-c mb-2">
           <div class="f-r-s-c">
             <img
-              [src]="comment.user.image || 'assets/images/default-profile.png'"
+              [src]="
+                comment.user.image ||
+                environment.deployUrl + 'assets/images/default-profile.png'
+              "
               class="small-profile-picture"
               alt="profile_picture_img"
             />
@@ -143,7 +146,9 @@
     </div>
     <ng-template #noComments>
       <div class="cool-comment">
-        <div class="comment-body">{{ "FEED-POST-CONTENT.NO_COMMENTS" | translate }}</div>
+        <div class="comment-body">
+          {{ 'FEED-POST-CONTENT.NO_COMMENTS' | translate }}
+        </div>
       </div>
     </ng-template>
 

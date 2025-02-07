@@ -32,7 +32,7 @@
             [(ngModel)]="businessName"
             type="text"
             class="cool-input services-input"
-            placeholder="Business Name"
+            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.BUSINESS_NAME' | translate"
             required
           />
           <p
@@ -50,7 +50,7 @@
             [(ngModel)]="bio"
             type="text"
             class="cool-input services-input"
-            placeholder="Description"
+            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.DESCRIPTION' | translate"
             required
           />
           <p
@@ -68,7 +68,7 @@
             [(ngModel)]="phoneNumber"
             type="tel"
             class="cool-input services-input"
-            placeholder="Phone Number"
+            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.PHONE_NUMBER' | translate"
             required
           />
           <p
@@ -86,7 +86,7 @@
             [(ngModel)]="address"
             type="text"
             class="cool-input services-input"
-            placeholder="Address"
+            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.ADDRESS' | translate"
             required
           />
           <p

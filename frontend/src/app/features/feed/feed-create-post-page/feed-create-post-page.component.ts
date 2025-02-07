@@ -20,6 +20,8 @@ import {
 } from '@core/index';
 import { catchError, combineLatest, forkJoin, of, switchMap, take } from 'rxjs';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-create-post-page',
@@ -64,8 +66,8 @@ export class FeedCreatePostPageComponent implements OnInit {
     private route: ActivatedRoute,
     private userSessionService: UserSessionService,
     private toastService: ToastService,
-    private authService: AuthService,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
@@ -217,7 +219,7 @@ export class FeedCreatePostPageComponent implements OnInit {
 
     this.translate.get(key).subscribe(translated => {
       this.title = translated;
-      console.log(this.title);
+      this.titleService.setTitle(translated);
     });
   }
 

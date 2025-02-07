@@ -8,6 +8,9 @@ import {
   LinkKey,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-information-page',
@@ -35,17 +38,22 @@ export class InformationPageComponent implements OnInit {
     private resourceService: ResourceService,
     private contactService: ContactService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.INFORMATION_PAGE);
+    this.titleService.setTitle(title);
+
     this.resourcesUrl = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_RESOURCES
+      LinkKey.NEIGHBORHOOD_RESOURCES,
     );
     this.contactsUrl = this.linkService.getLink(LinkKey.NEIGHBORHOOD_CONTACTS);
 
     // Read initial page states from query parameters
-    this.route.queryParamMap.subscribe((params) => {
+    this.route.queryParamMap.subscribe(params => {
       const contactPageParam = params.get('contactsPage');
       const resourcePageParam = params.get('resourcesPage');
 
@@ -64,7 +72,7 @@ export class InformationPageComponent implements OnInit {
         page: this.contactCurrentPage,
         size: this.contactPageSize,
       })
-      .subscribe((result) => {
+      .subscribe(result => {
         this.contacts = result.contacts;
         this.contactTotalPages = result.totalPages;
         this.contactCurrentPage = result.currentPage;
@@ -77,7 +85,7 @@ export class InformationPageComponent implements OnInit {
         page: this.resourceCurrentPage,
         size: this.resourcePageSize,
       })
-      .subscribe((result) => {
+      .subscribe(result => {
         this.resources = result.resources;
         this.resourceTotalPages = result.totalPages;
         this.resourceCurrentPage = result.currentPage;

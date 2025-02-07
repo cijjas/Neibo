@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractDate;
-import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractOptionalDate;
+import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableDate;
 
 /*
  * # Summary
@@ -66,7 +66,7 @@ public class EventController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // Extract Date
-        Date extractedDate = extractOptionalDate(date);
+        Date extractedDate = extractNullableDate(date);
 
         // Content
         final List<Event> events = es.getEvents(neighborhoodId, extractedDate, page, size);
@@ -158,7 +158,7 @@ public class EventController {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final Event updatedEvent = es.updateEvent(neighborhoodId, eventId, updateForm.getName(), updateForm.getDescription(), extractOptionalDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
+        final Event updatedEvent = es.updateEvent(neighborhoodId, eventId, updateForm.getName(), updateForm.getDescription(), extractNullableDate(updateForm.getEventDate()), updateForm.getStartTime(), updateForm.getEndTime());
         String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
         return Response.ok(EventDto.fromEvent(updatedEvent, null, uriInfo))

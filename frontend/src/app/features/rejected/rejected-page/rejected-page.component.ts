@@ -12,6 +12,8 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-rejected-page',
@@ -30,23 +32,26 @@ export class RejectedPageComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private translate: TranslateService,
-    private userSessionService: UserSessionService
-  ) {
+    private userSessionService: UserSessionService,
+    private titleService: Title,
+  ) {}
+
+  ngOnInit(): void {
+    const title = this.translate.instant(AppTitleKeys.REJECTED_PAGE);
+    this.titleService.setTitle(title);
+
     this.neighborhoodForm = this.fb.group({
       neighborhood: [null, Validators.required],
     });
   }
 
-  ngOnInit(): void {
-  }
-
   fetchNeighborhoods = (page: number, size: number): Observable<any> => {
     return this.neighborhoodService.getNeighborhoods({ page, size }).pipe(
-      map((response) => ({
+      map(response => ({
         items: response.neighborhoods,
         currentPage: response.currentPage,
         totalPages: response.totalPages,
-      }))
+      })),
     );
   };
 
@@ -67,22 +72,22 @@ export class RejectedPageComponent implements OnInit {
           next: () => {
             this.userSessionService.updateUserProperty(
               'userRole',
-              Role.UNVERIFIED_NEIGHBOR
+              Role.UNVERIFIED_NEIGHBOR,
             );
             this.userSessionService.updateUserProperty(
               'userRoleEnum',
-              Role.UNVERIFIED_NEIGHBOR
+              Role.UNVERIFIED_NEIGHBOR,
             );
             this.userSessionService.updateUserProperty(
               'userRoleDisplay',
-              'Unverified'
+              'Unverified',
             );
 
             this.userSessionService.setUserRole(Role.UNVERIFIED_NEIGHBOR);
 
             this.toastService.showToast(
               this.translate.instant('REJECTED-PAGE.SUCCESSFULLY_REQUESTED'),
-              'success'
+              'success',
             );
 
             this.router.navigate(['/unverified']);
@@ -90,12 +95,15 @@ export class RejectedPageComponent implements OnInit {
           error: () => {
             this.toastService.showToast(
               this.translate.instant('REJECTED-PAGE.ERROR_REQUESTED'),
-              'error'
+              'error',
             );
           },
         });
     } else {
-      this.toastService.showToast(this.translate.instant('REJECTED-PAGE.PLEASE_SELECT_A_NEIGHBORHOOD'), 'error');
+      this.toastService.showToast(
+        this.translate.instant('REJECTED-PAGE.PLEASE_SELECT_A_NEIGHBORHOOD'),
+        'error',
+      );
     }
   }
 

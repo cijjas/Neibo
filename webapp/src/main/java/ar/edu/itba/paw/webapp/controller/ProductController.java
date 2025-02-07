@@ -63,9 +63,9 @@ public class ProductController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractOptionalFirstId(productParams.getUser());
-        Long departmentId = extractOptionalFirstId(productParams.getDepartment());
-        Long productStatusId = extractOptionalFirstId(productParams.getProductStatus());
+        Long userId = extractNullableFirstId(productParams.getUser());
+        Long departmentId = extractNullableFirstId(productParams.getDepartment());
+        Long productStatusId = extractNullableFirstId(productParams.getProductStatus());
 
         // Content
         final List<Product> products = ps.getProducts(productParams.getNeighborhoodId(), userId, departmentId, productStatusId, productParams.getPage(), productParams.getSize());
@@ -166,7 +166,7 @@ public class ProductController {
                 updateForm.getDescription(),
                 updateForm.getPrice(),
                 updateForm.getRemainingUnits(), updateForm.getUsed(),
-                extractOptionalFirstId(updateForm.getDepartment()),
+                extractNullableFirstId(updateForm.getDepartment()),
                 extractFirstIds(updateForm.getImages())
         );
         String productHashCode = String.valueOf(updatedProduct.hashCode());

@@ -57,15 +57,15 @@ public class AttendanceController {
     }
 
     @GET
-    @PreAuthorize("@accessControlHelper.canListAttendance(#attendanceParams.event, #attendanceParams.user)")
+    @PreAuthorize("@accessControlHelper.canListOrCountAttendance(#attendanceParams.event, #attendanceParams.user)")
     public Response listAttendance(
             @Valid @BeanParam AttendanceParams attendanceParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long eventId = extractOptionalSecondId(attendanceParams.getEvent());
-        Long userId = extractOptionalFirstId(attendanceParams.getUser());
+        Long eventId = extractNullableSecondId(attendanceParams.getEvent());
+        Long userId = extractNullableFirstId(attendanceParams.getUser());
 
         // Content
         final List<Attendance> attendance = as.getAttendance(attendanceParams.getNeighborhoodId(), eventId, userId, attendanceParams.getPage(), attendanceParams.getSize());
@@ -111,15 +111,15 @@ public class AttendanceController {
 
     @GET
     @Path(Endpoint.COUNT)
-    @PreAuthorize("@accessControlHelper.canCountAttendance(#attendanceParams.event, #attendanceParams.user)")
+    @PreAuthorize("@accessControlHelper.canListOrCountAttendance(#attendanceParams.event, #attendanceParams.user)")
     public Response countAttendance(
             @Valid @BeanParam AttendanceParams attendanceParams
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long eventId = extractOptionalSecondId(attendanceParams.getEvent());
-        Long userId = extractOptionalFirstId(attendanceParams.getUser());
+        Long eventId = extractNullableSecondId(attendanceParams.getEvent());
+        Long userId = extractNullableFirstId(attendanceParams.getUser());
 
         // Content
         int count = as.countAttendance(attendanceParams.getNeighborhoodId(), eventId, userId);
@@ -142,9 +142,9 @@ public class AttendanceController {
 
     @POST
     @Validated(CreateSequence.class)
-    @PreAuthorize("@accessControlHelper.canCreateAttendance(#createForm.event, #createForm.user)")
+    @PreAuthorize("@accessControlHelper.canCreateOrDeleteAttendance(#createForm.event, #createForm.user)")
     public Response createAttendance(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @NotNull AttendanceDto createForm
     ) {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
@@ -161,10 +161,10 @@ public class AttendanceController {
     }
 
     @DELETE
-    @PreAuthorize("@accessControlHelper.canDeleteAttendance(#attendanceParams.event, #attendanceParams.user)")
+    @PreAuthorize("@accessControlHelper.canCreateOrDeleteAttendance(#attendanceParams.event, #attendanceParams.user)")
     @Validated(DeleteSequence.class)
     public Response deleteAttendance(
-            @PathParam(PathParameter.NEIGHBORHOOD_ID) Long neighborhoodId,
+            @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @Valid @BeanParam AttendanceParams attendanceParams
     ) {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());

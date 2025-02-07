@@ -7,14 +7,12 @@ import {
   HostListener,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  HateoasLinksService,
-  ToastService,
-  UserSessionService,
-} from '@core/index';
+import { HateoasLinksService, ToastService } from '@core/index';
 import { AffiliationService, NeighborhoodService } from '@shared/index';
 import { Affiliation, LinkKey, Neighborhood } from '@shared/models';
 import { TranslateService } from '@ngx-translate/core';
+import { Title } from '@angular/platform-browser';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-neighborhoods',
@@ -30,14 +28,14 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
 
   isSelectOpen = false;
 
-  page = 1; 
-  size = 10; 
-  hasMore = true; 
-  isLoading = false; 
+  page = 1;
+  size = 10;
+  hasMore = true;
+  isLoading = false;
 
-  currentAssociatedPage = 1; 
-  totalAssociatedPages = 1; 
-  pageSize = 10; 
+  currentAssociatedPage = 1;
+  totalAssociatedPages = 1;
+  pageSize = 10;
 
   @ViewChild('selectBtn') selectBtnRef!: ElementRef;
   @ViewChild('listItems', { static: false })
@@ -52,12 +50,18 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     private route: ActivatedRoute,
     private router: Router,
     private translate: TranslateService,
+    private titleService: Title,
   ) {}
 
   ngOnInit(): void {
+    const title = this.translate.instant(
+      AppTitleKeys.SERVICE_PROVIDERS_JOIN_NEIGHBORHOODS_PAGE,
+    );
+    this.titleService.setTitle(title);
+
     this.route.queryParams.subscribe(params => {
-      this.currentAssociatedPage = +params['page'] || 1; 
-      this.pageSize = +params['size'] || 10; 
+      this.currentAssociatedPage = +params['page'] || 1;
+      this.pageSize = +params['size'] || 10;
       this.loadAssociatedNeighborhoods();
       this.loadOtherNeighborhoods(true);
     });
@@ -82,7 +86,7 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
         'scroll',
         this.onListScroll.bind(this),
       );
-      this.isListenerAttached = true; 
+      this.isListenerAttached = true;
     }
   }
 
@@ -96,8 +100,8 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     this.affiliationService.getAffiliations(queryParams).subscribe({
       next: response => {
         this.associatedNeighborhoods = response.affiliations;
-        this.totalAssociatedPages = response.totalPages || 1; 
-        this.updateQueryParams(); 
+        this.totalAssociatedPages = response.totalPages || 1;
+        this.updateQueryParams();
       },
       error: () => {
         this.toastService.showToast(
@@ -114,7 +118,7 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { page: this.currentAssociatedPage, size: this.pageSize },
-      queryParamsHandling: 'merge', 
+      queryParamsHandling: 'merge',
     });
   }
 
@@ -170,7 +174,7 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
   onListScroll(event: Event): void {
     const element = event.target as HTMLElement;
 
-    const threshold = 30; 
+    const threshold = 30;
     const position =
       element.scrollHeight - element.scrollTop - element.clientHeight;
 
@@ -214,7 +218,7 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
   }
 
   toggleItem(neighborhoodId: string, name: string, event: MouseEvent): void {
-    event.stopPropagation(); 
+    event.stopPropagation();
 
     if (this.selectedNeighborhoodIds.includes(neighborhoodId)) {
       this.selectedNeighborhoodIds = this.selectedNeighborhoodIds.filter(
@@ -244,8 +248,7 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
     }
   }
 
-  updateDisplayText(): void {
-  }
+  updateDisplayText(): void {}
 
   toggleSelect(): void {
     this.isSelectOpen = !this.isSelectOpen;
@@ -301,11 +304,10 @@ export class ServiceProvidersJoinNeighborhoodsPageComponent
           'scroll',
           this.onListScroll.bind(this),
         );
-        this.isListenerAttached = true; 
+        this.isListenerAttached = true;
       }
-    }, 0); 
+    }, 0);
   }
-
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {

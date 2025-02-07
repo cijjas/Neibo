@@ -45,7 +45,7 @@
           [(ngModel)]="reviewMessage"
           class="cool-input services-input textarea-min-max"
           rows="5"
-          placeholder="Your review..."
+          [attr.placeholder]="'SERVICE-PROVIDERS-REVIEW-DIALOG.YOUR_REVIEW' | translate"
           required
           minlength="10"
         ></textarea>

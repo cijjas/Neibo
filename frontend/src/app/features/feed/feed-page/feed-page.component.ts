@@ -1,9 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
-import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  finalize,
+  map,
+  tap,
+} from 'rxjs/operators';
 import { PostService, Post, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
+import { AppTitleKeys } from '@shared/constants/app-titles';
 
 @Component({
   selector: 'app-feed-page',
@@ -26,6 +35,8 @@ export class FeedPageComponent implements OnInit {
     private route: ActivatedRoute,
     private linkService: HateoasLinksService,
     private router: Router,
+    private titleService: Title,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -56,9 +67,40 @@ export class FeedPageComponent implements OnInit {
             prev.withStatus === curr.withStatus &&
             JSON.stringify(prev.withTag) === JSON.stringify(curr.withTag),
         ),
+        tap(feedParams => {
+          this.channel = feedParams.inChannel;
+          const channelTitleKey = this.getFriendlyChannelName(
+            feedParams.inChannel,
+          );
+          const title = this.translate.instant(channelTitleKey);
+          this.titleService.setTitle(title);
+        }),
         switchMap(feedParams => this.loadPosts(feedParams)),
       )
       .subscribe();
+  }
+
+  private getFriendlyChannelName(channelLink: string): string {
+    const announcementsChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_ANNOUNCEMENTS_CHANNEL,
+    );
+    const feedChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_FEED_CHANNEL,
+    );
+    const complaintsChannelUrl = this.linkService.getLink(
+      LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL,
+    );
+
+    switch (channelLink) {
+      case announcementsChannelUrl:
+        return AppTitleKeys.ANNOUNCEMENTS_PAGE;
+      case feedChannelUrl:
+        return AppTitleKeys.FEED_PAGE;
+      case complaintsChannelUrl:
+        return AppTitleKeys.COMPLAINTS_PAGE;
+      default:
+        return AppTitleKeys.FEED_PAGE;
+    }
   }
 
   loadPosts(feedParams: {
@@ -88,6 +130,9 @@ export class FeedPageComponent implements OnInit {
         this.totalPages = 0;
         this.loading = false;
         return of();
+      }),
+      finalize(() => {
+        this.loading = false;
       }),
     );
   }

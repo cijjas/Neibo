@@ -50,7 +50,7 @@ export const VALIDATION_CONFIG = {
 
   // function validators
   atLeastOneTagSelected,
-  imageValidator: imageSizeAndFormatValidator(2, [
+  imageValidator: imageSizeAndFormatValidator(10, [
     'image/jpeg',
     'image/png',
     'image/gif',
