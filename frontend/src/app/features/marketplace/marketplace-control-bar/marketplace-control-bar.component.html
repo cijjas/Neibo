@@ -47,7 +47,7 @@
             </li>
             <li *ngFor="let department of departmentList" [hidden]="department.name === 'NONE'">
               <a [routerLink]="['/marketplace']" [queryParams]="{ inDepartment: department.self }">
-                {{ ('MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + department.name) | translate }}
+                {{ ('MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + departmentName) | translate }}
               </a>
             </li>
           </ul>
