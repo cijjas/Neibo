@@ -740,7 +740,30 @@
     "BUYER_DASHBOARD": "Buyer Dashboard",
     "SELLER_DASHBOARD": "Seller Dashboard",
     "ALL": "All",
-    "SELL": "Sell"
+    "SELL": "Sell",
+    "DEPARTMENTS": {
+      "ELECTRONICS": "Electronics",
+      "APPLIANCES": "Appliances",
+      "HOME_FURNITURE": "Home Furniture",
+      "CLOTHING_FASHION": "Clothing & Fashion",
+      "HEALTH_BEAUTY": "Health & Beauty",
+      "SPORTS_OUTDOORS": "Sports & Outdoors",
+      "BOOKS_MEDIA": "Books & Media",
+      "TOYS_GAMES": "Toys & Games",
+      "JEWELRY_ACCESSORIES": "Jewelry & Accessories",
+      "AUTOMOTIVE": "Automotive",
+      "GROCERIES_FOOD": "Groceries & Food",
+      "PETS_SUPPLIES": "Pets & Supplies",
+      "HOME_IMPROVEMENT": "Home Improvement",
+      "GARDEN_OUTDOOR": "Garden & Outdoor",
+      "OFFICE_SUPPLIES": "Office Supplies",
+      "BABY_KIDS": "Baby & Kids",
+      "ARTS_CRAFTS": "Arts & Crafts",
+      "TRAVEL_LUGGAGE": "Travel & Luggage",
+      "MUSIC_INSTRUMENTS": "Music Instruments",
+      "TECHNOLOGY": "Technology",
+      "OTHER": "Other"
+    }
   },
   "MARKETPLACE-DASHBOARD-BUYER-PAGE": {
     "MY_REQUESTS": "My requests",

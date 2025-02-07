@@ -732,7 +732,30 @@
     "BUYER_DASHBOARD": "Panel del Comprador",
     "SELLER_DASHBOARD": "Panel del Vendedor",
     "ALL": "Todos",
-    "SELL": "Vender"
+    "SELL": "Vender",
+    "DEPARTMENTS": {
+      "ELECTRONICS": "Electrónica",
+      "APPLIANCES": "Electrodomésticos",
+      "HOME_FURNITURE": "Muebles para el hogar",
+      "CLOTHING_FASHION": "Ropa y moda",
+      "HEALTH_BEAUTY": "Salud y belleza",
+      "SPORTS_OUTDOORS": "Deportes y aire libre",
+      "BOOKS_MEDIA": "Libros y medios",
+      "TOYS_GAMES": "Juguetes y juegos",
+      "JEWELRY_ACCESSORIES": "Joyería y accesorios",
+      "AUTOMOTIVE": "Automoción",
+      "GROCERIES_FOOD": "Comestibles y alimentos",
+      "PETS_SUPPLIES": "Mascotas y suministros",
+      "HOME_IMPROVEMENT": "Mejoras para el hogar",
+      "GARDEN_OUTDOOR": "Jardín y exterior",
+      "OFFICE_SUPPLIES": "Útiles de oficina",
+      "BABY_KIDS": "Bebés y niños",
+      "ARTS_CRAFTS": "Artes y manualidades",
+      "TRAVEL_LUGGAGE": "Viajes y equipaje",
+      "MUSIC_INSTRUMENTS": "Instrumentos musicales",
+      "TECHNOLOGY": "Tecnología",
+      "OTHER": "Otro"
+    }
   },
   "MARKETPLACE-DASHBOARD-BUYER-PAGE": {
     "MY_REQUESTS": "Mis solicitudes",

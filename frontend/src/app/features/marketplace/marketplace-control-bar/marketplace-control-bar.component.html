@@ -35,21 +35,19 @@
       <div *ngIf="channel === 'Marketplace'">
         <div class="custom-dropdown">
           <div class="dropdown-toggle" id="department-toggle">
-            {{ departmentName === "NONE" ? ('MARKETPLACE-CONTROL-BAR.ALL' | translate) : departmentName }}
+            {{ departmentName === "NONE" 
+                ? ('MARKETPLACE-CONTROL-BAR.ALL' | translate) 
+                : (('MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + departmentName) | translate) }}
           </div>
           <ul class="dropdown-options">
             <li>
-              <a [routerLink]="['/marketplace']" [queryParams]="{}">{{ "MARKETPLACE-CONTROL-BAR.ALL" | translate }}</a>
+              <a [routerLink]="['/marketplace']" [queryParams]="{}">
+                {{ "MARKETPLACE-CONTROL-BAR.ALL" | translate }}
+              </a>
             </li>
-            <li
-              *ngFor="let department of departmentList"
-              [hidden]="department.name === 'NONE'"
-            >
-              <a
-                [routerLink]="['/marketplace']"
-                [queryParams]="{ inDepartment: department.self }"
-              >
-                {{ department.displayName }}
+            <li *ngFor="let department of departmentList" [hidden]="department.name === 'NONE'">
+              <a [routerLink]="['/marketplace']" [queryParams]="{ inDepartment: department.self }">
+                {{ ('MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + department.name) | translate }}
               </a>
             </li>
           </ul>
