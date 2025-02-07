@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.enums;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -19,13 +17,13 @@ public enum UserRole {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public static Optional<UserRole> fromId(long id) {
         return Arrays.stream(values())
                 .filter(us -> us.getId() == id)
                 .findFirst();
+    }
+
+    public int getId() {
+        return id;
     }
 }

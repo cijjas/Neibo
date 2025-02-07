@@ -7,11 +7,9 @@ import java.util.Optional;
 
 public interface RequestService {
 
-    Request createRequest(long userId, long productId, String message, int quantity);
+    Request createRequest(long neighborhoodId, long userId, long productId, String message, int quantity);
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    Optional<Request> findRequest(long requestId); // Used for Access Control
 
     Optional<Request> findRequest(long neighborhoodId, long requestId);
 

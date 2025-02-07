@@ -39,7 +39,7 @@ public class WorkerServiceImpl implements WorkerService {
         LOGGER.info("Creating Worker associated with User {}, business name {}, address {}, phone number {} and Professions {}", userId, businessName, address, phoneNumber, professionIds);
 
         Worker worker = workerDao.createWorker(userId, phoneNumber, address, businessName);
-        for (long id: professionIds) {
+        for (long id : professionIds) {
             professionWorkerDao.findSpecialization(userId, id).orElseGet(() -> professionWorkerDao.createSpecialization(userId, id));
         }
 

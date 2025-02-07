@@ -25,7 +25,6 @@ public class AmenityDaoImpl implements AmenityDao {
     @PersistenceContext
     private EntityManager em;
 
-
     // ---------------------------------------------- AMENITIES INSERT ---------------------------------------------------
 
     @Override
@@ -63,36 +62,24 @@ public class AmenityDaoImpl implements AmenityDao {
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Amenity with Neighborhood Id {}", neighborhoodId);
 
-        // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
-        // We retrieve a list of amenity ids which are Longs, from the Amenity Entity
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<Amenity> idRoot = idQuery.from(Amenity.class);
         idQuery.select(idRoot.get("amenityId"));
-        // We join through the neighborhoodId
         Join<Amenity, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
         idQuery.where(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
         idQuery.orderBy(cb.desc(idRoot.get("amenityId")));
-        // Create the query
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
-        // We implement pagination in the query
         idTypedQuery.setFirstResult((page - 1) * size);
         idTypedQuery.setMaxResults(size);
-        // Results
         List<Long> amenityIds = idTypedQuery.getResultList();
-        // Check if amenityIds is empty, better performance
         if (amenityIds.isEmpty())
             return Collections.emptyList();
-        // Second Query is also focused on Amenities
         CriteriaQuery<Amenity> dataQuery = cb.createQuery(Amenity.class);
         Root<Amenity> dataRoot = dataQuery.from(Amenity.class);
-        // Add predicate that enforces existence within the IDs recovered in the first query
         dataQuery.where(dataRoot.get("amenityId").in(amenityIds));
-        // Order by amenityId in the final query as well
         dataQuery.orderBy(cb.desc(dataRoot.get("amenityId")));
-        // Create!
         TypedQuery<Amenity> dataTypedQuery = em.createQuery(dataQuery);
-        // Return Results
         return dataTypedQuery.getResultList();
     }
 
@@ -103,9 +90,9 @@ public class AmenityDaoImpl implements AmenityDao {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Amenity> root = criteriaQuery.from(Amenity.class);
-        Join<Amenity, Neighborhood> neighborhoodJoin = root.join("neighborhood"); // Use the association
+        Join<Amenity, Neighborhood> neighborhoodJoin = root.join("neighborhood");
         criteriaQuery.select(cb.count(root));
-        criteriaQuery.where(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId)); // Filter by neighborhoodId
+        criteriaQuery.where(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
         TypedQuery<Long> query = em.createQuery(criteriaQuery);
         return query.getSingleResult().intValue();
     }

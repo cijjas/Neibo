@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,14 +37,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Attendance> findAttendance(long eventId, long userId) {
-        LOGGER.info("Finding Attendance for User {} and Event {}", userId, eventId);
-
-        return attendanceDao.findAttendance(eventId, userId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<Attendance> getAttendance(long neighborhoodId, Long eventId, Long userId, int page, int size) {
         LOGGER.info("Getting Attendance for Event {} and User {} in Neighborhood {}", eventId, userId, neighborhoodId);
 
@@ -55,7 +46,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional(readOnly = true)
     public int calculateAttendancePages(long neighborhoodId, Long eventId, Long userId, int size) {
-        LOGGER.info("Calculating Attendance Pages for Event {} and User {} in Neighborhood {}", eventId, userId,neighborhoodId);
+        LOGGER.info("Calculating Attendance Pages for Event {} and User {} in Neighborhood {}", eventId, userId, neighborhoodId);
 
         return PaginationUtils.calculatePages(attendanceDao.countAttendance(neighborhoodId, eventId, userId), size);
     }

@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
-import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
 import ar.edu.itba.paw.webapp.dto.queryForms.AffiliationParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
@@ -13,7 +12,6 @@ import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -113,7 +111,6 @@ public class AffiliationController {
 
     @POST
     @Validated(CreateSequence.class)
-    @Secured({UserRole.WORKER, UserRole.SUPER_ADMINISTRATOR})
     @PreAuthorize("@accessControlHelper.canCreateAffiliation(#createForm.neighborhood, #createForm.worker, #createForm.workerRole)")
     public Response createAffiliation(
             @Valid @NotNull AffiliationDto createForm

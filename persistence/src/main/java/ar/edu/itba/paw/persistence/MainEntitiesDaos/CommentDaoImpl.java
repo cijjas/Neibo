@@ -57,13 +57,6 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public Optional<Comment> findComment(long commentId) {
-        LOGGER.debug("Selecting Comment with Comment Id {}", commentId);
-
-        return Optional.ofNullable(em.find(Comment.class, commentId));
-    }
-
-    @Override
     public List<Comment> getComments(long neighborhoodId, long postId, int page, int size) {
         LOGGER.debug("Selecting Comments with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 

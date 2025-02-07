@@ -14,26 +14,22 @@ import javax.ws.rs.QueryParam;
 
 public class AttendanceParams {
 
+    @QueryParam(QueryParameter.PAGE)
+    @DefaultValue(Constant.DEFAULT_PAGE)
+    int page;
+    @QueryParam(QueryParameter.SIZE)
+    @DefaultValue(Constant.DEFAULT_SIZE)
+    int size;
     @PathParam(PathParameter.NEIGHBORHOOD_ID)
     private Long neighborhoodId;
-
     @QueryParam(QueryParameter.FOR_EVENT)
     @NotNull(groups = OnDelete.class)
     @Pattern(regexp = URIValidator.EVENT_URI_REGEX)
     private String event;
-
     @QueryParam(QueryParameter.FOR_USER)
     @NotNull(groups = OnDelete.class)
     @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
-
-    @QueryParam(QueryParameter.PAGE)
-    @DefaultValue(Constant.DEFAULT_PAGE)
-    int page;
-
-    @QueryParam(QueryParameter.SIZE)
-    @DefaultValue(Constant.DEFAULT_SIZE)
-    int size;
 
     public Long getNeighborhoodId() {
         return neighborhoodId;

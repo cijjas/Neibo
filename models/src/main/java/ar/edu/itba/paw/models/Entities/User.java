@@ -81,7 +81,7 @@ public class User {
     @JoinTable(name = "reviews", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> reviewsGiven;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL) //cambiar a seller y tmb en Product??
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<Product> productsSelling;
 
     @ManyToMany
@@ -300,23 +300,6 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", mail='" + mail + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", password='" + password + '\'' +
-                ", neighborhood=" + neighborhood +
-                ", darkMode=" + darkMode +
-                ", language=" + language +
-                ", role=" + role +
-                ", creationDate=" + creationDate +
-                ", identification=" + identification +
-                '}';
     }
 
     @Override

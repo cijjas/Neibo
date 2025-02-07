@@ -5,13 +5,11 @@ import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
-import ar.edu.itba.paw.webapp.controller.constants.UserRole;
 import ar.edu.itba.paw.webapp.dto.ProfessionDto;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -109,7 +107,6 @@ public class ProfessionController {
     }
 
     @POST
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     @Validated(CreateSequence.class)
     public Response createProfession(
             @Valid @NotNull ProfessionDto createForm
@@ -134,7 +131,6 @@ public class ProfessionController {
 
     @DELETE
     @Path("{" + PathParameter.PROFESSION_ID + "}")
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteProfession(
             @PathParam(PathParameter.PROFESSION_ID) long professionId
     ) {

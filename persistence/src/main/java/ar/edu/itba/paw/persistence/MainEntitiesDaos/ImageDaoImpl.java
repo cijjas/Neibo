@@ -33,7 +33,6 @@ public class ImageDaoImpl implements ImageDao {
         } catch (IOException e) {
             throw new UnexpectedException("An error occurred while storing the image");
         }
-
         Image img = new Image.Builder()
                 .image(imageBytes)
                 .build();
@@ -75,5 +74,4 @@ public class ImageDaoImpl implements ImageDao {
         }
         return buffer.toByteArray();
     }
-
 }

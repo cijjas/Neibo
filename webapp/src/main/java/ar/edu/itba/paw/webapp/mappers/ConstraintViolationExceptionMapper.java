@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.mappers;
 
 import ar.edu.itba.paw.models.ApiErrorDetails;
-import ar.edu.itba.paw.models.ErrorDetail;
-import org.springframework.http.HttpStatus;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -12,9 +9,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Provider
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {

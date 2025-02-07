@@ -2,7 +2,6 @@ package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.compositeKeys.AffiliationKey;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;

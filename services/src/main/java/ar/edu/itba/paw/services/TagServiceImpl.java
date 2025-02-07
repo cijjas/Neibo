@@ -41,10 +41,9 @@ public class TagServiceImpl implements TagService {
     public Tag createTag(long neighborhoodId, String tagName) {
         LOGGER.info("Creating Tag {} in Neighborhood {}", tagName, neighborhoodId);
 
-        // Find tag by name, if it doesn't exist create it
         Tag tag = tagDao.findTag(tagName).orElseGet(() -> tagDao.createTag(tagName));
 
-        if(!tagMappingDao.findTagMapping(neighborhoodId, tag.getTagId()).isPresent())
+        if (!tagMappingDao.findTagMapping(neighborhoodId, tag.getTagId()).isPresent())
             tagMappingDao.createTagMappingDao(neighborhoodId, tag.getTagId());
 
         return tag;
@@ -82,10 +81,8 @@ public class TagServiceImpl implements TagService {
     public boolean deleteTag(long neighborhoodId, long tagId) {
         LOGGER.info("Deleting Tag {} from Neighborhood {}", tagId, neighborhoodId);
 
-        // Delete Tag-Neighborhood association
         tagMappingDao.deleteTagMapping(neighborhoodId, tagId);
 
-        // Delete Tag-Posts associations
         int batchSize = 100;
         int totalPosts = postDao.countPosts(neighborhoodId, null, null, Collections.singletonList(tagId), null);
         int totalPages = PaginationUtils.calculatePages(totalPosts, batchSize);
@@ -97,7 +94,6 @@ public class TagServiceImpl implements TagService {
             }
         }
 
-        // If the tag was only being used by this Neighborhood, it can safely be deleted
         if (tagMappingDao.getTagMappings(null, tagId, 1, 1).isEmpty()) {
             return tagDao.deleteTag(tagId);
         }

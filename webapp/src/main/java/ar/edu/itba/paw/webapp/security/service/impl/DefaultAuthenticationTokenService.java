@@ -43,11 +43,6 @@ public class DefaultAuthenticationTokenService implements AuthenticationTokenSer
         return tokenIssuer.issueToken(authenticationTokenDetails);
     }
 
-    /*
-     * Improvements:
-     * - The information stored in the Refresh Token should be minimized, limiting only to userId ideally
-     * - The Refresh Token should be stored in the DB, this would allow for Refreshing Limit, and for Token Invalidation
-     * */
     @Override
     public String issueRefreshToken(String username, Set<Authority> authorities) {
         ZonedDateTime issuedDate = ZonedDateTime.now();

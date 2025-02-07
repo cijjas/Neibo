@@ -11,7 +11,6 @@ public class TestConstants {
     public static final int TEST_PAGE_SIZE = 1;
 
     public static final int INVALID_ID = -1;
-    public static final long INVALID_LONG_ID = -1L;
     public static final String INVALID_STRING_ID = "INVALID";
 
     public static final String USER_MAIL_1 = "usermail1@test.com";
@@ -36,7 +35,6 @@ public class TestConstants {
 
     public static final String DEPARTMENT_NAME_1 = "Best department";
     public static final String DEPARTMENT_NAME_2 = "Not the Best department";
-    public static final String DEPARTMENT_NAME_3 = "Maybe the worst department";
 
     public static final int NO_ELEMENTS = 0;
     public static final int ONE_ELEMENT = 1;
@@ -46,18 +44,16 @@ public class TestConstants {
     public static final int FIVE_ELEMENTS = 5;
     public static final int SIX_ELEMENTS = 6;
     public static final int SEVEN_ELEMENTS = 7;
-    public static final int EIGHT_ELEMENTS = 8;
     public static final int NINE_ELEMENTS = 9;
-    public static final int TEN_ELEMENTS = 10;
-    public static final int ELEVEN_ELEMENTS = 11;
     public static final int TWELVE_ELEMENTS = 12;
     public static final int THIRTEEN_ELEMENTS = 13;
     public static final int NINETEEN_ELEMENTS = 19;
 
     public static final Long EMPTY_FIELD = null;
     public static final Boolean EMPTY_BOOLEAN_FIELD = null;
-
-    private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    public static final Date NO_DATE = null;
+    public static final Integer NO_DAY_ID = null;
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
     public static Date DATE_1;
     public static Date DATE_2;
     public static Date DATE_3;
@@ -65,16 +61,13 @@ public class TestConstants {
 
     static {
         try {
-            DATE_1 = formatter.parse("2024-09-09");
-            DATE_2 = formatter.parse("2024-09-10");
-            DATE_3 = formatter.parse("2024-09-11");
-            DATE_4 = formatter.parse("2024-09-11");
+            DATE_1 = FORMATTER.parse("2024-09-09");
+            DATE_2 = FORMATTER.parse("2024-09-10");
+            DATE_3 = FORMATTER.parse("2024-09-11");
+            DATE_4 = FORMATTER.parse("2024-09-11");
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
-
-    public static final Date NO_DATE = null;
-    public static final Integer NO_DAY_ID = null;
 
 }

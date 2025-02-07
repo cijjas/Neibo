@@ -39,5 +39,4 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
 
         return Optional.ofNullable(em.find(Specialization.class, new SpecializationKey(workerId, professionId)));
     }
-
 }

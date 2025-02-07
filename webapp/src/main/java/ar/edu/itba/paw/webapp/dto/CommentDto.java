@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URIValidator;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;

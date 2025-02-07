@@ -8,7 +8,8 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.validation.URIValidator;
 import ar.edu.itba.paw.webapp.validation.constraints.EmailConstraint;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
+import ar.edu.itba.paw.webapp.validation.groups.Specific;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -103,12 +104,10 @@ public class UserDto {
             links.setUserImage(imageUri.build());
         }
 
-        // Worker Specific Links
         if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()) {
             links.setWorker(uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(String.valueOf(user.getUserId())).build());
         }
 
-        // Neighbor Specific Link
         if (!BaseNeighborhood.isABaseNeighborhood(neighborhoodIdLong)) {
             String purchaseTransactionTypeId = String.valueOf(TransactionType.PURCHASE.getId());
             String saleTransactionTypeId = String.valueOf(TransactionType.SALE.getId());

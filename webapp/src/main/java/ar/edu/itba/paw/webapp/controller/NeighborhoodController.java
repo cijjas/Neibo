@@ -2,14 +2,14 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.webapp.controller.constants.*;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.dto.queryForms.NeighborhoodParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -122,7 +122,6 @@ public class NeighborhoodController {
     }
 
     @POST
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     @Validated(CreateSequence.class)
     public Response createNeighborhood(
             @Valid @NotNull NeighborhoodDto createForm
@@ -147,7 +146,6 @@ public class NeighborhoodController {
 
     @DELETE
     @Path("{" + PathParameter.NEIGHBORHOOD_ID + "}")
-    @Secured(UserRole.SUPER_ADMINISTRATOR)
     public Response deleteNeighborhood(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId
     ) {

@@ -27,12 +27,4 @@ public class LinkEntry {
     public void setLink(String link) {
         this.link = link;
     }
-
-    @Override
-    public String toString() {
-        return "LinkEntry{" +
-                "linkName='" + content + '\'' +
-                ", link='" + link + '\'' +
-                '}';
-    }
 }

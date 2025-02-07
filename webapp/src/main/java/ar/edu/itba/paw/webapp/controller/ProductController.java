@@ -59,7 +59,7 @@ public class ProductController {
     @PreAuthorize("@accessControlHelper.canListProducts(#productParams.user, #productParams.department, #productParams.productStatus)")
     public Response listProducts(
             @Valid @BeanParam ProductParams productParams
-            ) {
+    ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
@@ -149,7 +149,7 @@ public class ProductController {
     @PATCH
     @Path("{" + PathParameter.PRODUCT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateProduct(#updateForm.user, #updateForm.department, #productId)")
+    @PreAuthorize("@accessControlHelper.canUpdateProduct(#updateForm.user, #updateForm.department, #neighborhoodId, #productId)")
     @Validated(UpdateSequence.class)
     public Response updateProduct(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -178,7 +178,7 @@ public class ProductController {
 
     @DELETE
     @Path("{" + PathParameter.PRODUCT_ID + "}")
-    @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
+    @PreAuthorize("@accessControlHelper.canDeleteProduct(#neighborhoodId, #productId)")
     public Response deleteProduct(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.PRODUCT_ID) long productId

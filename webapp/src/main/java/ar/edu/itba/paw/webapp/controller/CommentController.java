@@ -69,7 +69,7 @@ public class CommentController {
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
-        // Verify path
+        // Path Verification
         ps.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new);
 
         // Content

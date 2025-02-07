@@ -32,15 +32,6 @@ public class ChannelMapping implements Serializable {
         this.channel = channel;
     }
 
-    @Override
-    public String toString() {
-        return "ChannelMapping{" +
-                "id=" + id +
-                ", neighborhood=" + neighborhood +
-                ", channel=" + channel +
-                '}';
-    }
-
     public ChannelMappingKey getId() {
         return id;
     }

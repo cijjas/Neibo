@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.enums;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -16,13 +14,13 @@ public enum ProductStatus {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public static Optional<ProductStatus> fromId(long id) {
         return Arrays.stream(values())
                 .filter(ps -> ps.getId() == id)
                 .findFirst();
+    }
+
+    public int getId() {
+        return id;
     }
 }

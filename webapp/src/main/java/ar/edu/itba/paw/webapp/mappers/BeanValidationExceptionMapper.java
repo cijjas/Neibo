@@ -3,15 +3,12 @@ package ar.edu.itba.paw.webapp.mappers;
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import org.eclipse.persistence.exceptions.BeanValidationException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.util.stream.Collectors;
 
 @Provider
 public class BeanValidationExceptionMapper implements ExceptionMapper<BeanValidationException> {

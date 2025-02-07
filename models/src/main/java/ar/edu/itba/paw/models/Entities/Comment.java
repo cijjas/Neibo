@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -46,16 +44,16 @@ public class Comment {
         return commentId;
     }
 
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
+    }
+
     public String getComment() {
         return comment;
     }
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public void setCommentId(Long commentId) {
-        this.commentId = commentId;
     }
 
     public Date getDate() {
@@ -80,17 +78,6 @@ public class Comment {
 
     public void setPost(Post post) {
         this.post = post;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "commentId=" + commentId +
-                ", comment='" + comment + '\'' +
-                ", date=" + date +
-                ", user=" + user +
-                ", post=" + post +
-                '}';
     }
 
     @Override

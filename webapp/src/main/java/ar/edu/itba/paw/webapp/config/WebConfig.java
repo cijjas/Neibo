@@ -5,12 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -27,20 +25,15 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 @PropertySource("classpath:application.properties")
 @EnableWebMvc
@@ -109,24 +102,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         populator.addScript(schemaSql);
 
         return populator;
-    }
-
-    @Bean
-    public MessageSource messageSource() {
-        final ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
-
-        ms.setBasename("classpath:i18n/messages");
-        ms.setDefaultEncoding(StandardCharsets.UTF_8.name());
-        ms.setCacheSeconds((int) TimeUnit.SECONDS.toSeconds(5));
-
-        return ms;
-    }
-
-    @Bean
-    public LocaleResolver localeResolver() {
-        SessionLocaleResolver resolver = new SessionLocaleResolver();
-        resolver.setDefaultLocale(Locale.US);
-        return resolver;
     }
 
     //---------------------------------------------- EMAIL CONFIG ------------------------------------------------------

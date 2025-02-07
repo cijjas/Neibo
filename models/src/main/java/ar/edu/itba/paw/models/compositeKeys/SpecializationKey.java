@@ -10,6 +10,11 @@ public class SpecializationKey implements Serializable {
     public SpecializationKey() {
     }
 
+    public SpecializationKey(Long workerId, Long professionId) {
+        this.workerId = workerId;
+        this.professionId = professionId;
+    }
+
     public Long getWorkerId() {
         return workerId;
     }
@@ -23,11 +28,6 @@ public class SpecializationKey implements Serializable {
     }
 
     public void setProfessionId(Long professionId) {
-        this.professionId = professionId;
-    }
-
-    public SpecializationKey(Long workerId, Long professionId) {
-        this.workerId = workerId;
         this.professionId = professionId;
     }
 

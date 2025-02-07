@@ -31,15 +31,6 @@ public class TagMapping {
         this.tag = tag;
     }
 
-    @Override
-    public String toString() {
-        return "TagMapping{" +
-                "id=" + id +
-                ", neighborhood=" + neighborhood +
-                ", tag=" + tag +
-                '}';
-    }
-
     public TagMappingKey getId() {
         return id;
     }

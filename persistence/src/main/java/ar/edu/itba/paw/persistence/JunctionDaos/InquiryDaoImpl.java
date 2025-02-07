@@ -42,13 +42,6 @@ public class InquiryDaoImpl implements InquiryDao {
     // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
-    public Optional<Inquiry> findInquiry(long inquiryId) {
-        LOGGER.debug("Selecting Inquiry with Inquiry Id {}", inquiryId);
-
-        return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
-    }
-
-    @Override
     public Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId) {
         LOGGER.debug("Selecting Inquiry with Neighborhood Id {}, Product Id {} and Inquiry Id {}", neighborhoodId, productId, inquiryId);
 

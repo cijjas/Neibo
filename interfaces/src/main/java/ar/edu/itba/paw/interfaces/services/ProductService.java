@@ -11,8 +11,6 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Product> findProduct(long productId);
-
     Optional<Product> findProduct(long neighborhoodId, long productId);
 
     List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size);

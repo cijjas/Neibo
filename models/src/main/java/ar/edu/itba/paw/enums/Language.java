@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.enums;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -15,13 +13,13 @@ public enum Language {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public static Optional<Language> fromId(long id) {
         return Arrays.stream(values())
-                .filter(l-> l.getId() == id)
+                .filter(l -> l.getId() == id)
                 .findFirst();
+    }
+
+    public int getId() {
+        return id;
     }
 }

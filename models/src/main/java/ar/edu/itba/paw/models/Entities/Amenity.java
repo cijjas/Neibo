@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -82,17 +80,6 @@ public class Amenity {
     }
 
     @Override
-    public String toString() {
-        return "Amenity{" +
-                "amenityId=" + amenityId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", neighborhood=" + neighborhood +
-                ", availableShifts=" + availableShifts +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Builder)) return false;
@@ -104,7 +91,6 @@ public class Amenity {
     public int hashCode() {
         return Objects.hash(amenityId, name, description);
     }
-
 
     public static class Builder {
         private Long amenityId;

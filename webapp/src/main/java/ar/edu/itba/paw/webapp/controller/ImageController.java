@@ -48,7 +48,7 @@ public class ImageController {
     ) {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
-        // Retrieve Image
+        // Content
         Image image = is.findImage(imageId).orElseThrow(NotFoundException::new);
         String imageHashCode = String.valueOf(image.hashCode());
 
@@ -58,7 +58,6 @@ public class ImageController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Return image bytes directly
         return Response.ok((StreamingOutput) output -> output.write((image.getImage())), MediaType.APPLICATION_OCTET_STREAM)
                 .cacheControl(cacheControl)
                 .tag(imageHashCode)
@@ -78,7 +77,7 @@ public class ImageController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         try {
-            if (fileInputStream.available() > 10 * 1024 * 1024) { // 10 MB
+            if (fileInputStream.available() > 10 * 1024 * 1024) {
                 LOGGER.warn("Uploaded file exceeds 10 MB limit.");
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity("File size exceeds the 10 MB limit")

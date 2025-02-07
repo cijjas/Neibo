@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.enums.RequestStatus;
-import ar.edu.itba.paw.enums.UserRole;
 
 import javax.persistence.*;
 import java.io.Serializable;

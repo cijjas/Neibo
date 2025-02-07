@@ -8,7 +8,6 @@ import java.util.Collection;
 public class UserAuth extends User {
     private final long userId;
     private final long neighborhoodId;
-    // Add other fields as needed
 
     public UserAuth(String username, String password, Collection<? extends GrantedAuthority> authorities, long userId, long neighborhoodId) {
         super(username, password, authorities);

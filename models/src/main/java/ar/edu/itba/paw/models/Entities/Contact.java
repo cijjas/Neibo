@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -38,51 +36,44 @@ public class Contact {
         this.neighborhood = builder.neighborhood;
     }
 
+    public Long getContactId() {
+        return contactId;
+    }
 
     public void setContactId(Long contactId) {
         this.contactId = contactId;
-    }
-
-    public void setNeighborhood(Neighborhood neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
-
-    public Long getContactId() {
-        return contactId;
     }
 
     public String getContactName() {
         return contactName;
     }
 
-    public void setContactName(String contactName) { this.contactName = contactName; }
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
 
     public String getContactAddress() {
         return contactAddress;
     }
 
-    public void setContactAddress(String contactAddress) { this.contactAddress = contactAddress; }
+    public void setContactAddress(String contactAddress) {
+        this.contactAddress = contactAddress;
+    }
 
     public String getContactPhone() {
         return contactPhone;
     }
 
-    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
 
     public Neighborhood getNeighborhood() {
         return neighborhood;
     }
 
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "contactId=" + contactId +
-                ", contactName='" + contactName + '\'' +
-                ", contactAddress='" + contactAddress + '\'' +
-                ", contactPhone='" + contactPhone + '\'' +
-                ", neighborhood=" + neighborhood +
-                '}';
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
     }
 
     @Override
@@ -104,7 +95,6 @@ public class Contact {
         private String contactAddress;
         private String contactPhone;
         private Neighborhood neighborhood;
-        private Long version;
 
         public Builder contactId(Long contactId) {
             this.contactId = contactId;
@@ -128,11 +118,6 @@ public class Contact {
 
         public Builder neighborhood(Neighborhood neighborhood) {
             this.neighborhood = neighborhood;
-            return this;
-        }
-
-        public Builder version(Long version) {
-            this.version = version;
             return this;
         }
 
