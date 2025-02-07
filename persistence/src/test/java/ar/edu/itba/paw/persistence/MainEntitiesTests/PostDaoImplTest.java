@@ -103,39 +103,6 @@ public class PostDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_postId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey, chKey, iKey);
-
-        // Exercise
-        Optional<Post> optionalPost = postDaoImpl.findPost(pKey);
-
-        // Validations
-        assertTrue(optionalPost.isPresent());
-        assertEquals(pKey, optionalPost.get().getPostId().longValue());
-    }
-
-    @Test
-    public void find_postId_invalid_postId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey, chKey, iKey);
-
-        // Exercise
-        Optional<Post> optionalPost = postDaoImpl.findPost(INVALID_ID);
-
-        // Validations
-        assertFalse(optionalPost.isPresent());
-    }
-
-    @Test
     public void find_neighborhoodId_postId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

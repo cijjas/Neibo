@@ -37,14 +37,6 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findComment(long commentId) {
-        LOGGER.info("Finding Comment {}", commentId);
-
-        return commentDao.findComment(commentId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Comment> findComment(long neighborhoodId, long postId, long commentId) {
         LOGGER.info("Finding Comment {} in Post {} from Neighborhood {}", commentId, postId, neighborhoodId);
 

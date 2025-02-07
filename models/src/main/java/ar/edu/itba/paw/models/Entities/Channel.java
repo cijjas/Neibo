@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
@@ -48,12 +46,12 @@ public class Channel {
         return channelId;
     }
 
-    public String getChannel() {
-        return channel;
-    }
-
     public void setChannelId(Long channelId) {
         this.channelId = channelId;
+    }
+
+    public String getChannel() {
+        return channel;
     }
 
     public void setChannel(String channel) {
@@ -74,14 +72,6 @@ public class Channel {
 
     public void setNeighborhoods(Set<Neighborhood> neighborhoods) {
         this.neighborhoods = neighborhoods;
-    }
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                ", channel='" + channel + '\'' +
-                ", isBase=" + isBase +
-                '}';
     }
 
     @Override

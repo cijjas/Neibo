@@ -16,14 +16,6 @@ public class TagMappingKey implements Serializable {
         this.tagId = tagId;
     }
 
-    @Override
-    public String toString() {
-        return "TagMappingKey{" +
-                "neighborhoodId=" + neighborhoodId +
-                ", tagId=" + tagId +
-                '}';
-    }
-
     public Long getNeighborhoodId() {
         return neighborhoodId;
     }

@@ -36,11 +36,10 @@ public class InquiryServiceImpl implements InquiryService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Inquiry createInquiry(long userId, long productId, String message) {
+    public Inquiry createInquiry(long neighborhoodId, long userId, long productId, String message) {
         LOGGER.info("Creating Inquiry with message {} for Product {} from User {}", message, productId, userId);
 
-        // Send email to seller
-        Product product = productDao.findProduct(productId).orElseThrow(NotFoundException::new);
+        Product product = productDao.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
         User receiver = product.getSeller();
         emailService.sendInquiryMail(receiver, product, message, false);
 
@@ -51,20 +50,11 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Inquiry> findInquiry(long inquiryId) {
-        LOGGER.info("Finding Inquiry {}", inquiryId);
-
-        return inquiryDao.findInquiry(inquiryId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId) {
         LOGGER.info("Finding Inquiry {} for Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
 
         return inquiryDao.findInquiry(neighborhoodId, productId, inquiryId);
     }
-
 
     @Override
     @Transactional(readOnly = true)
@@ -88,7 +78,6 @@ public class InquiryServiceImpl implements InquiryService {
     public Inquiry replyInquiry(long neighborhoodId, long productId, long inquiryId, String reply) {
         LOGGER.info("Creating the reply {} for Inquiry {} made on Product {} from Neighborhood {}", reply, inquiryId, productId, neighborhoodId);
 
-        // Send email to inquirer
         Inquiry inquiry = inquiryDao.findInquiry(neighborhoodId, productId, inquiryId).orElseThrow(NotFoundException::new);
         inquiry.setReply(reply);
 

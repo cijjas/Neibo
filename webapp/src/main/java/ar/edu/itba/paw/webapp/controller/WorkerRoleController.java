@@ -82,7 +82,7 @@ public class WorkerRoleController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(workerRoleId).get(), uriInfo)) // Optional not empty, checked in authorization
+        return Response.ok(WorkerRoleDto.fromWorkerRole(workerRole, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(workerRoleHashCode)
                 .build();

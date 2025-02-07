@@ -2,7 +2,6 @@ package ar.edu.itba.paw.exceptions;
 
 import ar.edu.itba.paw.models.LinkEntry;
 
-import java.util.Map;
 import java.util.Set;
 
 public class InvalidEnumValueException extends RuntimeException {

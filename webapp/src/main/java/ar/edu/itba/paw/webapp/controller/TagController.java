@@ -2,7 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
-import ar.edu.itba.paw.webapp.controller.constants.*;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.dto.queryForms.TagParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;

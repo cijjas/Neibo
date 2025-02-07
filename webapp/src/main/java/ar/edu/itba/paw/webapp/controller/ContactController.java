@@ -2,14 +2,16 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
-import ar.edu.itba.paw.webapp.controller.constants.*;
+import ar.edu.itba.paw.webapp.controller.constants.Constant;
+import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
+import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
+import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
@@ -116,7 +118,6 @@ public class ContactController {
     }
 
     @POST
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(CreateSequence.class)
     public Response createContact(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -139,7 +140,6 @@ public class ContactController {
     @PATCH
     @Path("{" + PathParameter.CONTACT_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     @Validated(UpdateSequence.class)
     public Response updateContact(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -159,7 +159,6 @@ public class ContactController {
 
     @DELETE
     @Path("{" + PathParameter.CONTACT_ID + "}")
-    @Secured({UserRole.ADMINISTRATOR, UserRole.SUPER_ADMINISTRATOR})
     public Response deleteContact(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.CONTACT_ID) long contactId

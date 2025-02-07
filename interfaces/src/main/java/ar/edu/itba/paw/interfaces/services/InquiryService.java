@@ -7,11 +7,9 @@ import java.util.Optional;
 
 public interface InquiryService {
 
-    Inquiry createInquiry(long userId, long productId, String message);
+    Inquiry createInquiry(long neighborhoodId, long userId, long productId, String message);
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    Optional<Inquiry> findInquiry(long inquiryId); // Used for Access Control
 
     Optional<Inquiry> findInquiry(long neighborhoodId, long productId, long inquiryId);
 

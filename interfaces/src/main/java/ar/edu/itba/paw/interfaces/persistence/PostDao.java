@@ -15,8 +15,6 @@ public interface PostDao {
 
     Optional<Post> findPost(long neighborhoodId, long postId);
 
-    Optional<Post> findPost(long postId);
-
     List<Post> getPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int page, int size);
 
     int countPosts(long neighborhoodId, Long userId, Long channelId, List<Long> tags, Long postStatusId);

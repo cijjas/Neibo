@@ -20,7 +20,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Optional;
-import java.util.OptionalLong;
 
 import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;

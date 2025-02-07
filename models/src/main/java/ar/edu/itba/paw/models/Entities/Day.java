@@ -25,22 +25,12 @@ public class Day {
         this.dayName = builder.dayName;
     }
 
-    // Getter methods
-
     public Long getDayId() {
         return dayId;
     }
 
     public String getDayName() {
         return dayName;
-    }
-
-    @Override
-    public String toString() {
-        return "Day{" +
-                "dayId=" + dayId +
-                ", dayName='" + dayName + '\'' +
-                '}';
     }
 
     public Set<Shift> getShifts() {

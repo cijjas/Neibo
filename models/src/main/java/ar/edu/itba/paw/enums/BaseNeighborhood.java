@@ -13,13 +13,13 @@ public enum BaseNeighborhood {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public static boolean isABaseNeighborhood(long id) {
         return Arrays.stream(BaseNeighborhood.values())
                 .anyMatch(neighborhood -> neighborhood.getId() == id);
+    }
+
+    public int getId() {
+        return id;
     }
 }
 

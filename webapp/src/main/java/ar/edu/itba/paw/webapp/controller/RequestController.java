@@ -141,7 +141,7 @@ public class RequestController {
 
     @GET
     @Path("{" + PathParameter.REQUEST_ID + "}")
-    @PreAuthorize("@accessControlHelper.canFindRequest(#requestId)")
+    @PreAuthorize("@accessControlHelper.canFindRequest(#neighborhoodId, #requestId)")
     public Response findRequest(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.REQUEST_ID) long requestId
@@ -174,7 +174,7 @@ public class RequestController {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
-        final Request request = rs.createRequest(extractFirstId(createForm.getUser()), extractSecondId(createForm.getProduct()), createForm.getMessage(), createForm.getUnitsRequested());
+        final Request request = rs.createRequest(neighborhoodId, extractFirstId(createForm.getUser()), extractSecondId(createForm.getProduct()), createForm.getMessage(), createForm.getUnitsRequested());
         String requestHashCode = String.valueOf(request.hashCode());
 
         // Resource URI
@@ -188,7 +188,7 @@ public class RequestController {
     @PATCH
     @Path("{" + PathParameter.REQUEST_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateRequest(#updateForm.user, #updateForm.product, #updateForm.requestStatus, #requestId)")
+    @PreAuthorize("@accessControlHelper.canUpdateRequest(#updateForm.user, #updateForm.product, #updateForm.requestStatus, #neighborhoodId, #requestId)")
     @Validated(UpdateSequence.class)
     public Response updateRequest(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -208,7 +208,7 @@ public class RequestController {
 
     @DELETE
     @Path("{" + PathParameter.REQUEST_ID + "}")
-    @PreAuthorize("@accessControlHelper.canDeleteRequest(#requestId)")
+    @PreAuthorize("@accessControlHelper.canDeleteRequest(#neighborhoodId, #requestId)")
     public Response deleteRequest(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.REQUEST_ID) long requestId

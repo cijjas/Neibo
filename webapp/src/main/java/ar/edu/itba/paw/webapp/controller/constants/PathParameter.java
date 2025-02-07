@@ -29,4 +29,7 @@ public class PathParameter {
     public static final String WORKER_ID = "workerId";
     public static final String WORKER_ROLE_ID = "workerRoleId";
     public static final String WORKER_STATUS_ID = "workerStatusId";
+
+    private PathParameter() {
+    }
 }

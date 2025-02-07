@@ -22,10 +22,6 @@ import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
 @Repository
 public class PostDaoImpl implements PostDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
-
-    @PersistenceContext
-    private EntityManager em;
-
     private final String FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
             "SELECT DISTINCT p.*, channel, u.* " +
                     "FROM posts p  " +
@@ -35,7 +31,6 @@ public class PostDaoImpl implements PostDao {
                     "LEFT JOIN tags t ON pt.tagid = t.tagid " +
                     "LEFT JOIN comments cm ON p.postid = cm.postid " +
                     "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
-
     private final String COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
             "SELECT COUNT(DISTINCT p.postid) " +
                     "FROM posts p  " +
@@ -45,6 +40,8 @@ public class PostDaoImpl implements PostDao {
                     "LEFT JOIN tags t ON pt.tagid = t.tagid " +
                     "LEFT JOIN comments cm ON p.postid = cm.postid " +
                     "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
+    @PersistenceContext
+    private EntityManager em;
 
     // ------------------------------------------------ POSTS INSERT ---------------------------------------------------
 
@@ -79,13 +76,6 @@ public class PostDaoImpl implements PostDao {
 
         List<Post> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
-    }
-
-    @Override
-    public Optional<Post> findPost(long postId) {
-        LOGGER.debug("Selecting Post with Post Id {}", postId);
-
-        return Optional.ofNullable(em.find(Post.class, postId));
     }
 
     @Override
@@ -129,7 +119,6 @@ public class PostDaoImpl implements PostDao {
     public boolean deletePost(long neighborhoodId, long postId) {
         LOGGER.debug("Deleting Post with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
-        // Execute native query
         int rowsAffected = em.createNativeQuery(
                         "DELETE FROM posts " +
                                 "WHERE postid = :postId " +

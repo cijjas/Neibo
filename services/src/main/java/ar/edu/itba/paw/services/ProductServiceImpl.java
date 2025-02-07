@@ -49,14 +49,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Product> findProduct(long productId) {
-        LOGGER.info("Finding Product {}", productId);
-
-        return productDao.findProduct(productId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public Optional<Product> findProduct(long neighborhoodId, long productId) {
         LOGGER.info("Finding Product {} from Neighborhood {}", productId, neighborhoodId);
 

@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
-import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.User;
@@ -67,13 +66,6 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Optional<Product> findProduct(long productId) {
-        LOGGER.debug("Selecting Product with Product Id {}", productId);
-
-        return Optional.ofNullable(em.find(Product.class, productId));
-    }
-
-    @Override
     public List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size) {
         LOGGER.debug("Selecting Products with Neighborhood Id {}, User Id {}, Department Id {} and Product Status Id {}", neighborhoodId, userId, departmentId, productStatusId);
 
@@ -87,14 +79,13 @@ public class ProductDaoImpl implements ProductDao {
 
         if (userId != null) {
             if (productStatusId == null) {
-                // Was bought by a user with this ID (is the userId in the request) or is being sold by a user with this ID (is the sellerId in product)
                 nativeQuery.append("AND (p.productid IN (" +
                         "SELECT DISTINCT r.productid FROM products_users_requests r " +
                         "WHERE r.userid = :userId ) " +
                         "OR " +
                         "p.sellerid = :userId ) ");
             } else {
-                switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty optional
+                switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty Optional
                     case BOUGHT:
                         nativeQuery.append("AND (p.productId IN (" +
                                 "SELECT DISTINCT r.productid FROM products_users_requests r " +
@@ -111,7 +102,7 @@ public class ProductDaoImpl implements ProductDao {
                 }
             }
         } else if (productStatusId != null) {
-            switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty optional
+            switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty Optional
                 case BOUGHT:
                 case SOLD:
                     nativeQuery.append("AND (p.productId IN (" +
@@ -158,14 +149,13 @@ public class ProductDaoImpl implements ProductDao {
 
         if (userId != null) {
             if (productStatusId == null) {
-                // Was bought by a user with this ID (is the userId in the request) or is being sold by a user with this ID (is the sellerId in product)
                 nativeQuery.append("AND (p.productid IN (" +
                         "SELECT DISTINCT r.productid FROM products_users_requests r " +
                         "WHERE r.userid = :userId ) " +
                         "OR " +
                         "p.sellerid = :userId ) ");
             } else {
-                switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty optional
+                switch (ProductStatus.fromId(productStatusId).get()) {
                     case BOUGHT:
                         nativeQuery.append("AND (p.productId IN (" +
                                 "SELECT DISTINCT r.productid FROM products_users_requests r " +
@@ -182,7 +172,7 @@ public class ProductDaoImpl implements ProductDao {
                 }
             }
         } else if (productStatusId != null) {
-            switch (ProductStatus.fromId(productStatusId).get()) { // Controller layer guarantees non-empty Optional
+            switch (ProductStatus.fromId(productStatusId).get()) {
                 case BOUGHT:
                 case SOLD:
                     nativeQuery.append("AND (p.productId IN (" +
@@ -217,11 +207,11 @@ public class ProductDaoImpl implements ProductDao {
         LOGGER.debug("Deleting Product with Neighborhood Id {} and Product Id {}", neighborhoodId, productId);
 
         int deletedCount = em.createNativeQuery(
-            "DELETE FROM products p WHERE p.productId = :productId AND p.sellerId IN (SELECT u.userId FROM users u WHERE u.neighborhoodId = :neighborhoodId)"
-            )
-            .setParameter("productId", productId)
-            .setParameter("neighborhoodId", neighborhoodId)
-            .executeUpdate();
+                        "DELETE FROM products p WHERE p.productId = :productId AND p.sellerId IN (SELECT u.userId FROM users u WHERE u.neighborhoodId = :neighborhoodId)"
+                )
+                .setParameter("productId", productId)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .executeUpdate();
 
         return deletedCount > 0;
     }

@@ -43,9 +43,4 @@ public class AttendanceKey implements Serializable {
     public void setEventId(Long eventId) {
         this.eventId = eventId;
     }
-
-    @Override
-    public String toString() {
-        return userId.toString() + eventId.toString();
-    }
 }

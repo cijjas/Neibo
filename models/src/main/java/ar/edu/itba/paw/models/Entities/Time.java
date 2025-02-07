@@ -38,11 +38,6 @@ public class Time {
         return timeInterval;
     }
 
-    @Override
-    public String toString() {
-        return timeInterval.toString();
-    }
-
     public Time plusHours(int hours) {
         return new Time.Builder()
                 .timeId(this.timeId)

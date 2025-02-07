@@ -96,40 +96,6 @@ public class ProductDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_productId_valid() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
-
-        // Exercise
-        Optional<Product> optionalProduct = productDaoImpl.findProduct(pKey);
-
-        // Validations & Post Conditions
-        assertTrue(optionalProduct.isPresent());
-        assertEquals(pKey, optionalProduct.get().getProductId().longValue());
-
-    }
-
-    @Test
-    public void find_productId_invalid_productId() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
-
-        // Exercise
-        Optional<Product> optionalProduct = productDaoImpl.findProduct(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalProduct.isPresent());
-    }
-
-    @Test
     public void find_neighborhoodId_productId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();

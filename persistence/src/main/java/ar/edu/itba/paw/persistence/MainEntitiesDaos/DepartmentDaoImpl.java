@@ -45,7 +45,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     public List<Department> getDepartments() {
         LOGGER.debug("Selecting Departments");
 
-        String query = "SELECT d FROM Department d"; // JPQL query
+        String query = "SELECT d FROM Department d";
         return em.createQuery(query, Department.class).getResultList();
     }
 

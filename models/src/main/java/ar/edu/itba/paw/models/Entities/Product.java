@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -50,7 +48,6 @@ public class Product {
     @JoinColumn(name = "departmentId", referencedColumnName = "departmentId")
     private Department department;
 
-    //junction tables:
     @ManyToMany
     @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> inquirers;
@@ -207,20 +204,6 @@ public class Product {
     }
 
     @Override
-    public String toString() {
-        return "Product{" +
-                "productId=" + productId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", used=" + used +
-                ", remainingUnits=" + remainingUnits +
-                ", department=" + department +
-                ", creationDate=" + creationDate +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Product)) return false;
@@ -245,8 +228,6 @@ public class Product {
         private Image secondaryPicture;
         private Image tertiaryPicture;
         private Department department;
-        private Set<User> inquirers;
-        private Set<User> requesters;
         private Date creationDate;
 
         public Builder productId(Long productId) {
@@ -304,31 +285,13 @@ public class Product {
             return this;
         }
 
-        public Builder inquirers(Set<User> inquirers) {
-            this.inquirers = inquirers;
-            return this;
-        }
-
-        public Builder requesters(Set<User> requesters) {
-            this.requesters = requesters;
-            return this;
-        }
-
         public Builder creationDate(Date creationDate) {
             this.creationDate = creationDate;
             return this;
         }
 
         public Product build() {
-            Product product = new Product(this);
-            // Initialize inquirers and requesters if not set
-            if (inquirers != null) {
-                product.setInquirers(inquirers);
-            }
-            if (requesters != null) {
-                product.setRequesters(requesters);
-            }
-            return product;
+            return new Product(this);
         }
     }
 }

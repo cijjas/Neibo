@@ -7,4 +7,7 @@ public class UserRole {
     public static final String REJECTED = "ROLE_REJECTED";
     public static final String WORKER = "ROLE_WORKER";
     public static final String SUPER_ADMINISTRATOR = "ROLE_SUPER_ADMINISTRATOR";
+
+    private UserRole() {
+    }
 }

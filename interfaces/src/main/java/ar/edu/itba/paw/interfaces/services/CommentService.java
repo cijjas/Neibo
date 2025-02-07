@@ -11,8 +11,6 @@ public interface CommentService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Comment> findComment(long commentId); // Used for Access Control
-
     Optional<Comment> findComment(long neighborhoodId, long postId, long commentId);
 
     List<Comment> getComments(long neighborhoodId, long postId, int size, int page);

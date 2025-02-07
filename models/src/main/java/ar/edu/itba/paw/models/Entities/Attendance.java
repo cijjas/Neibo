@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -37,8 +36,6 @@ public class Attendance implements Serializable {
         return id;
     }
 
-
-
     public void setId(AttendanceKey id) {
         this.id = id;
     }
@@ -71,6 +68,4 @@ public class Attendance implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-
 }

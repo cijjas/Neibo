@@ -19,7 +19,7 @@ class DaoUtils {
             appendTagsCondition(query, queryParams, tags);
 
         if (postStatusId != null) {
-            switch (PostStatus.fromId(postStatusId).get()) { // Controller layer guarantees optional not empty if not null
+            switch (PostStatus.fromId(postStatusId).get()) { // Controller layer guarantees non-empty Optional
                 case HOT:
                     appendHotClause(query);
                     break;
@@ -59,7 +59,7 @@ class DaoUtils {
         appendLongParams(query, queryParams, tagIds);
 
         query.append(")");
-        query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
+        query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)");
         queryParams.add(tagIds.size());
     }
 

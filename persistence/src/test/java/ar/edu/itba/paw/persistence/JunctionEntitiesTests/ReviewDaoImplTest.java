@@ -276,8 +276,8 @@ public class ReviewDaoImplTest {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey); // Reviewer
-        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey); // Reviewer
+        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey);
+        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
@@ -296,8 +296,8 @@ public class ReviewDaoImplTest {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey); // Reviewer
-        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey); // Reviewer
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
@@ -316,9 +316,9 @@ public class ReviewDaoImplTest {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey); // Reviewer
-        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey); // Reviewer
-        long uKey4 = testInserter.createUser(TestConstants.USER_MAIL_4, nhKey); // Reviewer
+        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey);
+        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey);
+        long uKey4 = testInserter.createUser(TestConstants.USER_MAIL_4, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);

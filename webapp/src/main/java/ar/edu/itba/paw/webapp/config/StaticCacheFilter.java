@@ -14,7 +14,7 @@ public class StaticCacheFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        response.setHeader("Cache-Control", "public, max-age="+ MAX_TIME +", immutable");
+        response.setHeader("Cache-Control", "public, max-age=" + MAX_TIME + ", immutable");
         chain.doFilter(request, response);
     }
 }

@@ -19,10 +19,6 @@ import java.util.Optional;
 @Repository
 public class BookingDaoImpl implements BookingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingDaoImpl.class);
-
-    @PersistenceContext
-    private EntityManager em;
-
     private final String BOOKINGS_JOIN_AVAILABILITY =
             "SELECT uav.*, bookingid, date, a.amenityid, s.shiftid, userid, a.name, d.dayid, t.timeid, timeinterval\n" +
                     "FROM users_availability uav\n" +
@@ -31,6 +27,9 @@ public class BookingDaoImpl implements BookingDao {
                     "INNER JOIN shifts s ON s.shiftid = asa.shiftid\n" +
                     "INNER JOIN days d ON s.dayid = d.dayid\n" +
                     "INNER JOIN times t ON s.starttime = t.timeid";
+    @PersistenceContext
+    private EntityManager em;
+
     // --------------------------------------------- BOOKINGS INSERT ---------------------------------------------------
 
     @Override
@@ -126,7 +125,6 @@ public class BookingDaoImpl implements BookingDao {
             countQuery.append(" AND asa.amenityid = :amenityId");
         }
 
-        // Filter by neighborhoodId
         countQuery.append(" AND a.neighborhoodid = :neighborhoodId");
 
         countQuery.append(") SELECT * FROM CountCTE");

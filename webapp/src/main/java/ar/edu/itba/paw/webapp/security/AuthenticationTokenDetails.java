@@ -55,9 +55,6 @@ public final class AuthenticationTokenDetails {
         this.tokenType = tokenType;
     }
 
-    /**
-     * Builder for the {@link AuthenticationTokenDetails}.
-     */
     public static class Builder {
 
         private String id;

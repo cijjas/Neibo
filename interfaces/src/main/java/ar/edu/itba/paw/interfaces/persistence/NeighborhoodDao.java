@@ -15,8 +15,6 @@ public interface NeighborhoodDao {
 
     Optional<Neighborhood> findNeighborhood(long neighborhoodId);
 
-    Optional<Neighborhood> findNeighborhood(String name);
-
     List<Neighborhood> getNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int page, int size);
 
     List<Long> getNeighborhoodIds();

@@ -33,7 +33,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
         Worker worker = em.find(Worker.class, workerId);
         Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
-        WorkerRole workerRole = WorkerRole.fromId(workerRoleId).get(); // Optional not empty, checked in authorization
+        WorkerRole workerRole = WorkerRole.fromId(workerRoleId).get(); // Controller layer guarantees non-empty Optional
 
         Affiliation affiliation = new Affiliation(worker, neighborhood, workerRole, new Date(System.currentTimeMillis()));
 
@@ -82,7 +82,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
 
         if (!ids.isEmpty()) {
             TypedQuery<Affiliation> affiliationQuery = em.createQuery(
-                    "SELECT a FROM Affiliation a WHERE a.id IN :ids ORDER BY a.requestDate ASC", Affiliation.class); // Order by requestDate
+                    "SELECT a FROM Affiliation a WHERE a.id IN :ids ORDER BY a.requestDate ASC", Affiliation.class);
             affiliationQuery.setParameter("ids", ids);
             return affiliationQuery.getResultList();
         }

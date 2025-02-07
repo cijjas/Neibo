@@ -63,33 +63,20 @@ public class EventDaoImpl implements EventDao {
     public List<Event> getEvents(long neighborhoodId, Date date, int page, int size) {
         LOGGER.debug("Selecting Events with Neighborhood Id {} on date {}", neighborhoodId, date);
 
-        // Build the JPQL query for fetching event IDs
         StringBuilder jpqlBuilder = new StringBuilder("SELECT e.eventId FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
-
         if (date != null) {
             jpqlBuilder.append(" AND e.date = :date");
         }
-
-        // Append the ORDER BY clause
         jpqlBuilder.append(" ORDER BY e.date, e.startTime, e.eventId");
-
-        // Create the query
         TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
-
-        // Set the parameters
         if (date != null) {
             query.setParameter("date", date);
         }
-
         query.setParameter("neighborhoodId", neighborhoodId);
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
-
-        // Get the list of event IDs
         List<Long> eventIds = query.getResultList();
-
         if (!eventIds.isEmpty()) {
-            // Build the JPQL query for fetching events
             TypedQuery<Event> eventQuery = em.createQuery(
                     "SELECT e FROM Event e WHERE e.eventId IN :eventIds ORDER BY e.date, e.startTime, e.eventId", Event.class);
             eventQuery.setParameter("eventIds", eventIds);
@@ -105,17 +92,13 @@ public class EventDaoImpl implements EventDao {
         LOGGER.debug("Counting Events with Neighborhood Id {} on date {}", neighborhoodId, date);
 
         StringBuilder jpqlBuilder = new StringBuilder("SELECT DISTINCT COUNT(e.eventId) FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
-
         if (date != null) {
             jpqlBuilder.append(" AND e.date = :date");
         }
-
         TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
-
         if (date != null) {
             query.setParameter("date", date);
         }
-
         query.setParameter("neighborhoodId", neighborhoodId);
 
         return query.getSingleResult().intValue();

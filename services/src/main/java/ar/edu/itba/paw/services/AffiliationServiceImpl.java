@@ -21,7 +21,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     private final AffiliationDao affiliationDao;
 
     @Autowired
-    public AffiliationServiceImpl(AffiliationDao affiliationDao){
+    public AffiliationServiceImpl(AffiliationDao affiliationDao) {
         this.affiliationDao = affiliationDao;
     }
 

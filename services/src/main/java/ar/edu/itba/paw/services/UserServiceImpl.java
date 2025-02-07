@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
@@ -59,14 +60,12 @@ public class UserServiceImpl implements UserService {
         if (!n.isPresent()) {
             User createdUser = userDao.createUser(neighborhoodId, mail, name, surname, passwordEncoder.encode(password), identification, language, false, userRole);
 
-            // If user created is a neighbor (not worker), send admin email notifying new neighbor
-            if (neighborhoodId != 0) {
+            if (neighborhoodId != BaseNeighborhood.WORKERS.getId()) {
                 emailService.sendNewUserMail(neighborhoodId, name, UserRole.NEIGHBOR);
             }
             return createdUser;
         } else if (n.get().getPassword() == null) {
             User earlyAccessUser = n.get();
-            // n is a user from an early version where signing up was not a requirement
             earlyAccessUser.setPassword(passwordEncoder.encode(password));
             earlyAccessUser.setLanguage(language);
             earlyAccessUser.setRole(userRole);
@@ -75,8 +74,6 @@ public class UserServiceImpl implements UserService {
             earlyAccessUser.setName(name);
             earlyAccessUser.setSurname(surname);
         }
-
-        // Case where a User already exists with this email
 
         return n.get();
     }
@@ -123,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userDao.findUser(userId).orElseThrow(NotFoundException::new);
 
-        if (neighborhoodId != null){
+        if (neighborhoodId != null) {
             Neighborhood n = neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
             user.setNeighborhood(n);
         }

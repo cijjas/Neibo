@@ -209,41 +209,6 @@ public class CommentDaoImplTest {
         assertFalse(optionalComment.isPresent());
     }
 
-    @Test
-    public void find_commentId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey, chKey, iKey);
-        long cKey = testInserter.createComment(uKey, pKey);
-
-        // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey);
-
-        // Validations & Post Conditions
-        assertTrue(optionalComment.isPresent());
-        assertEquals(cKey, optionalComment.get().getCommentId().longValue());
-    }
-
-    @Test
-    public void find_commentId_invalid_commentId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey, chKey, iKey);
-        long cKey = testInserter.createComment(uKey, pKey);
-
-        // Exercise
-        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalComment.isPresent());
-    }
-
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test

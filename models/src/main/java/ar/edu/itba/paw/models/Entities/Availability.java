@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -46,20 +44,20 @@ public class Availability {
         return amenityAvailabilityId;
     }
 
-    public Amenity getAmenity() {
-        return amenity;
-    }
-
-    public Shift getShift() {
-        return shift;
-    }
-
     public void setAmenityAvailabilityId(Long amenityAvailabilityId) {
         this.amenityAvailabilityId = amenityAvailabilityId;
     }
 
+    public Amenity getAmenity() {
+        return amenity;
+    }
+
     public void setAmenity(Amenity amenity) {
         this.amenity = amenity;
+    }
+
+    public Shift getShift() {
+        return shift;
     }
 
     public void setShift(Shift shift) {
@@ -76,15 +74,6 @@ public class Availability {
 
     public Set<User> getBookedByUsers() {
         return bookedByUsers;
-    }
-
-    @Override
-    public String toString() {
-        return "Availability{" +
-                "amenityAvailabilityId=" + amenityAvailabilityId +
-                ", amenity=" + amenity +
-                ", shift=" + shift +
-                '}';
     }
 
     public static class Builder {

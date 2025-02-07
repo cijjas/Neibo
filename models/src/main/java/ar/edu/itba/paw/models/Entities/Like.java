@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.models.compositeKeys.LikeKey;
-import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;

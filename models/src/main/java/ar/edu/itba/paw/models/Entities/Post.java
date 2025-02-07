@@ -1,5 +1,5 @@
-package ar.edu.itba.paw.models.Entities;// Post.java
-import org.hibernate.annotations.ColumnDefault;
+package ar.edu.itba.paw.models.Entities;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -65,12 +65,12 @@ public class Post {
         this.date = new Date(System.currentTimeMillis());
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
     public Long getPostId() {
         return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getTitle() {
@@ -143,21 +143,6 @@ public class Post {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postId=" + postId +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", channel=" + channel +
-                ", postPicture=" + postPicture +
-                ", tags=" + tags +
-                ", likedByUsers=" + likedByUsers +
-                ", comments=" + comments +
-                '}';
     }
 
     @Override
