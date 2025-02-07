@@ -7,6 +7,7 @@ import { ToastService } from './services/toast.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ConfirmationService } from './services/confirmation.service';
+import { CachingInterceptor } from './interceptors/caching.interceptor';
 
 export function initApp(appInitService: AppInitService) {
   return () => appInitService.loadInitialLinks();
@@ -19,7 +20,6 @@ export function initApp(appInitService: AppInitService) {
     ToastService,
     ConfirmationService,
     AppInitService,
-
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtInterceptor,
@@ -28,6 +28,11 @@ export function initApp(appInitService: AppInitService) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CachingInterceptor,
       multi: true,
     },
     {

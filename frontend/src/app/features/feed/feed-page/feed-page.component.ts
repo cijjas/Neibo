@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
-import { catchError, distinctUntilChanged, map, tap } from 'rxjs/operators';
+import {
+  catchError,
+  distinctUntilChanged,
+  finalize,
+  map,
+  tap,
+} from 'rxjs/operators';
 import { PostService, Post, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { Title } from '@angular/platform-browser';
@@ -124,6 +130,9 @@ export class FeedPageComponent implements OnInit {
         this.totalPages = 0;
         this.loading = false;
         return of();
+      }),
+      finalize(() => {
+        this.loading = false;
       }),
     );
   }
