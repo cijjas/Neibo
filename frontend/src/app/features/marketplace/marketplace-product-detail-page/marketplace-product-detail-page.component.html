@@ -168,7 +168,7 @@
                       [(ngModel)]="questionMessage"
                       type="text"
                       class="cool-input marketplace-input background"
-                      placeholder="Ask a question"
+                      [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_A_QUESTION' | translate"
                     />
                     <a
                       (click)="submitQuestionForm()"
@@ -393,7 +393,7 @@
             ngModel
             type="text"
             class="cool-input marketplace-input background"
-            placeholder="Phone Number (e.g., +54 9 11 1234 5678)"
+            [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.PHONE_NUMBER_EX' | translate"
             required
             pattern="^\+?[0-9\s]+$"
             #phoneNumberField="ngModel"
@@ -415,7 +415,7 @@
             ngModel
             class="cool-input marketplace-input textarea-min-max"
             rows="5"
-            placeholder="Message"
+            [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE' | translate"
             required
             minlength="10"
             #phoneRequestMessageField="ngModel"
@@ -596,7 +596,7 @@
             ngModel
             class="cool-input marketplace-input textarea-min-max"
             rows="5"
-            placeholder="Message"
+            [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE' | translate"
             required
             minlength="10"
             #requestMessageField="ngModel"
@@ -772,7 +772,7 @@
           [(ngModel)]="replyMessage"
           class="cool-input marketplace-input textarea-min-max"
           rows="5"
-          placeholder="Your reply..."
+          [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.YOUR_REPLY' | translate"
           required
           minlength="5"
         ></textarea>

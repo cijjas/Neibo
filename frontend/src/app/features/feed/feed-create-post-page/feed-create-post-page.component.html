@@ -22,7 +22,7 @@
                 formControlName="title"
                 class="cool-input"
                 style="border-radius: var(--border-radius)"
-                placeholder="Title"
+                [attr.placeholder]="'FEED-CREATE-POST-PAGE.TITLE' | translate"
               />
               <div
                 *ngIf="
@@ -44,7 +44,7 @@
                 formControlName="body"
                 class="cool-input textarea-min-max"
                 rows="5"
-                placeholder="Body"
+                [attr.placeholder]="'FEED-CREATE-POST-PAGE.BODY' | translate"
               ></textarea>
               <div
                 *ngIf="
@@ -137,7 +137,7 @@
                 <input
                   #newTagInput
                   type="text"
-                  placeholder="Create a tag (e.g., ThisIsATag)"
+                  [attr.placeholder]="'FEED-CREATE-POST-PAGE.CREATE_A_TAG' | translate"
                   (keydown)="handleTagInputKeydown($event, newTagInput)"
                 />
                 <button

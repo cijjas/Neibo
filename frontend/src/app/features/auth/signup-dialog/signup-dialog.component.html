@@ -103,7 +103,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="First name"
+                    [attr.placeholder]="'SIGNUP-DIALOG.FIRST_NAME' | translate"
                     class="input"
                     formControlName="name"
                   />
@@ -132,7 +132,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Surname"
+                  [attr.placeholder]="'SIGNUP-DIALOG.SURNAME' | translate"
                     class="input"
                     formControlName="surname"
                   />
@@ -165,7 +165,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Email"
+                  [attr.placeholder]="'SIGNUP-DIALOG.EMAIL' | translate"
                     type="email"
                     class="input"
                     formControlName="mail"
@@ -196,7 +196,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Password"
+                  [attr.placeholder]="'SIGNUP-DIALOG.PASSWORD' | translate"
                     type="password"
                     class="input"
                     formControlName="password"
@@ -221,7 +221,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Identification"
+                    [attr.placeholder]="'SIGNUP-DIALOG.IDENTIFICATION' | translate"
                     type="number"
                     class="input"
                     formControlName="identification"
@@ -317,7 +317,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Business Name"
+                    [attr.placeholder]="'SIGNUP-DIALOG.BUSINESS_NAME' | translate"
                     class="input"
                     formControlName="businessName"
                   />
@@ -352,7 +352,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="First Name"
+                    [attr.placeholder]="'SIGNUP-DIALOG.FIRST_NAME' | translate"
                     class="input"
                     formControlName="w_name"
                   />
@@ -381,7 +381,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Surname"
+                    [attr.placeholder]="'SIGNUP-DIALOG.SURNAME' | translate"
                     class="input"
                     formControlName="w_surname"
                   />
@@ -415,7 +415,7 @@
                 <label>
                   <input
                     type="email"
-                    placeholder="Email"
+                    [attr.placeholder]="'SIGNUP-DIALOG.EMAIL' | translate"
                     class="input"
                     formControlName="w_mail"
                   />
@@ -445,7 +445,7 @@
                 <label>
                   <input
                     type="password"
-                    placeholder="Password"
+                    [attr.placeholder]="'SIGNUP-DIALOG.PASSWORD' | translate"
                     autocomplete="new-password"
                     class="input"
                     formControlName="w_password"
@@ -488,7 +488,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Address"
+                    [attr.placeholder]="'SIGNUP-DIALOG.ADDRESS' | translate"
                     class="input"
                     formControlName="w_address"
                   />
@@ -507,7 +507,7 @@
               <div class="col p-0">
                 <label>
                   <input
-                    placeholder="Identification"
+                    [attr.placeholder]="'SIGNUP-DIALOG.IDENTIFICATION' | translate"
                     type="number"
                     class="input"
                     formControlName="w_identification"
@@ -567,7 +567,7 @@
             <div class="col p-0">
               <label>
                 <input
-                  placeholder="Phone Number (e.g. +54 9 11 1234 5678)"
+                  [attr.placeholder]="'SIGNUP-DIALOG.PHONE_NUMBER_EX' | translate"
                   class="input"
                   formControlName="phoneNumber"
                 />

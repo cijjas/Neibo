@@ -30,7 +30,7 @@
                     formControlName="title"
                     type="text"
                     class="cool-input marketplace-input font-weight-bold"
-                    placeholder="Title"
+                    [attr.placeholder]="'MARKETPLACE-PRODUCT-SELL-PAGE.TITLE' | translate"
                   />
                   <div
                     class="error pt-1"
@@ -48,7 +48,7 @@
                     formControlName="price"
                     type="text"
                     class="cool-input marketplace-input font-weight-bold font-size-14"
-                    placeholder="$1,000.00"
+                    [attr.placeholder]="'MARKETPLACE-PRODUCT-SELL-PAGE.MONEY' | translate"
                     (blur)="formatCurrency()"
                   />
                   <div
@@ -124,7 +124,7 @@
                 formControlName="description"
                 class="cool-input marketplace-input textarea-min-max"
                 rows="5"
-                placeholder="Description"
+                [attr.placeholder]="'MARKETPLACE-PRODUCT-SELL-PAGE.DESCRIPTION' | translate"
               ></textarea>
               <div
                 class="error pt-1"

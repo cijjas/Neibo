@@ -19,7 +19,7 @@
           type="text"
           class="cool-input"
           formControlName="name"
-          placeholder="Enter event name"
+          [attr.placeholder]="'ADMIN-CREATE-EVENT.ENTER_EVENT_NAME' | translate"
         />
         <app-form-error
           class="w-100"
@@ -38,7 +38,7 @@
           rows="5"
           class="cool-input textarea-min-max"
           formControlName="description"
-          placeholder="Enter event description"
+          [attr.placeholder]="'ADMIN-CREATE-EVENT.ENTER_EVENT_DESCRIPTION' | translate"
         ></textarea>
         <app-form-error
           class="w-100"
