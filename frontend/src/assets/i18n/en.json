@@ -1239,5 +1239,11 @@
     "UNVERIFIED_PAGE": "Unverified | Neibo",
 
     "USER_PROFILE_PAGE": "Profile | Neibo"
+  },
+  "SUPER-ADMIN-PAGE": {
+    "WELCOME": "Welcome, Super Admin!",
+    "UNDER_DEVELOPMENT": "This feature is currently under development.",
+    "ADMINISTRATIVE_TOOLS": "We are working on bringing you a comprehensive suite of <b>administrative tools</b> to efficiently <b>manage multiple neighborhoods, users, and services</b>. Stay tuned for updates!",
+    "DEVELOPMENT_TEAM": "For any questions or early access requests, please reach out to the <b>development team</b>."
   }
 }

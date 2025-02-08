@@ -6,35 +6,26 @@
         class="d-flex flex-column justify-content-center align-items-center"
         style="text-align: center"
       >
-        <p
+        <p [innerHTML]="'SUPER-ADMIN-PAGE.WELCOME' | translate"
           style="font-size: 50px"
           class="c-primary font-weight-bold mb-4 mt-4"
-          i18n
         >
-          Welcome, Super Admin!
         </p>
 
-        <p style="font-size: 24px" class="c-primary mb-4" i18n>
-          This feature is currently under development.
+        <p [innerHTML]="'SUPER-ADMIN-PAGE.UNDER_DEVELOPMENT' | translate" style="font-size: 24px" class="c-primary mb-4">
         </p>
         <br />
 
-        <p i18n style="text-align: justify" class="mb-3">
-          We are working on bringing you a comprehensive suite of
-          <b>administrative tools</b> to efficiently
-          <b>manage multiple neighborhoods, users, and services</b>. Stay tuned
-          for updates!
+        <p [innerHTML]="'SUPER-ADMIN-PAGE.ADMINISTRATIVE_TOOLS' | translate" style="text-align: justify" class="mb-3">
         </p>
 
-        <p i18n>
-          For any questions or early access requests, please reach out to the
-          <b>development team</b>.
+        <p [innerHTML]="'SUPER-ADMIN-PAGE.DEVELOPMENT_TEAM' | translate">
         </p>
 
         <br />
 
         <br />
-        <button class="cool-button m-t-40" (click)="goBackToMainPage()" i18n>
+        <button class="cool-button m-t-40" (click)="goBackToMainPage()">
           {{ 'UNVERIFIED-PAGE.GO_BACK_TO_LOGIN' | translate }}
         </button>
       </div>
