@@ -22,7 +22,7 @@ public class Amenity {
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "amenities_shifts_availability",
             joinColumns = @JoinColumn(name = "amenityid"),
             inverseJoinColumns = @JoinColumn(name = "shiftid"))

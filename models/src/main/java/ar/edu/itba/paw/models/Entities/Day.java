@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 @Table(name = "days")
 public class Day {
-    @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "day")
     private final Set<Shift> shifts = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "days_dayid_seq")

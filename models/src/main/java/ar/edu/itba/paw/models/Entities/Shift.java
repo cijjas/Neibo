@@ -12,14 +12,14 @@ public class Shift {
     @SequenceGenerator(sequenceName = "shifts_shiftid_seq", name = "shifts_shiftid_seq", allocationSize = 1)
     private Long shiftId;
 
-    @ManyToMany(mappedBy = "availableShifts", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "availableShifts")
     private List<Amenity> amenities;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "dayid")
     private Day day;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "starttime")
     private Time startTime;
 

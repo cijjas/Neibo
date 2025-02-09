@@ -28,7 +28,7 @@ public class Neighborhood {
     @Column(name = "neighborhoodname", length = 128, unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "neighborhoods_channels", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "channelid"))
     private Set<Neighborhood> channels;
 

@@ -13,11 +13,11 @@ public class Booking {
     @Column(name = "bookingid")
     private Long bookingId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "amenityavailabilityid")
     private Availability amenityAvailability;
 

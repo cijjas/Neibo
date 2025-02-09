@@ -18,17 +18,17 @@ public class Availability {
     @JoinColumn(name = "amenityid")
     private Amenity amenity;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "shiftid")
     private Shift shift;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "users_availability",
             joinColumns = @JoinColumn(name = "amenityavailabilityid"),
             inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> bookedByUsers;
 
-    @OneToMany(mappedBy = "amenityAvailability", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "amenityAvailability")
     private List<Booking> bookings;
 
     Availability() {
