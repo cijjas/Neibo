@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.IMMUTABLE;
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
 /*
@@ -47,6 +48,7 @@ public class WorkerStatusController {
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerStatusesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -77,6 +79,7 @@ public class WorkerStatusController {
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerStatusHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
