@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.IMMUTABLE;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
+
 /*
  * # Summary
  *   - Self-Descriptive, has relationships with many entities like Posts, Products, Users, Workers, Resources
@@ -54,6 +57,8 @@ public class ImageController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(imageHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -97,22 +102,6 @@ public class ImageController {
 
         return Response.created(uri)
                 .tag(imageHashCode)
-                .build();
-    }
-
-    @DELETE
-    @Path("{" + PathParameter.IMAGE_ID + "}")
-    public Response deleteImage(
-            @PathParam(PathParameter.IMAGE_ID) long imageId
-    ) {
-        LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
-
-        // Deletion Attempt
-        if (is.deleteImage(imageId))
-            return Response.noContent()
-                    .build();
-
-        return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }
 }

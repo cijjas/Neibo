@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.IMMUTABLE;
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 
 /*
@@ -48,6 +49,7 @@ public class WorkerRoleController {
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerRolesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -78,6 +80,7 @@ public class WorkerRoleController {
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerRoleHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

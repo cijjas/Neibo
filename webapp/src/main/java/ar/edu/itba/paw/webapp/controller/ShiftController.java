@@ -18,6 +18,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.IMMUTABLE;
 import static ar.edu.itba.paw.webapp.controller.constants.Constant.MAX_AGE_SECONDS;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableDate;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableSecondId;
@@ -63,6 +64,7 @@ public class ShiftController {
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -97,6 +99,7 @@ public class ShiftController {
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

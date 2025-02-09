@@ -56,20 +56,31 @@ Admins can maintain an up-to-date database of important neighborhood information
 
 A community-driven marketplace where residents can buy, sell, and trade goods within the neighborhood. Find great deals, support local sellers, and create a thriving local economy.
 
-## Default Test Accounts
+# Roles
+- **Neighbor**: A neighborhood resident who has access to their neighborhood's resources but cannot modify or create administrative entities.
+- **Administrator**: Represents moderation, has access to their neighborhood's resources and can modify or create administrative entities as well as moderate content created by its neighbors.
+- **Unverified Neighbor**: A user who has made a request to join a certain neighborhood and must wait to be either accepted (becoming a **Neighbor**) or rejected (becoming a **Rejected**). The neighborhood administrator is in charge of their request. This user only has access to their profile which they can modify.
+- **Rejected**: A user whose request to join a certain neighborhood was rejected. They are given the possibility to make a request to another neighborhood. They also have access to their profile.
+- **Workers**: Independent workers who offer their services. They make requests to neighborhoods to be verified by them and become listed in those neighborhoods' Service Providers section, thus gaining new potential clients.
+- **Super Administrator**: Exercises moderation over all domains beyond neighborhood administrators' scope, for example, moderation over **Workers** and their actions, creation of new neighborhoods, creation of new neighborhood administrators, etc. This role can interact directly with the API but their SPA view is still under construction.
 
-| Role                | Username                     | Password                   |
-|---------------------|----------------------------|---------------------------|
-| **Admin**           | moderatorneibo@gmail.com    | moderatorneibo2023b-02    |
-| **Verified Neighbor** | verifiedneibo@gmail.com    | verifiedneibo2023b-02     |
-| **Service Provider** | workerneibo@gmail.com      | workerneibo2023b-02       |
-| **Unverified Neighbor** | unverifiedneibo@gmail.com | unverifiedneibo2023b-02   |
-| **Rejected Neighbor** | rejected@test.com         | rejected                  |
+## Test Accounts
 
-## Quick start
+| Role                    | Gmail & Neibo Account     | Gmail Account Password  | Neibo Account Password |
+|-------------------------|---------------------------|-------------------------|------------------------|
+| **Admin**               | moderatorneibo@gmail.com  | moderatorneibo2023b-02  | moderatorneibo         |
+| **Verified Neighbor**   | verifiedneibo@gmail.com   | verifiedneibo2023b-02   | verifiedneibo          |
+| **Service Provider**    | workerneibo@gmail.com     | workerneibo2023b-02     | workerneibo            |
+| **Unverified Neighbor** | unverifiedneibo@gmail.com | unverifiedneibo2023b-02 | unverifiedneibo        |
+| **Rejected Neighbor**   | rejected@test.com         | rejected                |                        |
 
-### Docker-way to quick start
+!!!!!!!!!!! Create gmail for rejected and superadmin
 
+## How to Run
+1. Clone Project
+2. Choose Branch (Front has the RESTful HATEOAS API with SPA Client)
+3. Run `maven clean package`
+4. Run `docker compose up`
 
 ## Frontend
 
