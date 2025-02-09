@@ -432,8 +432,8 @@
     "REJECTED": "rechazado",
     "NOTFOUND": "no encontrado",
     "LOGIN_FAILED": "Error al iniciar sesión:",
-    "PASSWORD": "contraseña",
-    "EMAIL": "email"
+    "PASSWORD": "Contraseña",
+    "EMAIL": "Email"
   },
   "LOGIN-PAGE": {
     "NEIBO": "Neibo",
@@ -953,7 +953,7 @@
     "LISTING_CREATED_SUCCESSFULLY": "Publicación creada con éxito",
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "Hubo un problema al crear la publicación.",
     "INVALID_PRICE_FORMAT": "Formato de precio inválido.",
-    "TITTLE": "Título",
+    "TITLE": "Título",
     "MONEY": "$1,000.00",
     "DESCRIPTION": "Descripción"
   },
