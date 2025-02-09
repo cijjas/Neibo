@@ -18,7 +18,9 @@
               [class.active]="isRequests"
             >
               <i class="fa-solid fa-basket-shopping"></i>
-              <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.MY_REQUESTS" | translate }}</span>
+              <span class="hide-text">{{
+                'MARKETPLACE-DASHBOARD-BUYER-PAGE.MY_REQUESTS' | translate
+              }}</span>
             </a>
             <a
               [routerLink]="['/marketplace/buyer-hub', 'purchases']"
@@ -26,7 +28,9 @@
               [class.active]="isPurchases"
             >
               <i class="fa-solid fa-calendar-check"></i>
-              <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.MY_PURCHASES" | translate }}</span>
+              <span class="hide-text">{{
+                'MARKETPLACE-DASHBOARD-BUYER-PAGE.MY_PURCHASES' | translate
+              }}</span>
             </a>
           </div>
         </div>
@@ -38,7 +42,9 @@
             *ngIf="purchaseList && purchaseList.length === 0"
           >
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.PURCHASES_NOT_FOUND" | translate }}
+            {{
+              'MARKETPLACE-DASHBOARD-BUYER-PAGE.PURCHASES_NOT_FOUND' | translate
+            }}
           </div>
 
           <div
@@ -50,8 +56,8 @@
               *ngFor="let purchase of purchaseList"
             >
               <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2">
-                <div>{{ purchase.fulfilledAt | date : "dd MMM yyyy" }}</div>
-                <div>{{ purchase.fulfilledAt | date : "HH:mm" }}</div>
+                <div>{{ purchase.fulfilledAt | date : 'dd MMM yyyy' }}</div>
+                <div>{{ purchase.fulfilledAt | date : 'HH:mm' }}</div>
               </div>
               <div class="divider m-0"></div>
 
@@ -81,25 +87,38 @@
                           class="department-tag"
                           (click)="goToDepartment(purchase.product.department)"
                         >
-                          {{ purchase.product.department?.name }}
+                          {{
+                            'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' +
+                              purchase.product?.department?.name | translate
+                          }}
                         </div>
                         <div
                           *ngIf="purchase.product.used; else newPurchase"
                           class="used-tag used font-weight-normal"
                         >
-                        {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.USED" | translate }}
+                          {{
+                            'MARKETPLACE-DASHBOARD-BUYER-PAGE.USED' | translate
+                          }}
                         </div>
                         <ng-template #newPurchase>
-                          <div class="used-tag new font-weight-normal">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.NEW" | translate }}</div>
+                          <div class="used-tag new font-weight-normal">
+                            {{
+                              'MARKETPLACE-DASHBOARD-BUYER-PAGE.NEW' | translate
+                            }}
+                          </div>
                         </ng-template>
                       </div>
                     </div>
 
                     <div class="f-r-c-c font-weight-normal">
-                      {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.QUANTITY" | translate }}: {{ purchase.unitsRequested }}
+                      {{
+                        'MARKETPLACE-DASHBOARD-BUYER-PAGE.QUANTITY' | translate
+                      }}: {{ purchase.unitsRequested }}
                     </div>
                     <div class="f-r-c-c g-05">
-                      <span class="font-weight-normal">{{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.SOLD_BY" | translate }}</span>
+                      <span class="font-weight-normal">{{
+                        'MARKETPLACE-DASHBOARD-BUYER-PAGE.SOLD_BY' | translate
+                      }}</span>
                       <span style="color: var(--lila)">
                         {{ purchase.product.seller?.name }}
                       </span>
@@ -111,9 +130,9 @@
                           purchase.product?.price
                             ? (
                                 purchase.product.price
-                                | currency : "USD" : "symbol-narrow" : "1.0-2"
-                              ).split(".")[0]
-                            : ""
+                                | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                              ).split('.')[0]
+                            : ''
                         }}
                       </span>
                       <div class="f-c-s-c ps-1" style="height: 20px">
@@ -122,12 +141,12 @@
                         >
                           {{
                             purchase.product?.price
-                              ? "," +
+                              ? ',' +
                                 ((
                                   purchase.product.price
-                                  | currency : "USD" : "symbol-narrow" : "1.0-2"
-                                ).split(".")[1] || "00")
-                              : ""
+                                  | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                                ).split('.')[1] || '00')
+                              : ''
                           }}
                         </span>
                       </div>
@@ -153,7 +172,7 @@
             *ngIf="requestList && requestList.length === 0"
           >
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.NO_NEW_REQUESTS" | translate }}
+            {{ 'MARKETPLACE-DASHBOARD-BUYER-PAGE.NO_NEW_REQUESTS' | translate }}
           </div>
 
           <div
@@ -168,8 +187,8 @@
                 class="f-r-sb-c w-100 pb-0 pt-2"
                 style="padding-left: 1em; padding-right: 1em"
               >
-                <div>{{ request.createdAt | date : "dd MMM yyyy" }}</div>
-                <div>{{ request.createdAt | date : "HH:mm" }}</div>
+                <div>{{ request.createdAt | date : 'dd MMM yyyy' }}</div>
+                <div>{{ request.createdAt | date : 'HH:mm' }}</div>
               </div>
               <div class="divider"></div>
 
@@ -199,13 +218,18 @@
                           class="department-tag"
                           (click)="goToDepartment(request.product.department)"
                         >
-                          {{ request.product.department?.name }}
+                          {{
+                            'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' +
+                              request.product.department?.name | translate
+                          }}
                         </div>
                         <div
                           *ngIf="request.product.used; else newTag"
                           class="used-tag used font-weight-normal"
                         >
-                        {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.USED" | translate }}
+                          {{
+                            'MARKETPLACE-DASHBOARD-BUYER-PAGE.USED' | translate
+                          }}
                         </div>
                         <ng-template #newTag>
                           <div class="used-tag new font-weight-normal">New</div>
@@ -220,9 +244,9 @@
                             request.product?.price
                               ? (
                                   request.product.price
-                                  | currency : "USD" : "symbol-narrow" : "1.0-2"
-                                ).split(".")[0]
-                              : ""
+                                  | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                                ).split('.')[0]
+                              : ''
                           }}
                         </span>
                         <div class="f-c-s-c ps-1" style="height: 20px">
@@ -231,15 +255,15 @@
                           >
                             {{
                               request.product?.price
-                                ? "," +
+                                ? ',' +
                                   ((
                                     request.product.price
                                     | currency
-                                      : "USD"
-                                      : "symbol-narrow"
-                                      : "1.0-2"
-                                  ).split(".")[1] || "00")
-                                : ""
+                                      : 'USD'
+                                      : 'symbol-narrow'
+                                      : '1.0-2'
+                                  ).split('.')[1] || '00')
+                                : ''
                             }}
                           </span>
                         </div>
@@ -252,7 +276,10 @@
                         class="cool-button small-a marketplace-button font-weight-bold"
                       >
                         <i class="fa-solid fa-arrow-right-to-bracket pe-1"></i>
-                        {{ "MARKETPLACE-DASHBOARD-BUYER-PAGE.VIEW_PRODUCT" | translate }}
+                        {{
+                          'MARKETPLACE-DASHBOARD-BUYER-PAGE.VIEW_PRODUCT'
+                            | translate
+                        }}
                       </a>
                     </div>
                   </div>

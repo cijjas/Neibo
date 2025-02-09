@@ -1366,6 +1366,22 @@ input[type='file']::file-selector-button:hover {
     }
   }
 
+  &.services {
+    --loader-color: var(--profession);
+
+    &::before {
+      content: '';
+      position: absolute;
+      background: var(--profession);
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      border-radius: 30px;
+      animation: moving 1s ease-in-out infinite;
+    }
+  }
+
   width: 30%;
   height: var(--height-of-loader);
   border-radius: 30px;
@@ -3599,4 +3615,31 @@ td.selected .cell-wrapper {
 
 .c-lightertext {
   color: var(--lightertext);
+}
+
+/* GENERIC LOADER */
+
+.common-loader {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 32px 0 #fff, -32px 0 #fff;
+  position: relative;
+  animation: flash 0.5s ease-out infinite alternate;
+}
+
+@keyframes flash {
+  0% {
+    background-color: #fff2;
+    box-shadow: 32px 0 #fff2, -32px 0 #fff;
+  }
+  50% {
+    background-color: #fff;
+    box-shadow: 32px 0 #fff2, -32px 0 #fff2;
+  }
+  100% {
+    background-color: #fff2;
+    box-shadow: 32px 0 #fff, -32px 0 #fff2;
+  }
 }

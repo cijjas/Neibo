@@ -59,7 +59,6 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   private showNotification(message: string): void {
-    // Replace this with your notification service or logic
     console.log('Notification:', message);
   }
 }

@@ -29,12 +29,12 @@ export class JwtInterceptor implements HttpInterceptor {
   constructor(
     private tokenService: TokenService,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   intercept(
     request: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     const skip = request.context.get(SKIP_ACCESS_TOKEN);
     if (!skip) {
@@ -45,24 +45,23 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     return next.handle(request).pipe(
-      catchError((error) => {
+      catchError(error => {
         if (
           error instanceof HttpErrorResponse &&
           error.status === 401 &&
           !skip
         ) {
-          console.warn(`401 error intercepted for URL: ${request.url}`);
           return this.handle401Error(request, next);
         }
 
         return throwError(() => error);
-      })
+      }),
     );
   }
 
   private handle401Error(
     request: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     if (!this.isRefreshing) {
       this.isRefreshing = true;
@@ -78,7 +77,7 @@ export class JwtInterceptor implements HttpInterceptor {
           const clonedRequest = this.addTokenHeader(request, newAccessToken);
           return next.handle(clonedRequest);
         }),
-        catchError((refreshError) => {
+        catchError(refreshError => {
           console.error('Failed to refresh token:', refreshError);
           this.authService.logout(); // Log out the user if refresh fails
           return throwError(() => refreshError);
@@ -86,17 +85,17 @@ export class JwtInterceptor implements HttpInterceptor {
         finalize(() => {
           this.isRefreshing = false;
           this.tokenService.setRefreshingTokenState(false); // Notify refresh ended
-        })
+        }),
       );
     } else {
       // Wait for the token to refresh before proceeding with the request
       return this.refreshTokenSubject.pipe(
-        filter((token) => token !== null),
+        filter(token => token !== null),
         take(1),
-        switchMap((token) => {
+        switchMap(token => {
           const clonedRequest = this.addTokenHeader(request, token as string);
           return next.handle(clonedRequest);
-        })
+        }),
       );
     }
   }
@@ -134,7 +133,7 @@ export class JwtInterceptor implements HttpInterceptor {
           }
 
           return throwError(() => new Error('Token refresh failed'));
-        })
+        }),
       );
   }
 
@@ -143,7 +142,7 @@ export class JwtInterceptor implements HttpInterceptor {
    */
   private addTokenHeader(
     request: HttpRequest<any>,
-    token: string
+    token: string,
   ): HttpRequest<any> {
     return request.clone({
       setHeaders: { Authorization: `Bearer ${token}` },
