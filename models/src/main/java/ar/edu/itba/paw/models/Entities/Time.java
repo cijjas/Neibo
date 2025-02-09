@@ -8,11 +8,11 @@ import java.util.Set;
 @Entity
 @Table(name = "times")
 public class Time {
-    @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "startTime")
     private final Set<Shift> shifts = new HashSet<>();
-    @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "startTime")
     private final Set<Event> eventsStartingAtThisTime = new HashSet<>();
-    @OneToMany(mappedBy = "endTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "endTime")
     private final Set<Event> eventsEndingAtThisTime = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "times_timeid_seq")

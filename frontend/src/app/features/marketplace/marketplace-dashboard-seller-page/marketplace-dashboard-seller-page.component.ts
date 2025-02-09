@@ -34,7 +34,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     private productService: ProductService,
     private translate: TranslateService,
     private titleService: Title,
-  ) {}
+  ) { }
 
   get isListings(): boolean {
     return this.route.snapshot.paramMap.get('mode') === 'listings';

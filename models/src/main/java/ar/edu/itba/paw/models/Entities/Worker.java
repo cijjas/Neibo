@@ -29,7 +29,7 @@ public class Worker {
     @Column(name = "bio", length = 255)
     private String bio;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "backgroundpictureid", referencedColumnName = "imageId")
     private Image backgroundPicture;
 

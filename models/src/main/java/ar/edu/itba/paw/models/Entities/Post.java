@@ -24,7 +24,7 @@ public class Post {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "userid", nullable = false)
     private User user;
 
@@ -32,7 +32,7 @@ public class Post {
     @JoinColumn(name = "channelid", nullable = false)
     private Channel channel;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "postpictureid")
     private Image postPicture;
 
@@ -44,7 +44,7 @@ public class Post {
     private Set<Tag> tags;
 
     @Column(name = "likes")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> likedByUsers;
 
