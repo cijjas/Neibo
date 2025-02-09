@@ -101,15 +101,6 @@ public class Links {
     private URI unverifiedWorkerRole;
     private URI rejectedWorkerRole;
     private URI affiliations;
-    private String posts2;
-
-    public String getPosts2() {
-        return posts2;
-    }
-
-    public void setPosts2(String posts2) {
-        this.posts2 = posts2;
-    }
 
     public URI getReviewsCount() {
         return reviewsCount;

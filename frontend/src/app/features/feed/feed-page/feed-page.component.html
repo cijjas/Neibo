@@ -42,8 +42,14 @@
       </div>
     </div>
 
-    <div class="column-right">
-      <app-right-column></app-right-column>
+    <div class="column-right" style="position: relative">
+      <div class="f-c-s-c" style="position: sticky; top: 20px">
+        <app-calendar-widget></app-calendar-widget>
+        <app-tags-filter-widget
+          class="w-100 mt-1"
+          [mode]="'tags'"
+        ></app-tags-filter-widget>
+      </div>
     </div>
   </div>
 </div>

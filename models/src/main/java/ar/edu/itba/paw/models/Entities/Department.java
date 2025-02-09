@@ -51,14 +51,6 @@ public class Department {
     }
 
     @Override
-    public String toString() {
-        return "Department{" +
-                "departmentId=" + departmentId +
-                ", department='" + department + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Department)) return false;

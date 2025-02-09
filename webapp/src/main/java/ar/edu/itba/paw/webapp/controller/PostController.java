@@ -189,7 +189,7 @@ public class PostController {
 
     @DELETE
     @Path("{" + PathParameter.POST_ID + "}")
-    @PreAuthorize("@accessControlHelper.canDeletePost(#postId)")
+    @PreAuthorize("@accessControlHelper.canDeletePost(#neighborhoodId, #postId)")
     public Response deletePost(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.POST_ID) long postId

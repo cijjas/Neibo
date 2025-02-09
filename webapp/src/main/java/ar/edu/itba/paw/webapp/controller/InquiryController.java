@@ -131,7 +131,7 @@ public class InquiryController {
     }
 
     @POST
-    @PreAuthorize("@accessControlHelper.canCreateInquiry(#createForm.user, #productId)")
+    @PreAuthorize("@accessControlHelper.canCreateInquiry(#createForm.user, #neighborhoodId, #productId)")
     @Validated(CreateSequence.class)
     public Response createInquiry(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -144,7 +144,7 @@ public class InquiryController {
         ps.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
 
         // Creation & HashCode Generation
-        final Inquiry inquiry = is.createInquiry(extractFirstId(createForm.getUser()), productId, createForm.getMessage());
+        final Inquiry inquiry = is.createInquiry(neighborhoodId, extractFirstId(createForm.getUser()), productId, createForm.getMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Resource URI
@@ -159,7 +159,7 @@ public class InquiryController {
     @PATCH
     @Path("{" + PathParameter.INQUIRY_ID + "}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateInquiry(#updateForm.user, #inquiryId)")
+    @PreAuthorize("@accessControlHelper.canUpdateInquiry(#updateForm.user, #neighborhoodId, #productId, #inquiryId)")
     @Validated(UpdateSequence.class)
     public Response updateInquiry(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
@@ -183,7 +183,7 @@ public class InquiryController {
 
     @DELETE
     @Path("{" + PathParameter.INQUIRY_ID + "}")
-    @PreAuthorize("@accessControlHelper.canDeleteInquiry(#inquiryId)")
+    @PreAuthorize("@accessControlHelper.canDeleteInquiry(#neighborhoodId, #productId, #inquiryId)")
     public Response deleteInquiry(
             @PathParam(PathParameter.NEIGHBORHOOD_ID) long neighborhoodId,
             @PathParam(PathParameter.PRODUCT_ID) long productId,

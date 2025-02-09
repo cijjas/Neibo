@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 @Table(name = "neighborhoods")
 public class Neighborhood {
-    @OneToMany(mappedBy = "neighborhood")  // mappedBy refers to the field in the User entity
+    @OneToMany(mappedBy = "neighborhood")
     private final Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "neighborhood")
@@ -28,7 +28,7 @@ public class Neighborhood {
     @Column(name = "neighborhoodname", length = 128, unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "neighborhoods_channels", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "channelid"))
     private Set<Neighborhood> channels;
 
@@ -96,13 +96,5 @@ public class Neighborhood {
         public Neighborhood build() {
             return new Neighborhood(this);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Neighborhood{" +
-                ", name='" + name + '\'' +
-                ", isBase=" + isBase +
-                '}';
     }
 }

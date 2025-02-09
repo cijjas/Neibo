@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -15,11 +13,11 @@ public class Booking {
     @Column(name = "bookingid")
     private Long bookingId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "userid")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "amenityavailabilityid")
     private Availability amenityAvailability;
 
@@ -37,46 +35,36 @@ public class Booking {
         this.bookingDate = builder.bookingDate;
     }
 
-    public void setBookingId(Long bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setAmenityAvailability(Availability amenityAvailability) {
-        this.amenityAvailability = amenityAvailability;
-    }
-
-    public void setBookingDate(Date bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
     public Long getBookingId() {
         return bookingId;
+    }
+
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
     }
 
     public User getUser() {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Availability getAmenityAvailability() {
         return amenityAvailability;
+    }
+
+    public void setAmenityAvailability(Availability amenityAvailability) {
+        this.amenityAvailability = amenityAvailability;
     }
 
     public Date getBookingDate() {
         return bookingDate;
     }
 
-    @Override
-    public String toString() {
-        return "Booking{" +
-                "bookingId=" + bookingId +
-                ", user=" + user +
-                ", amenityAvailability=" + amenityAvailability +
-                ", bookingDate=" + bookingDate +
-                '}';
+    public void setBookingDate(Date bookingDate) {
+        this.bookingDate = bookingDate;
     }
 
     @Override

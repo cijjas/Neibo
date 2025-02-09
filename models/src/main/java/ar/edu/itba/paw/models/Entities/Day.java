@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 @Table(name = "days")
 public class Day {
-    @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "day")
     private final Set<Shift> shifts = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "days_dayid_seq")
@@ -25,22 +25,12 @@ public class Day {
         this.dayName = builder.dayName;
     }
 
-    // Getter methods
-
     public Long getDayId() {
         return dayId;
     }
 
     public String getDayName() {
         return dayName;
-    }
-
-    @Override
-    public String toString() {
-        return "Day{" +
-                "dayId=" + dayId +
-                ", dayName='" + dayName + '\'' +
-                '}';
     }
 
     public Set<Shift> getShifts() {

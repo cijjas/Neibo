@@ -17,7 +17,6 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Time;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import static ar.edu.itba.paw.persistence.TestConstants.DATE_1;
@@ -39,6 +38,7 @@ public class TestInserter {
     public long createChannel(String channelName) {
         final Channel channel = new Channel.Builder()
                 .channel(channelName)
+                .isBase(false)
                 .build();
         em.persist(channel);
         em.flush();
@@ -180,16 +180,6 @@ public class TestInserter {
         em.persist(resource);
         em.flush();
         return resource.getResourceId();
-    }
-
-    public long createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
-        Booking booking = new Booking.Builder()
-                .user(em.find(User.class, userId))
-                .bookingDate(date)
-                .amenityAvailability(em.find(Availability.class, amenityId))
-                .build();
-        em.persist(booking);
-        return booking.getBookingId();
     }
 
     public void createChannelMapping(long neighborhoodId, long channelId) {
@@ -428,7 +418,6 @@ public class TestInserter {
     }
 
     public long createUser(long neighborhoodId) {
-        // Generate dummy values
         String mail = "dummy@mail.com";
         String password = "password";
         String name = "Dummy";
@@ -441,7 +430,6 @@ public class TestInserter {
     }
 
     public long createUser(String mail, long neighborhoodId) {
-        // Generate dummy values
         String password = "password";
         String name = "Dummy";
         String surname = "User";
@@ -453,7 +441,6 @@ public class TestInserter {
     }
 
     public long createUser(String mail, UserRole role, long neighborhoodId) {
-        // Generate dummy values
         String password = "password";
         String name = "Dummy";
         String surname = "User";
@@ -472,18 +459,6 @@ public class TestInserter {
         String title = "Dummy Resource";
         String description = "Dummy Resource Description";
         return createResource(neighborhoodId, title, description, imageId);
-    }
-
-    public long createReservation(long amenityId, long userId) {
-        Date date = DATE_1;
-        Time startTime = Time.valueOf(LocalDateTime.now().toLocalTime());
-        Time endTime = Time.valueOf(LocalDateTime.now().plusHours(1).toLocalTime());
-        return createReservation(amenityId, userId, date, startTime, endTime);
-    }
-
-    public long createBooking(long userId, long amenityAvailabilityId) {
-        Date date = DATE_1;
-        return createBooking(userId, amenityAvailabilityId, date);
     }
 
     public int createDay() {
@@ -516,10 +491,7 @@ public class TestInserter {
     }
 
     public long createImage() {
-        // Create a small byte array for a fake image (e.g., a 1x1 white pixel)
         byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
-
-        // Create a MockMultipartFile using the fake image bytes
         MockMultipartFile fakeImage = new MockMultipartFile("image", "fake.jpg", "image/jpeg", fakeImageBytes);
         return createImage(fakeImage);
     }

@@ -39,7 +39,7 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableF
  *   - An Admin can update the profiles of the Neighbors it moderates
  */
 
-@Path(Endpoint.API + "/" +  Endpoint.USERS)
+@Path(Endpoint.API + "/" + Endpoint.USERS)
 @Component
 @Validated
 @Produces(value = {MediaType.APPLICATION_JSON})
@@ -147,7 +147,7 @@ public class UserController {
     @PATCH
     @Path("{" + PathParameter.USER_ID + "}")
     @Validated(UpdateSequence.class)
-     @PreAuthorize("@accessControlHelper.canUpdateUser(#updateForm.neighborhood, #updateForm.userRole, #updateForm.language, #updateForm.profilePicture, #userId)")
+    @PreAuthorize("@accessControlHelper.canUpdateUser(#updateForm.neighborhood, #updateForm.userRole, #updateForm.language, #updateForm.profilePicture, #userId)")
     public Response updateUser(
             @PathParam(PathParameter.USER_ID) long userId,
             @Valid @NotNull UserDto updateForm

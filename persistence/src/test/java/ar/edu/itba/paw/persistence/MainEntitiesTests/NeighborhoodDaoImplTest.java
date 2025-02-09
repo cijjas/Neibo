@@ -89,31 +89,6 @@ public class NeighborhoodDaoImplTest {
         assertFalse(optionalNeighborhood.isPresent());
     }
 
-    @Test
-    public void find_neighborhoodName_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-
-        // Exercise
-        Optional<Neighborhood> optionalNeighborhood = neighborhoodDaoImpl.findNeighborhood(NEIGHBORHOOD_NAME_1);
-
-        // Validations & Post Conditions
-        assertTrue(optionalNeighborhood.isPresent());
-        assertEquals(nhKey, optionalNeighborhood.get().getNeighborhoodId().longValue());
-    }
-
-    @Test
-    public void find_neighborhoodName_invalid_neighborhoodName() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-
-        // Exercise
-        Optional<Neighborhood> optionalNeighborhood = neighborhoodDaoImpl.findNeighborhood(INVALID_STRING_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalNeighborhood.isPresent());
-    }
-
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test

@@ -42,25 +42,16 @@ public class PostServiceImpl implements PostService {
 
         Post p = postDao.createPost(userId, title, description, channelId, imageId == null ? 0 : imageId);
         if (tagIds != null && !tagIds.isEmpty())
-            for (long tag: tagIds)
+            for (long tag : tagIds)
                 categorizationDao.findCategorization(p.getPostId(), tag).orElseGet(() -> categorizationDao.createCategorization(p.getPostId(), tag));
 
-        if(channelId == BaseChannel.ANNOUNCEMENTS.getId())
+        if (channelId == BaseChannel.ANNOUNCEMENTS.getId())
             emailService.sendBatchAnnouncementMail(p, neighborhoodId);
 
         return p;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Post> findPost(long postId) {
-        LOGGER.info("Finding Post {}", postId);
-
-        return postDao.findPost(postId);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -99,10 +90,9 @@ public class PostServiceImpl implements PostService {
     public boolean deletePost(long neighborhoodId, long postId) {
         LOGGER.info("Deleting Post {} from Neighborhood {}", postId, neighborhoodId);
 
-        // Delete tag associations
         Set<Tag> tags = postDao.findPost(neighborhoodId, postId).orElseThrow(NotFoundException::new).getTags();
         if (tags != null)
-            for (Tag tag: tags)
+            for (Tag tag : tags)
                 categorizationDao.deleteCategorization(postId, tag.getTagId());
 
         return postDao.deletePost(neighborhoodId, postId);

@@ -22,7 +22,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ----------------------------------------------------------------------------------
+    // --------------------------------------------- TAG MAPPING DELETE ------------------------------------------------
 
     @Override
     public TagMapping createTagMappingDao(long neighborhoodId, long tagId) {
@@ -33,7 +33,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
         return tagMapping;
     }
 
-    // ----------------------------------------------------------------------------------
+    // --------------------------------------------- TAG MAPPING SELECT ------------------------------------------------
 
     @Override
     public Optional<TagMapping> findTagMapping(long neighborhoodId, long tagId) {
@@ -119,7 +119,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
         return 0;
     }
 
-    // ----------------------------------------------------------------------------------
+    // --------------------------------------------- TAG MAPPING DELETE ------------------------------------------------
 
     @Override
     public boolean deleteTagMapping(long neighborhoodId, long tagId) {

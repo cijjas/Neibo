@@ -1,45 +1,64 @@
 <div class="wrapper-widget">
-    <div id="calendar-box" class="f-c-c-c" *ngIf="!isLoading">
-        <header class="header-content">
-            <a class="current-date" style="font-weight: bold" [routerLink]="['/calendar']">{{ currentDate }}</a>
-            <div class="icons">
-                <span id="prev" (click)="changeMonth(-1)"><i class="fa-solid fa-angle-left"></i></span>
-                <span id="next" (click)="changeMonth(1)"><i class="fa-solid fa-angle-right"></i></span>
-            </div>
-        </header>
-        <div class="divider"></div>
-        <div class="calendar-widget">
-            <ul class="weeks">
-                <li *ngFor="let day of weekDays">{{ day }}</li>
-            </ul>
-            <ul class="days">
-                <li *ngFor="let day of days" [class.inactive]="day.inactive" [class.today]="day.today"
-                    [class.event]="day.event && !day.today" (click)="navigateToDay(day)">
-                    {{ day.date }}
-                </li>
-            </ul>
-        </div>
+  <div id="calendar-box" class="f-c-c-c" *ngIf="!isLoading">
+    <header class="header-content">
+      <a
+        class="current-date"
+        style="font-weight: bold"
+        [routerLink]="['/calendar']"
+      >
+        {{ currentDate }}
+      </a>
+      <div class="icons">
+        <span id="prev" (click)="changeMonth(-1)">
+          <i class="fa-solid fa-angle-left"></i>
+        </span>
+        <span id="next" (click)="changeMonth(1)">
+          <i class="fa-solid fa-angle-right"></i>
+        </span>
+      </div>
+    </header>
+    <div class="divider"></div>
+    <div class="calendar-widget">
+      <ul class="weeks">
+        <li *ngFor="let day of weekDays">{{ day }}</li>
+      </ul>
+      <ul class="days">
+        <li
+          *ngFor="let day of days"
+          [class.inactive]="day.inactive"
+          [class.today]="day.today"
+          [class.event]="day.event && !day.today"
+          (click)="navigateToDay(day)"
+        >
+          {{ day.date }}
+        </li>
+      </ul>
     </div>
-    <div id="calendar-box-placeholder" class="f-c-c-c placeholder-glow w-100" *ngIf="isLoading">
-        <header class="header-content">
-            <div class="placeholder col-6"></div>
-            <div class="icons">
-                <span><i class="placeholder col-2"></i></span>
-                <span><i class="placeholder col-2"></i></span>
-            </div>
-        </header>
-        <div class="divider"></div>
-        <div class="calendar-widget">
-            <ul class="weeks">
-                <li *ngFor="let day of weekDays">
-                    <div class="placeholder col-2"></div>
-                </li>
-            </ul>
-            <ul class="days">
-                <li *ngFor="let j of [1, 2, 3, 4, 5, 6, 7]">
-                    <div class="placeholder col-2"></div>
-                </li>
-            </ul>
-        </div>
+  </div>
+  <div
+    id="calendar-box-placeholder"
+    class="f-c-c-c placeholder-glow w-100"
+    *ngIf="isLoading"
+  >
+    <header class="header-content">
+      <div class="placeholder col-6"></div>
+      <div class="icons">
+        <span><i class="placeholder col-2"></i></span>
+        <span><i class="placeholder col-2"></i></span>
+      </div>
+    </header>
+    <div class="divider"></div>
+    <div class="calendar-widget">
+      <ul class="weeks">
+        <li *ngFor="let day of weekDays">
+          <div class="placeholder col-2"></div>
+        </li>
+      </ul>
+      <ul class="days">
+        <li *ngFor="let j of [1, 2, 3, 4, 5, 6, 7]">
+          <div class="placeholder col-2"></div>
+        </li>
+      </ul>
     </div>
+  </div>
 </div>

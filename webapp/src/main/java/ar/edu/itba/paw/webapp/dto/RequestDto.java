@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URIValidator;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -16,7 +16,7 @@ import java.util.Date;
 public class RequestDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 500)
+    @Size(max = 512)
     private String message;
 
     @NotNull(groups = OnCreate.class)
@@ -24,7 +24,6 @@ public class RequestDto {
     private String product;
 
     @NotNull(groups = OnCreate.class)
-    @Range(min = 1, max = 100)
     private Integer unitsRequested;
 
     @NotNull(groups = OnCreate.class)
@@ -60,7 +59,7 @@ public class RequestDto {
         UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
         UriBuilder requestUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).path(requestId);
         UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
-        UriBuilder requestUserUri = neighborhoodUri.clone().path(Endpoint.USERS).path(requestUserId);
+        UriBuilder requestUserUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(requestUserId);
 
         links.setSelf(requestUri.build());
         links.setProduct(productUri.build());

@@ -44,14 +44,6 @@ public class Profession {
     }
 
     @Override
-    public String toString() {
-        return "Profession{" +
-                "professionId=" + professionId +
-                ", profession='" + profession + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Profession)) return false;

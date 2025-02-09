@@ -1,12 +1,25 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MarketplacePageComponent } from './marketplace-page.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ProductService, LinkKey, Product, Role } from '@shared/index';
 import { DepartmentService } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
+
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
 
 describe('MarketplacePageComponent - Initialization', () => {
   let component: MarketplacePageComponent;
@@ -76,6 +89,8 @@ describe('MarketplacePageComponent - Initialization', () => {
     TestBed.configureTestingModule({
       declarations: [MarketplacePageComponent],
       providers: [
+        { provide: TranslateService, useClass: FakeTranslateService },
+
         { provide: ProductService, useValue: productServiceSpy },
         { provide: DepartmentService, useValue: departmentServiceSpy },
         { provide: HateoasLinksService, useValue: linkServiceSpy },
@@ -91,7 +106,7 @@ describe('MarketplacePageComponent - Initialization', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(MarketplacePageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); 
+    fixture.detectChanges();
   });
 
   it('should initialize by reading query params and loading products', () => {

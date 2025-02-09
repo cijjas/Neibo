@@ -75,43 +75,6 @@ public class InquiryDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_inquiryId_valid() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
-        long iqKey = testInserter.createInquiry(pKey, uKey2);
-
-        // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(iqKey);
-
-        // Validations & Post Conditions
-        assertTrue(optionalInquiry.isPresent());
-        assertEquals(iqKey, optionalInquiry.get().getInquiryId().longValue());
-    }
-
-    @Test
-    public void find_inquiryId_invalid_inquiryId() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(DEPARTMENT_NAME_1);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
-        long iqKey = testInserter.createInquiry(pKey, uKey2);
-
-        // Exercise
-        Optional<Inquiry> optionalInquiry = inquiryDaoImpl.findInquiry(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalInquiry.isPresent());
-    }
-
-    @Test
     public void find_neighborhoodId_productId_inquiryId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();

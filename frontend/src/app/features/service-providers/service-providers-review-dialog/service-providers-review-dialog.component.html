@@ -7,10 +7,16 @@
     <div class="dialog-header">
       <div class="review-dialog-text">
         <h3 class="font-size-20 font-weight-bold c-services mb-3">
-          {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.LEAVE_A_REVIEW" | translate }}
+          {{ 'SERVICE-PROVIDERS-REVIEW-DIALOG.LEAVE_A_REVIEW' | translate }}
         </h3>
-        <p class="font-weight-normal font-size-14">
-          {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.SHARE_YOUR_EXPERIENCE_WITH" | translate }}
+        <p
+          class="font-weight-normal font-size-14"
+          style="color: var(--lighttext)"
+        >
+          {{
+            'SERVICE-PROVIDERS-REVIEW-DIALOG.SHARE_YOUR_EXPERIENCE_WITH'
+              | translate
+          }}
           <strong class="c-services">{{ worker?.businessName }}</strong>
         </p>
       </div>
@@ -37,7 +43,10 @@
           *ngIf="!rating && reviewForm.submitted"
           class="error-message c-red"
         >
-        {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.PLEASE_SELECT_A_STAR_RATING" | translate }}
+          {{
+            'SERVICE-PROVIDERS-REVIEW-DIALOG.PLEASE_SELECT_A_STAR_RATING'
+              | translate
+          }}
         </div>
 
         <textarea
@@ -45,7 +54,9 @@
           [(ngModel)]="reviewMessage"
           class="cool-input services-input textarea-min-max"
           rows="5"
-          [attr.placeholder]="'SERVICE-PROVIDERS-REVIEW-DIALOG.YOUR_REVIEW' | translate"
+          [attr.placeholder]="
+            'SERVICE-PROVIDERS-REVIEW-DIALOG.YOUR_REVIEW' | translate
+          "
           required
           minlength="10"
         ></textarea>
@@ -53,9 +64,10 @@
           *ngIf="reviewForm.invalid && reviewForm.touched"
           class="error-message c-red"
         >
-          <span *ngIf="reviewMessage?.length < 10"
-            >{{ "SERVICE-PROVIDERS-REVIEW-DIALOG.REVIEW_MUST_BE_AT_LEAST" | translate }}</span
-          >
+          <span *ngIf="reviewMessage?.length < 10">{{
+            'SERVICE-PROVIDERS-REVIEW-DIALOG.REVIEW_MUST_BE_AT_LEAST'
+              | translate
+          }}</span>
         </div>
       </div>
       <button
@@ -63,7 +75,7 @@
         class="w-75 cool-button services-button pure filled-interesting square-radius font-size-14 font-weight-bold"
         [disabled]="reviewForm.invalid"
       >
-      {{ "SERVICE-PROVIDERS-REVIEW-DIALOG.SUBMIT_REVIEW" | translate }}
+        {{ 'SERVICE-PROVIDERS-REVIEW-DIALOG.SUBMIT_REVIEW' | translate }}
       </button>
     </form>
   </div>

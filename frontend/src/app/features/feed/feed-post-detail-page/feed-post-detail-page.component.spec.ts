@@ -1,10 +1,23 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FeedPostDetailPageComponent } from './feed-post-detail-page.component';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { Post, Role } from '@shared/index';
+import { TranslateService } from '@ngx-translate/core';
+
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
 
 // Create a dummy post with all required properties. Use a cast to bypass type issues.
 const dummyPost: Post = {
@@ -45,7 +58,10 @@ describe('FeedPostDetailPageComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [FeedPostDetailPageComponent],
-      providers: [{ provide: ActivatedRoute, useValue: fakeActivatedRoute }],
+      providers: [
+        { provide: ActivatedRoute, useValue: fakeActivatedRoute },
+        { provide: TranslateService, useClass: FakeTranslateService },
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     })
       // Override the template to avoid processing any pipes or unknown elements.

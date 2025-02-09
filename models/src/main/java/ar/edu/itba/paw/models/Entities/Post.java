@@ -1,5 +1,5 @@
-package ar.edu.itba.paw.models.Entities;// Post.java
-import org.hibernate.annotations.ColumnDefault;
+package ar.edu.itba.paw.models.Entities;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -17,14 +17,14 @@ public class Post {
     @Column(name = "title", length = 128, nullable = false)
     private String title;
 
-    @Column(name = "description", length = 1064, nullable = false)
+    @Column(name = "description", length = 1024, nullable = false)
     private String description;
 
     @Column(name = "postdate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "userid", nullable = false)
     private User user;
 
@@ -32,7 +32,7 @@ public class Post {
     @JoinColumn(name = "channelid", nullable = false)
     private Channel channel;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "postpictureid")
     private Image postPicture;
 
@@ -44,7 +44,7 @@ public class Post {
     private Set<Tag> tags;
 
     @Column(name = "likes")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> likedByUsers;
 
@@ -65,12 +65,12 @@ public class Post {
         this.date = new Date(System.currentTimeMillis());
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
     public Long getPostId() {
         return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getTitle() {
@@ -143,21 +143,6 @@ public class Post {
 
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postId=" + postId +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", channel=" + channel +
-                ", postPicture=" + postPicture +
-                ", tags=" + tags +
-                ", likedByUsers=" + likedByUsers +
-                ", comments=" + comments +
-                '}';
     }
 
     @Override

@@ -60,14 +60,6 @@ public class Image {
     }
 
     @Override
-    public String toString() {
-        return "Image{" +
-                "imageId=" + imageId +
-                ", image=[BLOB]" +  // Representing a byte array
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Image)) return false;

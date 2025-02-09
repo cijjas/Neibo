@@ -1,11 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
@@ -46,14 +42,15 @@ public class Event {
     private Set<User> attendees;
 
 
-    // Constructor
     Event() {
     }
 
-
-    // Getters and Setters
     public Long getEventId() {
         return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
     }
 
     public String getName() {
@@ -84,10 +81,6 @@ public class Event {
         return formatter;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
-    }
-
     public Set<User> getAttendees() {
         return attendees;
     }
@@ -95,7 +88,6 @@ public class Event {
     public void setAttendees(Set<User> attendees) {
         this.attendees = attendees;
     }
-
 
     public Neighborhood getNeighborhood() {
         return neighborhood;
@@ -121,44 +113,6 @@ public class Event {
         this.endTime = endTime;
     }
 
-    public String getStartTimeString() {
-        if (startTime == null) {
-            return "";
-        } else {
-            return startTime.getTimeInterval().toLocalTime().format(formatter);
-        }
-    }
-
-    public String getEndTimeString() {
-        if (endTime == null) {
-            return "";
-        } else {
-            return endTime.getTimeInterval().toLocalTime().format(formatter);
-        }
-    }
-
-    public String getDuration() {
-        if (startTime != null && endTime != null) {
-            LocalTime start = startTime.getTimeInterval().toLocalTime();
-            LocalTime end = endTime.getTimeInterval().toLocalTime();
-            Long minutes = ChronoUnit.MINUTES.between(start, end);
-            return String.valueOf(minutes);
-        }
-        return "N/A";
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "eventId=" + eventId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                '}';
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -172,7 +126,6 @@ public class Event {
         return Objects.hash(eventId, name, description, date, startTime, endTime);
     }
 
-    // Builder Class
     public static class Builder {
         private Long eventId;
         private String name;

@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -14,19 +12,16 @@ public class Shift {
     @SequenceGenerator(sequenceName = "shifts_shiftid_seq", name = "shifts_shiftid_seq", allocationSize = 1)
     private Long shiftId;
 
-    @ManyToMany(mappedBy = "availableShifts", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "availableShifts")
     private List<Amenity> amenities;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "dayid")
     private Day day;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "starttime")
     private Time startTime;
-
-    @Transient
-    private java.sql.Time endTime;
 
     @Transient
     private Boolean taken;
@@ -39,16 +34,6 @@ public class Shift {
         this.day = builder.day;
         this.startTime = builder.startTime;
         this.taken = builder.taken;
-        if (builder.startTime != null) {
-            this.endTime = calculateEndTime(builder.startTime);
-        }
-    }
-
-    private java.sql.Time calculateEndTime(Time startTime) {
-        // Calculate endTime by adding 1 hour to the startTime
-        long startTimeMillis = startTime.getTimeInterval().getTime();
-        long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
-        return new java.sql.Time(endTimeMillis);
     }
 
     public Boolean getTaken() {
@@ -59,58 +44,36 @@ public class Shift {
         this.taken = taken;
     }
 
-    public void setShiftId(Long shiftId) {
-        this.shiftId = shiftId;
-    }
-
-    public void setAmenities(List<Amenity> amenities) {
-        this.amenities = amenities;
-    }
-
-    public void setDay(Day day) {
-        this.day = day;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(java.sql.Time endTime) {
-        this.endTime = endTime;
-    }
-
     public Long getShiftId() {
         return shiftId;
+    }
+
+    public void setShiftId(Long shiftId) {
+        this.shiftId = shiftId;
     }
 
     public List<Amenity> getAmenities() {
         return amenities;
     }
 
+    public void setAmenities(List<Amenity> amenities) {
+        this.amenities = amenities;
+    }
+
     public Day getDay() {
         return day;
+    }
+
+    public void setDay(Day day) {
+        this.day = day;
     }
 
     public Time getStartTime() {
         return startTime;
     }
 
-    public java.sql.Time getEndTime() {
-        if (endTime == null && startTime != null) {
-            endTime = calculateEndTime(startTime);
-        }
-        return endTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Shift{" +
-                "shiftId=" + shiftId +
-                ", day=" + day +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", taken=" + taken +
-                '}';
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
     }
 
     @Override

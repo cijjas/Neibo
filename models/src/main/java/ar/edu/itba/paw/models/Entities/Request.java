@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.enums.RequestStatus;
-import ar.edu.itba.paw.enums.UserRole;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,7 +23,7 @@ public class Request implements Serializable {
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
-    @Column(name = "message")
+    @Column(name = "message", length = 512)
     private String message;
 
     @Column(name = "requestdate")

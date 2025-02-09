@@ -107,12 +107,10 @@ export class FeedCreatePostPageComponent implements OnInit {
       LinkKey.NEIGHBORHOOD_COMPLAINTS_CHANNEL,
     );
 
-    this.translate.getTranslation(this.translate.currentLang).subscribe(() => {
-      // Listen to route queryParams for channel
-      this.route.queryParams.subscribe(params => {
-        this.channel = params['inChannel'];
-        this.updateChannelTitle();
-      });
+    // Listen to route queryParams for channel
+    this.route.queryParams.subscribe(params => {
+      this.channel = params['inChannel'];
+      this.updateChannelTitle();
     });
 
     // If user is not a worker, load tags
@@ -462,7 +460,7 @@ export class FeedCreatePostPageComponent implements OnInit {
     } else if (this.channel === this.complaintsChannelUrl) {
       return this.translate.instant('FEED-CREATE-POST-PAGE.COMPLAINT');
     }
-    return this.translate.instant('FEED-CREATE-POST-PAGE.CONTENT'); // Fallback
+    return this.translate.instant('FEED-CREATE-POST-PAGE.CONTENT');
   }
 
   /**

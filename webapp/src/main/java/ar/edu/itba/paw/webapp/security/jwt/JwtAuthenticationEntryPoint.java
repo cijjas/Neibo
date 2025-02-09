@@ -53,7 +53,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
     private ApiErrorDetails createErrorDetails(String title, Throwable exception, HttpStatus status, HttpServletRequest request) {
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setTitle(title);
-        // Only set the message if it's not null
         if (exception != null && exception.getMessage() != null) {
             errorDetails.setMessage(exception.getMessage());
         }

@@ -15,8 +15,6 @@ public interface ProductDao {
 
     Optional<Product> findProduct(long neighborhoodId, long productId);
 
-    Optional<Product> findProduct(long productId);
-
     List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size);
 
     int countProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId);

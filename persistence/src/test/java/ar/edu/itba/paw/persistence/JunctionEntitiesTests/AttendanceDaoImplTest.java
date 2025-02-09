@@ -20,7 +20,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -69,79 +68,6 @@ public class AttendanceDaoImplTest {
         assertEquals(eKey, attendance.getEvent().getEventId().longValue());
         assertEquals(uKey, attendance.getUser().getUserId().longValue());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events_users.name()));
-    }
-
-    // -------------------------------------------------- FINDS --------------------------------------------------------
-
-    @Test
-    public void find_neighborhoodId_eventId_userId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long tKey1 = testInserter.createTime();
-        long tKey2 = testInserter.createTime();
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
-        testInserter.createAttendance(uKey1, eKey1);
-
-        // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(eKey1, uKey1);
-
-        // Validations & Post Conditions
-        assertTrue(optionalAttendance.isPresent());
-        assertEquals(eKey1, optionalAttendance.get().getEvent().getEventId().longValue());
-        assertEquals(uKey1, optionalAttendance.get().getUser().getUserId().longValue());
-    }
-
-    @Test
-    public void find_eventId_userId_invalid_userId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long tKey1 = testInserter.createTime();
-        long tKey2 = testInserter.createTime();
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
-        testInserter.createAttendance(uKey1, eKey1);
-
-        // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(eKey1, INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalAttendance.isPresent());
-    }
-
-    @Test
-    public void find_eventId_userId_invalid_eventId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long tKey1 = testInserter.createTime();
-        long tKey2 = testInserter.createTime();
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
-        testInserter.createAttendance(uKey1, eKey1);
-
-        // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, uKey1);
-
-        // Validations & Post Conditions
-        assertFalse(optionalAttendance.isPresent());
-    }
-
-
-    @Test
-    public void find_eventId_userId_invalid_eventId_userId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long tKey1 = testInserter.createTime();
-        long tKey2 = testInserter.createTime();
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
-        testInserter.createAttendance(uKey1, eKey1);
-
-        // Exercise
-        Optional<Attendance> optionalAttendance = attendanceDaoImpl.findAttendance(INVALID_ID, INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optionalAttendance.isPresent());
     }
 
     // -------------------------------------------------- GETS ---------------------------------------------------------

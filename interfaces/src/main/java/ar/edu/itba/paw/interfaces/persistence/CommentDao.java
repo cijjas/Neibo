@@ -15,8 +15,6 @@ public interface CommentDao {
 
     Optional<Comment> findComment(long neighborhoodId, long postId, long commentId);
 
-    Optional<Comment> findComment(long commentId);
-
     List<Comment> getComments(long neighborhoodId, long postId, int page, int size);
 
     int countComments(long neighborhoodId, long postId);

@@ -3,8 +3,21 @@ import { MarketplaceDashboardBuyerPageComponent } from './marketplace-dashboard-
 import { ActivatedRoute, Router } from '@angular/router';
 import { HateoasLinksService } from '@core/index';
 import { RequestService } from '@shared/index';
-import { of, BehaviorSubject } from 'rxjs';
+import { of, BehaviorSubject, Observable } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
 
 describe('MarketplaceDashboardBuyerPageComponent', () => {
   let component: MarketplaceDashboardBuyerPageComponent;
@@ -34,6 +47,7 @@ describe('MarketplaceDashboardBuyerPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: [MarketplaceDashboardBuyerPageComponent],
       providers: [
+        { provide: TranslateService, useClass: FakeTranslateService },
         { provide: HateoasLinksService, useValue: linkServiceSpy },
         { provide: RequestService, useValue: requestServiceSpy },
         { provide: Router, useValue: routerSpy },
@@ -67,12 +81,12 @@ describe('MarketplaceDashboardBuyerPageComponent', () => {
     paramMapSubject.next(paramMapValue);
     fakeActivatedRoute.snapshot.paramMap = paramMapValue;
 
-    fixture.detectChanges(); 
+    fixture.detectChanges();
 
     expect(component.isPurchases).toBeTrue();
-    expect(requestServiceSpy.getRequests).toHaveBeenCalled(); 
+    expect(requestServiceSpy.getRequests).toHaveBeenCalled();
     expect(component.purchaseList).toBeDefined();
-    expect(component.requestList.length).toBe(0); 
+    expect(component.requestList.length).toBe(0);
   });
 
   /**
@@ -85,10 +99,10 @@ describe('MarketplaceDashboardBuyerPageComponent', () => {
     paramMapSubject.next(paramMapValue);
     fakeActivatedRoute.snapshot.paramMap = paramMapValue;
 
-    fixture.detectChanges(); 
+    fixture.detectChanges();
 
     expect(component.isRequests).toBeTrue();
-    expect(requestServiceSpy.getRequests).toHaveBeenCalled(); 
+    expect(requestServiceSpy.getRequests).toHaveBeenCalled();
     expect(component.requestList).toBeDefined();
     expect(component.purchaseList.length).toBe(0);
   });
@@ -107,7 +121,7 @@ describe('MarketplaceDashboardBuyerPageComponent', () => {
     queryParamsSubject.next(queryParamsValue);
     fakeActivatedRoute.snapshot.queryParams = queryParamsValue;
 
-    fixture.detectChanges(); 
+    fixture.detectChanges();
 
     requestServiceSpy.getRequests.calls.reset();
     routerSpy.navigate.calls.reset();

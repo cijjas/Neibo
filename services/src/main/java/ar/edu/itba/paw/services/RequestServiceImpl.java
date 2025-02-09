@@ -41,10 +41,10 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Request createRequest(long userId, long productId, String message, int quantity) {
+    public Request createRequest(long neighborhoodId, long userId, long productId, String message, int quantity) {
         LOGGER.info("Creating Request {} for {} units for Product {} by User {}", message, quantity, productId, userId);
 
-        Product product = productDao.findProduct(productId).orElseThrow(NotFoundException::new);
+        Product product = productDao.findProduct(neighborhoodId, productId).orElseThrow(NotFoundException::new);
         User seller = userDao.findUser(product.getSeller().getUserId()).orElseThrow(NotFoundException::new);
         emailService.sendNewRequestMail(product, seller, message);
 
@@ -52,14 +52,6 @@ public class RequestServiceImpl implements RequestService {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Request> findRequest(long requestId) {
-        LOGGER.info("Finding Request {}", requestId);
-
-        return requestDao.findRequest(requestId);
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -100,11 +92,11 @@ public class RequestServiceImpl implements RequestService {
 
         Request request = requestDao.findRequest(neighborhoodId, requestId).orElseThrow(NotFoundException::new);
 
-        if (requestStatusId != null){
+        if (requestStatusId != null) {
             if (requestStatusId == RequestStatus.ACCEPTED.getId()) {
                 Product p = request.getProduct();
                 long finalUnits = p.getRemainingUnits() - request.getUnits();
-                if ( finalUnits < 0)
+                if (finalUnits < 0)
                     throw new IllegalArgumentException("Cant fulfill the request, not enough stock.");
                 request.setPurchaseDate(new Date(System.currentTimeMillis()));
                 p.setRemainingUnits(p.getRemainingUnits() - request.getUnits());

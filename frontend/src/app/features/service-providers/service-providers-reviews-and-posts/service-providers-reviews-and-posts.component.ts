@@ -39,7 +39,9 @@ export class ServiceProvidersReviewsAndPostsComponent
   isTheWorker = false;
   isWorker = false;
 
-  worker: Worker = null;
+  @Input() worker: Worker;
+
+  isLoading = true;
 
   selectedTab: 'reviews' | 'posts' = 'reviews';
 
@@ -53,7 +55,7 @@ export class ServiceProvidersReviewsAndPostsComponent
   ) {}
 
   ngOnInit(): void {
-    const workerId = this.route.snapshot.paramMap.get('id');
+    const workerId = this.worker.self;
     if (workerId) {
       this.loadWorker(workerId).then(() => {
         this.isTheWorker =
@@ -61,6 +63,8 @@ export class ServiceProvidersReviewsAndPostsComponent
         this.isWorker =
           this.linkService.getLink(LinkKey.USER_USER_ROLE) ===
           this.linkService.getLink(LinkKey.WORKER_USER_ROLE);
+
+        this.isLoading = false;
 
         this.subscriptions.add(
           this.route.queryParams.subscribe(params => {
@@ -76,6 +80,7 @@ export class ServiceProvidersReviewsAndPostsComponent
           }),
         );
 
+        // If the worker changes, reload reviews/posts
         this.subscriptions.add(
           this.workerSubject
             .pipe(
@@ -98,7 +103,7 @@ export class ServiceProvidersReviewsAndPostsComponent
       this.workerService.getWorker(id).subscribe({
         next: worker => {
           this.worker = worker;
-          this.workerSubject.next(worker); 
+          this.workerSubject.next(worker);
           resolve();
         },
         error: err => {
@@ -108,7 +113,6 @@ export class ServiceProvidersReviewsAndPostsComponent
       });
     });
   }
-
 
   onTabChange(tab: 'reviews' | 'posts'): void {
     this.selectedTab = tab;
@@ -138,7 +142,6 @@ export class ServiceProvidersReviewsAndPostsComponent
 
   loadPosts(): void {
     const workerPostsUrl = this.worker.posts;
-
     this.postService
       .getWorkerPostsByUrl(workerPostsUrl, {
         page: this.postCurrentPage,
@@ -199,7 +202,8 @@ export class ServiceProvidersReviewsAndPostsComponent
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
   }
-  goToServicePostCreation() {
+
+  goToServicePostCreation(): void {
     this.router.navigate(['/services', 'posts', 'new'], {
       queryParams: {
         inChannel: this.linkService.getLink(

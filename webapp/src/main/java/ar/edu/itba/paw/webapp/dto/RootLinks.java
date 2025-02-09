@@ -3,65 +3,60 @@ package ar.edu.itba.paw.webapp.dto;
 import java.net.URI;
 
 public class RootLinks {
-    // Self
     private URI self;
 
-    // ------- Dynamic Endpoints
-    // Neighborhoods
     private URI neighborhoods;
     private URI workersNeighborhood;
-    // Affiliations
+
     private URI affiliations;
-    // Images
+
     private URI images;
-    // Neighborhood
+
     private URI neighborhood;
-    // Workers
+
     private URI workers;
-    // Departments
+
     private URI departments;
-    // Professions
+
     private URI professions;
-    // Shifts
+
     private URI shifts;
-    // Users
+
     private URI users;
 
-    // ------- Static Endpoints
-    // Languages
     private URI languages;
     private URI englishLanguage;
     private URI spanishLanguage;
-    // User Roles
+
     private URI administratorUserRole;
     private URI superAdministratorUserRole;
     private URI neighborUserRole;
     private URI unverifiedNeighborUserRole;
     private URI rejectedUserRole;
     private URI workerUserRole;
-    // Worker Posts
+
     private URI workerPosts;
-    // Worker Roles (Affiliation)
+
     private URI verifiedWorkerRole;
     private URI unverifiedWorkerRole;
     private URI rejectedWorkerRole;
-    // Worker Statuses
+
     private URI hotWorkerStatus;
     private URI trendingWorkerStatus;
-    // Post Statuses
+
     private URI postStatuses;
     private URI nonePostStatus;
     private URI hotPostStatus;
     private URI trendingPostStatus;
-    // Product Status
+
     private URI boughtProductStatus;
     private URI soldProductStatus;
     private URI sellingProductStatus;
-    // Request Statuses
+
     private URI acceptedRequestStatus;
     private URI declinedRequestStatus;
     private URI requestedRequestStatus;
-    // Transaction Types
+
     private URI purchaseTransactionType;
     private URI saleTransactionType;
 

@@ -7,7 +7,6 @@ export * from '@shared/components/sidebar/sidebar.component';
 export * from './components/navbar/navbar.component';
 export * from './components/paginator/paginator.component';
 export * from './components/infinite-scroll-select/infinite-scroll-select.component';
-export * from './components/right-column/right-column.component';
 export * from './components/confirmation-dialog/confirmation-dialog.component';
 export * from './components/success-toast/success-toast.component';
 export * from './components/wave-footer/wave-footer.component';

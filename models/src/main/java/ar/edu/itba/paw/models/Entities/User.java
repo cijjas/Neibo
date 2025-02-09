@@ -36,7 +36,7 @@ public class User {
     @Column(name = "darkmode")
     private Boolean darkMode;
 
-    @Column(name = "phonenumber")
+    @Column(name = "phonenumber", length = 255)
     private String phoneNumber;
 
     @Column(name = "language", length = 32)
@@ -51,23 +51,23 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "profilepictureid", referencedColumnName = "imageId")
     private Image profilePicture;
 
     @Column(name = "identification")
     private Integer identification;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Booking> bookings;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "users_availability",
             joinColumns = @JoinColumn(name = "userid"),
             inverseJoinColumns = @JoinColumn(name = "amenityavailabilityid"))
@@ -81,7 +81,7 @@ public class User {
     @JoinTable(name = "reviews", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> reviewsGiven;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL) //cambiar a seller y tmb en Product??
+    @OneToMany(mappedBy = "seller")
     private List<Product> productsSelling;
 
     @ManyToMany
@@ -300,23 +300,6 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", mail='" + mail + '\'' +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", password='" + password + '\'' +
-                ", neighborhood=" + neighborhood +
-                ", darkMode=" + darkMode +
-                ", language=" + language +
-                ", role=" + role +
-                ", creationDate=" + creationDate +
-                ", identification=" + identification +
-                '}';
     }
 
     @Override

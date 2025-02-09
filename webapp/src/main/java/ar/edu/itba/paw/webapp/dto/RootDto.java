@@ -55,7 +55,7 @@ public class RootDto {
         links.setEnglishLanguage(languagesUri.clone().path(String.valueOf(Language.ENGLISH.getId())).build());
         links.setSpanishLanguage(languagesUri.clone().path(String.valueOf(Language.SPANISH.getId())).build());
 
-        links.setPostStatuses(postStatusesUri.build()); // Should be removed as its redundant, already extensively defined, is it redundant?
+        links.setPostStatuses(postStatusesUri.build());
         links.setHotPostStatus(postStatusesUri.clone().path(String.valueOf(PostStatus.HOT.getId())).build());
         links.setTrendingPostStatus(postStatusesUri.clone().path(String.valueOf(PostStatus.TRENDING.getId())).build());
         links.setNonePostStatus(postStatusesUri.clone().path(String.valueOf(PostStatus.NONE.getId())).build());

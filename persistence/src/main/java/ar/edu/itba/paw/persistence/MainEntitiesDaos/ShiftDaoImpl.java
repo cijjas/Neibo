@@ -50,13 +50,11 @@ public class ShiftDaoImpl implements ShiftDao {
     public List<Shift> getShifts(Long amenityId, Date date, Integer dayId) {
         LOGGER.debug("Selecting Shifts with Amenity Id {} on Date {}", amenityId, date);
 
-        // If both amenityId and date are null, return all shifts ordered by day and start time
         if (amenityId == null && date == null) {
             return em.createQuery("SELECT s FROM Shift s ORDER BY s.day DESC, s.startTime ASC", Shift.class)
                     .getResultList();
         }
 
-        // If date is null, use HQL to fetch shifts for a specific amenity
         if (date == null) {
             String hql = "SELECT s FROM Shift s JOIN s.amenities a WHERE a.amenityId = :amenityId ORDER BY s.day DESC, s.startTime ASC";
             TypedQuery<Shift> query = em.createQuery(hql, Shift.class);
@@ -64,7 +62,6 @@ public class ShiftDaoImpl implements ShiftDao {
             return query.getResultList();
         }
 
-        // If both amenityId and date are provided and due to the service also dayId, use a native query to fetch shifts with availability status
         String nativeQuery = "SELECT s.shiftid, s.dayid, s.starttime, " +
                 "CASE " +
                 "   WHEN (" +

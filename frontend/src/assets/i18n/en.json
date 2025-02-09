@@ -222,9 +222,9 @@
     "RESOURCE_DELETED_SUCCESSFULLY": "Resource deleted successfully.",
     "ERROR_DELETING_RESOURCE": "Error deleting resource:",
     "FAILED_TO_DELETE_RESOURCE": "Failed to delete resource.",
-    "CONTACT_NAME" : "Contact Name",
-    "CONTACT_ADDRESS" : "Contact Address",
-    "CONTACT_PHONE" : "Contact Phone"
+    "CONTACT_NAME": "Contact Name",
+    "CONTACT_ADDRESS": "Contact Address",
+    "CONTACT_PHONE": "Contact Phone"
   },
 
   "ADMIN-NEIGHBORS-REQUESTS-PAGE": {
@@ -591,6 +591,43 @@
     "LONG": "long",
     "ENUS": "en-US"
   },
+
+  "calendar": {
+    "month": {
+      "January": "January",
+      "February": "February",
+      "March": "March",
+      "April": "April",
+      "May": "May",
+      "June": "June",
+      "July": "July",
+      "August": "August",
+      "September": "September",
+      "October": "October",
+      "November": "November",
+      "December": "December"
+    },
+    "weekdays": {
+      "Sun": "Sun",
+      "Mon": "Mon",
+      "Tue": "Tue",
+      "Wed": "Wed",
+      "Thu": "Thu",
+      "Fri": "Fri",
+      "Sat": "Sat",
+      "Sunday": "Sunday",
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday",
+      "Saturday": "Saturday"
+    },
+    "actions": {
+      "previous": "Previous",
+      "next": "Next"
+    }
+  },
   "CALENDAR-WIDGET": {
     "_CURRENTDATE_": "{{ currentDate }}",
     "_DAY_": "{{ day }}",
@@ -803,7 +840,7 @@
     "USED": "Used",
     "NEW": "New",
     "VIEW_LISTING": "View listing",
-    "REQUESTS": "Requests",
+    "REQUESTS": "View requests",
     "PURCHASES_NOT_FOUND": "Purchases not found",
     "QUANTITY": "Quantity",
     "BOUGHT_BY": "Bought by"
@@ -850,8 +887,8 @@
     "UNIT": "Unit",
     "UNITS": "Units",
     "ASK_A_QUESTION": "Ask a question",
-    "PHONE_NUMBER_EX":"Phone Number (e.g. +54 9 11 1234 5678)",
-    "MESSAGE" : "Message",
+    "PHONE_NUMBER_EX": "Phone Number (e.g. +54 9 11 1234 5678)",
+    "MESSAGE": "Message",
     "YOUR_REPLY": "Your reply..."
   },
   "MARKETPLACE-PRODUCT-EDIT-PAGE": {
@@ -877,8 +914,8 @@
     "LISTING_UPDATED_SUCCESSFULLY": "Listing updated successfully",
     "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "There was a problem updating the listing.",
     "TITTLE": "Title",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Description"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Description"
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Used",
@@ -926,8 +963,8 @@
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "There was a problem creating the listing.",
     "INVALID_PRICE_FORMAT": "Invalid price format.",
     "TITTLE": "Title",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Description"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Description"
   },
   "NOT-FOUND-PAGE": {
     "OOPS__ERRORCODE_": "Oops! {{ errorCode }}",
@@ -1127,7 +1164,14 @@
   },
   "TAGS-FILTER-WIDGET": {
     "TAGS": "Filter by Tags",
-    "PROFESSIONS": "Filter by Profession"
+    "FILTER_BY_PROFESSIONS": "Filter by Profession",
+    "PROFESSIONS": {
+      "PLUMBER": "Plumber",
+      "ELECTRICIAN": "Electrician",
+      "POOL_MAINTENANCE": "Pool Maintenance",
+      "GARDENER": "Gardener",
+      "CARPENTER": "Carpenter"
+    }
   },
   "WAVE-FOOTER": {
     "SLOGAN": "Your peace of mind is our priority. Safe, secure, and serene.",
@@ -1195,5 +1239,11 @@
     "UNVERIFIED_PAGE": "Unverified | Neibo",
 
     "USER_PROFILE_PAGE": "Profile | Neibo"
+  },
+  "SUPER-ADMIN-PAGE": {
+    "WELCOME": "Welcome, Super Admin!",
+    "UNDER_DEVELOPMENT": "This feature is currently under development.",
+    "ADMINISTRATIVE_TOOLS": "We are working on bringing you a comprehensive suite of <b>administrative tools</b> to efficiently <b>manage multiple neighborhoods, users, and services</b>. Stay tuned for updates!",
+    "DEVELOPMENT_TEAM": "For any questions or early access requests, please reach out to the <b>development team</b>."
   }
 }

@@ -22,7 +22,6 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <filter-mapping>
         <filter-name>encoding-filter</filter-name>
-        <!-- HERE -->
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
@@ -42,27 +41,12 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <!--<servlet>
-        <servlet-name>dispatcher</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <init-param>
-            <param-name>contextClass</param-name>
-            <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>dispatcher</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>-->
-
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
-        <!-- HERE -->
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
@@ -73,7 +57,6 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     </filter>
     <filter-mapping>
         <filter-name>openEntityManagerInView</filter-name>
-        <!-- HERE -->
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
@@ -86,16 +69,13 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
             <param-value>
                 ar.edu.itba.paw.webapp.controller,
                 ar.edu.itba.paw.webapp.security
-
-                <!-- comment these to deactivate exception catchers -->
-<!--                ar.edu.itba.paw.webapp.mappers,-->
-<!--                ar.edu.itba.paw.webapp.mappers.jax,-->
+                ar.edu.itba.paw.webapp.mappers,
+                ar.edu.itba.paw.webapp.mappers.jax,
             </param-value>
         </init-param>
 
         <init-param>
             <param-name>jersey.config.servlet.filter.contextPath</param-name>
-            <!-- HERE -->
             <param-value>/</param-value>
         </init-param>
 
@@ -119,7 +99,6 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     </filter>
     <filter-mapping>
         <filter-name>jersey</filter-name>
-        <!-- HERE -->
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 

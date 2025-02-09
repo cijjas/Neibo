@@ -49,10 +49,6 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
 
             default:
-              // Generic error handling
-              console.warn(
-                `Received error [${error.status}]. ${error.message} `,
-              );
               break;
           }
         }
@@ -63,7 +59,6 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   private showNotification(message: string): void {
-    // Replace this with your notification service or logic
     console.log('Notification:', message);
   }
 }

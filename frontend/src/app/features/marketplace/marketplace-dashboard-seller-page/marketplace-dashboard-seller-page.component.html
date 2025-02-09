@@ -18,7 +18,9 @@
               [class.active]="isListings"
             >
               <i class="fa-regular fa-chart-bar"></i>
-              <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.MY_LISTINGS" | translate }}</span>
+              <span class="hide-text">{{
+                'MARKETPLACE-DASHBOARD-SELLER-PAGE.MY_LISTINGS' | translate
+              }}</span>
             </a>
 
             <a
@@ -27,7 +29,9 @@
               [class.active]="isSales"
             >
               <i class="fa-solid fa-box-open hide-icons"></i>
-              <span class="hide-text">{{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.MY_SALES" | translate }}</span>
+              <span class="hide-text">{{
+                'MARKETPLACE-DASHBOARD-SELLER-PAGE.MY_SALES' | translate
+              }}</span>
             </a>
           </div>
         </div>
@@ -36,7 +40,9 @@
         <ng-container *ngIf="isListings; else showSales">
           <div class="no-posts-found" *ngIf="listings.length === 0">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_NEW_REQUESTS" | translate }}
+            {{
+              'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_NEW_REQUESTS' | translate
+            }}
           </div>
 
           <div class="w-100 f-c-c-c g-1" *ngIf="listings.length > 0">
@@ -46,14 +52,18 @@
             >
               <div class="container">
                 <div class="f-r-c-c w-100 g-0">
-                  <div class="ps-0">
+                  <div class="p-3">
                     <div
                       class="purchased-product-image f-c-c-c placeholder-glow"
                     >
                       <img
                         [src]="getProductImage(product)"
-                        class=""
-                        style="max-height: 100px"
+                        style="
+                          width: 100px;
+                          height: 100px;
+                          object-fit: cover;
+                          border-radius: 10px;
+                        "
                         alt="purchased_product_image_{{ product.self }}"
                       />
                     </div>
@@ -67,12 +77,18 @@
 
                       <ng-container *ngIf="product.stock === 0; else inStock">
                         <div class="sold-tag p-2 font-weight-bolder">
-                          {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.SOLD_OUT" | translate }}
+                          {{
+                            'MARKETPLACE-DASHBOARD-SELLER-PAGE.SOLD_OUT'
+                              | translate
+                          }}
                         </div>
                       </ng-container>
                       <ng-template #inStock>
                         <div class="in-stock-tag p-2 font-weight-bolder">
-                          {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.IN_STOCK" | translate }}: {{ product.stock }}
+                          {{
+                            'MARKETPLACE-DASHBOARD-SELLER-PAGE.IN_STOCK'
+                              | translate
+                          }}: {{ product.stock }}
                         </div>
                       </ng-template>
                     </div>
@@ -84,9 +100,9 @@
                             product?.price
                               ? (
                                   product.price
-                                  | currency : "USD" : "symbol-narrow" : "1.0-2"
-                                ).split(".")[0]
-                              : ""
+                                  | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                                ).split('.')[0]
+                              : ''
                           }}
                         </span>
                         <div class="f-c-s-c ps-1" style="height: 20px">
@@ -95,15 +111,15 @@
                           >
                             {{
                               product?.price
-                                ? "," +
+                                ? ',' +
                                   ((
                                     product.price
                                     | currency
-                                      : "USD"
-                                      : "symbol-narrow"
-                                      : "1.0-2"
-                                  ).split(".")[1] || "00")
-                                : ""
+                                      : 'USD'
+                                      : 'symbol-narrow'
+                                      : '1.0-2'
+                                  ).split('.')[1] || '00')
+                                : ''
                             }}
                           </span>
                         </div>
@@ -113,16 +129,27 @@
                           class="department-tag"
                           (click)="goToDepartment(product.department)"
                         >
-                          {{ product.department?.name }}
+                          {{
+                            'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' +
+                              product.department?.name | translate
+                          }}
                         </div>
+
                         <div
                           *ngIf="product.used; else newTag"
                           class="used-tag used font-weight-normal"
                         >
-                        {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.USED" | translate }}
+                          {{
+                            'MARKETPLACE-DASHBOARD-SELLER-PAGE.USED' | translate
+                          }}
                         </div>
                         <ng-template #newTag>
-                          <div class="used-tag new font-weight-normal">{{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.NEW" | translate }}</div>
+                          <div class="used-tag new font-weight-normal">
+                            {{
+                              'MARKETPLACE-DASHBOARD-SELLER-PAGE.NEW'
+                                | translate
+                            }}
+                          </div>
                         </ng-template>
                       </div>
                     </div>
@@ -136,14 +163,21 @@
                           <i
                             class="fa-solid fa-arrow-right-to-bracket pe-1"
                           ></i>
-                          {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.VIEW_LISTING" | translate }}
+                          {{
+                            'MARKETPLACE-DASHBOARD-SELLER-PAGE.VIEW_LISTING'
+                              | translate
+                          }}
                         </a>
                         <a
                           class="cool-button small-a marketplace-button square-radius w-50 font-weight-bold"
                           (click)="goToRequests(product.self)"
                         >
                           <i class="fa-solid fa-bell pe-1"></i>
-                          {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.REQUESTS" | translate }} ({{ product.totalPendingRequests }})
+                          {{
+                            'MARKETPLACE-DASHBOARD-SELLER-PAGE.REQUESTS'
+                              | translate
+                          }}
+                          ({{ product.totalPendingRequests }})
                         </a>
                       </div>
                     </div>
@@ -166,7 +200,10 @@
         <ng-template #showSales>
           <div class="no-posts-found" *ngIf="sales.length === 0">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.PURCHASES_NOT_FOUND" | translate }}
+            {{
+              'MARKETPLACE-DASHBOARD-SELLER-PAGE.PURCHASES_NOT_FOUND'
+                | translate
+            }}
           </div>
 
           <div class="w-100 f-c-c-c g-1" *ngIf="sales.length > 0">
@@ -178,8 +215,8 @@
                 class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2"
                 style="padding-left: 1em; padding-right: 1em"
               >
-                <div>{{ purchase.createdAt | date : "dd MMM yyyy" }}</div>
-                <div>{{ purchase.createdAt | date : "HH:mm" }}</div>
+                <div>{{ purchase.createdAt | date : 'dd MMM yyyy' }}</div>
+                <div>{{ purchase.createdAt | date : 'HH:mm' }}</div>
               </div>
               <div class="divider m-0"></div>
 
@@ -209,25 +246,41 @@
                           class="department-tag"
                           (click)="goToDepartment(purchase.product?.department)"
                         >
-                          {{ purchase.product?.department?.name }}
+                          {{
+                            'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' +
+                              purchase.product?.department?.name | translate
+                          }}
                         </div>
                         <div
                           *ngIf="purchase.product?.used; else newSale"
                           class="used-tag used font-weight-normal"
                         >
-                        {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.USED" | translate }}
+                          {{
+                            'MARKETPLACE-DASHBOARD-SELLER-PAGE.USED' | translate
+                          }}
                         </div>
                         <ng-template #newSale>
-                          <div class="used-tag new font-weight-normal">{{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.NEW" | translate }}</div>
+                          <div class="used-tag new font-weight-normal">
+                            {{
+                              'MARKETPLACE-DASHBOARD-SELLER-PAGE.NEW'
+                                | translate
+                            }}
+                          </div>
                         </ng-template>
                       </div>
                     </div>
 
                     <div class="f-r-c-c font-weight-normal">
-                      {{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.QUANTITY" | translate }}: {{ purchase.unitsRequested }}
+                      {{
+                        'MARKETPLACE-DASHBOARD-SELLER-PAGE.QUANTITY'
+                          | translate
+                      }}: {{ purchase.unitsRequested }}
                     </div>
                     <div class="f-r-c-c g-05">
-                      <span class="font-weight-normal">{{ "MARKETPLACE-DASHBOARD-SELLER-PAGE.BOUGHT_BY" | translate }}</span>
+                      <span class="font-weight-normal">{{
+                        'MARKETPLACE-DASHBOARD-SELLER-PAGE.BOUGHT_BY'
+                          | translate
+                      }}</span>
                       <span style="color: var(--lila)">
                         {{ purchase.requestingUser?.name }} ({{
                           purchase.requestingUser?.phoneNumber
@@ -241,9 +294,9 @@
                           purchase.product?.price
                             ? (
                                 purchase.product.price
-                                | currency : "USD" : "symbol-narrow" : "1.0-2"
-                              ).split(".")[0]
-                            : ""
+                                | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                              ).split('.')[0]
+                            : ''
                         }}
                       </span>
                       <div class="f-c-s-c ps-1" style="height: 20px">
@@ -252,12 +305,12 @@
                         >
                           {{
                             purchase.product?.price
-                              ? "," +
+                              ? ',' +
                                 ((
                                   purchase.product.price
-                                  | currency : "USD" : "symbol-narrow" : "1.0-2"
-                                ).split(".")[1] || "00")
-                              : ""
+                                  | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                                ).split('.')[1] || '00')
+                              : ''
                           }}
                         </span>
                       </div>

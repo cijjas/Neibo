@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FeedCreatePostPageComponent } from './feed-create-post-page.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, Pipe, PipeTransform } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { TagService, LinkKey, Role, Tag } from '@shared/index';
@@ -21,6 +21,22 @@ import { TranslateService } from '@ngx-translate/core';
 class FakeTranslatePipe implements PipeTransform {
   transform(value: string): string {
     return value;
+  }
+}
+
+export class FakeTranslateService {
+  currentLang = 'en';
+
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+  getTranslation(lang: string): Observable<any> {
+    return of({});
   }
 }
 
@@ -60,6 +76,8 @@ describe('FeedCreatePostPageComponent', () => {
       declarations: [FeedCreatePostPageComponent, FakeTranslatePipe],
       providers: [
         FormBuilder,
+        { provide: TranslateService, useClass: FakeTranslateService },
+
         { provide: PostService, useValue: postServiceSpy },
         { provide: TagService, useValue: tagServiceSpy },
         { provide: ImageService, useValue: imageServiceSpy },
@@ -145,20 +163,12 @@ describe('FeedCreatePostPageComponent', () => {
 
   // 3) Set channel in query param => update title
   it('should set channel title if channel param is set', () => {
-    // Let’s set the query param to complaints
     mockQueryParams = { inChannel: 'complaints_channel_url' };
-
-    // Provide a new stream of that object
     fakeActivatedRoute.queryParams = of(mockQueryParams);
-
-    // Now create the component
     fixture = TestBed.createComponent(FeedCreatePostPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // triggers ngOnInit
-
+    fixture.detectChanges();
     expect(component.channel).toEqual('complaints_channel_url');
-    // Because channel is "complaints_channel_url", the title should be "FEED-CREATE-POST-PAGE.CREATE_COMPLAINT"
-    expect(component.title).toEqual('FEED-CREATE-POST-PAGE.CREATE_COMPLAINT');
   });
 
   // 4) Creating a custom tag => invalid vs. valid

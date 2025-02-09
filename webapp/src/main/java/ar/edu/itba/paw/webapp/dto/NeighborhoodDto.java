@@ -15,7 +15,7 @@ import javax.ws.rs.core.UriInfo;
 public class NeighborhoodDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 20)
+    @Size( max = 128)
     private String name;
 
     private Links _links;
@@ -80,7 +80,7 @@ public class NeighborhoodDto {
             links.setAnnouncements(postsUri.clone().queryParam(QueryParameter.IN_CHANNEL, announcementsChannelUri.clone().build()).build());
 
             links.setWorkers(workersUri.queryParam(QueryParameter.IN_NEIGHBORHOOD, links.getSelf()).build());
-        } else if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()){
+        } else if (neighborhoodIdLong == BaseNeighborhood.WORKERS.getId()) {
             UriBuilder workersChannelUri = channelsUri.clone().path(String.valueOf(BaseChannel.WORKERS.getId()));
             links.setWorkerChannel(workersChannelUri.build());
             links.setWorkers(workersUri.build());

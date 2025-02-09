@@ -98,7 +98,7 @@ public class AmenityServiceImpl implements AmenityService {
 
         if (shiftIds != null) {
             List<Shift> currentShifts = amenity.getAvailableShifts();
-            if (shiftIds.isEmpty()) // If the provided shiftIds list is empty, remove all availabilities for the amenity
+            if (shiftIds.isEmpty())
                 for (Shift shift : currentShifts)
                     availabilityDao.deleteAvailability(shift.getShiftId(), amenityId);
             else {

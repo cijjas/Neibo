@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -25,7 +23,7 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private float rating;
 
-    @Column(name = "review", length = 256, nullable = false)
+    @Column(name = "review", length = 255, nullable = false)
     private String review;
 
     @Column(name = "date")
@@ -44,60 +42,52 @@ public class Review {
         this.date = builder.date;
     }
 
-    public void setReviewId(Long reviewId) {
-        this.reviewId = reviewId;
-    }
-
-    public void setWorker(Worker worker) {
-        this.worker = worker;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public void setReview(String review) {
-        this.review = review;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public Long getReviewId() {
         return reviewId;
+    }
+
+    public void setReviewId(Long reviewId) {
+        this.reviewId = reviewId;
     }
 
     public Worker getWorker() {
         return worker;
     }
 
+    public void setWorker(Worker worker) {
+        this.worker = worker;
+    }
+
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public float getRating() {
         return rating;
     }
 
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
     public String getReview() {
         return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
     }
 
     public Date getDate() {
         return date;
     }
 
-    @Override
-    public String toString() {
-        return "Review{" +
-                "reviewId=" + reviewId +
-                ", date=" + date +
-                '}';
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override

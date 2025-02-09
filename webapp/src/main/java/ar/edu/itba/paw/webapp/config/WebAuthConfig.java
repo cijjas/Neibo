@@ -148,7 +148,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.AMENITIES + "/*"
                 ).access(
-                "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
                 )
                 .antMatchers(
                         HttpMethod.POST,
@@ -269,19 +269,23 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS,
                         "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS + "/*",
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*"
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS,
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*"
                 ).permitAll()
                 .antMatchers(
                         HttpMethod.POST,
                         "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS
-                        ).hasAnyRole(
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS,
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS
+                ).hasAnyRole(
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
                 .antMatchers(
                         HttpMethod.DELETE,
                         "/" + Endpoint.API + "/" + Endpoint.DEPARTMENTS + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*"
+                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*",
+                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*"
                 ).hasAnyRole(
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
@@ -298,8 +302,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/" + Endpoint.API + "/" + Endpoint.POST_STATUSES + "/*",
                         "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES,
                         "/" + Endpoint.API + "/" + Endpoint.PRODUCT_STATUSES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS,
-                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*",
                         "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES,
                         "/" + Endpoint.API + "/" + Endpoint.REQUEST_STATUSES + "/*",
                         "/" + Endpoint.API + "/" + Endpoint.SHIFTS,
@@ -315,8 +317,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 .antMatchers(
                         HttpMethod.POST,
-                        "/" + Endpoint.API + "/" + Endpoint.IMAGES,
-                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS
+                        "/" + Endpoint.API + "/" + Endpoint.IMAGES
                 ).hasAnyRole(
                         UserRole.REJECTED.name(),
                         UserRole.UNVERIFIED_NEIGHBOR.name(),
@@ -327,8 +328,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 )
                 .antMatchers(
                         HttpMethod.DELETE,
-                        "/" + Endpoint.API + "/" + Endpoint.IMAGES + "/*",
-                        "/" + Endpoint.API + "/" + Endpoint.PROFESSIONS + "/*"
+                        "/" + Endpoint.API + "/" + Endpoint.IMAGES + "/*"
                 ).hasAnyRole(
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
@@ -520,6 +520,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/static/**");
+        web.ignoring().antMatchers("/static/browser/**");
     }
 }

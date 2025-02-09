@@ -18,11 +18,11 @@ import java.text.SimpleDateFormat;
 public class EventDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 100)
+    @Size(max = 255)
     private String name;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 2000)
+    @Size(max = 512)
     private String description;
 
     @NotNull(groups = OnCreate.class)

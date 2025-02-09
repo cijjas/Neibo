@@ -222,9 +222,9 @@
     "RESOURCE_DELETED_SUCCESSFULLY": "¡Recurso eliminado exitosamente!",
     "ERROR_DELETING_RESOURCE": "Error al eliminar el recurso:",
     "FAILED_TO_DELETE_RESOURCE": "No se pudo eliminar el recurso.",
-    "CONTACT_NAME" : "Name de Contacto",
-    "CONTACT_ADDRESS" : "Dirección de Contacto",
-    "CONTACT_PHONE" : "Teléfono de Contacto"
+    "CONTACT_NAME": "Name de Contacto",
+    "CONTACT_ADDRESS": "Dirección de Contacto",
+    "CONTACT_PHONE": "Teléfono de Contacto"
   },
   "ADMIN-NEIGHBORS-REQUESTS-PAGE": {
     "_NEIGHBORS__PENDING_NEIGHBOR_REQUESTS__CURRENT_NEI": "{{ !neighbors ? \"Solicitudes Pendientes de Vecinos\" : \"Vecinos Actuales\" }}",
@@ -582,6 +582,42 @@
     "LONG": "largo",
     "ENUS": "en-US"
   },
+  "calendar": {
+    "month": {
+      "January": "Enero",
+      "February": "Febrero",
+      "March": "Marzo",
+      "April": "Abril",
+      "May": "Mayo",
+      "June": "Junio",
+      "July": "Julio",
+      "August": "Agosto",
+      "September": "Septiembre",
+      "October": "Octubre",
+      "November": "Noviembre",
+      "December": "Diciembre"
+    },
+    "weekdays": {
+      "Sun": "Dom",
+      "Mon": "Lun",
+      "Tue": "Mar",
+      "Wed": "Mié",
+      "Thu": "Jue",
+      "Fri": "Vie",
+      "Sat": "Sáb",
+      "Sunday": "Domingo",
+      "Monday": "Lunes",
+      "Tuesday": "Martes",
+      "Wednesday": "Miércoles",
+      "Thursday": "Jueves",
+      "Friday": "Viernes",
+      "Saturday": "Sábado"
+    },
+    "actions": {
+      "previous": "Anterior",
+      "next": "Siguiente"
+    }
+  },
   "CALENDAR-WIDGET": {
     "_CURRENTDATE_": "{{ currentDate }}",
     "_DAY_": "{{ day }}",
@@ -795,7 +831,7 @@
     "USED": "Usado",
     "NEW": "Nuevo",
     "VIEW_LISTING": "Ver publicación",
-    "REQUESTS": "Solicitudes",
+    "REQUESTS": "Ver solicitudes",
     "PURCHASES_NOT_FOUND": "No se encontraron compras",
     "QUANTITY": "Cantidad",
     "BOUGHT_BY": "Comprado por"
@@ -842,8 +878,8 @@
     "UNIT": "Unidad",
     "UNITS": "Unidades",
     "ASK_A_QUESTION": "Hacer una pregunta",
-    "PHONE_NUMBER_EX":"Número de Teléfono (e.g. +54 9 11 1234 5678)",
-    "MESSAGE" : "Mensaje",
+    "PHONE_NUMBER_EX": "Número de Teléfono (e.g. +54 9 11 1234 5678)",
+    "MESSAGE": "Mensaje",
     "YOUR_REPLY": "Su respuesta..."
   },
   "MARKETPLACE-PRODUCT-EDIT-PAGE": {
@@ -869,8 +905,8 @@
     "LISTING_UPDATED_SUCCESSFULLY": "Publicación actualizada con éxito",
     "THERE_WAS_A_PROBLEM_UPDATING_THE_LISTING": "Hubo un problema al actualizar la publicación.",
     "TITTLE": "Título",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Descripción"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Descripción"
   },
   "MARKETPLACE-PRODUCT-PREVIEW": {
     "USED": "Usado",
@@ -918,8 +954,8 @@
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "Hubo un problema al crear la publicación.",
     "INVALID_PRICE_FORMAT": "Formato de precio inválido.",
     "TITTLE": "Título",
-    "MONEY":"$1,000.00",
-    "DESCRIPTION":"Descripción"
+    "MONEY": "$1,000.00",
+    "DESCRIPTION": "Descripción"
   },
   "NOT-FOUND-PAGE": {
     "OOPS__ERRORCODE_": "¡Ups! {{ errorCode }}",
@@ -1121,7 +1157,14 @@
   },
   "TAGS-FILTER-WIDGET": {
     "TAGS": "Filtrar por Etiquetas",
-    "PROFESSIONS": "Filtrar por Profesión"
+    "FILTER_BY_PROFESSIONS": "Filtrar por Profesión",
+    "PROFESSIONS": {
+      "PLUMBER": "Plomero",
+      "ELECTRICIAN": "Electricista",
+      "POOL_MAINTENANCE": "Mantenimiento de Piscina",
+      "GARDENER": "Jardinero",
+      "CARPENTER": "Carpintero"
+    }
   },
   "WAVE-FOOTER": {
     "SLOGAN": "Tu tranquilidad es nuestra prioridad. Seguro, protegido y sereno.",
@@ -1189,5 +1232,11 @@
     "UNVERIFIED_PAGE": "Unverified | Neibo",
 
     "USER_PROFILE_PAGE": "Profile | Neibo"
+  },
+  "SUPER-ADMIN-PAGE": {
+    "WELCOME": "¡Bienvenido, Super Administrador!",
+    "UNDER_DEVELOPMENT": "Esta función se encuentra actualmente en desarrollo.",
+    "ADMINISTRATIVE_TOOLS": "Estamos trabajando para ofrecerte un completo conjunto de <b>herramientas administrativas</b> que te permitan <b>gestionar múltiples vecindarios, usuarios y servicios</b> de manera eficiente. ¡Mantente atento a las actualizaciones!",
+    "DEVELOPMENT_TEAM": "Para cualquier pregunta o solicitud de acceso anticipado, por favor comunícate con el <b>equipo de desarrollo</b>."
   }
 }

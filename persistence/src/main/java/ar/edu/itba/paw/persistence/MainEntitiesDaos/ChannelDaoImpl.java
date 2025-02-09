@@ -97,7 +97,6 @@ public class ChannelDaoImpl implements ChannelDao {
     public int countChannels(long neighborhoodId, Boolean isBase) {
         LOGGER.debug("Counting Channels with Neighborhood Id {} and isBase {}", neighborhoodId, isBase);
 
-        // Build the base query
         StringBuilder queryBuilder = new StringBuilder(
                 "SELECT COUNT(c) FROM Channel c JOIN c.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId"
         );

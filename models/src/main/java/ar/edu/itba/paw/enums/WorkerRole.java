@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.enums;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -16,14 +14,14 @@ public enum WorkerRole {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public static Optional<WorkerRole> fromId(long id) {
         return Arrays.stream(values())
                 .filter(wr -> wr.getId() == id)
                 .findFirst();
+    }
+
+    public int getId() {
+        return id;
     }
 }
 

@@ -1,110 +1,132 @@
-<div class="w-100 tabbed-box container">
+<div *ngIf="!isLoading; else loadingTemplate">
+  <div class="w-100 tabbed-box container">
+    <input
+      id="tab1"
+      type="radio"
+      name="tabs"
+      [checked]="selectedTab === 'reviews'"
+      (change)="onTabChange('reviews')"
+    />
+    <label for="tab1">{{
+      'SERVICE-PROVIDERS-REVIEWS-AND-POSTS.REVIEWS' | translate
+    }}</label>
 
-  <input
-    id="tab1"
-    type="radio"
-    name="tabs"
-    [checked]="selectedTab === 'reviews'"
-    (change)="onTabChange('reviews')"
-  />
-  <label for="tab1">{{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.REVIEWS" | translate }}</label>
+    <input
+      id="tab2"
+      type="radio"
+      name="tabs"
+      [checked]="selectedTab === 'posts'"
+      (change)="onTabChange('posts')"
+    />
+    <label for="tab2">{{
+      'SERVICE-PROVIDERS-REVIEWS-AND-POSTS.POSTS' | translate
+    }}</label>
 
-  <input
-    id="tab2"
-    type="radio"
-    name="tabs"
-    [checked]="selectedTab === 'posts'"
-    (change)="onTabChange('posts')"
-  />
-  <label for="tab2">{{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.POSTS" | translate }}</label>
-
-  <section id="content1" *ngIf="selectedTab === 'reviews'">
-    <div class="f-c-c-c g-0 w-100">
-      <button
-        class="cool-action-button w-100 services-button mb-3"
-        style="width: 200px"
-        *ngIf="!isWorker"
-        (click)="openReviewDialog.emit()"
-      >
-        <i class="fa-solid fa-star ml-1"></i>
-
-        {{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.LEAVE_A_REVIEW" | translate }}
-      </button>
-
-      <ng-container *ngIf="reviews && reviews.length > 0; else noReviewsFound">
-        <div
-          class="review-box f-c-s-s w-100"
-          *ngFor="let review of reviews; index as i"
+    <section id="content1" *ngIf="selectedTab === 'reviews'">
+      <div class="f-c-c-c g-0 w-100">
+        <button
+          class="cool-action-button w-100 services-button mb-3"
+          style="width: 200px"
+          *ngIf="!isWorker"
+          (click)="openReviewDialog.emit()"
         >
-          <div class="f-r-sb-c w-100">
-            <span class="font-size-14 font-weight-normal c-light-text">
-              {{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.ANNONYMOUS_REVIEWER" | translate }}
-            </span>
-            <div>
-              <span class="post-date">
-                {{ review.createdAt | date }}
+          <i class="fa-solid fa-star ml-1"></i>
+
+          {{ 'SERVICE-PROVIDERS-REVIEWS-AND-POSTS.LEAVE_A_REVIEW' | translate }}
+        </button>
+
+        <ng-container
+          *ngIf="reviews && reviews.length > 0; else noReviewsFound"
+        >
+          <div
+            class="review-box f-c-s-s w-100"
+            *ngFor="let review of reviews; index as i"
+          >
+            <div class="f-r-sb-c w-100">
+              <span class="font-size-14 font-weight-normal c-light-text">
+                {{
+                  'SERVICE-PROVIDERS-REVIEWS-AND-POSTS.ANNONYMOUS_REVIEWER'
+                    | translate
+                }}
               </span>
+              <div>
+                <span class="post-date">
+                  {{ review.createdAt | date }}
+                </span>
+              </div>
             </div>
+            <div class="f-r-c-c">
+              <div [innerHTML]="renderStars(review.rating)"></div>
+            </div>
+            <p class="font-size-12">
+              {{ review.message }}
+            </p>
           </div>
-          <div class="f-r-c-c">
-            <div [innerHTML]="renderStars(review.rating)"></div>
+        </ng-container>
+
+        <ng-template #noReviewsFound>
+          <div class="no-posts-found">
+            <i class="circle-icon fa-solid fa-magnifying-glass mb-3"></i>
+            {{
+              'SERVICE-PROVIDERS-REVIEWS-AND-POSTS.REVIEWS_NOT_FOUND'
+                | translate
+            }}
           </div>
-          <p class="font-size-12">
-            {{ review.message }}
-          </p>
-        </div>
-      </ng-container>
+        </ng-template>
 
-      <ng-template #noReviewsFound>
-        <div class="no-posts-found">
-          <i class="circle-icon fa-solid fa-magnifying-glass mb-3"></i>
-          {{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.REVIEWS_NOT_FOUND" | translate }}
-        </div>
-      </ng-template>
+        <app-paginator
+          [totalPages]="reviewTotalPages"
+          [currentPage]="reviewCurrentPage"
+          [pageSize]="reviewPageSize"
+          [theme]="'services'"
+          (pageChange)="onReviewPageChange($event)"
+        ></app-paginator>
+      </div>
+    </section>
 
-      <app-paginator
-        [totalPages]="reviewTotalPages"
-        [currentPage]="reviewCurrentPage"
-        [pageSize]="reviewPageSize"
-        [theme]="'services'"
-        (pageChange)="onReviewPageChange($event)"
-      ></app-paginator>
-    </div>
-  </section>
+    <section id="content2" *ngIf="selectedTab === 'posts'">
+      <div class="f-c-c-c g-0 w-100">
+        <a
+          class="cool-action-button w-100 services-button mb-3"
+          style="width: 200px"
+          *ngIf="isTheWorker"
+          (click)="goToServicePostCreation()"
+        >
+          {{ 'SERVICE-PROVIDERS-REVIEWS-AND-POSTS.POST' | translate }}
+        </a>
 
-  <section id="content2" *ngIf="selectedTab === 'posts'">
-    <div class="f-c-c-c g-0 w-100">
-      <a
-        class="cool-action-button w-100 services-button mb-3"
-        style="width: 200px"
-        *ngIf="isTheWorker"
-        (click)="goToServicePostCreation()"
-      >
-      {{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.POST" | translate }}
-      </a>
+        <ng-container *ngIf="posts && posts.length > 0; else noPostsFound">
+          <div class="w-100" *ngFor="let post of posts">
+            <app-service-providers-post-preview
+              [post]="post"
+            ></app-service-providers-post-preview>
+          </div>
+        </ng-container>
 
-      <ng-container *ngIf="posts && posts.length > 0; else noPostsFound">
-        <div class="w-100" *ngFor="let post of posts">
-          <app-service-providers-post-preview
-            [post]="post"
-          ></app-service-providers-post-preview>
-        </div>
-      </ng-container>
+        <ng-template #noPostsFound>
+          <div class="no-posts-found w-100">
+            <i class="circle-icon fa-solid fa-magnifying-glass mb-3"></i>
+            {{
+              'SERVICE-PROVIDERS-REVIEWS-AND-POSTS.POSTS_NOT_FOUND' | translate
+            }}
+          </div>
+        </ng-template>
 
-      <ng-template #noPostsFound>
-        <div class="no-posts-found w-100">
-          <i class="circle-icon fa-solid fa-magnifying-glass mb-3"></i>
-          {{ "SERVICE-PROVIDERS-REVIEWS-AND-POSTS.POSTS_NOT_FOUND" | translate }}
-        </div>
-      </ng-template>
-
-      <app-paginator
-        [totalPages]="postTotalPages"
-        [currentPage]="postCurrentPage"
-        [pageSize]="postPageSize"
-        [theme]="'services'"
-        (pageChange)="onPostPageChange($event)"
-      ></app-paginator>
-    </div>
-  </section>
+        <app-paginator
+          [totalPages]="postTotalPages"
+          [currentPage]="postCurrentPage"
+          [pageSize]="postPageSize"
+          [theme]="'services'"
+          (pageChange)="onPostPageChange($event)"
+        ></app-paginator>
+      </div>
+    </section>
+  </div>
 </div>
+
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <div class="cool-static-container w-100 ps-2 pe-2 f-c-c-c">
+    <div class="loader w-100 services"></div>
+  </div>
+</ng-template>

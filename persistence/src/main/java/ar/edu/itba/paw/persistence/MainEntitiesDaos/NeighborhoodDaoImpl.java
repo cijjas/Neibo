@@ -10,10 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class NeighborhoodDaoImpl implements NeighborhoodDao {
@@ -43,15 +41,6 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         LOGGER.debug("Selecting Neighborhood with Neighborhood Id{}", neighborhoodId);
 
         return Optional.ofNullable(em.find(Neighborhood.class, neighborhoodId));
-    }
-
-    @Override
-    public Optional<Neighborhood> findNeighborhood(String name) {
-        LOGGER.debug("Selecting Neighborhood with name {}", name);
-
-        TypedQuery<Neighborhood> query = em.createQuery("FROM Neighborhood WHERE neighborhoodname = :neighborhoodName", Neighborhood.class);
-        query.setParameter("neighborhoodName", name);
-        return query.getResultList().stream().findFirst();
     }
 
     @Override
@@ -101,7 +90,6 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     public int countNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId) {
         LOGGER.debug("Counting Neighborhoods with Worker Id {}, without Worker Id {}, and isBase {}", withWorkerId, withoutWorkerId, isBase);
 
-        // Build the query
         StringBuilder queryBuilder = new StringBuilder(
                 "SELECT COUNT(DISTINCT n.neighborhoodid) " +
                         "FROM neighborhoods n " +
@@ -109,7 +97,6 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
                         "WHERE 1=1 "
         );
 
-        // Append conditions
         if (isBase != null) {
             queryBuilder.append("AND n.isbase = :isBase ");
         }
@@ -123,10 +110,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
                     "LEFT JOIN workers_neighborhoods wn2 ON neigh.neighborhoodid = wn2.neighborhoodid " +
                     "WHERE wn2.workerid = :withoutWorkerId ) ");
         }
-
-        // Create and parameterize the query
         Query query = em.createNativeQuery(queryBuilder.toString());
-
         if (isBase != null) {
             query.setParameter("isBase", isBase);
         }
@@ -137,7 +121,6 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
             query.setParameter("withoutWorkerId", withoutWorkerId);
         }
 
-        // Execute the query and return the count
         Object result = query.getSingleResult();
         return ((Number) result).intValue();
     }

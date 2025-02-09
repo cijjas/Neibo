@@ -64,7 +64,6 @@ public class TagDaoImpl implements TagDao {
     public List<Tag> getTags(long neighborhoodId, Long postId, int page, int size) {
         LOGGER.debug("Selecting Tags with Neighborhood Id {} and Post Id {}", neighborhoodId, postId);
 
-        // 1) Build the SELECT DISTINCT query for IDs + the 'tag' field (for ordering).
         String queryStr;
         TypedQuery<Object[]> idQuery;
 
@@ -74,7 +73,7 @@ public class TagDaoImpl implements TagDao {
                             "FROM Tag t " +
                             "JOIN t.posts p " +
                             "WHERE p.postId = :postId " +
-                            "ORDER BY t.tag";    // alphabetical
+                            "ORDER BY t.tag";
             idQuery = em.createQuery(queryStr, Object[].class)
                     .setParameter("postId", postId);
         } else {
@@ -83,12 +82,11 @@ public class TagDaoImpl implements TagDao {
                             "FROM Tag t " +
                             "JOIN t.neighborhoods n " +
                             "WHERE n.neighborhoodId = :neighborhoodId " +
-                            "ORDER BY t.tag";    // alphabetical
+                            "ORDER BY t.tag";
             idQuery = em.createQuery(queryStr, Object[].class)
                     .setParameter("neighborhoodId", neighborhoodId);
         }
 
-        // Apply pagination on the ID+tag query
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
 
@@ -97,18 +95,14 @@ public class TagDaoImpl implements TagDao {
             return Collections.emptyList();
         }
 
-        // 2) Extract just the IDs. (We don’t need the 'tag' column itself here,
-        //    but we had to select it so we could ORDER BY it.)
         List<Long> tagIds = results.stream()
                 .map(obj -> (Long) obj[0])
                 .collect(Collectors.toList());
 
-        // 3) Fetch the Tag entities by those IDs,
-        //    re-ordering them alphabetically by t.tag
         TypedQuery<Tag> tagQuery = em.createQuery(
                 "SELECT t FROM Tag t " +
                         "WHERE t.tagId IN :tagIds " +
-                        "ORDER BY t.tag",  // alphabetical again
+                        "ORDER BY t.tag",
                 Tag.class
         );
         tagQuery.setParameter("tagIds", tagIds);
@@ -144,6 +138,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     // ---------------------------------------------- TAGS DELETE ------------------------------------------------------
+
     @Override
     public boolean deleteTag(long tagId) {
         LOGGER.debug("Deleting Tag with Tag Id {}", tagId);
@@ -154,5 +149,4 @@ public class TagDaoImpl implements TagDao {
         }
         return false;
     }
-
 }

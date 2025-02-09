@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,7 @@ public class Worker {
     @Column(name = "bio", length = 255)
     private String bio;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "backgroundpictureid", referencedColumnName = "imageId")
     private Image backgroundPicture;
 
@@ -119,7 +117,7 @@ public class Worker {
     public List<String> getProfessionsAsStrings() {
         List<String> professionsList = new ArrayList<String>();
         for (Profession profession : professions) {
-            professionsList.add(profession.getProfession().toString());
+            professionsList.add(profession.getProfession());
         }
         return professionsList;
     }
@@ -138,17 +136,6 @@ public class Worker {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return "Worker{" +
-                "user=" + getWorkerId()+
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", businessName='" + businessName + '\'' +
-                ", address='" + address + '\'' +
-                ", bio='" + bio + '\'' +
-                '}';
     }
 
     public Long getWorkerId() {

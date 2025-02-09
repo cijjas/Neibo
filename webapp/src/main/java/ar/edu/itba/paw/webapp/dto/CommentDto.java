@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.validation.URIValidator;
-import ar.edu.itba.paw.webapp.validation.groups.*;
+import ar.edu.itba.paw.webapp.validation.groups.OnCreate;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -15,7 +15,7 @@ import java.util.Date;
 public class CommentDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 500)
+    @Size(max = 512)
     private String message;
 
     @NotNull(groups = OnCreate.class)

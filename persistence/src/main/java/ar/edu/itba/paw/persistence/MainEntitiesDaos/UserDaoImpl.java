@@ -67,22 +67,19 @@ public class UserDaoImpl implements UserDao {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        // Query to fetch user IDs
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<User> idRoot = idQuery.from(User.class);
         idQuery.select(idRoot.get("userId"));
 
         List<Predicate> predicates = new ArrayList<>();
         if (userRoleId != null) {
-            predicates.add(cb.equal(idRoot.get("role"), UserRole.fromId(userRoleId).get())); // Controller layer guarantees non-empty optional
+            predicates.add(cb.equal(idRoot.get("role"), UserRole.fromId(userRoleId).get())); // Controller layer guarantees non-empty Optional
         }
         if (neighborhoodId != null) {
             Join<User, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
             predicates.add(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
         }
         idQuery.where(predicates.toArray(new Predicate[0]));
-
-        // Order by creationDate
         idQuery.orderBy(cb.asc(idRoot.get("creationDate")));
 
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
@@ -95,7 +92,6 @@ public class UserDaoImpl implements UserDao {
             return Collections.emptyList();
         }
 
-        // Query to fetch User entities using the IDs
         CriteriaQuery<User> dataQuery = cb.createQuery(User.class);
         Root<User> dataRoot = dataQuery.from(User.class);
         dataQuery.where(dataRoot.get("userId").in(userIds));
@@ -130,7 +126,7 @@ public class UserDaoImpl implements UserDao {
         }
         TypedQuery<Long> query = em.createQuery(jpqlConditions.toString(), Long.class);
         if (userRoleId != null) {
-            query.setParameter("role", UserRole.fromId(userRoleId).get()); // Controller layer guarantees non-empty optional
+            query.setParameter("role", UserRole.fromId(userRoleId).get()); // Controller layer guarantees non-empty Optional
         }
         if (neighborhoodId != null) {
             query.setParameter("neighborhoodId", neighborhoodId);

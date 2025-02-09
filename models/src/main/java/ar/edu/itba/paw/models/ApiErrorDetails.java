@@ -2,14 +2,8 @@ package ar.edu.itba.paw.models;
 
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-/**
- * API model that represents an error.
- *
- * @author cassiomolin
- */
 public class ApiErrorDetails {
 
     private Integer status;

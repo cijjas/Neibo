@@ -63,10 +63,7 @@ public class ContactDaoImpl implements ContactDao {
     public List<Contact> getContacts(long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Contacts with Neighborhood Id {}", neighborhoodId);
 
-        // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
-
-        // First Query: Retrieve paginated Contact IDs
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<Contact> idRoot = idQuery.from(Contact.class);
         idQuery.select(idRoot.get("contactId"));
@@ -76,12 +73,9 @@ public class ContactDaoImpl implements ContactDao {
         idTypedQuery.setFirstResult((page - 1) * size);
         idTypedQuery.setMaxResults(size);
         List<Long> contactIds = idTypedQuery.getResultList();
-
         if (contactIds.isEmpty()) {
             return Collections.emptyList();
         }
-
-        // Second Query: Retrieve Contacts by IDs
         CriteriaQuery<Contact> dataQuery = cb.createQuery(Contact.class);
         Root<Contact> dataRoot = dataQuery.from(Contact.class);
         dataQuery.where(dataRoot.get("contactId").in(contactIds));

@@ -15,14 +15,6 @@ public class ChannelMappingKey implements Serializable {
         this.channelId = channelId;
     }
 
-    @Override
-    public String toString() {
-        return "ChannelMappingKey{" +
-                "neighborhoodId=" + neighborhoodId +
-                ", channelId=" + channelId +
-                '}';
-    }
-
     public Long getNeighborhoodId() {
         return neighborhoodId;
     }

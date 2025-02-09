@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -39,20 +37,20 @@ public class Tag {
         this.tag = builder.tag;
     }
 
-    public void setTagId(Long tagId) {
-        this.tagId = tagId;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
     public Long getTagId() {
         return tagId;
     }
 
+    public void setTagId(Long tagId) {
+        this.tagId = tagId;
+    }
+
     public String getTag() {
         return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public List<Post> getPosts() {
@@ -61,14 +59,6 @@ public class Tag {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "tagId=" + tagId +
-                ", tag='" + tag + '\'' +
-                '}';
     }
 
     @Override

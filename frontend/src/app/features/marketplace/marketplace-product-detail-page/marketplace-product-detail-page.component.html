@@ -56,13 +56,20 @@
                 "
               >
                 <span class="font-weight-normal font-size-16 f-r-sb-c w-100">
-                  <span>{{ product?.used ? ('MARKETPLACE-PRODUCT-DETAIL-PAGE.USED' | translate) : ('MARKETPLACE-PRODUCT-DETAIL-PAGE.NEW' | translate) }}</span>
+                  <span>{{
+                    product?.used
+                      ? ('MARKETPLACE-PRODUCT-DETAIL-PAGE.USED' | translate)
+                      : ('MARKETPLACE-PRODUCT-DETAIL-PAGE.NEW' | translate)
+                  }}</span>
 
                   <div
                     class="department-tag"
                     (click)="goToDepartment(product?.department)"
                   >
-                    {{ product?.department.displayName }}
+                    {{
+                      'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' +
+                        product?.department.name | translate
+                    }}
                   </div>
                 </span>
 
@@ -78,9 +85,9 @@
                       product?.price
                         ? (
                             product.price
-                            | currency : "USD" : "symbol-narrow" : "1.0-2"
-                          ).split(".")[0]
-                        : ""
+                            | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                          ).split('.')[0]
+                        : ''
                     }}
                   </span>
                   <div class="f-c-s-c ps-1" style="height: 26px">
@@ -89,27 +96,31 @@
                     >
                       {{
                         product?.price
-                          ? "," +
+                          ? ',' +
                             ((
                               product.price
-                              | currency : "USD" : "symbol-narrow" : "1.0-2"
-                            ).split(".")[1] || "00")
-                          : ""
+                              | currency : 'USD' : 'symbol-narrow' : '1.0-2'
+                            ).split('.')[1] || '00')
+                          : ''
                       }}
                     </span>
                   </div>
                 </div>
 
                 <div class="f-c-s-s w-100 mt-3 g-05">
-                  <span *ngIf="product?.stock === 0" class="c-red"
-                    >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.SOLD_OUT" | translate }}</span
-                  >
-                  <span *ngIf="product?.stock > 0" class="c-accent"
-                    >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.IN_STOCK" | translate }}</span
-                  >
+                  <span *ngIf="product?.stock === 0" class="c-red">{{
+                    'MARKETPLACE-PRODUCT-DETAIL-PAGE.SOLD_OUT' | translate
+                  }}</span>
+                  <span *ngIf="product?.stock > 0" class="c-accent">{{
+                    'MARKETPLACE-PRODUCT-DETAIL-PAGE.IN_STOCK' | translate
+                  }}</span>
                   <span *ngIf="product?.stock > 0"
                     >{{ product?.stock }}
-                    {{ product?.stock === 1 ? ("MARKETPLACE-PRODUCT-DETAIL-PAGE.UNIT" | translate) : ("MARKETPLACE-PRODUCT-DETAIL-PAGE.UNITS" | translate)}}</span
+                    {{
+                      product?.stock === 1
+                        ? ('MARKETPLACE-PRODUCT-DETAIL-PAGE.UNIT' | translate)
+                        : ('MARKETPLACE-PRODUCT-DETAIL-PAGE.UNITS' | translate)
+                    }}</span
                   >
                 </div>
 
@@ -124,7 +135,7 @@
                     (click)="openRequestDialog()"
                     class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
                   >
-                  {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST" | translate }}
+                    {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST' | translate }}
                   </button>
                 </ng-container>
                 <ng-template #editListing>
@@ -136,7 +147,10 @@
                     ]"
                     class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
                   >
-                    <i class="fa-solid fa-pen-to-square"></i> {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.EDIT_LISTING" | translate }}
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    {{
+                      'MARKETPLACE-PRODUCT-DETAIL-PAGE.EDIT_LISTING' | translate
+                    }}
                   </a>
                 </ng-template>
               </div>
@@ -149,7 +163,9 @@
           >
             <div class="col-12 pt-3 pb-3 h-100">
               <div class="f-c-s-s">
-                <span class="c-text font-size-16 g-05">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.DESCRIPTION" | translate }}</span>
+                <span class="c-text font-size-16 g-05">{{
+                  'MARKETPLACE-PRODUCT-DETAIL-PAGE.DESCRIPTION' | translate
+                }}</span>
                 <p class="c-light-text font-weight-normal">
                   {{ product?.description }}
                 </p>
@@ -161,27 +177,37 @@
                 <ng-container
                   *ngIf="loggedUser?.self !== product?.seller?.self"
                 >
-                  <span class="c-text font-size-16 g-05">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_THE_SELLER" | translate }}</span>
+                  <span class="c-text font-size-16 g-05">{{
+                    'MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_THE_SELLER' | translate
+                  }}</span>
                   <form #questionForm="ngForm" class="f-r-sb-c w-100">
                     <input
                       name="questionMessage"
                       [(ngModel)]="questionMessage"
                       type="text"
                       class="cool-input marketplace-input background"
-                      [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_A_QUESTION' | translate"
+                      [attr.placeholder]="
+                        'MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_A_QUESTION'
+                          | translate
+                      "
                     />
                     <a
                       (click)="submitQuestionForm()"
                       id="ask-button"
                       class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold"
                     >
-                    {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK" | translate }}
+                      {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK' | translate }}
                     </a>
                   </form>
                 </ng-container>
 
                 <ng-container *ngIf="questions?.length > 0; else noQuestions">
-                  <div>{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.RECENTLY_ASKED_QUESTIONS" | translate }}</div>
+                  <div>
+                    {{
+                      'MARKETPLACE-PRODUCT-DETAIL-PAGE.RECENTLY_ASKED_QUESTIONS'
+                        | translate
+                    }}
+                  </div>
                   <div
                     *ngFor="let question of questions"
                     class="f-c-s-s w-100 g-05"
@@ -207,7 +233,10 @@
 
                           <span
                             class="font-weight-normal c-text font-size-14 ms-2"
-                            >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY" | translate }}</span
+                            >{{
+                              'MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY'
+                                | translate
+                            }}</span
                           >
                         </a>
                       </ng-container>
@@ -229,16 +258,20 @@
                 <ng-template #noQuestions>
                   <div class="f-c-s-s w-100">
                     <div class="f-r-s-c w-100 g-05">
-                      <span class="c-text font-size-14 font-weight-bold"
-                        >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.NO_ONE_ASKED" | translate }}</span
-                      >
+                      <span class="c-text font-size-14 font-weight-bold">{{
+                        'MARKETPLACE-PRODUCT-DETAIL-PAGE.NO_ONE_ASKED'
+                          | translate
+                      }}</span>
                       <ng-container
                         *ngIf="loggedUser?.self !== product?.seller?.self"
                       >
                         <span
                           class="c-light-text font-weight-normal font-size-12"
                         >
-                        {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_FIRST" | translate }}
+                          {{
+                            'MARKETPLACE-PRODUCT-DETAIL-PAGE.ASK_FIRST'
+                              | translate
+                          }}
                         </span>
                       </ng-container>
                     </div>
@@ -372,9 +405,14 @@
             </svg>
           </div>
           <div class="reply-dialog-text">
-            <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST" | translate }}</h3>
+            <h3 class="font-size-18 font-weight-bold">
+              {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST' | translate }}
+            </h3>
             <p class="font-weight-normal font-size-14">
-              {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND_A_MESSAGE_TO_THE_SELLER" | translate }}
+              {{
+                'MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND_A_MESSAGE_TO_THE_SELLER'
+                  | translate
+              }}
             </p>
           </div>
         </div>
@@ -393,7 +431,9 @@
             ngModel
             type="text"
             class="cool-input marketplace-input background"
-            [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.PHONE_NUMBER_EX' | translate"
+            [attr.placeholder]="
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.PHONE_NUMBER_EX' | translate
+            "
             required
             pattern="^\+?[0-9\s]+$"
             #phoneNumberField="ngModel"
@@ -402,12 +442,14 @@
             *ngIf="phoneNumberField.invalid && phoneNumberField.touched"
             class="error-message"
           >
-            <span *ngIf="phoneNumberField.errors?.['required']" class="c-red"
-              >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.PHONE_NUMBER_IS_REQUIRED" | translate }}</span
-            >
-            <span *ngIf="phoneNumberField.errors?.['pattern']" class="c-red"
-              >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.ENTER_A_VALID_PHONE_NUMBER" | translate }}</span
-            >
+            <span *ngIf="phoneNumberField.errors?.['required']" class="c-red">{{
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.PHONE_NUMBER_IS_REQUIRED'
+                | translate
+            }}</span>
+            <span *ngIf="phoneNumberField.errors?.['pattern']" class="c-red">{{
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.ENTER_A_VALID_PHONE_NUMBER'
+                | translate
+            }}</span>
           </div>
 
           <textarea
@@ -415,7 +457,9 @@
             ngModel
             class="cool-input marketplace-input textarea-min-max"
             rows="5"
-            [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE' | translate"
+            [attr.placeholder]="
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE' | translate
+            "
             required
             minlength="10"
             #phoneRequestMessageField="ngModel"
@@ -430,12 +474,18 @@
             <span
               *ngIf="phoneRequestMessageField.errors?.['required']"
               class="c-red"
-              >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_IS_REQUIRED" | translate }}</span
+              >{{
+                'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_IS_REQUIRED'
+                  | translate
+              }}</span
             >
             <span
               *ngIf="phoneRequestMessageField.errors?.['minlength']"
               class="c-red"
-              >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_MUST_BE_AT_LEAST_10_CHARACTERS" | translate }}</span
+              >{{
+                'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_MUST_BE_AT_LEAST_10_CHARACTERS'
+                  | translate
+              }}</span
             >
           </div>
 
@@ -454,7 +504,9 @@
             *ngIf="requestAmountField.invalid && requestAmountField.touched"
             class="error-message"
           >
-            <span class="c-red">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.AMOUNT_IS_REQUIRED" | translate }}</span>
+            <span class="c-red">{{
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.AMOUNT_IS_REQUIRED' | translate
+            }}</span>
           </div>
         </div>
 
@@ -463,7 +515,7 @@
           class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
           [disabled]="phoneRequestForm.invalid"
         >
-        {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND" | translate }}
+          {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND' | translate }}
         </button>
       </form>
     </div>
@@ -573,9 +625,14 @@
             </svg>
           </div>
           <div class="reply-dialog-text">
-            <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST" | translate }}</h3>
+            <h3 class="font-size-18 font-weight-bold">
+              {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST' | translate }}
+            </h3>
             <p class="font-weight-normal font-size-14">
-              {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND_A_MESSAGE_TO_THE_SELLER" | translate }}
+              {{
+                'MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND_A_MESSAGE_TO_THE_SELLER'
+                  | translate
+              }}
             </p>
           </div>
         </div>
@@ -596,7 +653,9 @@
             ngModel
             class="cool-input marketplace-input textarea-min-max"
             rows="5"
-            [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE' | translate"
+            [attr.placeholder]="
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE' | translate
+            "
             required
             minlength="10"
             #requestMessageField="ngModel"
@@ -605,13 +664,21 @@
             *ngIf="requestMessageField.invalid && requestMessageField.touched"
             class="error-message"
           >
-            <span *ngIf="requestMessageField.errors?.['required']" class="c-red"
-              >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_IS_REQUIRED" | translate }}</span
+            <span
+              *ngIf="requestMessageField.errors?.['required']"
+              class="c-red"
+              >{{
+                'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_IS_REQUIRED'
+                  | translate
+              }}</span
             >
             <span
               *ngIf="requestMessageField.errors?.['minlength']"
               class="c-red"
-              >{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_MUST_BE_AT_LEAST_10_CHARACTERS" | translate }}</span
+              >{{
+                'MARKETPLACE-PRODUCT-DETAIL-PAGE.MESSAGE_MUST_BE_AT_LEAST_10_CHARACTERS'
+                  | translate
+              }}</span
             >
           </div>
 
@@ -630,7 +697,9 @@
             *ngIf="requestAmountField.invalid && requestAmountField.touched"
             class="error-message"
           >
-            <span class="c-red">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.AMOUNT_IS_REQUIRED" | translate }}</span>
+            <span class="c-red">{{
+              'MARKETPLACE-PRODUCT-DETAIL-PAGE.AMOUNT_IS_REQUIRED' | translate
+            }}</span>
           </div>
         </div>
 
@@ -639,7 +708,7 @@
           class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
           [disabled]="requestForm.invalid"
         >
-        {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND" | translate }}
+          {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND' | translate }}
         </button>
       </form>
     </div>
@@ -755,7 +824,9 @@
           </svg>
         </div>
         <div class="reply-dialog-text">
-          <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY_TO_INQUIRY" | translate }}</h3>
+          <h3 class="font-size-18 font-weight-bold">
+            {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY_TO_INQUIRY' | translate }}
+          </h3>
           <p class="font-weight-normal font-size-14">
             {{ questionForReply?.inquiryMessage }}
           </p>
@@ -772,7 +843,9 @@
           [(ngModel)]="replyMessage"
           class="cool-input marketplace-input textarea-min-max"
           rows="5"
-          [attr.placeholder]="'MARKETPLACE-PRODUCT-DETAIL-PAGE.YOUR_REPLY' | translate"
+          [attr.placeholder]="
+            'MARKETPLACE-PRODUCT-DETAIL-PAGE.YOUR_REPLY' | translate
+          "
           required
           minlength="5"
         ></textarea>
@@ -780,7 +853,10 @@
           *ngIf="replyMessage.length < 5 && replyMessage"
           class="error-message c-red"
         >
-          <span>{{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY_MUST_BE_AT_LEAST_5_CHARACTERS" | translate }}</span>
+          <span>{{
+            'MARKETPLACE-PRODUCT-DETAIL-PAGE.REPLY_MUST_BE_AT_LEAST_5_CHARACTERS'
+              | translate
+          }}</span>
         </div>
       </div>
       <button
@@ -788,7 +864,7 @@
         class="w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
         [disabled]="!replyMessage || replyMessage.length < 5"
       >
-        {{ "MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND_REPLY" | translate }}
+        {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.SEND_REPLY' | translate }}
       </button>
     </form>
   </div>

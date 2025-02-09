@@ -70,35 +70,27 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private boolean handleBasicAuthentication(String authorizationHeader, HttpServletRequest request,
                                               HttpServletResponse response) throws IOException, ServletException {
         try {
-            // Decode the credentials from the Authorization header
             String credentialsBase64 = authorizationHeader.substring(6);
             String credentials = new String(Base64.getDecoder().decode(credentialsBase64));
             String[] usernamePassword = credentials.split(":");
 
-            // Create authentication request using username and password
             Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(usernamePassword[0], usernamePassword[1]);
             Authentication authenticationResult = authenticationManager.authenticate(authenticationRequest);
 
-            // Set the authenticated user context
             SecurityContextHolder.getContext().setAuthentication(authenticationResult);
 
-            // Get the username and authorities from the authenticated context
             String username = SecurityContextHolder.getContext().getAuthentication().getName();
             Set<Authority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                     .map(grantedAuthority -> Authority.valueOf(grantedAuthority.toString()))
                     .collect(Collectors.toSet());
 
-            // Issue a short-lived JWT token
             String jwtToken = authenticationTokenService.issueAccessToken(username, authorities);
 
-            // Issue a long-lived refresh token
             String refreshToken = authenticationTokenService.issueRefreshToken(username, authorities);
 
-            // Add both tokens to the response headers
             response.addHeader("X-Access-Token", jwtToken);
             response.addHeader("X-Refresh-Token", refreshToken);
 
-            // Construct a full URL for the User URL, Workers' Neighborhood, and User's Neighborhood URL and add them to the response headers
             UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if (userAuth.getNeighborhoodId() != BaseNeighborhood.WORKERS.getId()) {
                 String workersNeighborhoodURL = String.format("%s://%s:%d%s/%s/%s/%d",
@@ -155,38 +147,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             return false;
         }
         LOGGER.debug("Valid access token provided");
-        return true;
-    }
-
-    /*
-     * If persistence is implemented as well as the Refreshing strategy, this method should verify this info with the DB
-     * */
-    private boolean handleRefreshToken(String refreshHeader, HttpServletRequest request,
-                                       HttpServletResponse response) throws IOException, ServletException {
-        try {
-            String refreshToken = refreshHeader.substring(7);
-            AuthenticationTokenDetails tokenDetails = authenticationTokenService.parseToken(refreshToken);
-
-            if (tokenDetails.getTokenType() != TokenType.REFRESH)
-                throw new IllegalArgumentException("Invalid Token");
-
-            if (ZonedDateTime.now().isAfter(tokenDetails.getExpirationDate()))
-                throw new IllegalArgumentException("Refresh token has expired");
-
-            String newAccessToken = authenticationTokenService.issueAccessToken(tokenDetails.getUsername(), tokenDetails.getAuthorities());
-            response.addHeader("X-Access-Token", newAccessToken);
-
-        } catch (AuthenticationException e) {
-            LOGGER.debug("Error processing refresh token", e);
-            SecurityContextHolder.clearContext();
-            authenticationEntryPoint.commence(request, response, e);
-            return false;
-        } catch (IllegalArgumentException e) {
-            LOGGER.debug("Invalid refresh token provided", e);
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid refresh token");
-            return false;
-        }
-        LOGGER.debug("Valid refresh token provided");
         return true;
     }
 }

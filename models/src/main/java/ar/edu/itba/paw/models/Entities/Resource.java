@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -31,10 +29,6 @@ public class Resource {
     Resource() {
     }
 
-    public void setResourceId(Long resourceId) {
-        this.resourceId = resourceId;
-    }
-
     private Resource(Builder builder) {
         this.resourceId = builder.resourceId;
         this.title = builder.title;
@@ -45,6 +39,10 @@ public class Resource {
 
     public Long getResourceId() {
         return resourceId;
+    }
+
+    public void setResourceId(Long resourceId) {
+        this.resourceId = resourceId;
     }
 
     public String getTitle() {
@@ -77,16 +75,6 @@ public class Resource {
 
     public void setNeighborhood(Neighborhood neighborhood) {
         this.neighborhood = neighborhood;
-    }
-
-    @Override
-    public String toString() {
-        return "Resource{" +
-                "resourceId=" + resourceId +
-                ", description='" + description + '\'' +
-                ", image='" + (image != null ? image.getImageId() : null) + '\'' +
-                ", title='" + title + '\'' +
-                '}';
     }
 
     @Override

@@ -8,7 +8,9 @@
           [ngClass]="{ active: channel === 'Marketplace' }"
         >
           <i class="fa-solid fa-shopping-cart"></i>
-          <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.MARKETPLACE" | translate }}</span>
+          <span class="hide-text">{{
+            'MARKETPLACE-CONTROL-BAR.MARKETPLACE' | translate
+          }}</span>
         </a>
 
         <div class="f-r-s-c sub-filters g-05">
@@ -18,7 +20,9 @@
             [ngClass]="{ active: channel.startsWith('BuyerHub') }"
           >
             <i class="fa-solid fa-bag-shopping hide-icons"></i>
-            <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.BUYER_DASHBOARD" | translate }}</span>
+            <span class="hide-text">{{
+              'MARKETPLACE-CONTROL-BAR.BUYER_DASHBOARD' | translate
+            }}</span>
           </a>
 
           <a
@@ -27,7 +31,9 @@
             [ngClass]="{ active: channel.startsWith('SellerHub') }"
           >
             <i class="fa-solid fa-tags"></i>
-            <span class="hide-text">{{ "MARKETPLACE-CONTROL-BAR.SELLER_DASHBOARD" | translate }}</span>
+            <span class="hide-text">{{
+              'MARKETPLACE-CONTROL-BAR.SELLER_DASHBOARD' | translate
+            }}</span>
           </a>
         </div>
       </div>
@@ -35,19 +41,31 @@
       <div *ngIf="channel === 'Marketplace'">
         <div class="custom-dropdown">
           <div class="dropdown-toggle" id="department-toggle">
-            {{ departmentName === "NONE" 
-                ? ('MARKETPLACE-CONTROL-BAR.ALL' | translate) 
-                : (('MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + departmentName) | translate) }}
+            {{
+              departmentName === 'All'
+                ? ('MARKETPLACE-CONTROL-BAR.ALL' | translate)
+                : ('MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + departmentName
+                  | translate)
+            }}
           </div>
           <ul class="dropdown-options">
             <li>
               <a [routerLink]="['/marketplace']" [queryParams]="{}">
-                {{ "MARKETPLACE-CONTROL-BAR.ALL" | translate }}
+                {{ 'MARKETPLACE-CONTROL-BAR.ALL' | translate }}
               </a>
             </li>
-            <li *ngFor="let department of departmentList" [hidden]="department.name === 'NONE'">
-              <a [routerLink]="['/marketplace']" [queryParams]="{ inDepartment: department.self }">
-                {{ ('MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + departmentName) | translate }}
+            <li
+              *ngFor="let department of departmentList"
+              [hidden]="department.name === 'NONE'"
+            >
+              <a
+                [routerLink]="['/marketplace']"
+                [queryParams]="{ inDepartment: department.self }"
+              >
+                {{
+                  'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + department.name
+                    | translate
+                }}
               </a>
             </li>
           </ul>
@@ -61,7 +79,7 @@
       [ngClass]="{ active: channel === 'Sell' }"
     >
       <i class="fa-solid fa-tag"></i>
-      {{ "MARKETPLACE-CONTROL-BAR.SELL" | translate }}
+      {{ 'MARKETPLACE-CONTROL-BAR.SELL' | translate }}
     </a>
   </div>
 </div>

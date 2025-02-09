@@ -131,34 +131,44 @@ export class AdminAmenitiesPageComponent implements OnInit {
         cancelText: this.translate.instant('ADMIN-AMENITIES-PAGE.CANCEL'),
       })
       .subscribe(confirmed => {
-        if (confirmed) {
-          this.amenityService.deleteAmenity(amenity.self).subscribe({
-            next: () => {
-              this.toastService.showToast(
-                this.translate.instant(
-                  'ADMIN-AMENITIES-PAGE.AMENITY_AMENITYNAME_DELETED_SUCCESSFULLY',
-                  {
-                    amenityName: amenity.name,
-                  },
-                ),
-                'success',
-              );
-              this.loadAmenities();
-            },
-            error: err => {
-              this.toastService.showToast(
-                this.translate.instant(
-                  'ADMIN-AMENITIES-PAGE.COULD_NOT_REMOVE_AMENITYNAME_TRY_AGAIN',
-                  {
-                    amenityName: amenity.name,
-                  },
-                ),
-                'error',
-              );
-              console.error('Error deleting amenities:', err);
-            },
-          });
-        }
+        if (!confirmed) return;
+
+        this.amenityService.deleteAmenity(amenity.self).subscribe({
+          next: () => {
+            this.toastService.showToast(
+              this.translate.instant(
+                'ADMIN-AMENITIES-PAGE.AMENITY_AMENITYNAME_DELETED_SUCCESSFULLY',
+                {
+                  amenityName: amenity.name,
+                },
+              ),
+              'success',
+            );
+
+            this.amenities = this.amenities.filter(
+              a => a.self !== amenity.self,
+            );
+
+            if (this.amenities.length === 0 && this.currentPage > 1) {
+              this.currentPage--;
+              this.updateQueryParams();
+            }
+
+            this.loadAmenities();
+          },
+          error: err => {
+            this.toastService.showToast(
+              this.translate.instant(
+                'ADMIN-AMENITIES-PAGE.COULD_NOT_REMOVE_AMENITYNAME_TRY_AGAIN',
+                {
+                  amenityName: amenity.name,
+                },
+              ),
+              'error',
+            );
+            console.error('Error deleting amenities:', err);
+          },
+        });
       });
   }
 
