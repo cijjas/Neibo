@@ -28,10 +28,7 @@ export class AmenityService {
   }
 
   public getAmenities(
-    queryParams: {
-      page?: number;
-      size?: number;
-    } = {},
+    queryParams: { page?: number; size?: number } = {},
   ): Observable<{
     amenities: Amenity[];
     totalPages: number;
@@ -42,7 +39,6 @@ export class AmenityService {
     );
 
     let params = new HttpParams();
-
     if (queryParams.page !== undefined)
       params = params.set('page', queryParams.page.toString());
     if (queryParams.size !== undefined)
@@ -54,6 +50,15 @@ export class AmenityService {
         mergeMap(response => {
           const amenitiesDto: AmenityDto[] = response.body || [];
           const pagination = parseLinkHeader(response.headers.get('Link'));
+
+          // If there are no amenities, emit a value immediately
+          if (amenitiesDto.length === 0) {
+            return of({
+              amenities: [],
+              totalPages: pagination ? pagination.totalPages : 0,
+              currentPage: pagination ? pagination.currentPage : 0,
+            });
+          }
 
           const amenityObservables = amenitiesDto.map(amenityDto =>
             mapAmenity(this.http, amenityDto),

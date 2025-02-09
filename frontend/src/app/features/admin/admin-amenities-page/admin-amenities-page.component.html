@@ -13,6 +13,8 @@
   <div class="divider mb-3 mt-3"></div>
 
   <!-- If no amenities -->
+  <div class="loader" *ngIf="isLoading"></div>
+
   <div class="no-posts-found" *ngIf="amenities?.length === 0 && !isLoading">
     <i class="circle-icon fa-solid fa-magnifying-glass"></i>
     {{ 'ADMIN-AMENITIES-PAGE.AMENITIES_NOT_FOUND' | translate }}
@@ -37,12 +39,8 @@
             <i class="fa-solid fa-pen"></i>
             {{ 'ADMIN-AMENITIES-PAGE.EDIT' | translate }}
           </a>
-          <a class="btn btn-link">
-            <i
-              class="fas fa-trash"
-              style="color: var(--error)"
-              (click)="deleteAmenity(amenity)"
-            ></i>
+          <a class="btn btn-link" (click)="deleteAmenity(amenity)">
+            <i class="fas fa-trash" style="color: var(--error)"></i>
           </a>
         </div>
       </div>

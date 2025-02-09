@@ -20,7 +20,6 @@ import { TranslateService } from '@ngx-translate/core';
 export class MarketplaceProductRequestsPageComponent implements OnInit {
   channel: string = 'SellerHub';
 
-  productSelf: string;
   product?: Product;
   requestList: Request[] = [];
 
@@ -33,6 +32,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
   selectedRequesterName: string | undefined;
 
   page: number = 1;
+  pageSize: number = 20;
   totalPages: number = 1;
 
   showLoader: boolean = false;
@@ -78,8 +78,8 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     this.requestService
       .getRequests({
         page: this.page,
-        size: 20,
-        forProduct: this.productSelf,
+        size: this.pageSize,
+        forProduct: this.product.self,
         withStatus: statusUrl,
       })
       .subscribe({

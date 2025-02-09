@@ -122,7 +122,9 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
           this.sales = data.requests;
           this.totalPages = data.totalPages;
         },
-        error: err => console.error(err),
+        error: err => {
+          console.error(err);
+        },
       });
   }
 

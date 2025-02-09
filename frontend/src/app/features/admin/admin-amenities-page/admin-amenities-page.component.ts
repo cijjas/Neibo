@@ -59,6 +59,7 @@ export class AdminAmenitiesPageComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.currentPage = +params['page'] || 1;
       this.pageSize = +params['size'] || 10;
+
       this.loadAmenities();
     });
 
