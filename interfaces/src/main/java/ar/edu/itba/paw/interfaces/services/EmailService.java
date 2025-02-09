@@ -31,11 +31,9 @@ public interface EmailService {
 
     void sendAnnouncementMail(Post post, List<User> receivers);
 
-    void sendNewCommentMail(Post post, List<User> receivers);
-
     void sendInquiryMail(User receiver, Product product, String message, boolean reply);
 
     void sendNewRequestMail(Product product, User sender, String message);
 
-    void sendVerifiedNeighborMail(User user, String neighborhoodName);
+    void sendVerifiedNeighborMail(User user);
 }

@@ -98,15 +98,6 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public List<Long> getNeighborhoodIds() {
-        LOGGER.debug("Selecting All Neighborhood Ids");
-
-        String jpql = "SELECT n.id FROM Neighborhood n";
-        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
-        return query.getResultList();
-    }
-
-    @Override
     public int countNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId) {
         LOGGER.debug("Counting Neighborhoods with Worker Id {}, without Worker Id {}, and isBase {}", withWorkerId, withoutWorkerId, isBase);
 
