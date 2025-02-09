@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { EventService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-calendar-box',
@@ -17,26 +18,41 @@ export class CalendarBoxComponent implements OnInit {
   placeholders = Array(5).fill(0);
   isAdmin = false;
   selectedDay: any = null;
-  weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  weekDays: string[] = [];
 
   constructor(
     private eventService: EventService,
     private linkStorage: HateoasLinksService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+  ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
+    // Initialize translated weekday labels.
+    this.weekDays = [
+      this.translate.instant('calendar.weekdays.Sunday'),
+      this.translate.instant('calendar.weekdays.Monday'),
+      this.translate.instant('calendar.weekdays.Tuesday'),
+      this.translate.instant('calendar.weekdays.Wednesday'),
+      this.translate.instant('calendar.weekdays.Thursday'),
+      this.translate.instant('calendar.weekdays.Friday'),
+      this.translate.instant('calendar.weekdays.Saturday'),
+    ];
+
+    this.route.queryParams.subscribe(params => {
       const dateParam = params['date'];
       if (dateParam) {
         const [year, month, day] = dateParam.split('-').map(Number);
         this.selectedDate = new Date(Date.UTC(year, month - 1, day));
       } else {
         const now = new Date();
-        this.selectedDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+        this.selectedDate = new Date(
+          Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+        );
       }
 
+      // Set the calendar's date and selected day.
       this.date = new Date(this.selectedDate);
       this.selectedDay = {
         date: this.selectedDate.getUTCDate(),
@@ -49,19 +65,24 @@ export class CalendarBoxComponent implements OnInit {
     });
   }
 
-
   private loadEventTimestamps(): void {
     const eventUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_EVENTS);
-    const datesInMonth = this.getDatesInMonth(this.date.getFullYear(), this.date.getMonth());
-
-    const dateStrings = datesInMonth.map((date) => date.toISOString().split('T')[0]);
+    const datesInMonth = this.getDatesInMonth(
+      this.date.getFullYear(),
+      this.date.getMonth(),
+    );
+    const dateStrings = datesInMonth.map(
+      date => date.toISOString().split('T')[0],
+    );
 
     this.eventService.getEventsForDateRange(eventUrl, dateStrings).subscribe({
-      next: (allEvents) => {
-        this.eventTimestamps = allEvents.map((e) => new Date(e.eventDate).getTime());
+      next: allEvents => {
+        this.eventTimestamps = allEvents.map(e =>
+          new Date(e.eventDate).getTime(),
+        );
         this.updateEventDays();
       },
-      error: (error) => console.error('Error fetching event timestamps:', error),
+      error: error => console.error('Error fetching event timestamps:', error),
       complete: () => (this.isLoading = false),
     });
   }
@@ -77,10 +98,9 @@ export class CalendarBoxComponent implements OnInit {
   }
 
   private updateEventDays(): void {
-    this.days = this.days.map((day) => {
+    this.days = this.days.map(day => {
       const dayDate = new Date(Date.UTC(day.year, day.month, day.date));
-
-      const isEvent = this.eventTimestamps.some((timestamp) => {
+      const isEvent = this.eventTimestamps.some(timestamp => {
         const eventDate = new Date(timestamp);
         return (
           eventDate.getUTCFullYear() === dayDate.getUTCFullYear() &&
@@ -88,7 +108,6 @@ export class CalendarBoxComponent implements OnInit {
           eventDate.getUTCDate() === dayDate.getUTCDate()
         );
       });
-
       return { ...day, event: isEvent };
     });
   }
@@ -99,12 +118,14 @@ export class CalendarBoxComponent implements OnInit {
 
     const firstDayOfMonth = new Date(Date.UTC(year, month, 1)).getUTCDay();
     const lastDateOfMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-    const lastDayOfMonth = new Date(Date.UTC(year, month, lastDateOfMonth)).getUTCDay();
+    const lastDayOfMonth = new Date(
+      Date.UTC(year, month, lastDateOfMonth),
+    ).getUTCDay();
     const lastDateOfLastMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
 
     this.days = [];
 
-    // Previous month's days in UTC
+    // Previous month's days (using UTC).
     for (let i = firstDayOfMonth; i > 0; i--) {
       let prevMonth = month - 1;
       let prevYear = year;
@@ -122,15 +143,18 @@ export class CalendarBoxComponent implements OnInit {
       });
     }
 
-    // Current month's days in UTC
+    // Current month's days.
     for (let i = 1; i <= lastDateOfMonth; i++) {
       const currentDay = new Date(Date.UTC(year, month, i));
-      const isToday = currentDay.toUTCString() === new Date(Date.UTC(
-        new Date().getUTCFullYear(),
-        new Date().getUTCMonth(),
-        new Date().getUTCDate()
-      )).toUTCString();
-
+      const isToday =
+        currentDay.toUTCString() ===
+        new Date(
+          Date.UTC(
+            new Date().getUTCFullYear(),
+            new Date().getUTCMonth(),
+            new Date().getUTCDate(),
+          ),
+        ).toUTCString();
       this.days.push({
         date: i,
         month: month,
@@ -141,7 +165,7 @@ export class CalendarBoxComponent implements OnInit {
       });
     }
 
-    // Next month's days in UTC
+    // Next month's days.
     for (let i = lastDayOfMonth; i < 6; i++) {
       let nextMonth = month + 1;
       let nextYear = year;
@@ -159,15 +183,25 @@ export class CalendarBoxComponent implements OnInit {
       });
     }
 
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
+    // Use translated month names to build the current date string.
+    const monthKeys = [
+      'calendar.month.January',
+      'calendar.month.February',
+      'calendar.month.March',
+      'calendar.month.April',
+      'calendar.month.May',
+      'calendar.month.June',
+      'calendar.month.July',
+      'calendar.month.August',
+      'calendar.month.September',
+      'calendar.month.October',
+      'calendar.month.November',
+      'calendar.month.December',
     ];
-    this.currentDate = `${months[month]} ${year}`;
+
+    this.currentDate = `${this.translate.instant(monthKeys[month])} ${year}`;
     this.isLoading = false;
   }
-
-
 
   changeMonth(direction: number): void {
     this.date.setMonth(this.date.getMonth() + direction);
@@ -176,21 +210,14 @@ export class CalendarBoxComponent implements OnInit {
   }
 
   navigateToDay(day: any): void {
-    // Update the selected day
     this.selectedDay = day;
-
-    // Create the selected date at noon local time
+    // Create a date (using local time at noon) for navigation.
     const selectedDate = new Date(day.year, day.month, day.date, 12);
-
-    // Format the date as yyyy-MM-dd
     const year = selectedDate.getFullYear();
     const month = ('0' + (selectedDate.getMonth() + 1)).slice(-2);
     const dayDate = ('0' + selectedDate.getDate()).slice(-2);
-
-    // Navigate using a date query param
-    this.router.navigate(['/calendar'], { queryParams: { date: `${year}-${month}-${dayDate}` } });
+    this.router.navigate(['/calendar'], {
+      queryParams: { date: `${year}-${month}-${dayDate}` },
+    });
   }
-
-
-
 }

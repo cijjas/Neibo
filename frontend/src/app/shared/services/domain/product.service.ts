@@ -147,8 +147,17 @@ export function mapProduct(
     http
       .get<UserDto>(productDto._links.productUser)
       .pipe(mergeMap(userDto => mapUser(http, userDto))),
+
     http.get<DepartmentDto>(productDto._links.department),
-    http.get<RequestsCountDto>(productDto._links.pendingRequestsCount),
+
+    http.get<RequestsCountDto>(productDto._links.pendingRequestsCount).pipe(
+      catchError(error => {
+        if (error.status === 403) {
+          return of(null);
+        }
+        return throwError(() => error);
+      }),
+    ),
   ]).pipe(
     map(([seller, department, pendingRequestsCount]) => {
       return {
@@ -158,7 +167,9 @@ export function mapProduct(
         used: productDto.used,
         stock: productDto.remainingUnits,
         inquiries: productDto._links.inquiries,
-        totalPendingRequests: pendingRequestsCount.count,
+        totalPendingRequests: pendingRequestsCount
+          ? pendingRequestsCount.count
+          : null,
         createdAt: productDto.creationDate,
         firstImage: productDto._links.firstProductImage,
         secondImage: productDto._links.secondProductImage,

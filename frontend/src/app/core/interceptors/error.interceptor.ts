@@ -49,10 +49,6 @@ export class ErrorInterceptor implements HttpInterceptor {
               break;
 
             default:
-              // Generic error handling
-              console.warn(
-                `Received error [${error.status}]. ${error.message} `,
-              );
               break;
           }
         }

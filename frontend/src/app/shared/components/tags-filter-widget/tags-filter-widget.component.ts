@@ -94,7 +94,7 @@ export class TagsFilterWidgetComponent implements OnInit {
     forkJoin(professionObservables).subscribe({
       next: professions => {
         this.appliedItems = professions.map(profession => ({
-          name: profession.displayName,
+          name: profession.name,
           self: profession.self,
         }));
       },

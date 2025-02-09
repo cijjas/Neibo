@@ -3,6 +3,7 @@ import { CalendarService, EventService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-calendar-widget',
@@ -12,8 +13,19 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class CalendarWidgetComponent implements OnInit {
   isLoading = true;
+  // The currentDate will now be built using translated month names.
   currentDate: string = '';
-  weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // You can also translate the weekday labels if desired.
+  weekDays = [
+    this.translate.instant('calendar.weekdays.Sun'),
+    this.translate.instant('calendar.weekdays.Mon'),
+    this.translate.instant('calendar.weekdays.Tue'),
+    this.translate.instant('calendar.weekdays.Wed'),
+    this.translate.instant('calendar.weekdays.Thu'),
+    this.translate.instant('calendar.weekdays.Fri'),
+    this.translate.instant('calendar.weekdays.Sat'),
+  ];
 
   days: Array<{
     date: number;
@@ -33,27 +45,29 @@ export class CalendarWidgetComponent implements OnInit {
     private linkStorage: HateoasLinksService,
     private router: Router,
     private calendarService: CalendarService,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit() {
     this.calendarService.calendarReload$.subscribe(() => {
       this.loadEventTimestamps();
-
       this.renderCalendar();
     });
     this.calendarService.triggerReload();
   }
 
+  /**
+   * Fetch events for each day in the current month.
+   */
   private loadEventTimestamps(): void {
     const eventUrl = this.linkStorage.getLink(LinkKey.NEIGHBORHOOD_EVENTS);
     const datesInMonth = this.getDatesInMonth(
       this.date.getFullYear(),
       this.date.getMonth(),
     );
-
-    const dateStrings = datesInMonth.map(date => {
-      return date.toISOString().split('T')[0];
-    });
+    const dateStrings = datesInMonth.map(
+      date => date.toISOString().split('T')[0],
+    );
 
     this.eventService.getEventsForDateRange(eventUrl, dateStrings).subscribe({
       next: allEvents => {
@@ -71,9 +85,12 @@ export class CalendarWidgetComponent implements OnInit {
     });
   }
 
+  /**
+   * Generate an array of Date objects for each day in the given month.
+   */
   private getDatesInMonth(year: number, month: number): Date[] {
     const date = new Date(year, month, 1);
-    const dates = [];
+    const dates: Date[] = [];
     while (date.getMonth() === month) {
       dates.push(new Date(date));
       date.setDate(date.getDate() + 1);
@@ -81,40 +98,42 @@ export class CalendarWidgetComponent implements OnInit {
     return dates;
   }
 
+  /**
+   * Update the days array to mark which days have events.
+   */
   private updateEventDays(): void {
     this.days = this.days.map(day => {
-      // Create a date at midnight in UTC for the calendar day
       const dayDate = new Date(Date.UTC(day.year, day.month, day.date));
-
-      // Check if there is an event on this exact day
       const isEvent = this.eventTimestamps.some(timestamp => {
         const eventDate = new Date(timestamp);
-        // Compare only the date parts
         return (
           dayDate.getUTCFullYear() === eventDate.getUTCFullYear() &&
           dayDate.getUTCMonth() === eventDate.getUTCMonth() &&
           dayDate.getUTCDate() === eventDate.getUTCDate()
         );
       });
-
       return { ...day, event: isEvent };
     });
   }
 
+  /**
+   * Render the calendar grid for the current month.
+   */
   renderCalendar(): void {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+    // Define translation keys for each month.
+    const monthKeys = [
+      'calendar.month.January',
+      'calendar.month.February',
+      'calendar.month.March',
+      'calendar.month.April',
+      'calendar.month.May',
+      'calendar.month.June',
+      'calendar.month.July',
+      'calendar.month.August',
+      'calendar.month.September',
+      'calendar.month.October',
+      'calendar.month.November',
+      'calendar.month.December',
     ];
 
     const firstDayOfMonth = new Date(
@@ -140,7 +159,7 @@ export class CalendarWidgetComponent implements OnInit {
 
     this.days = [];
 
-    // Previous month's days
+    // Previous month's trailing days.
     for (let i = firstDayOfMonth; i > 0; i--) {
       let prevMonth = this.date.getMonth() - 1;
       let year = this.date.getFullYear();
@@ -158,7 +177,7 @@ export class CalendarWidgetComponent implements OnInit {
       });
     }
 
-    // Current month's days
+    // Current month's days.
     for (let i = 1; i <= lastDateOfMonth; i++) {
       const currentDay = new Date(
         this.date.getFullYear(),
@@ -176,7 +195,7 @@ export class CalendarWidgetComponent implements OnInit {
       });
     }
 
-    // Next month's days
+    // Next month's leading days.
     for (let i = lastDayOfMonth; i < 6; i++) {
       let nextMonth = this.date.getMonth() + 1;
       let year = this.date.getFullYear();
@@ -194,23 +213,25 @@ export class CalendarWidgetComponent implements OnInit {
       });
     }
 
-    this.currentDate = `${
-      months[this.date.getMonth()]
-    } ${this.date.getFullYear()}`;
+    // Use the translate service to localize the month name.
+    this.currentDate = `${this.translate.instant(
+      monthKeys[this.date.getMonth()],
+    )} ${this.date.getFullYear()}`;
     this.isLoading = false;
   }
 
+  /**
+   * Change the current month and reload the calendar.
+   */
   changeMonth(direction: number): void {
-    // Update the current month
     this.date.setMonth(this.date.getMonth() + direction);
-
-    // Re-render the calendar for the new month
     this.renderCalendar();
-
-    // Request events for the new month
     this.loadEventTimestamps();
   }
 
+  /**
+   * Navigate to the detailed view for a selected day.
+   */
   navigateToDay(day: {
     date: number;
     month: number;

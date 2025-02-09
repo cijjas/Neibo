@@ -189,7 +189,17 @@ export function mapWorker(
     http
       .get<UserDto>(workerDto._links.user)
       .pipe(mergeMap(userDto => mapUser(http, userDto))),
-    http.get<NeighborhoodDto[]>(workerDto._links.workerNeighborhoods),
+
+    // If a 403 error occurs, return null instead of failing.
+    http.get<NeighborhoodDto[]>(workerDto._links.workerNeighborhoods).pipe(
+      catchError(error => {
+        if (error.status === 403) {
+          return of(null);
+        }
+        return throwError(() => error);
+      }),
+    ),
+
     http.get<ProfessionDto[]>(workerDto._links.professions),
     http.get<ReviewsAverageDto>(workerDto._links.reviewsAverage),
     http.get<ReviewsCountDto>(workerDto._links.reviewsCount),
