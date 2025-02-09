@@ -7,11 +7,24 @@ import {
 } from '@angular/core/testing';
 import { CalendarBoxComponent } from './calendar-box.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { EventService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
+
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
 
 describe('CalendarBoxComponent - Initialization', () => {
   let component: CalendarBoxComponent;
@@ -48,6 +61,7 @@ describe('CalendarBoxComponent - Initialization', () => {
     TestBed.configureTestingModule({
       declarations: [CalendarBoxComponent],
       providers: [
+        { provide: TranslateService, useClass: FakeTranslateService },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: Router, useValue: routerSpy },
         { provide: HateoasLinksService, useValue: linkServiceSpy },

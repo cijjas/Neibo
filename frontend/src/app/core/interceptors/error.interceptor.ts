@@ -23,7 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error.error instanceof ErrorEvent) {
           // Client-side or network error
           console.error('Client-side error:', error.error.message);
-          this.showNotification('Network error: Please check your connection.');
+          console.log('Network error: Please check your connection.');
         } else {
           // Backend error
           switch (error.status) {
@@ -56,9 +56,5 @@ export class ErrorInterceptor implements HttpInterceptor {
         return throwError(() => error);
       }),
     );
-  }
-
-  private showNotification(message: string): void {
-    console.log('Notification:', message);
   }
 }

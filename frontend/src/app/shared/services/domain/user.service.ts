@@ -12,6 +12,7 @@ import {
   LinkKey,
 } from '@shared/index';
 import { HateoasLinksService, ImageService } from '@core/index';
+import { formatDate } from 'date-fns';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -272,6 +273,7 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
         image: userDto._links.userImage,
         identification: userDto.identification,
         creationDate: userDto.creationDate,
+        userSince: formatDate(userDto.creationDate, 'dd MMM yyyy'),
         language: language._links.self,
         userRole: userRole.role,
         userRoleDisplay: roleDisplayMapping[roleEnum] || 'Unknown Role',

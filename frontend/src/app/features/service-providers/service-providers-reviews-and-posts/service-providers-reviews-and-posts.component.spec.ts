@@ -104,11 +104,11 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     linkServiceSpy.getLink.and.callFake((key: string) => {
       switch (key) {
         case LinkKey.USER_WORKER:
-          return 'worker123'; 
+          return 'worker123';
         case LinkKey.USER_USER_ROLE:
-          return 'worker'; 
+          return 'worker';
         case LinkKey.WORKER_USER_ROLE:
-          return 'worker'; 
+          return 'worker';
         default:
           return '';
       }
@@ -117,7 +117,7 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         ServiceProvidersReviewsAndPostsComponent,
-        FakeTranslatePipe, 
+        FakeTranslatePipe,
       ],
       providers: [
         { provide: ReviewService, useValue: reviewServiceSpy },
@@ -134,8 +134,11 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
   beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(ServiceProvidersReviewsAndPostsComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); 
-    tick(); 
+
+    component.worker = dummyWorker;
+
+    fixture.detectChanges();
+    tick();
   }));
 
   // Test 1: Initialization
@@ -153,7 +156,7 @@ describe('ServiceProvidersReviewsAndPostsComponent', () => {
       postSize: '7',
       tab: 'posts',
     });
-    tick(); 
+    tick();
 
     expect(component.reviewCurrentPage).toBe(2);
     expect(component.reviewPageSize).toBe(5);

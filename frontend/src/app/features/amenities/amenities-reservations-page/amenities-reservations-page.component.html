@@ -11,7 +11,12 @@
         aria-hidden="true"
       >
         <!-- If no amenities -->
-        <div class="no-posts-found" *ngIf="amenities?.length === 0">
+        <div class="loader w-100" *ngIf="isLoading"></div>
+
+        <div
+          class="no-posts-found"
+          *ngIf="amenities?.length === 0 && !isLoading"
+        >
           <i class="circle-icon fa-solid fa-magnifying-glass"></i>
           {{ 'AMENITIES-RESERVATIONS-PAGE.AMENITIES_NOT_FOUND' | translate }}
         </div>
@@ -63,6 +68,7 @@
                 id="date"
                 formControlName="date"
                 class="cool-input mb-1"
+                [min]="todayString"
                 required
               />
               <p

@@ -180,30 +180,33 @@ export class WorkerService {
     );
   }
 }
-
 export function mapWorker(
   http: HttpClient,
   workerDto: WorkerDto,
 ): Observable<Worker> {
+  const user$ = http
+    .get<UserDto>(workerDto._links.user)
+    .pipe(mergeMap(userDto => mapUser(http, userDto)));
+
+  const neighborhoods$ = http.get<NeighborhoodDto[]>(
+    workerDto._links.workerNeighborhoods,
+  );
+  const professions$ = http.get<ProfessionDto[]>(workerDto._links.professions);
+  const reviewsAverage$ = http.get<ReviewsAverageDto>(
+    workerDto._links.reviewsAverage,
+  );
+  const reviewsCount$ = http.get<ReviewsCountDto>(
+    workerDto._links.reviewsCount,
+  );
+  const postsCount$ = http.get<PostsCountDto>(workerDto._links.postsCount);
+
   return forkJoin([
-    http
-      .get<UserDto>(workerDto._links.user)
-      .pipe(mergeMap(userDto => mapUser(http, userDto))),
-
-    // If a 403 error occurs, return null instead of failing.
-    http.get<NeighborhoodDto[]>(workerDto._links.workerNeighborhoods).pipe(
-      catchError(error => {
-        if (error.status === 403) {
-          return of(null);
-        }
-        return throwError(() => error);
-      }),
-    ),
-
-    http.get<ProfessionDto[]>(workerDto._links.professions),
-    http.get<ReviewsAverageDto>(workerDto._links.reviewsAverage),
-    http.get<ReviewsCountDto>(workerDto._links.reviewsCount),
-    http.get<PostsCountDto>(workerDto._links.postsCount),
+    user$,
+    neighborhoods$,
+    professions$,
+    reviewsAverage$,
+    reviewsCount$,
+    postsCount$,
   ]).pipe(
     map(
       ([
@@ -214,7 +217,7 @@ export function mapWorker(
         reviewsCount,
         postsCount,
       ]) => {
-        const worker = {
+        return {
           phoneNumber: workerDto.phoneNumber,
           businessName: workerDto.businessName,
           address: workerDto.address,
@@ -234,7 +237,6 @@ export function mapWorker(
             : null,
           self: workerDto._links.self,
         } as Worker;
-        return worker;
       },
     ),
   );

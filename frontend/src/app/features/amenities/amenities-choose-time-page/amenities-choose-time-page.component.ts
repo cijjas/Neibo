@@ -15,6 +15,8 @@ import { Subscription } from 'rxjs';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { enUS, es } from 'date-fns/locale';
+import { format } from 'date-fns';
 
 interface ShiftTime {
   start: string;
@@ -28,6 +30,7 @@ interface ShiftTime {
 export class AmenitiesChooseTimePageComponent implements OnInit, OnDestroy {
   amenityUrl!: string;
   date!: string;
+  displayDate: string;
   amenityName: string = '';
   bookings: Shift[] = [];
   private queryParamsSubscription!: Subscription;
@@ -59,6 +62,11 @@ export class AmenitiesChooseTimePageComponent implements OnInit, OnDestroy {
       params => {
         this.amenityUrl = params.get('amenityUrl') || '';
         this.date = params.get('date') || '';
+        const userLang = localStorage.getItem('language'); // Default to English
+        const locale = userLang === 'es' ? es : enUS; // Select locale
+        this.displayDate = format(this.date, 'EE, dd MMM yyyy', {
+          locale,
+        });
         if (this.amenityUrl && this.date) {
           this.loadData();
         }

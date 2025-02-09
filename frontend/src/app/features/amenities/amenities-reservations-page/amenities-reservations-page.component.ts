@@ -14,6 +14,7 @@ import { catchError, map, Observable, of, switchMap } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { Title } from '@angular/platform-browser';
+import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 
 @Component({
   selector: 'app-amenities-reservations-page',
@@ -23,6 +24,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
   amenities: Amenity[] = [];
   reservationsList: Booking[] = [];
   reservationForm!: FormGroup;
+  todayString: string = '';
 
   currentPage = 1;
   totalPages = 1;
@@ -63,9 +65,11 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     );
     this.titleService.setTitle(title);
 
+    this.todayString = new Date().toISOString().split('T')[0];
+
     this.reservationForm = this.fb.group({
       amenity: ['', Validators.required],
-      date: ['', Validators.required],
+      date: ['', [Validators.required]],
     });
 
     // Get initial page/size from query params

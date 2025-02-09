@@ -26,7 +26,8 @@
                 <img
                   id="output"
                   [src]="
-                    profileImageSafeUrl || environment.deployUrl + 'assets/images/default-profile.png'
+                    profileImageSafeUrl ||
+                    environment.deployUrl + 'assets/images/default-profile.png'
                   "
                   alt="profile_picture_img"
                 />
@@ -67,7 +68,7 @@
                   {{ 'USER-PROFILE-PAGE.USER_SINCE' | translate }}
                 </p>
                 <h6 class="text-muted f-w-400">
-                  {{ currentUser?.creationDate }}
+                  {{ currentUser?.userSince }}
                 </h6>
               </div>
             </div>
@@ -76,7 +77,6 @@
             <div class="divider mb-3 mt-3"></div>
 
             <div class="row m-t-40">
-
               <!-- Language toggle -->
               <div class="col-md-6 mb-2">
                 <p class="m-b-10 f-w-500">

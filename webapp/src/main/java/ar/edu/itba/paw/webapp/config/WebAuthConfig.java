@@ -487,7 +487,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Access-Token",
                 "X-Refresh-Token",
                 "Location",
-                "Link"
+                "Link",
+                "If-None-Match"
         ));
         corsConfiguration.setExposedHeaders(Arrays.asList(
                 "Origin",
@@ -503,7 +504,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Access-Token",
                 "X-Refresh-Token",
                 "Location",
-                "Link"
+                "Link",
+                "ETag",
+                "Cache-Control"
         ));
         corsConfiguration.setAllowedMethods(Arrays.asList(
                 "GET",

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { formatTime, LinkKey, Shift, ShiftDto } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { format, parse } from 'date-fns';
 
 @Injectable({ providedIn: 'root' })
 export class ShiftService {
@@ -40,10 +41,17 @@ export class ShiftService {
   }
 }
 
+function formatTimeHHMM(timeString: string): string {
+  const parsedTime = parse(timeString, 'HH:mm:ss', new Date()); // Parse time
+  return format(parsedTime, 'HH:mm'); // Format as HH:MM
+}
+
 export function mapShift(shiftDto: ShiftDto): Shift {
   return {
     startTime: shiftDto.startTime,
     endTime: addOneHour(shiftDto.startTime),
+    startTimeNoSec: formatTimeHHMM(shiftDto.startTime),
+    endTimeNoSec: formatTimeHHMM(addOneHour(shiftDto.startTime)),
     startTimeDisplay: formatTime(shiftDto.startTime, 'es-AR', { hour12: true }),
     endTimeDisplay: formatTime(addOneHour(shiftDto.startTime), 'es-AR', {
       hour12: true,

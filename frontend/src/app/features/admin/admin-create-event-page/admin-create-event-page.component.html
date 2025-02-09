@@ -38,7 +38,9 @@
           rows="5"
           class="cool-input textarea-min-max"
           formControlName="description"
-          [attr.placeholder]="'ADMIN-CREATE-EVENT.ENTER_EVENT_DESCRIPTION' | translate"
+          [attr.placeholder]="
+            'ADMIN-CREATE-EVENT.ENTER_EVENT_DESCRIPTION' | translate
+          "
         ></textarea>
         <app-form-error
           class="w-100"
@@ -58,6 +60,7 @@
             type="date"
             class="cool-input"
             formControlName="date"
+            [min]="todayString"
           />
           <app-form-error
             class="w-100"

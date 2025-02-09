@@ -56,7 +56,7 @@
           </p>
           <p class="c-light-text mt-2">
             <strong>{{ 'AMENITIES-CHOOSE-TIME-PAGE.DATE' | translate }}</strong>
-            {{ date }}
+            {{ displayDate }}
           </p>
 
           <div class="divider"></div>
@@ -68,16 +68,17 @@
               </span>
 
               <form [formGroup]="shiftsForm" *ngIf="bookings?.length > 0">
-                <!-- Add formArrayName here -->
                 <div formArrayName="selectedShifts">
                   <div
                     *ngFor="let shift of bookings; let i = index"
                     class="cat"
                   >
                     <label class="w-100">
-                      <!-- Here i indexes into the FormArray 'selectedShifts' -->
                       <input type="checkbox" [formControlName]="i" />
-                      <span>{{ shift.startTime }} - {{ shift.endTime }}</span>
+                      <span
+                        >{{ shift.startTimeNoSec }} -
+                        {{ shift.endTimeNoSec }}</span
+                      >
                     </label>
                   </div>
                 </div>
@@ -117,9 +118,10 @@
 
         <!-- Loading indicator -->
         <div *ngIf="isLoading" class="f-c-c-c" style="text-align: center">
-          <span class="w-100 mb-2">{{
+          <span class="w-100 mb-2" style="color: var(--lighttext)">{{
             'AMENITIES-CHOOSE-TIME-PAGE.LOADING_AVAILABLE_TIMES' | translate
           }}</span>
+          <div class="loader w-100" *ngIf="isLoading"></div>
         </div>
       </div>
     </div>

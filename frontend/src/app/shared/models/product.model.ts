@@ -1,4 +1,4 @@
-import { Department, Inquiry, User } from "./index";
+import { Department, Inquiry, User } from './index';
 
 export interface Product {
   name: string;
@@ -7,7 +7,7 @@ export interface Product {
   used: boolean;
   stock: number;
   inquiries: string;
-  totalPendingRequests: number;
+  totalPendingRequests?: number;
   createdAt: Date;
   firstImage: string;
   secondImage: string;

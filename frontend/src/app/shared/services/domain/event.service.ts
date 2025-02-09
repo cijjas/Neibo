@@ -9,11 +9,12 @@ import {
   parseLinkHeader,
   LinkKey,
   formatTime,
-  formatDate,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { from } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { formatDate } from 'date-fns/format';
+import { enUS, es } from 'date-fns/locale';
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -136,11 +137,15 @@ export function mapEvent(
     http.get<AttendanceCountDto>(eventDto._links.attendanceCount),
   ]).pipe(
     map(([attendanceCount]) => {
+      const userLang = localStorage.getItem('language');
+      const locale = userLang === 'es' ? es : enUS;
       return {
         name: eventDto.name,
         description: eventDto.description,
         eventDate: eventDto.eventDate,
-        eventDateDisplay: formatDate(eventDto.eventDate),
+        eventDateDisplay: formatDate(eventDto.eventDate, 'EE, dd MMM yyyy', {
+          locale,
+        }),
         startTime: formatTime(eventDto.startTime),
         endTime: formatTime(eventDto.endTime),
         duration: calculateDurationInMinutes(

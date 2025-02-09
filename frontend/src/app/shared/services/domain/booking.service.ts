@@ -11,9 +11,11 @@ import {
   mapAmenity,
   parseLinkHeader,
   LinkKey,
-  formatDate,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { formatDate } from 'date-fns/format';
+
+import { enUS, es } from 'date-fns/locale';
 
 @Injectable({ providedIn: 'root' })
 export class BookingService {
@@ -135,6 +137,8 @@ export function mapBooking(
   http: HttpClient,
   bookingDto: BookingDto,
 ): Observable<Booking> {
+  const userLang = localStorage.getItem('language');
+  const locale = userLang === 'es' ? es : enUS;
   return forkJoin([
     http
       .get<AmenityDto>(bookingDto._links.amenity)
@@ -145,7 +149,9 @@ export function mapBooking(
       return {
         shift: mapShift(shiftDto),
         amenity: amenity,
-        bookingDate: formatDate(bookingDto.bookingDate),
+        bookingDate: formatDate(bookingDto.bookingDate, 'EE, dd MMM yyyy', {
+          locale,
+        }),
         self: bookingDto._links.self,
       } as Booking;
     }),

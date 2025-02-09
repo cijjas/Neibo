@@ -122,9 +122,7 @@ describe('MarketplaceProductRequestsPageComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [MarketplaceProductRequestsPageComponent],
-      imports: [
-        TranslateModule.forRoot(), 
-      ],
+      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: Router, useValue: routerSpy },
@@ -132,14 +130,13 @@ describe('MarketplaceProductRequestsPageComponent', () => {
         { provide: HateoasLinksService, useValue: hateoasLinksServiceSpy },
         { provide: ProductService, useClass: ProductServiceStub },
       ],
-      schemas: [NO_ERRORS_SCHEMA], 
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MarketplaceProductRequestsPageComponent);
     component = fixture.componentInstance;
-    component.productSelf = dummyProduct.self;
     fixture.detectChanges();
   });
 

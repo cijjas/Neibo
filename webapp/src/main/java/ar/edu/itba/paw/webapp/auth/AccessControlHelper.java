@@ -205,7 +205,7 @@ public class AccessControlHelper {
         }
 
         // Reference Authorization
-        return (!optionalWithWorker.isPresent() && !optionalWithoutWorker.isPresent()) || (authHelper.isAnonymous() && !authHelper.isUnverifiedOrRejected());
+        return (!optionalWithWorker.isPresent() && !optionalWithoutWorker.isPresent()) || (!(authHelper.isAnonymous() && !authHelper.isUnverifiedOrRejected()));
     }
 
     // --------------------------------------------- PROFESSION --------------------------------------------------------

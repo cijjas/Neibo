@@ -153,7 +153,7 @@ export class ServiceProvidersCreatePostPageComponent {
             ),
             'success',
           );
-          this.router.navigate(['/services', 'profiles', this.workerId], {
+          this.router.navigate(['/services', 'my-profile', this.workerId], {
             queryParams: { tab: 'posts' },
           });
         },

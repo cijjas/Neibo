@@ -1,13 +1,25 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CalendarWidgetComponent } from './calendar-widget.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 
 // Import the service types (adjust paths as needed)
 import { CalendarService, EventService, LinkKey } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { TranslateService } from '@ngx-translate/core';
 
+export class FakeTranslateService {
+  currentLang = 'en';
+  setDefaultLang(lang: string): void {}
+  use(lang: string): Observable<string> {
+    this.currentLang = lang;
+    return of(lang);
+  }
+  instant(key: string): string {
+    return key;
+  }
+}
 describe('CalendarWidgetComponent', () => {
   let component: CalendarWidgetComponent;
   let fixture: ComponentFixture<CalendarWidgetComponent>;
@@ -42,8 +54,10 @@ describe('CalendarWidgetComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [CalendarWidgetComponent], 
+      imports: [CalendarWidgetComponent],
       providers: [
+        { provide: TranslateService, useClass: FakeTranslateService },
+
         { provide: EventService, useValue: eventServiceSpy },
         { provide: HateoasLinksService, useValue: linkStorageSpy },
         { provide: Router, useValue: routerSpy },

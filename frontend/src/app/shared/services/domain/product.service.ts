@@ -38,6 +38,7 @@ export class ProductService {
       forUser?: string;
       withStatus?: string;
     } = {},
+    lightweight: boolean = true,
   ): Observable<{
     products: Product[];
     totalPages: number;
@@ -75,7 +76,7 @@ export class ProductService {
           const paginationInfo = parseLinkHeader(linkHeader);
 
           const productObservables = productsDto.map(productDto =>
-            mapProduct(this.http, productDto),
+            mapProduct(this.http, productDto, lightweight),
           );
 
           return forkJoin(productObservables).pipe(
@@ -138,27 +139,29 @@ export class ProductService {
     );
   }
 }
-
 export function mapProduct(
   http: HttpClient,
   productDto: ProductDto,
+  lightweight: boolean = true,
 ): Observable<Product> {
-  return forkJoin([
-    http
-      .get<UserDto>(productDto._links.productUser)
-      .pipe(mergeMap(userDto => mapUser(http, userDto))),
+  const seller$ = http
+    .get<UserDto>(productDto._links.productUser)
+    .pipe(mergeMap(userDto => mapUser(http, userDto)));
 
-    http.get<DepartmentDto>(productDto._links.department),
+  const department$ = http.get<DepartmentDto>(productDto._links.department);
 
-    http.get<RequestsCountDto>(productDto._links.pendingRequestsCount).pipe(
-      catchError(error => {
-        if (error.status === 403) {
-          return of(null);
-        }
-        return throwError(() => error);
-      }),
-    ),
-  ]).pipe(
+  const pendingRequests$ = lightweight
+    ? of(null)
+    : http.get<RequestsCountDto>(productDto._links.pendingRequestsCount).pipe(
+        catchError(error => {
+          if (error.status === 403) {
+            return of(null);
+          }
+          return throwError(() => error);
+        }),
+      );
+
+  return forkJoin([seller$, department$, pendingRequests$]).pipe(
     map(([seller, department, pendingRequestsCount]) => {
       return {
         name: productDto.name,

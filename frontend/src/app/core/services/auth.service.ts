@@ -164,13 +164,14 @@ export class AuthService {
 
   // In AuthService
   logout(): void {
+    this.router.navigate(['']);
+
     this.tokenService.clearTokens();
 
     sessionStorage.clear();
     localStorage.clear();
 
     this.linkRegistry.clearLinks();
-    this.router.navigate(['']);
   }
 
   isLoggedIn(): boolean {

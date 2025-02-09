@@ -405,7 +405,7 @@
     &.active {
       border: 1px solid transparent;
       background-color: var(--error);
-      color: var(--background);
+      color: #f1d283;
       box-shadow: 0 5px 0 0 #f1d283;
       transform: translateY(-5px);
     }
@@ -2457,14 +2457,15 @@ h6 {
   & .cat {
     background-color: var(--darkonbackground);
     width: 100%;
-    border-radius: var(--border-radius);
-    border: 0px solid var(--lighttext);
-    border-bottom: 1px solid var(--lighttext);
+    border-radius: 7px;
+
     overflow: hidden;
     float: left;
 
     & label {
       & span {
+        border: 1px solid var(--bordercolor);
+        border-radius: 7px;
         padding: 5px;
         text-align: center;
         display: block;
@@ -2472,8 +2473,8 @@ h6 {
         transition: all 0.3s ease-in-out;
 
         &:hover {
-          color: var(--background);
-          background-color: var(--old-primary);
+          color: var(--primary);
+          background-color: var(--to-primary);
         }
       }
 
@@ -2489,8 +2490,10 @@ h6 {
     }
 
     & input:checked + span {
-      color: var(--background);
-      background-color: var(--primary);
+      color: var(--primary);
+      background-color: var(--to-primary);
+      border: 1px solid var(--primary);
+      border-radius: 7px;
     }
 
     & input:disabled + span {

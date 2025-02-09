@@ -61,8 +61,6 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
         },
       );
       this.titleService.setTitle(title);
-
-      this.fetchRequests();
     });
 
     this.route.queryParams.subscribe(params => {

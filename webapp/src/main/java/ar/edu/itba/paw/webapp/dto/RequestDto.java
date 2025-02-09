@@ -59,7 +59,7 @@ public class RequestDto {
         UriBuilder requestStatusUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.REQUEST_STATUSES).path(requestStatusId);
         UriBuilder requestUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).path(requestId);
         UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
-        UriBuilder requestUserUri = uriInfo.getBaseUriBuilder().path(Endpoint.USERS).path(requestUserId);
+        UriBuilder requestUserUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(requestUserId);
 
         links.setSelf(requestUri.build());
         links.setProduct(productUri.build());

@@ -20,6 +20,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class AdminCreateEventPageComponent {
   eventForm: FormGroup;
+  todayString: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -34,6 +35,7 @@ export class AdminCreateEventPageComponent {
     const title = this.translate.instant(AppTitleKeys.ADMIN_CREATE_EVENT_PAGE);
     this.titleService.setTitle(title);
 
+    this.todayString = new Date().toISOString().split('T')[0];
     this.eventForm = this.fb.group(
       {
         name: ['', [Validators.required]],

@@ -44,7 +44,6 @@ export class MarketplacePageComponent implements OnInit {
 
   private loadProducts(): void {
     this.isLoading = true;
-
     this.productService
       .getProducts({
         page: this.page,
@@ -58,7 +57,6 @@ export class MarketplacePageComponent implements OnInit {
           this.isLoading = false;
         },
         error: err => {
-          console.error(err);
           this.isLoading = false;
         },
       });

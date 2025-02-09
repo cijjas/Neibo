@@ -24,7 +24,9 @@ export const AuthGuard = () => {
       [Role.REJECTED]: ['/rejected'],
       [Role.WORKER]: () => {
         const workerUrl = linkStorage.getLink(LinkKey.USER_WORKER);
-        return workerUrl ? ['services', 'profiles', workerUrl] : ['/not-found'];
+        return workerUrl
+          ? ['services', 'my-profile', workerUrl]
+          : ['/not-found'];
       },
     };
 

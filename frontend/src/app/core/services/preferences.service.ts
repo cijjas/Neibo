@@ -14,7 +14,7 @@ export class PreferencesService {
   private darkModeSubject = new BehaviorSubject<boolean>(false);
   // Store the language code (for example, 'en' or 'es')
   private languageSubject = new BehaviorSubject<string>(
-    localStorage.getItem('preferredLanguage') || '',
+    localStorage.getItem('language') || '',
   );
 
   darkMode$ = this.darkModeSubject.asObservable();
@@ -46,7 +46,7 @@ export class PreferencesService {
 
   // Apply and persist language (language is a code like 'en' or 'es')
   applyLanguage(language: string): void {
-    localStorage.setItem('preferredLanguage', language);
+    localStorage.setItem('language', language);
     this.languageSubject.next(language);
   }
 

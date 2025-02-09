@@ -15,6 +15,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { environment } from 'environments/environment';
+import { enUS, es } from 'date-fns/locale';
 
 @Component({
   selector: 'app-feed-post-content',
@@ -240,9 +241,10 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
 
   private updateHumanReadableDate(): void {
     if (this.post.createdAt) {
+      const locale = localStorage.getItem('language') == 'es' ? es : enUS;
       this.humanReadableDate = formatDistanceToNow(
         new Date(this.post.createdAt),
-        { addSuffix: true },
+        { addSuffix: true, locale: locale },
       );
     }
   }

@@ -1,4 +1,3 @@
-
 <div class="container f-c-c-c">
   <div class="row w-100">
     <div class="col-lg-8 w-100 m-b-20">
@@ -8,7 +7,7 @@
       <div class="f-c-c-c">
         <div class="upper-feed-buttons-box w-100" style="padding: 20px">
           <div class="f-c-c-c w-100">
-            <div>
+            <div class="f-r-sb-c w-100 ps-3 pe-3 p-3">
               <p
                 style="
                   font-size: 32px;
@@ -16,9 +15,21 @@
                   text-align: center;
                 "
               >
-              {{ "CALENDAR-PAGE.EVENTS" | translate }}
+                {{ 'CALENDAR-PAGE.EVENTS' | translate }}
               </p>
-              <p style="font-size: 16px">{{ formattedSelectedDate }}</p>
+              <div class="f-c-c-e g-0">
+                <div class="f-r-c-c g-05">
+                  <p style="font-size: 16px" class="bold">
+                    {{ formattedNumericDayMonth }}
+                  </p>
+                  <p style="font-size: 16px">
+                    {{ formattedYear }}
+                  </p>
+                </div>
+                <p>
+                  {{ formattedSelectedDay }}
+                </p>
+              </div>
             </div>
             <div class="divider m-b-20"></div>
             <div class="w-100">

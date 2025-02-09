@@ -8,6 +8,7 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ConfirmationService } from './services/confirmation.service';
 import { CachingInterceptor } from './interceptors/caching.interceptor';
+import { AutoCancelInterceptor } from './interceptors/auto-cancel.interceptor';
 
 export function initApp(appInitService: AppInitService) {
   return () => appInitService.loadInitialLinks();
@@ -30,11 +31,16 @@ export function initApp(appInitService: AppInitService) {
       useClass: ErrorInterceptor,
       multi: true,
     },
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: CachingInterceptor,
-    //   multi: true,
-    // },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CachingInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AutoCancelInterceptor,
+      multi: true,
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: initApp,

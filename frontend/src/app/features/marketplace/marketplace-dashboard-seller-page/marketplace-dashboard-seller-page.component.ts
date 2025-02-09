@@ -34,7 +34,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     private productService: ProductService,
     private translate: TranslateService,
     private titleService: Title,
-  ) { }
+  ) {}
 
   get isListings(): boolean {
     return this.route.snapshot.paramMap.get('mode') === 'listings';
@@ -85,12 +85,15 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
     );
 
     this.productService
-      .getProducts({
-        forUser: userUrl,
-        withStatus: productStatusUrl,
-        page: this.page,
-        size: this.size,
-      })
+      .getProducts(
+        {
+          forUser: userUrl,
+          withStatus: productStatusUrl,
+          page: this.page,
+          size: this.size,
+        },
+        false,
+      )
       .subscribe({
         next: data => {
           this.listings = data.products;

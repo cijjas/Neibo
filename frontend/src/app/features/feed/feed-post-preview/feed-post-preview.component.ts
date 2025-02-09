@@ -9,6 +9,7 @@ import {
 } from '@core/index';
 import { LikeService, TagService, Post, Tag, LinkKey } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
+import { enUS, es } from 'date-fns/locale';
 
 @Component({
   selector: 'app-feed-post-preview',
@@ -34,7 +35,7 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
     private likeService: LikeService,
     private userSessionService: UserSessionService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +50,7 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
       next: ({ tags }: { tags: Tag[] }) => {
         this.tags = tags || [];
       },
-      error: (err) => {
+      error: err => {
         console.error('Error fetching tags:', err);
         this.tags = [];
       },
@@ -78,28 +79,29 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
 
   private updateHumanReadableDate(): void {
     if (this.post.createdAt) {
+      const locale = localStorage.getItem('language') == 'es' ? es : enUS;
       this.humanReadableDate = formatDistanceToNow(
         new Date(this.post.createdAt),
-        { addSuffix: true }
+        { addSuffix: true, locale: locale },
       );
     }
   }
 
   private loadLikeStatus(): void {
     if (this.likesUrl) {
-      this.userSessionService.getCurrentUser().subscribe((user) => {
+      this.userSessionService.getCurrentUser().subscribe(user => {
         this.likeService
           .getLikes(this.likesUrl, {
             onPost: this.post.self,
             likedBy: user.self,
           })
           .subscribe({
-            next: (response) => {
+            next: response => {
               this.hasLiked = response.likes.some(
-                (like) => like.post.self === this.post.self
+                like => like.post.self === this.post.self,
               );
             },
-            error: (err) => {
+            error: err => {
               console.error('Error fetching like status:', err);
             },
           });
@@ -120,7 +122,7 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
       var userUrl: string;
       this.userSessionService
         .getCurrentUser()
-        .subscribe((user) => (userUrl = user.self));
+        .subscribe(user => (userUrl = user.self));
       this.likeService
         .createLike({
           post: this.post.self,
@@ -131,7 +133,7 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
             this.hasLiked = true;
             this.post.likeCount++;
           },
-          error: (err) => {
+          error: err => {
             console.error('Error liking post:', err);
           },
         });
@@ -143,14 +145,14 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
       var userUrl: string;
       this.userSessionService
         .getCurrentUser()
-        .subscribe((user) => (userUrl = user.self));
+        .subscribe(user => (userUrl = user.self));
       this.likeService.deleteLike(this.post.self, userUrl).subscribe({
         // Replace 'current-user-id' appropriately
         next: () => {
           this.hasLiked = false;
           this.post.likeCount--;
         },
-        error: (err) => {
+        error: err => {
           console.error('Error unliking post:', err);
         },
       });

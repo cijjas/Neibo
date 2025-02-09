@@ -94,7 +94,7 @@ export class LoginDialogComponent implements OnInit {
               case Role.WORKER:
                 const workerUrl = this.linkStorage.getLink(LinkKey.USER_WORKER);
                 this.router
-                  .navigate(['services', 'profile', workerUrl])
+                  .navigate(['services', 'my-profile', workerUrl])
                   .then(() => this.closeLoginDialog());
                 break;
 
