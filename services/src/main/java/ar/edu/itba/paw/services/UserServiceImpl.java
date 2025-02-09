@@ -144,8 +144,11 @@ public class UserServiceImpl implements UserService {
             user.setIdentification(identification);
         if (languageId != null)
             user.setLanguage(Language.fromId(languageId).get()); // Controller layer guarantees non-empty optional
-        if (userRoleId != null)
+        if (userRoleId != null) {
             user.setRole(UserRole.fromId(userRoleId).get()); // Controller layer guarantees non-empty optional
+            if (userRoleId == UserRole.NEIGHBOR.getId())
+                emailService.sendVerifiedNeighborMail(user);
+        }
 
         return user;
     }

@@ -434,8 +434,8 @@
     "REJECTED": "rejected",
     "NOTFOUND": "not-found",
     "LOGIN_FAILED": "Login failed:",
-    "PASSWORD": "password",
-    "EMAIL": "email"
+    "PASSWORD": "Password",
+    "EMAIL": "Email"
   },
   "LOGIN-PAGE": {
     "NEIBO": "Neibo",
@@ -962,7 +962,7 @@
     "LISTING_CREATED_SUCCESSFULLY": "Listing created successfully",
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "There was a problem creating the listing.",
     "INVALID_PRICE_FORMAT": "Invalid price format.",
-    "TITTLE": "Title",
+    "TITLE": "Title",
     "MONEY": "$1,000.00",
     "DESCRIPTION": "Description"
   },

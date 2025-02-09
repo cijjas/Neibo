@@ -92,32 +92,6 @@ public class NeighborhoodDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void getNeighborhoodIds() {
-        // Pre Conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
-
-        // Exercise
-        List<Long> neighborhoodList = neighborhoodDaoImpl.getNeighborhoodIds();
-
-        // Validations & Post Conditions
-        assertEquals(TWO_ELEMENTS, neighborhoodList.size());
-        assertTrue(neighborhoodList.contains(nhKey1));
-        assertTrue(neighborhoodList.contains(nhKey2));
-    }
-
-    @Test
-    public void getNeighborhoodIds_empty() {
-        // Pre Conditions
-
-        // Exercise
-        List<Long> neighborhoodList = neighborhoodDaoImpl.getNeighborhoodIds();
-
-        // Validations & Post Conditions
-        assertTrue(neighborhoodList.isEmpty());
-    }
-
-    @Test
     public void get() {
         // Pre Conditions
         testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);

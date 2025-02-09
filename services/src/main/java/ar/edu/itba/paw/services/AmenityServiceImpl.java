@@ -53,15 +53,6 @@ public class AmenityServiceImpl implements AmenityService {
 
         emailService.sendBatchNewAmenityMail(neighborhoodId, name, description);
 
-        // todo: This should be refactored into using the sendBatchEmail method, and by consequence the service test >:(
-        int size = 500;
-        int totalPages = PaginationUtils.calculatePages(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId()), size);
-        for (int page = 1; page <= totalPages; page++) {
-            List<User> users = userDao.getUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId(), page, size);
-            if (!users.isEmpty())
-                emailService.sendNewAmenityMail(neighborhoodId, name, description, users);
-        }
-
         return amenity;
     }
 

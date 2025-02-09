@@ -45,20 +45,10 @@ public class AmenityServiceImplTest {
         String description = "A community swimming pool";
         long neighborhoodId = 1L;
         List<Long> selectedShiftsIds = Arrays.asList(1L, 2L, 3L);
-        int page = 1;
-        int size = 500;
+
         Amenity mockAmenity = new Amenity.Builder().amenityId(1L).build();
 
-        List<User> mockUsers = new ArrayList<>();
-        for (int i = 0; i < 750; i++)
-            mockUsers.add(new User.Builder().build());
-
         when(amenityDao.createAmenity(neighborhoodId, description, name)).thenReturn(mockAmenity);
-        when(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId())).thenReturn(750);
-        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page), eq(size)))
-                .thenReturn(mockUsers);
-        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page + 1), eq(size)))
-                .thenReturn(Collections.emptyList());
 
         // Exercise
         Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
@@ -74,9 +64,6 @@ public class AmenityServiceImplTest {
                 .createAvailability(anyLong(), eq(mockAmenity.getAmenityId()));
 
         verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
-        verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
-
-        verify(userDao, times(2)).getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), anyInt(), eq(size));
 
         assertNotNull(result);
         assertEquals(mockAmenity, result);
@@ -89,21 +76,10 @@ public class AmenityServiceImplTest {
         String description = "A community swimming pool";
         long neighborhoodId = 1L;
         List<Long> selectedShiftsIds = Collections.emptyList();
-        int page = 1;
-        int size = 500;
 
         Amenity mockAmenity = new Amenity.Builder().amenityId(1L).build();
-        List<User> mockUsers = new ArrayList<>();
-
-        for (int i = 0; i < 750; i++)
-            mockUsers.add(new User.Builder().build());
 
         when(amenityDao.createAmenity(neighborhoodId, description, name)).thenReturn(mockAmenity);
-        when(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId())).thenReturn(750);
-        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page), eq(size)))
-                .thenReturn(mockUsers);
-        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page + 1), eq(size)))
-                .thenReturn(Collections.emptyList());
 
         // Exercise
         Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
@@ -112,8 +88,6 @@ public class AmenityServiceImplTest {
         verify(amenityDao, times(1)).createAmenity(neighborhoodId, description, name);
         verify(availabilityDao, times(0)).createAvailability(anyLong(), anyLong());
         verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
-        verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
-        verify(userDao, times(2)).getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), anyInt(), eq(size));
 
         assertNotNull(result);
         assertEquals(mockAmenity, result);
@@ -126,31 +100,18 @@ public class AmenityServiceImplTest {
         String description = "A well-maintained tennis court";
         long neighborhoodId = 2L;
         List<Long> selectedShiftsIds = null; // Simulating the null case
-        int page = 1;
-        int size = 500;
 
         Amenity mockAmenity = new Amenity.Builder().amenityId(2L).build();
-        List<User> mockUsers = new ArrayList<>();
-
-        for (int i = 0; i < 750; i++)
-            mockUsers.add(new User.Builder().build());
 
         when(amenityDao.createAmenity(neighborhoodId, description, name)).thenReturn(mockAmenity);
-        when(userDao.countUsers(neighborhoodId, (long) UserRole.NEIGHBOR.getId())).thenReturn(750);
-        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page), eq(size)))
-                .thenReturn(mockUsers);
-        when(userDao.getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), eq(page + 1), eq(size)))
-                .thenReturn(Collections.emptyList());
 
         // Exercise
         Amenity result = amenityService.createAmenity(neighborhoodId, name, description, selectedShiftsIds);
 
         // Validation & Post Conditions
         verify(amenityDao, times(1)).createAmenity(neighborhoodId, description, name);
-        verify(availabilityDao, times(0)).createAvailability(anyLong(), anyLong()); // Ensure no availability is created
+        verify(availabilityDao, times(0)).createAvailability(anyLong(), anyLong());
         verify(emailService, times(1)).sendBatchNewAmenityMail(neighborhoodId, name, description);
-        verify(emailService, times(1)).sendNewAmenityMail(neighborhoodId, name, description, mockUsers);
-        verify(userDao, times(2)).getUsers(eq(neighborhoodId), eq((long) UserRole.NEIGHBOR.getId()), anyInt(), eq(size));
 
         assertNotNull(result);
         assertEquals(mockAmenity, result);

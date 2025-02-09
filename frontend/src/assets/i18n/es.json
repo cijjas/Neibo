@@ -317,7 +317,7 @@
     "NEIGHBOR_LIST": "Lista de Vecinos",
     "PROVIDER_REQUESTS": "Solicitudes de Proveedores",
     "PROVIDER_LIST": "Lista de Proveedores",
-    "AMENITIES": "Servicios",
+    "AMENITIES": "Amenidades",
     "INFORMATION": "Información",
     "CREATE_EVENT": "Crear Evento"
   },
@@ -329,10 +329,10 @@
     "": ".",
     "_AMENITYNAME_": "{{ amenityName }}",
     "_DATE_": "{{ date }}",
-    "NO_SHIFTS_ARE_AVAILABLE_ON_THIS_DAY_PLEASE_CHECK_T": "No hay turnos disponibles para este día. Consulta la tabla de disponibilidad de turnos del servicio para ver los días disponibles y selecciona otra fecha.",
+    "NO_SHIFTS_ARE_AVAILABLE_ON_THIS_DAY_PLEASE_CHECK_T": "No hay turnos disponibles para este día. Consulta la tabla de disponibilidad de turnos de la amenidad para ver los días disponibles y selecciona otra fecha.",
     "GO_BACK": "Volver",
     "SELECT_TIME_SLOTS": "Seleccionar Franja Horaria",
-    "AMENITY": "Servicio:",
+    "AMENITY": "Amenidad:",
     "DATE": "Fecha:",
     "AVAILABLE_TIMES": "Tiempos disponibles",
     "_SHIFTSTARTTIME____SHIFTENDTIME_": "{{ shift.startTime }} - {{ shift.endTime }}",
@@ -343,7 +343,7 @@
     "RESERVATION_CONFIRMED": "¡Reserva Confirmada!",
     "HAS_BEEN_SUCCESSFULLY_RESERVED_FOR_YOU": "¡Se ha reservado exitosamente para ti!",
     "SHIFTS": "Turno(s):",
-    "GO_TO_AMENITIES": "Ir a Servicios",
+    "GO_TO_AMENITIES": "Ir a Amenidades",
     "APPAMENITIESCHOOSETIMEPAGE": "app-amenities-choose-time-page",
     "AMENITYURL": "amenityUrl",
     "SELECTEDSHIFTS": "selectedShifts"
@@ -353,7 +353,7 @@
     "LOADING_RESERVATIONS": "Cargando reservas...",
     "ERROR_LOADING_RESERVATIONS_PLEASE_TRY_AGAIN_LATER": "Error al cargar las reservas. Por favor, inténtelo de nuevo más tarde.",
     "YOU_HAVE_NO_RESERVATIONS": "No tienes reservas.",
-    "BROWSE_AMENITIES_AND_MAKE_YOUR_FIRST_RESERVATION": "Explora las comodidades y realiza tu primera reserva.",
+    "BROWSE_AMENITIES_AND_MAKE_YOUR_FIRST_RESERVATION": "Explora las amenidades y realiza tu primera reserva.",
     "_RESERVATIONAMENITYNAME_": "{{ reservation.amenity?.name }}",
     "DATE": "Fecha",
     "_RESERVATIONBOOKINGDATE_": "{{ reservation.bookingDate }}",
@@ -376,16 +376,16 @@
     "WE_COULDNT_CANCEL_YOUR_RESERVATION_FOR_BOOKINGAM": "No pudimos cancelar tu reserva para '{{bookingAmenityName}}' el {{bookingBookingDate}} de {{bookingShiftStartTime}} a {{bookingShiftEndTime}}. Por favor, revisa tu conexión o intenta nuevamente más tarde."
   },
   "AMENITIES-RESERVATIONS-PAGE": {
-    "AMENITIES_NOT_FOUND": "Comodidades no encontradas",
+    "AMENITIES_NOT_FOUND": "Amenidades no encontradas",
     "MAKE_A_RESERVATION": "Hacer una Reserva",
-    "SELECT_AN_AMENITY": "Seleccionar una Comodidad",
-    "PLEASE_SELECT_AN_AMENITY": "Por favor selecciona una comodidad.",
+    "SELECT_AN_AMENITY": "Seleccionar una Amenidad",
+    "PLEASE_SELECT_AN_AMENITY": "Por favor selecciona una amenidad.",
     "CHOOSE_DATE": "Elegir Fecha",
     "PLEASE_CHOOSE_A_VALID_DATE": "Por favor, elige una fecha válida.",
     "SEE_TIMES": "Ver Horarios",
     "_AMENITYNAME_": "{{ amenity.name }}",
     "_AMENITYDESCRIPTION_": "{{ amenity.description }}",
-    "AMENITY_HOURS": "Horario de la Comodidad",
+    "AMENITY_HOURS": "Horario de la Amenidad",
     "_GETABBREVIATEDDAYD_": "{{ getAbbreviatedDay(d) }}",
     "_FORMATTIMET_": "{{ formatTime(t) }}",
     "APPAMENITIESRESERVATIONSPAGE": "app-amenities-reservations-page",
@@ -393,8 +393,8 @@
     "SIZE": "tamaño",
     "MERGE": "fusionar",
     "ERROR_FETCHING_SHIFTS": "Error al obtener turnos:",
-    "ERROR_LOADING_AMENITIES": "Error al cargar comodidades:",
-    "AMENITY": "comodidad",
+    "ERROR_LOADING_AMENITIES": "Error al cargar amenidades:",
+    "AMENITY": "amenidad",
     "DATE": "fecha",
     "HHMMSS": "HH:mm:ss",
     "HHMM": "HH:mm",
@@ -432,8 +432,8 @@
     "REJECTED": "rechazado",
     "NOTFOUND": "no encontrado",
     "LOGIN_FAILED": "Error al iniciar sesión:",
-    "PASSWORD": "contraseña",
-    "EMAIL": "email"
+    "PASSWORD": "Contraseña",
+    "EMAIL": "Email"
   },
   "LOGIN-PAGE": {
     "NEIBO": "Neibo",
@@ -953,7 +953,7 @@
     "LISTING_CREATED_SUCCESSFULLY": "Publicación creada con éxito",
     "THERE_WAS_A_PROBLEM_CREATING_THE_LISTING": "Hubo un problema al crear la publicación.",
     "INVALID_PRICE_FORMAT": "Formato de precio inválido.",
-    "TITTLE": "Título",
+    "TITLE": "Título",
     "MONEY": "$1,000.00",
     "DESCRIPTION": "Descripción"
   },
@@ -1152,7 +1152,7 @@
       "FEED": "Muro",
       "ANNOUNCEMENTS": "Anuncios",
       "COMPLAINTS": "Quejas",
-      "AMENITIES": "Comodidades"
+      "AMENITIES": "Amenidades"
     }
   },
   "TAGS-FILTER-WIDGET": {

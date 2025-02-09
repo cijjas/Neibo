@@ -24,7 +24,6 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -90,9 +89,8 @@ public class EmailServiceImpl implements EmailService {
 
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(null);
-        String htmlBody = thymeleafTemplateEngine.process(templateModel, thymeleafContext);
 
-        // sendHtmlMessage(to, subject, variables, templateModel, language);
+        sendHtmlMessage(to, subject, variables, templateModel, language);
     }
 
     @Override
@@ -358,25 +356,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendNewCommentMail(Post post, List<User> receivers) {
-        User user = post.getUser();
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("name", user.getName());
-        variables.put("postTitle", post.getTitle());
-        variables.put("postPath", BASE_URL + "posts/" + post.getPostId());
-        sendMessageUsingThymeleafTemplate(user.getMail(), "subject.new.comment", "comment-template_en.html", variables, user.getLanguage());
-
-        for (User n : receivers) {
-            Map<String, Object> vars = new HashMap<>();
-            vars.put("name", n.getName());
-            vars.put("postTitle", post.getTitle());
-            vars.put("postPath", BASE_URL + "posts/" + post.getPostId());
-            sendMessageUsingThymeleafTemplate(n.getMail(), "subject.new.comment", "comment-template_en.html", vars, n.getLanguage());
-        }
-    }
-
-    @Override
-    @Async
     public void sendInquiryMail(User receiver, Product product, String message, boolean reply) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("name", receiver.getName());
@@ -409,10 +388,10 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendVerifiedNeighborMail(User user, String neighborhoodName) {
+    public void sendVerifiedNeighborMail(User user) {
         Map<String, Object> vars = new HashMap<>();
         vars.put("name", user.getName());
-        vars.put("neighborhood", neighborhoodName);
+        vars.put("neighborhood", user.getNeighborhood().getName());
         vars.put("loginPath", BASE_URL);
         sendMessageUsingThymeleafTemplate(user.getMail(), "subject.verification", "verification-template_en.html", vars, user.getLanguage());
     }
