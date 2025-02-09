@@ -1013,7 +1013,7 @@ public class AccessControlHelper {
         // Reference Authorization
         if (authHelper.isSuperAdministrator())
             return true;
-        return (!optionalUser.isPresent() || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId())
+        return (!optionalUser.isPresent() || optionalUser.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId() || optionalUser.get().getNeighborhood().getNeighborhoodId() == BaseNeighborhood.WORKERS.getId())
                 && (channelTwoId == null || channelTwoId.getFirstId() == authHelper.getRequestingUserNeighborhoodId()); // I have to use the URI instead of the optional to avoid extra logic, channels have N:M relationship with neighborhoods
     }
 

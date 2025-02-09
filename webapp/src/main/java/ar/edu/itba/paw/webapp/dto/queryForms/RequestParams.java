@@ -36,12 +36,10 @@ public class RequestParams {
 
     @QueryParam(QueryParameter.PAGE)
     @DefaultValue(Constant.DEFAULT_PAGE)
-    @Min(1)
     private int page;
 
     @QueryParam(QueryParameter.SIZE)
     @DefaultValue(Constant.DEFAULT_SIZE)
-    @Min(1)
     private int size;
 
     public long getNeighborhoodId() {

@@ -23,7 +23,7 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private float rating;
 
-    @Column(name = "review", length = 256, nullable = false)
+    @Column(name = "review", length = 255, nullable = false)
     private String review;
 
     @Column(name = "date")

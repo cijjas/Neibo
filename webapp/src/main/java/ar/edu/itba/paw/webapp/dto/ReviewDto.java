@@ -19,7 +19,7 @@ public class ReviewDto {
     private Float rating;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 255)
+    @Size(max = 255)
     private String message;
 
     @NotNull(groups = OnCreate.class)

@@ -13,7 +13,7 @@ import javax.ws.rs.core.UriInfo;
 
 public class ResourceDto {
 
-    @Size(max = 1000)
+    @Size(max = 255)
     @NotNull(groups = OnCreate.class)
     private String description;
 
@@ -21,7 +21,7 @@ public class ResourceDto {
     private String image;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 64)
+    @Size(max = 64)
     private String title;
 
     private Links _links;

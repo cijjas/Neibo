@@ -15,7 +15,7 @@ import javax.ws.rs.core.UriInfo;
 public class TagDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 20)
+    @Size(max = 64)
     @TagsConstraint(groups = Specific.class)
     private String name;
 

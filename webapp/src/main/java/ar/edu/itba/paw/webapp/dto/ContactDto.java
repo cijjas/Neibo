@@ -12,15 +12,15 @@ import javax.ws.rs.core.UriInfo;
 public class ContactDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 64)
+    @Size(max = 64)
     private String name;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 64)
+    @Size(max = 128)
     private String address;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 20)
+    @Size(max = 32)
     private String phone;
 
     private Links _links;

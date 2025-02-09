@@ -15,7 +15,7 @@ import java.util.Date;
 public class CommentDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 500)
+    @Size(max = 512)
     private String message;
 
     @NotNull(groups = OnCreate.class)

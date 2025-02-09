@@ -13,8 +13,7 @@ import javax.ws.rs.core.UriInfo;
 public class DepartmentDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 64)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
+    @Size(max = 64)
     private String name;
 
     private Links _links;

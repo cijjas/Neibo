@@ -36,7 +36,7 @@ public class User {
     @Column(name = "darkmode")
     private Boolean darkMode;
 
-    @Column(name = "phonenumber")
+    @Column(name = "phonenumber", length = 255)
     private String phoneNumber;
 
     @Column(name = "language", length = 32)

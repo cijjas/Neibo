@@ -26,23 +26,23 @@ public class UserDto {
     private String neighborhood;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 64)
+    @Size(max = 64)
     @Pattern(regexp = "^[a-zA-Z ]*")
     private String name;
 
     @NotNull(groups = OnCreate.class)
     @Pattern(regexp = "^[a-zA-Z ]*")
-    @Size(min = 1, max = 64)
+    @Size(max = 64)
     private String surname;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 6, max = 128)
+    @Size(max = 128)
     @Email
     @EmailConstraint(groups = Specific.class)
     private String mail;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 50)
+    @Size(max = 128)
     private String password;
 
     @NotNull(groups = OnCreate.class)
@@ -55,7 +55,7 @@ public class UserDto {
     @Pattern(regexp = URIValidator.USER_ROLE_URI_REGEX)
     private String userRole;
 
-    @Size(min = 1, max = 50)
+    @Size(max = 255)
     @Pattern(regexp = "^[0-9]*")
     private String phoneNumber;
 

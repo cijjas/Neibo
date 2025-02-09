@@ -27,21 +27,21 @@ public class WorkerDto {
     private List<String> professions;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 64)
+    @Size(max = 64)
     @Pattern(regexp = "^[0-9+\\- ]*")
     private String phoneNumber;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 128)
+    @Size(max = 128)
     @Pattern(regexp = "^[a-zA-Z0-9 -]*")
     private String businessName;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 128)
+    @Size(max = 128)
     @Pattern(regexp = "^[a-zA-Z0-9 -]*")
     private String address;
 
-    @Size(max = 1000)
+    @Size(max = 255)
     private String bio;
 
     @Pattern(regexp = URIValidator.NEIGHBORHOOD_URI_REGEX)

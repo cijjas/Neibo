@@ -15,7 +15,7 @@ import javax.ws.rs.core.UriInfo;
 public class NeighborhoodDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 20)
+    @Size( max = 128)
     private String name;
 
     private Links _links;
