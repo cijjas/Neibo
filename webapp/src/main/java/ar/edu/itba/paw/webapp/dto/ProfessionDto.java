@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriInfo;
 
 public class ProfessionDto {
     @NotNull(groups = OnCreate.class)
-    @Size(min = 1, max = 20)
+    @Size(max = 64)
     private String name;
 
     private Links _links;

@@ -15,14 +15,14 @@ import java.util.Date;
 public class InquiryDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(max = 500)
+    @Size(max = 512)
     private String message;
 
     @NotNull(groups = OnCreate.class)
     @Pattern(regexp = URIValidator.USER_URI_REGEX)
     private String user;
 
-    @Size(max = 500)
+    @Size(max = 512)
     private String reply;
 
     private Date inquiryDate;

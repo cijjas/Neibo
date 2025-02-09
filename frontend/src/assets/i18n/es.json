@@ -1232,5 +1232,11 @@
     "UNVERIFIED_PAGE": "Unverified | Neibo",
 
     "USER_PROFILE_PAGE": "Profile | Neibo"
+  },
+  "SUPER-ADMIN-PAGE": {
+    "WELCOME": "¡Bienvenido, Super Administrador!",
+    "UNDER_DEVELOPMENT": "Esta función se encuentra actualmente en desarrollo.",
+    "ADMINISTRATIVE_TOOLS": "Estamos trabajando para ofrecerte un completo conjunto de <b>herramientas administrativas</b> que te permitan <b>gestionar múltiples vecindarios, usuarios y servicios</b> de manera eficiente. ¡Mantente atento a las actualizaciones!",
+    "DEVELOPMENT_TEAM": "Para cualquier pregunta o solicitud de acceso anticipado, por favor comunícate con el <b>equipo de desarrollo</b>."
   }
 }

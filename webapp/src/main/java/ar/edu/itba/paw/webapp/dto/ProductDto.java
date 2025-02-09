@@ -21,7 +21,7 @@ import java.util.List;
 public class ProductDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(max = 100)
+    @Size(max = 128)
     private String name;
 
     @NotNull(groups = OnCreate.class)
@@ -33,14 +33,13 @@ public class ProductDto {
     private List<String> images;
 
     @NotNull(groups = OnCreate.class)
-    @Size(max = 2000)
+    @Size(max = 1000)
     private String description;
 
     @NotNull(groups = OnCreate.class)
     private String department;
 
     @NotNull(groups = OnCreate.class)
-    @Range(min = 1, max = 100)
     private Long remainingUnits;
 
     @NotNull(groups = OnCreate.class)

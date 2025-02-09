@@ -18,11 +18,11 @@ import java.util.List;
 public class PostDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 100)
+    @Size(max = 128)
     private String title;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 2000)
+    @Size(max = 1024)
     private String body;
 
     @TagsURIConstraint

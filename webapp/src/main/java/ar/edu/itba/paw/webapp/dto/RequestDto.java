@@ -16,7 +16,7 @@ import java.util.Date;
 public class RequestDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 500)
+    @Size(max = 512)
     private String message;
 
     @NotNull(groups = OnCreate.class)
@@ -24,7 +24,6 @@ public class RequestDto {
     private String product;
 
     @NotNull(groups = OnCreate.class)
-    @Range(min = 1, max = 100)
     private Integer unitsRequested;
 
     @NotNull(groups = OnCreate.class)

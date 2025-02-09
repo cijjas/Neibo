@@ -18,7 +18,7 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private Set<Post> posts;
 
-    @Column(name = "isbase")
+    @Column(name = "isbase", nullable = false)
     private Boolean isBase;
 
     @ManyToMany

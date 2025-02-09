@@ -16,13 +16,11 @@ import java.util.List;
 public class AmenityDto {
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
+    @Size(max = 512)
     private String name;
 
     @NotNull(groups = OnCreate.class)
-    @Size(min = 0, max = 1000)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
+    @Size(max = 512)
     private String description;
 
     @ShiftsURIConstraint

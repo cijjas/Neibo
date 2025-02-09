@@ -38,6 +38,7 @@ public class TestInserter {
     public long createChannel(String channelName) {
         final Channel channel = new Channel.Builder()
                 .channel(channelName)
+                .isBase(false)
                 .build();
         em.persist(channel);
         em.flush();
