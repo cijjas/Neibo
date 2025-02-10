@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
 /*
@@ -83,9 +84,10 @@ public class NeighborhoodController {
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int neighborhoodsCount = ns.countNeighborhoods(neighborhoodParams.getBase(), withWorkerId, withoutWorkerId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS),
-                ns.calculateNeighborhoodPages(neighborhoodParams.getBase(), withWorkerId, withoutWorkerId, neighborhoodParams.getSize()),
+                neighborhoodsCount,
                 neighborhoodParams.getPage(),
                 neighborhoodParams.getSize()
         );
@@ -95,6 +97,7 @@ public class NeighborhoodController {
                 .cacheControl(cacheControl)
                 .tag(neighborhoodsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, neighborhoodsCount)
                 .build();
     }
 

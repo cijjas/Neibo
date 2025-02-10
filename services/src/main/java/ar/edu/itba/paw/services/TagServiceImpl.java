@@ -69,10 +69,10 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateTagPages(long neighborhoodId, Long postId, int size) {
-        LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
+    public int countTags(long neighborhoodId, Long postId) {
+        LOGGER.info("Counting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(tagDao.countTags(neighborhoodId, postId), size);
+        return tagDao.countTags(neighborhoodId, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ public class TagServiceImpl implements TagService {
 
         int batchSize = 100;
         int totalPosts = postDao.countPosts(neighborhoodId, null, null, Collections.singletonList(tagId), null);
-        int totalPages = PaginationUtils.calculatePages(totalPosts, batchSize);
+        int totalPages = (int) Math.ceil((double) totalPosts / batchSize);
 
         for (int page = 1; page <= totalPages; page++) {
             List<Post> posts = postDao.getPosts(neighborhoodId, null, null, Collections.singletonList(tagId), null, page, batchSize);

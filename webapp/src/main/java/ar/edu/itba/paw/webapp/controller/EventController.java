@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractDate;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableDate;
 
@@ -90,9 +91,10 @@ public class EventController {
                 .map(e -> EventDto.fromEvent(e, null, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int eventsCount = es.countEvents(neighborhoodId, extractedDate);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.EVENTS),
-                es.calculateEventPages(neighborhoodId, extractedDate, size),
+                eventsCount,
                 page,
                 size
         );
@@ -102,6 +104,7 @@ public class EventController {
                 .cacheControl(cacheControl)
                 .tag(eventsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, eventsCount)
                 .build();
     }
 

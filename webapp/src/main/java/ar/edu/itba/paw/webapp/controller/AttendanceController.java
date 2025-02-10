@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.dto.AttendanceCountDto;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.dto.queryForms.AttendanceParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -44,6 +44,7 @@ public class AttendanceController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceController.class);
 
     private final AttendanceService as;
+    private final NeighborhoodController neighborhoodController;
 
     @Context
     private UriInfo uriInfo;
@@ -52,8 +53,9 @@ public class AttendanceController {
     private Request request;
 
     @Autowired
-    public AttendanceController(AttendanceService as) {
+    public AttendanceController(AttendanceService as, NeighborhoodController neighborhoodController) {
         this.as = as;
+        this.neighborhoodController = neighborhoodController;
     }
 
     @GET
@@ -94,9 +96,10 @@ public class AttendanceController {
                 .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int attendanceCount = as.countAttendance(attendanceParams.getNeighborhoodId(), eventId, userId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(attendanceParams.getNeighborhoodId())).path(Endpoint.EVENTS).path(String.valueOf(eventId)).path(Endpoint.ATTENDANCE),
-                as.calculateAttendancePages(attendanceParams.getNeighborhoodId(), userId, eventId, attendanceParams.getSize()),
+                attendanceCount,
                 attendanceParams.getPage(),
                 attendanceParams.getSize()
         );
@@ -106,37 +109,7 @@ public class AttendanceController {
                 .cacheControl(cacheControl)
                 .tag(attendanceHashCode)
                 .links(links)
-                .build();
-    }
-
-    @GET
-    @Path(Endpoint.COUNT)
-    @PreAuthorize("@accessControlHelper.canListOrCountAttendance(#attendanceParams.event, #attendanceParams.user)")
-    public Response countAttendance(
-            @Valid @BeanParam AttendanceParams attendanceParams
-    ) {
-        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
-
-        // ID Extraction
-        Long eventId = extractNullableSecondId(attendanceParams.getEvent());
-        Long userId = extractNullableFirstId(attendanceParams.getUser());
-
-        // Content
-        int count = as.countAttendance(attendanceParams.getNeighborhoodId(), eventId, userId);
-        String countHashCode = String.valueOf(count);
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
-        AttendanceCountDto dto = AttendanceCountDto.fromAttendanceCount(count, attendanceParams.getNeighborhoodId(), attendanceParams.getEvent(), attendanceParams.getUser(), uriInfo);
-
-        return Response.ok(new GenericEntity<AttendanceCountDto>(dto) {
-                })
-                .cacheControl(cacheControl)
-                .tag(countHashCode)
+                .header(COUNT_HEADER, attendanceCount)
                 .build();
     }
 

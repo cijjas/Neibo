@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
 /*
@@ -80,9 +81,10 @@ public class ResourceController {
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int resourcesCount = rs.countResources(neighborhoodId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.RESOURCES),
-                rs.calculateResourcePages(neighborhoodId, size),
+                resourcesCount,
                 page,
                 size
         );
@@ -92,6 +94,7 @@ public class ResourceController {
                 .cacheControl(cacheControl)
                 .tag(resourcesHashCode)
                 .links(links)
+                .header(COUNT_HEADER, resourcesCount)
                 .build();
     }
 

@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, mergeMap, timeout, toArray } from 'rxjs/operators';
 import {
-  AttendanceCountDto,
   EventDto,
   Event,
   parseLinkHeader,
   LinkKey,
   formatTime,
+  extractCountFromHeaders,
+  Attendance,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { from } from 'rxjs';
@@ -21,7 +22,7 @@ export class EventService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService,
-  ) {}
+  ) { }
 
   public getEvent(url: string): Observable<Event> {
     return this.http
@@ -134,9 +135,10 @@ export function mapEvent(
   eventDto: EventDto,
 ): Observable<Event> {
   return forkJoin([
-    http.get<AttendanceCountDto>(eventDto._links.attendanceCount),
+    http.get<Attendance[]>(eventDto._links.attendanceUsers, { observe: 'response' }),
   ]).pipe(
-    map(([attendanceCount]) => {
+    map(([attendance]) => {
+      const attendanceCount = extractCountFromHeaders(attendance.headers);
       const userLang = localStorage.getItem('language');
       const locale = userLang === 'es' ? es : enUS;
       return {
@@ -153,7 +155,7 @@ export function mapEvent(
           eventDto.endTime,
         ),
         attendees: eventDto._links.attendanceUsers,
-        attendeesCount: attendanceCount.count,
+        attendeesCount: attendanceCount,
         self: eventDto._links.self,
       } as Event;
     }),

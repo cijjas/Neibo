@@ -1,4 +1,6 @@
-// uitls.ts
+// utils.ts
+
+import { HttpHeaders } from "@angular/common/http";
 
 export function parseLinkHeader(header: string | null): {
   totalPages: number;
@@ -98,4 +100,18 @@ export function formatTime(
     console.error(`Error formatting time: ${error}`);
     return 'Invalid time';
   }
+}
+
+export function extractCountFromHeaders(headers: HttpHeaders): number {
+  const countHeader = headers.get('X-Count');
+  return countHeader ? parseInt(countHeader, 10) : 0;
+}
+
+export function extractCountAndAverageFromHeaders(headers: HttpHeaders): { count: number; average: number } {
+  const countHeader = headers.get('X-Count');
+  const averageHeader = headers.get('X-Average');
+  return {
+    count: countHeader ? parseInt(countHeader, 10) : 0,
+    average: averageHeader ? parseFloat(averageHeader) : 0,
+  };
 }

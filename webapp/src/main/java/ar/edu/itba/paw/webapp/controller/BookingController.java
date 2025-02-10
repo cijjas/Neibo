@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -81,9 +82,10 @@ public class BookingController {
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int bookingsCount = bs.countBookings(bookingParams.getNeighborhoodId(), userId, amenityId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(bookingParams.getNeighborhoodId())).path(Endpoint.BOOKINGS),
-                bs.calculateBookingPages(bookingParams.getNeighborhoodId(), amenityId, userId, bookingParams.getSize()),
+                bookingsCount,
                 bookingParams.getPage(),
                 bookingParams.getSize()
         );
@@ -93,6 +95,7 @@ public class BookingController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(bookingsHashCode)
+                .header(COUNT_HEADER, bookingsCount)
                 .build();
     }
 

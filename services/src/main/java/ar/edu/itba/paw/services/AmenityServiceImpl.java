@@ -76,10 +76,10 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateAmenityPages(long neighborhoodId, int size) {
-        LOGGER.info("Calculating Amenity Pages for Neighborhood {}", neighborhoodId);
+    public int countAmenities(long neighborhoodId) {
+        LOGGER.info("Counting Amenities for Neighborhood {}", neighborhoodId);
 
-        return PaginationUtils.calculatePages(amenityDao.countAmenities(neighborhoodId), size);
+        return amenityDao.countAmenities(neighborhoodId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

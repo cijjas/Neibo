@@ -21,8 +21,6 @@ public interface ReviewService {
 
     int countReviews(long workerId);
 
-    int calculateReviewPages(long workerId, int size);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteReview(long workerId, long reviewId);

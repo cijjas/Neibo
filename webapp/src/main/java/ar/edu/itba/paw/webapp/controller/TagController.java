@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableSecondId;
 
 /*
@@ -79,9 +80,10 @@ public class TagController {
                 .map(t -> TagDto.fromTag(t, tagParams.getNeighborhoodId(), uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int tagsCount = ts.countTags(tagParams.getNeighborhoodId(), postId);
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(tagParams.getNeighborhoodId())).path(Endpoint.TAGS),
-                ts.calculateTagPages(tagParams.getNeighborhoodId(), postId, tagParams.getSize()),
+                tagsCount,
                 tagParams.getPage(),
                 tagParams.getSize()
         );
@@ -91,6 +93,7 @@ public class TagController {
                 .cacheControl(cacheControl)
                 .tag(tagsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, tagsCount)
                 .build();
     }
 

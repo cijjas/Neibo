@@ -395,9 +395,9 @@ public class AccessControlHelper {
             return true;
         if (authHelper.isAdministrator()) {
             return (
-                    !neighborhood.isPresent() && !userRole.isPresent()
+                            !neighborhood.isPresent() && !userRole.isPresent()
                             && user.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId()
-            )
+                    )
                     ||
                     (
                             neighborhood.isPresent() && userRole.isPresent()
@@ -688,9 +688,6 @@ public class AccessControlHelper {
         // Reference Authorization
         if (authHelper.isSuperAdministrator())
             return true;
-        System.out.println("HELLO");
-        System.out.println(!optionalEvent.isPresent() || authHelper.getRequestingUserNeighborhoodId() == optionalEvent.get().getNeighborhood().getNeighborhoodId());
-        System.out.println(!optionalUser.isPresent() || authHelper.getRequestingUserNeighborhoodId() == optionalUser.get().getNeighborhood().getNeighborhoodId());
         return (!optionalEvent.isPresent() || authHelper.getRequestingUserNeighborhoodId() == optionalEvent.get().getNeighborhood().getNeighborhoodId())
                 && (!optionalUser.isPresent() || authHelper.getRequestingUserNeighborhoodId() == optionalUser.get().getNeighborhood().getNeighborhoodId());
     }

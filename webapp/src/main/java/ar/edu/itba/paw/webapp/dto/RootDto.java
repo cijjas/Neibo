@@ -16,12 +16,14 @@ public class RootDto {
         RootLinks links = new RootLinks();
 
         String workersNeighborhoodId = String.valueOf(BaseNeighborhood.WORKERS.getId());
+        String rejectedNeighborhoodId = String.valueOf(BaseNeighborhood.REJECTED.getId());
 
         UriBuilder rootUri = uriInfo.getBaseUriBuilder().path(Endpoint.API);
         UriBuilder affiliationsUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.AFFILIATIONS);
         UriBuilder userRolesUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USER_ROLES);
         UriBuilder neighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS);
         UriBuilder workersNeighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(workersNeighborhoodId);
+        UriBuilder rejectedNeighborhoodUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(rejectedNeighborhoodId);
         UriBuilder workersUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS);
         UriBuilder imagesUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES);
         UriBuilder usersUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS);
@@ -40,6 +42,7 @@ public class RootDto {
         links.setSelf(rootUri.build());
 
         links.setWorkersNeighborhood(workersNeighborhoodUri.build());
+        links.setRejectedNeighborhood(rejectedNeighborhoodUri.build());
 
         links.setAffiliations(affiliationsUri.build());
         links.setNeighborhoods(neighborhoodsUri.build());

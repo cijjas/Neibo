@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 /*
@@ -90,9 +91,11 @@ public class CommentController {
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
+        // Pagination Links
+        int commentsCount = cs.countComments(neighborhoodId, postId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.POSTS).path(String.valueOf(postId)).path(Endpoint.COMMENTS),
-                cs.calculateCommentPages(neighborhoodId, postId, size),
+                commentsCount,
                 page,
                 size
         );
@@ -102,6 +105,7 @@ public class CommentController {
                 .cacheControl(cacheControl)
                 .tag(commentsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, commentsCount)
                 .build();
     }
 

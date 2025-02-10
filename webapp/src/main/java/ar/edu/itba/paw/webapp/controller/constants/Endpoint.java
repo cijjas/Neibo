@@ -5,12 +5,10 @@ public class Endpoint {
     public static final String AMENITIES = "amenities";
     public static final String API = "api";
     public static final String ATTENDANCE = "attendance";
-    public static final String AVERAGE = "average";
     public static final String BOOKINGS = "bookings";
     public static final String CHANNELS = "channels";
     public static final String COMMENTS = "comments";
     public static final String CONTACTS = "contacts";
-    public static final String COUNT = "count";
     public static final String DEPARTMENTS = "departments";
     public static final String EVENTS = "events";
     public static final String IMAGES = "images";

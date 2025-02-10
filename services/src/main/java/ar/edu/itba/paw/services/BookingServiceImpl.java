@@ -61,10 +61,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateBookingPages(long neighborhoodId, Long amenityId, Long userId, int size) {
-        LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
+    public int countBookings(long neighborhoodId, Long amenityId, Long userId) {
+        LOGGER.info("Counting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(bookingDao.countBookings(neighborhoodId, userId, amenityId), size);
+        return bookingDao.countBookings(neighborhoodId, userId, amenityId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

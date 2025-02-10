@@ -64,7 +64,6 @@ public class PostDto {
         UriBuilder channelUri = neighborhoodUri.clone().path(Endpoint.CHANNELS).path(channelId);
         UriBuilder tagsUri = neighborhoodUri.clone().path(Endpoint.TAGS).queryParam(QueryParameter.ON_POST, postUri.build());
         UriBuilder likesUri = neighborhoodUri.clone().path(Endpoint.LIKES).queryParam(QueryParameter.ON_POST, postUri.build());
-        UriBuilder likesCountUri = neighborhoodUri.clone().path(Endpoint.LIKES).path(Endpoint.COUNT).queryParam(QueryParameter.ON_POST, postUri.build());
 
         links.setSelf(postUri.build());
         links.setPostUser(userUri.build());
@@ -72,7 +71,6 @@ public class PostDto {
         links.setComments(commentsUri.build());
         links.setTags(tagsUri.build());
         links.setLikes(likesUri.build());
-        links.setLikeCount(likesCountUri.build());
         if (post.getPostPicture() != null) {
             String imageId = String.valueOf(post.getPostPicture().getImageId());
             UriBuilder imageUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(imageId);

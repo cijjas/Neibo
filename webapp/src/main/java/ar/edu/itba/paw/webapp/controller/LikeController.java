@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
-import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
 import ar.edu.itba.paw.webapp.dto.queryForms.LikeParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
@@ -23,6 +22,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -88,9 +88,10 @@ public class LikeController {
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int likesCount = ls.countLikes(likeParams.getNeighborhoodId(), userId, postId);
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.LIKES),
-                ls.calculateLikePages(likeParams.getNeighborhoodId(), userId, postId, likeParams.getSize()),
+                likesCount,
                 likeParams.getPage(),
                 likeParams.getSize());
 
@@ -99,33 +100,7 @@ public class LikeController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(likesHashCode)
-                .build();
-    }
-
-    @GET
-    @Path(Endpoint.COUNT)
-    @PreAuthorize("@accessControlHelper.canListOrCountLikes(#likeParams.user, #likeParams.post)")
-    public Response countLikes(
-            @Valid @BeanParam LikeParams likeParams
-    ) {
-        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
-
-        // Content
-        int count = ls.countLikes(likeParams.getNeighborhoodId(), extractNullableFirstId(likeParams.getUser()), extractNullableSecondId(likeParams.getPost()));
-        String countHashCode = String.valueOf(count);
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
-        LikeCountDto dto = LikeCountDto.fromLikeCount(count, likeParams.getNeighborhoodId(), likeParams.getPost(), likeParams.getUser(), uriInfo);
-
-        return Response.ok(new GenericEntity<LikeCountDto>(dto) {
-                })
-                .cacheControl(cacheControl)
-                .tag(countHashCode)
+                .header(COUNT_HEADER, likesCount)
                 .build();
     }
 

@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
-import ar.edu.itba.paw.webapp.dto.RequestsCountDto;
 import ar.edu.itba.paw.webapp.dto.queryForms.RequestParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.UpdateSequence;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -90,10 +90,10 @@ public class RequestController {
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int requestsCount = rs.countRequests(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(requestParams.getNeighborhoodId())).path(Endpoint.REQUESTS),
-                rs.calculateRequestPages(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId,
-                        requestParams.getSize()),
+                requestsCount,
                 requestParams.getPage(),
                 requestParams.getSize()
         );
@@ -103,39 +103,7 @@ public class RequestController {
                 .links(links)
                 .tag(requestsHashCode)
                 .cacheControl(cacheControl)
-                .build();
-    }
-
-    @GET
-    @Path(Endpoint.COUNT)
-    @PreAuthorize("@accessControlHelper.canListOrCountRequests(#requestParams.user, #requestParams.product, #requestParams.transactionType, #requestParams.requestStatus)")
-    public Response countRequests(
-            @Valid @BeanParam RequestParams requestParams
-    ) {
-        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
-
-        // ID Extraction
-        Long userId = extractNullableSecondId(requestParams.getUser());
-        Long productId = extractNullableSecondId(requestParams.getProduct());
-        Long requestStatusId = extractNullableFirstId(requestParams.getRequestStatus());
-        Long transactionTypeId = extractNullableFirstId(requestParams.getTransactionType());
-
-        // Content
-        int count = rs.countRequests(requestParams.getNeighborhoodId(), userId, productId, transactionTypeId, requestStatusId);
-        String countHashCode = String.valueOf(count);
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
-        RequestsCountDto dto = RequestsCountDto.fromRequestsCount(count, requestParams.getNeighborhoodId(), requestParams.getUser(), requestParams.getProduct(), requestParams.getRequestStatus(), requestParams.getTransactionType(), uriInfo);
-
-        return Response.ok(new GenericEntity<RequestsCountDto>(dto) {
-                })
-                .cacheControl(cacheControl)
-                .tag(countHashCode)
+                .header(COUNT_HEADER, requestsCount)
                 .build();
     }
 

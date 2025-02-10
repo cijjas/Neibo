@@ -15,7 +15,7 @@ public interface ResourceService {
 
     List<Resource> getResources(long neighborhoodId, int page, int size);
 
-    int calculateResourcePages(long neighborhoodId, int size);
+    int countResources(long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

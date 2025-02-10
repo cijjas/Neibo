@@ -44,7 +44,6 @@ export interface Links {
   professions: string;
   workerNeighborhoods: string;
   neighborhoods: string;
-  likeCount: string;
   replyUser: string;
   inquiryUser: string;
   user: string;
@@ -58,11 +57,7 @@ export interface Links {
   resourceImage: string;
   reviewUser: string;
   requestUser: string;
-  attendanceCount: string;
-  reviewsAverage: string;
-  reviewsCount: string;
-  postsCount: string;
-  pendingRequestsCount: string;
+  pendingRequests: string;
 }
 
 export interface AffiliationDto {
@@ -77,11 +72,6 @@ export interface AmenityDto {
 }
 
 export interface AttendanceDto {
-  _links: Links;
-}
-
-export interface AttendanceCountDto {
-  count: number;
   _links: Links;
 }
 
@@ -146,11 +136,6 @@ export interface LikeDto {
   _links?: Links;
 }
 
-export interface LikeCountDto {
-  count: number;
-  _links: Links;
-}
-
 export interface NeighborhoodDto {
   name: string;
   _links: Links;
@@ -168,11 +153,6 @@ export interface PostDto {
   image?: string;
   channel?: string;
   user?: string;
-}
-
-export interface PostsCountDto {
-  count: number;
-  _links: Links;
 }
 
 export interface PostStatusDto {
@@ -211,11 +191,6 @@ export interface RequestDto {
   _links: Links;
 }
 
-export interface RequestsCountDto {
-  count: number;
-  _links: Links;
-}
-
 export interface RequestStatusDto {
   status: string;
   _links: Links;
@@ -233,16 +208,6 @@ export interface ReviewDto {
   message?: string;
   creationDate?: Date;
   _links?: Links;
-}
-
-export interface ReviewsCountDto {
-  count: number;
-  _links: Links;
-}
-
-export interface ReviewsAverageDto {
-  average: number;
-  _links: Links;
 }
 
 export interface ShiftDto {

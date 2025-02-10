@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -86,9 +87,10 @@ public class ProductController {
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int productsCount = ps.countProducts(productParams.getNeighborhoodId(), userId, departmentId, productStatusId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(productParams.getNeighborhoodId())).path(Endpoint.PRODUCTS),
-                ps.calculateProductPages(productParams.getNeighborhoodId(), userId, departmentId, productStatusId, productParams.getSize()),
+                productsCount,
                 productParams.getPage(),
                 productParams.getSize()
         );
@@ -98,6 +100,7 @@ public class ProductController {
                 .cacheControl(cacheControl)
                 .tag(productsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, productsCount)
                 .build();
     }
 

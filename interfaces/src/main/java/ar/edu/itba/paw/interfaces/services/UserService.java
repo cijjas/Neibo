@@ -17,7 +17,7 @@ public interface UserService {
 
     List<User> getUsers(Long neighborhoodId, Long userRoleId, int page, int size);
 
-    int calculateUserPages(Long neighborhoodId, Long userRoleId, int size);
+    int countUsers(Long neighborhoodId, Long userRoleId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

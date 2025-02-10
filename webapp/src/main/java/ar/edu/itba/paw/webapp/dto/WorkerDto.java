@@ -68,21 +68,15 @@ public class WorkerDto {
         UriBuilder professionsUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.PROFESSIONS).queryParam(QueryParameter.FOR_WORKER, workerUri.build());
         UriBuilder workerNeighborhoodsUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).queryParam(QueryParameter.WITH_WORKER, workerUri.build());
         UriBuilder reviewsUri = workerUri.clone().path(Endpoint.REVIEWS);
-        UriBuilder reviewsAverageUri = reviewsUri.clone().path(Endpoint.AVERAGE);
-        UriBuilder reviewsCountUri = reviewsUri.clone().path(Endpoint.COUNT);
         UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(userId);
         UriBuilder postsUri = neighborhoodUri.clone().path(Endpoint.POSTS).queryParam(QueryParameter.POSTED_BY, userUri.build());
-        UriBuilder postsCountUri = neighborhoodUri.clone().path(Endpoint.POSTS).path(Endpoint.COUNT).queryParam(QueryParameter.POSTED_BY, userUri.build());
 
         links.setSelf(workerUri.build());
         links.setUser(userUri.build());
-        links.setReviewsAverage(reviewsAverageUri.build());
-        links.setReviewsCount(reviewsCountUri.build());
         links.setReviews(reviewsUri.build());
         links.setProfessions(professionsUri.build());
         links.setWorkerNeighborhoods(workerNeighborhoodsUri.build());
         links.setPosts(postsUri.build());
-        links.setPostsCount(postsCountUri.build());
         if (worker.getBackgroundPicture() != null) {
             String backgroundPictureId = String.valueOf(worker.getBackgroundPicture().getImageId());
             UriBuilder backgroundPictureUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.IMAGES).path(backgroundPictureId);

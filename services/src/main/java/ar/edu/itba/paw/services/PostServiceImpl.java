@@ -76,14 +76,6 @@ public class PostServiceImpl implements PostService {
         return postDao.countPosts(neighborhoodId, userId, channelId, tagIds, postStatusId);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public int calculatePostPages(long neighborhoodId, Long userId, Long channelId, List<Long> tagIds, Long postStatusId, int size) {
-        LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusId, channelId, tagIds, userId, neighborhoodId);
-
-        return PaginationUtils.calculatePages(postDao.countPosts(neighborhoodId, userId, channelId, tagIds, postStatusId), size);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

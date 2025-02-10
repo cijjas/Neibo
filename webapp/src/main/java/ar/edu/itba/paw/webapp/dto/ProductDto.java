@@ -77,7 +77,7 @@ public class ProductDto {
         UriBuilder productUri = neighborhoodUri.clone().path(Endpoint.PRODUCTS).path(productId);
         UriBuilder inquiriesUri = productUri.clone().path(Endpoint.INQUIRIES);
         UriBuilder requestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).queryParam(QueryParameter.FOR_PRODUCT, productUri.build());
-        UriBuilder pendingRequestsCountUri = neighborhoodUri.clone().path(Endpoint.REQUESTS).path(Endpoint.COUNT)
+        UriBuilder pendingRequestsUri = neighborhoodUri.clone().path(Endpoint.REQUESTS)
                 .queryParam(QueryParameter.FOR_PRODUCT, productUri.build())
                 .queryParam(QueryParameter.WITH_STATUS, requestStatusUri.build());
         UriBuilder userUri = uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS).path(userId);
@@ -87,7 +87,7 @@ public class ProductDto {
         links.setDepartment(departmentUri.build());
         links.setInquiries(inquiriesUri.build());
         links.setRequests(requestsUri.build());
-        links.setPendingRequestsCount(pendingRequestsCountUri.build());
+        links.setPendingRequests(pendingRequestsUri.build());
 
         if (product.getPrimaryPicture() != null) {
             String primaryPictureId = String.valueOf(product.getPrimaryPicture().getImageId());

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstIds;
 
 /*
@@ -81,9 +82,10 @@ public class AmenityController {
         List<AmenityDto> amenitiesDto = amenities.stream().map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int amenitiesCount = as.countAmenities(neighborhoodId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.AMENITIES),
-                as.calculateAmenityPages(neighborhoodId, size),
+                amenitiesCount,
                 page,
                 size
         );
@@ -93,6 +95,7 @@ public class AmenityController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(amenitiesHashCode)
+                .header(COUNT_HEADER, amenitiesCount)
                 .build();
     }
 

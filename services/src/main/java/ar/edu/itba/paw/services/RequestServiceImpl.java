@@ -76,14 +76,6 @@ public class RequestServiceImpl implements RequestService {
         return requestDao.countRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public int calculateRequestPages(long neighborhoodId, Long userId, Long productId, Long transactionTypeId, Long requestStatusId, int size) {
-        LOGGER.info("Calculating Requests for Product {} made by User {} that has Transaction Type {} and has Request Status {} from Neighborhood {}", productId, userId, transactionTypeId, requestStatusId, neighborhoodId);
-
-        return PaginationUtils.calculatePages(requestDao.countRequests(neighborhoodId, userId, productId, transactionTypeId, requestStatusId), size);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

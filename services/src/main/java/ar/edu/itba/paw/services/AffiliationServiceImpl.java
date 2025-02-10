@@ -46,10 +46,10 @@ public class AffiliationServiceImpl implements AffiliationService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateAffiliationPages(Long neighborhoodId, Long workerId, int size) {
-        LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerId, neighborhoodId);
+    public int countAffiliations(Long neighborhoodId, Long workerId) {
+        LOGGER.info("Counting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(affiliationDao.countAffiliations(neighborhoodId, workerId), size);
+        return affiliationDao.countAffiliations(neighborhoodId, workerId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
