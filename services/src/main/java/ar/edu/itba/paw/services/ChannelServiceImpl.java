@@ -59,9 +59,9 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateChannelPages(long neighborhoodId, Boolean isBase, int size) {
-        LOGGER.info("Calculating Channel Pages for Neighborhood {}", neighborhoodId);
+    public int countChannels(long neighborhoodId, Boolean isBase) {
+        LOGGER.info("Counting Channels for Neighborhood {}", neighborhoodId);
 
-        return PaginationUtils.calculatePages(channelDao.countChannels(neighborhoodId, isBase), size);
+        return channelDao.countChannels(neighborhoodId, isBase);
     }
 }

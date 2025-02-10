@@ -47,7 +47,6 @@ public class Links {
     private URI professions;
     private URI workerNeighborhoods;
     private URI neighborhoods;
-    private URI likeCount;
     private URI replyUser;
     private URI inquiryUser;
     private URI user;
@@ -72,8 +71,6 @@ public class Links {
     private URI hotPostStatus;
     private URI trendingPostStatus;
     private URI nonePostStatus;
-    private URI reviewsAverage;
-    private URI attendanceCount;
     private URI languageEnglish;
     private URI languageSpanish;
     private URI amenities;
@@ -88,9 +85,6 @@ public class Links {
     private URI soldProductStatus;
     private URI sellingProductStatus;
     private URI attendance;
-    private URI reviewsCount;
-    private URI postsCount;
-    private URI pendingRequestsCount;
     private URI administratorUserRole;
     private URI superAdministratorUserRole;
     private URI neighborUserRole;
@@ -101,21 +95,14 @@ public class Links {
     private URI unverifiedWorkerRole;
     private URI rejectedWorkerRole;
     private URI affiliations;
+    private URI pendingRequests;
 
-    public URI getReviewsCount() {
-        return reviewsCount;
+    public URI getPendingRequests() {
+        return pendingRequests;
     }
 
-    public void setReviewsCount(URI reviewsCount) {
-        this.reviewsCount = reviewsCount;
-    }
-
-    public URI getPostsCount() {
-        return postsCount;
-    }
-
-    public void setPostsCount(URI postsCount) {
-        this.postsCount = postsCount;
+    public void setPendingRequests(URI pendingRequests) {
+        this.pendingRequests = pendingRequests;
     }
 
     public URI getAcceptedRequestStatus() {
@@ -220,22 +207,6 @@ public class Links {
 
     public void setLanguageSpanish(URI languageSpanish) {
         this.languageSpanish = languageSpanish;
-    }
-
-    public URI getAttendanceCount() {
-        return attendanceCount;
-    }
-
-    public void setAttendanceCount(URI attendanceCount) {
-        this.attendanceCount = attendanceCount;
-    }
-
-    public URI getReviewsAverage() {
-        return reviewsAverage;
-    }
-
-    public void setReviewsAverage(URI reviewsAverage) {
-        this.reviewsAverage = reviewsAverage;
     }
 
     public URI getHotPostStatus() {
@@ -678,14 +649,6 @@ public class Links {
         this.neighborhoods = neighborhoods;
     }
 
-    public URI getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(URI likeCount) {
-        this.likeCount = likeCount;
-    }
-
     public URI getReplyUser() {
         return replyUser;
     }
@@ -788,14 +751,6 @@ public class Links {
 
     public void setAttendance(URI attendance) {
         this.attendance = attendance;
-    }
-
-    public URI getPendingRequestsCount() {
-        return pendingRequestsCount;
-    }
-
-    public void setPendingRequestsCount(URI pendingRequestsCount) {
-        this.pendingRequestsCount = pendingRequestsCount;
     }
 
     public URI getAdministratorUserRole() {

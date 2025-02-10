@@ -66,10 +66,10 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateWorkerPages(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId, int size) {
+    public int countWorkers(List<Long> neighborhoodIds, List<Long> professionIds, Long workerRoleId, Long workerStatusId) {
         LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusId, workerRoleId, professionIds, neighborhoodIds);
 
-        return PaginationUtils.calculatePages(workerDao.countWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId), size);
+        return workerDao.countWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

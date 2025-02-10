@@ -106,10 +106,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateUserPages(Long neighborhoodId, Long userRoleId, int size) {
+    public int countUsers(Long neighborhoodId, Long userRoleId) {
         LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", userRoleId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(userDao.countUsers(neighborhoodId, userRoleId), size);
+        return userDao.countUsers(neighborhoodId, userRoleId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

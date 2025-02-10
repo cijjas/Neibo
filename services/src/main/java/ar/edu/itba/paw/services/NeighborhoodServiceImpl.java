@@ -53,10 +53,10 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateNeighborhoodPages(Boolean isBase, Long withWorkerId, Long withoutWorkerId, int size) {
+    public int countNeighborhoods(Boolean isBase, Long withWorkerId, Long withoutWorkerId) {
         LOGGER.info("Calculating Neighborhood Pages that have an Affiliation with Worker {} and without Worker {}", withWorkerId, withoutWorkerId);
 
-        return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(isBase, withWorkerId, withoutWorkerId), size);
+        return neighborhoodDao.countNeighborhoods(isBase, withWorkerId, withoutWorkerId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

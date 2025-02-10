@@ -66,10 +66,10 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateInquiryPages(long productId, int size) {
-        LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
+    public int countInquiries(long productId) {
+        LOGGER.info("Counting Inquiries for Product {}", productId);
 
-        return PaginationUtils.calculatePages(inquiryDao.countInquiries(productId), size);
+        return inquiryDao.countInquiries(productId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

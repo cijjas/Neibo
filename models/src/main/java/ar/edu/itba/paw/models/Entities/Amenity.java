@@ -89,7 +89,7 @@ public class Amenity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(amenityId, name, description);
+        return Objects.hash(amenityId, name, description, availableShifts);
     }
 
     public static class Builder {

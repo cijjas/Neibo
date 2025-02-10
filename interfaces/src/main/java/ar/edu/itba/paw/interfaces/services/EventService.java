@@ -16,7 +16,7 @@ public interface EventService {
 
     List<Event> getEvents(long neighborhoodId, Date date, int page, int size);
 
-    int calculateEventPages(long neighborhoodId, Date date, int size);
+    int countEvents(long neighborhoodId, Date date);
 
     // -----------------------------------------------------------------------------------------------------------------
 

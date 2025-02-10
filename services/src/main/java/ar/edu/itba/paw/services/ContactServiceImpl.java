@@ -54,10 +54,10 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateContactPages(long neighborhoodId, int size) {
-        LOGGER.info("Calculating Contact Pages for Neighborhood {}", neighborhoodId);
+    public int countContacts(long neighborhoodId) {
+        LOGGER.info("Counting Contacts for Neighborhood {}", neighborhoodId);
 
-        return PaginationUtils.calculatePages(contactDao.countContacts(neighborhoodId), size);
+        return contactDao.countContacts(neighborhoodId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

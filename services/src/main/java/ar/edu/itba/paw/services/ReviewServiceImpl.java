@@ -74,14 +74,6 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewDao.countReviews(workerId);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public int calculateReviewPages(long workerId, int size) {
-        LOGGER.info("Calculating Review Pages for Worker {}", workerId);
-
-        return PaginationUtils.calculatePages(reviewDao.countReviews(workerId), size);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

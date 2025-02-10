@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
@@ -45,15 +46,15 @@ import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableF
 @Produces(value = {MediaType.APPLICATION_JSON,})
 public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
-    private final AffiliationService nws;
+    private final AffiliationService as;
     @Context
     private UriInfo uriInfo;
     @Context
     private Request request;
 
     @Autowired
-    public AffiliationController(AffiliationService nws) {
-        this.nws = nws;
+    public AffiliationController(AffiliationService as) {
+        this.as = as;
     }
 
     @GET
@@ -69,7 +70,7 @@ public class AffiliationController {
         Long workerId = extractNullableFirstId(affiliationParams.getWorker());
 
         // Content
-        List<Affiliation> affiliations = nws.getAffiliations(neighborhoodId, workerId, affiliationParams.getPage(), affiliationParams.getSize());
+        List<Affiliation> affiliations = as.getAffiliations(neighborhoodId, workerId, affiliationParams.getPage(), affiliationParams.getSize());
         String affiliationsHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a "find"
@@ -94,9 +95,10 @@ public class AffiliationController {
                 .map(wa -> AffiliationDto.fromAffiliation(wa, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int affiliationCount = as.countAffiliations(neighborhoodId, workerId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.AFFILIATIONS),
-                nws.calculateAffiliationPages(neighborhoodId, workerId, affiliationParams.getSize()),
+                affiliationCount,
                 affiliationParams.getPage(),
                 affiliationParams.getSize()
         );
@@ -106,6 +108,7 @@ public class AffiliationController {
                 .cacheControl(cacheControl)
                 .tag(affiliationsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, affiliationCount)
                 .build();
     }
 
@@ -118,7 +121,7 @@ public class AffiliationController {
         LOGGER.info("POST request arrived at '{}'", uriInfo.getRequestUri());
 
         // Creation & HashCode Generation
-        Affiliation affiliation = nws.createAffiliation(extractFirstId(createForm.getNeighborhood()), extractFirstId(createForm.getWorker()), extractFirstId(createForm.getWorkerRole()));
+        Affiliation affiliation = as.createAffiliation(extractFirstId(createForm.getNeighborhood()), extractFirstId(createForm.getWorker()), extractFirstId(createForm.getWorkerRole()));
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URI
@@ -139,7 +142,7 @@ public class AffiliationController {
         LOGGER.info("PATCH request arrived at '{}'", uriInfo.getRequestUri());
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(extractFirstId(affiliationParams.getNeighborhood()), extractFirstId(affiliationParams.getWorker()), extractFirstId(updateForm.getWorkerRole()));
+        final Affiliation updatedAffiliation = as.updateAffiliation(extractFirstId(affiliationParams.getNeighborhood()), extractFirstId(affiliationParams.getWorker()), extractFirstId(updateForm.getWorkerRole()));
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
@@ -156,7 +159,7 @@ public class AffiliationController {
         LOGGER.info("DELETE request arrived at '{}'", uriInfo.getRequestUri());
 
         // Deletion Attempt
-        if (nws.deleteAffiliation(extractFirstId(affiliationParams.getNeighborhood()), extractFirstId(affiliationParams.getWorker())))
+        if (as.deleteAffiliation(extractFirstId(affiliationParams.getNeighborhood()), extractFirstId(affiliationParams.getWorker())))
             return Response.noContent()
                     .build();
 

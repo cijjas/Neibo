@@ -15,5 +15,5 @@ public interface ChannelService {
 
     List<Channel> getChannels(long neighborhoodId, Boolean isBase, int page, int size);
 
-    int calculateChannelPages(long neighborhoodId, Boolean isBase, int size);
+    int countChannels(long neighborhoodId, Boolean isBase);
 }

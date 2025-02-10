@@ -58,10 +58,10 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateResourcePages(long neighborhoodId, int size) {
-        LOGGER.info("Calculating Contact Pages for Neighborhood {}", neighborhoodId);
+    public int countResources(long neighborhoodId) {
+        LOGGER.info("Counting Contacts for Neighborhood {}", neighborhoodId);
 
-        return PaginationUtils.calculatePages(resourceDao.countResources(neighborhoodId), size);
+        return resourceDao.countResources(neighborhoodId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

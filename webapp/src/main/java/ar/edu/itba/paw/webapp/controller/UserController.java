@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractNullableFirstId;
 
@@ -83,9 +84,10 @@ public class UserController {
                     .build();
 
         // Pagination Links
+        int usersCount = us.countUsers(neighborhoodId, userRoleId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.USERS),
-                us.calculateUserPages(neighborhoodId, userRoleId, userParams.getSize()),
+                usersCount,
                 userParams.getPage(),
                 userParams.getSize()
         );
@@ -94,9 +96,10 @@ public class UserController {
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto) {
                 })
+                .links(links)
                 .cacheControl(cacheControl)
                 .tag(usersHashCode)
-                .links(links)
+                .header(COUNT_HEADER, usersCount)
                 .build();
     }
 

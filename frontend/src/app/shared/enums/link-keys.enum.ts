@@ -38,6 +38,7 @@ export enum LinkKey {
   TRENDING_POST_STATUS = 'root:trendingPostStatus',
   USERS = 'root:users',
   WORKERS = 'root:workers',
+  REJECTED_NEIGHBORHOOD = 'root:rejectedNeighborhood',
   WORKERS_NEIGHBORHOOD = 'root:workersNeighborhood',
 
   // -----------------------------------------------------------------

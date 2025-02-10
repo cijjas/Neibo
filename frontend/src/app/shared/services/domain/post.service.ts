@@ -6,11 +6,12 @@ import {
   ChannelDto,
   PostDto,
   UserDto,
-  LikeCountDto,
   Post,
   mapUser,
   parseLinkHeader,
   LinkKey,
+  extractCountFromHeaders,
+  Like,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
@@ -19,7 +20,7 @@ export class PostService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService,
-  ) {}
+  ) { }
 
   public getPost(postUrl: string): Observable<Post> {
     return this.http
@@ -233,19 +234,19 @@ export class PostService {
 export function mapPost(http: HttpClient, postDto: PostDto): Observable<Post> {
   return forkJoin([
     http.get<ChannelDto>(postDto._links.channel),
-    http.get<LikeCountDto>(postDto._links.likeCount),
+    http.get<Like[]>(postDto._links.likes, { observe: 'response' }),
     http
       .get<UserDto>(postDto._links.postUser)
       .pipe(mergeMap(userDto => mapUser(http, userDto))),
   ]).pipe(
-    map(([channelDto, likeCountDto, user]) => {
+    map(([channelDto, likes, user]) => {
       return {
         title: postDto.title,
         body: postDto.body,
         createdAt: postDto.creationDate,
         image: postDto._links.postImage,
         channel: channelDto.name,
-        likeCount: likeCountDto.count,
+        likeCount: extractCountFromHeaders(likes.headers),
         comments: postDto._links.comments,
         author: user,
         self: postDto._links.self,

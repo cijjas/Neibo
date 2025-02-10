@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 
 /*
  * # Summary
@@ -78,9 +79,10 @@ public class ChannelController {
                 .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 
         // Pagination Links
+        int channelCount = cs.countChannels(neighborhoodId, isBase);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CHANNELS),
-                cs.calculateChannelPages(neighborhoodId, isBase, size),
+                channelCount,
                 page,
                 size
         );
@@ -90,6 +92,7 @@ public class ChannelController {
                 .cacheControl(cacheControl)
                 .tag(channelsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, channelCount)
                 .build();
     }
 

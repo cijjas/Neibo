@@ -15,7 +15,7 @@ public interface TagService {
 
     List<Tag> getTags(long neighborhoodId, Long postId, int page, int size);
 
-    int calculateTagPages(long neighborhoodId, Long postId, int size);
+    int countTags(long neighborhoodId, Long postId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

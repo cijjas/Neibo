@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.dto.PostDto;
-import ar.edu.itba.paw.webapp.dto.PostsCountDto;
 import ar.edu.itba.paw.webapp.dto.queryForms.PostParams;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
@@ -24,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -89,9 +89,10 @@ public class PostController {
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int postsCount = ps.countPosts(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(postParams.getNeighborhoodId())).path(Endpoint.POSTS),
-                ps.calculatePostPages(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId, postParams.getSize()),
+                postsCount,
                 postParams.getPage(),
                 postParams.getSize()
         );
@@ -101,39 +102,7 @@ public class PostController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(postsHashCode)
-                .build();
-    }
-
-    @GET
-    @Path(Endpoint.COUNT)
-    @PreAuthorize("@accessControlHelper.canListOrCountPosts(#postParams.user, #postParams.channel, #postParams.tags, #postParams.postStatus)")
-    public Response countPosts(
-            @Valid @BeanParam PostParams postParams
-    ) {
-        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
-
-        // ID Extraction
-        Long userId = extractNullableFirstId(postParams.getUser());
-        Long channelId = extractNullableSecondId(postParams.getChannel());
-        List<Long> tagIds = extractSecondIds(postParams.getTags());
-        Long postStatusId = extractNullableFirstId(postParams.getPostStatus());
-
-        // Content
-        int count = ps.countPosts(postParams.getNeighborhoodId(), userId, channelId, tagIds, postStatusId);
-        String countHashCode = String.valueOf(count);
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
-        PostsCountDto dto = PostsCountDto.fromPostsCount(count, postParams.getNeighborhoodId(), postParams.getUser(), postParams.getChannel(), postParams.getTags(), postParams.getPostStatus(), uriInfo);
-
-        return Response.ok(new GenericEntity<PostsCountDto>(dto) {
-                })
-                .cacheControl(cacheControl)
-                .tag(countHashCode)
+                .header(COUNT_HEADER, postsCount)
                 .build();
     }
 

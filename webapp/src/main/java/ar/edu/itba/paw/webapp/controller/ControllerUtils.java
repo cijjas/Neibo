@@ -12,7 +12,9 @@ import java.util.List;
 public class ControllerUtils {
 
 
-    public static Link[] createPaginationLinks(UriBuilder baseUriBuilder, int totalPages, int page, int size) {
+    public static Link[] createPaginationLinks(UriBuilder baseUriBuilder, int totalItems, int page, int size) {
+
+        int totalPages = (int) Math.ceil((double) totalItems / size);
         List<Link> links = new ArrayList<>();
 
         // Self link

@@ -7,6 +7,7 @@ public class RootLinks {
 
     private URI neighborhoods;
     private URI workersNeighborhood;
+    private URI rejectedNeighborhood;
 
     private URI affiliations;
 
@@ -210,6 +211,14 @@ public class RootLinks {
 
     public void setUnverifiedNeighborUserRole(URI unverifiedNeighborUserRole) {
         this.unverifiedNeighborUserRole = unverifiedNeighborUserRole;
+    }
+
+    public URI getRejectedNeighborhood() {
+        return rejectedNeighborhood;
+    }
+
+    public void setRejectedNeighborhood(URI rejectedNeighborhood) {
+        this.rejectedNeighborhood = rejectedNeighborhood;
     }
 
     public URI getRejectedUserRole() {

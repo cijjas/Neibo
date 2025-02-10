@@ -173,7 +173,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         HttpMethod.GET,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.ATTENDANCE + "/" + Endpoint.COUNT,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.BOOKINGS + "/*",
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*/" + Endpoint.COMMENTS,
@@ -181,11 +180,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*/" + Endpoint.INQUIRIES + "/*",
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.LIKES + "/" + Endpoint.COUNT,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.PRODUCTS + "/*",
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/" + Endpoint.COUNT,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.REQUESTS + "/*"
                 ).access(
                         "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
@@ -337,7 +334,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         HttpMethod.GET,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS,
-                        "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/" + Endpoint.COUNT,
                         "/" + Endpoint.API + "/" + Endpoint.NEIGHBORHOODS + "/*/" + Endpoint.POSTS + "/*"
                 ).access(
                         "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " + "and " + "@accessControlHelper.isNeighborhoodMember(request)"
@@ -359,8 +355,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         HttpMethod.GET,
                         "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS,
-                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/" + Endpoint.COUNT,
-                        "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/" + Endpoint.AVERAGE,
                         "/" + Endpoint.API + "/" + Endpoint.WORKERS + "/*/" + Endpoint.REVIEWS + "/*"
                 ).hasAnyRole(
                         UserRole.WORKER.name(), UserRole.NEIGHBOR.name(), UserRole.ADMINISTRATOR.name(), UserRole.SUPER_ADMINISTRATOR.name()
@@ -478,7 +472,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "Content-Type",
                 "Accept",
                 "Authorization",
-                "X-Requested-With", // sus
                 "Access-Control-Request-Method",
                 "Access-Control-Request-Headers",
                 "X-User-URL",
@@ -486,6 +479,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Workers-Neighborhood-URL",
                 "X-Access-Token",
                 "X-Refresh-Token",
+                "X-Count",
+                "X-Average",
                 "Location",
                 "Link",
                 "If-None-Match"
@@ -495,7 +490,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "Content-Type",
                 "Accept",
                 "Authorization",
-                "X-Requested-With",
                 "Access-Control-Request-Method",
                 "Access-Control-Request-Headers",
                 "X-User-URL",
@@ -503,6 +497,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "X-Workers-Neighborhood-URL",
                 "X-Access-Token",
                 "X-Refresh-Token",
+                "X-Count",
+                "X-Average",
                 "Location",
                 "Link",
                 "ETag",

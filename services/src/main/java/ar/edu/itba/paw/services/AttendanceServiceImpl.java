@@ -44,14 +44,6 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public int calculateAttendancePages(long neighborhoodId, Long eventId, Long userId, int size) {
-        LOGGER.info("Calculating Attendance Pages for Event {} and User {} in Neighborhood {}", eventId, userId, neighborhoodId);
-
-        return PaginationUtils.calculatePages(attendanceDao.countAttendance(neighborhoodId, eventId, userId), size);
-    }
-
-    @Override
     public int countAttendance(long neighborhoodId, Long eventId, Long userId) {
         LOGGER.info("Counting Attendees for Event {} and User {} in Neighborhood {}", eventId, userId, neighborhoodId);
 

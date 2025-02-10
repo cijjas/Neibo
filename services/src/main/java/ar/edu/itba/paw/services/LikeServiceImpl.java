@@ -44,14 +44,6 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateLikePages(long neighborhoodId, Long userId, Long postId, int size) {
-        LOGGER.info("Calculating Like Pages for Post {} by User {} in Neighborhood {}", userId, postId, neighborhoodId);
-
-        return PaginationUtils.calculatePages(likeDao.countLikes(neighborhoodId, userId, postId), size);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public int countLikes(long neighborhoodId, Long userId, Long postId) {
         LOGGER.info("Counting Likes for Post {} by User {}", userId, postId);
 

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.*;
 
 /*
@@ -86,9 +87,10 @@ public class WorkerController {
                 .map(w -> WorkerDto.fromWorker(w, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int workersCount = ws.countWorkers(neighborhoodIds, professionIds, workerRoleId, workerStatusId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS),
-                ws.calculateWorkerPages(neighborhoodIds, professionIds, workerRoleId, workerStatusId, workerParams.getSize()),
+                workersCount,
                 workerParams.getPage(),
                 workerParams.getSize()
         );
@@ -98,6 +100,7 @@ public class WorkerController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(workersHashCode)
+                .header(COUNT_HEADER, workersCount)
                 .build();
     }
 

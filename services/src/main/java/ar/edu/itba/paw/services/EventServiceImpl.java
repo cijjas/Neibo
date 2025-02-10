@@ -72,10 +72,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateEventPages(long neighborhoodId, Date date, int size) {
-        LOGGER.info("Calculating Event Pages for Neighborhood {} on date {}", neighborhoodId, date);
+    public int countEvents(long neighborhoodId, Date date) {
+        LOGGER.info("Counting Events for Neighborhood {} on date {}", neighborhoodId, date);
 
-        return PaginationUtils.calculatePages(eventDao.countEvents(neighborhoodId, date), size);
+        return eventDao.countEvents(neighborhoodId, date);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

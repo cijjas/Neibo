@@ -12,8 +12,6 @@ public interface LikeService {
 
     List<Like> getLikes(long neighborhoodId, Long userId, Long postId, int page, int size);
 
-    int calculateLikePages(long neighborhoodId, Long userId, Long postId, int size);
-
     int countLikes(long neighborhoodId, Long userId, Long postId);
 
     // -----------------------------------------------------------------------------------------------------------------

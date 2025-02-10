@@ -15,7 +15,7 @@ public interface ProductService {
 
     List<Product> getProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int page, int size);
 
-    int calculateProductPages(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int size);
+    int countProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

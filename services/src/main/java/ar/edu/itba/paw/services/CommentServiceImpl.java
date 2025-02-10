@@ -53,10 +53,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateCommentPages(long neighborhoodId, long postId, int size) {
-        LOGGER.info("Calculating Comment for Post {}", postId);
+    public int countComments(long neighborhoodId, long postId) {
+        LOGGER.info("Counting Comments for Post {}", postId);
 
-        return PaginationUtils.calculatePages(commentDao.countComments(neighborhoodId, postId), size);
+        return commentDao.countComments(neighborhoodId, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

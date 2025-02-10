@@ -65,10 +65,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateProductPages(long neighborhoodId, Long userId, Long departmentId, Long productStatusId, int size) {
-        LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
+    public int countProducts(long neighborhoodId, Long userId, Long departmentId, Long productStatusId) {
+        LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusId, departmentId, userId, neighborhoodId);
 
-        return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, userId, departmentId, productStatusId), size);
+        return productDao.countProducts(neighborhoodId, userId, departmentId, productStatusId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

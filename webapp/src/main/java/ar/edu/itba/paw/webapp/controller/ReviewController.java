@@ -7,8 +7,6 @@ import ar.edu.itba.paw.webapp.controller.constants.Endpoint;
 import ar.edu.itba.paw.webapp.controller.constants.PathParameter;
 import ar.edu.itba.paw.webapp.controller.constants.QueryParameter;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
-import ar.edu.itba.paw.webapp.dto.ReviewsAverageDto;
-import ar.edu.itba.paw.webapp.dto.ReviewsCountDto;
 import ar.edu.itba.paw.webapp.validation.groups.sequences.CreateSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +24,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.AVERAGE_HEADER;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 import static ar.edu.itba.paw.webapp.validation.ExtractionUtils.extractFirstId;
 
 /*
@@ -81,9 +81,11 @@ public class ReviewController {
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int reviewsCount = rs.countReviews(workerId);
+        float reviewsAverage = rs.findAverageRating(workerId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.WORKERS).path(String.valueOf(workerId)).path(Endpoint.REVIEWS),
-                rs.calculateReviewPages(workerId, size),
+                reviewsCount,
                 page,
                 size
         );
@@ -93,58 +95,8 @@ public class ReviewController {
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(reviewsHashCode)
-                .build();
-    }
-
-    @GET
-    @Path(Endpoint.COUNT)
-    public Response countReviews(
-            @PathParam(PathParameter.WORKER_ID) long workerId
-    ) {
-        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
-
-        // Content
-        int count = rs.countReviews(workerId);
-        String countHashCode = String.valueOf(count);
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(countHashCode));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
-        ReviewsCountDto dto = ReviewsCountDto.fromReviewsCount(count, workerId, uriInfo);
-
-        return Response.ok(new GenericEntity<ReviewsCountDto>(dto) {
-                })
-                .cacheControl(cacheControl)
-                .tag(countHashCode)
-                .build();
-    }
-
-    @GET
-    @Path(Endpoint.AVERAGE)
-    public Response averageReviews(
-            @PathParam(PathParameter.WORKER_ID) long workerId
-    ) {
-        LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
-
-        // Content
-        float average = rs.findAverageRating(workerId);
-        String averageHashCode = String.valueOf(average);
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(averageHashCode));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
-        ReviewsAverageDto dto = ReviewsAverageDto.fromReviewAverage(average, workerId, uriInfo);
-
-        return Response.ok(new GenericEntity<ReviewsAverageDto>(dto) {
-                })
-                .cacheControl(cacheControl)
-                .tag(averageHashCode)
+                .header(COUNT_HEADER, reviewsCount)
+                .header(AVERAGE_HEADER, reviewsAverage)
                 .build();
     }
 

@@ -12,7 +12,7 @@ public interface AffiliationService {
 
     List<Affiliation> getAffiliations(Long neighborhoodId, Long workerId, int page, int size);
 
-    int calculateAffiliationPages(Long neighborhoodId, Long workerId, int size);
+    int countAffiliations(Long neighborhoodId, Long workerId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

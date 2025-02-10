@@ -10,8 +10,8 @@ import {
   UserDto,
   DepartmentDto,
   Product,
-  RequestsCountDto,
   LinkKey,
+  extractCountFromHeaders,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
@@ -20,7 +20,7 @@ export class ProductService {
   constructor(
     private http: HttpClient,
     private linkService: HateoasLinksService,
-  ) {}
+  ) { }
 
   public getProduct(url: string): Observable<Product> {
     return this.http
@@ -139,6 +139,7 @@ export class ProductService {
     );
   }
 }
+
 export function mapProduct(
   http: HttpClient,
   productDto: ProductDto,
@@ -152,14 +153,15 @@ export function mapProduct(
 
   const pendingRequests$ = lightweight
     ? of(null)
-    : http.get<RequestsCountDto>(productDto._links.pendingRequestsCount).pipe(
-        catchError(error => {
-          if (error.status === 403) {
-            return of(null);
-          }
-          return throwError(() => error);
-        }),
-      );
+    : http.get<any>(productDto._links.pendingRequests, { observe: 'response' }).pipe(
+      map(response => extractCountFromHeaders(response.headers)),
+      catchError(error => {
+        if (error.status === 403) {
+          return of(null);
+        }
+        return throwError(() => error);
+      }),
+    );
 
   return forkJoin([seller$, department$, pendingRequests$]).pipe(
     map(([seller, department, pendingRequestsCount]) => {
@@ -170,9 +172,7 @@ export function mapProduct(
         used: productDto.used,
         stock: productDto.remainingUnits,
         inquiries: productDto._links.inquiries,
-        totalPendingRequests: pendingRequestsCount
-          ? pendingRequestsCount.count
-          : null,
+        totalPendingRequests: pendingRequestsCount,
         createdAt: productDto.creationDate,
         firstImage: productDto._links.firstProductImage,
         secondImage: productDto._links.secondProductImage,

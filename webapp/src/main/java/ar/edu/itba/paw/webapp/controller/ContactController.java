@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.constants.Constant.COUNT_HEADER;
 
 /*
  * # Summary
@@ -78,9 +79,10 @@ public class ContactController {
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
+        int contactCount = cs.countContacts(neighborhoodId);
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUriBuilder().path(Endpoint.API).path(Endpoint.NEIGHBORHOODS).path(String.valueOf(neighborhoodId)).path(Endpoint.CONTACTS),
-                cs.calculateContactPages(neighborhoodId, size),
+                contactCount,
                 page,
                 size
         );
@@ -90,6 +92,7 @@ public class ContactController {
                 .cacheControl(cacheControl)
                 .tag(contactsHashCode)
                 .links(links)
+                .header(COUNT_HEADER, contactCount)
                 .build();
     }
 

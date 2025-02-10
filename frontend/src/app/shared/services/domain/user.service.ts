@@ -20,7 +20,7 @@ export class UserService {
     private http: HttpClient,
     private linkService: HateoasLinksService,
     private imageService: ImageService,
-  ) {}
+  ) { }
 
   public getUser(userUrl: string): Observable<User> {
     return this.http
@@ -69,7 +69,6 @@ export class UserService {
       );
   }
 
-  // ? Prequest is kinda sus, waiting for users refactoring
   public createUser(
     neighborhoodUrl: string,
     name: string,
@@ -243,8 +242,14 @@ export class UserService {
     let rejectedUserRoleUrl: string = this.linkService.getLink(
       LinkKey.REJECTED_USER_ROLE,
     );
+    let rejectedNeighborhoodUrl: string = this.linkService.getLink(
+      LinkKey.REJECTED_NEIGHBORHOOD,
+    );
     return this.http
-      .patch<UserDto>(user.self, { userRole: rejectedUserRoleUrl })
+      .patch<UserDto>(user.self, {
+        userRole: rejectedUserRoleUrl,
+        neighborhood: rejectedNeighborhoodUrl
+      })
       .pipe(mergeMap(newUser => mapUser(this.http, newUser)));
   }
 }

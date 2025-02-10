@@ -8,14 +8,13 @@ import {
   UserDto,
   NeighborhoodDto,
   ProfessionDto,
-  ReviewsAverageDto,
   mapUser,
   parseLinkHeader,
   mapProfession,
-  ReviewsCountDto,
-  PostsCountDto,
   UserService,
   LinkKey,
+  extractCountAndAverageFromHeaders,
+  extractCountFromHeaders,
 } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 
@@ -25,7 +24,7 @@ export class WorkerService {
     private http: HttpClient,
     private linkService: HateoasLinksService,
     private userService: UserService,
-  ) {}
+  ) { }
 
   public getWorker(url: string): Observable<Worker> {
     return this.http
@@ -180,6 +179,7 @@ export class WorkerService {
     );
   }
 }
+
 export function mapWorker(
   http: HttpClient,
   workerDto: WorkerDto,
@@ -192,41 +192,28 @@ export function mapWorker(
     workerDto._links.workerNeighborhoods,
   );
   const professions$ = http.get<ProfessionDto[]>(workerDto._links.professions);
-  const reviewsAverage$ = http.get<ReviewsAverageDto>(
-    workerDto._links.reviewsAverage,
-  );
-  const reviewsCount$ = http.get<ReviewsCountDto>(
-    workerDto._links.reviewsCount,
-  );
-  const postsCount$ = http.get<PostsCountDto>(workerDto._links.postsCount);
 
-  return forkJoin([
-    user$,
-    neighborhoods$,
-    professions$,
-    reviewsAverage$,
-    reviewsCount$,
-    postsCount$,
-  ]).pipe(
+  const reviews$ = http
+    .get<any>(workerDto._links.reviews, { observe: 'response' })
+    .pipe(map(response => extractCountAndAverageFromHeaders(response.headers)));
+
+  const posts$ = http
+    .get<any>(workerDto._links.posts, { observe: 'response' })
+    .pipe(map(response => extractCountFromHeaders(response.headers)));
+
+  return forkJoin([user$, neighborhoods$, professions$, reviews$, posts$]).pipe(
     map(
-      ([
-        user,
-        neighborhoods,
-        professions,
-        reviewAverage,
-        reviewsCount,
-        postsCount,
-      ]) => {
+      ([user, neighborhoods, professions, reviewsData, postsCount]) => {
         return {
           phoneNumber: workerDto.phoneNumber,
           businessName: workerDto.businessName,
           address: workerDto.address,
           bio: workerDto.bio,
-          averageRating: reviewAverage.average,
+          averageRating: reviewsData.average,
           reviews: workerDto._links.reviews,
-          totalReviews: reviewsCount.count,
+          totalReviews: reviewsData.count,
           posts: workerDto._links.posts,
-          totalPosts: postsCount.count,
+          totalPosts: postsCount,
           user: user,
           backgroundImage: workerDto._links.backgroundImage,
           neighborhoodAffiliated: neighborhoods
