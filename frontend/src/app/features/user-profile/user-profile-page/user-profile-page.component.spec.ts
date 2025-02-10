@@ -45,7 +45,7 @@ describe('UserProfilePageComponent - Initialization', () => {
 
   const dummyUser: DummyUser = {
     darkMode: true,
-    language: 'spanish_dummy', 
+    language: 'spanish_dummy',
     image: 'dummy_image',
     email: 'dummy@example.com',
     name: 'Dummy',
@@ -61,6 +61,7 @@ describe('UserProfilePageComponent - Initialization', () => {
 
   const userSessionServiceSpy = jasmine.createSpyObj('UserSessionService', [
     'getCurrentUser',
+    'getCurrentUserValue',
     'getCurrentRole',
   ]);
   userSessionServiceSpy.getCurrentUser.and.returnValue(of(dummyUser));

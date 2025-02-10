@@ -10,6 +10,7 @@ import {
   parseLinkHeader,
 } from '@shared/index';
 import { formatDistanceToNow } from 'date-fns';
+import { enUS, es } from 'date-fns/locale';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {
@@ -88,6 +89,7 @@ export function mapComment(
       .pipe(mergeMap(userDto => mapUser(http, userDto))),
   ]).pipe(
     map(([author]) => {
+      const locale = localStorage.getItem('language') == 'es' ? es : enUS;
       return {
         message: commentDto.message,
         createdAt: commentDto.creationDate,
@@ -96,6 +98,7 @@ export function mapComment(
           new Date(commentDto.creationDate),
           {
             addSuffix: true,
+            locale,
           },
         ),
         self: commentDto._links.self,

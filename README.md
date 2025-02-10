@@ -56,7 +56,7 @@ Admins can maintain an up-to-date database of important neighborhood information
 
 A community-driven marketplace where residents can buy, sell, and trade goods within the neighborhood. Find great deals, support local sellers, and create a thriving local economy.
 
-# Roles
+## Roles
 - **Neighbor**: A neighborhood resident who has access to their neighborhood's resources but cannot modify or create administrative entities.
 - **Administrator**: Represents moderation, has access to their neighborhood's resources and can modify or create administrative entities as well as moderate content created by its neighbors.
 - **Unverified Neighbor**: A user who has made a request to join a certain neighborhood and must wait to be either accepted (becoming a **Neighbor**) or rejected (becoming a **Rejected**). The neighborhood administrator is in charge of their request. This user only has access to their profile which they can modify.
@@ -81,10 +81,6 @@ A community-driven marketplace where residents can buy, sell, and trade goods wi
 2. Choose Branch (Front has the RESTful HATEOAS API with SPA Client)
 3. Run `maven clean package`
 4. Run `docker compose up`
-
-## Frontend
-
-## License
 
 
 <h3 style="width: 100%; display: flex; flex-direction: row; justify-content: end; align-items: center;"> Contributors</h3>
@@ -118,7 +114,7 @@ A community-driven marketplace where residents can buy, sell, and trade goods wi
 </tr>
 </table>
 
-  
+
 <!-- Go -->
 
 <!-- Repository -->

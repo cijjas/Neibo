@@ -36,6 +36,7 @@ describe('AdminCreateAnnouncementPageComponent', () => {
     mockLinkService = jasmine.createSpyObj('HateoasLinksService', ['getLink']);
     mockUserSessionService = jasmine.createSpyObj('UserSessionService', [
       'getCurrentUser',
+      'getCurrentUserValue',
     ]);
     mockToastService = jasmine.createSpyObj('ToastService', ['showToast']);
 

@@ -12,6 +12,8 @@ import { switchMap } from 'rxjs/operators';
 import { Review, Post, Worker, WorkerService, LinkKey } from '@shared/index';
 import { ReviewService, PostService } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
+import { enUS, es } from 'date-fns/locale';
+import { formatDate } from 'date-fns';
 
 @Component({
   selector: 'app-service-providers-reviews-and-posts',
@@ -212,5 +214,10 @@ export class ServiceProvidersReviewsAndPostsComponent
         forWorker: this.worker.self,
       },
     });
+  }
+
+  formatFNSDate(date: Date) {
+    const locale = localStorage.getItem('language') == 'es' ? es : enUS;
+    return formatDate(date, 'dd MMM yyyy', { locale });
   }
 }

@@ -58,6 +58,7 @@ describe('FeedControlBarComponent - Initialization', () => {
   // Stub UserSessionService: for this test we assume a non-admin user.
   const userSessionServiceSpy = jasmine.createSpyObj('UserSessionService', [
     'getCurrentUser',
+    'getCurrentUserValue',
     'getCurrentRole',
   ]);
   // For this test the current user is not needed, so we can return an empty object.

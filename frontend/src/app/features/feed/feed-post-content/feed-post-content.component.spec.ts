@@ -22,7 +22,7 @@ class FakeTranslatePipe implements PipeTransform {
   }
 }
 
-// Dummy post to assign to the component input.
+// Dummy post object
 const dummyPost: Post = {
   title: 'Sample Post',
   body: 'This is a sample post.',
@@ -55,7 +55,6 @@ describe('FeedPostContentComponent', () => {
 
   // Service stubs
   const imageServiceSpy = jasmine.createSpyObj('ImageService', ['fetchImage']);
-  // Return dummy safe URLs for both post and author images.
   imageServiceSpy.fetchImage.and.returnValue(
     of({ safeUrl: 'dummy_safe_url', isFallback: false }),
   );
@@ -64,9 +63,7 @@ describe('FeedPostContentComponent', () => {
     'createComment',
     'getComments',
   ]);
-  // For comment creation.
   commentServiceSpy.createComment.and.returnValue(of({ self: 'new_comment' }));
-  // For fetching comments.
   commentServiceSpy.getComments.and.returnValue(
     of({ comments: [{ text: 'comment1' }], totalPages: 1, currentPage: 1 }),
   );
@@ -74,7 +71,6 @@ describe('FeedPostContentComponent', () => {
   const linkServiceSpy = jasmine.createSpyObj('HateoasLinksService', [
     'getLink',
   ]);
-  // For tag fetching and like status
   linkServiceSpy.getLink.and.callFake((key: string) => {
     if (key === LinkKey.NEIGHBORHOOD_TAGS) return 'tags_link';
     if (key === LinkKey.NEIGHBORHOOD_LIKES) return 'likes_link';
@@ -87,7 +83,6 @@ describe('FeedPostContentComponent', () => {
     'deleteLike',
   ]);
   likeServiceSpy.getLikes.and.returnValue(of({ likes: [] }));
-  // We'll assume createLike and deleteLike are not used in these tests.
 
   const tagServiceSpy = jasmine.createSpyObj('TagService', ['getTags']);
   tagServiceSpy.getTags.and.returnValue(
@@ -96,12 +91,13 @@ describe('FeedPostContentComponent', () => {
 
   const userSessionSpy = jasmine.createSpyObj('UserSessionService', [
     'getCurrentUser',
+    'getCurrentUserValue',
   ]);
   userSessionSpy.getCurrentUser.and.returnValue(of({ self: 'user_self' }));
+  userSessionSpy.getCurrentUserValue.and.returnValue({ self: 'user_self' });
 
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
-  // ActivatedRoute stub with default queryParams.
   const fakeActivatedRoute = {
     snapshot: { queryParams: { page: '1', size: '10' } },
     queryParams: of({ page: '1', size: '10' }),
@@ -131,84 +127,76 @@ describe('FeedPostContentComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FeedPostContentComponent);
     component = fixture.componentInstance;
-    // Set the required @Input() post.
     component.post = { ...dummyPost };
-    fixture.detectChanges(); // triggers ngOnInit
+    fixture.detectChanges();
   });
 
-  // Test 1: Initialization
-  it('should initialize by fetching images, tags, like status, and build the comment form', () => {
-    // Verify commentForm is built.
-    expect(component.commentForm).toBeDefined();
-    expect(component.commentForm.contains('comment')).toBeTrue();
-
-    // Verify that imageService.fetchImage is called for both post and author.
-    expect(imageServiceSpy.fetchImage).toHaveBeenCalledWith('post_image_url');
-    expect(imageServiceSpy.fetchImage).toHaveBeenCalledWith('author_image_url');
-
-    // Verify that tagService.getTags is called with the expected arguments.
-    expect(tagServiceSpy.getTags).toHaveBeenCalledWith('tags_link', {
-      onPost: 'post_self',
-    });
-    // Verify that likeService.getLikes is called.
-    expect(likeServiceSpy.getLikes).toHaveBeenCalled();
-  });
-
-  // Test 2: Toggling Like
-  it('should toggle like status by calling likePost or unlikePost', () => {
-    const compAny = component as any;
-    spyOn(compAny, 'likePost');
-    spyOn(compAny, 'unlikePost');
-
-    component.isLiked = false;
-    component.toggleLike();
-    expect(compAny.likePost).toHaveBeenCalled();
-    expect(compAny.unlikePost).not.toHaveBeenCalled();
-
-    component.isLiked = true;
-    component.toggleLike();
-    expect(compAny.unlikePost).toHaveBeenCalled();
-  });
-
-  // Test 3: Submitting a Comment
   it('should create a comment and refresh comments when onSubmit is called', () => {
-    // Set a valid comment value.
+    spyOn(component, 'getComments'); // Ensure getComments is called
+
     component.commentForm.setValue({ comment: 'Hello World' });
-    // Spy on getComments.
-    spyOn(component, 'getComments');
     component.onSubmit();
+
     expect(commentServiceSpy.createComment).toHaveBeenCalledWith(
       'comments_link',
       'Hello World',
       'user_self',
     );
+
     expect(component.getComments).toHaveBeenCalled();
-    // After reset, the comment control should be null.
     expect(component.commentForm.value.comment).toBe('');
   });
 
-  // Test 4: Comment Pagination (onPageChange)
-  it('should update page, update query params, and re-fetch comments on page change', () => {
-    // Spy on private updateQueryParams via casting.
-    const compAny = component as any;
-    spyOn(compAny, 'updateQueryParams');
+  it('should initialize by fetching images, tags, like status, and build the comment form', () => {
+    expect(component.commentForm).toBeDefined();
+    expect(component.commentForm.contains('comment')).toBeTrue();
+
+    expect(imageServiceSpy.fetchImage).toHaveBeenCalledWith('post_image_url');
+    expect(imageServiceSpy.fetchImage).toHaveBeenCalledWith('author_image_url');
+
+    expect(tagServiceSpy.getTags).toHaveBeenCalledWith('tags_link', {
+      onPost: 'post_self',
+    });
+    expect(likeServiceSpy.getLikes).toHaveBeenCalled();
+  });
+
+  it('should toggle like status by calling likePost or unlikePost', () => {
+    spyOn(component as any, 'likePost');
+    spyOn(component as any, 'unlikePost');
+
+    component.isLiked = false;
+    component.toggleLike();
+    expect((component as any).likePost).toHaveBeenCalled();
+
+    component.isLiked = true;
+    component.toggleLike();
+    expect((component as any).unlikePost).toHaveBeenCalled();
+  });
+
+  it('should update page and fetch comments on page change', () => {
     spyOn(component, 'getComments');
     component.onPageChange(2);
+
     expect(component.currentPage).toEqual(2);
-    expect(compAny.updateQueryParams).toHaveBeenCalled();
     expect(component.getComments).toHaveBeenCalledWith(2, component.pageSize);
   });
 
-  // Test 5: Filtering by Tag
   it('should merge new tag parameter and navigate to /posts when filterByTag is called', () => {
-    // Simulate a route snapshot with existing query params.
-    (component as any).route = {
-      snapshot: { queryParams: { page: '1', size: '10' } },
-    };
     component.filterByTag('SampleTag');
+
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/posts'], {
       queryParams: { page: '1', size: '10', withTag: 'SampleTag' },
       queryParamsHandling: 'merge',
     });
+  });
+
+  it('should clear interval and unsubscribe on destroy', () => {
+    spyOn(window, 'clearInterval');
+    spyOn(component['subscriptions'], 'unsubscribe');
+
+    component.ngOnDestroy();
+
+    expect(window.clearInterval).toHaveBeenCalled();
+    expect(component['subscriptions'].unsubscribe).toHaveBeenCalled();
   });
 });

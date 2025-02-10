@@ -279,7 +279,7 @@
     "_WORKERUSEREMAIL_": "{{ worker.user.email }}",
     "IDENTIFICATION": "Identification:",
     "_WORKERUSERIDENTIFICATION_": "{{\n              worker.user.identification\n            }}",
-    "PHONENUMBER": "PhoneNumber:",
+    "PHONE_NUMBER": "Phone Number:",
     "_WORKERPHONENUMBER_": "{{ worker.phoneNumber }}",
     "BUSINESS_NAME": "Business name:",
     "_WORKERBUSINESSNAME_": "{{ worker.businessName }}",
@@ -719,6 +719,11 @@
     "ERROR_LOADING_POSTS": "Error loading posts:"
   },
   "FEED-POST-CONTENT": {
+    "CHANNEL": {
+      "ANNOUNCEMENTS": "Announcements",
+      "COMPLAINTS": "Complaints",
+      "FEED": "Feed"
+    },
     "_POSTCHANNEL_": "{{ post.channel }}",
     "_POSTED_BY": "- Posted by",
     "_POSTAUTHORNAME_": "{{ post.author.name }}",
@@ -1193,44 +1198,44 @@
   "TITLES": {
     "ADMIN_AMENITIES_PAGE": "Admin Amenities | Neibo",
     "ADMIN_AMENITY_CREATE_PAGE": "Create Amenity | Neibo",
-    "ADMIN_AMENITY_EDIT_PAGE": "Editing '{{amenityName}}' | Neibo",
+    "ADMIN_AMENITY_EDIT_PAGE": "Editing {{amenityName}} | Neibo",
     "ADMIN_CREATE_ANNOUNCEMENT_PAGE": "Create Announcement | Neibo",
     "ADMIN_CREATE_EVENT_PAGE": "Create Event | Neibo",
     "ADMIN_INFORMATION_PAGE": "Admin Information | Neibo",
     "ADMIN_NEIGHBORS_REQUESTS_PAGE": "Neighbor Requests | Neibo",
-    "ADMIN_SERVICE_PROVIDERS_REQUESTS_PAGE": "Service Providers Requests | Neibo",
-    "ADMIN_NEIGHBORS_LIST_PAGE": "Neighbor List | Neibo",
+    "ADMIN_SERVICE_PROVIDERS_REQUESTS_PAGE": "Service Provider Requests | Neibo",
+    "ADMIN_NEIGHBORS_LIST_PAGE": "Neighbors List | Neibo",
     "ADMIN_SERVICE_PROVIDERS_LIST_PAGE": "Service Providers List | Neibo",
 
-    "AMENITIES_CHOOSE_TIME_PAGE": "Choose Time for '{{amenityName}}' Reservation | Neibo",
+    "AMENITIES_CHOOSE_TIME_PAGE": "Choose Time for {{amenityName}} Reservation | Neibo",
     "AMENITIES_RESERVATIONS_PAGE": "Amenities Reservations | Neibo",
 
     "LOGIN_PAGE": "Login | Neibo",
 
     "CALENDAR_PAGE": "Calendar | Neibo",
-    "CALENDAR_EVENT_PAGE": "{{eventName}} : Event Details | Neibo",
+    "CALENDAR_EVENT_PAGE": "{{eventName}}: Event Details | Neibo",
 
     "FEED_CREATE_POST_PAGE": "Create Post | Neibo",
     "FEED_PAGE": "Feed | Neibo",
     "ANNOUNCEMENTS_PAGE": "Announcements | Neibo",
     "COMPLAINTS_PAGE": "Complaints | Neibo",
-    "FEED_POST_DETAIL_PAGE": "{{postTitle}} : Post Details | Neibo",
+    "FEED_POST_DETAIL_PAGE": "{{postTitle}}: Post Details | Neibo",
 
     "INFORMATION_PAGE": "Information | Neibo",
 
     "MARKETPLACE_DASHBOARD_BUYER_PAGE": "Marketplace Dashboard (Buyer) | Neibo",
     "MARKETPLACE_DASHBOARD_SELLER_PAGE": "Marketplace Dashboard (Seller) | Neibo",
     "MARKETPLACE_PAGE": "Marketplace | Neibo",
-    "MARKETPLACE_PRODUCT_DETAIL_PAGE": "{{productName}} : Product Details | Neibo",
-    "MARKETPLACE_PRODUCT_EDIT_PAGE": "{{productName}} : Edit Product | Neibo",
-    "MARKETPLACE_PRODUCT_REQUESTS_PAGE": "{{productName}} : Product Requests | Neibo",
+    "MARKETPLACE_PRODUCT_DETAIL_PAGE": "{{productName}}: Product Details | Neibo",
+    "MARKETPLACE_PRODUCT_EDIT_PAGE": "{{productName}}: Edit Product | Neibo",
+    "MARKETPLACE_PRODUCT_REQUESTS_PAGE": "{{productName}}: Product Requests | Neibo",
     "MARKETPLACE_PRODUCT_SELL_PAGE": "Sell Product | Neibo",
 
     "NOT_FOUND_PAGE": "Page Not Found | Neibo",
-    "REJECTED_PAGE": "Access Rejected | Neibo",
+    "REJECTED_PAGE": "Access Denied | Neibo",
 
     "SERVICE_PROVIDERS_CREATE_POST_PAGE": "Create Post | Neibo",
-    "SERVICE_PROVIDERS_DETAIL_PAGE": "{{businessName}} : Service Provider Details | Neibo",
+    "SERVICE_PROVIDERS_DETAIL_PAGE": "{{businessName}}: Service Provider Details | Neibo",
     "SERVICE_PROVIDERS_JOIN_NEIGHBORHOODS_PAGE": "Join Neighborhoods | Neibo",
     "SERVICE_PROVIDERS_PAGE": "Service Providers | Neibo",
 

@@ -29,18 +29,7 @@ export class NavbarComponent implements OnInit {
     private userService: UserService,
     private linkService: HateoasLinksService,
     private translate: TranslateService,
-  ) {
-    // Precompute language links
-    this.englishLanguageLink = this.linkService.getLink(
-      LinkKey.ENGLISH_LANGUAGE,
-    );
-    this.spanishLanguageLink = this.linkService.getLink(
-      LinkKey.SPANISH_LANGUAGE,
-    );
-
-    // Set default language
-    this.translate.setDefaultLang('en');
-  }
+  ) {}
 
   ngOnInit(): void {
     this.userSessionService.getCurrentNeighborhood().subscribe({
@@ -53,14 +42,10 @@ export class NavbarComponent implements OnInit {
       },
     });
 
-    this.userSessionService.getCurrentUser().subscribe({
-      next: user => {
-        this.currentUser = user;
-      },
-      error: () => {
-        console.error('Error fetching user information');
-      },
-    });
+    this.currentUser = this.userSessionService.getCurrentUserValue();
+    if (!this.currentUser) {
+      console.error('Error fetching user information');
+    }
   }
 
   routeBasedOnRole() {

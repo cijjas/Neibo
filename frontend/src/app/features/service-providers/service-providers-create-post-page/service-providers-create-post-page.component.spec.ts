@@ -38,6 +38,7 @@ const imageServiceSpy = jasmine.createSpyObj('ImageService', ['createImage']);
 const toastServiceSpy = jasmine.createSpyObj('ToastService', ['showToast']);
 const userSessionSpy = jasmine.createSpyObj('UserSessionService', [
   'getCurrentUser',
+  'getCurrentUserValue',
 ]);
 const hateoasLinksServiceSpy = jasmine.createSpyObj('HateoasLinksService', [
   'getLink',
@@ -59,7 +60,10 @@ describe('ServiceProvidersCreatePostComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ServiceProvidersCreatePostPageComponent, FakeTranslatePipe],
+      declarations: [
+        ServiceProvidersCreatePostPageComponent,
+        FakeTranslatePipe,
+      ],
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
@@ -150,7 +154,7 @@ describe('ServiceProvidersCreatePostComponent', () => {
       'success',
     );
     expect(routerSpy.navigate).toHaveBeenCalledWith(
-      ['/services', 'profiles', 'worker123'],
+      ['/services', 'my-profile', 'worker123'],
       { queryParams: { tab: 'posts' } },
     );
   }));

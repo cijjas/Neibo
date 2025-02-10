@@ -57,6 +57,7 @@ describe('FeedCreatePostPageComponent', () => {
   ]);
   const userSessionSpy = jasmine.createSpyObj('UserSessionService', [
     'getCurrentRole',
+    'getCurrentUserValue',
     'getCurrentUser',
   ]);
   const toastServiceSpy = jasmine.createSpyObj('ToastService', ['showToast']);

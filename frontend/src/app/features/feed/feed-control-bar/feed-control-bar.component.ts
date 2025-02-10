@@ -47,9 +47,7 @@ export class FeedControlBarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userSessionService.getCurrentUser().subscribe((user: User) => {
-      this.currentUser = user;
-    });
+    this.currentUser = this.userSessionService.getCurrentUserValue();
 
     this.isNotAdmin =
       this.userSessionService.getCurrentRole() != Role.ADMINISTRATOR;

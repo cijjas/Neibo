@@ -42,6 +42,7 @@ describe('UserProfileWidgetComponent - Toggles and Image', () => {
 
   const userSessionServiceSpy = jasmine.createSpyObj('UserSessionService', [
     'getCurrentUser',
+    'getCurrentUserValue',
     'getCurrentRole',
   ]);
   userSessionServiceSpy.getCurrentUser.and.returnValue(of(dummyUser));

@@ -63,9 +63,11 @@ describe('FeedPostPreviewComponent', () => {
   ]);
   const userSessionSpy = jasmine.createSpyObj('UserSessionService', [
     'getCurrentUser',
+    'getCurrentUserValue',
   ]);
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-
+  userSessionSpy.getCurrentUser.and.returnValue(of({ self: 'user_self' }));
+  userSessionSpy.getCurrentUserValue.and.returnValue({ self: 'user_self' });
   // Provide a route with some default query params.
   const fakeActivatedRoute = {
     snapshot: { queryParams: { inChannel: 'channel_url' } },

@@ -278,7 +278,7 @@
     "_WORKERUSEREMAIL_": "{{ worker.user.email }}",
     "IDENTIFICATION": "Identificación:",
     "_WORKERUSERIDENTIFICATION_": "{{ worker.user.identification }}",
-    "PHONENUMBER": "Número de Teléfono:",
+    "PHONE_NUMBER": "Número de Teléfono:",
     "_WORKERPHONENUMBER_": "{{ worker.phoneNumber }}",
     "BUSINESS_NAME": "Nombre del negocio:",
     "_WORKERBUSINESSNAME_": "{{ worker.businessName }}",
@@ -709,6 +709,11 @@
     "ERROR_LOADING_POSTS": "Error al cargar las publicaciones:"
   },
   "FEED-POST-CONTENT": {
+    "CHANNEL": {
+      "ANNOUNCEMENTS": "Anuncios",
+      "COMPLAINTS": "Quejas",
+      "FEED": "Foro"
+    },
     "_POSTCHANNEL_": "{{ post.channel }}",
     "_POSTED_BY": "- Publicado por",
     "_POSTAUTHORNAME_": "{{ post.author.name }}",
@@ -782,7 +787,7 @@
     "MERGE": "fusionar"
   },
   "MARKETPLACE-CONTROL-BAR": {
-    "MARKETPLACE": "Mercado",
+    "MARKETPLACE": "Marketplace",
     "BUYER_DASHBOARD": "Panel del Comprador",
     "SELLER_DASHBOARD": "Panel del Vendedor",
     "ALL": "Todos",
@@ -1060,7 +1065,7 @@
     "ERROR_LOADING_WORKERS": "Error al cargar trabajadores:"
   },
   "SERVICE-PROVIDERS-POST-PREVIEW": {
-    "POSTED": "Posteado"
+    "POSTED": "Publicado"
   },
   "SERVICE-PROVIDERS-PREVIEW": {
     "_PROFESSIONDISPLAYNAME_": "{{ profession.displayName }}",
@@ -1118,7 +1123,7 @@
     "LOGOUT": "Cerrar sesión",
     "USERUSERPROFILEPAGE": "user-user-profile-page",
     "DEFAULT": "predeterminado",
-    "MARKETPLACE": "mercado",
+    "MARKETPLACE": "marketplace",
     "SERVICES": "servicios",
     "ADMIN": "admin",
     "DARKMODE": "modo-oscuro",
@@ -1146,10 +1151,10 @@
       "PROFILE": "Perfil",
       "NEIGHBORHOODS": "Vecindarios",
       "SERVICES": "Servicios",
-      "MARKETPLACE": "Mercado",
+      "MARKETPLACE": "Marketplace",
       "RESERVATIONS": "Reservas",
       "INFORMATION": "Información",
-      "FEED": "Muro",
+      "FEED": "Publicaciones",
       "ANNOUNCEMENTS": "Anuncios",
       "COMPLAINTS": "Quejas",
       "AMENITIES": "Amenidades"
@@ -1184,54 +1189,54 @@
   },
 
   "TITLES": {
-    "ADMIN_AMENITIES_PAGE": "Admin Amenities | Neibo",
-    "ADMIN_AMENITY_CREATE_PAGE": "Create Amenity | Neibo",
-    "ADMIN_AMENITY_EDIT_PAGE": "Editing '{{amenityName}}' | Neibo",
-    "ADMIN_CREATE_ANNOUNCEMENT_PAGE": "Create Announcement | Neibo",
-    "ADMIN_CREATE_EVENT_PAGE": "Create Event | Neibo",
-    "ADMIN_INFORMATION_PAGE": "Admin Information | Neibo",
-    "ADMIN_NEIGHBORS_REQUESTS_PAGE": "Neighbor Requests | Neibo",
-    "ADMIN_SERVICE_PROVIDERS_REQUESTS_PAGE": "Service Providers Requests | Neibo",
-    "ADMIN_NEIGHBORS_LIST_PAGE": "Neighbor List | Neibo",
-    "ADMIN_SERVICE_PROVIDERS_LIST_PAGE": "Service Providers List | Neibo",
+    "ADMIN_AMENITIES_PAGE": "Administración de Amenidades | Neibo",
+    "ADMIN_AMENITY_CREATE_PAGE": "Crear Amenidad | Neibo",
+    "ADMIN_AMENITY_EDIT_PAGE": "Editando {{amenityName}} | Neibo",
+    "ADMIN_CREATE_ANNOUNCEMENT_PAGE": "Crear Anuncio | Neibo",
+    "ADMIN_CREATE_EVENT_PAGE": "Crear Evento | Neibo",
+    "ADMIN_INFORMATION_PAGE": "Información Administrativa | Neibo",
+    "ADMIN_NEIGHBORS_REQUESTS_PAGE": "Solicitudes de Vecinos | Neibo",
+    "ADMIN_SERVICE_PROVIDERS_REQUESTS_PAGE": "Solicitudes de Prestadores de Servicios | Neibo",
+    "ADMIN_NEIGHBORS_LIST_PAGE": "Lista de Vecinos | Neibo",
+    "ADMIN_SERVICE_PROVIDERS_LIST_PAGE": "Lista de Prestadores de Servicios | Neibo",
 
-    "AMENITIES_CHOOSE_TIME_PAGE": "Choose Time for '{{amenityName}}' Reservation | Neibo",
-    "AMENITIES_RESERVATIONS_PAGE": "Amenities Reservations | Neibo",
+    "AMENITIES_CHOOSE_TIME_PAGE": "Elegir Horario para la Reserva de {{amenityName}} | Neibo",
+    "AMENITIES_RESERVATIONS_PAGE": "Reservas de Amenidades | Neibo",
 
-    "LOGIN_PAGE": "Login | Neibo",
+    "LOGIN_PAGE": "Iniciar Sesión | Neibo",
 
-    "CALENDAR_PAGE": "Calendar | Neibo",
-    "CALENDAR_EVENT_PAGE": "{{eventName}} : Event Details | Neibo",
+    "CALENDAR_PAGE": "Calendario | Neibo",
+    "CALENDAR_EVENT_PAGE": "{{eventName}}: Detalles del Evento | Neibo",
 
-    "FEED_CREATE_POST_PAGE": "Create Post | Neibo",
-    "FEED_PAGE": "Feed | Neibo",
-    "ANNOUNCEMENTS_PAGE": "Announcements | Neibo",
-    "COMPLAINTS_PAGE": "Complaints | Neibo",
-    "FEED_POST_DETAIL_PAGE": "{{postTitle}} : Post Details | Neibo",
+    "FEED_CREATE_POST_PAGE": "Crear Publicación | Neibo",
+    "FEED_PAGE": "Publicaciones | Neibo",
+    "ANNOUNCEMENTS_PAGE": "Anuncios | Neibo",
+    "COMPLAINTS_PAGE": "Reclamos | Neibo",
+    "FEED_POST_DETAIL_PAGE": "{{postTitle}}: Detalles de la Publicación | Neibo",
 
-    "INFORMATION_PAGE": "Information | Neibo",
+    "INFORMATION_PAGE": "Información | Neibo",
 
-    "MARKETPLACE_DASHBOARD_BUYER_PAGE": "Marketplace Dashboard (Buyer) | Neibo",
-    "MARKETPLACE_DASHBOARD_SELLER_PAGE": "Marketplace Dashboard (Seller) | Neibo",
+    "MARKETPLACE_DASHBOARD_BUYER_PAGE": "Panel de Marketplace (Comprador) | Neibo",
+    "MARKETPLACE_DASHBOARD_SELLER_PAGE": "Panel de Marketplace (Vendedor) | Neibo",
     "MARKETPLACE_PAGE": "Marketplace | Neibo",
-    "MARKETPLACE_PRODUCT_DETAIL_PAGE": "{{productName}} : Product Details | Neibo",
-    "MARKETPLACE_PRODUCT_EDIT_PAGE": "{{productName}} : Edit Product | Neibo",
-    "MARKETPLACE_PRODUCT_REQUESTS_PAGE": "{{productName}} : Product Requests | Neibo",
-    "MARKETPLACE_PRODUCT_SELL_PAGE": "Sell Product | Neibo",
+    "MARKETPLACE_PRODUCT_DETAIL_PAGE": "{{productName}}: Detalles del Producto | Neibo",
+    "MARKETPLACE_PRODUCT_EDIT_PAGE": "{{productName}}: Editar Producto | Neibo",
+    "MARKETPLACE_PRODUCT_REQUESTS_PAGE": "{{productName}}: Solicitudes del Producto | Neibo",
+    "MARKETPLACE_PRODUCT_SELL_PAGE": "Vender Producto | Neibo",
 
-    "NOT_FOUND_PAGE": "Page Not Found | Neibo",
-    "REJECTED_PAGE": "Access Rejected | Neibo",
+    "NOT_FOUND_PAGE": "Página No Encontrada | Neibo",
+    "REJECTED_PAGE": "Acceso Denegado | Neibo",
 
-    "SERVICE_PROVIDERS_CREATE_POST_PAGE": "Create Post | Neibo",
-    "SERVICE_PROVIDERS_DETAIL_PAGE": "{{businessName}} : Service Provider Details | Neibo",
-    "SERVICE_PROVIDERS_JOIN_NEIGHBORHOODS_PAGE": "Join Neighborhoods | Neibo",
-    "SERVICE_PROVIDERS_PAGE": "Service Providers | Neibo",
+    "SERVICE_PROVIDERS_CREATE_POST_PAGE": "Crear Publicación | Neibo",
+    "SERVICE_PROVIDERS_DETAIL_PAGE": "{{businessName}}: Detalles del Prestador de Servicios | Neibo",
+    "SERVICE_PROVIDERS_JOIN_NEIGHBORHOODS_PAGE": "Unirse a Barrios | Neibo",
+    "SERVICE_PROVIDERS_PAGE": "Prestadores de Servicios | Neibo",
 
-    "SUPER_ADMIN_PAGE": "Super Admin | Neibo",
+    "SUPER_ADMIN_PAGE": "Super Administrador | Neibo",
 
-    "UNVERIFIED_PAGE": "Unverified | Neibo",
+    "UNVERIFIED_PAGE": "No Verificado | Neibo",
 
-    "USER_PROFILE_PAGE": "Profile | Neibo"
+    "USER_PROFILE_PAGE": "Perfil | Neibo"
   },
   "SUPER-ADMIN-PAGE": {
     "WELCOME": "¡Bienvenido, Super Administrador!",

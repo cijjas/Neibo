@@ -273,7 +273,6 @@ export function mapUser(http: HttpClient, userDto: UserDto): Observable<User> {
         image: userDto._links.userImage,
         identification: userDto.identification,
         creationDate: userDto.creationDate,
-        userSince: formatDate(userDto.creationDate, 'dd MMM yyyy'),
         language: language._links.self,
         userRole: userRole.role,
         userRoleDisplay: roleDisplayMapping[roleEnum] || 'Unknown Role',

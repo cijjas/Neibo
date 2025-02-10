@@ -62,6 +62,10 @@ export class UserSessionService {
     return this.currentUserSubject.asObservable();
   }
 
+  getCurrentUserValue(): User | null {
+    return this.currentUserSubject.value;
+  }
+
   getCurrentNeighborhood(): Observable<Neighborhood | null> {
     return this.neighborhoodSubject.asObservable();
   }

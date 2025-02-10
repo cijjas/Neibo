@@ -49,9 +49,7 @@ export class WorkerService {
     totalPages: number;
     currentPage: number;
   }> {
-    let workersUrl: string = this.linkService.getLink(
-      LinkKey.NEIGHBORHOOD_WORKERS,
-    );
+    let workersUrl: string = this.linkService.getLink(LinkKey.WORKERS);
 
     let params = new HttpParams();
 

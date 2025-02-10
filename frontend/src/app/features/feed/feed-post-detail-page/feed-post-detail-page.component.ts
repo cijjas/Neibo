@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
-import { Comment, Post, CommentService, LikeService } from '@shared/index';
-import { UserSessionService } from '@core/index';
+import { Post } from '@shared/index';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';

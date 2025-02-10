@@ -14,7 +14,8 @@ import { environment } from '../../../../environments/environment';
 import { FormControl } from '@angular/forms';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 import { AppTitleKeys } from '@shared/constants/app-titles';
-
+import { formatDate } from 'date-fns';
+import { enUS, es } from 'date-fns/locale';
 @Component({
   selector: 'user-user-profile-page',
   templateUrl: './user-profile-page.component.html',
@@ -28,6 +29,9 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
   currentUserRole: Role;
   private subscriptions = new Subscription();
   environment = environment;
+  localStorage = localStorage;
+  es = es;
+  enUS = enUS;
 
   profileImageControl: FormControl = new FormControl(
     null,
@@ -158,5 +162,12 @@ export class UserProfilePageComponent implements OnInit, OnDestroy {
       this.translate.instant('USER-PROFILE-PAGE.SUCCESSFULLY_LOGGED_OUT'),
       'success',
     );
+  }
+
+  formatUserCreationDate(date: Date | string | number): string {
+    const language = localStorage.getItem('language');
+    const locale = language === 'es' ? es : enUS;
+
+    return formatDate(date, 'dd MMM yyyy', { locale });
   }
 }

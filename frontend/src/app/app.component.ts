@@ -17,12 +17,15 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     @Inject(DOCUMENT) private document: Document,
+    private translate: TranslateService,
   ) {
     this.channel = new BroadcastChannel('auth_channel');
     this.setFavicon(environment.deployUrl + 'favicon.ico');
   }
 
   ngOnInit(): void {
+    this.translate.getTranslation(localStorage.getItem('language')).subscribe();
+
     // Actually use the default language
     this.channel.onmessage = event => {
       if (event.data.type === 'login') {

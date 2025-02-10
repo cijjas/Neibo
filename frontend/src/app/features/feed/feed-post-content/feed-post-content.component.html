@@ -5,7 +5,10 @@
       <div class="f-r-sb-c">
         <div>
           <span style="font-size: 14px" class="font-weight-bold">
-            {{ post.channel }}
+            {{
+              'FEED-POST-CONTENT.CHANNEL.' + post.channel.toUpperCase()
+                | translate
+            }}
           </span>
           <span style="font-size: 12px; font-weight: normal" class="ms-1">
             {{ 'FEED-POST-CONTENT._POSTED_BY' | translate }}

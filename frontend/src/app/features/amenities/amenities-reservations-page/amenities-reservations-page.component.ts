@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HateoasLinksService } from '@core/index';
 import {
@@ -57,6 +57,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
     private shiftService: ShiftService,
     private translate: TranslateService,
     private titleService: Title,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -123,6 +124,7 @@ export class AmenitiesReservationsPageComponent implements OnInit {
           this.currentPage = response.currentPage;
           this.totalPages = response.totalPages;
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: err => {
           console.error('Error loading amenities:', err);

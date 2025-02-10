@@ -147,7 +147,7 @@ describe('LoginDialogComponent', () => {
     expect(component.loading).toBeFalse();
     expect(routerSpy.navigate).toHaveBeenCalledWith([
       'services',
-      'profile',
+      'my-profile',
       'worker_url',
     ]);
     expect(component.closeLoginDialog).toHaveBeenCalled();

@@ -8,7 +8,6 @@ export interface User {
   phoneNumber: string;
   identification: number;
   creationDate: Date;
-  userSince?: string;
   language: string;
   userRole: string;
   userRoleEnum: Role;
