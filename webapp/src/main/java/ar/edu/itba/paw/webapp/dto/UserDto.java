@@ -56,7 +56,7 @@ public class UserDto {
     private String userRole;
 
     @Size(max = 255)
-    @Pattern(regexp = "^[0-9]*")
+    @Pattern(regexp = "^[0-9+\\- ]*$")
     private String phoneNumber;
 
     @Pattern(regexp = URIValidator.IMAGE_URI_REGEX)

@@ -203,19 +203,6 @@ public class Product {
         this.department = department;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product)) return false;
-        Product product = (Product) o;
-        return Objects.equals(productId, product.productId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(productId, name, description, price, used, remainingUnits, primaryPicture, secondaryPicture, tertiaryPicture, department);
-    }
-
     public static class Builder {
         private Long productId;
         private String name;
@@ -292,6 +279,19 @@ public class Product {
 
         public Product build() {
             return new Product(this);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Builder)) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(productId, builder.productId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(productId);
         }
     }
 }

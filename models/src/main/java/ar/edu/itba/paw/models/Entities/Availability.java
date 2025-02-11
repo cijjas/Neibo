@@ -110,7 +110,7 @@ public class Availability {
 
         @Override
         public int hashCode() {
-            return Objects.hash(amenityAvailabilityId);
+            return Objects.hashCode(amenityAvailabilityId);
         }
     }
 }

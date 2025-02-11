@@ -82,14 +82,14 @@ public class Amenity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Builder)) return false;
-        Builder builder = (Builder) o;
-        return Objects.equals(amenityId, builder.amenityId);
+        if (!(o instanceof Amenity)) return false;
+        Amenity amenity = (Amenity) o;
+        return Objects.equals(amenityId, amenity.amenityId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amenityId, name, description, availableShifts);
+        return Objects.hashCode(amenityId);
     }
 
     public static class Builder {

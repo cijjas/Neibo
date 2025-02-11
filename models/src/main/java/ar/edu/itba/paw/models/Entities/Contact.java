@@ -86,7 +86,7 @@ public class Contact {
 
     @Override
     public int hashCode() {
-        return Objects.hash(contactId, contactName, contactAddress, contactPhone);
+        return Objects.hashCode(contactId);
     }
 
     public static class Builder {
