@@ -270,6 +270,33 @@ public class AccessControlHelper {
         return optionalReview.get().getUser().getUserId() == authHelper.getRequestingUserId();
     }
 
+
+    // ------------------------------------------------ SHIFTS ---------------------------------------------------------
+
+    public boolean canListShifts(String amenityURI) {
+        LOGGER.info("Verifying List Shifts Accessibility");
+
+        // Structure Validation
+        if (!URIValidator.validateOptionalURI(amenityURI, Endpoint.AMENITIES))
+            return true; // Constraints handle the error
+
+        // Entity Existence
+        Optional<Amenity> optionalAmenity = Optional.empty();
+        if (amenityURI != null) {
+            TwoId amenityTwoId = extractTwoId(amenityURI);
+            optionalAmenity = as.findAmenity(amenityTwoId.getFirstId(), amenityTwoId.getSecondId());
+            if (!optionalAmenity.isPresent())
+                return false;
+        }
+
+        // Reference Authentication
+        if (authHelper.isAnonymous())
+            return false;
+        if (authHelper.isSuperAdministrator())
+            return true;
+        return !optionalAmenity.isPresent() || optionalAmenity.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId();
+    }
+
     // -------------------------------------------------- USERS --------------------------------------------------------
 
     public boolean canListUsers(String neighborhoodURI, String userRoleURI) {
@@ -1342,28 +1369,6 @@ public class AccessControlHelper {
             return optionalImage.isPresent();
         }
         return true;
-    }
-
-    // ------------------------------------------------ TAGS -----------------------------------------------------------
-
-    public boolean canListShifts(String amenityURI) {
-        LOGGER.info("Verifying List Shifts Accessibility");
-
-        // Structure Validation
-        if (!URIValidator.validateOptionalURI(amenityURI, Endpoint.AMENITIES))
-            return true; // Constraints handle the error
-
-        // Entity Existence
-        Optional<Amenity> optionalAmenity = Optional.empty();
-        if (amenityURI != null) {
-            TwoId amenityTwoId = extractTwoId(amenityURI);
-            optionalAmenity = as.findAmenity(amenityTwoId.getFirstId(), amenityTwoId.getSecondId());
-            if (!optionalAmenity.isPresent())
-                return false;
-        }
-
-        // Reference Authentication
-        return !optionalAmenity.isPresent() || optionalAmenity.get().getNeighborhood().getNeighborhoodId() == authHelper.getRequestingUserNeighborhoodId();
     }
 
     // ------------------------------------------------ TAGS -----------------------------------------------------------
