@@ -24,7 +24,7 @@
       </div>
       <div class="col-md-11 pt-3 pb-3 pe-3 col-md-push-11">
         <a
-          [routerLink]="['/posts', encodeURI(post.self)]"
+          [routerLink]="['/posts', encodeUrlSafeBase64(post.self)]"
           [queryParams]="{ inChannel: this.inChannel }"
           style="text-decoration: none"
         >

@@ -10,6 +10,7 @@ import {
 import { LikeService, TagService, Post, Tag, LinkKey } from '@shared/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { enUS, es } from 'date-fns/locale';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-feed-post-preview',
@@ -27,7 +28,7 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
   hasLiked: boolean = false;
   likesUrl: string | undefined;
   inChannel: string;
-  encodeURI = encodeURI;
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
 
   constructor(
     private linkStorage: HateoasLinksService,

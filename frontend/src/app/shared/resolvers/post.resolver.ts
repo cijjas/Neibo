@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 import { Post } from '@shared/models';
 import { PostService } from '@shared/services/domain/post.service';
+import { decodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 import { catchError, EMPTY } from 'rxjs';
 
 export const postResolver: ResolveFn<Post> = (
@@ -26,13 +27,12 @@ export const postResolver: ResolveFn<Post> = (
   // Decode it
   let postUrl: string;
   try {
-    postUrl = decodeURI(encodedUrl);
+    postUrl = decodeUrlSafeBase64(encodedUrl);
   } catch (error) {
     console.error('Error decoding URL:', error);
     router.navigate(['/not-found']);
     return EMPTY;
   }
-  console.log('hola');
 
   // Use postUrl to get the post from your API.
   return postService.getPost(postUrl).pipe(
