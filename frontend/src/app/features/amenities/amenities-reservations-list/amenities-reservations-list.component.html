@@ -5,10 +5,11 @@
     </h3>
 
     <!-- Loading Indicator -->
-    <div *ngIf="isLoading" class="f-c-c-c align-items-center">
-      <span class="w-100 mb-2">{{
+    <div *ngIf="isLoading" class="f-c-c-c align-items-center w-100 mb-3">
+      <span class="mb-2">{{
         'AMENITIES-RESERVATIONS-LIST.LOADING_RESERVATIONS' | translate
       }}</span>
+      <span class="loader w-100"> </span>
     </div>
 
     <!-- Error Message -->
@@ -29,7 +30,7 @@
       class="f-c-c-c align-items-center mb-4"
       style="text-align: center"
     >
-      <span class="w-100 mb-2 c-light-text">
+      <span class="w-100 mb-1 c-light-text bold">
         {{ 'AMENITIES-RESERVATIONS-LIST.YOU_HAVE_NO_RESERVATIONS' | translate }}
       </span>
       <span class="w-100 c-light-text">

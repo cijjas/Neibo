@@ -65,8 +65,9 @@
       <div class="cool-table w-100 p-4">
         <table>
           <tr>
-            <th *ngFor="let day of uniqueDays">
-              {{ getAbbreviatedDay(day) | translate }}
+            <th>{{ 'ADMIN-AMENITY-EDIT-PAGE.ROW' | translate }}</th>
+            <th *ngFor="let d of uniqueDays">
+              {{ getAbbreviatedDay(d) | translate }}
             </th>
           </tr>
           <tr *ngFor="let time of uniqueTimes; let rowIndex = index">

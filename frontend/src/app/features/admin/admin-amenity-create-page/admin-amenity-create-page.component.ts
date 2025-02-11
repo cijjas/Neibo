@@ -28,16 +28,16 @@ export class AdminAmenityCreatePageComponent implements OnInit {
   selectedShifts: Shift[] = [];
 
   private dayAbbreviations: Record<string, string> = {
-    Monday: 'Mon',
-    Tuesday: 'Tue',
-    Wednesday: 'Wed',
-    Thursday: 'Thu',
-    Friday: 'Fri',
-    Saturday: 'Sat',
-    Sunday: 'Sun',
+    Monday: this.translate.instant('ADMIN-AMENITIES-PAGE.MON'),
+    Tuesday: this.translate.instant('ADMIN-AMENITIES-PAGE.TUE'),
+    Wednesday: this.translate.instant('ADMIN-AMENITIES-PAGE.WED'),
+    Thursday: this.translate.instant('ADMIN-AMENITIES-PAGE.THU'),
+    Friday: this.translate.instant('ADMIN-AMENITIES-PAGE.FRI'),
+    Saturday: this.translate.instant('ADMIN-AMENITIES-PAGE.SAT'),
+    Sunday: this.translate.instant('ADMIN-AMENITIES-PAGE.SUN'),
   };
   getAbbreviatedDay(day: string): string {
-    return this.dayAbbreviations[day] || day; // Fallback to original name if not found
+    return this.dayAbbreviations[day] || day;
   }
 
   constructor(

@@ -59,7 +59,6 @@
           <table class="table-striped w-100">
             <tr>
               <th>{{ 'ADMIN-AMENITIES-PAGE.HOURS' | translate }}</th>
-              <!-- Use the abbreviations if you want them: getAbbreviatedDay(d) -->
               <th *ngFor="let d of uniqueDays">
                 {{ getAbbreviatedDay(d) | translate }}
               </th>
