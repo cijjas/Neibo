@@ -67,9 +67,12 @@
 
         <!-- Errors and Submit Button -->
         <div class="centered-column">
-          <small class="form-error centered" *ngIf="loginFailed">{{
-            'LOGIN-DIALOG.INVALID_EMAIL_OR_PASSWORD' | translate
-          }}</small>
+          <small
+            class="form-error"
+            style="display: block; text-align: center"
+            *ngIf="loginFailed"
+            >{{ 'LOGIN-DIALOG.INVALID_EMAIL_OR_PASSWORD' | translate }}</small
+          >
           <button
             type="submit"
             class="action-button font-weight-bolder"

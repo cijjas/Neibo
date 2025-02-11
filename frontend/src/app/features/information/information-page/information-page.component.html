@@ -5,16 +5,14 @@
     </div>
 
     <div class="column-middle">
-      <div
-        class="cool-static-container m-b-20"
-        style="word-wrap: break-word"
-        aria-hidden="true"
-      >
-        <h2 class="mb-3">{{ "INFORMATION-PAGE.CONTACT_INFORMATION" | translate }}</h2>
+      <div class="cool-static-container m-b-20" style="word-wrap: break-word">
+        <h2 class="mb-3">
+          {{ 'INFORMATION-PAGE.CONTACT_INFORMATION' | translate }}
+        </h2>
         <div *ngIf="contacts.length === 0; else contactTable">
           <div class="no-posts-found">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{ "INFORMATION-PAGE.INFORMATION_NOT_FOUND" | translate }}
+            {{ 'INFORMATION-PAGE.INFORMATION_NOT_FOUND' | translate }}
           </div>
         </div>
         <ng-template #contactTable>
@@ -23,9 +21,9 @@
           >
             <table class="table-striped w-100">
               <tr>
-                <th class="day">{{ "INFORMATION-PAGE.NAME" | translate }}</th>
-                <th>{{ "INFORMATION-PAGE.ADDRESS" | translate }}</th>
-                <th>{{ "INFORMATION-PAGE.PHONE_NUMBER" | translate }}</th>
+                <th class="day">{{ 'INFORMATION-PAGE.NAME' | translate }}</th>
+                <th>{{ 'INFORMATION-PAGE.ADDRESS' | translate }}</th>
+                <th>{{ 'INFORMATION-PAGE.PHONE_NUMBER' | translate }}</th>
               </tr>
               <tr *ngFor="let contact of contacts">
                 <td class="day">{{ contact.name }}</td>
@@ -53,7 +51,6 @@
         *ngFor="let resource of resources"
         class="cool-static-container m-b-20"
         style="word-wrap: break-word"
-        aria-hidden="true"
       >
         <div
           class="d-flex flex-column justify-content-center align-items-center w-100"

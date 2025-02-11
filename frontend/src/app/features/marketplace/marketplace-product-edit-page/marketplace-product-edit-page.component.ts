@@ -169,11 +169,11 @@ export class MarketplaceProductEditPageComponent implements OnInit {
     }
   }
 
-  formatCurrency(blur?: boolean): void {
+  formatCurrency(): void {
     let val = this.listingForm.get('price')?.value || '';
     if (!val) return;
 
-    val = val.replace(/[^0-9.]/g, '');
+    val = val.replace(/[^\d.]/g, '');
 
     let floatVal = parseFloat(val);
     if (isNaN(floatVal)) {

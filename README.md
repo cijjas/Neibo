@@ -78,7 +78,7 @@ A community-driven marketplace where residents can buy, sell, and trade goods wi
 
 ## How to Run
 1. Clone Project
-2. Choose Branch (Front has the RESTful HATEOAS API with SPA Client)
+2. Choose Branch 'api-spa'
 3. Run `maven clean package`
 4. Run `docker compose up`
 

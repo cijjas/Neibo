@@ -8,7 +8,7 @@
     >
       <i class="fa-solid fa-user-pen ml-1"></i>
 
-      {{ "SERVICE-PROVIDERS-CONTENT.EDIT_PROFILE" | translate }}
+      {{ 'SERVICE-PROVIDERS-CONTENT.EDIT_PROFILE' | translate }}
     </button>
     <div class="card-header">
       <img
@@ -38,7 +38,7 @@
               (click)="setProfession(profession)"
               title="Click to learn more"
             >
-              {{ profession.displayName }}
+              {{ 'TAGS-FILTER-WIDGET.PROFESSIONS.' + profession.name }}
             </span>
           </ng-container>
         </div>
@@ -50,7 +50,6 @@
         <p class="c-light-text mr-3 ml-3" style="text-align: center">
           {{ worker?.bio }}
         </p>
-
       </div>
     </div>
     <div class="card-footer m-3">
@@ -58,19 +57,25 @@
         <div class="c-services">
           {{
             averageRating && averageRating > 0
-              ? (averageRating | number : "1.2-2")
-              : "--"
+              ? (averageRating | number : '1.2-2')
+              : '--'
           }}
         </div>
-        <div class="c-light-text">{{ "SERVICE-PROVIDERS-CONTENT.RATING" | translate }}</div>
+        <div class="c-light-text">
+          {{ 'SERVICE-PROVIDERS-CONTENT.RATING' | translate }}
+        </div>
       </div>
       <div class="inner">
         <div class="c-services">{{ reviewsCount || 0 }}</div>
-        <div class="c-light-text">{{ "SERVICE-PROVIDERS-CONTENT.REVIEWS" | translate }}</div>
+        <div class="c-light-text">
+          {{ 'SERVICE-PROVIDERS-CONTENT.REVIEWS' | translate }}
+        </div>
       </div>
       <div class="inner">
         <div class="c-services">{{ postCount || 0 }}</div>
-        <div class="c-light-text">{{ "SERVICE-PROVIDERS-CONTENT.POSTS" | translate }}</div>
+        <div class="c-light-text">
+          {{ 'SERVICE-PROVIDERS-CONTENT.POSTS' | translate }}
+        </div>
       </div>
     </div>
   </div>

@@ -23,14 +23,14 @@
 
               <section class="f-c-c-s">
                 <div class="info-item">
-                  <i class="fa fa-calendar me-2" aria-hidden="true"></i>
+                  <i class="fa fa-calendar me-2"></i>
                   <span class="info-label me-2">{{
                     'CALENDAR-EVENT-PAGE.DATE' | translate
                   }}</span>
                   <span class="info-value">{{ event?.eventDateDisplay }}</span>
                 </div>
                 <div class="info-item">
-                  <i class="fa fa-clock me-2" aria-hidden="true"></i>
+                  <i class="fa fa-clock me-2"></i>
                   <span class="info-label me-2">{{
                     'CALENDAR-EVENT-PAGE.TIME' | translate
                   }}</span>
@@ -44,7 +44,7 @@
                   }}</span>
                 </div>
                 <div class="info-item">
-                  <i class="fa fa-hourglass-half me-2" aria-hidden="true"></i>
+                  <i class="fa fa-hourglass-half me-2"></i>
                   <span class="info-label me-2">{{
                     'CALENDAR-EVENT-PAGE.DURATION' | translate
                   }}</span>
@@ -107,7 +107,7 @@
           <!-- Attendees List -->
           <ul *ngIf="attendees.length > 0" class="attendees-list">
             <li *ngFor="let attendee of attendees" class="attendee-item">
-              <i class="fa fa-user-circle" aria-hidden="true"></i>
+              <i class="fa fa-user-circle"></i>
               {{ attendee.user.name }} {{ attendee.user.surname }}
             </li>
           </ul>

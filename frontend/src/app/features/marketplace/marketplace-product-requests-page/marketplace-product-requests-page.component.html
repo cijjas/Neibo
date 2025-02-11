@@ -38,7 +38,8 @@
           </div>
           <div class="f-r-c-c g-0">
             <span class="price font-size-20 font-weight-normal">
-              {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.IN_STOCK" | translate }}: {{ product?.stock }}
+              {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.IN_STOCK' | translate }}:
+              {{ product?.stock }}
             </span>
           </div>
         </div>
@@ -47,7 +48,10 @@
 
         <div class="f-r-c-c w-100 pt-2 pb-2">
           <h1 class="font-weight-normal font-size-16">
-            {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.LIST_OF_INTERESTED_PEOPLE" | translate }}
+            {{
+              'MARKETPLACE-PRODUCT-REQUESTS-PAGE.LIST_OF_INTERESTED_PEOPLE'
+                | translate
+            }}
           </h1>
         </div>
 
@@ -56,7 +60,7 @@
           class="no-posts-found"
         >
           <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-          {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.NO_NEW_REQUESTS" | translate }}
+          {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.NO_NEW_REQUESTS' | translate }}
         </div>
 
         <div
@@ -71,30 +75,38 @@
               <div class="f-r-c-c">
                 <div class="f-c-s-s">
                   <div>
-                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUESTER" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUESTER' | translate
+                    }}
                     <span style="color: var(--lila)">
                       {{ request.requestingUser?.name }}
                     </span>
                   </div>
 
                   <div>
-                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.EMAIL" | translate }}
+                    {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.EMAIL' | translate }}
                     <span style="color: var(--lila)">
                       {{ request.requestingUser?.email }}
                     </span>
                   </div>
                   <div>
-                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PHONE_NUMBER" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-REQUESTS-PAGE.PHONE_NUMBER'
+                        | translate
+                    }}
                     <span style="color: var(--lila)">
                       {{ request.requestingUser?.phoneNumber }}
                     </span>
                   </div>
                   <div>
-                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUEST_DATE" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUEST_DATE'
+                        | translate
+                    }}
                     <span style="color: var(--lila)">
-                      {{ request.createdAt | date : "dd MMM yyyy" }}
+                      {{ request.createdAt | date : 'dd MMM yyyy' }}
                       -
-                      {{ request.createdAt | date : "HH:mm" }}
+                      {{ request.createdAt | date : 'HH:mm' }}
                     </span>
                   </div>
                 </div>
@@ -110,7 +122,10 @@
                 "
                 class="cool-action-button rounded marketplace-button font-weight-normal"
               >
-              {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.RESPOND_TO_REQUEST" | translate }}
+                {{
+                  'MARKETPLACE-PRODUCT-REQUESTS-PAGE.RESPOND_TO_REQUEST'
+                    | translate
+                }}
               </a>
             </div>
 
@@ -120,13 +135,15 @@
               <div class="f-r-c-c">
                 <div class="f-c-s-s">
                   <div>
-                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.AMOUNT" | translate }}
+                    {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.AMOUNT' | translate }}
                     <span style="color: var(--lila)">
                       {{ request.unitsRequested }}
                     </span>
                   </div>
                   <div>
-                    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.MESSAGE" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-REQUESTS-PAGE.MESSAGE' | translate
+                    }}
                     <span style="color: var(--lila)">
                       {{ request.message }}
                     </span>
@@ -225,13 +242,20 @@
           </svg>
         </div>
         <div class="inclined-dialog-text">
-          <h3 class="font-size-18 font-weight-bold">{{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PENDING_REQUEST" | translate }}</h3>
+          <h3 class="font-size-18 font-weight-bold">
+            {{
+              'MARKETPLACE-PRODUCT-REQUESTS-PAGE.PENDING_REQUEST' | translate
+            }}
+          </h3>
           <p class="font-weight-normal font-size-14">
-            {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.YOU_HAVE_A_PENDING_REQUEST_FOR" | translate }}
+            {{
+              'MARKETPLACE-PRODUCT-REQUESTS-PAGE.YOU_HAVE_A_PENDING_REQUEST_FOR'
+                | translate
+            }}
             <span class="font-weight-bold">{{ selectedUnitsRequested }}</span>
-            {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.UNITS_FROM" | translate }}
+            {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.UNITS_FROM' | translate }}
             <span class="font-weight-bold">{{ selectedRequesterName }}</span
-            >{{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PLEASE_CHOOSE" | translate }}
+            >{{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.PLEASE_CHOOSE' | translate }}
           </p>
         </div>
       </div>
@@ -245,17 +269,20 @@
         class="cool-button marketplace-button"
         [disabled]="product?.stock < selectedUnitsRequested"
       >
-        Confirm Sale
+        {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.CONFIRM_SALE' | translate }}
       </button>
       <button (click)="submitDeclineRequest()" class="cool-button red">
-        Decline
+        {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.DECLINE' | translate }}
       </button>
     </div>
     <div
       *ngIf="product?.stock < selectedUnitsRequested"
       class="c-red mt-2 font-size-14"
     >
-    {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUESTED_QUANTITY_GREATER" | translate }}
+      {{
+        'MARKETPLACE-PRODUCT-REQUESTS-PAGE.REQUESTED_QUANTITY_GREATER'
+          | translate
+      }}
     </div>
   </div>
 </div>
@@ -267,7 +294,9 @@
 >
   <div class="cool-static-container small-size-container">
     <div style="font-weight: bold; font-size: 16px">
-      {{ "MARKETPLACE-PRODUCT-REQUESTS-PAGE.PROCESSING_THE_REQUEST" | translate }}
+      {{
+        'MARKETPLACE-PRODUCT-REQUESTS-PAGE.PROCESSING_THE_REQUEST' | translate
+      }}
     </div>
     <div class="loader marketplace" style="margin-top: 20px"></div>
   </div>

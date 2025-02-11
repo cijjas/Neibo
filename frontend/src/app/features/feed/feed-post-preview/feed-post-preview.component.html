@@ -24,7 +24,7 @@
       </div>
       <div class="col-md-11 pt-3 pb-3 pe-3 col-md-push-11">
         <a
-          [routerLink]="['/posts', post.self]"
+          [routerLink]="['/posts', encodeURI(post.self)]"
           [queryParams]="{ inChannel: this.inChannel }"
           style="text-decoration: none"
         >
@@ -44,7 +44,9 @@
               </div>
 
               <div style="font-size: 12px; color: var(--lighttext)">
-                <span class="post-date" i18n>{{ "FEED-POST-PREVIEW.POSTED" | translate }} </span>
+                <span class="post-date" i18n
+                  >{{ 'FEED-POST-PREVIEW.POSTED' | translate }}
+                </span>
                 <span class="post-date">{{ humanReadableDate }}</span>
               </div>
             </div>

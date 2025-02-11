@@ -2,40 +2,70 @@
 <div class="container">
   <div class="d-flex flex-column justify-content-center align-items-center">
     <div class="cool-static-container" style="width: 500px; margin-top: 100px">
-      <div class="d-flex flex-column justify-content-center align-items-center" style="text-align: center">
+      <div
+        class="d-flex flex-column justify-content-center align-items-center"
+        style="text-align: center"
+      >
         <h3 class="c-primary" style="font-size: 4em; line-height: 1.5em">
-          {{ "REJECTED-PAGE.HEY_THERE" | translate }}
+          {{ 'REJECTED-PAGE.HEY_THERE' | translate }}
         </h3>
         <p style="color: var(--primary); font-size: 30px">
-          {{ "REJECTED-PAGE.IT_LOOKS_LIKE_YOU_ARENT_ASSOCIATED_WITH_A_NEIGHBOR" | translate }}
+          {{
+            'REJECTED-PAGE.IT_LOOKS_LIKE_YOU_ARENT_ASSOCIATED_WITH_A_NEIGHBOR'
+              | translate
+          }}
         </p>
         <br />
-        <p>{{ "REJECTED-PAGE.HEY_TPLEASE_SELECT_ONE_OF_THE_FOLLOWING_NEIGHBORHOODS_THERE" | translate }}</p>
+        <p>
+          {{
+            'REJECTED-PAGE.PLEASE_SELECT_ONE_OF_THE_FOLLOWING_NEIGHBORHOODS_T'
+              | translate
+          }}
+        </p>
         <br />
 
         <form [formGroup]="neighborhoodForm" (ngSubmit)="onSubmit()">
           <div class="centered-column">
             <div class="form-input">
-              <app-infinite-scroll-select [theme]="'default'" [multiple]="false" [fetchData]="fetchNeighborhoods"
-                [displayFn]="displayNeighborhood" formControlName="neighborhood"
-                [uniqueKey]="'self'"></app-infinite-scroll-select>
-              <div *ngIf="submitted && neighborhoodForm.get('neighborhood')?.errors?.['required']" class="error">
-                {{ "REJECTED-PAGE.NEIGHBORHOOD_IS_REQUIRED" | translate }}
+              <app-infinite-scroll-select
+                [theme]="'default'"
+                [multiple]="false"
+                [fetchData]="fetchNeighborhoods"
+                [displayFn]="displayNeighborhood"
+                formControlName="neighborhood"
+                [uniqueKey]="'self'"
+              ></app-infinite-scroll-select>
+              <div
+                *ngIf="submitted && neighborhoodForm.get('neighborhood')?.errors?.['required']"
+                class="error"
+              >
+                {{ 'REJECTED-PAGE.NEIGHBORHOOD_IS_REQUIRED' | translate }}
               </div>
             </div>
           </div>
 
-          <button type="submit" class="cool-button">{{ "REJECTED-PAGE.REQUEST" | translate }}</button>
+          <button type="submit" class="cool-button">
+            {{ 'REJECTED-PAGE.REQUEST' | translate }}
+          </button>
         </form>
 
-
-        <span class="mt-3" style="color: var(--lighttext)">{{ "REJECTED-PAGE.OR" | translate }}</span>
-        <a (click)="goBackToMainPage()" class="cool-button m-t-40" style="cursor: pointer">
-          {{ "REJECTED-PAGE.GO_BACK_TO_LOGIN" | translate }}
+        <span class="mt-3" style="color: var(--lighttext)">{{
+          'REJECTED-PAGE.OR' | translate
+        }}</span>
+        <a
+          (click)="goBackToMainPage()"
+          class="cool-button m-t-40"
+          style="cursor: pointer"
+        >
+          {{ 'REJECTED-PAGE.GO_BACK_TO_LOGIN' | translate }}
         </a>
 
-        <div *ngIf="isLoading" class="spinner-border text-primary mt-3" role="status">
-          <span class="sr-only">{{ "REJECTED-PAGE.LOADING" | translate }}</span>
+        <div
+          *ngIf="isLoading"
+          class="spinner-border text-primary mt-3"
+          role="status"
+        >
+          <span class="sr-only">{{ 'REJECTED-PAGE.LOADING' | translate }}</span>
         </div>
       </div>
     </div>

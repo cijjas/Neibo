@@ -12,7 +12,9 @@
       <div class="cool-static-container w-100">
         <div class="f-c-c-c">
           <div class="f-r-c-c">
-            <span class="font-size-24">{{ "MARKETPLACE-PRODUCT-SELL-PAGE.CREATE_LISTING" | translate }}</span>
+            <span class="font-size-24">{{
+              'MARKETPLACE-PRODUCT-SELL-PAGE.CREATE_LISTING' | translate
+            }}</span>
           </div>
           <div class="divider w-75 mb-3"></div>
         </div>
@@ -30,7 +32,9 @@
                     formControlName="title"
                     type="text"
                     class="cool-input marketplace-input font-weight-bold"
-                    [attr.placeholder]="'MARKETPLACE-PRODUCT-SELL-PAGE.TITLE' | translate"
+                    [attr.placeholder]="
+                      'MARKETPLACE-PRODUCT-SELL-PAGE.TITLE' | translate
+                    "
                   />
                   <div
                     class="error pt-1"
@@ -39,7 +43,10 @@
                       listingForm.get('title').invalid
                     "
                   >
-                  {{ "MARKETPLACE-PRODUCT-SELL-PAGE.TITLE_IS_REQUIRED" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-SELL-PAGE.TITLE_IS_REQUIRED'
+                        | translate
+                    }}
                   </div>
                 </div>
 
@@ -48,7 +55,9 @@
                     formControlName="price"
                     type="text"
                     class="cool-input marketplace-input font-weight-bold font-size-14"
-                    [attr.placeholder]="'MARKETPLACE-PRODUCT-SELL-PAGE.MONEY' | translate"
+                    [attr.placeholder]="
+                      'MARKETPLACE-PRODUCT-SELL-PAGE.MONEY' | translate
+                    "
                     (blur)="formatCurrency()"
                   />
                   <div
@@ -58,7 +67,10 @@
                       listingForm.get('price').invalid
                     "
                   >
-                  {{ "MARKETPLACE-PRODUCT-SELL-PAGE.PRICE_IS_REQUIRED" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-SELL-PAGE.PRICE_IS_REQUIRED'
+                        | translate
+                    }}
                   </div>
                 </div>
               </div>
@@ -88,7 +100,11 @@
                           <i class="fa fa-plus ms-1"></i>
                         </span>
                         <h3 id="add-photo-text" class="font-weight-bold">
-                          {{ "MARKETPLACE-PRODUCT-SELL-PAGE.ADD_PHOTO" | translate }} ({{ images.length }}/3)
+                          {{
+                            'MARKETPLACE-PRODUCT-SELL-PAGE.ADD_PHOTO'
+                              | translate
+                          }}
+                          ({{ images.length }}/3)
                         </h3>
                       </div>
                     </a>
@@ -97,7 +113,9 @@
                     class="f-c-c-c w-100 c-light-text font-weight-normal special-hover mb-3"
                     *ngIf="images.length < 3"
                   >
-                  {{ "MARKETPLACE-PRODUCT-SELL-PAGE.SELECT_IMAGES" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-SELL-PAGE.SELECT_IMAGES' | translate
+                    }}
                   </div>
                   <div class="upload__img-wrap">
                     <div
@@ -124,7 +142,9 @@
                 formControlName="description"
                 class="cool-input marketplace-input textarea-min-max"
                 rows="5"
-                [attr.placeholder]="'MARKETPLACE-PRODUCT-SELL-PAGE.DESCRIPTION' | translate"
+                [attr.placeholder]="
+                  'MARKETPLACE-PRODUCT-SELL-PAGE.DESCRIPTION' | translate
+                "
               ></textarea>
               <div
                 class="error pt-1"
@@ -133,7 +153,10 @@
                   listingForm.get('description').invalid
                 "
               >
-              {{ "MARKETPLACE-PRODUCT-SELL-PAGE.DESCRIPTION_IS_REQUIRED" | translate }}
+                {{
+                  'MARKETPLACE-PRODUCT-SELL-PAGE.DESCRIPTION_IS_REQUIRED'
+                    | translate
+                }}
               </div>
 
               <select
@@ -142,10 +165,16 @@
                 id="department"
               >
                 <option value="" disabled selected>
-                  {{ "MARKETPLACE-PRODUCT-SELL-PAGE.SELECT_DEPARTMENT" | translate }}
+                  {{
+                    'MARKETPLACE-PRODUCT-SELL-PAGE.SELECT_DEPARTMENT'
+                      | translate
+                  }}
                 </option>
                 <option *ngFor="let dept of departmentList" [value]="dept.self">
-                  {{ dept.displayName }}
+                  {{
+                    'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' + dept.name
+                      | translate
+                  }}
                 </option>
               </select>
 
@@ -156,19 +185,26 @@
                   listingForm.get('departmentId').invalid
                 "
               >
-              {{ "MARKETPLACE-PRODUCT-SELL-PAGE.DEPARTMENT_IS_REQUIRED" | translate }}
+                {{
+                  'MARKETPLACE-PRODUCT-SELL-PAGE.DEPARTMENT_IS_REQUIRED'
+                    | translate
+                }}
               </div>
 
               <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
-                {{ "MARKETPLACE-PRODUCT-SELL-PAGE.THIS_ITEM_IS" | translate }}
+                {{ 'MARKETPLACE-PRODUCT-SELL-PAGE.THIS_ITEM_IS' | translate }}
                 <div class="w-25">
                   <select
                     formControlName="used"
                     class="cool-input marketplace-input font-weight-bold font-size-14"
                     id="condition"
                   >
-                    <option [value]="false">{{ "MARKETPLACE-PRODUCT-SELL-PAGE.NEW" | translate }}</option>
-                    <option [value]="true">{{ "MARKETPLACE-PRODUCT-SELL-PAGE.USED" | translate }}</option>
+                    <option [value]="false">
+                      {{ 'MARKETPLACE-PRODUCT-SELL-PAGE.NEW' | translate }}
+                    </option>
+                    <option [value]="true">
+                      {{ 'MARKETPLACE-PRODUCT-SELL-PAGE.USED' | translate }}
+                    </option>
                   </select>
                   <div
                     class="error pt-1"
@@ -177,14 +213,17 @@
                       listingForm.get('used').invalid
                     "
                   >
-                  {{ "MARKETPLACE-PRODUCT-SELL-PAGE.CONDITION_IS_REQUIRED" | translate }}
+                    {{
+                      'MARKETPLACE-PRODUCT-SELL-PAGE.CONDITION_IS_REQUIRED'
+                        | translate
+                    }}
                   </div>
                 </div>
               </div>
 
               <div class="f-c-c-c w-100 g-0">
                 <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
-                  {{ "MARKETPLACE-PRODUCT-SELL-PAGE.QUANTITY" | translate }}
+                  {{ 'MARKETPLACE-PRODUCT-SELL-PAGE.QUANTITY' | translate }}
                   <div>
                     <select
                       formControlName="quantity"
@@ -203,7 +242,10 @@
                     listingForm.get('quantity').invalid
                   "
                 >
-                {{ "MARKETPLACE-PRODUCT-SELL-PAGE.QUANTITY_IS_REQUIRED" | translate }}
+                  {{
+                    'MARKETPLACE-PRODUCT-SELL-PAGE.QUANTITY_IS_REQUIRED'
+                      | translate
+                  }}
                 </div>
               </div>
             </div>
@@ -219,7 +261,7 @@
               style="width: 200px"
               type="submit"
             >
-            {{ "MARKETPLACE-PRODUCT-SELL-PAGE.CREATE_LISTING" | translate }}
+              {{ 'MARKETPLACE-PRODUCT-SELL-PAGE.CREATE_LISTING' | translate }}
             </button>
           </div>
         </form>

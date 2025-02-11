@@ -40,9 +40,7 @@
         <ng-container *ngIf="isListings; else showSales">
           <div class="no-posts-found" *ngIf="listings.length === 0">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{
-              'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_NEW_REQUESTS' | translate
-            }}
+            {{ 'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_LISTINGS' | translate }}
           </div>
 
           <div class="w-100 f-c-c-c g-1" *ngIf="listings.length > 0">
@@ -200,10 +198,7 @@
         <ng-template #showSales>
           <div class="no-posts-found" *ngIf="sales.length === 0">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-            {{
-              'MARKETPLACE-DASHBOARD-SELLER-PAGE.PURCHASES_NOT_FOUND'
-                | translate
-            }}
+            {{ 'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_SELLED' | translate }}
           </div>
 
           <div class="w-100 f-c-c-c g-1" *ngIf="sales.length > 0">

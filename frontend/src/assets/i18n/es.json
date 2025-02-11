@@ -839,7 +839,9 @@
     "REQUESTS": "Ver solicitudes",
     "PURCHASES_NOT_FOUND": "No se encontraron compras",
     "QUANTITY": "Cantidad",
-    "BOUGHT_BY": "Comprado por"
+    "BOUGHT_BY": "Comprado por",
+    "NO_LISTINGS": "No se encontraron publicaciones",
+    "NO_SELLED": "No se vendieron productos aún"
   },
   "MARKETPLACE-PAGE": {
     "PRODUCTS_NOT_FOUND": "Productos no encontrados"
@@ -1173,7 +1175,7 @@
   },
   "WAVE-FOOTER": {
     "SLOGAN": "Tu tranquilidad es nuestra prioridad. Seguro, protegido y sereno.",
-    "CONTACT": "Contáctanos: +54 911 2328-6639 | info&#64;neibo.com"
+    "CONTACT": "Contáctanos: +54 911 2328-6639 | Neibo"
   },
 
   "FORM-ERROR-COMPONENT": {

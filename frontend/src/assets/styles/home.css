@@ -437,7 +437,7 @@
     &:hover {
       border: 1px solid transparent;
       background-color: var(--error);
-      color: var(--background);
+      color: #f1d283;
       box-shadow: 0 5px 0 0 #f1d283;
       transform: translateY(-4px);
 

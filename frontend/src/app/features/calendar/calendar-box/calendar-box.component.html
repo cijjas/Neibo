@@ -1,6 +1,6 @@
 <div class="f-c-c-c w-100">
   <div class="wrapper">
-    <div id="calendar-box" class="f-c-c-c" *ngIf="!isLoading">
+    <div id="calendar-box" class="f-c-c-c w-100" *ngIf="!isLoading">
       <header class="f-r-sb-c w-100">
         <div class="icons">
           <span id="prev" (click)="changeMonth(-1)">
@@ -15,8 +15,8 @@
         </div>
       </header>
       <div class="divider m-b-20 m-t-40"></div>
-      <div class="f-c-c-c h-100 m-b-20">
-        <div class="calendar">
+      <div class="f-c-c-c h-100 w-100 m-b-20">
+        <div class="calendar w-100">
           <ul class="weeks">
             <li *ngFor="let day of weekDays">{{ day }}</li>
           </ul>

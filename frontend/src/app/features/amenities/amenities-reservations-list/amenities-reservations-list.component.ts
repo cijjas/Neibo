@@ -28,11 +28,11 @@ export class AmenitiesReservationsListComponent implements OnInit {
     private toastService: ToastService,
     private confirmationService: ConfirmationService,
     private translate: TranslateService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.subscribe(params => {
       // Use a unique query parameter for this widget
       this.currentPage = +params['reservationsPage'] || 1; // Default to page 1
       this.loadReservations();
@@ -50,16 +50,18 @@ export class AmenitiesReservationsListComponent implements OnInit {
         bookedBy: this.linkService.getLink(LinkKey.USER_SELF),
       })
       .subscribe({
-        next: (data) => {
+        next: data => {
           this.reservationsList = data.bookings || []; // Ensure it's an array
           this.totalPages = data.totalPages || 1;
           this.isLoading = false; // Stop loading
         },
-        error: (err) => {
+        error: err => {
           console.error(err);
           this.toastService.showToast(
-            this.translate.instant('AMENITIES-RESERVATIONS-LIST.THERE_WAS_A_PROBLEM_GETTING_YOUR_RESERVATIONS'),
-            'error'
+            this.translate.instant(
+              'AMENITIES-RESERVATIONS-LIST.THERE_WAS_A_PROBLEM_GETTING_YOUR_RESERVATIONS',
+            ),
+            'error',
           );
           this.showErrorMessage = true;
           this.isLoading = false; // Stop loading on error
@@ -100,29 +102,58 @@ export class AmenitiesReservationsListComponent implements OnInit {
 
     this.confirmationService
       .askForConfirmation({
-        title: this.translate.instant('AMENITIES-RESERVATIONS-LIST.CENCEL_RESERVATION'),
-        message: this.translate.instant('AMENITIES-RESERVATIONS-LIST.ARE_YOU_SURE_YOU_WANT_TO_CANCEL_YOUR_RESERVATION_F', {bookingAmenityName: booking.amenity.name, bookingBookingDate: booking.bookingDate, bookingShiftStartTime : booking.shift.startTime}),
-        confirmText: this.translate.instant('AMENITIES-RESERVATIONS-LIST.YES_CANCEL'),
-        cancelText: this.translate.instant('AMENITIES-RESERVATIONS-LIST.NO_KEEP'),
+        title: this.translate.instant(
+          'AMENITIES-RESERVATIONS-LIST.CANCEL_RESERVATION',
+        ),
+        message: this.translate.instant(
+          'AMENITIES-RESERVATIONS-LIST.ARE_YOU_SURE_YOU_WANT_TO_CANCEL_YOUR_RESERVATION_F',
+          {
+            bookingAmenityName: booking.amenity.name,
+            bookingBookingDate: booking.bookingDate,
+            bookingShiftStartTime: booking.shift.startTime,
+          },
+        ),
+        confirmText: this.translate.instant(
+          'AMENITIES-RESERVATIONS-LIST.YES_CANCEL',
+        ),
+        cancelText: this.translate.instant(
+          'AMENITIES-RESERVATIONS-LIST.NO_KEEP',
+        ),
       })
-      .subscribe((confirmed) => {
+      .subscribe(confirmed => {
         if (confirmed) {
           this.bookingService.deleteBooking(booking.self).subscribe({
             next: () => {
               this.reservationsList = this.reservationsList.filter(
-                (reservation) => reservation.self !== booking.self
+                reservation => reservation.self !== booking.self,
               );
               this.loadReservations(); // Reload reservations after deletion
               this.toastService.showToast(
-                this.translate.instant('AMENITIES-RESERVATIONS-LIST.YOUR_RESERVATION_FOR_BOOKINGAMENITYNAME_ON_BOOKING', {bookingAmenityName: booking.amenity.name, bookingBookingDate: booking.bookingDate, bookingShiftStartTime : booking.shift.startTime, bookingShiftEndTime: booking.shift.endTime}),
-                'success'
+                this.translate.instant(
+                  'AMENITIES-RESERVATIONS-LIST.YOUR_RESERVATION_FOR_BOOKINGAMENITYNAME_ON_BOOKING',
+                  {
+                    bookingAmenityName: booking.amenity.name,
+                    bookingBookingDate: booking.bookingDate,
+                    bookingShiftStartTime: booking.shift.startTime,
+                    bookingShiftEndTime: booking.shift.endTime,
+                  },
+                ),
+                'success',
               );
             },
-            error: (err) => {
+            error: err => {
               console.error(err);
               this.toastService.showToast(
-                this.translate.instant('AMENITIES-RESERVATIONS-LIST.WE_COULDNT_CANCEL_YOUR_RESERVATION_FOR_BOOKINGAMEN', {bookingAmenityName: booking.amenity.name, bookingBookingDate: booking.bookingDate, bookingShiftStartTime : booking.shift.startTime, bookingShiftEndTime: booking.shift.endTime}),
-                'error'
+                this.translate.instant(
+                  'AMENITIES-RESERVATIONS-LIST.WE_COULDNT_CANCEL_YOUR_RESERVATION_FOR_BOOKINGAMEN',
+                  {
+                    bookingAmenityName: booking.amenity.name,
+                    bookingBookingDate: booking.bookingDate,
+                    bookingShiftStartTime: booking.shift.startTime,
+                    bookingShiftEndTime: booking.shift.endTime,
+                  },
+                ),
+                'error',
               );
             },
             complete: () => {

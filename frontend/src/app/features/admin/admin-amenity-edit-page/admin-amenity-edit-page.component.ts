@@ -6,7 +6,7 @@ import { ToastService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
-import { ShiftService, Shift, AmenityService } from '@shared/index';
+import { ShiftService, Shift, AmenityService, Amenity } from '@shared/index';
 
 @Component({
   selector: 'app-admin-amenity-edit-page',
@@ -14,7 +14,7 @@ import { ShiftService, Shift, AmenityService } from '@shared/index';
 })
 export class AdminAmenityEditPageComponent implements OnInit {
   amenityForm!: FormGroup;
-
+  amenity: Amenity;
   amenityName = '';
 
   allShifts: Shift[] = [];
@@ -74,6 +74,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
       if (!amenity) {
         return;
       }
+      this.amenity = amenity;
       this.amenityName = amenity.name;
       this.amenityForm.patchValue({
         name: amenity.name,
@@ -132,7 +133,7 @@ export class AdminAmenityEditPageComponent implements OnInit {
     }
 
     const formValue = this.amenityForm.value;
-    const amenityId = this.route.snapshot.params['id'];
+    const amenityId = this.amenity.self;
     // Convert selectedShifts to an array of SHIFT URLs
     const selectedShiftRefs: string[] = this.selectedShifts.map(s => s.self);
 

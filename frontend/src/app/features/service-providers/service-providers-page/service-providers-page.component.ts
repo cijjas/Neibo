@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HateoasLinksService, UserSessionService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 import { AppTitleKeys } from '@shared/constants/app-titles';
-import { Worker, WorkerService } from '@shared/index';
+import { LinkKey, Role, Worker, WorkerService } from '@shared/index';
 
 @Component({
   selector: 'app-service-providers-page',
@@ -25,6 +26,8 @@ export class ServiceProvidersPageComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private titleService: Title,
+    private linkService: HateoasLinksService,
+    private userSessionService: UserSessionService,
   ) {}
 
   ngOnInit(): void {
@@ -48,11 +51,24 @@ export class ServiceProvidersPageComponent implements OnInit {
 
   loadWorkers() {
     this.isLoading = true;
-    const queryParams = {
+
+    const currentUser = this.userSessionService.getCurrentUserValue();
+    const isWorker = currentUser.userRole === Role.WORKER;
+
+    const neigh = isWorker
+      ? null
+      : this.linkService.getLink(LinkKey.NEIGHBORHOOD_SELF);
+
+    const queryParams: any = {
       page: this.currentPage,
       size: this.pageSize,
       withProfession: this.professions,
+      withRole: this.linkService.getLink(LinkKey.VERIFIED_WORKER_ROLE),
     };
+
+    if (neigh) {
+      queryParams.inNeighborhood = [neigh];
+    }
 
     this.workerService.getWorkers(queryParams).subscribe({
       next: response => {

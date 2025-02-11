@@ -5,11 +5,7 @@
     </div>
 
     <div class="column-middle">
-      <div
-        class="cool-static-container m-b-20"
-        style="word-wrap: break-word"
-        aria-hidden="true"
-      >
+      <div class="cool-static-container m-b-20" style="word-wrap: break-word">
         <!-- If no amenities -->
         <div class="loader w-100" *ngIf="isLoading"></div>
 
@@ -105,7 +101,6 @@
         *ngFor="let amenity of amenities"
         class="cool-static-container m-b-20"
         style="word-wrap: break-word"
-        aria-hidden="true"
       >
         <h2>{{ amenity.name }}</h2>
         <p class="mb-3" style="color: var(--lighttext)">

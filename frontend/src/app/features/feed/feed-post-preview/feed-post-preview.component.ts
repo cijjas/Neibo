@@ -27,6 +27,7 @@ export class FeedPostPreviewComponent implements OnInit, OnDestroy {
   hasLiked: boolean = false;
   likesUrl: string | undefined;
   inChannel: string;
+  encodeURI = encodeURI;
 
   constructor(
     private linkStorage: HateoasLinksService,

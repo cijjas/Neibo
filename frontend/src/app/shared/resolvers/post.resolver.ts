@@ -1,14 +1,13 @@
-// post.resolver.ts
 import { inject } from '@angular/core';
 import {
-  ResolveFn,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
+  ResolveFn,
   Router,
+  RouterStateSnapshot,
 } from '@angular/router';
-import { PostService, Post } from '@shared/index';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Post } from '@shared/models';
+import { PostService } from '@shared/services/domain/post.service';
+import { catchError, EMPTY } from 'rxjs';
 
 export const postResolver: ResolveFn<Post> = (
   route: ActivatedRouteSnapshot,
@@ -17,13 +16,26 @@ export const postResolver: ResolveFn<Post> = (
   const router = inject(Router);
   const postService = inject(PostService);
 
-  const id = route.paramMap.get('id');
-  if (!id) {
+  // The route parameter now holds the base64 encoded URL.
+  const encodedUrl = route.paramMap.get('id');
+  if (!encodedUrl) {
     router.navigate(['/not-found']);
     return EMPTY;
   }
 
-  return postService.getPost(id).pipe(
+  // Decode it
+  let postUrl: string;
+  try {
+    postUrl = decodeURI(encodedUrl);
+  } catch (error) {
+    console.error('Error decoding URL:', error);
+    router.navigate(['/not-found']);
+    return EMPTY;
+  }
+  console.log('hola');
+
+  // Use postUrl to get the post from your API.
+  return postService.getPost(postUrl).pipe(
     catchError(error => {
       console.error('Error loading post:', error);
       router.navigate(['/not-found']);
