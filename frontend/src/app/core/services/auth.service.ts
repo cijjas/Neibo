@@ -170,7 +170,7 @@ export class AuthService {
 
     sessionStorage.clear();
     localStorage.clear();
-
+    this.userSessionService.logout();
     this.linkRegistry.clearLinks();
   }
 
