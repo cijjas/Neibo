@@ -13,6 +13,7 @@ import { environment } from 'environments/environment';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { AppTitleKeys } from '@shared/constants/app-titles';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-marketplace-dashboard-seller-page',
@@ -157,11 +158,18 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   }
 
   goToListingDetail(productId: string): void {
-    this.router.navigate(['/marketplace/products', productId]);
+    this.router.navigate([
+      '/marketplace/products',
+      encodeUrlSafeBase64(productId),
+    ]);
   }
 
   goToRequests(productId: string): void {
-    this.router.navigate(['/marketplace/products', productId, 'requests']);
+    this.router.navigate([
+      '/marketplace/products',
+      encodeUrlSafeBase64(productId),
+      'requests',
+    ]);
   }
 
   getProductImage(product: Product): string {

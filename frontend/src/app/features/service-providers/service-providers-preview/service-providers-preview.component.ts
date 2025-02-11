@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Profession, Worker } from '@shared/index';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 import { environment } from 'environments/environment';
 
 @Component({
@@ -12,6 +13,8 @@ export class ServiceProvidersPreviewComponent implements OnInit {
 
   profileImageUrl: string = '';
   backgroundImageUrl: string = '';
+
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 

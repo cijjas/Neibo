@@ -17,12 +17,15 @@ import {
 } from '@core/index';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { Title } from '@angular/platform-browser';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-marketplace-product-detail-page',
   templateUrl: './marketplace-product-detail-page.component.html',
 })
 export class MarketplaceProductDetailPageComponent implements OnInit {
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
+
   departmentList: Department[] = [];
   departmentName: string = '';
   department: string;

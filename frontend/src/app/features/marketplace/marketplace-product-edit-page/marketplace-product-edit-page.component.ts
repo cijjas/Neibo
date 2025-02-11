@@ -14,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { Title } from '@angular/platform-browser';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-marketplace-product-edit-page',
@@ -256,7 +257,10 @@ export class MarketplaceProductEditPageComponent implements OnInit {
             ),
             'success',
           );
-          this.router.navigate(['/marketplace/products', this.product!.self]);
+          this.router.navigate([
+            '/marketplace/products',
+            encodeUrlSafeBase64(this.product!.self),
+          ]);
         },
         error: err => {
           this.formErrors = this.translate.instant(
@@ -268,6 +272,9 @@ export class MarketplaceProductEditPageComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/marketplace/products', this.product?.self]);
+    this.router.navigate([
+      '/marketplace/products',
+      encodeUrlSafeBase64(this.product?.self),
+    ]);
   }
 }

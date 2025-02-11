@@ -7,6 +7,7 @@ import {
   UserSessionService,
 } from '@core/index';
 import { LinkKey, Role } from '@shared/models';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-sidebar',
@@ -17,6 +18,7 @@ export class SidebarComponent implements OnInit {
   workerId: string | null = '';
   channelClass: string = ''; // Active channel class
   public Roles = Role; // Expose Roles enum to the template
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
 
   constructor(
     private linkService: HateoasLinksService,

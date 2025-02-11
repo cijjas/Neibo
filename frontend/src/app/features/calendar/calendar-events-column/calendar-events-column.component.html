@@ -22,7 +22,13 @@
     <div *ngFor="let event of events" class="blogpost p-3">
       <div class="f-r-sb-c w-100">
         <div class="" style="overflow: hidden; text-overflow: ellipsis">
-          <a [routerLink]="['/calendar', 'events', event.self]">
+          <a
+            [routerLink]="[
+              '/calendar',
+              'events',
+              encodeUrlSafeBase64(event.self)
+            ]"
+          >
             <div class="mb-3 bold font-size-20">{{ event.name }}</div>
           </a>
         </div>
@@ -35,7 +41,10 @@
         </div>
       </div>
 
-      <a [routerLink]="['/calendar/events', event.self]" class="f-c-c-s">
+      <a
+        [routerLink]="['/calendar/events', encodeUrlSafeBase64(event.self)]"
+        class="f-c-c-s"
+      >
         <p style="font-size: 12px; font-weight: normal">
           {{ event.startTime }} - {{ event.endTime }}
         </p>

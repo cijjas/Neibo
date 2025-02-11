@@ -12,12 +12,15 @@ import { environment } from 'environments/environment';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-marketplace-dashboard-buyer-page',
   templateUrl: './marketplace-dashboard-buyer-page.component.html',
 })
 export class MarketplaceDashboardBuyerPageComponent implements OnInit {
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
+
   page: number = 1;
   totalPages: number = 1;
   size: number = 10;

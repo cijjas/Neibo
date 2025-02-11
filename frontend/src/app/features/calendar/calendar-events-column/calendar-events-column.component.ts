@@ -8,12 +8,15 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Event, EventService, LinkKey, Role } from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-calendar-events-column',
   templateUrl: './calendar-events-column.component.html',
 })
 export class CalendarEventsColumnComponent implements OnInit {
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
+
   @Input() selectedDate: Date;
   events: Event[] = [];
   isLoading = true;

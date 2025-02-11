@@ -17,14 +17,12 @@ export const postResolver: ResolveFn<Post> = (
   const router = inject(Router);
   const postService = inject(PostService);
 
-  // The route parameter now holds the base64 encoded URL.
-  const encodedUrl = route.paramMap.get('id');
+  const encodedUrl: string | null = route.paramMap.get('id');
   if (!encodedUrl) {
     router.navigate(['/not-found']);
     return EMPTY;
   }
 
-  // Decode it
   let postUrl: string;
   try {
     postUrl = decodeUrlSafeBase64(encodedUrl);
@@ -34,7 +32,6 @@ export const postResolver: ResolveFn<Post> = (
     return EMPTY;
   }
 
-  // Use postUrl to get the post from your API.
   return postService.getPost(postUrl).pipe(
     catchError(error => {
       console.error('Error loading post:', error);

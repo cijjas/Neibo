@@ -33,7 +33,11 @@
         <div class="f-r-sb-c">
           <a
             class="cool-action-button rounded admin-button"
-            [routerLink]="['/admin/amenities', amenity.self, 'edit']"
+            [routerLink]="[
+              '/admin/amenities',
+              encodeUrlSafeBase64(amenity.self),
+              'edit'
+            ]"
           >
             <i class="fa-solid fa-pen"></i>
             {{ 'ADMIN-AMENITIES-PAGE.EDIT' | translate }}

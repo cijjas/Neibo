@@ -10,12 +10,15 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { AppTitleKeys } from '@shared/constants/app-titles';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-admin-amenities-page',
   templateUrl: './admin-amenities-page.component.html',
 })
 export class AdminAmenitiesPageComponent implements OnInit {
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
+
   amenities: Amenity[] = [];
   currentPage = 1;
   totalPages = 1;

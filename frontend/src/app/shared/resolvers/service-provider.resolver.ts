@@ -9,6 +9,7 @@ import {
 import { WorkerService, Worker } from '@shared/index';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { decodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 export const serviceProviderResolver: ResolveFn<Worker> = (
   route: ActivatedRouteSnapshot,
@@ -17,13 +18,22 @@ export const serviceProviderResolver: ResolveFn<Worker> = (
   const router = inject(Router);
   const workerService = inject(WorkerService);
 
-  const id = route.paramMap.get('id');
-  if (!id) {
+  const encodedId: string | null = route.paramMap.get('id');
+  if (!encodedId) {
     router.navigate(['/not-found']);
     return EMPTY;
   }
 
-  return workerService.getWorker(id).pipe(
+  let workerUrl: string;
+  try {
+    workerUrl = decodeUrlSafeBase64(encodedId);
+  } catch (error) {
+    console.error('Error decoding worker URL:', error);
+    router.navigate(['/not-found']);
+    return EMPTY;
+  }
+
+  return workerService.getWorker(workerUrl).pipe(
     catchError(error => {
       console.error('Error loading worker:', error);
       router.navigate(['/not-found']);

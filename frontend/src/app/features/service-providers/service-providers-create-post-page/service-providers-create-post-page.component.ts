@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
 import { Title } from '@angular/platform-browser';
 import { AppTitleKeys } from '@shared/constants/app-titles';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-service-providers-create-post',
@@ -153,9 +154,12 @@ export class ServiceProvidersCreatePostPageComponent {
             ),
             'success',
           );
-          this.router.navigate(['/services', 'my-profile', this.workerId], {
-            queryParams: { tab: 'posts' },
-          });
+          this.router.navigate(
+            ['/services', 'my-profile', encodeUrlSafeBase64(this.workerId)],
+            {
+              queryParams: { tab: 'posts' },
+            },
+          );
         },
         error: error => {
           this.toastService.showToast(

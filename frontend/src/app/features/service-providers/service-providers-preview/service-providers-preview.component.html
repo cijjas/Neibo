@@ -1,5 +1,7 @@
 <div class="service-widget">
-  <div [routerLink]="['/services', 'profiles', worker?.self]">
+  <div
+    [routerLink]="['/services', 'profiles', encodeUrlSafeBase64(worker?.self)]"
+  >
     <div class="card-text">
       <div class="img-avatar">
         <img

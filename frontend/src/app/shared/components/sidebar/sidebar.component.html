@@ -8,7 +8,7 @@
       <div class="f-c-c-c">
         <a
           id="profileButton"
-          [routerLink]="['/services/my-profile', workerId]"
+          [routerLink]="['/services/my-profile', encodeUrlSafeBase64(workerId)]"
           class="cool-left-button services-button f-r-sb-c"
           [ngClass]="{ active: channelClass === 'Profile' }"
         >

@@ -15,6 +15,7 @@ import {
 import { DepartmentService, ProductService } from '@shared/index';
 import { Title } from '@angular/platform-browser';
 import { AppTitleKeys } from '@shared/constants/app-titles';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-marketplace-product-sell-page',
@@ -184,7 +185,10 @@ export class MarketplaceProductSellPageComponent implements OnInit {
       )
       .subscribe({
         next: productUrl => {
-          this.router.navigate(['/marketplace/products', productUrl]);
+          this.router.navigate([
+            '/marketplace/products',
+            encodeUrlSafeBase64(productUrl),
+          ]);
           this.toastService.showToast(
             this.translate.instant(
               'MARKETPLACE-PRODUCT-SELL-PAGE.LISTING_CREATED_SUCCESSFULLY',

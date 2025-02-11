@@ -271,7 +271,7 @@
                       <a
                         [routerLink]="[
                           '/marketplace/products',
-                          request.product.self
+                          encodeUrlSafeBase64(request.product.self)
                         ]"
                         class="cool-button small-a marketplace-button font-weight-bold"
                       >

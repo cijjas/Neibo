@@ -9,6 +9,7 @@ import {
 import { UserService, User } from '@shared/index';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { decodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 export const userResolver: ResolveFn<User> = (
   route: ActivatedRouteSnapshot,
@@ -17,13 +18,22 @@ export const userResolver: ResolveFn<User> = (
   const router = inject(Router);
   const userService = inject(UserService);
 
-  const id = route.paramMap.get('id');
-  if (!id) {
+  const encodedId: string | null = route.paramMap.get('id');
+  if (!encodedId) {
     router.navigate(['/not-found']);
     return EMPTY;
   }
 
-  return userService.getUser(id).pipe(
+  let userUrl: string;
+  try {
+    userUrl = decodeUrlSafeBase64(encodedId);
+  } catch (error) {
+    console.error('Error decoding user URL:', error);
+    router.navigate(['/not-found']);
+    return EMPTY;
+  }
+
+  return userService.getUser(userUrl).pipe(
     catchError(error => {
       console.error('Error loading user:', error);
       router.navigate(['/not-found']);

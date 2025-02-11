@@ -142,7 +142,7 @@
                   <a
                     [routerLink]="[
                       '/marketplace/products',
-                      product?.self,
+                      encodeUrlSafeBase64(product?.self),
                       'edit'
                     ]"
                     class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
