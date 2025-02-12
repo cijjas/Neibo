@@ -54,18 +54,18 @@
             }}
           </h1>
         </div>
-
+        <div *ngIf="loading" class="loader marketplace w-100"></div>
         <div
-          *ngIf="requestList && requestList.length === 0"
+          *ngIf="requestList && requestList.length === 0 && !loading"
           class="no-posts-found"
         >
-          <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+          <i class="fa-solid fa-magnifying-glass fa-4x"></i>
           {{ 'MARKETPLACE-PRODUCT-REQUESTS-PAGE.NO_NEW_REQUESTS' | translate }}
         </div>
 
         <div
           class="f-c-c-c w-100"
-          *ngIf="requestList && requestList.length > 0"
+          *ngIf="requestList && requestList.length > 0 && !loading"
         >
           <div
             *ngFor="let request of requestList; let i = index"
@@ -260,10 +260,12 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="showLoader" class="loader w-100 marketplace"></div>
     <a class="close-button marketplace" (click)="closeRequestDialog()">
       <i class="fas fa-close"></i>
     </a>
-    <div class="f-c-c-c w-100 g-1 mt-3">
+    <div *ngIf="!showLoader" class="f-c-c-c w-100 g-1 mt-3">
       <button
         (click)="submitMarkAsSold()"
         class="cool-button marketplace-button"
@@ -284,21 +286,6 @@
           | translate
       }}
     </div>
-  </div>
-</div>
-
-<div
-  id="loader-container"
-  class="loader-container"
-  [ngStyle]="{ display: showLoader ? 'flex' : 'none' }"
->
-  <div class="cool-static-container small-size-container">
-    <div style="font-weight: bold; font-size: 16px">
-      {{
-        'MARKETPLACE-PRODUCT-REQUESTS-PAGE.PROCESSING_THE_REQUEST' | translate
-      }}
-    </div>
-    <div class="loader marketplace" style="margin-top: 20px"></div>
   </div>
 </div>
 

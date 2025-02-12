@@ -45,11 +45,11 @@ export class TagsFilterWidgetComponent implements OnInit {
         const tagUrls = params['withTag'];
 
         if (tagUrls) {
-          // If there's a 'withTag' param, fetch those tags
+          // If theres a 'withTag' param, fetch those tags
           const tagUrlArray = Array.isArray(tagUrls) ? tagUrls : [tagUrls];
           this.fetchAndApplyTags(tagUrlArray);
         } else {
-          // If there's no 'withTag' param, clear the applied items
+          // If theres no 'withTag' param, clear the applied items
           this.appliedItems = [];
         }
 
@@ -64,7 +64,7 @@ export class TagsFilterWidgetComponent implements OnInit {
             : [professionUrls];
           this.fetchAndApplyProfessions(professionUrlArray);
         } else {
-          // If there's no 'withProfession' param, clear the applied items
+          // If theres no 'withProfession' param, clear the applied items
           this.appliedItems = [];
         }
 
@@ -135,7 +135,7 @@ export class TagsFilterWidgetComponent implements OnInit {
   }
 
   addItem(item: { name: string; self: string }): void {
-    // Only add if it's not already in the appliedItems array
+    // Only add if its not already in the appliedItems array
     if (!this.appliedItems.find(t => t.self === item.self)) {
       this.appliedItems.push(item);
 

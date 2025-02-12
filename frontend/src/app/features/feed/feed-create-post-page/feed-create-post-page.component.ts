@@ -294,7 +294,7 @@ export class FeedCreatePostPageComponent implements OnInit {
 
     const newTag: Tag = {
       name: formattedTag,
-      self: null, // Mark as `null` since it hasn't been created yet
+      self: null,
     };
 
     this.addTagToApplied(newTag);

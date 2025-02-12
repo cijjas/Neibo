@@ -135,7 +135,7 @@ export class AdminCreateAnnouncementPageComponent implements OnInit {
       // Hide preview
       this.imagePreviewUrl = null;
       // The user sees the error in <app-form-error>.
-      // They also still see the file's name in <input type="file"> by default.
+      // They also still see the files name in <input type="file"> by default.
       return;
     }
 

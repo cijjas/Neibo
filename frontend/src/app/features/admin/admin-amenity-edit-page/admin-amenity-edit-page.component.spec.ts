@@ -146,7 +146,7 @@ describe('AdminAmenityEditPageComponent', () => {
     // - the form values
     // - an array of selected shift self URLs.
     expect(mockAmenityService.updateAmenity).toHaveBeenCalledWith(
-      '123',
+      '/api/amenities/123',
       'Updated Gym',
       'Updated description',
       ['/api/shifts/1'],

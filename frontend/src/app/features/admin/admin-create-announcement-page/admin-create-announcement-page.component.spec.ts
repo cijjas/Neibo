@@ -174,7 +174,7 @@ describe('AdminCreateAnnouncementPageComponent', () => {
     // 6. Flush asynchronous operations.
     flush();
 
-    // 7. Check that the form's "tags" control was patched with the correct tag URLs.
+    // 7. Check that the forms "tags" control was patched with the correct tag URLs.
     const updatedTags = component.announcementForm.get('tags')?.value;
     expect(updatedTags).toEqual(['/api/tags/existing', '/api/tags/newTag']);
 

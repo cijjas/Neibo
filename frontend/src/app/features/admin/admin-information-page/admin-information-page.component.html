@@ -17,7 +17,7 @@
 
   <!-- If no phone numbers -->
   <div class="no-posts-found" *ngIf="phoneNumbersList?.length === 0">
-    <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-4x"></i>
     {{ 'ADMIN-INFORMATION-PAGE.INFORMATION_NOT_FOUND' | translate }}
   </div>
 
@@ -72,7 +72,7 @@
 
 <!-- Resources list -->
 <div class="no-posts-found" *ngIf="resourceList?.length === 0">
-  <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+  <i class="fa-solid fa-magnifying-glass fa-4x"></i>
   {{ 'ADMIN-INFORMATION-PAGE.RESOURCES_NOT_FOUND' | translate }}
 </div>
 
@@ -138,7 +138,9 @@
           <input
             formControlName="contactName"
             class="cool-input"
-            [attr.placeholder]="'ADMIN-INFORMATION-PAGE.CONTACT_NAME' | translate"
+            [attr.placeholder]="
+              'ADMIN-INFORMATION-PAGE.CONTACT_NAME' | translate
+            "
             type="text"
           />
           <app-form-error
@@ -153,7 +155,9 @@
           <input
             formControlName="contactAddress"
             class="cool-input"
-            [attr.placeholder]="'ADMIN-INFORMATION-PAGE.CONTACT_ADDRESS' | translate"
+            [attr.placeholder]="
+              'ADMIN-INFORMATION-PAGE.CONTACT_ADDRESS' | translate
+            "
             type="text"
           />
           <app-form-error
@@ -168,7 +172,9 @@
           <input
             formControlName="contactPhone"
             class="cool-input"
-            [attr.placeholder]="'ADMIN-INFORMATION-PAGE.CONTACT_PHONE' | translate"
+            [attr.placeholder]="
+              'ADMIN-INFORMATION-PAGE.CONTACT_PHONE' | translate
+            "
             type="text"
           />
           <app-form-error
@@ -235,7 +241,9 @@
           <input
             formControlName="description"
             class="cool-input"
-            [attr.placeholder]="'ADMIN-INFORMATION-PAGE.DESCRIPTION' | translate"
+            [attr.placeholder]="
+              'ADMIN-INFORMATION-PAGE.DESCRIPTION' | translate
+            "
             type="text"
           />
           <app-form-error

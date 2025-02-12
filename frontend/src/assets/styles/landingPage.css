@@ -86,7 +86,7 @@
   transform: translateY(0);
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     width: 100%;
     height: 110%;
@@ -135,7 +135,7 @@ input.ng-invalid.ng-touched {
 }
 
 /* input[type="text"], TODO VER SI AFECTABA EN ALGUN LUGAR */
-input[type="number"],
+input[type='number'],
 .input {
   width: 100%;
   height: var(--input-height);
@@ -152,7 +152,7 @@ input[type="number"],
   transform: translateY(0);
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     width: 100%;
     height: 110%;
@@ -246,7 +246,7 @@ input[type="number"],
   transform: translateY(0);
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     width: 100%;
     height: 110%;
@@ -299,10 +299,10 @@ input[type="number"],
 
 .form-error {
   margin-left: 5px;
-  white-space: normal; /* Allows text to wrap onto multiple lines */
+  white-space: normal;
   word-break: break-word;
-  max-width: 100%; /* Ensure it doesn't exceed the container width */
-  display: block; /* Make sure error messages are on their own line */
+  max-width: 100%;
+  display: block;
   flex-direction: row;
   justify-content: start;
   align-items: center;

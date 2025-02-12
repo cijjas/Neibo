@@ -52,7 +52,7 @@ export class CalendarBoxComponent implements OnInit {
         );
       }
 
-      // Set the calendar's date and selected day.
+      // Set the calendars date and selected day.
       this.date = new Date(this.selectedDate);
       this.selectedDay = {
         date: this.selectedDate.getUTCDate(),
@@ -125,7 +125,7 @@ export class CalendarBoxComponent implements OnInit {
 
     this.days = [];
 
-    // Previous month's days (using UTC).
+    // Previous months days (using UTC).
     for (let i = firstDayOfMonth; i > 0; i--) {
       let prevMonth = month - 1;
       let prevYear = year;
@@ -143,7 +143,7 @@ export class CalendarBoxComponent implements OnInit {
       });
     }
 
-    // Current month's days.
+    // Current months days.
     for (let i = 1; i <= lastDateOfMonth; i++) {
       const currentDay = new Date(Date.UTC(year, month, i));
       const isToday =
@@ -165,7 +165,7 @@ export class CalendarBoxComponent implements OnInit {
       });
     }
 
-    // Next month's days.
+    // Next months days.
     for (let i = lastDayOfMonth; i < 6; i++) {
       let nextMonth = month + 1;
       let nextYear = year;

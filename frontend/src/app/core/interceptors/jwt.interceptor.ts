@@ -101,7 +101,7 @@ export class JwtInterceptor implements HttpInterceptor {
   }
 
   /**
-   * Refresh the access token using the refresh token.
+   * Refersh the access token using the refresh token.
    * Expects a 401 response with a new access token in the `X-Access-Token` header.
    */
   private refreshToken(): Observable<string | HttpResponse<Object>> {

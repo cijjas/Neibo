@@ -28,7 +28,6 @@ export class ConfirmationService {
     return this.confirmationSubject.asObservable();
   }
 
-  // Called by the dialog's confirm/cancel methods
   respondToConfirmation(response: boolean) {
     if (this.currentResponseSubject) {
       this.currentResponseSubject.next(response);

@@ -42,7 +42,7 @@
             <div class="loader marketplace w-100"></div>
           </div>
           <div class="no-posts-found" *ngIf="listings.length === 0 && !loading">
-            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass fa-4x"></i>
             {{ 'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_LISTINGS' | translate }}
           </div>
 
@@ -202,19 +202,16 @@
             <div class="loader marketplace w-100"></div>
           </div>
           <div class="no-posts-found" *ngIf="sales.length === 0 && !loading">
-            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass fa-4x"></i>
             {{ 'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_SELLED' | translate }}
           </div>
 
           <div class="w-100 f-c-c-c g-1" *ngIf="sales.length > 0">
             <div
-              class="cool-static-container w-100 f-c-s-s g-0 p-0"
+              class="cool-static-m-container w-100 f-c-s-s g-0 p-0"
               *ngFor="let sale of sales"
             >
-              <div
-                class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2"
-                style="padding-left: 1em; padding-right: 1em"
-              >
+              <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2 time-header">
                 <div>{{ sale.createdAt | date : 'dd MMM yyyy' }}</div>
                 <div>{{ sale.createdAt | date : 'HH:mm' }}</div>
               </div>

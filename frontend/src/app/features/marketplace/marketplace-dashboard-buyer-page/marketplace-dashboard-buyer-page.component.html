@@ -44,7 +44,7 @@
             class="no-posts-found"
             *ngIf="purchaseList && purchaseList.length === 0 && !loading"
           >
-            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass fa-4x"></i>
             {{
               'MARKETPLACE-DASHBOARD-BUYER-PAGE.PURCHASES_NOT_FOUND' | translate
             }}
@@ -55,10 +55,10 @@
             *ngIf="purchaseList && purchaseList.length > 0 && !loading"
           >
             <div
-              class="cool-static-container w-100 f-c-s-s g-0 p-0"
+              class="cool-static-m-container w-100 f-c-s-s g-0 p-0"
               *ngFor="let purchase of purchaseList"
             >
-              <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2">
+              <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2 time-header">
                 <div>{{ purchase.fulfilledAt | date : 'dd MMM yyyy' }}</div>
                 <div>{{ purchase.fulfilledAt | date : 'HH:mm' }}</div>
               </div>
@@ -182,19 +182,16 @@
             class="no-posts-found"
             *ngIf="requestList.length === 0 && !loading"
           >
-            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass fa-4x"></i>
             {{ 'MARKETPLACE-DASHBOARD-BUYER-PAGE.NO_NEW_REQUESTS' | translate }}
           </div>
 
           <div class="w-100 f-c-c-c g-1" *ngIf="requestList.length > 0">
             <div
-              class="cool-static-container w-100 f-c-s-s g-0 p-0"
+              class="cool-static-m-container w-100 f-c-s-s g-0 p-0"
               *ngFor="let request of requestList"
             >
-              <div
-                class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2"
-                style="padding-left: 1em; padding-right: 1em"
-              >
+              <div class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2 time-header">
                 <div>{{ request.createdAt | date : 'dd MMM yyyy' }}</div>
                 <div>{{ request.createdAt | date : 'HH:mm' }}</div>
               </div>

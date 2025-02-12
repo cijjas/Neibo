@@ -159,7 +159,7 @@ export class CalendarWidgetComponent implements OnInit {
 
     this.days = [];
 
-    // Previous month's trailing days.
+    // Previous months trailing days.
     for (let i = firstDayOfMonth; i > 0; i--) {
       let prevMonth = this.date.getMonth() - 1;
       let year = this.date.getFullYear();
@@ -177,7 +177,7 @@ export class CalendarWidgetComponent implements OnInit {
       });
     }
 
-    // Current month's days.
+    // Current months days.
     for (let i = 1; i <= lastDateOfMonth; i++) {
       const currentDay = new Date(
         this.date.getFullYear(),
@@ -195,7 +195,7 @@ export class CalendarWidgetComponent implements OnInit {
       });
     }
 
-    // Next month's leading days.
+    // Next months leading days.
     for (let i = lastDayOfMonth; i < 6; i++) {
       let nextMonth = this.date.getMonth() + 1;
       let year = this.date.getFullYear();

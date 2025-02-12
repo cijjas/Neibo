@@ -118,6 +118,7 @@ describe('MarketplacePageComponent - Initialization', () => {
       page: 2,
       size: 30,
       inDepartment: 'dept1',
+      withStatus: undefined,
     });
 
     expect(component.productList).toEqual(dummyProducts);

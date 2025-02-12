@@ -27,10 +27,10 @@
 }
 
 .confirmation-dialog h2 {
-  word-wrap: break-word; /* Break long words to fit in the container */
-  white-space: normal; /* Allow wrapping of text */
-  text-align: center; /* Optional: Center-align the title */
-  max-width: 100%; /* Ensure it doesn't overflow */
+  word-wrap: break-word;
+  white-space: normal;
+  text-align: center;
+  max-width: 100%;
 }
 .confirmation-button {
   text-align: center;

@@ -5,7 +5,7 @@ import { UserSessionService } from '@core/services/user-session.service';
 import { Role } from '@shared/index';
 
 export const RoleGuard = async (
-  route: ActivatedRouteSnapshot
+  route: ActivatedRouteSnapshot,
 ): Promise<boolean | UrlTree> => {
   const router = inject(Router);
   const authService = inject(AuthService);
@@ -32,7 +32,7 @@ export const RoleGuard = async (
   }
 
   const userRole = userSessionService.getCurrentRole();
-  // 4) Check if the user's role matches any required role
+  // 4) Check if the users role matches any required role
   if (requiredRoles.includes(userRole)) {
     // Authorized
     return true;

@@ -176,7 +176,9 @@ export class SignupDialogComponent implements OnInit {
   trySignup(): void {
     if (this.signupForm.invalid) {
       this.toastService.showToast(
-        this.translate.instant('SIGNUP-DIALOG.PLEASE_FILL_OUT_ALL_REQUIRED_FIELDS'),
+        this.translate.instant(
+          'SIGNUP-DIALOG.PLEASE_FILL_OUT_ALL_REQUIRED_FIELDS',
+        ),
         'error',
       );
       return;
@@ -211,7 +213,7 @@ export class SignupDialogComponent implements OnInit {
               next: success => {
                 this.loading = false;
                 if (success) {
-                  // Get the user's role from UserSessionService
+                  // Get the users role from UserSessionService
                   const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
                     case Role.WORKER:
@@ -342,7 +344,7 @@ export class SignupDialogComponent implements OnInit {
               next: success => {
                 this.loading = false;
                 if (success) {
-                  // Get the user's role from UserSessionService
+                  // Get the users role from UserSessionService
                   const userRole = this.userSessionService.getCurrentRole();
                   switch (userRole) {
                     case Role.WORKER:

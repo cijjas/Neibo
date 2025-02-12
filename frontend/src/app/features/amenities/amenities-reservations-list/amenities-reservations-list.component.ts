@@ -51,7 +51,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
       })
       .subscribe({
         next: data => {
-          this.reservationsList = data.bookings || []; // Ensure it's an array
+          this.reservationsList = data.bookings || []; // Ensure its an array
           this.totalPages = data.totalPages || 1;
           this.isLoading = false; // Stop loading
         },

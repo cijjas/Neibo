@@ -3,6 +3,7 @@ import { MarketplaceProductPreviewComponent } from './marketplace-product-previe
 import { Router } from '@angular/router';
 import { Product, Department } from '@shared/index';
 import { environment } from 'environments/environment';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 describe('MarketplaceProductPreviewComponent', () => {
   let component: MarketplaceProductPreviewComponent;
@@ -51,7 +52,7 @@ describe('MarketplaceProductPreviewComponent', () => {
     component.onProductClick();
     expect(routerSpy.navigate).toHaveBeenCalledWith([
       '/marketplace/products',
-      component.product.self,
+      encodeUrlSafeBase64(component.product.self),
     ]);
   });
 

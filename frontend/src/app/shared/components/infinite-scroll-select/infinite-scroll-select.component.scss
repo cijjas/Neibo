@@ -65,16 +65,16 @@ $infinite-scroll-categories: (
 
       /* Always display the checkmark icon */
       &::after {
-        content: "\f058"; /* Unicode for fa-check-circle */
-        font-family: "Font Awesome 5 Free"; 
+        content: '\f058'; /* Unicode for fa-check-circle */
+        font-family: 'Font Awesome 5 Free';
         font-weight: 400; /* 400 for regular (outline) */
         position: absolute;
         left: 10px;
         top: 50%;
         transform: translateY(-50%);
         color: var(--bordercolor);
-        font-size: 1.2em; 
-        pointer-events: none; /* Ensures the icon doesn't interfere with click events */
+        font-size: 1.2em;
+        pointer-events: none;
       }
 
       /* Modify the checkmark when active */

@@ -19,6 +19,7 @@ import {
   HateoasLinksService,
 } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Pipe({ name: 'translate' })
 class FakeTranslatePipe implements PipeTransform {
@@ -154,7 +155,7 @@ describe('ServiceProvidersCreatePostComponent', () => {
       'success',
     );
     expect(routerSpy.navigate).toHaveBeenCalledWith(
-      ['/services', 'my-profile', 'worker123'],
+      ['/services', 'my-profile', encodeUrlSafeBase64('worker123')],
       { queryParams: { tab: 'posts' } },
     );
   }));

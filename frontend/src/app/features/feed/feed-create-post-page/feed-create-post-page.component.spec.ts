@@ -102,7 +102,6 @@ describe('FeedCreatePostPageComponent', () => {
   beforeEach(() => {
     // By default, the user is NEIGHBOR (not worker).
     userSessionSpy.getCurrentRole.and.returnValue(Role.NEIGHBOR);
-    // The user object isn't used extensively, so we can return a simple stub.
     userSessionSpy.getCurrentUser.and.returnValue(of({ self: 'user_self' }));
 
     // Stub link lookups
@@ -132,7 +131,6 @@ describe('FeedCreatePostPageComponent', () => {
 
   // 1) Non-worker initialization => fetches tags
   it('should initialize, fetch tags if not worker', () => {
-    // Because we haven't changed getCurrentRole, it's NEIGHBOR => fetch tags
     fixture = TestBed.createComponent(FeedCreatePostPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges(); // triggers ngOnInit

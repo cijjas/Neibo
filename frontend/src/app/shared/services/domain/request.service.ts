@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin, throwError } from 'rxjs';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import {
   Request,
@@ -73,9 +73,17 @@ export class RequestService {
     return this.http
       .get<RequestDto[]>(url, { params, observe: 'response' })
       .pipe(
-        map(response => {
+        mergeMap(response => {
           const requestsDto: RequestDto[] = response.body || [];
           const pagination = parseLinkHeader(response.headers.get('Link'));
+
+          if (requestsDto.length === 0) {
+            return of({
+              requests: [],
+              totalPages: pagination.totalPages,
+              currentPage: pagination.currentPage,
+            });
+          }
 
           const requestObservables = requestsDto.map(requestDto =>
             mapRequest(this.http, requestDto),
@@ -88,7 +96,6 @@ export class RequestService {
             })),
           );
         }),
-        mergeMap(result => result),
       );
   }
 
