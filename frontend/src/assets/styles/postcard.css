@@ -3,7 +3,7 @@
   padding: 20px;
   transform: translateY(-4px);
   border: 1px solid var(--bordercolor);
-  box-shadow: -3px 5px 0 0 var(--shadow);
+  box-shadow: -3px 5px 0 0 var(--bordercolor);
   background-color: var(--onbackground);
   color: var(--text);
   border-radius: var(--border-radius);
@@ -49,12 +49,13 @@
 .cool-comment {
   margin-top: 5px;
   margin-bottom: 5px;
+  padding: 5px 10px;
+
   font-size: 12px;
   font-weight: normal;
   border-radius: var(--border-radius);
   background-color: var(--darkonbackground);
   color: var(--text);
   width: 100%;
-  padding: 5px 10px;
   outline: none;
 }

@@ -161,7 +161,7 @@ describe('CalendarEventsColumnComponent', () => {
   }));
 
   it('should delete event after confirmation and reload events', fakeAsync(() => {
-    // For the second fetch after deletion, let's return an empty list
+    // For the second fetch after deletion, lets return an empty list
     const afterDeleteResponse = { events: [], totalPages: 1 };
     eventServiceSpy.deleteEvent.and.returnValue(of({}));
     eventServiceSpy.getEvents.and.returnValue(of(afterDeleteResponse));

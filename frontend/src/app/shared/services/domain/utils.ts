@@ -1,6 +1,6 @@
 // utils.ts
 
-import { HttpHeaders } from "@angular/common/http";
+import { HttpHeaders } from '@angular/common/http';
 
 export function parseLinkHeader(header: string | null): {
   totalPages: number;
@@ -54,7 +54,7 @@ export function formatName(name: string): string {
  * Supports localization and customizable time formats.
  *
  * @param timeString - The time string in "HH:mm:ss" or "HH:mm" format.
- * @param locale - (Optional) Locale string for formatting. Defaults to the user's locale.
+ * @param locale - (Optional) Locale string for formatting. Defaults to the users locale.
  * @param options - (Optional) Intl.DateTimeFormat options for customization.
  * @returns A formatted time string or an error message if input is invalid.
  */
@@ -86,7 +86,7 @@ export function formatTime(
 
   const [_, hours, minutes, seconds] = match;
 
-  // Create a Date object with today's date and the parsed time
+  // Create a Date object with todays date and the parsed time
   const now = new Date();
   now.setHours(parseInt(hours, 10));
   now.setMinutes(parseInt(minutes, 10));
@@ -107,7 +107,10 @@ export function extractCountFromHeaders(headers: HttpHeaders): number {
   return countHeader ? parseInt(countHeader, 10) : 0;
 }
 
-export function extractCountAndAverageFromHeaders(headers: HttpHeaders): { count: number; average: number } {
+export function extractCountAndAverageFromHeaders(headers: HttpHeaders): {
+  count: number;
+  average: number;
+} {
   const countHeader = headers.get('X-Count');
   const averageHeader = headers.get('X-Average');
   return {

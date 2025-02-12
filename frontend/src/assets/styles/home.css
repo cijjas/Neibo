@@ -324,7 +324,7 @@
   border: 1px solid var(--bordercolor);
   border-radius: var(--border-radius);
   transform: translateY(-3px);
-  box-shadow: -3px 4px 0 0 var(--lighttext);
+  box-shadow: -3px 4px 0 0 var(--bordercolor);
 
   & .cool-feed-button {
     gap: 0.2em;
@@ -636,19 +636,13 @@
   align-items: center;
   flex-direction: column;
   text-align: center;
-  color: var(--lighttext);
+  color: var(--lightertext);
   gap: 10px;
-  box-shadow: -4px 4px 0 0 var(--lighttext);
-}
+  box-shadow: -4px 4px 0 0 var(--bordercolor);
 
-.circle-icon {
-  border: var(--lighttext) 1px solid;
-  border-radius: 50px;
-  width: 45px;
-  height: 45px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  & i {
+    margin-bottom: 1rem;
+  }
 }
 
 .error {
@@ -676,7 +670,7 @@
   border: 1px solid var(--bordercolor);
 
   transform: translateY(-4px);
-  box-shadow: 0 0px 0 0 var(--lighttext);
+  box-shadow: 0 0px 0 0 var(--bordercolor);
   margin-bottom: 20px;
 }
 
@@ -772,7 +766,7 @@
   background-color: var(--onbackground);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
-  box-shadow: -3px 5px 0 0 var(--shadow);
+  box-shadow: -3px 5px 0 0 var(--bordercolor);
   border: 1px solid var(--bordercolor);
 
   &.admin-box {
@@ -1116,6 +1110,21 @@
   }
 }
 
+.time-header {
+  padding-left: 1em;
+  padding-right: 1em;
+  background-color: var(--to-lila);
+}
+.cool-static-m-container {
+  overflow: hidden;
+  padding: 2em 2em;
+  width: 100%;
+  background-color: var(--onbackground);
+  color: var(--text);
+  border-radius: var(--border-radius);
+  box-shadow: 0px 0px 3px 1px var(--bordercolor);
+}
+
 .cool-static-container {
   overflow: hidden;
   padding: 2em 2em;
@@ -1125,7 +1134,7 @@
   border: 1px solid var(--bordercolor);
   border-radius: var(--border-radius);
   transform: translateY(-4px);
-  box-shadow: 0 5px 0 0 var(--lighttext);
+  box-shadow: 0 5px 0 0 var(--bordercolor);
 
   &.red {
     border: 1px solid var(--error);
@@ -1482,7 +1491,6 @@ app-background-clouds {
   width: 100%;
   height: 100%;
   z-index: -10000;
-  /* Ensures it doesn't overlap other components */
   pointer-events: none;
   /* Prevents it from capturing clicks or interactions */
 }
@@ -1823,8 +1831,8 @@ app-navbar {
 
       &:active {
         border: 1px solid var(--background);
-        transform: translateY(4px);
-        box-shadow: 0 0 0 0;
+        transform: translateY(1px);
+        box-shadow: 0 1px 0 0;
       }
     }
 
@@ -2031,7 +2039,7 @@ app-navbar {
   &:hover,
   &:focus-visible {
     transform: translateY(-4px);
-    box-shadow: -3px 4px var(--lighttext);
+    box-shadow: -3px 4px var(--bordercolor);
   }
 }
 
@@ -2328,7 +2336,7 @@ h6 {
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: -2px 4px 0 var(--lighttext);
+    box-shadow: -2px 4px 0 var(--bordercolor);
     cursor: pointer;
   }
 }
@@ -2343,7 +2351,7 @@ h6 {
   border-radius: var(--border-radius);
   transition: all 0.3s ease-in-out;
   transform: translateY(-4px);
-  box-shadow: -3px 5px 0 0 var(--lighttext);
+  box-shadow: -3px 5px 0 0 var(--bordercolor);
 }
 
 .profile-widget {
@@ -2903,7 +2911,6 @@ input[type='time'] {
   justify-content: flex-start;
 }
 
-/* Ensure right side elements don't get squished */
 .col-4.pt-3.pb-3 {
   flex-shrink: 0;
   max-width: 33.3333%;
@@ -3190,9 +3197,6 @@ input[type='time'] {
 }
 
 .purchased-product-image {
-  width: 100px;
-  height: 100px;
-
   & img {
     border-radius: var(--border-radius);
     width: 100%;
@@ -3380,7 +3384,7 @@ input[type='time'] {
   align-items: flex-start;
   padding: 10px;
   background-color: var(--box-background);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--bordercolor);
   overflow: hidden;
   /* Hide overflowing content */
   box-sizing: border-box;
@@ -3544,7 +3548,7 @@ input[type='time'] {
 }
 
 .cell-wrapper:hover {
-  background-color: var(--border-color);
+  background-color: var(--bordercolor);
   /* Highlight on hover */
 }
 
@@ -3644,5 +3648,30 @@ td.selected .cell-wrapper {
   100% {
     background-color: #fff2;
     box-shadow: 32px 0 #fff, -32px 0 #fff2;
+  }
+}
+
+/* LOADING COMMENT */
+
+.placeholder-comment {
+  border-radius: var(--border-radius);
+  animation: pulse 1.5s infinite ease-in-out;
+  background-color: var(--onbackground);
+  height: 69px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: rgba(29, 34, 41, 0.2);
+  }
+  50% {
+    background-color: var(--darkonbackground);
+  }
+  100% {
+    background-color: rgba(29, 34, 41, 0.2);
   }
 }

@@ -18,6 +18,7 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './marketplace-product-requests-page.component.html',
 })
 export class MarketplaceProductRequestsPageComponent implements OnInit {
+  loading: boolean = false;
   channel: string = 'SellerHub';
 
   product?: Product;
@@ -70,6 +71,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
   }
 
   private fetchRequests(): void {
+    this.loading = true;
     const statusUrl = this.linkService.getLink(
       LinkKey.REQUESTED_REQUEST_STATUS,
     );
@@ -84,8 +86,13 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
         next: data => {
           this.requestList = data.requests;
           this.totalPages = data.totalPages;
+          this.loading = false;
         },
-        error: err => console.error(err),
+
+        error: err => {
+          console.error(err);
+          this.loading = false;
+        },
       });
   }
 
@@ -121,7 +128,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
         next: () => {
           this.showLoader = false;
           this.closeMarkAsSoldDialog();
-          this.fetchRequests();
+          window.location.reload(); // Fully reload the page to update product
         },
         error: err => {
           this.showLoader = false;

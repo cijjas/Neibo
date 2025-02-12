@@ -11,7 +11,7 @@
         </h2>
         <div *ngIf="contacts.length === 0; else contactTable">
           <div class="no-posts-found">
-            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass fa-4x"></i>
             {{ 'INFORMATION-PAGE.INFORMATION_NOT_FOUND' | translate }}
           </div>
         </div>
@@ -47,40 +47,50 @@
         </div>
       </div>
 
-      <div
-        *ngFor="let resource of resources"
-        class="cool-static-container m-b-20"
-        style="word-wrap: break-word"
-      >
+      <div class="w-100 cool-static-container" *ngIf="loading">
+        <div class="loader w-100"></div>
+      </div>
+
+      <div *ngIf="!loading && resources.length > 0">
         <div
-          class="d-flex flex-column justify-content-center align-items-center w-100"
+          *ngFor="let resource of resources"
+          class="cool-static-container m-b-20"
+          style="word-wrap: break-word"
         >
-          <h2>{{ resource.title }}</h2>
-          <h3 style="all: unset">{{ resource.description }}</h3>
           <div
-            class="mt-3"
-            *ngIf="resource.image"
-            style="display: flex; justify-content: center; align-items: center"
+            class="d-flex flex-column justify-content-center align-items-center w-100"
           >
-            <img
-              [src]="resource.image"
-              style="max-width: 100%; max-height: 100vh; border-radius: 5px"
-              [alt]="'resource image ' + resource.title"
-            />
+            <h2>{{ resource.title }}</h2>
+            <h3 style="all: unset">{{ resource.description }}</h3>
+            <div
+              class="mt-3"
+              *ngIf="resource.image"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <img
+                [src]="resource.image"
+                style="max-width: 100%; max-height: 100vh; border-radius: 5px"
+                [alt]="'resource image ' + resource.title"
+              />
+            </div>
           </div>
         </div>
-      </div>
-      <div
-        class="d-flex justify-content-center mt-3"
-        *ngIf="resourceTotalPages > 1"
-      >
-        <app-paginator
-          [totalPages]="resourceTotalPages"
-          [currentPage]="resourceCurrentPage"
-          [pageSize]="resourcePageSize"
-          (pageChange)="onResourcePageChange($event)"
+        <div
+          class="d-flex justify-content-center mt-3"
+          *ngIf="resourceTotalPages > 1"
         >
-        </app-paginator>
+          <app-paginator
+            [totalPages]="resourceTotalPages"
+            [currentPage]="resourceCurrentPage"
+            [pageSize]="resourcePageSize"
+            (pageChange)="onResourcePageChange($event)"
+          >
+          </app-paginator>
+        </div>
       </div>
     </div>
 

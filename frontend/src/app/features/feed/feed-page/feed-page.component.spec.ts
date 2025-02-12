@@ -9,7 +9,6 @@ import { PostService, LinkKey, Post } from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 
-// Define a simple fake TranslateService.
 class FakeTranslateService {
   currentLang = 'en';
   setDefaultLang(lang: string): void {}
@@ -17,7 +16,6 @@ class FakeTranslateService {
     return of(lang);
   }
   instant(key: string): string {
-    // For testing, simply return the key or a modified version.
     return key;
   }
 }

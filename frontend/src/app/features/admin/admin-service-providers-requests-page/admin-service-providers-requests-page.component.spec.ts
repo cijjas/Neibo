@@ -76,7 +76,7 @@ describe('AdminServiceProvidersRequestsPageComponent', () => {
       .and.callFake((key: string, params?: any) => key),
   };
 
-  // Configure ActivatedRoute so that the component behaves as if it's on the "service-providers" route.
+  // Configure ActivatedRoute so that the component behaves as if its on the "service-providers" route.
   const mockActivatedRoute = {
     url: of([{ path: 'service-providers' }]),
     queryParams: of({ page: 1, size: 10 }),

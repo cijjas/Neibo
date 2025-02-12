@@ -63,7 +63,7 @@ body {
   --secondary: #d8d8c5;
   --error: #de6f6f;
   --scrollbarthumb: #004f2d;
-  --bordercolor: #d9d9cf;
+  --bordercolor: #c8c8bb;
   --always-background: #faf6e8;
   --on-onbackground: rgb(238, 236, 231);
   --green: #328d3d;
@@ -87,7 +87,7 @@ body {
   --admin: #3d4a70;
 
   --border-light: 5px;
-  --border-radius: 0.8em;
+  --border-radius: 0.83em;
   --border-hard: 50px;
 
   --border: 1px solid var(--primary);
@@ -100,7 +100,7 @@ body {
 .dark-mode {
   --text: #ced3c1;
   --lighttext: #797f86;
-  --shadow: #4f5f6f;
+  --shadow: #424c56;
 
   --lightertext: #878f82;
 
@@ -471,10 +471,18 @@ p {
   gap: 1rem;
 }
 
-.f-c-sb-c {
+.f-c-sb-e {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+}
+
+.f-c-sb-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
   align-items: center;
   gap: 1rem;
 }

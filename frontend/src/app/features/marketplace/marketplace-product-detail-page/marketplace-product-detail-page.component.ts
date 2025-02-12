@@ -42,7 +42,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
   totalPages: number = 1;
   page: number = 1;
   size: number = 10;
-  requestError: boolean = false;
 
   phoneNumber: string = '';
   requestMessage: string = '';
@@ -70,6 +69,7 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     private toastService: ToastService,
     private translate: TranslateService,
     private titleService: Title,
+    private userSessionService: UserSessionService,
   ) {}
 
   ngOnInit(): void {
@@ -136,7 +136,8 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  closeRequestDialog() {
+  closeRequestDialog(requestForm: NgForm) {
+    requestForm.resetForm();
     this.requestDialogVisible = false;
   }
 
@@ -209,15 +210,16 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
             ),
             'success',
           );
-          this.requestDialogVisible = false;
+          this.closeRequestDialog(requestForm);
           requestForm.resetForm();
         },
         error: err => {
+          this.closeRequestDialog(requestForm);
+
           this.toastService.showToast(
             this.translate.instant('MARKETPLACE-PRODUCT-DETAIL-PAGE.OOPS'),
             'error',
           );
-          this.requestError = true;
         },
       });
     this.cdr.detectChanges();
@@ -247,10 +249,12 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
                   ),
                   'success',
                 );
-                this.requestDialogVisible = false;
+                this.closeRequestDialog(phoneRequestForm);
                 phoneRequestForm.resetForm();
               },
               error: err => {
+                this.closeRequestDialog(phoneRequestForm);
+
                 console.error('Error sending request:', err);
                 this.toastService.showToast(
                   this.translate.instant(
@@ -258,7 +262,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
                   ),
                   'error',
                 );
-                this.requestError = true;
               },
             });
         },
@@ -268,7 +271,6 @@ export class MarketplaceProductDetailPageComponent implements OnInit {
             this.translate.instant('MARKETPLACE-PRODUCT-DETAIL-PAGE.OOPS'),
             'error',
           );
-          this.requestError = true;
         },
       });
     this.cdr.detectChanges();

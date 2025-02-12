@@ -82,7 +82,7 @@ export class LoginDialogComponent implements OnInit {
           this.loading = false;
 
           if (success) {
-            // Get the user's role from UserSessionService
+            // Get the users role from UserSessionService
             const userRole = this.userSessionService.getCurrentRole();
 
             switch (userRole) {

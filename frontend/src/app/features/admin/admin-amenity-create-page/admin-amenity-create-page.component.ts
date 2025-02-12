@@ -169,7 +169,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
       s => s.day === dayName && s.startTime === startTime,
     );
     if (!foundShift) {
-      // If there's literally no shift for that day/time, do nothing
+      // If theres literally no shift for that day/time, do nothing
       return;
     }
 
@@ -194,7 +194,7 @@ export class AdminAmenityCreatePageComponent implements OnInit {
    * i.e. if EVERY day in that row is selected for that time
    */
   isRowSelected(time: string): boolean {
-    // For each day, check if there's a shift. If it exists, is it selected?
+    // For each day, check if theres a shift. If it exists, is it selected?
     // The row is "fully selected" only if for every day, the shift is selected
     return this.uniqueDays.every(day => {
       const shift = this.allShifts.find(

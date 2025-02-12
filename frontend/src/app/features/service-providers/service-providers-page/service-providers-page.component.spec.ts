@@ -9,8 +9,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ServiceProvidersPageComponent } from './service-providers-page.component';
-import { Profession, User, Worker, WorkerService } from '@shared/index';
+import {
+  LinkKey,
+  Profession,
+  User,
+  Worker,
+  WorkerService,
+} from '@shared/index';
 import { TranslateService } from '@ngx-translate/core';
+import { HateoasLinksService, UserSessionService } from '@core/index';
 
 const dummyUser: User = {
   email: 'test@example.com',
@@ -22,13 +29,13 @@ const dummyUser: User = {
   creationDate: new Date(),
   language: 'en',
   userRole: 'worker',
-  userRoleEnum: null, 
+  userRoleEnum: null,
   userRoleDisplay: 'Worker',
   image: 'profile.jpg',
   self: 'user1',
 };
 
-const dummyProfessions: Profession[] = []; 
+const dummyProfessions: Profession[] = [];
 
 const dummyWorker: Worker = {
   phoneNumber: '111-222-3333',
@@ -47,6 +54,14 @@ const dummyWorker: Worker = {
   self: 'worker1',
 };
 
+const hateoasLinksServiceStub = {
+  getLink: (key: string) => {
+    if (key === LinkKey.VERIFIED_WORKER_ROLE) {
+      return 'verified-worker-role-url';
+    }
+    return undefined;
+  },
+};
 describe('ServiceProvidersPageComponent', () => {
   let component: ServiceProvidersPageComponent;
   let fixture: ComponentFixture<ServiceProvidersPageComponent>;
@@ -75,6 +90,14 @@ describe('ServiceProvidersPageComponent', () => {
 
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
+    const userSessionServiceStub = {
+      getCurrentUserValue: () => dummyUser,
+    };
+
+    const hateoasLinksServiceStub = {
+      getLink: (key: string) => undefined,
+    };
+
     TestBed.configureTestingModule({
       declarations: [ServiceProvidersPageComponent],
       providers: [
@@ -85,6 +108,8 @@ describe('ServiceProvidersPageComponent', () => {
           provide: TranslateService,
           useValue: { instant: (key: string) => key },
         },
+        { provide: UserSessionService, useValue: userSessionServiceStub },
+        { provide: HateoasLinksService, useValue: hateoasLinksServiceStub },
       ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -103,11 +128,13 @@ describe('ServiceProvidersPageComponent', () => {
 
     tick();
 
-    expect(workerServiceSpy.getWorkers).toHaveBeenCalledWith({
-      page: 2,
-      size: 15,
-      withProfession: ['plumber'],
-    });
+    expect(workerServiceSpy.getWorkers).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        page: 2,
+        size: 15,
+        withProfession: ['plumber'],
+      }),
+    );
 
     expect(component.workersList).toEqual(dummyWorkers);
     expect(component.totalPages).toEqual(5);

@@ -59,7 +59,7 @@ describe('AdminNeighborsRequestsPageComponent', () => {
       .and.callFake((key: string, params?: any) => key),
   };
 
-  // Configure the ActivatedRoute so that the component behaves as if it's on the "neighbors" route.
+  // Configure the ActivatedRoute so that the component behaves as if its on the "neighbors" route.
   const mockActivatedRoute = {
     url: of([{ path: 'neighbors' }]),
     queryParams: of({ page: 1, size: 10 }),

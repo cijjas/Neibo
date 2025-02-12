@@ -42,6 +42,8 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   likesUrl: string | undefined;
   environment = environment;
 
+  loadingComments = true;
+
   constructor(
     private fb: FormBuilder,
     private imageService: ImageService,
@@ -211,6 +213,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   }
 
   getComments(page: number, size: number): void {
+    this.loadingComments = true;
     if (this.post?.comments) {
       this.commentService
         .getComments(this.post.comments, { page, size })
@@ -219,10 +222,12 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
             this.comments = response.comments || [];
             this.totalPages = response.totalPages || 1;
             this.currentPage = response.currentPage || 1;
+            this.loadingComments = false;
           },
           error: err => {
             console.error('Error fetching comments:', err);
             this.comments = [];
+            this.loadingComments = false;
           },
         });
     }

@@ -28,6 +28,8 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   requestList: Request[] = [];
   purchaseList: Request[] = [];
 
+  loading: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -80,6 +82,7 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
   }
 
   loadRequests(): void {
+    this.loading = true;
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const requestStatusUrl: string = this.linkService.getLink(
       LinkKey.REQUESTED_REQUEST_STATUS,
@@ -100,12 +103,17 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
         next: data => {
           this.requestList = data.requests;
           this.totalPages = data.totalPages;
+          this.loading = false;
         },
-        error: err => console.error(err),
+        error: err => {
+          console.error(err);
+          this.loading = false;
+        },
       });
   }
 
   loadPurchases(): void {
+    this.loading = true;
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const requestStatusUrl: string = this.linkService.getLink(
       LinkKey.ACCEPTED_REQUEST_STATUS,
@@ -126,8 +134,12 @@ export class MarketplaceDashboardBuyerPageComponent implements OnInit {
         next: data => {
           this.purchaseList = data.requests;
           this.totalPages = data.totalPages;
+          this.loading = false;
         },
-        error: err => console.error(err),
+        error: err => {
+          console.error(err);
+          this.loading = false;
+        },
       });
   }
 
