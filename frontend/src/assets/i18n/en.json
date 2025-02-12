@@ -946,7 +946,11 @@
     "CONFIRM_SALE": "Confirm Sale",
     "DECLINE": "Decline",
     "REQUESTED_QUANTITY_GREATER": "The requested quantity is greater than the current stock.",
-    "PROCESSING_THE_REQUEST": "Processing the request..."
+    "PROCESSING_THE_REQUEST": "Processing the request...",
+    "MARK_AS_SOLD": "This request has been marked as sold. Thank you for your transaction!",
+    "MARK_AS_SOLD_ERROR": "Oops! Something went wrong while marking the product as sold. Please try again.",
+    "MARK_AS_DECLINED": "You have successfully declined this request. Let us know if you need further assistance.",
+    "MARK_AS_DECLINED_ERROR": "An error occurred while declining the request. Please try again later."
   },
   "MARKETPLACE-PRODUCT-SELL-PAGE": {
     "CREATE_LISTING": "Create Listing",

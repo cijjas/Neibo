@@ -937,7 +937,11 @@
     "CONFIRM_SALE": "Confirmar venta",
     "DECLINE": "Rechazar",
     "REQUESTED_QUANTITY_GREATER": "La cantidad solicitada es mayor que el stock actual.",
-    "PROCESSING_THE_REQUEST": "Procesando la solicitud..."
+    "PROCESSING_THE_REQUEST": "Procesando la solicitud...",
+    "MARK_AS_SOLD": "Esta solicitud ha sido marcada como vendida. ¡Gracias por tu venta!",
+    "MARK_AS_SOLD_ERROR": "¡Ups! Algo salió mal al marcar el producto como vendido. Probá de nuevo.",
+    "MARK_AS_DECLINED": "Rechazaste esta solicitud correctamente. Avisanos si necesitás ayuda con algo más.",
+    "MARK_AS_DECLINED_ERROR": "Ocurrió un error al rechazar la solicitud. Intentá de nuevo más tarde."
   },
   "MARKETPLACE-PRODUCT-SELL-PAGE": {
     "CREATE_LISTING": "Crear publicación",

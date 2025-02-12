@@ -98,8 +98,6 @@ export class AmenitiesReservationsListComponent implements OnInit {
   }
 
   deleteReservation(booking: Booking): void {
-    this.isLoading = true;
-
     this.confirmationService
       .askForConfirmation({
         title: this.translate.instant(
