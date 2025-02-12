@@ -30,14 +30,12 @@ public class AmenityServiceImpl implements AmenityService {
     private final AmenityDao amenityDao;
     private final AvailabilityDao availabilityDao;
     private final EmailService emailService;
-    private final UserDao userDao;
 
     @Autowired
-    public AmenityServiceImpl(AmenityDao amenityDao, AvailabilityDao availabilityDao, EmailService emailService, UserDao userDao) {
+    public AmenityServiceImpl(AmenityDao amenityDao, AvailabilityDao availabilityDao, EmailService emailService) {
         this.availabilityDao = availabilityDao;
         this.amenityDao = amenityDao;
         this.emailService = emailService;
-        this.userDao = userDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

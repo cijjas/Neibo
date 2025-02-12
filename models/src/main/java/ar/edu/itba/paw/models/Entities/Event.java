@@ -123,7 +123,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventId, name, description, date, startTime, endTime);
+        return Objects.hashCode(eventId);
     }
 
     public static class Builder {

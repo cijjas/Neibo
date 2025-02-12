@@ -14,6 +14,10 @@
 
     <name>webapp</name>
 
+    <properties>
+        <maven-war-plugin.version>3.2.2</maven-war-plugin.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -161,15 +165,11 @@
             <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
 
-        <!-- JJWT -->
+        <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
         </dependency>
-
-        <!--
-        ADD MORE HERE
-        -->
     </dependencies>
 
     <build>
@@ -178,7 +178,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>3.2.2</version>
+                    <version>${maven-war-plugin.version}</version>
                     <configuration>
                         <packagingExcludes>**/logback-test.xml</packagingExcludes>
                         <webResources>

@@ -101,7 +101,7 @@ public class Inquiry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(inquiryId, reply);
+        return Objects.hashCode(inquiryId);
     }
 
     public static class Builder {

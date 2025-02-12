@@ -63,8 +63,6 @@ public class ShiftController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        cacheControl.getCacheExtension().put(IMMUTABLE, "");
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

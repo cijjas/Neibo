@@ -198,6 +198,19 @@ public class Worker {
             return this;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Builder)) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(workerId, builder.workerId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(workerId);
+        }
+
         public Builder workerId(Long workerId) {
             this.workerId = workerId;
             return this;
