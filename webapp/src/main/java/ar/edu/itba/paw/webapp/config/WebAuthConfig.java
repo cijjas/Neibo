@@ -101,7 +101,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.headers().referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE);
         http
                 .cors()
                 .and()
@@ -479,7 +478,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 "Location",
                 "Link",
                 "ETag",
-                "Cache-Control"
+                "Cache-Control",
+                "WWW-Authenticate"
         ));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

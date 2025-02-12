@@ -29,28 +29,38 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
     private ObjectMapper objectMapper;
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException {
         LOGGER.debug("Handling Authentication Exception");
 
-        HttpStatus status = authException instanceof InvalidAuthenticationTokenException ||
-                authException instanceof InvalidTokenTypeException
+        HttpStatus status = (authException instanceof InvalidAuthenticationTokenException ||
+                authException instanceof InvalidTokenTypeException)
                 ? HttpStatus.UNAUTHORIZED
                 : HttpStatus.FORBIDDEN;
 
-        ApiErrorDetails errorDetails = createErrorDetails(authException.getMessage(), authException.getCause(), status, request);
-        prepareAndWriteResponse(request, response, errorDetails, status);
+        response.addHeader(HttpHeaders.WWW_AUTHENTICATE,
+                "Basic realm=\"NeiboAPI\", Bearer realm=\"NeiboAPI\"");
+
+        ApiErrorDetails errorDetails = createErrorDetails(authException.getMessage(),
+                authException.getCause(),
+                status, request);
+        writeResponse(response, errorDetails, status);
     }
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+                       AccessDeniedException accessDeniedException) throws IOException {
         LOGGER.debug("Handling Access Denied Exception");
 
         HttpStatus status = HttpStatus.FORBIDDEN;
-        ApiErrorDetails errorDetails = createErrorDetails(status.getReasonPhrase(), accessDeniedException, status, request);
-        prepareAndWriteResponse(request, response, errorDetails, status);
+        ApiErrorDetails errorDetails = createErrorDetails(status.getReasonPhrase(),
+                accessDeniedException,
+                status, request);
+        writeResponse(response, errorDetails, status);
     }
 
-    private ApiErrorDetails createErrorDetails(String title, Throwable exception, HttpStatus status, HttpServletRequest request) {
+    private ApiErrorDetails createErrorDetails(String title, Throwable exception,
+                                               HttpStatus status, HttpServletRequest request) {
         ApiErrorDetails errorDetails = new ApiErrorDetails();
         errorDetails.setTitle(title);
         if (exception != null && exception.getMessage() != null) {
@@ -61,26 +71,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
         return errorDetails;
     }
 
-    private void prepareAndWriteResponse(HttpServletRequest request, HttpServletResponse response, ApiErrorDetails errorDetails, HttpStatus status) throws IOException {
+    private void writeResponse(HttpServletResponse response, ApiErrorDetails errorDetails,
+                               HttpStatus status) throws IOException {
         response.setStatus(status.value());
-
-        String contentType = determineContentType(request);
-        response.setContentType(contentType);
-
-        writeResponse(response, errorDetails, contentType);
-    }
-
-    private String determineContentType(HttpServletRequest request) {
-        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
-        if (acceptHeader != null && acceptHeader.contains(MediaType.APPLICATION_XML_VALUE)) {
-            return MediaType.APPLICATION_XML_VALUE;
-        }
-        return MediaType.APPLICATION_JSON_VALUE;
-    }
-
-    private void writeResponse(HttpServletResponse response, ApiErrorDetails errorDetails, String contentType) throws IOException {
-        String responseBody;
-        responseBody = objectMapper.writeValueAsString(errorDetails);
-        response.getWriter().write(responseBody);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write(objectMapper.writeValueAsString(errorDetails));
+        response.getWriter().flush();
     }
 }

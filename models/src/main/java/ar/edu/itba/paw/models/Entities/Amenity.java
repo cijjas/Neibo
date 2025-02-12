@@ -22,6 +22,18 @@ public class Amenity {
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Amenity)) return false;
+        Amenity amenity = (Amenity) o;
+        return Objects.equals(amenityId, amenity.amenityId) && Objects.equals(name, amenity.name) && Objects.equals(description, amenity.description) && Objects.equals(neighborhood, amenity.neighborhood);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(amenityId, name, description, neighborhood);
+    }
+
     @ManyToMany
     @JoinTable(name = "amenities_shifts_availability",
             joinColumns = @JoinColumn(name = "amenityid"),
@@ -77,19 +89,6 @@ public class Amenity {
 
     public void setAvailableShifts(List<Shift> availableShifts) {
         this.availableShifts = availableShifts;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Amenity)) return false;
-        Amenity amenity = (Amenity) o;
-        return Objects.equals(amenityId, amenity.amenityId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(amenityId);
     }
 
     public static class Builder {

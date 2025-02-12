@@ -93,15 +93,14 @@ public class Inquiry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof Inquiry)) return false;
         Inquiry inquiry = (Inquiry) o;
-        return Objects.equals(inquiryId, inquiry.inquiryId);
+        return Objects.equals(inquiryId, inquiry.inquiryId) && Objects.equals(message, inquiry.message) && Objects.equals(reply, inquiry.reply) && Objects.equals(inquiryDate, inquiry.inquiryDate) && Objects.equals(product, inquiry.product) && Objects.equals(user, inquiry.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(inquiryId);
+        return Objects.hash(inquiryId, message, reply, inquiryDate, product, user);
     }
 
     public static class Builder {

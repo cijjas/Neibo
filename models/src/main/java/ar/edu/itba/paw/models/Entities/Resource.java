@@ -117,6 +117,18 @@ public class Resource {
             return this;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Builder)) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(resourceId, builder.resourceId) && Objects.equals(title, builder.title) && Objects.equals(description, builder.description) && Objects.equals(image, builder.image) && Objects.equals(neighborhood, builder.neighborhood);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(resourceId, title, description, image, neighborhood);
+        }
+
         public Builder resourceId(Long resourceId) {
             this.resourceId = resourceId;
             return this;
