@@ -3,10 +3,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AuthService } from './services/auth.service';
 import { AppInitService } from './services/app-init.service';
-import { ToastService } from './services/toast.service';
+import { ToastService } from '@shared/services/utils/toast.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { ConfirmationService } from './services/confirmation.service';
+import { ConfirmationService } from '@shared/services/utils/confirmation.service';
 import { AutoCancelInterceptor } from './interceptors/auto-cancel.interceptor';
 
 export function initApp(appInitService: AppInitService) {

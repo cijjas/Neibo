@@ -8,7 +8,7 @@ import {
   Request,
   LinkKey,
 } from '@shared/index';
-import { HateoasLinksService } from '@core/index';
+import { HateoasLinksService, ToastService } from '@core/index';
 import { Title } from '@angular/platform-browser';
 import { AppTitleKeys } from '@shared/constants/app-titles';
 import { TranslateService } from '@ngx-translate/core';
@@ -45,6 +45,7 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
     private requestService: RequestService,
     private titleService: Title,
     private translate: TranslateService,
+    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -128,11 +129,23 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
         next: () => {
           this.showLoader = false;
           this.closeMarkAsSoldDialog();
-          window.location.reload(); // Fully reload the page to update product
+          window.location.reload();
+          this.toastService.showToast(
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-REQUESTS-PAGE.MARK_AS_SOLD',
+            ),
+            'success',
+          );
         },
         error: err => {
           this.showLoader = false;
           console.error('Error accepting the request:', err);
+          this.toastService.showToast(
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-REQUESTS-PAGE.MARK_AS_SOLD_ERROR',
+            ),
+            'error',
+          );
         },
       });
   }
@@ -157,10 +170,22 @@ export class MarketplaceProductRequestsPageComponent implements OnInit {
           this.showLoader = false;
           this.closeMarkAsSoldDialog();
           this.fetchRequests();
+          this.toastService.showToast(
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-REQUESTS-PAGE.MARK_AS_DECLINED',
+            ),
+            'success',
+          );
         },
         error: err => {
           this.showLoader = false;
           console.error('Error declining the request:', err);
+          this.toastService.showToast(
+            this.translate.instant(
+              'MARKETPLACE-PRODUCT-REQUESTS-PAGE.MARK_AS_DECLINED_ERROR',
+            ),
+            'error',
+          );
         },
       });
   }
