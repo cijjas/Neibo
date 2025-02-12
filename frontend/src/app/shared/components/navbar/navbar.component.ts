@@ -42,10 +42,14 @@ export class NavbarComponent implements OnInit {
       },
     });
 
-    this.currentUser = this.userSessionService.getCurrentUserValue();
-    if (!this.currentUser) {
-      console.error('Error fetching user information');
-    }
+    this.userSessionService.getCurrentUser().subscribe({
+      next: (user: User) => {
+        this.currentUser = user;
+      },
+      error: () => {
+        console.error('Unable to load user session, check connection.');
+      },
+    });
   }
 
   routeBasedOnRole() {
@@ -54,11 +58,13 @@ export class NavbarComponent implements OnInit {
 
   onDarkModeToggle(): void {
     if (!this.currentUser) {
+      console.log('hola');
       console.error('No user is currently logged in.');
       return;
     }
 
     const newDarkMode = !this.isDarkMode;
+    console.log(this.isDarkMode);
     this.preferencesService.applyDarkMode(newDarkMode);
 
     // Update the backend

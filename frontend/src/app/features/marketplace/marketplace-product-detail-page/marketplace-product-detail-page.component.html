@@ -126,20 +126,26 @@
 
                 <ng-container
                   *ngIf="
-                    loggedUser?.self !== product?.seller?.self;
-                    else editListing
+                    (product?.stock > 0 &&
+                      loggedUser?.self !== product?.seller?.self) ||
+                      loggedUser?.self === product?.seller?.self;
+                    else noButtons
                   "
                 >
                   <button
+                    *ngIf="
+                      product?.stock > 0 &&
+                      loggedUser?.self !== product?.seller?.self
+                    "
                     id="request-button"
                     (click)="openRequestDialog()"
                     class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold"
                   >
                     {{ 'MARKETPLACE-PRODUCT-DETAIL-PAGE.REQUEST' | translate }}
                   </button>
-                </ng-container>
-                <ng-template #editListing>
+
                   <a
+                    *ngIf="loggedUser?.self === product?.seller?.self"
                     [routerLink]="[
                       '/marketplace/products',
                       encodeUrlSafeBase64(product?.self),
@@ -152,15 +158,14 @@
                       'MARKETPLACE-PRODUCT-DETAIL-PAGE.EDIT_LISTING' | translate
                     }}
                   </a>
-                </ng-template>
+                </ng-container>
+
+                <ng-template #noButtons> </ng-template>
               </div>
             </div>
           </div>
 
-          <div
-            class="row pt-2 ps-2 pe-2"
-            style="background-color: var(--on-onbackground)"
-          >
+          <div class="row pt-2 ps-2 pe-2">
             <div class="col-12 pt-3 pb-3 h-100">
               <div class="f-c-s-s">
                 <span class="c-text font-size-16 g-05">{{
@@ -300,7 +305,7 @@
   class="dialog"
   [ngClass]="{ 'show-dialog': requestDialogVisible }"
 >
-  <ng-container *ngIf="true; else hasPhoneNumber">
+  <ng-container *ngIf="!loggedUser?.phoneNumber; else hasPhoneNumber">
     <div class="dialog-content marketplace">
       <div class="dialog-header">
         <div class="dialog-svg-wrapper">
@@ -417,7 +422,10 @@
           </div>
         </div>
       </div>
-      <a class="close-button marketplace" (click)="closeRequestDialog()">
+      <a
+        class="close-button marketplace"
+        (click)="closeRequestDialog(phoneRequestForm)"
+      >
         <i class="fas fa-close"></i>
       </a>
       <form
@@ -638,7 +646,10 @@
         </div>
       </div>
 
-      <a class="close-button marketplace" (click)="closeRequestDialog()">
+      <a
+        class="close-button marketplace"
+        (click)="closeRequestDialog(requestForm)"
+      >
         <i class="fas fa-close"></i>
       </a>
 

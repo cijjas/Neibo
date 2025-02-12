@@ -1823,8 +1823,8 @@ app-navbar {
 
       &:active {
         border: 1px solid var(--background);
-        transform: translateY(4px);
-        box-shadow: 0 0 0 0;
+        transform: translateY(1px);
+        box-shadow: 0 1px 0 0;
       }
     }
 
@@ -3190,9 +3190,6 @@ input[type='time'] {
 }
 
 .purchased-product-image {
-  width: 100px;
-  height: 100px;
-
   & img {
     border-radius: var(--border-radius);
     width: 100%;
@@ -3644,5 +3641,30 @@ td.selected .cell-wrapper {
   100% {
     background-color: #fff2;
     box-shadow: 32px 0 #fff, -32px 0 #fff2;
+  }
+}
+
+/* LOADING COMMENT */
+
+.placeholder-comment {
+  border-radius: var(--border-radius);
+  animation: pulse 1.5s infinite ease-in-out;
+  background-color: var(--onbackground);
+  height: 69px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: rgba(29, 34, 41, 0.2);
+  }
+  50% {
+    background-color: var(--darkonbackground);
+  }
+  100% {
+    background-color: rgba(29, 34, 41, 0.2);
   }
 }

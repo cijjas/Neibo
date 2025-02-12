@@ -37,9 +37,12 @@
         <div class="divider mb-3"></div>
 
         <ng-container *ngIf="isPurchases; else showRequests">
+          <div *ngIf="loading" class="w-100">
+            <div class="loader marketplace w-100"></div>
+          </div>
           <div
             class="no-posts-found"
-            *ngIf="purchaseList && purchaseList.length === 0"
+            *ngIf="purchaseList && purchaseList.length === 0 && !loading"
           >
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
             {{
@@ -49,7 +52,7 @@
 
           <div
             class="w-100 f-c-c-c g-1"
-            *ngIf="purchaseList && purchaseList.length > 0"
+            *ngIf="purchaseList && purchaseList.length > 0 && !loading"
           >
             <div
               class="cool-static-container w-100 f-c-s-s g-0 p-0"
@@ -61,15 +64,20 @@
               </div>
               <div class="divider m-0"></div>
 
-              <div class="container">
+              <div class="container p-0">
                 <div class="f-r-c-c w-100 g-1">
-                  <div class="ps-0">
+                  <div class="p-3">
                     <div
                       class="purchased-product-image f-c-c-c placeholder-glow"
                     >
                       <img
                         [src]="purchase.product.firstImage"
-                        class=""
+                        style="
+                          width: 150px;
+                          height: 150px;
+                          object-fit: cover;
+                          border-radius: 10px;
+                        "
                         alt="purchased_product_image_{{
                           purchase.product.seller?.name
                         }}"
@@ -167,40 +175,45 @@
         </ng-container>
 
         <ng-template #showRequests>
+          <div *ngIf="loading" class="w-100">
+            <div class="loader marketplace w-100"></div>
+          </div>
           <div
             class="no-posts-found"
-            *ngIf="requestList && requestList.length === 0"
+            *ngIf="requestList.length === 0 && !loading"
           >
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
             {{ 'MARKETPLACE-DASHBOARD-BUYER-PAGE.NO_NEW_REQUESTS' | translate }}
           </div>
 
-          <div
-            class="w-100 f-c-c-c g-1"
-            *ngIf="requestList && requestList.length > 0"
-          >
+          <div class="w-100 f-c-c-c g-1" *ngIf="requestList.length > 0">
             <div
-              class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-2"
+              class="cool-static-container w-100 f-c-s-s g-0 p-0"
               *ngFor="let request of requestList"
             >
               <div
-                class="f-r-sb-c w-100 pb-0 pt-2"
+                class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2"
                 style="padding-left: 1em; padding-right: 1em"
               >
                 <div>{{ request.createdAt | date : 'dd MMM yyyy' }}</div>
                 <div>{{ request.createdAt | date : 'HH:mm' }}</div>
               </div>
-              <div class="divider"></div>
+              <div class="divider m-0"></div>
 
-              <div class="container">
-                <div class="f-r-c-c w-100 g-1">
-                  <div class="ps-0">
+              <div class="container p-0">
+                <div class="f-r-c-c w-100 g-0">
+                  <div class="p-3">
                     <div
                       class="purchased-product-image f-c-c-c placeholder-glow"
                     >
                       <img
                         [src]="getProductImage(request.product)"
-                        class=""
+                        style="
+                          width: 150px;
+                          height: 150px;
+                          object-fit: cover;
+                          border-radius: 10px;
+                        "
                         alt="purchased_product_image_{{
                           request.product.seller?.name
                         }}"
@@ -208,9 +221,9 @@
                     </div>
                   </div>
 
-                  <div class="f-c-s-s w-100 p-4">
+                  <div class="f-c-s-s w-100 g-2 p-4">
                     <div class="f-r-sb-c g-0 w-100">
-                      <span class="font-weight-bold font-size-16">
+                      <span class="font-weight-bold font-size-20">
                         {{ request.product.name }}
                       </span>
                       <div class="f-r-c-c g-05">
@@ -232,11 +245,21 @@
                           }}
                         </div>
                         <ng-template #newTag>
-                          <div class="used-tag new font-weight-normal">New</div>
+                          <div class="used-tag new font-weight-normal">
+                            {{
+                              'MARKETPLACE-DASHBOARD-SELLER-PAGE.NEW'
+                                | translate
+                            }}
+                          </div>
                         </ng-template>
                       </div>
                     </div>
-
+                    <div class="f-r-c-c font-weight-normal">
+                      {{
+                        'MARKETPLACE-DASHBOARD-SELLER-PAGE.QUANTITY'
+                          | translate
+                      }}: {{ request.unitsRequested }}
+                    </div>
                     <div class="f-r-sb-c w-100">
                       <div class="f-r-c-c g-0">
                         <span class="price font-size-20 font-weight-normal">

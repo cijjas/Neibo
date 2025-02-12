@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService, DepartmentService, Product } from '@shared/index';
+import {
+  ProductService,
+  DepartmentService,
+  Product,
+  LinkKey,
+} from '@shared/index';
 import { HateoasLinksService } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
@@ -28,6 +33,7 @@ export class MarketplacePageComponent implements OnInit {
     private router: Router,
     private translate: TranslateService,
     private titleService: Title,
+    private linkService: HateoasLinksService,
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +55,7 @@ export class MarketplacePageComponent implements OnInit {
         page: this.page,
         size: this.size,
         inDepartment: this.selectedDepartment,
+        withStatus: this.linkService.getLink(LinkKey.SELLING_PRODUCT_STATUS),
       })
       .subscribe({
         next: data => {

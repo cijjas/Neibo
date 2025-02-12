@@ -471,10 +471,18 @@ p {
   gap: 1rem;
 }
 
-.f-c-sb-c {
+.f-c-sb-e {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+}
+
+.f-c-sb-c {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
   align-items: center;
   gap: 1rem;
 }

@@ -33,6 +33,8 @@ export class InformationPageComponent implements OnInit {
   contactsUrl: string;
   resourcesUrl: string;
 
+  loading: boolean = true;
+
   constructor(
     private linkService: HateoasLinksService,
     private resourceService: ResourceService,
@@ -72,23 +74,36 @@ export class InformationPageComponent implements OnInit {
         page: this.contactCurrentPage,
         size: this.contactPageSize,
       })
-      .subscribe(result => {
-        this.contacts = result.contacts;
-        this.contactTotalPages = result.totalPages;
-        this.contactCurrentPage = result.currentPage;
+      .subscribe({
+        next: result => {
+          this.contacts = result.contacts;
+          this.contactTotalPages = result.totalPages;
+          this.contactCurrentPage = result.currentPage;
+        },
+        error: err => {
+          console.error(err);
+        },
       });
   }
 
   fetchResources(): void {
+    this.loading = true;
     this.resourceService
       .getResources({
         page: this.resourceCurrentPage,
         size: this.resourcePageSize,
       })
-      .subscribe(result => {
-        this.resources = result.resources;
-        this.resourceTotalPages = result.totalPages;
-        this.resourceCurrentPage = result.currentPage;
+      .subscribe({
+        next: result => {
+          this.resources = result.resources;
+          this.resourceTotalPages = result.totalPages;
+          this.resourceCurrentPage = result.currentPage;
+          this.loading = false;
+        },
+        error: err => {
+          console.error(err);
+          this.loading = false;
+        },
       });
   }
 

@@ -63,7 +63,7 @@ public class RequestController {
         LOGGER.info("GET request arrived at '{}'", uriInfo.getRequestUri());
 
         // ID Extraction
-        Long userId = extractNullableSecondId(requestParams.getUser());
+        Long userId = extractNullableFirstId(requestParams.getUser());
         Long productId = extractNullableSecondId(requestParams.getProduct());
         Long transactionTypeId = extractNullableFirstId(requestParams.getTransactionType());
         Long requestStatusId = extractNullableFirstId(requestParams.getRequestStatus());

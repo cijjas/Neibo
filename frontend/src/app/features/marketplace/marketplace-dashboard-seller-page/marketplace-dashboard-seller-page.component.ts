@@ -20,9 +20,11 @@ import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
   templateUrl: './marketplace-dashboard-seller-page.component.html',
 })
 export class MarketplaceDashboardSellerPageComponent implements OnInit {
+  encodeUrlSafeBase64 = encodeUrlSafeBase64;
   page: number = 1;
   totalPages: number = 1;
   size: number = 10;
+  loading: boolean = false;
 
   listings: Product[] = [];
   sales: Request[] = [];
@@ -80,6 +82,7 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
   }
 
   loadListings(): void {
+    this.loading = true;
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const productStatusUrl: string = this.linkService.getLink(
       LinkKey.SELLING_PRODUCT_STATUS,
@@ -99,12 +102,17 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
         next: data => {
           this.listings = data.products;
           this.totalPages = data.totalPages;
+          this.loading = false;
         },
-        error: err => console.error(err),
+        error: err => {
+          console.error(err);
+          this.loading = false;
+        },
       });
   }
 
   loadSales(): void {
+    this.loading = true;
     const userUrl: string = this.linkService.getLink(LinkKey.USER_SELF);
     const requestStatusUrl: string = this.linkService.getLink(
       LinkKey.ACCEPTED_REQUEST_STATUS,
@@ -125,9 +133,11 @@ export class MarketplaceDashboardSellerPageComponent implements OnInit {
         next: data => {
           this.sales = data.requests;
           this.totalPages = data.totalPages;
+          this.loading = false;
         },
         error: err => {
           console.error(err);
+          this.loading = false;
         },
       });
   }

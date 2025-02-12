@@ -49,12 +49,13 @@
 .cool-comment {
   margin-top: 5px;
   margin-bottom: 5px;
+  padding: 5px 10px;
+
   font-size: 12px;
   font-weight: normal;
   border-radius: var(--border-radius);
   background-color: var(--darkonbackground);
   color: var(--text);
   width: 100%;
-  padding: 5px 10px;
   outline: none;
 }

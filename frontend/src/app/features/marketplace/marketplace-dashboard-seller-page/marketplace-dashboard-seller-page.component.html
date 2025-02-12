@@ -38,7 +38,10 @@
         <div class="divider mb-3"></div>
 
         <ng-container *ngIf="isListings; else showSales">
-          <div class="no-posts-found" *ngIf="listings.length === 0">
+          <div *ngIf="loading" class="w-100">
+            <div class="loader marketplace w-100"></div>
+          </div>
+          <div class="no-posts-found" *ngIf="listings.length === 0 && !loading">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
             {{ 'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_LISTINGS' | translate }}
           </div>
@@ -48,7 +51,7 @@
               class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-3"
               *ngFor="let product of listings"
             >
-              <div class="container">
+              <div class="container p-0">
                 <div class="f-r-c-c w-100 g-0">
                   <div class="p-3">
                     <div
@@ -57,8 +60,8 @@
                       <img
                         [src]="getProductImage(product)"
                         style="
-                          width: 100px;
-                          height: 100px;
+                          width: 150px;
+                          height: 150px;
                           object-fit: cover;
                           border-radius: 10px;
                         "
@@ -186,7 +189,6 @@
           </div>
 
           <app-paginator
-            *ngIf="totalPages > 1"
             [totalPages]="totalPages"
             [currentPage]="page"
             [theme]="'marketplace'"
@@ -196,7 +198,10 @@
         </ng-container>
 
         <ng-template #showSales>
-          <div class="no-posts-found" *ngIf="sales.length === 0">
+          <div *ngIf="loading" class="w-100">
+            <div class="loader marketplace w-100"></div>
+          </div>
+          <div class="no-posts-found" *ngIf="sales.length === 0 && !loading">
             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
             {{ 'MARKETPLACE-DASHBOARD-SELLER-PAGE.NO_SELLED' | translate }}
           </div>
@@ -204,29 +209,32 @@
           <div class="w-100 f-c-c-c g-1" *ngIf="sales.length > 0">
             <div
               class="cool-static-container w-100 f-c-s-s g-0 p-0"
-              *ngFor="let purchase of sales"
+              *ngFor="let sale of sales"
             >
               <div
                 class="f-r-sb-c w-100 ps-3 pe-3 pb-2 pt-2"
                 style="padding-left: 1em; padding-right: 1em"
               >
-                <div>{{ purchase.createdAt | date : 'dd MMM yyyy' }}</div>
-                <div>{{ purchase.createdAt | date : 'HH:mm' }}</div>
+                <div>{{ sale.createdAt | date : 'dd MMM yyyy' }}</div>
+                <div>{{ sale.createdAt | date : 'HH:mm' }}</div>
               </div>
               <div class="divider m-0"></div>
 
-              <div class="container">
-                <div class="f-r-c-c w-100 g-1">
-                  <div class="ps-0">
+              <div class="container p-0">
+                <div class="f-r-c-c w-100 g-0">
+                  <div class="p-3">
                     <div
                       class="purchased-product-image f-c-c-c placeholder-glow"
                     >
                       <img
-                        [src]="getProductImage(purchase.product)"
-                        class=""
-                        alt="purchased_product_image_{{
-                          purchase.product?.self
-                        }}"
+                        [src]="getProductImage(sale.product)"
+                        style="
+                          width: 150px;
+                          height: 150px;
+                          object-fit: cover;
+                          border-radius: 10px;
+                        "
+                        alt="purchased_product_image_{{ sale.product?.self }}"
                       />
                     </div>
                   </div>
@@ -234,20 +242,20 @@
                   <div class="f-c-s-s w-100 p-4">
                     <div class="f-r-sb-c g-0 w-100">
                       <span class="font-weight-bold font-size-16">
-                        {{ purchase.product?.name }}
+                        {{ sale.product?.name }}
                       </span>
                       <div class="f-r-c-c g-05">
                         <div
                           class="department-tag"
-                          (click)="goToDepartment(purchase.product?.department)"
+                          (click)="goToDepartment(sale.product?.department)"
                         >
                           {{
                             'MARKETPLACE-CONTROL-BAR.DEPARTMENTS.' +
-                              purchase.product?.department?.name | translate
+                              sale.product?.department?.name | translate
                           }}
                         </div>
                         <div
-                          *ngIf="purchase.product?.used; else newSale"
+                          *ngIf="sale.product?.used; else newSale"
                           class="used-tag used font-weight-normal"
                         >
                           {{
@@ -269,7 +277,7 @@
                       {{
                         'MARKETPLACE-DASHBOARD-SELLER-PAGE.QUANTITY'
                           | translate
-                      }}: {{ purchase.unitsRequested }}
+                      }}: {{ sale.unitsRequested }}
                     </div>
                     <div class="f-r-c-c g-05">
                       <span class="font-weight-normal">{{
@@ -277,52 +285,69 @@
                           | translate
                       }}</span>
                       <span style="color: var(--lila)">
-                        {{ purchase.requestingUser?.name }} ({{
-                          purchase.requestingUser?.phoneNumber
+                        {{ sale.requestingUser?.name }} ({{
+                          sale.requestingUser?.phoneNumber
                         }})
                       </span>
                     </div>
-
-                    <div class="f-r-c-c g-0">
-                      <span class="price font-size-20 font-weight-normal">
-                        {{
-                          purchase.product?.price
-                            ? (
-                                purchase.product.price
-                                | currency : 'USD' : 'symbol-narrow' : '1.0-2'
-                              ).split('.')[0]
-                            : ''
-                        }}
-                      </span>
-                      <div class="f-c-s-c ps-1" style="height: 20px">
-                        <span
-                          class="cents c-light-text font-size-12 font-weight-normal"
-                        >
+                    <div class="w-100 f-r-sb-c">
+                      <div class="f-r-c-c g-0">
+                        <span class="price font-size-20 font-weight-normal">
                           {{
-                            purchase.product?.price
-                              ? ',' +
-                                ((
-                                  purchase.product.price
+                            sale.product?.price
+                              ? (
+                                  sale.product.price
                                   | currency : 'USD' : 'symbol-narrow' : '1.0-2'
-                                ).split('.')[1] || '00')
+                                ).split('.')[0]
                               : ''
                           }}
                         </span>
+                        <div class="f-c-s-c ps-1" style="height: 20px">
+                          <span
+                            class="cents c-light-text font-size-12 font-weight-normal"
+                          >
+                            {{
+                              sale.product?.price
+                                ? ',' +
+                                  ((
+                                    sale.product.price
+                                    | currency
+                                      : 'USD'
+                                      : 'symbol-narrow'
+                                      : '1.0-2'
+                                  ).split('.')[1] || '00')
+                                : ''
+                            }}
+                          </span>
+                        </div>
                       </div>
+
+                      <a
+                        class="cool-action-button rounded marketplace-button"
+                        [routerLink]="[
+                          '/marketplace/products',
+                          encodeUrlSafeBase64(sale.product.self)
+                        ]"
+                      >
+                        <i class="fa-solid fa-arrow-right-to-bracket pe-1"></i>
+                        {{
+                          'MARKETPLACE-DASHBOARD-SELLER-PAGE.VIEW_LISTING'
+                            | translate
+                        }}
+                      </a>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <app-paginator
-              [totalPages]="totalPages"
-              [currentPage]="page"
-              [theme]="'marketplace'"
-              (pageChange)="onPageChange($event)"
-            >
-            </app-paginator>
           </div>
+          <app-paginator
+            [totalPages]="totalPages"
+            [currentPage]="page"
+            [theme]="'marketplace'"
+            (pageChange)="onPageChange($event)"
+          >
+          </app-paginator>
         </ng-template>
       </div>
     </div>
