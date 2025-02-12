@@ -115,15 +115,14 @@ public class Event {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof Event)) return false;
         Event event = (Event) o;
-        return Objects.equals(eventId, event.eventId);
+        return Objects.equals(eventId, event.eventId) && Objects.equals(name, event.name) && Objects.equals(description, event.description) && Objects.equals(date, event.date) && Objects.equals(neighborhood, event.neighborhood) && Objects.equals(startTime, event.startTime) && Objects.equals(endTime, event.endTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(eventId);
+        return Objects.hash(eventId, name, description, date, neighborhood, startTime, endTime);
     }
 
     public static class Builder {

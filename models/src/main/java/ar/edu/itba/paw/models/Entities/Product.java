@@ -283,15 +283,14 @@ public class Product {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
             if (!(o instanceof Builder)) return false;
             Builder builder = (Builder) o;
-            return Objects.equals(productId, builder.productId);
+            return Objects.equals(productId, builder.productId) && Objects.equals(name, builder.name) && Objects.equals(description, builder.description) && Objects.equals(price, builder.price) && Objects.equals(used, builder.used) && Objects.equals(remainingUnits, builder.remainingUnits) && Objects.equals(seller, builder.seller) && Objects.equals(primaryPicture, builder.primaryPicture) && Objects.equals(secondaryPicture, builder.secondaryPicture) && Objects.equals(tertiaryPicture, builder.tertiaryPicture) && Objects.equals(department, builder.department) && Objects.equals(creationDate, builder.creationDate);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(productId);
+            return Objects.hash(productId, name, description, price, used, remainingUnits, seller, primaryPicture, secondaryPicture, tertiaryPicture, department, creationDate);
         }
     }
 }

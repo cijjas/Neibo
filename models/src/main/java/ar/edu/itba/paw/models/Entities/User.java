@@ -304,15 +304,14 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId);
+        return Objects.equals(userId, user.userId) && Objects.equals(mail, user.mail) && Objects.equals(name, user.name) && Objects.equals(surname, user.surname) && Objects.equals(password, user.password) && Objects.equals(neighborhood, user.neighborhood) && Objects.equals(darkMode, user.darkMode) && Objects.equals(phoneNumber, user.phoneNumber) && language == user.language && role == user.role && Objects.equals(creationDate, user.creationDate) && Objects.equals(profilePicture, user.profilePicture) && Objects.equals(identification, user.identification);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(userId);
+        return Objects.hash(userId, mail, name, surname, password, neighborhood, darkMode, phoneNumber, language, role, creationDate, profilePicture, identification);
     }
 
     public static class Builder {

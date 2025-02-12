@@ -1,0 +1,30 @@
+# Use Eclipse Temurin Java 8 image
+FROM eclipse-temurin:8-jdk
+
+ENV TOMCAT_VERSION=9.0.98
+ENV CATALINA_HOME=/opt/tomcat
+ENV MAVEN_HOME=/usr/share/maven
+ENV PATH="$MAVEN_HOME/bin:$PATH"
+
+RUN mkdir -p $CATALINA_HOME
+
+RUN curl -fSL https://dlcdn.apache.org/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz \
+    | tar xz --strip-components=1 -C $CATALINA_HOME
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven
+
+# Copy the full multi-module project
+WORKDIR /app
+COPY . .
+
+# Build the project
+RUN mvn clean package
+
+# Deploy the WAR file to Tomcat
+RUN cp /app/webapp/target/webapp.war $CATALINA_HOME/webapps/paw-2023b-02.war
+
+EXPOSE 8080
+
+WORKDIR $CATALINA_HOME
+CMD ["bin/catalina.sh", "run"]

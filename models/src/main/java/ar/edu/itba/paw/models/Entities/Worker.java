@@ -200,15 +200,14 @@ public class Worker {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
             if (!(o instanceof Builder)) return false;
             Builder builder = (Builder) o;
-            return Objects.equals(workerId, builder.workerId);
+            return Objects.equals(workerId, builder.workerId) && Objects.equals(user, builder.user) && Objects.equals(phoneNumber, builder.phoneNumber) && Objects.equals(businessName, builder.businessName) && Objects.equals(address, builder.address) && Objects.equals(bio, builder.bio) && Objects.equals(backgroundPicture, builder.backgroundPicture);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(workerId);
+            return Objects.hash(workerId, user, phoneNumber, businessName, address, bio, backgroundPicture);
         }
 
         public Builder workerId(Long workerId) {

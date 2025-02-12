@@ -44,6 +44,18 @@ public class Affiliation implements Serializable {
         this.requestDate = requestDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Affiliation)) return false;
+        Affiliation that = (Affiliation) o;
+        return Objects.equals(id, that.id) && Objects.equals(worker, that.worker) && Objects.equals(neighborhood, that.neighborhood) && role == that.role && Objects.equals(requestDate, that.requestDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, worker, neighborhood, role, requestDate);
+    }
+
     public AffiliationKey getId() {
         return id;
     }
@@ -76,16 +88,4 @@ public class Affiliation implements Serializable {
         this.neighborhood = neighborhood;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Affiliation)) return false;
-        Affiliation that = (Affiliation) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 }

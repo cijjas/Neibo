@@ -78,15 +78,14 @@ public class Contact {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (!(o instanceof Contact)) return false;
         Contact contact = (Contact) o;
-        return Objects.equals(contactId, contact.contactId);
+        return Objects.equals(contactId, contact.contactId) && Objects.equals(contactName, contact.contactName) && Objects.equals(contactAddress, contact.contactAddress) && Objects.equals(contactPhone, contact.contactPhone) && Objects.equals(neighborhood, contact.neighborhood);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(contactId);
+        return Objects.hash(contactId, contactName, contactAddress, contactPhone, neighborhood);
     }
 
     public static class Builder {
