@@ -77,11 +77,16 @@ A community-driven marketplace where residents can buy, sell, and trade goods wi
 !!!!!!!!!!! Create gmail for rejected and superadmin
 
 ## How to Run
+### Pre-Built War
 1. Clone Project
 2. Choose Branch 'api-spa'
-3. Run `maven clean package`
-4. Run `docker compose up`
+3. Run `mvn clean package`, ensuring that Maven and Java 8 are installed on the local machine.
+4. Run `docker compose up webapp db`
 
+### In Container Build
+1. Clone Project
+2. Choose Branch 'api-spa'
+3. Run `docker compose up webapp-build db`
 
 <h3 style="width: 100%; display: flex; flex-direction: row; justify-content: end; align-items: center;"> Contributors</h3>
 

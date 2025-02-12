@@ -8,6 +8,15 @@ services:
     depends_on:
       - db
 
+  webapp-build:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    container_name: tomcat-paw-build
+    network_mode: host
+    depends_on:
+      - db
+
   db:
     image: postgres:14
     container_name: postgres-paw
