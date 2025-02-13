@@ -21,6 +21,7 @@ import {
   UserSessionService,
 } from '@core/index';
 import { LoginDialogComponent } from './login-dialog.component';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 /** Fake translate pipe to support usage of | translate in the template */
 @Pipe({ name: 'translate' })
@@ -148,7 +149,7 @@ describe('LoginDialogComponent', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith([
       'services',
       'my-profile',
-      'worker_url',
+      encodeUrlSafeBase64('worker_url'),
     ]);
     expect(component.closeLoginDialog).toHaveBeenCalled();
   }));

@@ -31,6 +31,7 @@ import {
   UserSessionService,
 } from '@core/index';
 import { TranslateService } from '@ngx-translate/core';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 // Dummy interfaces for Neighborhood if needed.
 export interface Neighborhood {
@@ -261,8 +262,8 @@ describe('SignupDialogComponent - Submission', () => {
     // (c) For a WORKER, router.navigate should be called with the worker profile route.
     expect(routerSpy.navigate).toHaveBeenCalledWith([
       'services',
-      'profile',
-      'worker_url',
+      'my-profile',
+      encodeUrlSafeBase64('worker_url'),
     ]);
     // (d) closeSignupDialog should be called.
     expect(component.closeSignupDialog).toHaveBeenCalled();

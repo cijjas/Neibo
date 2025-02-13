@@ -27,7 +27,15 @@ import { PublicLayoutComponent } from './layouts/public-layout/public-layout.com
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 import { UserProfileBridgeModule } from '@features/user-profile/user-profile-bridge.module';
-import { createTranslateLoader } from 'app/app.module';
+
+export function createTranslateLoader(http: HttpClient) {
+  const cacheBuster = environment.version || new Date().getTime();
+  return new TranslateHttpLoader(
+    http,
+    environment.deployUrl + 'assets/i18n/',
+    `.json?v=${cacheBuster}`,
+  );
+}
 
 @NgModule({
   declarations: [
