@@ -43,7 +43,8 @@ export class ErrorInterceptor implements HttpInterceptor {
               this.router.navigate(['/not-found'], {
                 queryParams: {
                   code: error.status,
-                  message: 'You are offline. Check your internet connection.',
+                  message:
+                    'It seems like you are offline. Check your internet connection.',
                 },
               });
               break;

@@ -1029,6 +1029,7 @@
     "BODY": "Body"
   },
   "SERVICE-PROVIDERS-DETAIL-PAGE": {
+    "ONLY_ONE_REVIEW_PER_DAY": "The review was not submitted, only one per day is allowed.",
     "ERROR_LOADING_WORKER": "Error loading worker:",
     "REVIEW_SUBMITTED_SUCCESSFULLY": "Review submitted successfully!",
     "FAILED_TO_SUBMIT_REVIEW": "Failed to submit review.",

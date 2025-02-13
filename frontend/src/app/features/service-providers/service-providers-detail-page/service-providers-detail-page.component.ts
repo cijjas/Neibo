@@ -101,13 +101,31 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
           this.tabbedBox.reloadReviews();
         }
       },
-      error: () => {
-        this.toastService.showToast(
-          this.translate.instant(
-            'SERVICE-PROVIDERS-DETAIL-PAGE.FAILED_TO_SUBMIT_REVIEW',
-          ),
-          'error',
-        );
+      error: err => {
+        console.log(err.status); // should now show 403
+        console.log(err.error); // original error body
+        console.log(err.error?.message);
+
+        if (
+          err.status === 403 &&
+          err.error?.message?.includes(
+            "You don't have enough permissions to perform this action",
+          )
+        ) {
+          this.toastService.showToast(
+            this.translate.instant(
+              'SERVICE-PROVIDERS-DETAIL-PAGE.ONLY_ONE_REVIEW_PER_DAY',
+            ),
+            'error',
+          );
+        } else {
+          this.toastService.showToast(
+            this.translate.instant(
+              'SERVICE-PROVIDERS-DETAIL-PAGE.FAILED_TO_SUBMIT_REVIEW',
+            ),
+            'error',
+          );
+        }
       },
     });
   }

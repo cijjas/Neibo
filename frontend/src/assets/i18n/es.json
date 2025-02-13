@@ -1018,6 +1018,7 @@
     "BODY": "Mensaje"
   },
   "SERVICE-PROVIDERS-DETAIL-PAGE": {
+    "ONLY_ONE_REVIEW_PER_DAY": "Su reseña no fue enviada, sólo se permite una por día.",
     "ERROR_LOADING_WORKER": "Error al cargar el trabajador:",
     "REVIEW_SUBMITTED_SUCCESSFULLY": "¡Reseña enviada con éxito!",
     "FAILED_TO_SUBMIT_REVIEW": "No se pudo enviar la reseña.",

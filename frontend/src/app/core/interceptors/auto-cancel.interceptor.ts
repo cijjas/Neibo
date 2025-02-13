@@ -14,13 +14,20 @@ export class AutoCancelInterceptor implements HttpInterceptor {
   private cancelRequest$ = new Subject<void>();
 
   constructor(private router: Router) {
-    // Listen for navigation events
-    this.router.events.subscribe(event => {
+    let prevUrl: string | null = null;
+    router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
-        // When navigation starts, emit a value to cancel pending requests.
-        this.cancelRequest$.next();
-        // Reset subject so new requests wont be immediately cancelled.
-        this.cancelRequest$ = new Subject<void>();
+        // Only cancel if user is navigating to a new URL
+        // and we dont want to cancel if going to '/not-found' or an error route
+        if (
+          prevUrl &&
+          prevUrl !== event.url &&
+          !event.url.includes('/not-found')
+        ) {
+          this.cancelRequest$.next();
+          this.cancelRequest$ = new Subject<void>();
+        }
+        prevUrl = event.url;
       }
     });
   }

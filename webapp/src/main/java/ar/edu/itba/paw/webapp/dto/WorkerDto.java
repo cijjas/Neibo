@@ -44,7 +44,7 @@ public class WorkerDto {
     @Size(max = 255)
     private String bio;
 
-    @Pattern(regexp = URIValidator.NEIGHBORHOOD_URI_REGEX)
+    @Pattern(regexp = URIValidator.IMAGE_URI_REGEX)
     private String backgroundImage;
 
     private Links _links;

@@ -1,4 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -65,9 +69,8 @@ export class ReviewService {
         }
         return locationHeader;
       }),
-      catchError(error => {
-        console.error('Error creating review:', error);
-        return throwError(() => new Error('Failed to create review.'));
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
       }),
     );
   }
