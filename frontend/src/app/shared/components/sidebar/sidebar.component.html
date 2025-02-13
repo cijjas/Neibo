@@ -13,7 +13,9 @@
           [ngClass]="{ active: channelClass === 'Profile' }"
         >
           <i class="fa-solid fa-address-card"></i>
-          <span>{{ 'SIDEBAR.CHANNELS.WORKER-PROFILE' | translate }}</span>
+          <span style="text-align: end">{{
+            'SIDEBAR.CHANNELS.WORKER-PROFILE' | translate
+          }}</span>
         </a>
         <a
           id="workerServicesButton"
@@ -22,7 +24,9 @@
           [ngClass]="{ active: channelClass === 'Services' }"
         >
           <i class="fa-solid fa-handshake-angle"></i>
-          <span>{{ 'SIDEBAR.CHANNELS.WORKER-SERVICES' | translate }}</span>
+          <span style="text-align: end">{{
+            'SIDEBAR.CHANNELS.WORKER-SERVICES' | translate
+          }}</span>
         </a>
         <a
           id="neighborhoodsButton"
@@ -31,7 +35,9 @@
           [ngClass]="{ active: channelClass === 'Neighborhoods' }"
         >
           <i class="fa-solid fa-house"></i>
-          <span>{{ 'SIDEBAR.CHANNELS.WORKER-NEIGHBORHOODS' | translate }}</span>
+          <span style="text-align: end">{{
+            'SIDEBAR.CHANNELS.WORKER-NEIGHBORHOODS' | translate
+          }}</span>
         </a>
       </div>
     </div>

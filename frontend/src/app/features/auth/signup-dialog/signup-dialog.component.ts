@@ -31,6 +31,7 @@ import { Router } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { VALIDATION_CONFIG } from '@shared/constants/validation-config';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-signup-dialog',
@@ -221,7 +222,11 @@ export class SignupDialogComponent implements OnInit {
                         LinkKey.USER_WORKER,
                       );
                       this.router
-                        .navigate(['services', 'profile', workerUrl])
+                        .navigate([
+                          'services',
+                          'my-profile',
+                          encodeUrlSafeBase64(workerUrl),
+                        ])
                         .then(() => this.closeSignupDialog());
                       break;
 
@@ -352,7 +357,11 @@ export class SignupDialogComponent implements OnInit {
                         LinkKey.USER_WORKER,
                       );
                       this.router
-                        .navigate(['services', 'profile', workerUrl])
+                        .navigate([
+                          'services',
+                          'my-profile',
+                          encodeUrlSafeBase64(workerUrl),
+                        ])
                         .then(() => this.closeSignupDialog());
                       break;
                     default:

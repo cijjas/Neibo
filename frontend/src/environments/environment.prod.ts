@@ -1,6 +1,7 @@
 export const environment = {
   apiBaseUrl: 'http://localhost:8080/paw-2023b-02/api',
-  deployUrl: '/paw-2023b-02/static/browser/'
+  deployUrl: '/paw-2023b-02/static/browser/',
+  version: '3.0',
 };
 
 /*
@@ -13,4 +14,4 @@ export const environment = {
  * Para que nadie accidentalmente acceda a la SPA de localhost:8080 e interactue accidentalmente con la api de
  * produccion lo mantenemos en este valor
  * apiBaseUrl: 'http://localhost:8080/paw-2023b-02/api',
-*/
+ */

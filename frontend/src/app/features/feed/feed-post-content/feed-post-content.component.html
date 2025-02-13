@@ -152,13 +152,13 @@
         </div>
       </div>
     </div>
-    <ng-template *ngIf="comments.length == 0 && !loadingComments">
+    <div *ngIf="comments.length == 0 && !loadingComments" class="mb-3">
       <div class="cool-comment">
-        <div class="comment-body">
+        <div class="" style="color: var(--lighttext)">
           {{ 'FEED-POST-CONTENT.NO_COMMENTS' | translate }}
         </div>
       </div>
-    </ng-template>
+    </div>
 
     <app-paginator
       [totalPages]="totalPages"

@@ -27,13 +27,16 @@ import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { PreferencesService } from '@core/services/preferences.service';
 
-export function HttpLoaderFactory(http: HttpClient) {
+export function createTranslateLoader(http: HttpClient) {
+  const cacheBuster = environment.version || new Date().getTime();
   return new TranslateHttpLoader(
     http,
     environment.deployUrl + 'assets/i18n/',
-    '.json',
+    `.json?v=${cacheBuster}`,
   );
 }
+
+import { firstValueFrom } from 'rxjs';
 
 export function appInitializerFactory(
   translate: TranslateService,
@@ -44,7 +47,8 @@ export function appInitializerFactory(
     const storedLanguage = preferencesService.getLanguage();
     const lang = storedLanguage || 'en';
     translate.setDefaultLang('en');
-    return translate.use(lang).toPromise();
+    // Replace toPromise() with firstValueFrom
+    return firstValueFrom(translate.use(lang));
   };
 }
 
@@ -65,7 +69,7 @@ export function appInitializerFactory(
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useFactory: createTranslateLoader,
         deps: [HttpClient],
       },
     }),

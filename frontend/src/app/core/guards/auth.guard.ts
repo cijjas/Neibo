@@ -5,6 +5,7 @@ import { HateoasLinksService } from '@core/services/link.service';
 import { TokenService } from '@core/services/token.service';
 import { UserSessionService } from '@core/services/user-session.service';
 import { LinkKey, Role } from '@shared/index';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 export const AuthGuard = () => {
   const authService = inject(AuthService);
@@ -25,7 +26,7 @@ export const AuthGuard = () => {
       [Role.WORKER]: () => {
         const workerUrl = linkStorage.getLink(LinkKey.USER_WORKER);
         return workerUrl
-          ? ['services', 'my-profile', workerUrl]
+          ? ['services', 'my-profile', encodeUrlSafeBase64(workerUrl)]
           : ['/not-found'];
       },
     };

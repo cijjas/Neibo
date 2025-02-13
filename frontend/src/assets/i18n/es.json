@@ -1021,11 +1021,13 @@
     "ERROR_LOADING_WORKER": "Error al cargar el trabajador:",
     "REVIEW_SUBMITTED_SUCCESSFULLY": "¡Reseña enviada con éxito!",
     "FAILED_TO_SUBMIT_REVIEW": "No se pudo enviar la reseña.",
-    "NEW_PROFILE_INFORMATION_SAVED_SUCCESSFULLY": "¡La nueva información del perfil se guardó con éxito!",
+    "NEW_PROFILE_INFORMATION_SAVED_SUCCESFULLY": "¡La nueva información del perfil se guardó con éxito!",
     "THERE_WAS_AN_ERROR_UPDATING_PROFILE_TRY_AGAIN": "Hubo un error al actualizar el perfil. Inténtalo de nuevo.",
     "ERROR_SAVING_PROFILE": "Error al guardar el perfil:"
   },
   "SERVICE-PROVIDERS-EDIT-DIALOG": {
+    "IMAGE_TOO_LARGE": "La imagen es demasiado grande.",
+    "IMAGE_INVALID_FORMAT": "Sólo se perimten los formatos jpg, jpeg y png.",
     "EDIT_PROFILE": "Editar perfil",
     "BUSINESS_NAME_IS_REQUIRED": "El nombre comercial es obligatorio.",
     "DESCRIPTION_IS_REQUIRED": "La descripción es obligatoria.",

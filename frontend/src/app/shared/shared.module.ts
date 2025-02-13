@@ -27,14 +27,7 @@ import { PublicLayoutComponent } from './layouts/public-layout/public-layout.com
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { CalendarBridgeModule } from '@features/calendar/calendar-bridge.module';
 import { UserProfileBridgeModule } from '@features/user-profile/user-profile-bridge.module';
-
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(
-    http,
-    environment.deployUrl + 'assets/i18n/',
-    '.json',
-  );
-}
+import { createTranslateLoader } from 'app/app.module';
 
 @NgModule({
   declarations: [
@@ -66,7 +59,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
+        useFactory: createTranslateLoader,
         deps: [HttpClient],
       },
     }),

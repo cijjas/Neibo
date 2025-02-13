@@ -16,6 +16,7 @@ import {
   UserSessionService,
 } from '@core/index';
 import { LinkKey, Role } from '@shared/index';
+import { encodeUrlSafeBase64 } from '@shared/utils/url-safe-base64.util';
 
 @Component({
   selector: 'app-login-dialog',
@@ -94,7 +95,11 @@ export class LoginDialogComponent implements OnInit {
               case Role.WORKER:
                 const workerUrl = this.linkStorage.getLink(LinkKey.USER_WORKER);
                 this.router
-                  .navigate(['services', 'my-profile', workerUrl])
+                  .navigate([
+                    'services',
+                    'my-profile',
+                    encodeUrlSafeBase64(workerUrl),
+                  ])
                   .then(() => this.closeLoginDialog());
                 break;
 

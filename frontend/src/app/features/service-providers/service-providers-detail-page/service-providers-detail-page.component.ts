@@ -128,7 +128,7 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
       error: err => {
         this.toastService.showToast(
           this.translate.instant(
-            'SERVICE-PROVIDERS-DETAIL-PAGE.THERE_WAS_AN_ERROR_SUBMITTING_PROFILE_TRY_AGAIN',
+            'SERVICE-PROVIDERS-DETAIL-PAGE.THERE_WAS_AN_ERROR_UPDATING_PROFILE_TRY_AGAIN',
           ),
           'error',
         );

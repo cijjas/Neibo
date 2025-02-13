@@ -1032,11 +1032,13 @@
     "ERROR_LOADING_WORKER": "Error loading worker:",
     "REVIEW_SUBMITTED_SUCCESSFULLY": "Review submitted successfully!",
     "FAILED_TO_SUBMIT_REVIEW": "Failed to submit review.",
-    "NEW_PROFILE_INFORMATION_SAVED_SUCCESSFULLY": "New profile information saved successfully!",
+    "NEW_PROFILE_INFORMATION_SAVED_SUCCESFULLY": "New profile information saved successfully!",
     "THERE_WAS_AN_ERROR_UPDATING_PROFILE_TRY_AGAIN": "There was an error updating profile. Try again.",
     "ERROR_SAVING_PROFILE": "Error saving profile:"
   },
   "SERVICE-PROVIDERS-EDIT-DIALOG": {
+    "IMAGE_TOO_LARGE": "The image size is too large.",
+    "IMAGE_INVALID_FORMAT": "The image format is not valid only jpeg, jpg and png are allowed.",
     "EDIT_PROFILE": "Edit Profile",
     "BUSINESS_NAME_IS_REQUIRED": "Business name is required.",
     "DESCRIPTION_IS_REQUIRED": "Description is required.",

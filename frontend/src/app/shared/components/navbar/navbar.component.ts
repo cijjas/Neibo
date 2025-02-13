@@ -58,13 +58,11 @@ export class NavbarComponent implements OnInit {
 
   onDarkModeToggle(): void {
     if (!this.currentUser) {
-      console.log('hola');
       console.error('No user is currently logged in.');
       return;
     }
 
     const newDarkMode = !this.isDarkMode;
-    console.log(this.isDarkMode);
     this.preferencesService.applyDarkMode(newDarkMode);
 
     // Update the backend

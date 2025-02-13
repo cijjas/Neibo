@@ -29,7 +29,9 @@
               (click)="onProfessionClick($event, profession)"
               title="Click to filter by profession"
             >
-              {{ 'TAGS-FILTER-WIDGET.PROFESSIONS.' + profession.name }}
+              {{
+                'TAGS-FILTER-WIDGET.PROFESSIONS.' + profession.name | translate
+              }}
             </span>
           </ng-container>
         </div>

@@ -42,7 +42,7 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   likesUrl: string | undefined;
   environment = environment;
 
-  loadingComments = true;
+  loadingComments = false;
 
   constructor(
     private fb: FormBuilder,
@@ -213,8 +213,8 @@ export class FeedPostContentComponent implements OnInit, OnDestroy {
   }
 
   getComments(page: number, size: number): void {
-    this.loadingComments = true;
     if (this.post?.comments) {
+      this.loadingComments = true;
       this.commentService
         .getComments(this.post.comments, { page, size })
         .subscribe({

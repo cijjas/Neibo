@@ -7,7 +7,6 @@
     class="dialog-content services"
     style="background-color: var(--onbackground)"
   >
-
     <div class="close-button services" (click)="closeEditDialog()">
       <i class="fas fa-close"></i>
     </div>
@@ -16,7 +15,7 @@
       class="mb-2 mt-3 f-c-c-c c-services font-weight-bold"
       style="font-size: 20px"
     >
-    {{ "SERVICE-PROVIDERS-EDIT-DIALOG.EDIT_PROFILE" | translate }}
+      {{ 'SERVICE-PROVIDERS-EDIT-DIALOG.EDIT_PROFILE' | translate }}
     </div>
 
     <form
@@ -25,14 +24,16 @@
       enctype="multipart/form-data"
     >
       <div class="f-c-c-c ps-3 pe-3 c-text" style="width: 500px">
-
+        <!-- Business Name -->
         <div class="w-75 f-c-c-c" style="gap: 10px">
           <input
             name="businessName"
             [(ngModel)]="businessName"
             type="text"
             class="cool-input services-input"
-            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.BUSINESS_NAME' | translate"
+            [attr.placeholder]="
+              'SERVICE-PROVIDERS-EDIT-DIALOG.BUSINESS_NAME' | translate
+            "
             required
           />
           <p
@@ -42,15 +43,21 @@
             "
             class="error"
           >
-          {{ "SERVICE-PROVIDERS-EDIT-DIALOG.BUSINESS_NAME_IS_REQUIRED" | translate }}
+            {{
+              'SERVICE-PROVIDERS-EDIT-DIALOG.BUSINESS_NAME_IS_REQUIRED'
+                | translate
+            }}
           </p>
 
+          <!-- Bio/Description -->
           <input
             name="bio"
             [(ngModel)]="bio"
             type="text"
             class="cool-input services-input"
-            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.DESCRIPTION' | translate"
+            [attr.placeholder]="
+              'SERVICE-PROVIDERS-EDIT-DIALOG.DESCRIPTION' | translate
+            "
             required
           />
           <p
@@ -60,15 +67,21 @@
             "
             class="error"
           >
-          {{ "SERVICE-PROVIDERS-EDIT-DIALOG.DESCRIPTION_IS_REQUIRED" | translate }}
+            {{
+              'SERVICE-PROVIDERS-EDIT-DIALOG.DESCRIPTION_IS_REQUIRED'
+                | translate
+            }}
           </p>
 
+          <!-- Phone Number -->
           <input
             name="phoneNumber"
             [(ngModel)]="phoneNumber"
             type="tel"
             class="cool-input services-input"
-            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.PHONE_NUMBER' | translate"
+            [attr.placeholder]="
+              'SERVICE-PROVIDERS-EDIT-DIALOG.PHONE_NUMBER' | translate
+            "
             required
           />
           <p
@@ -78,15 +91,21 @@
             "
             class="error"
           >
-          {{ "SERVICE-PROVIDERS-EDIT-DIALOG.PHONE_NUMBER_IS_REQUIRED" | translate }}
+            {{
+              'SERVICE-PROVIDERS-EDIT-DIALOG.PHONE_NUMBER_IS_REQUIRED'
+                | translate
+            }}
           </p>
 
+          <!-- Address -->
           <input
             name="address"
             [(ngModel)]="address"
             type="text"
             class="cool-input services-input"
-            [attr.placeholder]="'SERVICE-PROVIDERS-EDIT-DIALOG.ADDRESS' | translate"
+            [attr.placeholder]="
+              'SERVICE-PROVIDERS-EDIT-DIALOG.ADDRESS' | translate
+            "
             required
           />
           <p
@@ -96,13 +115,60 @@
             "
             class="error"
           >
-          {{ "SERVICE-PROVIDERS-EDIT-DIALOG.ADDRESS_IS_REQUIRED" | translate }}
+            {{
+              'SERVICE-PROVIDERS-EDIT-DIALOG.ADDRESS_IS_REQUIRED' | translate
+            }}
           </p>
         </div>
 
-        <label for="imageInput1" class="mt-3">{{ "SERVICE-PROVIDERS-EDIT-DIALOG.BACKGROUND_IMAGE" | translate }}</label>
+        <!-- Image Preview & Remove Button -->
+        <div class="mt-3" *ngIf="existingBackgroundImage || imagePreviewUrl">
+          <div
+            class="image-preview-wrapper"
+            style="position: relative; display: inline-block"
+          >
+            <img
+              [src]="
+                imagePreviewUrl ? imagePreviewUrl : existingBackgroundImage
+              "
+              alt="Preview"
+              style="
+                max-width: 200px;
+                max-height: 150px;
+                object-fit: cover;
+                border-radius: var(--border-radius);
+              "
+            />
+            <!-- Small remove/close button in top right -->
+            <button
+              type="button"
+              (click)="removeImage(imageInput1)"
+              style="
+                position: absolute;
+                top: 0;
+                right: 0;
+                color: var(--always-background);
+                background: var(--error);
+                border-radius: 5px;
+                border: none;
+                cursor: pointer;
+                font-weight: bold;
+                line-height: 1;
+                padding: 2px 6px;
+              "
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+
+        <!-- Image Input & Validation Errors -->
+        <label for="imageInput1" class="mt-3">
+          {{ 'SERVICE-PROVIDERS-EDIT-DIALOG.BACKGROUND_IMAGE' | translate }}
+        </label>
         <input
           id="imageInput1"
+          #imageInput1
           name="imageFile"
           type="file"
           (change)="onFileSelected($event)"
@@ -110,13 +176,22 @@
           accept="image/*"
         />
 
+        <!-- Show validation errors if any -->
+        <div class="error" *ngIf="imageValidationErrors?.fileSize">
+          {{ 'SERVICE-PROVIDERS-EDIT-DIALOG.IMAGE_TOO_LARGE' | translate }}
+          ({{ imageValidationErrors.fileSize.requiredMax }} MB max)
+        </div>
+        <div class="error" *ngIf="imageValidationErrors?.fileFormat">
+          {{ 'SERVICE-PROVIDERS-EDIT-DIALOG.IMAGE_INVALID_FORMAT' | translate }}
+        </div>
+
         <button
           type="submit"
           class="cool-button cool-small services-button on-bg font-weight-bolder mb-4 mt-3"
           style="width: 150px"
           [disabled]="editForm.invalid"
         >
-        {{ "SERVICE-PROVIDERS-EDIT-DIALOG.SAVE_CHANGES" | translate }}
+          {{ 'SERVICE-PROVIDERS-EDIT-DIALOG.SAVE_CHANGES' | translate }}
         </button>
       </div>
     </form>

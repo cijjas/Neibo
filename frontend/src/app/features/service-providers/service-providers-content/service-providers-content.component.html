@@ -38,7 +38,9 @@
               (click)="setProfession(profession)"
               title="Click to learn more"
             >
-              {{ 'TAGS-FILTER-WIDGET.PROFESSIONS.' + profession.name }}
+              {{
+                'TAGS-FILTER-WIDGET.PROFESSIONS.' + profession.name | translate
+              }}
             </span>
           </ng-container>
         </div>

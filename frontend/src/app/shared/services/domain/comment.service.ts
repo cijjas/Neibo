@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import {
   Comment,
@@ -23,7 +23,6 @@ export class CommentService {
         mergeMap((commentDto: CommentDto) => mapComment(this.http, commentDto)),
       );
   }
-
   public getComments(
     url: string,
     queryParams: {
@@ -37,10 +36,12 @@ export class CommentService {
   }> {
     let params = new HttpParams();
 
-    if (queryParams.page !== undefined)
+    if (queryParams.page !== undefined) {
       params = params.set('page', queryParams.page.toString());
-    if (queryParams.size !== undefined)
+    }
+    if (queryParams.size !== undefined) {
       params = params.set('size', queryParams.size.toString());
+    }
 
     return this.http
       .get<CommentDto[]>(url, { params, observe: 'response' })
@@ -49,11 +50,20 @@ export class CommentService {
           const commentsDto = response.body || [];
           const linkHeader = response.headers.get('Link');
           const paginationInfo = parseLinkHeader(linkHeader);
-
           const commentObservables = commentsDto.map(commentDto =>
             mapComment(this.http, commentDto),
           );
 
+          // If no comments, return an observable with an empty list.
+          if (commentObservables.length === 0) {
+            return of({
+              comments: [],
+              totalPages: paginationInfo.totalPages,
+              currentPage: paginationInfo.currentPage,
+            });
+          }
+
+          // Otherwise, forkJoin the comment observables.
           return forkJoin(commentObservables).pipe(
             map(comments => ({
               comments,
