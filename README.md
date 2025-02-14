@@ -72,7 +72,7 @@ A community-driven marketplace where residents can buy, sell, and trade goods wi
 | **Verified Neighbor**   | verifiedneibo@gmail.com   | verifiedneibo2023b-02   | verifiedneibo          |
 | **Service Provider**    | workerneibo@gmail.com     | workerneibo2023b-02     | workerneibo            |
 | **Unverified Neighbor** | unverifiedneibo@gmail.com | unverifiedneibo2023b-02 | unverifiedneibo        |
-| **Rejected Neighbor**   | rejected@test.com         | rejected                |                        |
+| **Rejected Neighbor**   | rejectedneibo@gmail.com   | rejectedneibo2023b-02   |                        |
 
 !!!!!!!!!!! Create gmail for rejected and superadmin
 

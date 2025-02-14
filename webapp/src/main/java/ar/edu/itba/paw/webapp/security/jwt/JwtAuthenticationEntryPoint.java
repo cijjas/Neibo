@@ -38,8 +38,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Ac
                 ? HttpStatus.UNAUTHORIZED
                 : HttpStatus.FORBIDDEN;
 
-        response.addHeader(HttpHeaders.WWW_AUTHENTICATE,
-                "Basic realm=\"NeiboAPI\", Bearer realm=\"NeiboAPI\"");
+        response.addHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer realm=\"NeiboAPI\"");
 
         ApiErrorDetails errorDetails = createErrorDetails(authException.getMessage(),
                 authException.getCause(),
