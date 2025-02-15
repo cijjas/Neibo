@@ -29,8 +29,10 @@ export class UserProfileWidgetComponent implements OnInit, OnDestroy {
     const userSub = this.userSessionService
       .getCurrentUser()
       .subscribe((user: User | null) => {
-        this.currentUser = user;
-        this.loadProfileImage(user.image);
+        if (user) {
+          this.currentUser = user;
+          this.loadProfileImage(user.image);
+        }
       });
     this.subscriptions.add(userSub);
   }

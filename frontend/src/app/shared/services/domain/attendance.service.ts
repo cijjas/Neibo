@@ -53,10 +53,23 @@ export class AttendanceService {
       .pipe(
         mergeMap(response => {
           const attendancesDto: AttendanceDto[] = response.body || [];
-          const pagination = parseLinkHeader(response.headers.get('Link'));
 
-          const attendanceObservables = attendancesDto.map(attendanceDto =>
-            mapAttendance(this.http, attendanceDto),
+          let pagination = { totalPages: 1, currentPage: 1 };
+          const linkHeader = response.headers.get('Link');
+          if (linkHeader) {
+            pagination = parseLinkHeader(linkHeader) ?? pagination;
+          }
+
+          if (attendancesDto.length === 0) {
+            return of({
+              attendances: [],
+              totalPages: pagination.totalPages,
+              currentPage: pagination.currentPage,
+            });
+          }
+
+          const attendanceObservables = attendancesDto.map(dto =>
+            mapAttendance(this.http, dto),
           );
 
           return forkJoin(attendanceObservables).pipe(

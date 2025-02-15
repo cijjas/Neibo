@@ -90,9 +90,11 @@
           </h3>
           <div class="divider"></div>
 
+          <div class="loader w-100" *ngIf="loading"></div>
+
           <!-- No Attendees -->
           <div
-            *ngIf="attendees.length === 0"
+            *ngIf="attendees.length === 0 && !loading"
             class="postcard-description"
             style="color: var(--lighttext)"
           >
@@ -105,7 +107,7 @@
           </div>
 
           <!-- Attendees List -->
-          <ul *ngIf="attendees.length > 0" class="attendees-list">
+          <ul *ngIf="attendees.length > 0 && !loading" class="attendees-list">
             <li *ngFor="let attendee of attendees" class="attendee-item">
               <i class="fa fa-user-circle"></i>
               {{ attendee.user.name }} {{ attendee.user.surname }}

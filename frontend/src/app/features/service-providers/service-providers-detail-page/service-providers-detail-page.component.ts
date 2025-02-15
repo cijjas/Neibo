@@ -100,12 +100,11 @@ export class ServiceProvidersDetailPageComponent implements OnInit {
         if (this.tabbedBox) {
           this.tabbedBox.reloadReviews();
         }
+        if (this.worker?.self) {
+          this.loadWorker(this.worker.self);
+        }
       },
       error: err => {
-        console.log(err.status); // should now show 403
-        console.log(err.error); // original error body
-        console.log(err.error?.message);
-
         if (
           err.status === 403 &&
           err.error?.message?.includes(

@@ -43,11 +43,9 @@ export function appInitializerFactory(
   preferencesService: PreferencesService,
 ) {
   return () => {
-    // Read language from preferences; if not set, default to 'en'
     const storedLanguage = preferencesService.getLanguage();
     const lang = storedLanguage || 'en';
     translate.setDefaultLang('en');
-    // Replace toPromise() with firstValueFrom
     return firstValueFrom(translate.use(lang));
   };
 }

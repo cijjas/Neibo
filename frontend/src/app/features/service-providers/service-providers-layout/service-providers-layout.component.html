@@ -4,14 +4,18 @@
       <app-sidebar></app-sidebar>
     </div>
 
-    <div class="column-middle">
+    <div class="column-middle" style="max-width: 700px">
       <router-outlet></router-outlet>
     </div>
 
     <div class="column-right">
       <div class="f-c-c-c w100">
         <app-calendar-widget></app-calendar-widget>
-        <app-tags-filter-widget class="w-100" mode="professions" *ngIf="isServicesRoute"></app-tags-filter-widget>
+        <app-tags-filter-widget
+          class="w-100"
+          mode="professions"
+          *ngIf="isServicesRoute"
+        ></app-tags-filter-widget>
       </div>
     </div>
   </div>

@@ -77,7 +77,6 @@ const fakeTranslateService = {
   instant: (key: string) => key,
 };
 
-// ----- ActivatedRoute Stub -----
 const activatedRouteStub = {
   data: of({ worker: dummyWorker }),
 } as unknown as ActivatedRoute;
@@ -118,12 +117,10 @@ describe('ServiceProvidersDetailPageComponent', () => {
     fixture.detectChanges();
   });
 
-  // Test 1: Initialization – worker is set from route data.
   it('should initialize worker from route data', () => {
     expect(component.worker).toEqual(dummyWorker);
   });
 
-  // Test 2: Dialog Toggle – openReviewDialog and closeReviewDialog toggle reviewDialogVisible.
   it('should toggle reviewDialogVisible when opening and closing review dialog', () => {
     component.openReviewDialog();
     expect(component.reviewDialogVisible).toBeTrue();
@@ -132,8 +129,9 @@ describe('ServiceProvidersDetailPageComponent', () => {
     expect(component.reviewDialogVisible).toBeFalse();
   });
 
-  // Test 3: onSubmitReview – calls reviewService.createReview, shows toast, and calls child reloadReviews if defined.
   it('should submit a review and show a success toast, then reload reviews', fakeAsync(() => {
+    workerServiceSpy.getWorker.and.returnValue(of(dummyWorker));
+
     const fakeReview = { rating: 5, message: 'Great service!' };
 
     reviewServiceSpy.createReview.and.returnValue(of({}));

@@ -21,7 +21,7 @@ export class CalendarEventPageComponent implements OnInit {
   // Event details
   event: Event;
   willAttend = false;
-
+  loading: boolean = false;
   // Attendees
   attendees: Attendance[] = []; // Replace `Attendance` with your actual Attendee type if different
 
@@ -94,16 +94,8 @@ export class CalendarEventPageComponent implements OnInit {
       });
   }
 
-  // Example: fetch the event from your EventService
-  loadEvent(eventId: string): void {
-    this.eventService.getEvent(eventId).subscribe(event => {
-      this.event = event;
-
-      this.loadAttendance();
-    });
-  }
-
   loadAttendance(): void {
+    this.loading = true;
     this.attendees = [];
     this.attendanceService
       .getAttendances({
@@ -111,10 +103,17 @@ export class CalendarEventPageComponent implements OnInit {
         page: this.attendanceCurrentPage,
         size: this.attendancePageSize,
       })
-      .subscribe(result => {
-        this.attendees = result.attendances ?? [];
-        this.attendanceTotalPages = result.totalPages;
-        this.attendanceCurrentPage = result.currentPage;
+      .subscribe({
+        next: result => {
+          this.attendees = result.attendances;
+          this.attendanceTotalPages = result.totalPages;
+          this.attendanceCurrentPage = result.currentPage;
+          this.loading = false;
+        },
+        error: err => {
+          console.error('Error getting attendees', err);
+          this.loading = false;
+        },
       });
   }
 

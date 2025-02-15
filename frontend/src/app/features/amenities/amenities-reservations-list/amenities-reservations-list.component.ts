@@ -108,7 +108,7 @@ export class AmenitiesReservationsListComponent implements OnInit {
           {
             bookingAmenityName: booking.amenity.name,
             bookingBookingDate: booking.bookingDate,
-            bookingShiftStartTime: booking.shift.startTime,
+            bookingShiftStartTime: booking.shift.startTimeDisplay,
           },
         ),
         confirmText: this.translate.instant(
