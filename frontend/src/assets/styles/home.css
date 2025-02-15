@@ -1680,8 +1680,7 @@ app-navbar {
   font-weight: normal;
   overflow: hidden;
   cursor: pointer;
-  padding: 7px 7px;
-  width: 200px;
+  padding: 10px;
   transition: all 0.3s ease-in-out;
   border-radius: var(--border-hard);
   box-shadow: 0 0 0 0 var(--primary);
@@ -1850,7 +1849,7 @@ app-navbar {
     padding: 7px 7px;
     font-size: 12px;
     color: var(--profession);
-    background-color: var(--background);
+    background-color: var(--onbackground);
     border: 1px solid var(--profession);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
@@ -3384,7 +3383,7 @@ input[type='time'] {
   align-items: flex-start;
   padding: 10px;
   background-color: var(--box-background);
-  border: 1px solid var(--bordercolor);
+  border: 0px solid var(--bordercolor);
   overflow: hidden;
   /* Hide overflowing content */
   box-sizing: border-box;
@@ -3674,4 +3673,8 @@ td.selected .cell-wrapper {
   100% {
     background-color: rgba(29, 34, 41, 0.2);
   }
+}
+
+.onbg {
+  background: var(--onbackground) !important;
 }
