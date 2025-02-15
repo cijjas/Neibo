@@ -36,7 +36,17 @@
           </ng-container>
         </div>
 
-        <h2>{{ worker?.user?.name }}</h2>
+        <h2
+          style="
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            white-space: normal;
+            text-align: start;
+          "
+        >
+          {{ worker?.user?.name }}
+        </h2>
 
         <div class="desc">
           {{ worker?.bio }}

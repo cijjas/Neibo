@@ -47,7 +47,7 @@ body {
 :root {
   --text: #4f5248;
   --lighttext: #83887f;
-  --shadow: #83887f;
+  --shadow: #4f504e33;
   /* #697683 */
   --lightertext: #9ca194;
   --background: #faf6e8;
@@ -100,7 +100,7 @@ body {
 .dark-mode {
   --text: #ced3c1;
   --lighttext: #797f86;
-  --shadow: #424c56;
+  --shadow: #00000066;
 
   --lightertext: #878f82;
 
