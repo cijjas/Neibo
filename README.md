@@ -97,7 +97,7 @@ Use the following credentials for a hands-on demo of Neibo:
 ### 🚀 Option 1: Using a Pre-Built WAR
 1. **Clone the repository**:
    ```sh
-   git clone https://cijjas@bitbucket.org/itba/paw-2023b-02.git
+   git clone https://bitbucket.org/itba/paw-2023b-02/
    cd paw-2023b-02
    ```
    
@@ -121,7 +121,7 @@ Use the following credentials for a hands-on demo of Neibo:
 ### 🐳 Option 2: Building Inside a Container
 1. **Clone the repository**:
    ```sh
-   git clone https://cijjas@bitbucket.org/itba/paw-2023b-02.git
+   git clone https://bitbucket.org/itba/paw-2023b-02/
    cd paw-2023b-02
    ```  
    
