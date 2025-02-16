@@ -1,92 +1,139 @@
 <div align="center">
 
-[![Neibo App Logo ][repo_logo_img]][page_url]
-
-<div style="position: relative; width: 90%; display: flex; justify-content: center;">
-
-<div style="
-position: absolute;
-bottom: 10px;
-right: 10px;
-font-size: 16px;
-color: #FAF6E8FF;
-">
-Your peace of mind, our priority. Stay safe, stay connected.
-</div>
+[![Neibo App Logo][repo_logo_img]][page_url]
 
 </div>
 
+# Neibo: Empowering Neighborhoods & Communities
 
-</div>
+**Neibo** is a comprehensive solution designed to enhance connectivity within gated communities. By centralizing communication and service management, it enables residents and administrators to interact seamlessly and efficiently.
+
+Residents can stay informed through an interactive feed that includes 'hot' and 'trending' posts, ensuring they never miss important updates. Neibo also simplifies everyday tasks such as reserving amenities and signing up for events. Administrators can manage everything from facility hours to event details, while residents participate effortlessly.
+
+One of Neibo’s key strengths lies in its robust service providers section. Residents can browse local professionals—ranging from electricians to yoga instructors—read reviews, and make confident hiring decisions. Meanwhile, service providers can expand their reach across multiple communities through personalized dashboards that highlight their offerings.
+
+Explore these features and more by logging in with the test credentials provided below. Discover how Neibo transforms community engagement into a more connected, efficient, and secure experience.
+
+---
 
 ## Introduction
 
-Welcome to **Neibo**, a full-featured web application designed to streamline and enhance community interactions.
-Whether you’re an **admin** managing amenities and user requests, a **service provider** offering services,
-or a **resident** engaging with your neighborhood through events, posts, and a marketplace,
-Neibo provides a seamless experience tailored to your needs.
+[![Neibo Presentation][neibo_presentation]][page_url]
 
-## Features
+Neibo brings together advanced administrative tools, real-time event management, and a dynamic marketplace in a single platform. Our goal is to create smart, connected neighborhoods that foster collaboration and sustainable growth.
+
+---
+
+## Key Features
 
 ### 🏢 Administration
-
-Admins have full control over the community, with the ability to create and manage amenities, schedule events, curate neighborhood information, and approve or reject residents and service providers. Keep the community well-organized and secure with powerful administration tools.
+- **Community Management:** Administrators have full control of community settings, amenities, events, and resident data.
+- **Security and Moderation:** Ensure a safe environment by approving or rejecting new residents and service providers.
 
 ### 🎾 Amenities Reservation
-
-Easily book community amenities such as tennis courts, pools, and clubhouses. Residents can check availability, make reservations, and manage their bookings hassle-free.
+- **Simple Booking:** Residents can view availability and reserve shared resources, such as sports courts or clubhouses, with just a few clicks.
 
 ### 📅 Events
-
-Stay updated with community events through an interactive calendar. Join or leave events with a simple click and never miss out on neighborhood gatherings, activities, or important meetings.
+- **Interactive Calendar:** Stay up-to-date on upcoming events. Residents can easily join community gatherings and activities.
 
 ### 📢 Announcements & Community Feed
-
-Stay informed with an announcement board for admins and a community feed for residents. Share news, updates, and discussions with neighbors, and even submit complaints or concerns in dedicated channels.
+- **Important Updates:** Administrators post announcements while residents share news through a real-time feed.
+- **Engagement and Feedback:** Encourage participation with likes, comments, and discussions.
 
 ### 🛠️ Service Providers Management
-
-A curated list of trusted neighborhood service providers, complete with ratings and reviews. Residents can easily find and contact plumbers, electricians, landscapers, and more, ensuring quality and reliability in their local community.
+- **Verified Professionals:** Residents can find and review trusted local service providers.
+- **Business Growth:** Providers expand their reach across different neighborhoods, benefiting both communities and service professionals.
 
 ### 🌍 Neighborhood Information
-
-Admins can maintain an up-to-date database of important neighborhood information, including contacts, emergency numbers, and essential local services, providing residents with quick access to key resources.
+- **Centralized Resources:** Quick access to essential contacts, emergency numbers, and community guidelines.
 
 ### 🛍️ Marketplace
+- **Local Commerce:** A dedicated marketplace for buying, selling, or trading items, helping foster a thriving local economy.
 
-A community-driven marketplace where residents can buy, sell, and trade goods within the neighborhood. Find great deals, support local sellers, and create a thriving local economy.
+---
 
-## Roles
-- **Neighbor**: A neighborhood resident who has access to their neighborhood's resources but cannot modify or create administrative entities.
-- **Administrator**: Represents moderation, has access to their neighborhood's resources and can modify or create administrative entities as well as moderate content created by its neighbors.
-- **Unverified Neighbor**: A user who has made a request to join a certain neighborhood and must wait to be either accepted (becoming a **Neighbor**) or rejected (becoming a **Rejected**). The neighborhood administrator is in charge of their request. This user only has access to their profile which they can modify.
-- **Rejected**: A user whose request to join a certain neighborhood was rejected. They are given the possibility to make a request to another neighborhood. They also have access to their profile.
-- **Workers**: Independent workers who offer their services. They make requests to neighborhoods to be verified by them and become listed in those neighborhoods' Service Providers section, thus gaining new potential clients.
-- **Super Administrator**: Exercises moderation over all domains beyond neighborhood administrators' scope, for example, moderation over **Workers** and their actions, creation of new neighborhoods, creation of new neighborhood administrators, etc. This role can interact directly with the API but their SPA view is still under construction.
+## User Roles & Access Levels
+
+Each role is designed to maintain security and a positive user experience:
+
+- **Neighbor**  
+  Regular community member with access to neighborhood resources and social features.
+
+- **Administrator**  
+  Has comprehensive control over administrative settings, event planning, and user moderation.
+
+- **Unverified Neighbor**  
+  User requesting neighborhood membership, awaiting administrator approval.
+
+- **Rejected Neighbor**  
+  User whose membership request has been declined but retains the ability to reapply elsewhere.
+
+- **Worker**  
+  Service provider seeking verification to appear in the community’s Service Providers directory.
+
+- **Super Administrator**  
+  Oversees all neighborhoods, manages platform-wide settings, and handles advanced moderation. *(SPA view for this role is under development.)*
+
+---
 
 ## Test Accounts
 
-| Role                    | Gmail & Neibo Account     | Gmail Account Password  | Neibo Account Password |
-|-------------------------|---------------------------|-------------------------|------------------------|
-| **Admin**               | moderatorneibo@gmail.com  | moderatorneibo2023b-02  | moderatorneibo         |
-| **Verified Neighbor**   | verifiedneibo@gmail.com   | verifiedneibo2023b-02   | verifiedneibo          |
-| **Service Provider**    | workerneibo@gmail.com     | workerneibo2023b-02     | workerneibo            |
-| **Unverified Neighbor** | unverifiedneibo@gmail.com | unverifiedneibo2023b-02 | unverifiedneibo        |
-| **Rejected Neighbor**   | rejectedneibo@gmail.com   | rejectedneibo2023b-02   |                        |
+Use the following credentials for a hands-on demo of Neibo:
 
-!!!!!!!!!!! Create gmail for rejected and superadmin
+| **Role**                | **Gmail & Neibo Account**    | **Gmail Password**           | **Neibo Password**  |
+|-------------------------|------------------------------|------------------------------|---------------------|
+| **Admin**               | moderatorneibo@gmail.com     | moderatorneibo2023b-02       | moderatorneibo      |
+| **Verified Neighbor**   | verifiedneibo@gmail.com      | verifiedneibo2023b-02        | verifiedneibo       |
+| **Service Provider**    | workerneibo@gmail.com        | workerneibo2023b-02          | workerneibo         |
+| **Unverified Neighbor** | unverifiedneibo@gmail.com    | unverifiedneibo2023b-02      | unverifiedneibo     |
+| **Rejected Neighbor**   | rejectedneibo@gmail.com      | rejectedneibo2023b-02        | rejectedneibo       |
+| **Super Administrator** | supermoderatorneibo@gmail.com    | supermoderatorneibo2023b-02      | supermoderatorneibo     |
 
-## How to Run
-### Pre-Built War
-1. Clone Project
-2. Choose Branch 'api-spa'
-3. Run `mvn clean package`, ensuring that Maven and Java 8 are installed on the local machine.
-4. Run `docker compose up webapp db`
+---
 
-### In Container Build
-1. Clone Project
-2. Choose Branch 'api-spa'
-3. Run `docker compose up webapp-build db`
+
+## Running the Application
+
+### 🚀 Option 1: Using a Pre-Built WAR
+1. **Clone the repository**:
+   ```sh
+   git clone https://cijjas@bitbucket.org/itba/paw-2023b-02.git
+   cd paw-2023b-02
+   ```
+   
+2. **Switch to the appropriate branch**:
+   ```sh
+   git checkout api-spa
+   ``` 
+   
+
+3. **Build the project** (Ensure Maven and Java 8 are installed):
+   ```sh
+   mvn clean package
+   ```  
+   
+4. **Start the application using Docker Compose**:
+   ```sh
+   docker compose up webapp db
+   ```  
+   
+
+### 🐳 Option 2: Building Inside a Container
+1. **Clone the repository**:
+   ```sh
+   git clone https://cijjas@bitbucket.org/itba/paw-2023b-02.git
+   cd paw-2023b-02
+   ```  
+   
+2. **Switch to the appropriate branch**:
+   ```sh
+   git checkout api-spa
+   ```  
+   
+3. **Start the application and build inside the container**:
+   ```sh
+   docker compose up webapp-build db
+   ```
 
 <h3 style="width: 100%; display: flex; flex-direction: row; justify-content: end; align-items: center;"> Contributors</h3>
 
@@ -126,6 +173,7 @@ A community-driven marketplace where residents can buy, sell, and trade goods wi
 
 [page_url]: http://old-pawserver.it.itba.edu.ar/paw-2023b-02
 [repo_logo_img]: /frontend/src/assets/images/banner_neibo.png
+[neibo_presentation]: /frontend/src/assets/images/v2.png
 
 <!-- Project -->
 
