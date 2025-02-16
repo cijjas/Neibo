@@ -10,7 +10,7 @@ RUN mkdir -p $CATALINA_HOME
 
 # Download and extract Apache Tomcat
 RUN curl -fSL https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz \
-    | tar xz --strip-components=1 -C $CATALINA_HOME \
+    | tar xz --strip-components=1 -C $CATALINA_HOME
 
 # Expose the Tomcat default port
 EXPOSE 8080
