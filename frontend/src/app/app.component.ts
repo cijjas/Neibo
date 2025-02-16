@@ -24,7 +24,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.translate.getTranslation(localStorage.getItem('language')).subscribe();
+    const language = localStorage.getItem('language') || 'en';
+    this.translate.getTranslation(language).subscribe();
 
     // Actually use the default language
     this.channel.onmessage = event => {

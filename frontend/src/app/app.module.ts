@@ -43,10 +43,12 @@ export function appInitializerFactory(
   preferencesService: PreferencesService,
 ) {
   return () => {
-    const storedLanguage = preferencesService.getLanguage();
-    const lang = storedLanguage || 'en';
+    let storedLanguage = preferencesService.getLanguage();
+    if (!storedLanguage || storedLanguage === 'null') {
+      storedLanguage = 'en';
+    }
     translate.setDefaultLang('en');
-    return firstValueFrom(translate.use(lang));
+    return firstValueFrom(translate.use(storedLanguage));
   };
 }
 
