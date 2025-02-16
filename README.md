@@ -92,7 +92,7 @@ Use the following credentials for a hands-on demo of Neibo:
 ---
 
 
-## Running the Application
+## Running the Application Locally
 
 ### 🚀 Option 1: Using a Pre-Built WAR
 1. **Clone the repository**:
@@ -109,7 +109,7 @@ Use the following credentials for a hands-on demo of Neibo:
 
 3. **Build the project** (Ensure Maven and Java 8 are installed):
    ```sh
-   mvn clean package
+   mvn clean package -Pdev
    ```  
    
 4. **Start the application using Docker Compose**:
