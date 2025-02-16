@@ -116,7 +116,7 @@ Use the following credentials for a hands-on demo of Neibo:
    ```sh
    docker compose up webapp db
    ```  
-   
+5. **Access the application by visiting:** [http://localhost:8080/paw-2023b-02/](http://localhost:8080/paw-2023b-02/)
 
 ### 🐳 Option 2: Building Inside a Container
 1. **Clone the repository**:
@@ -134,6 +134,9 @@ Use the following credentials for a hands-on demo of Neibo:
    ```sh
    docker compose up webapp-build db
    ```
+4. **Access the application by visiting:** [http://localhost:8080/paw-2023b-02/](http://localhost:8080/paw-2023b-02/)
+
+---
 
 <h3 style="width: 100%; display: flex; flex-direction: row; justify-content: end; align-items: center;"> Contributors</h3>
 
