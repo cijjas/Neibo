@@ -8,7 +8,7 @@ ENV PATH="$MAVEN_HOME/bin:$PATH"
 
 RUN mkdir -p $CATALINA_HOME
 
-RUN curl -fSL https://dlcdn.apache.org/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz \
+RUN curl -fSL https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz \
     | tar xz --strip-components=1 -C $CATALINA_HOME
 
 # Install Maven
