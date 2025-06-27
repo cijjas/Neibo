@@ -94,7 +94,7 @@ Use the following credentials for a hands-on demo of Neibo:
 
 ## Running the Application Locally
 
-### 🚀 Option 1: Using a Pre-Built WAR
+### Option 1: Using a Pre-Built WAR
 1. **Clone the repository**:
    ```sh
    git clone https://bitbucket.org/itba/paw-2023b-02/
@@ -118,7 +118,7 @@ Use the following credentials for a hands-on demo of Neibo:
    ```  
 5. **Access the application by visiting:** [http://localhost:8080/paw-2023b-02/](http://localhost:8080/paw-2023b-02/)
 
-### 🐳 Option 2: Building Inside a Container
+### Option 2: Building Inside a Container
 1. **Clone the repository**:
    ```sh
    git clone https://bitbucket.org/itba/paw-2023b-02/
