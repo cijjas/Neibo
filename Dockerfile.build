@@ -19,7 +19,7 @@ WORKDIR /app
 COPY . .
 
 # Build the project
-RUN mvn clean package -Pdev
+RUN mvn clean package
 
 # Deploy the WAR file to Tomcat
 RUN cp /app/webapp/target/webapp.war $CATALINA_HOME/webapps/paw-2023b-02.war

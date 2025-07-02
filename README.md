@@ -94,47 +94,17 @@ Use the following credentials for a hands-on demo of Neibo:
 
 ## Running the Application Locally
 
-### Option 1: Using a Pre-Built WAR
 1. **Clone the repository**:
    ```sh
-   git clone https://bitbucket.org/itba/paw-2023b-02/
+   git clone git@github.com:cijjas/Neibo.git
    cd paw-2023b-02
    ```
    
-2. **Switch to the appropriate branch**:
-   ```sh
-   git checkout api-spa
-   ``` 
-   
-
-3. **Build the project** (Ensure Maven and Java 8 are installed):
-   ```sh
-   mvn clean package -Pdev
-   ```  
-   
-4. **Start the application using Docker Compose**:
+2. **Start the application using Docker Compose**:
    ```sh
    docker compose up webapp db
    ```  
-5. **Access the application by visiting:** [http://localhost:8080/paw-2023b-02/](http://localhost:8080/paw-2023b-02/)
-
-### Option 2: Building Inside a Container
-1. **Clone the repository**:
-   ```sh
-   git clone https://bitbucket.org/itba/paw-2023b-02/
-   cd paw-2023b-02
-   ```  
-   
-2. **Switch to the appropriate branch**:
-   ```sh
-   git checkout api-spa
-   ```  
-   
-3. **Start the application and build inside the container**:
-   ```sh
-   docker compose up webapp-build db
-   ```
-4. **Access the application by visiting:** [http://localhost:8080/paw-2023b-02/](http://localhost:8080/paw-2023b-02/)
+3. **Access the application by visiting:** [http://localhost:8079/paw-2023b-02/](http://localhost:8079/paw-2023b-02/) (Port can be changed in the docker-compose.yaml)
 
 ---
 
