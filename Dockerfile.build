@@ -11,6 +11,15 @@ RUN mkdir -p $CATALINA_HOME
 RUN curl -fSL https://archive.apache.org/dist/tomcat/tomcat-9/v${TOMCAT_VERSION}/bin/apache-tomcat-${TOMCAT_VERSION}.tar.gz \
     | tar xz --strip-components=1 -C $CATALINA_HOME
 
+# Add this line after unpacking Tomcat
+RUN sed -i '/<Engine/a \
+<Valve className="org.apache.catalina.valves.RemoteIpValve" \
+       internalProxies=".*" \
+       protocolHeader="X-Forwarded-Proto" \
+       protocolHeaderHttpsValue="https" \
+       remoteIpHeader="X-Forwarded-For" \
+       requestAttributesEnabled="true" />' $CATALINA_HOME/conf/server.xml
+
 # Install Maven
 RUN apt-get update && apt-get install -y maven
 
