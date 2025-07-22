@@ -16,8 +16,6 @@ services:
     container_name: postgres-paw
     environment:
       POSTGRES_PASSWORD: superpassword
-    ports:
-      - "5432:5432"
     volumes:
       - ./docker-init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
