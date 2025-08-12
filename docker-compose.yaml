@@ -11,12 +11,12 @@ services:
     networks:
       - pawnet
     logging:
-      driver: loki
+      driver: grafana/loki-docker-driver:latest
       options:
         loki-url: "http://localhost:3100/loki/api/v1/push"
         loki-retries: "5"
         loki-batch-size: "400"
-        tag: "{{ '{{.ImageName}}' }}|{{ '{{.Name}}' }}"
+        loki-external-labels: "service={{.Name}},container={{.ID}}"
 
   db:
     image: postgres:14
@@ -28,12 +28,12 @@ services:
     networks:
       - pawnet
     logging:
-      driver: loki
+      driver: grafana/loki-docker-driver:latest
       options:
         loki-url: "http://localhost:3100/loki/api/v1/push"
         loki-retries: "5"
         loki-batch-size: "400"
-        tag: "{{ '{{.ImageName}}' }}|{{ '{{.Name}}' }}"
+        loki-external-labels: "service={{.Name}},container={{.ID}}"
 
 networks:
   pawnet:
