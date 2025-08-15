@@ -10,11 +10,10 @@ services:
       - db
     networks:
       - pawnet
-      - logging_logging_net
     logging:
       driver: grafana/loki-docker-driver:latest
       options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-url: "http://localhost:3100/loki/api/v1/push"
         loki-retries: "5"
         loki-batch-size: "400"
         loki-external-labels: "service={{.Name}},container={{.ID}}"
@@ -28,11 +27,10 @@ services:
       - ./docker-init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - pawnet
-      - logging_logging_net
     logging:
       driver: grafana/loki-docker-driver:latest
       options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-url: "http://localhost:3100/loki/api/v1/push"
         loki-retries: "5"
         loki-batch-size: "400"
         loki-external-labels: "service={{.Name}},container={{.ID}}"
@@ -40,5 +38,3 @@ services:
 networks:
   pawnet:
     driver: bridge
-  logging_logging_net:
-    external: true
