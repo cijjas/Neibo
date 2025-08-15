@@ -2,31 +2,18 @@
 <configuration>
     <property name="defaultPattern" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
 
-    <appender name="root-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <maxHistory>5</maxHistory>
-            <fileNamePattern>logs/paw-2023b-02-warnings-%d{yyyy-MM-dd}.log</fileNamePattern>
-        </rollingPolicy>
-        <encoder>
-            <pattern>${defaultPattern:-}</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="paw-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <maxHistory>5</maxHistory>
-            <fileNamePattern>logs/paw-2023b-02-%d{yyyy-MM-dd}.log</fileNamePattern>
-        </rollingPolicy>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>${defaultPattern:-}</pattern>
         </encoder>
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="root-appender"/>
+        <appender-ref ref="STDOUT"/>
     </root>
 
     <logger name="ar.edu.itba" level="DEBUG" additivity="false">
-        <appender-ref ref="paw-appender"/>
+        <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>
+
