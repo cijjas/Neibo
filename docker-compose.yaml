@@ -10,6 +10,7 @@ services:
       - db
     networks:
       - pawnet
+      - logging_logging_net
     logging:
       driver: grafana/loki-docker-driver:latest
       options:
@@ -27,6 +28,7 @@ services:
       - ./docker-init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - pawnet
+      - logging_logging_net
     logging:
       driver: grafana/loki-docker-driver:latest
       options:
@@ -38,3 +40,5 @@ services:
 networks:
   pawnet:
     driver: bridge
+  logging_logging_net:
+    external: true
