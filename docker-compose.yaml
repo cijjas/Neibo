@@ -13,7 +13,7 @@ services:
     logging:
       driver: grafana/loki-docker-driver:latest
       options:
-        loki-url: "http://localhost:3100/loki/api/v1/push"
+        loki-url: "http://loki:3100/loki/api/v1/push"
         loki-retries: "5"
         loki-batch-size: "400"
         loki-external-labels: "service={{.Name}},container={{.ID}}"
@@ -30,7 +30,7 @@ services:
     logging:
       driver: grafana/loki-docker-driver:latest
       options:
-        loki-url: "http://localhost:3100/loki/api/v1/push"
+        loki-url: "http://loki:3100/loki/api/v1/push"
         loki-retries: "5"
         loki-batch-size: "400"
         loki-external-labels: "service={{.Name}},container={{.ID}}"
